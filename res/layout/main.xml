@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/*
+ * Copyright (C) 2011 Scripture Software (http://scripturesoftware.org/)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+-->
+<LinearLayout 
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" 
+	android:layout_height="fill_parent" 
+	android:orientation="vertical" >
+	
+	<FrameLayout
+		android:id="@+id/splash_layout"
+		android:layout_width="fill_parent" 
+		android:layout_height="fill_parent"
+		android:background="@drawable/splash_background" >
+		<ImageView 
+			android:src="@drawable/bible"
+			android:layout_gravity="center_horizontal"
+			android:layout_width="wrap_content" 
+			android:layout_height="wrap_content"
+			android:paddingTop="50dip" />
+	</FrameLayout>
+
+	<!--  
+	<TableLayout 
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		android:layout_width="fill_parent" 
+		android:layout_height="fill_parent"
+		android:background="@drawable/dash_board_background">
+		<TableRow 
+			android:layout_gravity="center_horizontal"
+			android:padding="10dip">
+			<LinearLayout 
+				android:orientation="vertical"
+				android:layout_width="fill_parent" 
+				android:layout_height="wrap_content"
+				android:layout_weight="0.5">
+				<ImageView 
+					android:src="@drawable/dash_board_bibles"
+					android:layout_width="wrap_content" 
+					android:layout_height="wrap_content"
+					android:onClick="dbOnBibleOnClick" 
+					android:layout_gravity="center" />
+				<TextView 
+					android:text="@string/db_bibles"
+					android:layout_width="wrap_content" 
+					android:layout_height="wrap_content"
+					style="@style/DashBoardText" />
+			</LinearLayout>
+			<LinearLayout 
+				android:orientation="vertical"
+				android:layout_width="fill_parent" 
+				android:layout_height="wrap_content"
+				android:layout_weight="0.5">
+				<ImageView 
+					android:src="@drawable/dash_board_libraries"
+					android:layout_width="wrap_content" 
+					android:layout_height="wrap_content"
+					android:onClick="dbOnLibraryOnClick"
+					android:layout_gravity="center" />
+				<TextView 
+					android:text="@string/db_libraries"
+					android:layout_width="wrap_content" 
+					android:layout_height="wrap_content"
+					style="@style/DashBoardText" />
+			</LinearLayout>
+		</TableRow>
+		<TableRow 
+			android:layout_gravity="center_horizontal"
+			android:padding="10dip">
+			<LinearLayout 
+				android:orientation="vertical"
+				android:layout_width="fill_parent" 
+				android:layout_height="wrap_content"
+				android:layout_weight="0.5">
+				<ImageView 
+					android:src="@drawable/dash_board_bookmarks"
+					android:layout_width="wrap_content" 
+					android:layout_height="wrap_content"
+					android:onClick="dbOnBookmarksOnClick" 
+					android:layout_gravity="center" />
+				<TextView 
+					android:text="@string/db_bookmarks"
+					android:layout_width="wrap_content" 
+					android:layout_height="wrap_content"
+					style="@style/DashBoardText" />
+			</LinearLayout>
+			<LinearLayout
+				android:id="@+id/db_notes" 
+				android:orientation="vertical"
+				android:layout_width="fill_parent" 
+				android:layout_height="wrap_content"
+				android:layout_weight="0.5" >
+				<ImageView 
+					android:src="@drawable/dash_board_notes"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:onClick="dbOnNotesOnClick" 
+					android:layout_gravity="center" />
+				<TextView 
+					android:text="@string/db_notes"
+					android:layout_width="wrap_content" 
+					android:layout_height="wrap_content"
+					style="@style/DashBoardText" />
+			</LinearLayout>
+		</TableRow>
+		<TableRow 
+			android:layout_gravity="center_horizontal"
+			android:padding="10dip">
+			<LinearLayout
+				android:id="@+id/db_plans"
+				android:orientation="vertical"
+				android:layout_width="fill_parent" 
+				android:layout_height="wrap_content"
+				android:layout_weight="0.5">
+				<ImageView 
+					android:src="@drawable/dash_board_plans"
+					android:layout_width="wrap_content" 
+					android:layout_height="wrap_content"
+					android:onClick="dbOnPlansOnClick" 
+					android:layout_gravity="center" />
+				<TextView 
+					android:text="@string/db_plans"
+					android:layout_width="wrap_content" 
+					android:layout_height="wrap_content"
+					style="@style/DashBoardText" />
+			</LinearLayout>
+			<LinearLayout 
+				android:orientation="vertical"
+				android:layout_width="fill_parent" 
+				android:layout_height="wrap_content"
+				android:layout_weight="0.5">
+				<ImageView 
+					android:src="@drawable/dash_board_settings"
+					android:layout_width="wrap_content" 
+					android:layout_height="wrap_content"
+					android:onClick="dbOnSettingsOnClick" 
+					android:layout_gravity="center" />
+				<TextView 
+					android:text="@string/db_settings"
+					android:layout_width="wrap_content" 
+					android:layout_height="wrap_content"
+					style="@style/DashBoardText" />
+			</LinearLayout>
+		</TableRow>
+	</TableLayout>
+	-->
+</LinearLayout>

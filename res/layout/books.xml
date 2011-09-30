@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/*
+ * Copyright (C) 2011 Scripture Software (http://scripturesoftware.org/)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+-->
+<LinearLayout 
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/libraryLayout" 
+	android:layout_width="fill_parent" 
+	android:layout_height="fill_parent"
+	android:orientation="vertical" 
+	android:background="@color/white">
+	
+	<LinearLayout 
+		android:id="@+id/choosePanel" 
+		android:layout_width="fill_parent" 
+		android:layout_height="wrap_content"
+		android:orientation="horizontal"
+		android:background="@drawable/btn_bar_background"
+		android:padding="2.0dip" >
+		<Button 
+			android:id="@+id/btnBook" 
+			android:layout_width="fill_parent" 
+			android:layout_height="wrap_content"
+			android:layout_margin="1dip"
+			style="@style/DefaultButton" 
+			android:singleLine = "true" 
+			android:text="-----" 
+			android:gravity="center"
+			android:layout_weight="1"
+			android:onClick="onBookClick" />
+		<Button 
+			android:id="@+id/btnChapter" 
+			android:layout_width="50dip" 
+			android:layout_height="wrap_content"
+			android:layout_margin="1dip"
+			style="@style/DefaultButton"
+			android:text="0" 
+			android:gravity="center" 
+			android:onClick="onChapterClick"/>
+		<Button 
+			android:id="@+id/btnModule" 
+			android:layout_width="80dip" 
+			android:layout_height="wrap_content"
+			android:layout_margin="1dip"
+			style="@style/DefaultButton"			 
+			android:text="---" 
+			android:gravity="center" 
+			android:onClick="onModuleClick" />
+	</LinearLayout>
+
+	<LinearLayout
+		android:id="@+id/libraryContent" 
+		android:layout_width="fill_parent" 
+		android:layout_height="fill_parent"
+		android:orientation="horizontal" >		
+		
+		<ListView 
+			android:id="@+id/modules" 
+			android:layout_width="fill_parent" 
+			android:layout_height="fill_parent" />
+			
+		<ListView 
+			android:id="@+id/books" 
+			android:layout_width="fill_parent" 
+			android:layout_height="fill_parent" />
+			
+		<GridView
+			android:id="@+id/chapterChoose"
+			android:layout_width="fill_parent" 
+			android:layout_height="fill_parent"
+			android:visibility="gone"
+			android:padding="0dip"
+	        android:verticalSpacing="4dip"
+	        android:horizontalSpacing="0dip"
+	        android:columnWidth="40dip"
+	        android:numColumns="auto_fit"
+	        android:gravity="center" />
+	
+	</LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/*
+ * Copyright (C) 2011 Scripture Software (http://scripturesoftware.org/)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+-->
+<resources>
+	
+	<string name="app_name">Bible</string>
+	
+	<!-- Dash Board -->
+	<string name="db_bibles">Bible</string>
+	<string name="db_libraries">Library</string>
+	<string name="db_bookmarks">Bookmarks</string>
+	<string name="db_notes">Notes</string>
+	<string name="db_plans">Plans</string>
+	<string name="db_settings">Settings</string>
+	<string name="db_search">Search</string>
+	<string name="db_parallels">Parallels</string>
+	
+	<!-- About -->
+	<string name="about">About</string>
+	<string name="app_name_about">BibleQuote 0.02.09\n2011</string>
+	<string name="app_license">Apache License Version 2.0</string>
+	<string name="app_about_text">Developers:\nSergey Irupin: biblelamp@gmail.com\nEvgeny Zhelezhyak: kejniy@gmail.com\nVladimir Yakushev: ru.phoenix@gmail.com</string>
+	<string name="app_about_www">www.code.google.com/p/jbible</string>
+	
+	<!-- Settings -->
+	<string name="category_reader">Reading window settings</string>
+	<string name="text_size">Font size</string>
+	<string name="text_color">Text color</string>
+	<string name="background">Background color</string>
+	<string name="current_text_size">Current text size: %1$d</string>
+	<string name="text_color_summary">Choose font size</string>
+	<string name="background_summary">Choose background color</string>
+    <string name="split_verse">Split verses</string>
+    <string name="split_verse_summary_on">Forced split verse in the text</string>
+    <string name="split_verse_summary_off">Display verse in a module</string>
+	<string name="settings_category_other">Other</string>
+	<string name="settings_other_write_debug">Write debug data</string>
+	<string name="disable_auto_screen_rotation">Disable auto-screen rotation</string>
+	<string name="may_need_to_restart">May need to restart</string>
+	
+	<!-- Menu -->
+	<string name="menu_night_day_mode">Nigth / Day mode</string>
+	<string name="menu_favorites">Bookmarks</string>
+	<string name="menu_search">Search</string>
+	<string name="menu_settings">Settings</string>
+	
+	<!-- Reader -->
+	<string name="fav_add_bookmarks">Bookmarks</string>
+	<string name="web_view_parallels">Parallels</string>
+    
+	<!-- Miscellaneous -->
+	<string name="find">Find</string>
+	<string name="menu">Menu</string>
+	<string name="cancel">Cancel</string>
+	<string name="select_module">Select a module</string>
+	<string name="added">Added</string>
+	<string name="removed">Deleted</string>
+	<string name="messageLoad">Load...</string>
+	<string name="messageLoadCanceled">Load canceled</string>
+	<string name="messageSearch">Search...</string>
+	<string name="messageSearchCanceled">Search canceled</string>
+	<string name="results">results</string>
+	<string name="share">Share</string>
+	
+	<!-- Favorities -->
+	<string name="favorites">Bookmarks</string>
+	<string name="fav_question_add_favorities">Do you really want to add bookmark</string>
+	<string name="fav_question_del_fav">Do you really want to delete this bookmark?</string>
+	<string name="fav_sort_alphabetically">Sort</string>
+	<string name="fav_delete_all">Delete all</string>
+	<string name="fav_delete_all_question">Are you sure you want to delete all bookmarks?</string>
+	
+</resources>

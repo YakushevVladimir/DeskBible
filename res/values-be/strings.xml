@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/*
+ * Copyright (C) 2011 Scripture Software (http://scripturesoftware.org/)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+-->
+<resources>
+	
+	<string name="app_name">Біблія</string>
+	
+	<!-- About -->
+	<string name="about">Аб праграме</string>
+	<string name="app_license">Ліцэнзія: GNU GPL v2</string>
+	<string name="app_about_text">Распрацоўшчыкі:\nSergey Irupin: biblelamp@gmail.com\nEvgeny Zheleznyak: kejniy@gmail.com\nVladimir Yakushev: ru.phoenix@gmail.com</string>
+	<string name="app_about_www">www.code.google.com/p/jbible</string>
+	
+	<!-- Tab's -->
+	<string name="books">Кнігі</string>
+	<string name="favorites">Закладкі</string>
+	<string name="search">Пошук</string>
+	<string name="settings">Налады</string>
+	
+	<!-- Settings -->
+	<string name="category_reader">Налады акна чытання</string>
+	<string name="text_size">Памер шрыфта</string>
+	<string name="text_color">Колер тэксту</string>
+	<string name="background">Колер фону</string>
+	<string name="split_verse">Разбіваць па вершам</string>
+	<string name="current_text_size">Цякучы памер тэксту: %1$d</string>
+	<string name="text_color_summary">Выберыце памер шрыфта</string>
+	<string name="background_summary">Выберыце колер фону</string>
+    
+	<!-- Miscellaneous -->
+	<string name="find">Знайсці</string>
+	<string name="menu">Меню</string>
+	<string name="cancel">Адмена</string>
+	<string name="fav_question_add_favorities">Вы сапраўды жадаеце дадаць закладку?</string>
+	<string name="fav_question_del_fav">Вы сапраўды жадаеце выдаліць гэтую закладку?</string>
+	<string name="select_module">Выберыце модуль</string>
+	<string name="added">Даданне</string>
+	<string name="removed">Выдаленае</string>
+	
+</resources>

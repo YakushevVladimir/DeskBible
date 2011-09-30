@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+/*
+ * Copyright (C) 2011 Scripture Software (http://scripturesoftware.org/)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+-->
+<resources>
+
+    <string name="app_name">Bibel</string>
+
+    <!-- About -->
+    <string name="about">Das Programm</string>
+    <string name="app_license">Lizenz: GNU GPL v2</string>
+    <string name="app_about_text">Entwickler:\nSergey Irupin: biblelamp@gmail.com\nEvgeny Zheleznyak: kejniy@gmail.com\nVladimir Yakushev: ru.phoenix@gmail.com</string>
+    <string name="app_about_www">www.code.google.com/p/jbible</string>
+
+    <!-- Tab's -->
+    <string name="books">Bücher</string>
+    <string name="favorites">Lesezeichen</string>
+    <string name="search">Suche</string>
+    <string name="settings">Einstellungen</string>
+
+    <!-- Settings -->
+    <string name="category_reader">Fenster Einstellungen lesen</string>
+    <string name="text_size">Schriftgroesse</string>
+    <string name="text_color">Textfarbe</string>
+    <string name="background">Hintergrundfarbe</string>
+    <string name="split_verse">Bruch von Absätzen</string>
+    <string name="current_text_size">Aktuelle Textgroesse: %1$d</string>
+    <string name="text_color_summary">Wahl der Schriftgroesse</string>
+    <string name="background_summary">Wahl der Hintergrundfarbe</string>
+    
+    <!-- Miscellaneous -->
+    <string name="find">Finden</string>
+    <string name="menu">Menü</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="fav_question_add_favorities">Wollen Sie wirklich ein Lesezeichen hinzufügen?</string>
+    <string name="fav_question_del_fav">Wollen Sie wirklich dieses Lesezeichen löschen?</string>
+    <string name="select_module">Wählen Sie ein Modul</string>
+    <string name="added">Hinzugefügt</string>
+    <string name="removed">Gelöscht</string>
+
+    <!-- Color's -->
+    <color name="white_color">#fff</color>
+    <color name="gray_color">#aaa</color>
+
+</resources>

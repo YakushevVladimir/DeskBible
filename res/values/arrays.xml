@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/*
+ * Copyright (C) 2011 Scripture Software (http://scripturesoftware.org/)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+-->
+<resources>
+	<string-array name="text_color">
+		<item>#000000</item>
+		<item>#808080</item>
+		<item>#C0C0C0</item>
+		<item>#804000</item>
+		<item>#800000</item>
+		<item>#808000</item>
+		<item>#408080</item>
+		<item>#00FF00</item>
+		<item>#FF0000</item>
+		<item>#FF00FF</item>
+		<item>#FF0080</item>
+		<item>#800080</item>
+		<item>#FF8040</item>
+		<item>#0000A0</item>
+		<item>#0000FF</item>
+		<item>#00FFFF</item>
+		<item>#FFFF00</item>
+		<item>#FFFFFF</item>
+	</string-array>
+
+	<string-array name="text_color_txt">
+		<item>Black</item>
+		<item>Dark Grey</item>
+		<item>Light Grey</item>
+		<item>Brown</item>
+		<item>Burgundy</item>
+		<item>Forest Green</item>
+		<item>Grass Green</item>
+		<item>Pastel Green</item>
+		<item>Red</item>
+		<item>Pink</item>
+		<item>Light Purple</item>
+		<item>Dark Purple</item>
+		<item>Orange</item>
+		<item>Dark Blue</item>
+		<item>Light Blue</item>
+		<item>Turquoise</item>
+		<item>Yellow</item>
+		<item>White</item>
+	</string-array>
+	
+</resources>
