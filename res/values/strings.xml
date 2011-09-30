@@ -32,9 +32,9 @@
 	
 	<!-- About -->
 	<string name="about">About</string>
-	<string name="app_name_about">BibleQuote 0.02.09\n2011</string>
+	<string name="app_name_about">BibleQuote 0.02.10\n2011</string>
 	<string name="app_license">Apache License Version 2.0</string>
-	<string name="app_about_text">Developers:\nSergey Irupin: biblelamp@gmail.com\nEvgeny Zhelezhyak: kejniy@gmail.com\nVladimir Yakushev: ru.phoenix@gmail.com</string>
+	<string name="app_about_text">Developers:\nVladimir Yakushev: ru.phoenix@gmail.com</string>
 	<string name="app_about_www">www.code.google.com/p/jbible</string>
 	
 	<!-- Settings -->

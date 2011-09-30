@@ -31,7 +31,7 @@
 	
 	<!-- About -->
 	<string name="about">О программе</string>
-	<string name="app_about_text">Разработчики:\nСергей Ирюпин: biblelamp@gmail.com\nЕвгений Железняк: kejniy@gmail.com\nВладимир Якушев: ru.phoenix@gmail.com</string>
+	<string name="app_about_text">Разработчики:\nВладимир Якушев: ru.phoenix@gmail.com</string>
 	
 	<!-- Settings -->
 	<string name="category_reader">Настройки окна чтения</string>

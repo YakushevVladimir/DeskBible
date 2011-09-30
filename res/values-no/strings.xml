@@ -22,7 +22,7 @@
 
     <!-- About -->
     <string name="about">Om program</string>
-    <string name="app_about_text">Utviklere:\nSergey Irupin: biblelamp@gmail.com\nEvgeny Zheleznyak: kejniy@gmail.com\nVladimir Yakushev: ru.phoenix@gmail.com</string>
+    <string name="app_about_text">Utviklere:\nVladimir Yakushev: ru.phoenix@gmail.com</string>
 
     <!-- Tab's -->
     <string name="books">Bøker</string>

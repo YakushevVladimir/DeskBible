@@ -18,7 +18,7 @@
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	package="com.BibleQuote"
-	android:versionName="0.02.09" android:versionCode="17">
+	android:versionName="0.02.10" android:versionCode="18">
 	
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!-- 

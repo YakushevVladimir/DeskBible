@@ -22,7 +22,7 @@
     <!-- About -->
     <string name="about">Acerca del programa</string>
     <string name="app_license">Licencia: GNU GPL v2</string>
-    <string name="app_about_text">Desarrolladores:\nSergey Irupin: biblelamp@gmail.com\nEvgeny Zheleznyak: kejniy@gmail.com\nVladimir Yakushev: ru.phoenix@gmail.com</string>
+    <string name="app_about_text">Desarrolladores:\nVladimir Yakushev: ru.phoenix@gmail.com</string>
     <string name="app_about_www">www.code.google.com/p/jbible</string>
 
     <!-- Tab's -->
