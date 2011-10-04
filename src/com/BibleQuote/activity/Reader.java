@@ -123,6 +123,7 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
 	@Override
 	protected void onPostResume() {
 		Log.i(TAG, "onPostResume()");
+		WebLoadDataWithBaseURL();
 		super.onPostResume();
 	}
 	
@@ -274,17 +275,23 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
 
 		@Override
 		protected Boolean doInBackground(String... params) {
-			String linkOSIS = params[0];
-			String[] linkParam = linkOSIS.split("\\.");
-			if (linkParam.length > 3) {
-				try {
-					verse = Integer.parseInt(linkParam[3]);
-				} catch (NumberFormatException e) {
-					verse = 1;
+			Log.i(TAG, "doInBackground(\"" + params + "\")");
+			try {
+				String linkOSIS = params[0];
+				String[] linkParam = linkOSIS.split("\\.");
+				if (linkParam.length > 3) {
+					try {
+						verse = Integer.parseInt(linkParam[3]);
+					} catch (NumberFormatException e) {
+						verse = 1;
+					}
 				}
+				
+				chapterInHTML = myLibararian.OpenLink(linkOSIS);
+			} catch (NullPointerException e) {
+				chapterInHTML = "";
+				Log.e(TAG, e);
 			}
-			
-			chapterInHTML = myLibararian.OpenLink(linkOSIS);
 			return true;
 		}
 	}
