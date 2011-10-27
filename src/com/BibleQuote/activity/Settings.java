@@ -16,7 +16,6 @@
 package com.BibleQuote.activity;
 
 import com.BibleQuote.R;
-import com.BibleQuote.utils.Log;
 
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -32,17 +31,12 @@ public class Settings extends PreferenceActivity implements
 		addPreferencesFromResource(R.xml.settings);
 	}
 
-	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
-			String key) {
-		if (key.equals("Debug") && sharedPreferences.getBoolean("Debug", false)) {
-			Log.Init(this);
-		}
+	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 	}
 
 	@Override
 	protected void onDestroy() {
-		getPreferenceScreen().getSharedPreferences()
-				.unregisterOnSharedPreferenceChangeListener(this);
+		getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
 		super.onDestroy();
 	}
 }

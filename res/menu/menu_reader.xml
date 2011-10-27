@@ -23,11 +23,13 @@
     	android:id="@+id/NightDayMode" 
     	android:orderInCategory="0" 
     	android:icon="@drawable/ic_menu_view" />
+    <!--
     <item 
     	android:title="@string/menu_search" 
     	android:id="@+id/Search" 
     	android:orderInCategory="1" 
     	android:icon="@drawable/ic_menu_search" />
+    -->
     <item 
     	android:title="@string/menu_favorites" 
     	android:id="@+id/Favorites" 

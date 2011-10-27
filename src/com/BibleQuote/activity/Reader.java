@@ -15,6 +15,8 @@
  */
 package com.BibleQuote.activity;
 
+import java.util.TreeSet;
+
 import greendroid.app.GDActivity;
 import greendroid.widget.ActionBar;
 import greendroid.widget.ActionBarItem;
@@ -28,30 +30,26 @@ import com.BibleQuote.R;
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.entity.Librarian;
 import com.BibleQuote.utils.AsyncTaskManager;
-import com.BibleQuote.utils.FileUtilities;
 import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.OnTaskCompleteListener;
-import com.BibleQuote.utils.Share;
+import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.Task;
+import com.BibleQuote.controls.ReaderWebView;
 
-import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.Display;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.view.WindowManager;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -59,24 +57,22 @@ import android.widget.Toast;
 public class Reader extends GDActivity implements OnTaskCompleteListener {
 
 	private static final String TAG = "Reader";
+	private static final int VIEW_CHAPTER_NAV_LENGHT = 5000;
 	
-	private AsyncTaskManager mAsyncTaskManager;
-	private Librarian myLibararian;
+	private Librarian myLibrarian;
     
-	private QuickActionWidget webQAction;
+	private QuickActionWidget textQAction;
 
 	private String chapterInHTML = "";
-	private String textColor, textBG;
 	private int verse = 1;
-	private String selectVerse = "";
 	private boolean nightMode = false;
 	private String progressMessage = "";
 	private int runtimeOrientation;
 
-	private WebView vWeb;
-	private LinearLayout vContentBottom;
 	private TextView vModuleName;
 	private TextView vBookLink;
+	private ImageButton btnTextAction;
+	private LinearLayout btnChapterNav;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -89,42 +85,49 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
 		
 		initActionBar();
 		prepareQuickActionBar();
-
+		
 		BibleQuoteApp app = (BibleQuoteApp) getGDApplication();
-		myLibararian = app.getLibrarian();
+		myLibrarian = app.getLibrarian();
 		
-		vWeb = (WebView)findViewById(R.id.web);
-		vWeb.getSettings().setJavaScriptEnabled(true);
-		vWeb.setWebViewClient(webClient);
-		vWeb.setVerticalScrollbarOverlay(true);
+		btnChapterNav = (LinearLayout)findViewById(R.id.btn_chapter_nav);
 		
-		vContentBottom = (LinearLayout)findViewById(R.id.contentBottom);
+		ImageButton btnChapterPrev = (ImageButton)findViewById(R.id.btn_reader_prev);
+		btnChapterPrev.setOnClickListener(onClickChapterPrev);
+		ImageButton btnChapterNext = (ImageButton)findViewById(R.id.btn_reader_next);
+		btnChapterNext.setOnClickListener(onClickChapterNext);
+		
+		ImageButton btnChapterUp = (ImageButton)findViewById(R.id.btn_reader_up);
+		btnChapterUp.setOnClickListener(onClickPageUp);
+		ImageButton btnChapterDown = (ImageButton)findViewById(R.id.btn_reader_down);
+		btnChapterDown.setOnClickListener(onClickPageDown);
+		
+		btnTextAction = (ImageButton)findViewById(R.id.btn_text_action);
+		btnTextAction.setOnClickListener(onClickBtnTextAction);
+		
 		vModuleName = (TextView)findViewById(R.id.moduleName);
 		vBookLink = (TextView)findViewById(R.id.linkBook);
 		
-		mAsyncTaskManager = new AsyncTaskManager(this, this);
-		mAsyncTaskManager.handleRetainedTask(getLastNonConfigurationInstance());
 		progressMessage = getResources().getString(R.string.messageLoad);
-
-		nightMode = Share.restoreStateBoolean(this, "nightMode");
+		nightMode = PreferenceHelper.restoreStateBoolean("nightMode");
 		
-	    String linkOSIS = Share.restoreStateString(this, "last_read");
+		Object instance = getLastNonConfigurationInstance();
+		if (instance instanceof Task) {
+			AsyncTaskManager mAsyncTaskManager = new AsyncTaskManager(this, this);
+			mAsyncTaskManager.handleRetainedTask(instance);
+			return;
+		}
+		
+	    String linkOSIS = PreferenceHelper.restoreStateString("last_read");
 		if (linkOSIS == null) {
-			linkOSIS = myLibararian.getCurrentOSISLink();
+			linkOSIS = myLibrarian.getCurrentOSISLink();
 			if (linkOSIS == null) {
 				return;
 			}
 		}
 		Log.i(TAG, "Open " + linkOSIS);
+		
+		AsyncTaskManager mAsyncTaskManager = new AsyncTaskManager(this, this);
 		mAsyncTaskManager.setupTask(new ChapterLoader(progressMessage), linkOSIS);
-	}
-
-
-	@Override
-	protected void onPostResume() {
-		Log.i(TAG, "onPostResume()");
-		WebLoadDataWithBaseURL();
-		super.onPostResume();
 	}
 	
 	private void initActionBar() {
@@ -135,68 +138,22 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
 		itemCont.setDrawable(R.drawable.ic_action_bar_content);
 		addActionBarItem(itemCont, R.id.action_bar_chooseCh);
 		
-		ActionBarItem itemPrev = bar.newActionBarItem(NormalActionBarItem.class);
-		itemPrev.setDrawable(R.drawable.ic_action_bar_prev);
-		addActionBarItem(itemPrev, R.id.action_bar_prevCh);
-		
-		ActionBarItem itemNext = bar.newActionBarItem(NormalActionBarItem.class);
-		itemNext.setDrawable(R.drawable.ic_action_bar_next);
-		addActionBarItem(itemNext, R.id.action_bar_nextCh);
+		ActionBarItem itemSearch = bar.newActionBarItem(NormalActionBarItem.class);
+		itemSearch.setDrawable(R.drawable.ic_action_bar_search);
+		addActionBarItem(itemSearch, R.id.action_bar_search);
 	}
 
-    private void prepareQuickActionBar() {
-    	webQAction = new QuickActionBar(this);
-    	webQAction.addQuickAction(new QuickAction(this, R.drawable.ic_action_bar_bookmark, R.string.fav_add_bookmarks));
-    	webQAction.addQuickAction(new QuickAction(this, R.drawable.ic_action_bar_share, R.string.share));
-    	webQAction.setOnQuickActionClickListener(mActionListener);
-    }
-
-   private OnQuickActionClickListener mActionListener = new OnQuickActionClickListener() {
-        public void onQuickActionClicked(QuickActionWidget widget, int position) {
-    		Log.i(TAG, "onQuickActionClicked(" + widget + ", " + position + ")");
-        	switch (position) {
-			case 0:
-				final String added = getString(R.string.added);
-				myLibararian.addBookmark(selectVerse);
-				Toast.makeText(getApplicationContext(), added, Toast.LENGTH_LONG).show();
-				break;
-				
-			case 1:
-				final String share = getString(R.string.share);
-				String shareText = "\""	+ myLibararian.getVerseText(selectVerse) 
-					+ "\" (" + myLibararian.getCurrentLink(false) + ":" + selectVerse + ")";
-				
-				Intent send = new Intent(Intent.ACTION_SEND);
-				send.setType("text/plain");
-				send.putExtra(Intent.EXTRA_TEXT, shareText);
-				startActivity(Intent.createChooser(send, share));;
-				break;
-				
-			case 2:
-				Intent intent = new Intent();
-				intent.setClass(getApplicationContext(), ParallelsActivity.class);
-				intent.putExtra("linkOSIS", myLibararian.getCurrentOSISLink() + ":" + selectVerse);
-				startActivityForResult(intent, R.id.action_bar_chooseCh);
-				break;
-				
-			default:
-				break;
-			}
-        }
-    };
-    
 	@Override
 	public boolean onHandleActionBarItemClick(ActionBarItem item, int position) {
 		Log.i(TAG, "onHandleActionBarItemClick(" + item + ", " + position + ")");
 		switch (item.getItemId()) {
-		case R.id.action_bar_prevCh:
-			onChPrevClick();
-			break;
-		case R.id.action_bar_nextCh:
-			onChNextClick();
-			break;
 		case R.id.action_bar_chooseCh:
 			onChooseChapterClick();
+			break;
+		case R.id.action_bar_search:
+			Intent intentSearch = new Intent().setClass(
+					getApplicationContext(), Search.class);
+			startActivityForResult(intentSearch, R.id.action_bar_search);
 			break;
 		default:
 			return super.onHandleActionBarItemClick(item, position);
@@ -205,10 +162,63 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
 		return true;
 	}
 	
+   private void prepareQuickActionBar() {
+    	textQAction = new QuickActionBar(this);
+    	textQAction.addQuickAction(new QuickAction(this, R.drawable.ic_action_bar_bookmark, R.string.fav_add_bookmarks));
+    	textQAction.addQuickAction(new QuickAction(this, R.drawable.ic_action_bar_share, R.string.share));
+    	textQAction.addQuickAction(new QuickAction(this, R.drawable.ic_action_bar_delete, R.string.deselect));
+    	textQAction.setOnQuickActionClickListener(mActionListener);
+    }
+    
+    OnClickListener onClickBtnTextAction = new OnClickListener() {
+		@Override
+		public void onClick(View btnTextAction) {
+	    	textQAction.show(btnTextAction);
+		}
+	};
+
+   private OnQuickActionClickListener mActionListener = new OnQuickActionClickListener() {
+        public void onQuickActionClicked(QuickActionWidget widget, int position) {
+    		Log.i(TAG, "onQuickActionClicked(" + widget + ", " + position + ")");
+			
+    		ReaderWebView wView = (ReaderWebView)findViewById(R.id.readerView);
+			TreeSet<Integer> selVerses = wView.getSelectVerses();
+			if (selVerses.size() == 0) {
+				return;
+			}
+        	
+			switch (position) {
+			case 0:
+				final String added = getString(R.string.added);
+				
+				myLibrarian.addBookmark(selVerses.first());
+				Toast.makeText(getApplicationContext(), added, Toast.LENGTH_LONG).show();
+				break;
+				
+			case 1:
+				String shareText = myLibrarian.getShareText(selVerses);
+				
+				final String share = getString(R.string.share);
+				Intent send = new Intent(Intent.ACTION_SEND);
+				send.setType("text/plain");
+				send.putExtra(Intent.EXTRA_TEXT, shareText);
+				startActivity(Intent.createChooser(send, share));;
+				break;
+			
+			case 2:
+				wView.clearSelectedVerse();
+				btnTextAction.setVisibility(View.GONE);
+				
+			default:
+				break;
+			}
+        }
+    };
+    
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		Log.i(TAG, "onConfigurationChanged()");
-		if (Share.restoreStateBoolean(this, "DisableAutoScreenRotation")) {
+		if (PreferenceHelper.restoreStateBoolean("DisableAutoScreenRotation")) {
 			super.onConfigurationChanged(newConfig);
 			this.setRequestedOrientation(runtimeOrientation);
 		} else {
@@ -239,26 +249,17 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
 		return orientation;
 	}
 
-	private WebViewClient webClient = new WebViewClient() {
-		public boolean shouldOverrideUrlLoading(WebView view, String url) {
-			Log.i(TAG, "shouldOverrideUrlLoading(" + url + ")");
-			if (!url.contains("verse")) {
-				return true;
-			}
-			selectVerse = url.split(" ")[1];
-	       	webQAction.show(vWeb);
-			return true;
-		}
-	};
-	
     @Override
 	public Object onRetainNonConfigurationInstance() {
-		return mAsyncTaskManager.retainTask();
+		return null;
 	}
 
 	@Override
 	public void onTaskComplete(Task task) {
-		// ничего не делаем
+		Log.i(TAG, "onTaskComplete()");
+		if (!task.isCancelled()) {
+			WebLoadDataWithBaseURL();
+		}
 	}
 
 	private class ChapterLoader extends Task {
@@ -268,8 +269,6 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
 
 		@Override
 		protected void onPostExecute(Boolean result) {
-			//runtimeOrientation = getScreenOrientation();
-			WebLoadDataWithBaseURL();
 			super.onPostExecute(result);
 		}
 
@@ -287,7 +286,7 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
 					}
 				}
 				
-				chapterInHTML = myLibararian.OpenLink(linkOSIS);
+				chapterInHTML = myLibrarian.OpenLink(linkOSIS);
 			} catch (NullPointerException e) {
 				chapterInHTML = "";
 				Log.e(TAG, e);
@@ -306,45 +305,30 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		Log.i(TAG, "onOptionsItemSelected(" + item.toString() + ")");
+		Log.i(TAG, "onOptionsItemSelected()");
 		switch (item.getItemId()) {
 		case R.id.NightDayMode:
 			nightMode = !nightMode;
-			Share.saveStateBoolean(this, "nightMode", nightMode);
-			mAsyncTaskManager.setupTask(new ChapterLoader(progressMessage),
-					myLibararian.getCurrentOSISLink());
-			break;
-		case R.id.Search:
-			Intent intentSearch = new Intent().setClass(
-					getApplicationContext(), Search.class);
-			startActivityForResult(intentSearch, R.id.action_bar_search);
+			PreferenceHelper.saveStateBoolean("nightMode", nightMode);
+			WebLoadDataWithBaseURL();
 			break;
 		case R.id.Favorites:
 			Intent intentBookmarks = new Intent().setClass(
-					getApplicationContext(), Bookmarks.class);
+					getApplicationContext(), 
+					Bookmarks.class);
 			startActivityForResult(intentBookmarks, R.id.action_bar_bookmarks);
 			break;
 		case R.id.Settings:
 			Intent intentSettings = new Intent().setClass(
-					getApplicationContext(), Settings.class);
+					getApplicationContext(), 
+					Settings.class);
 			startActivityForResult(intentSettings, R.id.action_bar_settings);
 			break;
 		case R.id.About:
-			LayoutInflater inflater = getLayoutInflater();
-			View about = inflater.inflate(R.layout.about,
-					(ViewGroup) findViewById(R.id.about_dialog));
-
-			Builder builder = new AlertDialog.Builder(this);
-			builder.setTitle(R.string.about);
-			builder.setIcon(R.drawable.icon);
-			builder.setView(about);
-			builder.setPositiveButton("OK",
-					new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-						}
-					});
-			builder.show();
+			Intent intentAbout = new Intent().setClass(
+					getApplicationContext(), 
+					AboutActivity.class);
+			startActivity(intentAbout);
 			break;
 		default:
 			return false;
@@ -363,59 +347,29 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
 				verse = 1;
 				Bundle extras = data.getExtras();
 				String linkOSIS = extras.getString("linkOSIS");
+				
+				AsyncTaskManager mAsyncTaskManager = new AsyncTaskManager(this, this);
 				mAsyncTaskManager.setupTask(new ChapterLoader(progressMessage), linkOSIS);
 			}
 		} else if (requestCode == R.id.action_bar_settings) {
-			mAsyncTaskManager.setupTask(new ChapterLoader(progressMessage), myLibararian.getCurrentOSISLink());
+			AsyncTaskManager mAsyncTaskManager = new AsyncTaskManager(this, this);
+			mAsyncTaskManager.setupTask(new ChapterLoader(progressMessage), myLibrarian.getCurrentOSISLink());
 		}
 	}
 
 	public void WebLoadDataWithBaseURL() {
 		Log.i(TAG, "WebLoadDataWithBaseURL()");
 		
-		if (!nightMode) {
-			textColor = myLibararian.getTextColor(this);
-			textBG = myLibararian.getTextBackground(this);
-		} else {
-			textColor = "#ffffff";
-			textBG = "#000000";
-		}
-		String textSize = myLibararian.getTextSize(this);
-
-		String styleDesc = FileUtilities.getAssetString(this,
-				myLibararian.isBible() ? "bible_style.css" : "book_style.css");
-
-		String html = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\"> "
-				+ "<html>\r\n"
-				+ "<head>\r\n"
-				+ "<meta http-equiv=Content-Type content=\"text/html; charset=UTF-8\">\r\n"
-				+ "<style type=\"text/css\">\r\n"
-				+ styleDesc.replaceAll("TextColor", textColor)
-						.replaceAll("TextBG", textBG)
-						.replaceAll("TextSize", textSize + "pt")
-				+ "\r\n"
-				+ "</style>\r\n"
-				+ "</head>\r\n"
-				+ "<body"
-				+ "<body onLoad=\"document.location.href='#" + verse + "';\""
-				+ ">\r\n"
-				+ chapterInHTML
-				+ "</body>\r\n" + "</html>";
-
-		vWeb.loadDataWithBaseURL(null, html, "text/html", "UTF-8", null);
-		Share.saveStateString(this, "last_read", myLibararian.getCurrentOSISLink());
+		ReaderWebView vWeb = (ReaderWebView)findViewById(R.id.readerView);
+		vWeb.setText(chapterInHTML, verse, nightMode, myLibrarian.isBible());
 		
-		vModuleName.setText(myLibararian.getModuleName());
-		vBookLink.setText(myLibararian.getHumanBookLink());
-		if (!nightMode) {
-			vContentBottom.setBackgroundColor(Color.WHITE);
-			vModuleName.setTextColor(Color.BLACK);
-			vBookLink.setTextColor(Color.BLACK);
-		} else {
-			vContentBottom.setBackgroundColor(Color.BLACK);
-			vModuleName.setTextColor(Color.WHITE);
-			vBookLink.setTextColor(Color.WHITE);
-		}
+		PreferenceHelper.saveStateString("last_read", myLibrarian.getCurrentOSISLink());
+		
+		vModuleName.setText(myLibrarian.getModuleName());
+		vBookLink.setText(myLibrarian.getHumanBookLink());
+		
+		btnChapterNav.setVisibility(View.GONE);
+		btnTextAction.setVisibility(View.GONE);
 	}
 
 	public void onChooseChapterClick() {
@@ -425,19 +379,91 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
 		startActivityForResult(intent, R.id.action_bar_chooseCh);
 	}
 
-	public void onChPrevClick() {
-		Log.i(TAG, "onChPrevClick()");
+	OnClickListener onClickChapterPrev = new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			Log.i(TAG, "onClickChapterPrev()");
+			myLibrarian.prevChapter();
+			viewNewChapter();
+		}
+	};
+
+	OnClickListener onClickChapterNext = new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			Log.i(TAG, "onClickChapterPrev()");
+			myLibrarian.nextChapter();
+			viewNewChapter();
+		}
+	};
+
+	OnClickListener onClickPageUp = new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			Log.i(TAG, "onClickPageUp()");
+			ReaderWebView vWeb = (ReaderWebView)findViewById(R.id.readerView);
+			vWeb.pageUp(false);
+			viewChapterNav();
+		}
+	};
+
+	OnClickListener onClickPageDown = new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			Log.i(TAG, "onClickPageUp()");
+			ReaderWebView vWeb = (ReaderWebView)findViewById(R.id.readerView);
+			vWeb.pageDown(false);
+			viewChapterNav();
+		}
+	};
+
+	private void viewNewChapter() {
 		verse = 1;
-		myLibararian.prevChapter();
-		mAsyncTaskManager.setupTask(new ChapterLoader(progressMessage),
-				myLibararian.getCurrentOSISLink());
+		AsyncTaskManager mAsyncTaskManager = new AsyncTaskManager(this, this);
+		mAsyncTaskManager.setupTask(
+				new ChapterLoader(progressMessage),
+				myLibrarian.getCurrentOSISLink());
+	}
+	
+	public void setTextActionVisibility(boolean visibility) {
+		if (visibility) {
+			btnTextAction.setVisibility(View.VISIBLE);
+		} else {
+			btnTextAction.setVisibility(View.GONE);
+		}
 	}
 
-	public void onChNextClick() {
-		Log.i(TAG, "onChNextClick()");
-		verse = 1;
-		myLibararian.nextChapter();
-		mAsyncTaskManager.setupTask(new ChapterLoader(progressMessage),
-				myLibararian.getCurrentOSISLink());
+	public void viewChapterNav() {
+		if (chapterNavHandler.hasMessages(R.id.view_chapter_nav)) {
+			chapterNavHandler.removeMessages(R.id.view_chapter_nav);
+		}
+		btnChapterNav.setVisibility(View.VISIBLE);
+		
+		ReaderWebView vWeb = (ReaderWebView)findViewById(R.id.readerView);
+		if (!vWeb.isScrollToBottom()) {
+			Message msg = new Message();
+			msg.what = R.id.view_chapter_nav;
+			chapterNavHandler.sendMessageDelayed(msg, VIEW_CHAPTER_NAV_LENGHT);
+		}
+	}
+	
+	private Handler chapterNavHandler = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+			case R.id.view_chapter_nav:
+				btnChapterNav.setVisibility(View.GONE);
+				break;
+			}
+			super.handleMessage(msg);
+		}
+	};
+	
+	@Override
+	public boolean onSearchRequested() {
+		Intent intentSearch = new Intent().setClass(
+		getApplicationContext(), Search.class);
+		startActivityForResult(intentSearch, R.id.action_bar_search);
+		return false;
 	}
 }

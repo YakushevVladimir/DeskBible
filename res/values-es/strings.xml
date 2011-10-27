@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
 <!--
 /*
  * Copyright (C) 2011 Scripture Software (http://scripturesoftware.org/)
@@ -17,20 +17,12 @@
  */
 -->
 <resources>
-
     <string name="app_name">Biblia</string>
     <!-- About -->
     <string name="about">Acerca del programa</string>
-    <string name="app_license">Licencia: GNU GPL v2</string>
     <string name="app_about_text">Desarrolladores:\nVladimir Yakushev: ru.phoenix@gmail.com</string>
-    <string name="app_about_www">www.code.google.com/p/jbible</string>
-
     <!-- Tab's -->
-    <string name="books">Libros</string>
     <string name="favorites">Marcadores</string>
-    <string name="search">Búsqueda</string>
-    <string name="settings">Configuración</string>
-
     <!-- Settings -->
     <string name="category_reader">Configuración de la ventana de lectura</string>
     <string name="text_size">El tamaño de fuente</string>
@@ -40,7 +32,6 @@
     <string name="current_text_size">Tamaño del texto actual:: %1$d</string>
     <string name="text_color_summary">Seleccione el tamaño de fuente</string>
     <string name="background_summary">Seleccione el color del fondo</string>
-    
     <!-- Miscellaneous -->
     <string name="find">Buscar</string>
     <string name="menu">Menú</string>
@@ -50,5 +41,32 @@
     <string name="select_module">Seleccione un módulo</string>
     <string name="added">Añadido</string>
     <string name="removed">Eliminado</string>
-
+    <string name="split_verse_summary_off">Mostrar el verso en un módulo</string>
+    <string name="menu_night_day_mode">Nigth / día de modo de</string>
+    <string name="settings_other_write_debug">Escribe los datos de depuración</string>
+    <string name="fav_delete_all_question">¿Está seguro que desea eliminar todos los marcadores?</string>
+    <string name="db_notes">Notas</string>
+    <string name="messageLoad">De carga ...</string>
+    <string name="share">Compartir</string>
+    <string name="disable_auto_screen_rotation">Desactivar el auto-rotación de pantalla</string>
+    <string name="db_parallels">Paralelas</string>
+    <string name="split_verse_summary_on">División forzada verso en el texto</string>
+    <string name="results">resultados</string>
+    <string name="db_plans">Planes</string>
+    <string name="fav_add_bookmarks">Marcadores</string>
+    <string name="db_settings">Configuración</string>
+    <string name="settings_category_other">Otro</string>
+    <string name="may_need_to_restart">Posible que deba reiniciar</string>
+    <string name="fav_delete_all">Eliminar todos los</string>
+    <string name="messageLoadCanceled">Carga cancelado</string>
+    <string name="menu_favorites">Marcadores</string>
+    <string name="messageSearchCanceled">Buscar cancelado</string>
+    <string name="db_bookmarks">Marcadores</string>
+    <string name="db_libraries">Biblioteca</string>
+    <string name="fav_sort_alphabetically">Tipo</string>
+    <string name="messageSearch">Buscar ...</string>
+    <string name="menu_settings">Configuración</string>
+    <string name="menu_search">Búsqueda</string>
+    <string name="db_search">Búsqueda</string>
+    <string name="db_bibles">Biblia</string>
 </resources>

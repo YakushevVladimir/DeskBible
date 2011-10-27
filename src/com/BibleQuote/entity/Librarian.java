@@ -61,6 +61,7 @@ public class Librarian {
 	
 	ArrayList<String> verses = new ArrayList<String>();
 	SharedPreferences Settings;
+	Context mContext;
 	
 	private static final Byte delimeter1 = (byte) 0xFE;
 	private static final Byte delimeter2 = (byte) 0xFF;
@@ -80,7 +81,7 @@ public class Librarian {
 			try {
 				Module module = new Module(iniFile);
 				modules.put(module.getShortName(), module);
-				if (currModuleID == null) {
+				if (currModuleID.equals("---")) {
 					currModuleID = module.getShortName();
 					currBookID = this.getFirstModuleBookID(currModuleID);
 					currChapter = module.containsChapterZero() ? 0 : 1;
@@ -196,18 +197,20 @@ public class Librarian {
 			}
 			
 			verseText = StringProc.stripTags(verseText, currModule.getHtmlFilter(), false);
+			verseText = verseText.replaceAll("<a\\s+?href=\"verse\\s\\d+?\">(\\d+?)</a>", "<b>$1</b>");
 			if (currModule.isBible()) {
 				verseText = verseText
 						.replaceAll("^(<[^/]+?>)*?(\\d+)(</(.)+?>){0,1}?\\s+",
-								"$1<a href=\"verse $2\">$2</a>$3 ").replaceAll(
+								"$1<b>$2</b>$3 ").replaceAll(
 								"null", "");
 			}
 
 			chapterHTML.append(
-					"<a name=\"" + verse + "\"></a>" 
-					+ verseText
-					+ (currModule.isBible() && splitVerse() ? "<br/>" : "")
-					+ "\r\n");
+				"<div id=\"verse_" + verse + "\" class=\"verse\">"
+				+ verseText.replaceAll("<(/)*div(.*?)>", "<$1p$2>")
+				+ "</div>"
+				+ (currModule.isBible() && splitVerse() ? "<br/>" : "")
+				+ "\r\n");
 		}
 
 		return chapterHTML.toString();
@@ -230,7 +233,6 @@ public class Librarian {
 	}
 	
 	public String OpenLink(String moduleID, String bookID, Integer chapter){
-		
 		currModuleID = moduleID;
 		currBookID = bookID;
 		currChapter = chapter;
@@ -246,7 +248,6 @@ public class Librarian {
 		} else {
 			return "";
 		}
-		
 	}
 	
 	public String getFirstModuleBookID(String moduleID) {
@@ -344,7 +345,7 @@ public class Librarian {
 		}
 	}
 	
-	public void addBookmark(String verse){
+	public void addBookmark(Integer verse){
 		String fav = Settings.getString("Favorits", "");
 		fav = this.getCurrentLink() + ":" + verse + delimeter2
 			+ this.getCurrentOSISLink() + "." + verse + delimeter1
@@ -429,7 +430,7 @@ public class Librarian {
 		String moduleName = currModule.getName();
 		if (moduleName.length() > 40) {
 			int strLenght = moduleName.length();
-			moduleName = moduleName.substring(0, 20) + "..." + moduleName.substring(strLenght - 20, strLenght);
+			moduleName = moduleName.substring(0, 18) + "..." + moduleName.substring(strLenght - 18, strLenght);
 		}
 		return moduleName;
 	}
@@ -446,7 +447,7 @@ public class Librarian {
 		String bookLink = currBook.getShortName() + " " + chapter;
 		if (bookLink.length() > 10) {
 			int strLenght = bookLink.length();
-			bookLink = bookLink.substring(0, 8) + "..." + bookLink.substring(strLenght - 7, strLenght);
+			bookLink = bookLink.substring(0, 4) + "..." + bookLink.substring(strLenght - 4, strLenght);
 		}
 		return bookLink;
 	}
@@ -520,24 +521,53 @@ public class Librarian {
 		}
 	}
 
-	public String getVerseText(String selectVerse) {
-		int verse = Integer.parseInt(selectVerse);
+	public String getVerseText(Integer verse) {
 		if (verses.size() < --verse) {
 			return "";
 		};
-		return StringProc.stripTags(verses.get(verse), "", true)
-			.replaceAll("^\\d+\\s+", "");
-	}
-	
-	public String getTextSize(Context context) {
-		return String.valueOf(Settings.getInt("TextSize", 12));
+		return StringProc.stripTags(this.verses.get(verse), "", true)
+			.replaceAll("^\\d+\\s+", "")
+			.replaceAll("\\s\\d+", "");
 	}
 
-	public String getTextColor(Context context) {
-		return Settings.getString("TextColor", "#ff000000");
-	}
-
-	public String getTextBackground(Context context) {
-		return Settings.getString("TextBG", "#ffffffff");
+	public String getShareText(TreeSet<Integer> selectVerses) {
+		StringBuilder verseLink = new StringBuilder();
+		StringBuilder shareText = new StringBuilder();
+		Integer fromVerse = 0;
+		Integer toVerse = 0;
+		
+		for (Integer verse : selectVerses) {
+			if (fromVerse == 0) {
+				fromVerse = verse;
+			} else if ((toVerse + 1) != verse) {
+				if (verseLink.length() != 0) {
+					verseLink.append(",");
+				}
+				if (fromVerse == toVerse) {
+					verseLink.append(fromVerse);
+				} else {
+					verseLink.append(fromVerse + "-" + toVerse);
+				}
+				fromVerse = verse;
+				
+				shareText.append(" ... ");
+			}
+			toVerse = verse;
+			
+			shareText.append(getVerseText(verse));
+		}
+		if (verseLink.length() != 0) {
+			verseLink.append(",");
+		}
+		if (fromVerse == toVerse) {
+			verseLink.append(fromVerse);
+		} else {
+			verseLink.append(fromVerse + "-" + toVerse);
+		}
+		
+		shareText.append(" (" + getCurrentLink(false) + ":" + verseLink 
+				+ ") - http://b-bq.eu/" 
+				+ currBookID + "/" + currChapter + "_" + verseLink + "/" + currModuleID);
+		return shareText.toString();
 	}
 }

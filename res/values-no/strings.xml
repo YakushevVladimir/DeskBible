@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
 <!--
 /*
  * Copyright (C) 2011 Scripture Software (http://scripturesoftware.org/)
@@ -17,19 +17,12 @@
  */
 -->
 <resources>
-
     <string name="app_name">Bibelen</string>
-
     <!-- About -->
     <string name="about">Om program</string>
     <string name="app_about_text">Utviklere:\nVladimir Yakushev: ru.phoenix@gmail.com</string>
-
     <!-- Tab's -->
-    <string name="books">Bøker</string>
     <string name="favorites">Bokmerker</string>
-    <string name="search">Søk</string>
-    <string name="settings">Innstillinger</string>
-
     <!-- Settings -->
     <string name="category_reader">Valg-vinduet lesing</string>
     <string name="text_size">Skriftstørrelse</string>
@@ -39,7 +32,6 @@
     <string name="current_text_size">Nåværende Tekststørrelse: %1$d</string>
     <string name="text_color_summary">Velg skriftstørrelsen</string>
     <string name="background_summary">Velg bakgrunnsfarge</string>
-    
     <!-- Miscellaneous -->
     <string name="find">Finn</string>
     <string name="menu">Meny</string>
@@ -49,9 +41,34 @@
     <string name="select_module">Velg en modul</string>
     <string name="added">Lagt til</string>
     <string name="removed">Slettet</string>
-
     <!-- Color's -->
     <color name="white_color">#fff</color>
     <color name="gray_color">#aaa</color>
-
+    <string name="split_verse_summary_off">Vis vers i en modul</string>
+    <string name="menu_night_day_mode">Nigth / Dag modus</string>
+    <string name="settings_other_write_debug">Skriv debug data</string>
+    <string name="fav_delete_all_question">Er du sikker på at du vil slette alle bokmerker?</string>
+    <string name="messageLoad">Load ...</string>
+    <string name="db_notes">Merknader</string>
+    <string name="share">Share</string>
+    <string name="split_verse_summary_on">Tvunget delt verset i teksten</string>
+    <string name="db_parallels">Parallels</string>
+    <string name="results">resultater</string>
+    <string name="db_plans">Planer</string>
+    <string name="fav_add_bookmarks">Bokmerker</string>
+    <string name="db_settings">Innstillinger</string>
+    <string name="settings_category_other">Andre</string>
+    <string name="may_need_to_restart">Må starte</string>
+    <string name="fav_delete_all">Slett alle</string>
+    <string name="messageLoadCanceled">Load kansellert</string>
+    <string name="menu_favorites">Bokmerker</string>
+    <string name="messageSearchCanceled">Søk kansellert</string>
+    <string name="db_bookmarks">Bokmerker</string>
+    <string name="db_libraries">Bibliotek</string>
+    <string name="fav_sort_alphabetically">Sorter</string>
+    <string name="messageSearch">Søk ...</string>
+    <string name="menu_settings">Innstillinger</string>
+    <string name="menu_search">Søk</string>
+    <string name="db_search">Søk</string>
+    <string name="db_bibles">Bibelen</string>
 </resources>

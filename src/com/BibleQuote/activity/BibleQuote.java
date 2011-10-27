@@ -20,7 +20,6 @@ import greendroid.app.GDActivity;
 import com.BibleQuote.R;
 import com.BibleQuote.BibleQuoteApp;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -41,13 +40,12 @@ public class BibleQuote extends GDActivity {
 
 		getActionBar().setVisibility(View.GONE);
 
-		final Context context = this;
 		Thread splashTread = new Thread() {
 			@Override
 			public void run() {
 				try {
 					BibleQuoteApp app = (BibleQuoteApp) getGDApplication();
-					app.Init(context);
+					app.Init();
 				} finally {
 					Message msg = new Message();
 					msg.what = START_HOME_ACTIVITY;

@@ -16,42 +16,74 @@
  * limitations under the License.
  */
 -->
+
 <LinearLayout 
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@+id/about_dialog" 
 	android:layout_height="fill_parent"
 	android:layout_width="fill_parent" 
 	android:orientation="vertical"
-	android:background="#3E3E3C">
-	<TextView 
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content" 
-		android:text="@string/app_name_about" 
-		android:gravity="center"
-		android:textSize="24sp"
-		android:textColor="#FF0000" />
-	<TextView 
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content" 
-		android:text="@string/app_license"
-		android:gravity="center" 
-		android:textSize="16sp"
-		android:textColor="#FFDD00" />
-	<TextView 
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content" 
-		android:gravity="center"
-		android:text="@string/app_about_text" 
-		android:textSize="13sp"
-		android:textColor="@android:color/white" />
-	<TextView 
-		android:layout_width="fill_parent" 
-		android:layout_height="wrap_content" 
-		android:text="@string/app_about_www" 
-		android:gravity="center" 
-		android:layout_margin="5pt"
-		android:textColor="#120AAF"
-		android:linksClickable="true"
-		android:autoLink="web" />
-
+	android:background="@android:color/white">
+	<ScrollView 
+		android:layout_height="fill_parent"
+		android:layout_width="fill_parent">
+		<LinearLayout 
+			android:orientation="vertical"
+			android:layout_height="wrap_content" 
+			android:layout_width="fill_parent"
+			android:layout_marginTop="5pt">
+			<LinearLayout 
+				android:layout_height="wrap_content"
+				android:layout_width="fill_parent" 
+				android:orientation="horizontal"
+				android:gravity="center">
+				<ImageView 
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content" 
+					android:layout_gravity="left"
+					android:padding="3pt" 
+					android:src="@drawable/icon" />
+				<TextView 
+					android:layout_width="wrap_content" 
+					android:text="@string/app_name_about"
+					android:gravity="right" 
+					android:layout_height="wrap_content"
+					android:textSize="10pt" 
+					android:textColor="#02174c"
+					android:layout_gravity="center_vertical"/>
+			</LinearLayout>
+			<LinearLayout 
+				android:layout_height="wrap_content"
+				android:layout_width="fill_parent" 
+				android:orientation="vertical">
+				<TextView 
+					android:layout_width="fill_parent"
+					android:linksClickable="true" 
+					android:autoLink="web" 
+					android:text="@string/app_about_www"
+					android:textSize="9pt"
+					android:gravity="center" 
+					android:layout_height="wrap_content"
+					android:textColor="#120AAF" />
+				<TextView 
+					android:layout_width="fill_parent" 
+					android:text="@string/app_license"
+					android:gravity="center" 
+					android:layout_height="wrap_content"
+					android:textSize="5pt" 
+					android:textColor="#ce550e" />
+			</LinearLayout>
+			<TextView 
+				android:layout_width="fill_parent" 
+				android:text="@string/app_about_text" 
+				android:gravity="center"
+				android:layout_height="wrap_content" 
+				android:linksClickable="true" 
+				android:autoLink="email" 
+				android:textSize="8pt"
+				android:layout_marginTop="5pt" 
+				android:textColor="@android:color/black" />
+		</LinearLayout>
+	</ScrollView>
 </LinearLayout>
+

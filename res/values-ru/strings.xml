@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
 <!--
 /*
  * Copyright (C) 2011 Scripture Software (http://scripturesoftware.org/)
@@ -17,68 +17,61 @@
  */
 -->
 <resources>
-	
-	<string name="app_name">Библия</string>
-	
-	<!-- Dash Board -->
-	<string name="db_bibles">Библия</string>
-	<string name="db_libraries">Библиотека</string>
-	<string name="db_bookmarks">Закладки</string>
-	<string name="db_notes">Заметки</string>
-	<string name="db_plans">Планы чтения</string>
-	<string name="db_settings">Настройки</string>
-	<string name="db_search">Поиск</string>
-	
-	<!-- About -->
-	<string name="about">О программе</string>
-	<string name="app_about_text">Разработчики:\nВладимир Якушев: ru.phoenix@gmail.com</string>
-	
-	<!-- Settings -->
-	<string name="category_reader">Настройки окна чтения</string>
-	<string name="text_size">Размер шрифта</string>
-	<string name="text_color">Цвет текста</string>
-	<string name="background">Цвет фона</string>
-	<string name="current_text_size">Текущий размер шрифта: %1$d</string>
-	<string name="text_color_summary">Выберите размер шрифта</string>
-	<string name="background_summary">Выберите цвет фона</string>
-	<string name="settings_category_other">Прочее</string>
-	<string name="settings_other_write_debug">Записывать отладочную информацию</string>
+    <string name="app_name">Библия</string>
+    <!-- Dash Board -->
+    <string name="db_bibles">Библия</string>
+    <string name="db_libraries">Библиотека</string>
+    <string name="db_bookmarks">Закладки</string>
+    <string name="db_notes">Заметки</string>
+    <string name="db_plans">Планы чтения</string>
+    <string name="db_settings">Настройки</string>
+    <string name="db_search">Поиск</string>
+    <!-- About -->
+    <string name="about">О программе</string>
+    <string name="app_about_text">Разработчики:\nВладимир Якушев: ru.phoenix@gmail.com</string>
+    <!-- Settings -->
+    <string name="category_reader">Настройки окна чтения</string>
+    <string name="text_size">Размер шрифта</string>
+    <string name="text_color">Цвет текста</string>
+    <string name="background">Цвет фона</string>
+    <string name="current_text_size">Текущий размер шрифта: %1$d</string>
+    <string name="text_color_summary">Выберите размер шрифта</string>
+    <string name="background_summary">Выберите цвет фона</string>
+    <string name="settings_category_other">Прочее</string>
+    <string name="settings_other_write_debug">Записывать отладочную информацию</string>
     <string name="split_verse">Разбивать стихи</string>
     <string name="split_verse_summary_on">Принудительно разбивать стихи</string>
     <string name="split_verse_summary_off">Выводить стихи как есть</string>
-	<string name="disable_auto_screen_rotation">Отключить автоповорот экрана</string>
-	<string name="may_need_to_restart">Может потребоваться перезапуск</string>
-	
-	<!-- Menu -->
-	<string name="menu_night_day_mode">Режим день \ ночь</string>
-	<string name="menu_favorites">Закладки</string>
-	<string name="menu_search">Поиск</string>
-	<string name="menu_settings">Настройки</string>
-    
-	<!-- Reader -->
-	<string name="fav_add_bookmarks">Закладка</string>
-	<string name="web_view_parallels">Ссылки</string>
-    
-	<!-- Miscellaneous -->
-	<string name="find">Найти</string>
-	<string name="menu">Меню</string>
-	<string name="cancel">Отмена</string>
-	<string name="select_module">Выберите модуль</string>
-	<string name="added">Добавлена</string>
-	<string name="removed">Удалено</string>
-	<string name="messageLoad">Загрузка...</string>
-	<string name="messageLoadCanceled">Загрузка завершена</string>
-	<string name="messageSearch">Поиск...</string>
-	<string name="messageSearchCanceled">Поиск завершен</string>
-	<string name="results">результатов</string>
-	<string name="share">Поделиться</string>
-	
-	<!-- Favorities -->
-	<string name="favorites">Закладки</string>
-	<string name="fav_question_add_favorities">Добавить закладку</string>
-	<string name="fav_question_del_fav">Удалить эту закладку?</string>
-	<string name="fav_sort_alphabetically">Сортировка</string>
-	<string name="fav_delete_all">Очистить</string>
-	<string name="fav_delete_all_question">Вы уверены, что хотите удалить все закладки?</string>
-
+    <string name="disable_auto_screen_rotation">Отключить автоматический поворот экрана</string>
+    <string name="may_need_to_restart">Может потребоваться перезапуск</string>
+    <!-- Menu -->
+    <string name="menu_night_day_mode">Режим день \ ночь</string>
+    <string name="menu_favorites">Закладки</string>
+    <string name="menu_search">Поиск</string>
+    <string name="menu_settings">Настройки</string>
+    <!-- Reader -->
+    <string name="fav_add_bookmarks">Закладка</string>
+    <string name="web_view_parallels">Ссылки</string>
+    <!-- Miscellaneous -->
+    <string name="find">Найти</string>
+    <string name="menu">Меню</string>
+    <string name="cancel">Отмена</string>
+    <string name="select_module">Выберите модуль</string>
+    <string name="added">Добавлена</string>
+    <string name="removed">Удалено</string>
+    <string name="messageLoad">Загрузка...</string>
+    <string name="messageLoadCanceled">Загрузка завершена</string>
+    <string name="messageSearch">Поиск...</string>
+    <string name="messageSearchCanceled">Поиск завершен</string>
+    <string name="results">результатов</string>
+    <string name="share">Поделиться</string>
+    <string name="deselect">Отменить выделение</string>
+    <!-- Favorities -->
+    <string name="favorites">Закладки</string>
+    <string name="fav_question_add_favorities">Добавить закладку</string>
+    <string name="fav_question_del_fav">Удалить эту закладку?</string>
+    <string name="fav_sort_alphabetically">Сортировка</string>
+    <string name="fav_delete_all">Очистить</string>
+    <string name="fav_delete_all_question">Вы уверены, что хотите удалить все закладки?</string>
+    <string name="db_parallels">Parallels</string>
 </resources>

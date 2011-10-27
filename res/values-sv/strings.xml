@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
 <!--
 /*
  * Copyright (C) 2011 Scripture Software (http://scripturesoftware.org/)
@@ -17,21 +17,12 @@
  */
 -->
 <resources>
-
     <string name="app_name">Bibeln</string>
-
     <!-- About -->
     <string name="about">Om programm</string>
-    <string name="app_license">Licens: GNU GPL v2</string>
     <string name="app_about_text">Utvecklare:\nVladimir Yakushev: ru.phoenix@gmail.com</string>
-    <string name="app_about_www">www.code.google.com/p/jbible</string>
-
     <!-- Tab's -->
-    <string name="books">Böcker</string>
     <string name="favorites">Bokmärken</string>
-    <string name="search">Sök</string>
-    <string name="settings">Inställningar</string>
-
     <!-- Settings -->
     <string name="category_reader">Läsa fönsterinställningar</string>
     <string name="text_size">Teckenstorlek</string>
@@ -41,7 +32,6 @@
     <string name="current_text_size">Aktuell textstorlek: %1$d</string>
     <string name="text_color_summary">Välj teckenstorlek</string>
     <string name="background_summary">Välj bakgrundsfärg</string>
-    
     <!-- Miscellaneous -->
     <string name="find">Hitta</string>
     <string name="menu">Meny</string>
@@ -51,9 +41,35 @@
     <string name="select_module">Välj en modul</string>
     <string name="added">Tillagt</string>
     <string name="removed">Deleted</string>
-
     <!-- Color's -->
     <color name="white_color">#fff</color>
     <color name="gray_color">#aaa</color>
-
+    <string name="split_verse_summary_off">Visa vers i en modul</string>
+    <string name="menu_night_day_mode">Nigth / Dag-läget</string>
+    <string name="settings_other_write_debug">Skriv debug uppgifter</string>
+    <string name="fav_delete_all_question">Är du säker på att du vill ta bort alla bokmärken?</string>
+    <string name="db_notes">Anteckningar</string>
+    <string name="messageLoad">Ladda ...</string>
+    <string name="share">Dela</string>
+    <string name="disable_auto_screen_rotation">Inaktivera automatisk skärmrotation</string>
+    <string name="db_parallels">Parallels</string>
+    <string name="split_verse_summary_on">Påtvingad split vers i texten</string>
+    <string name="results">resultat</string>
+    <string name="db_plans">Planer</string>
+    <string name="fav_add_bookmarks">Bokmärken</string>
+    <string name="db_settings">Inställningar</string>
+    <string name="settings_category_other">Andra</string>
+    <string name="may_need_to_restart">Kan behöva starta</string>
+    <string name="fav_delete_all">Ta bort alla</string>
+    <string name="messageLoadCanceled">Ladda avbryts</string>
+    <string name="menu_favorites">Bokmärken</string>
+    <string name="messageSearchCanceled">Sök avbryts</string>
+    <string name="db_bookmarks">Bokmärken</string>
+    <string name="db_libraries">Bibliotek</string>
+    <string name="fav_sort_alphabetically">Sortera</string>
+    <string name="messageSearch">Sök ...</string>
+    <string name="menu_settings">Inställningar</string>
+    <string name="menu_search">Sök</string>
+    <string name="db_search">Sök</string>
+    <string name="db_bibles">Bibeln</string>
 </resources>

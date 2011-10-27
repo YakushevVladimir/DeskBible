@@ -16,47 +16,113 @@
  * limitations under the License.
  */
 -->
-<LinearLayout 
-	android:id="@+id/TableLayout01" 
+<RelativeLayout 
+	android:id="@+id/container" 
 	android:layout_width="fill_parent" 
 	android:layout_height="fill_parent"
 	android:background="#ff000000"
 	android:orientation ="vertical" 
 	xmlns:android="http://schemas.android.com/apk/res/android">
 
-	<LinearLayout
-		android:id="@+id/contentBottom"
+	<RelativeLayout
+		android:id="@+id/bookLink_container"
 		android:layout_width="fill_parent" 
-		android:layout_height="25dip"
+		android:layout_height="20.0dip"
 		android:orientation="horizontal"
-		android:padding="2dip"
 		android:layout_weight="1"
-		android:background="@android:color/white" >
+		android:background="#ff808080"
+		android:clickable="false" >
+		
+		<TextView 
+			android:id="@+id/linkBook"
+			android:layout_width="wrap_content" 
+			android:layout_height="wrap_content" 
+			android:padding="2.0dip"
+			android:textSize="11sp"
+			android:textColor="@android:color/white"
+			android:singleLine="true" 
+			android:shadowColor="#ff000000" 
+			android:shadowRadius="2.75" 
+			android:layout_alignParentRight="true" />
 		
 		<TextView 
 			android:id="@+id/moduleName"
-			android:layout_width="fill_parent" 
-			android:layout_height="wrap_content"
-			android:textSize="@dimen/text_size_very_small"
-			android:gravity="left"
-			android:paddingRight="2sp"
-			android:textColor="@android:color/black"
-			android:layout_weight="1"/>
-		<TextView 
-			android:id="@+id/linkBook"
-			android:layout_width="fill_parent" 
-			android:layout_height="wrap_content"
-			android:textSize="@dimen/text_size_very_small"
-			android:gravity="right"
-			android:textColor="@android:color/black"
-			android:layout_weight="4"/>
+			android:layout_width="wrap_content" 
+			android:layout_height="wrap_content" 
+			android:padding="2.0dip"
+			android:textSize="11sp"
+			android:textColor="@android:color/white"
+			android:singleLine="true" 
+			android:shadowColor="#ff000000" 
+			android:shadowRadius="2.75" 
+			android:layout_toLeftOf="@id/linkBook" 
+			android:layout_alignParentLeft="true" />
+		
+		</RelativeLayout>
+
+	<com.BibleQuote.controls.ReaderWebView 
+		android:id="@+id/readerView"
+		android:layout_width="fill_parent" 
+		android:layout_height="fill_parent"
+		android:layout_below="@id/bookLink_container" />
+	
+	<RelativeLayout 
+		android:orientation="horizontal" 
+		android:id="@+id/button_container" 
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content" 
+		android:layout_alignParentBottom="true">
+		
+		<ImageButton 
+			android:id="@+id/btn_text_action" 
+			android:background="@drawable/btn_reader_text_action" 
+			android:layout_width="wrap_content" 
+			android:layout_height="wrap_content" 
+			android:layout_marginRight="5.0dip"
+			android:visibility="gone"
+			android:layout_alignParentRight="true" />
+	
+		<LinearLayout 
+			android:id="@+id/btn_chapter_nav" 
+			android:layout_width="wrap_content" 
+			android:layout_height="wrap_content" 
+			android:layout_marginLeft="5.0dip"
+			android:visibility="gone">
+			
+			<ImageButton 
+				android:id="@+id/btn_reader_prev" 
+				android:background="@drawable/btn_reader_prev" 
+				android:focusable="true" 
+				android:clickable="false" 
+				android:layout_width="wrap_content" 
+				android:layout_height="wrap_content" />
+			
+			<ImageButton 
+				android:id="@+id/btn_reader_up" 
+				android:background="@drawable/btn_reader_up" 
+				android:focusable="true" 
+				android:clickable="false" 
+				android:layout_width="wrap_content" 
+				android:layout_height="wrap_content" />
+			
+			<ImageButton 
+				android:id="@+id/btn_reader_down" 
+				android:background="@drawable/btn_reader_down" 
+				android:focusable="true" 
+				android:clickable="false" 
+				android:layout_width="wrap_content" 
+				android:layout_height="wrap_content" />
+			
+			<ImageButton 
+				android:id="@+id/btn_reader_next" 
+				android:background="@drawable/btn_reader_next" 
+				android:focusable="true" 
+				android:clickable="false" 
+				android:layout_width="wrap_content" 
+				android:layout_height="wrap_content" />
 		
 		</LinearLayout>
 
-	<WebView 
-		android:layout_width="fill_parent" 
-		android:layout_height="fill_parent" 
-		android:id="@+id/web"
-		android:layout_weight="2" />
-		
-</LinearLayout>
+	</RelativeLayout>
+			
+</RelativeLayout>

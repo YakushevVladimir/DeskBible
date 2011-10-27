@@ -3,7 +3,6 @@ package com.BibleQuote.entity;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 
 import com.BibleQuote.utils.Log;
 
@@ -22,7 +21,7 @@ public class BibleBooksID {
 			put("Lev"   , new String[]{"Лев","Лв","Левит","Lev","Le","Lv","Levit","Leviticus"});
 			put("Num"   , new String[]{"Чис","Чс","Числ","Числа","Nu","Num","Nm","Numb","Numbers"});
 			put("Deut"  , new String[]{"Втор","Вт","Втрзк","Второзаконие","De","Deut","Deu","Dt","","Deuteron","Deuteronomy"});
-			put("Josh"  , new String[]{"Иис.Нав.","Иис.Нав","Нав","Иисус","Навин","Jos","Josh","Joshua"});
+			put("Josh"  , new String[]{"ИисНав","Нав","Иисус","Навин","Jos","Josh","Joshua"});
 			put("Judg"  , new String[]{"Суд","Сд","Судьи","Jdg","Judg","Judge","Judges"});
 			put("Ruth"  , new String[]{"Руф","Рф","Руфь","Ru","Ruth","Rth","Rt"});
 			put("1Sam"  , new String[]{"1Цар","1Цр","1Ц","1Царств","1Sa","1S","1Sam","1Sm","1Sml","1Samuel"});
@@ -197,12 +196,11 @@ public class BibleBooksID {
 			return bookID;
 		}
 		
-		for(Iterator<String> keys = qualifier.keySet().iterator(); keys.hasNext();){
-			String id = keys.next();
+		for (String id : qualifier.keySet()) {
 			String[] bookNames = qualifier.get(id);
 			for (String name : bookNames) {
 				for (String moduleBookName : moduleBookNames) {
-					if (name.equals(moduleBookName)) {
+					if (name.equals(moduleBookName.trim())) {
 						bookID = id;
 						break;
 					}
@@ -211,7 +209,7 @@ public class BibleBooksID {
 					break;
 				}
 			}
-		}		
+		}
 		
 		if (bookID != null) {
 			addBookID(bookID, moduleBookNames);

@@ -27,5 +27,4 @@ public class AboutActivity extends GDActivity {
         super.onCreate(savedInstanceState);
         setActionBarContentView(R.layout.about);
     }
-    
 }

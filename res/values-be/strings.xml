@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
 <!--
 /*
  * Copyright (C) 2011 Scripture Software (http://scripturesoftware.org/)
@@ -17,39 +17,56 @@
  */
 -->
 <resources>
-	
-	<string name="app_name">Біблія</string>
-	
-	<!-- About -->
-	<string name="about">Аб праграме</string>
-	<string name="app_license">Ліцэнзія: GNU GPL v2</string>
-	<string name="app_about_text">Распрацоўшчыкі:\nVladimir Yakushev: ru.phoenix@gmail.com</string>
-	<string name="app_about_www">www.code.google.com/p/jbible</string>
-	
-	<!-- Tab's -->
-	<string name="books">Кнігі</string>
-	<string name="favorites">Закладкі</string>
-	<string name="search">Пошук</string>
-	<string name="settings">Налады</string>
-	
-	<!-- Settings -->
-	<string name="category_reader">Налады акна чытання</string>
-	<string name="text_size">Памер шрыфта</string>
-	<string name="text_color">Колер тэксту</string>
-	<string name="background">Колер фону</string>
-	<string name="split_verse">Разбіваць па вершам</string>
-	<string name="current_text_size">Цякучы памер тэксту: %1$d</string>
-	<string name="text_color_summary">Выберыце памер шрыфта</string>
-	<string name="background_summary">Выберыце колер фону</string>
-    
-	<!-- Miscellaneous -->
-	<string name="find">Знайсці</string>
-	<string name="menu">Меню</string>
-	<string name="cancel">Адмена</string>
-	<string name="fav_question_add_favorities">Вы сапраўды жадаеце дадаць закладку?</string>
-	<string name="fav_question_del_fav">Вы сапраўды жадаеце выдаліць гэтую закладку?</string>
-	<string name="select_module">Выберыце модуль</string>
-	<string name="added">Даданне</string>
-	<string name="removed">Выдаленае</string>
-	
+    <string name="app_name">Біблія</string>
+    <!-- About -->
+    <string name="about">Аб праграме</string>
+    <string name="app_about_text">Распрацоўшчыкі:\nVladimir Yakushev: ru.phoenix@gmail.com</string>
+    <!-- Tab's -->
+    <string name="favorites">Закладкі</string>
+    <!-- Settings -->
+    <string name="category_reader">Налады акна чытання</string>
+    <string name="text_size">Памер шрыфта</string>
+    <string name="text_color">Колер тэксту</string>
+    <string name="background">Колер фону</string>
+    <string name="split_verse">Разбіваць па вершам</string>
+    <string name="current_text_size">Цякучы памер тэксту: %1$d</string>
+    <string name="text_color_summary">Выберыце памер шрыфта</string>
+    <string name="background_summary">Выберыце колер фону</string>
+    <!-- Miscellaneous -->
+    <string name="find">Знайсці</string>
+    <string name="menu">Меню</string>
+    <string name="cancel">Адмена</string>
+    <string name="fav_question_add_favorities">Вы сапраўды жадаеце дадаць закладку?</string>
+    <string name="fav_question_del_fav">Вы сапраўды жадаеце выдаліць гэтую закладку?</string>
+    <string name="select_module">Выберыце модуль</string>
+    <string name="added">Даданне</string>
+    <string name="removed">Выдаленае</string>
+    <string name="split_verse_summary_off">Паказаць верш у модулі</string>
+    <string name="menu_night_day_mode">Nigth / дзённай рэжым</string>
+    <string name="settings_other_write_debug">Напісаць адладкавыя дадзеных</string>
+    <string name="fav_delete_all_question">Вы сапраўды жадаеце выдаліць усе закладкі?</string>
+    <string name="db_notes">Заўвагі</string>
+    <string name="messageLoad">Загрузіць ...</string>
+    <string name="share">Доля</string>
+    <string name="disable_auto_screen_rotation">Адключыць аўтаматычны паварот экрана</string>
+    <string name="db_parallels">Parallels</string>
+    <string name="split_verse_summary_on">Прымусовае раскол верш ў тэкст</string>
+    <string name="results">Вынікі</string>
+    <string name="db_plans">Планы</string>
+    <string name="fav_add_bookmarks">Закладкі</string>
+    <string name="db_settings">Налады</string>
+    <string name="settings_category_other">Іншы</string>
+    <string name="may_need_to_restart">Магчыма, спатрэбіцца перазагрузіць</string>
+    <string name="fav_delete_all">Выдаліць усе</string>
+    <string name="messageLoadCanceled">Нагрузка адменены</string>
+    <string name="menu_favorites">Закладкі</string>
+    <string name="messageSearchCanceled">Пошук адменены</string>
+    <string name="db_bookmarks">Закладкі</string>
+    <string name="db_libraries">Бібліятэка</string>
+    <string name="fav_sort_alphabetically">Сартаваць</string>
+    <string name="messageSearch">Пошук ...</string>
+    <string name="menu_settings">Налады</string>
+    <string name="menu_search">Пошук</string>
+    <string name="db_search">Пошук</string>
+    <string name="db_bibles">Біблія</string>
 </resources>

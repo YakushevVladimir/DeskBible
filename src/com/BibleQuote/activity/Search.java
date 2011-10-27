@@ -92,7 +92,7 @@ public class Search extends GDActivity implements OnTaskCompleteListener {
         	+ getResources().getString(R.string.results) + ")";
 		}
         getActionBar().setTitle(title);
-	}
+ 	}
 
 	private void SpinnerInit() {
 		books = myLibararian.getModuleBooksList();

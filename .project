@@ -3,6 +3,8 @@
 	<name>BibleQuote</name>
 	<comment>@key 32303037303533312D3130206A4269626C652FC2EBE0E4E8ECE8F0 </comment>
 	<projects>
+		<project>GreenDroid</project>
+		<project>GreenDroid-GoogleAPIs</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
