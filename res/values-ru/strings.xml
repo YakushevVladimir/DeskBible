@@ -26,7 +26,8 @@
     <string name="db_plans">Планы чтения</string>
     <string name="db_settings">Настройки</string>
     <string name="db_search">Поиск</string>
-    <!-- About -->
+   <string name="db_help">Помощь</string>
+     <!-- About -->
     <string name="about">О программе</string>
     <string name="app_about_text">Разработчики:\nВладимир Якушев: ru.phoenix@gmail.com</string>
     <!-- Settings -->
@@ -44,10 +45,13 @@
     <string name="split_verse_summary_off">Выводить стихи как есть</string>
     <string name="disable_auto_screen_rotation">Отключить автоматический поворот экрана</string>
     <string name="may_need_to_restart">Может потребоваться перезапуск</string>
+    <string name="read_mode_by_default">Режим чтения по-умолчанию</string>
+    <string name="read_mode_by_default_summary">Использовать по-умолчанию режим чтения</string>
     <!-- Menu -->
     <string name="menu_night_day_mode">Режим день \ ночь</string>
     <string name="menu_favorites">Закладки</string>
     <string name="menu_search">Поиск</string>
+    <string name="menu_help">Помощь</string>
     <string name="menu_settings">Настройки</string>
     <!-- Reader -->
     <string name="fav_add_bookmarks">Закладка</string>
@@ -65,7 +69,7 @@
     <string name="messageSearchCanceled">Поиск завершен</string>
     <string name="results">результатов</string>
     <string name="share">Поделиться</string>
-    <string name="deselect">Отменить выделение</string>
+    <string name="copy">Копировать</string>
     <!-- Favorities -->
     <string name="favorites">Закладки</string>
     <string name="fav_question_add_favorities">Добавить закладку</string>

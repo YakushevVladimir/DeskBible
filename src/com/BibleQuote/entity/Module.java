@@ -196,6 +196,14 @@ public class Module {
 		return bookNames;
 	}
 
+	public ArrayList<String> getBooksIDs() {
+		ArrayList<String> bookIDs = new ArrayList<String>();
+		for (String id : Books.keySet()) {
+			bookIDs.add(id);
+		}
+		return bookIDs;
+	}
+
 	public ArrayList<ItemList> getBooksList() {
 		ArrayList<ItemList> booksList = new ArrayList<ItemList>();
 		for (Book currBook : Books.values()) {
@@ -318,6 +326,7 @@ public class Module {
 		int verse = 0;
 		try {
 			while ((str = bReader.readLine()) != null) {
+				str = str.replaceAll("\\s(\\d)+", "");
 				if (str.toLowerCase().contains(ChapterSign)) {
 					chapter++;
 					verse = 0;

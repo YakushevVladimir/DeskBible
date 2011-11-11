@@ -33,11 +33,4 @@
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>com.soyatec.additional.Nature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>GreenDroid_src</name>
-			<type>2</type>
-			<locationURI>_android_GreenDroid_612cb559/src</locationURI>
-		</link>
-	</linkedResources>
 </projectDescription>

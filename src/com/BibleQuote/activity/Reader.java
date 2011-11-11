@@ -42,6 +42,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.ClipboardManager;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -73,6 +74,7 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
 	private TextView vBookLink;
 	private ImageButton btnTextAction;
 	private LinearLayout btnChapterNav;
+	private ReaderWebView vWeb;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -109,6 +111,10 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
 		
 		progressMessage = getResources().getString(R.string.messageLoad);
 		nightMode = PreferenceHelper.restoreStateBoolean("nightMode");
+		
+		vWeb = (ReaderWebView)findViewById(R.id.readerView);
+		vWeb.setReadingMode(PreferenceHelper.isReadModeByDefault());
+		updateActivityMode();
 		
 		Object instance = getLastNonConfigurationInstance();
 		if (instance instanceof Task) {
@@ -166,7 +172,7 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
     	textQAction = new QuickActionBar(this);
     	textQAction.addQuickAction(new QuickAction(this, R.drawable.ic_action_bar_bookmark, R.string.fav_add_bookmarks));
     	textQAction.addQuickAction(new QuickAction(this, R.drawable.ic_action_bar_share, R.string.share));
-    	textQAction.addQuickAction(new QuickAction(this, R.drawable.ic_action_bar_delete, R.string.deselect));
+    	textQAction.addQuickAction(new QuickAction(this, R.drawable.ic_action_bar_clipboard, R.string.copy));
     	textQAction.setOnQuickActionClickListener(mActionListener);
     }
     
@@ -206,9 +212,12 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
 				break;
 			
 			case 2:
-				wView.clearSelectedVerse();
-				btnTextAction.setVisibility(View.GONE);
-				
+				ClipboardManager clpbdManager = (ClipboardManager)getSystemService("clipboard");
+			    if (clpbdManager != null) {
+					String clpbdText = myLibrarian.getShareText(selVerses);
+					clpbdManager.setText(clpbdText);
+			    }
+			    
 			default:
 				break;
 			}
@@ -318,6 +327,10 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
 					Bookmarks.class);
 			startActivityForResult(intentBookmarks, R.id.action_bar_bookmarks);
 			break;
+		case R.id.Help:
+			Intent helpIntent = new Intent(this, HelpActivity.class);
+			startActivity(helpIntent);
+			break;
 		case R.id.Settings:
 			Intent intentSettings = new Intent().setClass(
 					getApplicationContext(), 
@@ -352,6 +365,8 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
 				mAsyncTaskManager.setupTask(new ChapterLoader(progressMessage), linkOSIS);
 			}
 		} else if (requestCode == R.id.action_bar_settings) {
+			vWeb.setReadingMode(PreferenceHelper.isReadModeByDefault());
+			updateActivityMode();
 			AsyncTaskManager mAsyncTaskManager = new AsyncTaskManager(this, this);
 			mAsyncTaskManager.setupTask(new ChapterLoader(progressMessage), myLibrarian.getCurrentOSISLink());
 		}
@@ -360,7 +375,6 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
 	public void WebLoadDataWithBaseURL() {
 		Log.i(TAG, "WebLoadDataWithBaseURL()");
 		
-		ReaderWebView vWeb = (ReaderWebView)findViewById(R.id.readerView);
 		vWeb.setText(chapterInHTML, verse, nightMode, myLibrarian.isBible());
 		
 		PreferenceHelper.saveStateString("last_read", myLibrarian.getCurrentOSISLink());
@@ -383,25 +397,32 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
 		@Override
 		public void onClick(View v) {
 			Log.i(TAG, "onClickChapterPrev()");
-			myLibrarian.prevChapter();
-			viewNewChapter();
+			prevChapter();
 		}
 	};
-
+	
 	OnClickListener onClickChapterNext = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
 			Log.i(TAG, "onClickChapterPrev()");
-			myLibrarian.nextChapter();
-			viewNewChapter();
+			nextChapter();
 		}
 	};
+
+	public void prevChapter() {
+		myLibrarian.prevChapter();
+		viewNewChapter();
+	}
+
+	public void nextChapter() {
+		myLibrarian.nextChapter();
+		viewNewChapter();
+	}
 
 	OnClickListener onClickPageUp = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
 			Log.i(TAG, "onClickPageUp()");
-			ReaderWebView vWeb = (ReaderWebView)findViewById(R.id.readerView);
 			vWeb.pageUp(false);
 			viewChapterNav();
 		}
@@ -411,7 +432,6 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
 		@Override
 		public void onClick(View v) {
 			Log.i(TAG, "onClickPageUp()");
-			ReaderWebView vWeb = (ReaderWebView)findViewById(R.id.readerView);
 			vWeb.pageDown(false);
 			viewChapterNav();
 		}
@@ -465,5 +485,12 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
 		getApplicationContext(), Search.class);
 		startActivityForResult(intentSearch, R.id.action_bar_search);
 		return false;
+	}
+
+	public void updateActivityMode() {
+		getActionBar().setVisibility(vWeb.isStudyMode() ? View.VISIBLE : View.GONE);
+		if (!vWeb.isStudyMode() && btnChapterNav.getVisibility() == View.VISIBLE) {
+			btnChapterNav.setVisibility(View.GONE);
+		}
 	}
 }

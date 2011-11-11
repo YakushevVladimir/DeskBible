@@ -41,8 +41,13 @@
     	android:orderInCategory="3" 
     	android:icon="@drawable/ic_menu_preferences" />
     <item 
+    	android:title="@string/menu_help" 
+    	android:id="@+id/Help" 
+    	android:orderInCategory="4" 
+    	android:icon="@drawable/ic_menu_help" />
+    <item 
     	android:title="@string/about" 
     	android:id="@+id/About" 
-    	android:orderInCategory="4" 
+    	android:orderInCategory="5" 
     	android:icon="@drawable/ic_menu_info_details" />
 </menu>

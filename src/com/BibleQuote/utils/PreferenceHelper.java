@@ -62,6 +62,13 @@ public class PreferenceHelper {
 		preference.edit().putBoolean(key, v).commit();
 	}
 	
+	static public boolean isReadModeByDefault() {
+		if (preference == null) {
+			return false;
+		}
+		return preference.getBoolean("ReadModeByDefault", false);
+	}
+
 	static public String getTextSize() {
 		if (preference == null) {
 			return "12";

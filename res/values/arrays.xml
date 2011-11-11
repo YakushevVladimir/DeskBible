@@ -59,4 +59,14 @@
 		<item>White</item>
 	</string-array>
 	
+	<string-array name="reading_mode_txt">
+		<item>Study</item>
+	    <item>Read</item>
+	</string-array>
+	
+	<string-array name="reading_mode">
+		<item>1</item>
+		<item>2</item>
+	</string-array>
+	
 </resources>

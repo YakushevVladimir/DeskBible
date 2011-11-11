@@ -18,8 +18,8 @@
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	package="com.BibleQuote"
-	android:versionName="0.02.13" 
-	android:versionCode="21"
+	android:versionName="0.02.15" 
+	android:versionCode="23"
 	android:installLocation="auto">
 	
 	<uses-sdk android:targetSdkVersion="8" android:minSdkVersion="4" />
@@ -50,6 +50,7 @@
 		<activity android:name=".activity.Settings" android:label="@string/db_settings" />
 		<activity android:name=".activity.ParallelsActivity" android:label="@string/db_parallels" />
 		<activity android:name=".activity.AboutActivity" android:label="@string/about"  />
+		<activity android:name=".activity.HelpActivity" android:label="@string/db_help"  />
 		<activity android:name=".activity.Reader"
 			android:configChanges="keyboardHidden|orientation" />
 

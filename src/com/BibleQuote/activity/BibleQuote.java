@@ -50,7 +50,6 @@ public class BibleQuote extends GDActivity {
 					Message msg = new Message();
 					msg.what = START_HOME_ACTIVITY;
 					splashHandler.sendMessageDelayed(msg, 100);
-					stop();
 				}
 			}
 		};
@@ -73,59 +72,4 @@ public class BibleQuote extends GDActivity {
 			super.handleMessage(msg);
 		}
 	};
-
-/*	
-	@Override
-	public boolean onHandleActionBarItemClick(ActionBarItem item, int position) {
-		switch (item.getItemId()) {
-		case R.id.action_bar_view_info:
-			//startActivity(new Intent(this, AboutActivity.class));
-			LayoutInflater inflater = getLayoutInflater();
-			View about = inflater.inflate(R.layout.about,
-					(ViewGroup) findViewById(R.id.about_dialog));
-
-			Builder builder = new AlertDialog.Builder(this);
-			builder.setTitle(R.string.about);
-			builder.setIcon(R.drawable.icon);
-			builder.setView(about);
-			builder.setPositiveButton("OK",
-					new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-						}
-					});
-			builder.show();
-			break;
-		default:
-			return super.onHandleActionBarItemClick(item, position);
-		}
-
-		return true;
-	}
-
-	public void dbOnBibleOnClick(View v) {
-		startActivity(new Intent(this, Reader.class));
-	}
-
-	public void dbOnLibraryOnClick(View v) {
-        Intent intent = new Intent(jBible.this, Books.class);
-        intent.putExtra(Books.GD_ACTION_BAR_TITLE, R.string.db_libraries);
-        startActivity(intent);
-	}
-
-	public void dbOnBookmarksOnClick(View v) {
-		startActivity(new Intent(this, Bookmarks.class));
-	}
-
-	public void dbOnNotesOnClick(View v) {
-	}
-
-	public void dbOnPlansOnClick(View v) {
-	}
-
-	public void dbOnSettingsOnClick(View v) {
-		startActivity(new Intent(this, Settings.class));
-	}
-*/
-
 }

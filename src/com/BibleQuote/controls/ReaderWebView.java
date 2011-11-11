@@ -18,7 +18,6 @@ package com.BibleQuote.controls;
 import java.util.TreeSet;
 
 import com.BibleQuote.activity.Reader;
-import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.PreferenceHelper;
 
 import android.content.Context;
@@ -27,10 +26,10 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Toast;
 import android.os.Build;
 import android.os.Handler;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
@@ -42,6 +41,7 @@ public class ReaderWebView extends WebView
 	private GestureDetector mGestureScanner;
 	private JavaScriptInterface jsInterface;
 	protected TreeSet<Integer> selectedVerse = new TreeSet<Integer>();
+	private boolean isStudyMode = false;
 
 	public boolean mPageLoaded = false;
 
@@ -64,7 +64,7 @@ public class ReaderWebView extends WebView
 		
 		setVerticalScrollbarOverlay(true);
 
-		mGestureScanner = new GestureDetector(this);
+		mGestureScanner = new GestureDetector(mContext, this);
 		mGestureScanner.setIsLongpressEnabled(true);
 		mGestureScanner.setOnDoubleTapListener(this);
 	}
@@ -94,6 +94,14 @@ public class ReaderWebView extends WebView
 		jsInterface.clearSelectedVerse();
 	}
 
+	public void setReadingMode(boolean readModeByDefault) {
+		isStudyMode = !readModeByDefault;
+	}
+	
+	public boolean isStudyMode() {
+		return isStudyMode;
+	}
+
 	public boolean isScrollToBottom() {
 	    int scrollY = getScrollY();
 	    int scrollExtent = computeVerticalScrollExtent();
@@ -117,6 +125,7 @@ public class ReaderWebView extends WebView
 	
 	public void clearSelectedVerse() {
 		jsInterface.clearSelectedVerse();
+		((Reader) getContext()).setTextActionVisibility(false);
 	}
 	
 	private String getStyle(Boolean nightMode) {
@@ -139,7 +148,6 @@ public class ReaderWebView extends WebView
 		style.append("<style type=\"text/css\">\r\n");
 		style.append("body {\r\n");
 		style.append("padding-bottom: 50px;\r\n");
-		//style.append("text-align: justify;\r\n");
 		style.append("color: " + textColor + ";\r\n");
 		style.append("font-size: " + textSize + "pt;\r\n");
 		style.append("background: " + backColor + ";\r\n");
@@ -171,6 +179,9 @@ public class ReaderWebView extends WebView
 	}
 
 	private void viewChapterNav() {
+		if (!isStudyMode) {
+			return;
+		}
 		Handler mHandler = getHandler();
 		mHandler.post(new Runnable() {
 			@Override
@@ -192,65 +203,95 @@ public class ReaderWebView extends WebView
 
 	@Override
 	public boolean onSingleTapUp(MotionEvent event) {
-		int x = (int) event.getX();
-		int y = (int) event.getY(); 
-		if (Build.VERSION.SDK_INT < 8) {
-			y += getScrollY();
-		}
-		float density = getContext().getResources().getDisplayMetrics().density;
-		x = (int) (x / density);
-		y = (int) (y / density);
-
-		loadUrl("javascript:handleClick(" + x + ", " + y + ");");
-
+		Log.i(TAG, "onSingleTapUp()");
 		return false;
 	}
 
 	@Override
+	public boolean onSingleTapConfirmed(MotionEvent event) {
+		Log.i(TAG, "onSingleTapConfirmed()");
+		int x = (int) event.getX();
+		int y = (int) event.getY();
+		if (isStudyMode) {
+			if (Build.VERSION.SDK_INT < 8) {
+				y += getScrollY();
+			}
+			float density = getContext().getResources().getDisplayMetrics().density;
+			x = (int) (x / density);
+			y = (int) (y / density);
+	
+			loadUrl("javascript:handleClick(" + x + ", " + y + ");");
+	
+			viewChapterNav();
+		} else {
+			int width = this.getWidth();
+			int height = this.getHeight();
+			if (((float) y / height) <= 0.33) {
+				pageUp(false);
+			} else if (((float) y / height) > 0.67) {
+				pageDown(false);
+			} else if (((float) x / width) <= 0.33) {
+				((Reader)getContext()).prevChapter();
+			} else if (((float) x / width) > 0.67) {
+				((Reader)getContext()).nextChapter();
+			}
+		}
+		return false;
+	}
+	
+	@Override
 	public boolean onDown(MotionEvent event) {
-		viewChapterNav();
+		Log.i(TAG, "onDown()");
 		return false;
 	}
 
 	@Override
 	public boolean onFling(MotionEvent e1, MotionEvent e2, 
 			float velocityX, float velocityY) {
+		Log.i(TAG, "onFling()");
 		viewChapterNav();
 		return false;
 	}
 
 	@Override
 	public void onLongPress(MotionEvent event) {
-		viewChapterNav();
+		Log.i(TAG, "onLongPress()");
+		if (isStudyMode) {
+			viewChapterNav();
+		} else {
+			((Reader)getContext()).onChooseChapterClick();
+		}
 	}
 
 	@Override
 	public boolean onScroll(MotionEvent e1, MotionEvent e2, 
 			float distanceX, float distanceY) {
+		Log.i(TAG, "onScroll()");
 		return false;
 	}
 
 	@Override
 	public void onShowPress(MotionEvent event) {
+		Log.i(TAG, "onShowPress()");
 	}
 
 	@Override
 	public boolean onDoubleTap(MotionEvent event) {
-		viewChapterNav();
+		Log.i(TAG, "onDoubleTap()");
+		isStudyMode = !isStudyMode;
+		((Reader)getContext()).updateActivityMode();
+		if (!isStudyMode) {
+			clearSelectedVerse();
+		}
 		return false;
 	}
 
 	@Override
 	public boolean onDoubleTapEvent(MotionEvent event) {
+		Log.i(TAG, "onDoubleTapEvent()");
 		return false;
 	}
 
-	@Override
-	public boolean onSingleTapConfirmed(MotionEvent event) {
-		return false;
-	}
-
-	
 	final class chromeClient extends WebChromeClient {
 		chromeClient() {}
 
@@ -276,9 +317,10 @@ public class ReaderWebView extends WebView
 		}
 
 		public void onClickVerse(String id) {
-			if (!id.contains("verse")) {
+			if (!isStudyMode || !id.contains("verse")) {
 				return;
 			}
+			
 			Integer verse = Integer.parseInt(id.split("_")[1]);
 			if (selectedVerse.contains(verse)) {
 				selectedVerse.remove(verse);
@@ -298,13 +340,7 @@ public class ReaderWebView extends WebView
 		}
 		
 		public void alert(final String message) {
-			Handler mHandler = getHandler();
-			mHandler.post(new Runnable() {
-				@Override
-				public void run() {
-					Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-				}
-			});
+			Log.i(TAG, "JavaScriptInterface.alert()");
 		}
 	}
 }

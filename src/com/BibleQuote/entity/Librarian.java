@@ -331,6 +331,13 @@ public class Librarian {
 		Integer chapterQty = currBook.getChapterQty();
 		if (chapterQty > (currChapter + (currModule.containsChapterZero() ? 1 : 0))) {
 			currChapter++;
+		} else {
+			ArrayList<String> books = currModule.getBooksIDs();
+			int pos = books.indexOf(currBookID);
+			if (++pos < books.size()) {
+				currBookID = books.get(pos);
+				currChapter = currModule.containsChapterZero() ? 0 : 1;
+			}
 		}
 	}
 
@@ -342,6 +349,18 @@ public class Librarian {
 		
 		if (currChapter != (currModule.containsChapterZero() ? 0 : 1)) {
 			currChapter--;
+		} else {
+			ArrayList<String> books = currModule.getBooksIDs();
+			int pos = books.indexOf(currBookID);
+			if (pos > 0) {
+				currBookID = books.get(--pos);
+				Book currBook = currModule.getBook(currBookID);
+				if (currBook == null) {
+					return;
+				}
+				Integer chapterQty = currBook.getChapterQty();
+				currChapter = chapterQty - (currModule.containsChapterZero() ? 1 : 0);
+			}
 		}
 	}
 	

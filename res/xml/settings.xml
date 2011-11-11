@@ -49,18 +49,18 @@
 			android:persistent="true" 
 			android:summary="@string/current_text_size" />
 
-		<!--  
 		<CheckBoxPreference 
-			android:key="SplitVerse"
-			android:title="@string/split_verse" 
-			android:summaryOn="@string/split_verse_summary_on"
-			android:summaryOff="@string/split_verse_summary_off" />
-		-->
-			
+			android:title="@string/read_mode_by_default" 
+			android:key="ReadModeByDefault" 
+			android:persistent="true"
+			android:defaultValue="false" 
+			android:summary="@string/read_mode_by_default_summary"/>
+
 		<CheckBoxPreference 
 			android:title="@string/disable_auto_screen_rotation" 
 			android:key="DisableAutoScreenRotation" 
 			android:defaultValue="false" 
+			android:persistent="true"
 			android:summary="@string/may_need_to_restart"/>
 
 	</PreferenceCategory>
