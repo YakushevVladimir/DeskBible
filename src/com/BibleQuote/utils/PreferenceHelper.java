@@ -33,9 +33,9 @@ public class PreferenceHelper {
 	static public String restoreStateString(String key) {
 		Log.i(TAG, "restoreStateString(" + key + ")");
 		if (preference == null) {
-			return null;
+			return "";
 		}
-		return preference.getString(key, null);
+		return preference.getString(key, "");
 	}
 
 	static public void saveStateString(String key, String v) {
@@ -78,16 +78,15 @@ public class PreferenceHelper {
 
 	static public String getTextColor() {
 		if (preference == null) {
-			return "#ff000000";
+			return "#000000";
 		}
-		return preference.getString("TextColor", "#ff000000");
+		return preference.getString("TextColor", "#000000");
 	}
 
 	static public String getTextBackground() {
 		if (preference == null) {
-			return "#ffffffff";
+			return "#ffffff";
 		}
-		return preference.getString("TextBG", "#ffffffff");
+		return preference.getString("TextBG", "#ffffff");
 	}
-
 }

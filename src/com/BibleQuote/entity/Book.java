@@ -25,7 +25,6 @@ public class Book {
 	private String OSIS_ID;
 	private String pathName;
 	private Integer chapterQty = 0;
-	private String encoding = "UTF-8";
 	
 	public Book(String name, String pathName, String shortNames,  int chapterQty){
 		this.name = name;
@@ -88,20 +87,5 @@ public class Book {
 	 */
 	public int getChapterQty() {
 		return this.chapterQty;
-	}
-	
-	/**
-	 * Устанавливает кодировку в которой необходимо читать файл содержащий книгу
-	 * @param encoding - Кодировка книги
-	 */
-	public void setEncoding(String encoding) {
-		this.encoding = encoding;
-	}
-
-	/**
-	 * @return Возвращает кодировку файла с данной книгой
-	 */
-	public String getEncoding() {
-		return encoding;
 	}
 }

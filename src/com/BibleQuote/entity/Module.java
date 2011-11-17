@@ -47,6 +47,7 @@ public class Module {
 	private boolean ChapterZero = false;
 	private boolean containsStrong = false;
 	private boolean isBible = false;
+	private String defaultEncoding = "utf-8";
 	// private boolean containsOT = false;
 	// private boolean containsNT = false;
 	// private boolean containsAP = false;
@@ -64,9 +65,9 @@ public class Module {
 			return;
 		}
 
-		String filesEncoding = FileUtilities.getModuleEncoding(iniFile);
+		defaultEncoding = FileUtilities.getModuleEncoding(iniFile);
 
-		BufferedReader F = FileUtilities.OpenFile(iniFile, filesEncoding);
+		BufferedReader F = FileUtilities.OpenFile(iniFile, defaultEncoding);
 		if (F == null) {
 			return;
 		}
@@ -155,7 +156,6 @@ public class Module {
 			Book book = new Book(fullNames.get(i), pathNames.get(i), (shortNames
 							.size() > i ? shortNames.get(i) : ""), chapterQty
 							.get(i));
-			book.setEncoding(filesEncoding);
 			Books.put(book.getBookID(), book);
 		}
 		if (Books.size() == 0) {
@@ -254,7 +254,7 @@ public class Module {
 		ArrayList<String> verses = new ArrayList<String>();
 
 		String chapterFilePath = modulePath + "/" + book.getPath();
-		BufferedReader bReader = FileUtilities.OpenFile(chapterFilePath, book.getEncoding());
+		BufferedReader bReader = FileUtilities.OpenFile(chapterFilePath, defaultEncoding);
 		if (bReader == null) {
 			return verses;
 		}
@@ -265,13 +265,6 @@ public class Module {
 			int currentChapter = this.ChapterZero ? 0 : 1;
 			boolean chapterFind = false;
 			while ((str = bReader.readLine()) != null) {
-				if (str.matches("<meta http-equiv=\"Content-Type\" content=\"text/html; Charset=.+?\">")) {
-					String encodingCharset = str
-							.replaceAll(
-									"<meta http-equiv=\"Content-Type\" content=\"text/html; Charset=(.+?)\">",
-									"$1");
-					book.setEncoding(encodingCharset);
-				}
 				if (str.toLowerCase().contains(ChapterSign)) {
 					if (chapterFind) {
 						// Тег начала главы может быть не вначале строки.
@@ -316,7 +309,7 @@ public class Module {
 	private void searchInBook(String bookID, String regQuery) {
 		Book book = Books.get(bookID);
 		String chapterFilePath = modulePath + "/" + book.getPath();
-		BufferedReader bReader = FileUtilities.OpenFile(chapterFilePath, book.getEncoding());
+		BufferedReader bReader = FileUtilities.OpenFile(chapterFilePath, defaultEncoding);
 		if (bReader == null) {
 			return;
 		}
@@ -384,10 +377,6 @@ public class Module {
 			}
 		}
 		return SearchRes;
-	}
-
-	public String loadSearchRes(int pos) {
-		return SearchRes.get(pos);
 	}
 
 	public String toString() {

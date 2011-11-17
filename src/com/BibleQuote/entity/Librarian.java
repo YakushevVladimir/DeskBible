@@ -22,12 +22,11 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 import com.BibleQuote.exceptions.CreateModuleErrorException;
 import com.BibleQuote.utils.FileUtilities;
 import com.BibleQuote.utils.Log;
+import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.StringProc;
 
 public class Librarian {
@@ -60,7 +59,6 @@ public class Librarian {
 	private Integer currChapter = 1;
 	
 	ArrayList<String> verses = new ArrayList<String>();
-	SharedPreferences Settings;
 	Context mContext;
 	
 	private static final Byte delimeter1 = (byte) 0xFE;
@@ -74,8 +72,6 @@ public class Librarian {
 		Log.i(TAG, "Инициализация библиотеки");
 		ArrayList<String> bqIniFiles = FileUtilities.SearchModules();
 		
-		Settings = PreferenceManager.getDefaultSharedPreferences(context);
-
 		// Обрабатываем найденные пути с модулями
 		for (String iniFile : bqIniFiles) {
 			try {
@@ -83,7 +79,10 @@ public class Librarian {
 				modules.put(module.getShortName(), module);
 				if (currModuleID.equals("---")) {
 					currModuleID = module.getShortName();
-					currBookID = this.getFirstModuleBookID(currModuleID);
+					ArrayList<ItemList> books = module.getBooksList();
+					if (books.size() > 0) {
+						currBookID = books.get(0).get("ID");
+					}
 					currChapter = module.containsChapterZero() ? 0 : 1;
 				}
 			} catch (CreateModuleErrorException e) {
@@ -91,6 +90,10 @@ public class Librarian {
 			}
 		}
 	}
+	
+	
+	///////////////////////////////////////////////////////////////////////////
+	// NAVIGATION
 	
 	/**
 	 * Возвращает список доступных модулей с Библиями, апокрифами, книгами
@@ -126,19 +129,6 @@ public class Librarian {
 		return this.getModuleBooksList(currModuleID);
 	}
 
-	public ArrayList<String> getModuleBooks(String moduleID) {
-		// Получим модуль по его ID
-		Module currModule = getModule(moduleID);
-		if (currModule == null) {
-			return new ArrayList<String>();
-		}
-		return currModule.getBooks();
-	}
-
-	public ArrayList<String> getModuleBooks() {
-		return this.getModuleBooks(currModuleID);
-	}
-
 	/**
 	 * Возвращает список глав книги
 	 */
@@ -151,19 +141,6 @@ public class Librarian {
 		return currModule.getChapters(bookID);
 	}
 
-	public String getCurrentLink(){
-		return getCurrentLink(true);
-	}
-	
-	public String getCurrentLink(boolean includeModuleID){
-		return (includeModuleID ? currModuleID + ": " : "") 
-			+ this.getBookShortName(currModuleID, currBookID) + " " + currChapter;
-	}
-	
-	public String getCurrentOSISLink(){
-		return currModuleID + "." + currBookID + "." + currChapter;
-	}
-	
 	private Module getModule(String moduleID){
 		if (modules.containsKey(moduleID)) {
 			return modules.get(moduleID);
@@ -172,54 +149,6 @@ public class Librarian {
 		}
 	}
 	
-	public String getChapterHTMLView(String moduleID, String bookID, Integer chapter) {
-		Log.i(TAG, "getChapterHTMLView(" + moduleID + ", " + bookID + ", " + chapter  + ")");
-		// Получим модуль по его ID
-		Module currModule = getModule(moduleID);
-		if (currModule == null) {
-			return "";
-		}
-		
-		// Получим книгу модуля по её ID
-		Book currBook = currModule.getBook(bookID);
-		if (currBook == null) {
-			return "";
-		}
-		
-		verses = currModule.getChapterVerses(currBook, chapter);
-		StringBuilder chapterHTML = new StringBuilder();
-		for (int verse = 1; verse <= verses.size(); verse++) {
-			String verseText = verses.get(verse - 1);
-
-			if (currModule.isContainsStrong()) {
-				// убираем номера Стронга
-				verseText = verseText.replaceAll("\\s(\\d)+", "");
-			}
-			
-			verseText = StringProc.stripTags(verseText, currModule.getHtmlFilter(), false);
-			verseText = verseText.replaceAll("<a\\s+?href=\"verse\\s\\d+?\">(\\d+?)</a>", "<b>$1</b>");
-			if (currModule.isBible()) {
-				verseText = verseText
-						.replaceAll("^(<[^/]+?>)*?(\\d+)(</(.)+?>){0,1}?\\s+",
-								"$1<b>$2</b>$3 ").replaceAll(
-								"null", "");
-			}
-
-			chapterHTML.append(
-				"<div id=\"verse_" + verse + "\" class=\"verse\">"
-				+ verseText.replaceAll("<(/)*div(.*?)>", "<$1p$2>")
-				+ "</div>"
-				+ (currModule.isBible() && splitVerse() ? "<br/>" : "")
-				+ "\r\n");
-		}
-
-		return chapterHTML.toString();
-	}
-	
-	private Boolean splitVerse() {
-		return Settings.getBoolean("SplitVerse", false);
-	}
-
 	public String OpenLink(String moduleID, String bookID, String chapter){
 		
 		Integer chapterInt = 1;
@@ -250,18 +179,6 @@ public class Librarian {
 		}
 	}
 	
-	public String getFirstModuleBookID(String moduleID) {
-		String bookID = "";
-		Module currModule = getModule(moduleID);
-		if (currModule != null) {
-			ArrayList<ItemList> books = currModule.getBooksList();
-			if (books.size() > 0) {
-				bookID = books.get(0).get("ID");
-			}
-		}
-		return bookID;
-	}
-
 	public String getFirstChapter(String moduleID, String bookID) {
 		// Получим модуль по его ID
 		Module currModule = getModule(moduleID);
@@ -269,51 +186,6 @@ public class Librarian {
 			return "-";
 		} else {
 			return currModule.containsChapterZero() ? "0" : "1";
-		}
-	}
-	
-	public String getModuleFullName(String moduleID){
-		Module currModule = getModule(currModuleID);
-		if (currModule == null) {
-			return "";
-		}
-		return currModule.getName();
-	}
-
-	public String getBookFullName(String moduleID, String bookID){
-		// Получим модуль по его ID
-		Module currModule = getModule(moduleID);
-		if (currModule == null) {
-			return "---";
-		} else {
-			Book currBook = currModule.getBook(bookID);
-			if (currBook == null) {
-				return "---";
-			}
-			return currBook.getName();
-		}
-	}
-
-	public String getBookShortName(String moduleID, String bookID){
-		// Получим модуль по его ID
-		Module currModule = getModule(moduleID);
-		if (currModule == null) {
-			return "---";
-		} else {
-			Book currBook = currModule.getBook(bookID);
-			if (currBook == null) {
-				return "---";
-			}
-			return currBook.getShortName();
-		}
-	}
-
-	public Boolean isBible() {
-		Module currModule = getModule(currModuleID);
-		if (currModule == null) {
-			return false;
-		} else {
-			return currModule.isBible();
 		}
 	}
 	
@@ -364,23 +236,92 @@ public class Librarian {
 		}
 	}
 	
+	
+	///////////////////////////////////////////////////////////////////////////
+	// GET CONTENT
+	
+	public String getChapterHTMLView(String moduleID, String bookID, Integer chapter) {
+		Log.i(TAG, "getChapterHTMLView(" + moduleID + ", " + bookID + ", " + chapter  + ")");
+		// Получим модуль по его ID
+		Module currModule = getModule(moduleID);
+		if (currModule == null) {
+			return "";
+		}
+		
+		// Получим книгу модуля по её ID
+		Book currBook = currModule.getBook(bookID);
+		if (currBook == null) {
+			return "";
+		}
+		
+		verses = currModule.getChapterVerses(currBook, chapter);
+		StringBuilder chapterHTML = new StringBuilder();
+		for (int verse = 1; verse <= verses.size(); verse++) {
+			String verseText = verses.get(verse - 1);
+
+			if (currModule.isContainsStrong()) {
+				// убираем номера Стронга
+				verseText = verseText.replaceAll("\\s(\\d)+", "");
+			}
+			
+			verseText = StringProc.stripTags(verseText, currModule.getHtmlFilter(), false);
+			verseText = verseText.replaceAll("<a\\s+?href=\"verse\\s\\d+?\">(\\d+?)</a>", "<b>$1</b>");
+			if (currModule.isBible()) {
+				verseText = verseText
+						.replaceAll("^(<[^/]+?>)*?(\\d+)(</(.)+?>){0,1}?\\s+",
+								"$1<b>$2</b>$3 ").replaceAll(
+								"null", "");
+			}
+
+			chapterHTML.append(
+				"<div id=\"verse_" + verse + "\" class=\"verse\">"
+				+ verseText.replaceAll("<(/)*div(.*?)>", "<$1p$2>")
+				+ "</div>"
+				+ "\r\n");
+		}
+
+		return chapterHTML.toString();
+	}
+	
+	public String getVerseText(Integer verse) {
+		if (verses.size() < --verse) {
+			return "";
+		};
+		return StringProc.stripTags(this.verses.get(verse), "", true)
+			.replaceAll("^\\d+\\s+", "")
+			.replaceAll("\\s\\d+", "");
+	}
+	
+	public Boolean isBible() {
+		Module currModule = getModule(currModuleID);
+		if (currModule == null) {
+			return false;
+		} else {
+			return currModule.isBible();
+		}
+	}
+	
+	
+	///////////////////////////////////////////////////////////////////////////
+	// BOOKMARKS
+	
 	public void addBookmark(Integer verse){
-		String fav = Settings.getString("Favorits", "");
+		String fav = PreferenceHelper.restoreStateString("Favorits");
 		fav = this.getCurrentLink() + ":" + verse + delimeter2
 			+ this.getCurrentOSISLink() + "." + verse + delimeter1
 			+ fav;
-		Settings.edit().putString("Favorits", fav).commit();
+		PreferenceHelper.saveStateString("Favorits", fav);
 	}
 	
 	public void delBookmark(String bookmark){
-		String fav = Settings.getString("Favorits", "");
+		String fav = PreferenceHelper.restoreStateString("Favorits");
 		fav = fav.replaceAll(bookmark + "(.)+?" + delimeter1, "");
-		Settings.edit().putString("Favorits", fav).commit();
+		PreferenceHelper.saveStateString("Favorits", fav);
 	}
 	
 	public ArrayList<String> getBookmarks() {
 		ArrayList<String> favorits = new ArrayList<String>();
-		String fav = Settings.getString("Favorits", "");
+		String fav = PreferenceHelper.restoreStateString("Favorits");
 		if (!fav.equals("")) {
 			favorits.addAll(Arrays.asList(fav.split(delimeter1.toString())));
 		}
@@ -394,7 +335,7 @@ public class Librarian {
 	
 	public String getBookmark(String humanLink) {
 		ArrayList<String> favorits = new ArrayList<String>();
-		String fav = Settings.getString("Favorits", "");
+		String fav = PreferenceHelper.restoreStateString("Favorits");
 		if (!fav.equals("")) {
 			favorits.addAll(Arrays.asList(fav.split(delimeter1.toString())));
 			for (String favItem : favorits) {
@@ -408,7 +349,7 @@ public class Librarian {
 	}
 
 	public void sortBookmarks() {
-		String fav = Settings.getString("Favorits", "");
+		String fav = PreferenceHelper.restoreStateString("Favorits");
 		if (!fav.equals("")) {
 			TreeSet<String> favorits = new TreeSet<String>();
 			favorits.addAll(Arrays.asList(fav.split(delimeter1.toString())));
@@ -416,14 +357,18 @@ public class Librarian {
 			for (String favItem : favorits) {
 				newFav.append(favItem + delimeter1);
 			}
-			Settings.edit().putString("Favorits", newFav.toString()).commit();
+			PreferenceHelper.saveStateString("Favorits", newFav.toString());
 		}
 	}
 
 	public void delAllBookmarks() {
-		Settings.edit().putString("Favorits", "").commit();
+		PreferenceHelper.saveStateString("Favorits", "");
 	}
 
+	
+	///////////////////////////////////////////////////////////////////////////
+	// SEARCH
+	
 	public void setSearchResults(LinkedHashMap<String, String> searchResults) {
 		this.searchResults = searchResults;
 	}
@@ -441,6 +386,55 @@ public class Librarian {
 		}
 	}
 
+	
+	///////////////////////////////////////////////////////////////////////////
+	// GET LINK OF STRING
+		
+	public String getModuleFullName(String moduleID){
+		Module currModule = getModule(currModuleID);
+		if (currModule == null) {
+			return "";
+		}
+		return currModule.getName();
+	}
+
+	public String getBookFullName(String moduleID, String bookID){
+		// Получим модуль по его ID
+		Module currModule = getModule(moduleID);
+		if (currModule == null) {
+			return "---";
+		} else {
+			Book currBook = currModule.getBook(bookID);
+			if (currBook == null) {
+				return "---";
+			}
+			return currBook.getName();
+		}
+	}
+
+	public String getBookShortName(String moduleID, String bookID){
+		// Получим модуль по его ID
+		Module currModule = getModule(moduleID);
+		if (currModule == null) {
+			return "---";
+		} else {
+			Book currBook = currModule.getBook(bookID);
+			if (currBook == null) {
+				return "---";
+			}
+			return currBook.getShortName();
+		}
+	}
+
+	public String getCurrentLink(){
+		return getCurrentLink(true);
+	}
+	
+	public String getCurrentLink(boolean includeModuleID){
+		return (includeModuleID ? currModuleID + ": " : "") 
+			+ this.getBookShortName(currModuleID, currBookID) + " " + currChapter;
+	}
+	
 	public CharSequence getModuleName() {
 		Module currModule = getModule(currModuleID);
 		if (currModule == null) {
@@ -475,6 +469,10 @@ public class Librarian {
 		return this.getHumanBookLink(currModuleID, currBookID, currChapter);
 	}
 	
+	public String getCurrentOSISLink(){
+		return currModuleID + "." + currBookID + "." + currChapter;
+	}
+	
 	public String getOSIStoHuman(String linkOSIS) {
 		String[] param = linkOSIS.split("\\.");
 		if (param.length < 3) {
@@ -500,6 +498,7 @@ public class Librarian {
 		
 		return humanLink;
 	}
+	
 	public String getHumanToOSIS(String humanLink) {
 		String linkOSIS = "";
 		
@@ -540,14 +539,9 @@ public class Librarian {
 		}
 	}
 
-	public String getVerseText(Integer verse) {
-		if (verses.size() < --verse) {
-			return "";
-		};
-		return StringProc.stripTags(this.verses.get(verse), "", true)
-			.replaceAll("^\\d+\\s+", "")
-			.replaceAll("\\s\\d+", "");
-	}
+
+	///////////////////////////////////////////////////////////////////////////
+	// SHARE
 
 	public String getShareText(TreeSet<Integer> selectVerses) {
 		StringBuilder verseLink = new StringBuilder();
