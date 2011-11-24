@@ -72,4 +72,7 @@
     <string name="menu_search">Sök</string>
     <string name="db_search">Sök</string>
     <string name="db_bibles">Bibeln</string>
+    <string name="copy">Kopiera</string>
+    <string name="menu_help">Hjälp</string>
+    <string name="db_help">Hjälp</string>
 </resources>

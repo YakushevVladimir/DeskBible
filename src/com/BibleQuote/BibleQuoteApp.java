@@ -39,6 +39,7 @@ public class BibleQuoteApp extends GDApplication {
 
 	public Librarian getLibrarian() {
 		if (myLibararian == null) {
+			PreferenceHelper.Init(this);
 			myLibararian = new Librarian(this);
 		}
 		return myLibararian;

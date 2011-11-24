@@ -4,8 +4,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import com.BibleQuote.entity.ItemList;
-import com.BibleQuote.entity.Module;
+import com.BibleQuote.entity.Book;
+import com.BibleQuote.entity.modules.IModule;
+import com.BibleQuote.entity.modules.bq.FileModule;
 import com.BibleQuote.exceptions.CreateModuleErrorException;
 
 import android.content.Context;
@@ -102,11 +103,11 @@ public class UpdateManager {
 					String verse = param[4];
 					
 				
-					Module mod = new Module(path);
-					ArrayList<ItemList> books = mod.getBooksList();
+					IModule mod = new FileModule(path);
+					ArrayList<Book> books = mod.getBooks();
 					
 					String moduleID = mod.getShortName();
-					String bookID = books.get(bookNum).get("ID");
+					String bookID = books.get(bookNum).getBookID();
 					String linkOSIS = moduleID + "." + bookID + "." + (++chapter) + "." + verse;
 					
 					Log.i(TAG, "newItem = " + humanLink + " : " + linkOSIS);

@@ -30,7 +30,7 @@
     <string name="db_help">Help</string>
     <!-- About -->
     <string name="about">About</string>
-    <string name="app_name_about">BibleQuote 0.02.15</string>
+    <string name="app_name_about">BibleQuote 0.03.02</string>
     <string name="app_license">Apache License Version 2.0</string>
     <string name="app_about_text">Developers:\nVladimir Yakushev: ru.phoenix@gmail.com</string>
     <string name="app_about_www">www.scripturesoftware.org</string>

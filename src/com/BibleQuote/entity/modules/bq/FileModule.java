@@ -13,65 +13,49 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.BibleQuote.entity;
+package com.BibleQuote.entity.modules.bq;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 
+import com.BibleQuote.entity.Book;
 import com.BibleQuote.exceptions.CreateModuleErrorException;
 import com.BibleQuote.utils.FileUtilities;
 import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.StringProc;
 
 /**
- * @author Владимир
+ * @author Yakushev Vladimir
  * 
  */
-public class Module {
+public class FileModule extends Module {
 
-	private final String TAG = "Module";
-	
+	private final String TAG = "FileModule";
 	private String modulePath = "";
-	//private String filesEncoding = "cp1251";
 
-	private String Name = "";
-	private String ShortName = "";
-	private String ChapterSign = "";
-	private String VerseSign = "";
-	// private String Copyright = "";
-	private String XFilter = "";
-	// private String Categories = "";
-	private boolean ChapterZero = false;
-	private boolean containsStrong = false;
-	private boolean isBible = false;
-	private String defaultEncoding = "utf-8";
-	// private boolean containsOT = false;
-	// private boolean containsNT = false;
-	// private boolean containsAP = false;
-
-	private LinkedHashMap<String, Book> Books = new LinkedHashMap<String, Book>();
-	private LinkedHashMap<String, String> SearchRes = new LinkedHashMap<String, String>();
-
-	public Module(String pathINIFile) throws CreateModuleErrorException {
-		Log.i(TAG, "Module(" + pathINIFile + ")");
+	public FileModule(String pathINIFile) throws CreateModuleErrorException {
+		Log.i(TAG, "FileModule(" + pathINIFile + ")");
 
 		modulePath = pathINIFile.substring(0, pathINIFile.lastIndexOf("/"));
+		String filePath = pathINIFile.substring(pathINIFile.lastIndexOf("/") + 1);
+		
+		defaultEncoding = getEncoding(modulePath, filePath);
 
-		File iniFile = new File(pathINIFile);
-		if (!iniFile.exists()) {
-			return;
+		BufferedReader bReader = getReader(modulePath, filePath);
+		if (bReader == null) {
+			throw new CreateModuleErrorException();
 		}
 
-		defaultEncoding = FileUtilities.getModuleEncoding(iniFile);
-
-		BufferedReader F = FileUtilities.OpenFile(iniFile, defaultEncoding);
-		if (F == null) {
-			return;
-		}
-
+		fillParameters(bReader);
+	}
+	
+	/**
+	 * @param bReader
+	 * @throws CreateModuleErrorException
+	 */
+	protected void fillParameters(BufferedReader bReader) throws CreateModuleErrorException {
 		String str, HTMLFilter = "", key, value;
 		ArrayList<String> fullNames = new ArrayList<String>();
 		ArrayList<String> pathNames = new ArrayList<String>();
@@ -80,7 +64,7 @@ public class Module {
 
 		int pos;
 		try {
-			while ((str = F.readLine()) != null) {
+			while ((str = bReader.readLine()) != null) {
 				pos = str.indexOf("//");
 				if (pos >= 0)
 					str = str.substring(0, pos);
@@ -106,23 +90,10 @@ public class Module {
 							: false;
 				} else if (key.equals("versesign")) {
 					VerseSign = value.toLowerCase();
-					// } else if (key.equals("copyright")) {
-					// Copyright = value;
 				} else if (key.equals("htmlfilter")) {
 					HTMLFilter = value;
-					// } else if (key.equals("categories")) {
-					// Categories = value;
 				} else if (key.equals("bible")) {
 					isBible = value.toLowerCase().contains("y") ? true : false;
-					// } else if (key.equals("oldtestament")) {
-					// containsOT = value.toLowerCase().contains("y") ? true :
-					// false;
-					// } else if (key.equals("tewtestament")) {
-					// containsNT = value.toLowerCase().contains("y") ? true :
-					// false;
-					// } else if (key.equals("apocrypha")) {
-					// containsAP = value.toLowerCase().contains("y") ? true :
-					// false;
 				} else if (key.equals("strongnumbers")) {
 					this.containsStrong = value.toLowerCase().contains("y") ? true
 							: false;
@@ -140,8 +111,9 @@ public class Module {
 					}
 				}
 			}
+			bReader.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.e(TAG, e);
 		}
 
 		for (int i = 0; i < fullNames.size(); i++) {
@@ -187,74 +159,12 @@ public class Module {
 			separator = "|";
 		}
 	}
-
-	public ArrayList<String> getBooks() {
-		ArrayList<String> bookNames = new ArrayList<String>();
-		for (Book currBook : Books.values()) {
-			bookNames.add(currBook.getName());
-		}
-		return bookNames;
-	}
-
-	public ArrayList<String> getBooksIDs() {
-		ArrayList<String> bookIDs = new ArrayList<String>();
-		for (String id : Books.keySet()) {
-			bookIDs.add(id);
-		}
-		return bookIDs;
-	}
-
-	public ArrayList<ItemList> getBooksList() {
-		ArrayList<ItemList> booksList = new ArrayList<ItemList>();
-		for (Book currBook : Books.values()) {
-			booksList.add(new ItemList(currBook.getBookID(), currBook
-					.getName()));
-		}
-		return booksList;
-	}
-
-	public String getShortName() {
-		return ShortName;
-	}
-
-	public String getName() {
-		return Name;
-	}
-
-	public String getBookName(String bookID) {
-		if (bookID == null) {
-			return "";
-		}
-		Book currBook = Books.get(bookID);
-		return currBook.getName();
-	}
-
-	public Book getBook(String bookID) {
-		if (bookID == null || !Books.containsKey(bookID)) {
-			return null;
-		}
-		return Books.get(bookID);
-	}
-
-	/**
-	 * Возвращает список глав книги
-	 */
-	public ArrayList<String> getChapters(String bookID) {
-		ArrayList<String> ret = new ArrayList<String>();
-		Book currBook = this.getBook(bookID);
-		if (currBook != null) {
-			for (int i = 0; i < currBook.getChapterQty(); i++) {
-				ret.add(String.valueOf(i + (this.ChapterZero ? 0 : 1)));
-			}
-		}
-		return ret;
-	}
-
+	
+	@Override
 	public ArrayList<String> getChapterVerses(Book book, Integer chapterToView) {
 		ArrayList<String> verses = new ArrayList<String>();
 
-		String chapterFilePath = modulePath + "/" + book.getPath();
-		BufferedReader bReader = FileUtilities.OpenFile(chapterFilePath, defaultEncoding);
+		BufferedReader bReader = this.getReader(modulePath, book.getPath());
 		if (bReader == null) {
 			return verses;
 		}
@@ -289,6 +199,7 @@ public class Module {
 				
 				lines.add(str);
 			}
+			bReader.close();
 		} catch (IOException e) {
 			return verses;
 		}
@@ -306,10 +217,11 @@ public class Module {
 		return verses;
 	}
 
-	private void searchInBook(String bookID, String regQuery) {
+	protected void searchInBook(String bookID, String regQuery) {
+		
 		Book book = Books.get(bookID);
-		String chapterFilePath = modulePath + "/" + book.getPath();
-		BufferedReader bReader = FileUtilities.OpenFile(chapterFilePath, defaultEncoding);
+
+		BufferedReader bReader = this.getReader(modulePath, book.getPath());
 		if (bReader == null) {
 			return;
 		}
@@ -334,71 +246,33 @@ public class Module {
 					SearchRes.put(linkOSIS, content);
 				}
 			}
-		} catch (IOException e) {
-			Log.e(TAG, e);
-		}
-
-		try {
 			bReader.close();
 		} catch (IOException e) {
 			Log.e(TAG, e);
 		}
 	}
 
-	public LinkedHashMap<String, String> search(String query, String fromBookID, String toBookID) {
-		LinkedHashMap<String, String> ret = new LinkedHashMap<String, String>();
-
-		if (query.trim().equals("")) {
-			// Передана пустая строка
-			return ret;
+	protected String getEncoding (String dir, String path) {
+		File file = new File(dir, path);
+		if (!file.exists()) {
+			return "utf-8";
 		}
-
-		// Подготовим регулярное выражение для поиска
-		String regQuery = "";
-		String[] words = query.toLowerCase().split("\\s+");
-		for (String currWord : words) {
-			regQuery += (regQuery.equals("") ? "" : "\\s(.)*?") + currWord;
-		}
-		regQuery = ".*?" + regQuery + ".*?"; // любые символы в начале и конце
-
-		SearchRes.clear();
-		
-		boolean startSearch = false;
-		for (String bookID : Books.keySet()) {
-			if (!startSearch) {
-				startSearch = bookID.equals(fromBookID);
-				if (!startSearch) {
-					continue;
-				}
-			} 
-			searchInBook(bookID, regQuery);
-			if (bookID.equals(toBookID)) {
-				break;
-			}
-		}
-		return SearchRes;
-	}
-
-	public String toString() {
-		return this.Name;
-	}
-
-	public boolean isBible() {
-		return this.isBible;
+		return FileUtilities.getModuleEncoding(file);
 	}
 
 	/**
-	 * @return Возвращает true, если модуль содержит номера Стронга, иначе false
+	 * @param bookID OSIS reference to book
 	 */
-	public boolean isContainsStrong() {
-		return containsStrong;
-	}
+	protected BufferedReader getReader(String dir, String path) {
+		File file = new File(dir, path);
+		if (!file.exists()) {
+			return null;
+		}
 
-	public String getHtmlFilter() {
-		return XFilter;
-	}
-	
-	public Boolean containsChapterZero(){
-		return this.ChapterZero;
+		BufferedReader bReader = FileUtilities.OpenFile(file, defaultEncoding);
+		if (bReader == null) {
+			return null;
+		}
+		return bReader;
 	}
 }

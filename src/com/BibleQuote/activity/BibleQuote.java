@@ -21,15 +21,12 @@ import com.BibleQuote.R;
 import com.BibleQuote.BibleQuoteApp;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.view.View;
 import android.view.WindowManager;
 
 public class BibleQuote extends GDActivity {
-
-    private static final int START_HOME_ACTIVITY = 10;
 
     @Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -40,20 +37,7 @@ public class BibleQuote extends GDActivity {
 
 		getActionBar().setVisibility(View.GONE);
 
-		Thread splashTread = new Thread() {
-			@Override
-			public void run() {
-				try {
-					BibleQuoteApp app = (BibleQuoteApp) getGDApplication();
-					app.Init();
-				} finally {
-					Message msg = new Message();
-					msg.what = START_HOME_ACTIVITY;
-					splashHandler.sendMessageDelayed(msg, 100);
-				}
-			}
-		};
-		splashTread.start();
+		new InitApplication().execute(true);
 	}
     
     public void startHomeActivity(){
@@ -61,15 +45,20 @@ public class BibleQuote extends GDActivity {
 		finish();;
     }
 
-	private Handler splashHandler = new Handler() {
+	private class InitApplication extends AsyncTask<Boolean, Void, Boolean> {
 		@Override
-		public void handleMessage(Message msg) {
-			switch (msg.what) {
-			case START_HOME_ACTIVITY:
-				startHomeActivity();
-				break;
-			}
-			super.handleMessage(msg);
+		protected void onPostExecute(Boolean result) {
+			startHomeActivity();
+			super.onPostExecute(result);
 		}
-	};
+
+		@Override
+		protected Boolean doInBackground(Boolean... params) {
+			BibleQuoteApp app = (BibleQuoteApp) getGDApplication();
+			app.Init();
+			return true;
+		}
+	}
+
+
 }

@@ -35,7 +35,7 @@
     <!-- Miscellaneous -->
     <string name="find">Finden</string>
     <string name="menu">Menü</string>
-    <string name="cancel">Abbrechen</string>
+    <string name="cancel">Kündigen</string>
     <string name="fav_question_add_favorities">Wollen Sie wirklich ein Lesezeichen hinzufügen?</string>
     <string name="fav_question_del_fav">Wollen Sie wirklich dieses Lesezeichen löschen?</string>
     <string name="select_module">Wählen Sie ein Modul</string>
@@ -72,4 +72,7 @@
     <string name="menu_search">Suche</string>
     <string name="db_search">Suche</string>
     <string name="db_bibles">Bibel</string>
+    <string name="copy">Kopie</string>
+    <string name="menu_help">Hilfe</string>
+    <string name="db_help">Hilfe</string>
 </resources>

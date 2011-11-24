@@ -22,7 +22,12 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import android.content.Context;
+import android.content.res.Resources.NotFoundException;
 
+import com.BibleQuote.R;
+import com.BibleQuote.entity.modules.IModule;
+import com.BibleQuote.entity.modules.bq.FileModule;
+import com.BibleQuote.entity.modules.bq.ZipFileModule;
 import com.BibleQuote.exceptions.CreateModuleErrorException;
 import com.BibleQuote.utils.FileUtilities;
 import com.BibleQuote.utils.Log;
@@ -36,7 +41,7 @@ public class Librarian {
 	/** 
 	 * Содержит список доступных модулей
 	 */
-	private TreeMap<String, Module> modules  = new TreeMap<String, Module>();
+	private TreeMap<String, IModule> modules  = new TreeMap<String, IModule>();
 	
 	/**
 	 * Содержит ссылки по результатм последнего поиска
@@ -46,12 +51,12 @@ public class Librarian {
 	/**
 	 * Текущий открытый модуль
 	 */
-	private String currModuleID = "---"; 
+	private IModule currModule; 
 	
 	/**
 	 * Текущая открытая книга активного модуля
 	 */
-	private String currBookID = "---"; 
+	private Book currBook; 
 	
 	/**
 	 * Текущая открытая глава активной книги
@@ -70,24 +75,34 @@ public class Librarian {
 	 */
 	public Librarian(Context context) {
 		Log.i(TAG, "Инициализация библиотеки");
-		ArrayList<String> bqIniFiles = FileUtilities.SearchModules();
 		
-		// Обрабатываем найденные пути с модулями
+		try {
+			ZipFileModule zipModule = new ZipFileModule(context, R.raw.rst_strong);
+			modules.put(zipModule.getShortName(), zipModule);
+		} catch (NotFoundException e) {
+			Log.e(TAG, e);
+		} catch (CreateModuleErrorException e) {
+			Log.e(TAG, e);
+		}
+		
+		ArrayList<String> bqIniFiles = FileUtilities.SearchModules();
 		for (String iniFile : bqIniFiles) {
 			try {
-				Module module = new Module(iniFile);
-				modules.put(module.getShortName(), module);
-				if (currModuleID.equals("---")) {
-					currModuleID = module.getShortName();
-					ArrayList<ItemList> books = module.getBooksList();
-					if (books.size() > 0) {
-						currBookID = books.get(0).get("ID");
-					}
-					currChapter = module.containsChapterZero() ? 0 : 1;
-				}
+				FileModule fileModule = new FileModule(iniFile);
+				modules.put(fileModule.getShortName(), fileModule);
 			} catch (CreateModuleErrorException e) {
+				Log.e(TAG, e);
 				continue;
 			}
+		}
+		
+		if (currModule == null && modules.size() > 0) {
+			currModule = modules.get(modules.firstKey());
+			ArrayList<Book> books = currModule.getBooks();
+			if (books.size() > 0) {
+				currBook = books.get(0);
+			}
+			currChapter = currModule.containsChapterZero() ? 0 : 1;
 		}
 	}
 	
@@ -101,14 +116,14 @@ public class Librarian {
 	 */
 	public ArrayList<ItemList> getModulesList() {
 		// Сначала отсортируем список по наименованием модулей
-		TreeMap<String, Module> tMap = new TreeMap<String, Module>();
-		for (Module currModule : modules.values()) {
+		TreeMap<String, IModule> tMap = new TreeMap<String, IModule>();
+		for (IModule currModule : modules.values()) {
 			tMap.put(currModule.getName(), currModule);
 		}
 		
 		// Теперь создадим результирующий список на основе отсортированных данных
 		ArrayList<ItemList> moduleList = new ArrayList<ItemList>();
-		for (Module currModule : tMap.values()) {
+		for (IModule currModule : tMap.values()) {
 			moduleList.add(new ItemList(currModule.getShortName(), currModule
 					.getName()));
 		}
@@ -118,15 +133,19 @@ public class Librarian {
 	
 	public ArrayList<ItemList> getModuleBooksList(String moduleID) {
 		// Получим модуль по его ID
-		Module currModule = getModule(moduleID);
+		currModule = modules.get(moduleID);
 		if (currModule == null) {
 			return new ArrayList<ItemList>();
 		}
-		return currModule.getBooksList();
+		ArrayList<ItemList> booksList = new ArrayList<ItemList>();
+		for (Book book : currModule.getBooks()) {
+			booksList.add(new ItemList(book.getBookID(), book.getName()));
+		}
+		return booksList;
 	}
 
 	public ArrayList<ItemList> getModuleBooksList() {
-		return this.getModuleBooksList(currModuleID);
+		return this.getModuleBooksList(currModule.getShortName());
 	}
 
 	/**
@@ -134,14 +153,16 @@ public class Librarian {
 	 */
 	public ArrayList<String> getChaptersList(String moduleID, String bookID) {
 		// Получим модуль по его ID
-		Module currModule = getModule(moduleID);
+		currModule = getModule(moduleID);
 		if (currModule == null) {
 			return new ArrayList<String>();
 		}
+		currBook = currModule.getBook(bookID);
+		
 		return currModule.getChapters(bookID);
 	}
 
-	private Module getModule(String moduleID){
+	private IModule getModule(String moduleID){
 		if (modules.containsKey(moduleID)) {
 			return modules.get(moduleID);
 		} else {
@@ -162,11 +183,11 @@ public class Librarian {
 	}
 	
 	public String OpenLink(String moduleID, String bookID, Integer chapter){
-		currModuleID = moduleID;
-		currBookID = bookID;
+		currModule  = modules.get(moduleID);
+		currBook    = currModule.getBook(bookID);
 		currChapter = chapter;
 
-		String chapterText = getChapterHTMLView(currModuleID, currBookID, currChapter);
+		String chapterText = getChapterHTMLView(moduleID, bookID, currChapter);
 		return chapterText;
 	}
 	
@@ -181,7 +202,7 @@ public class Librarian {
 	
 	public String getFirstChapter(String moduleID, String bookID) {
 		// Получим модуль по его ID
-		Module currModule = getModule(moduleID);
+		IModule currModule = getModule(moduleID);
 		if (currModule == null) {
 			return "-";
 		} else {
@@ -190,13 +211,7 @@ public class Librarian {
 	}
 	
 	public void nextChapter(){
-		Module currModule = getModule(currModuleID);
-		if (currModule == null) {
-			return;
-		}
-		
-		Book currBook = currModule.getBook(currBookID);
-		if (currBook == null) {
+		if (currModule == null || currBook == null) {
 			return;
 		}
 		
@@ -204,32 +219,27 @@ public class Librarian {
 		if (chapterQty > (currChapter + (currModule.containsChapterZero() ? 1 : 0))) {
 			currChapter++;
 		} else {
-			ArrayList<String> books = currModule.getBooksIDs();
-			int pos = books.indexOf(currBookID);
+			ArrayList<Book> books = currModule.getBooks();
+			int pos = books.indexOf(currBook);
 			if (++pos < books.size()) {
-				currBookID = books.get(pos);
+				currBook = books.get(pos);
 				currChapter = currModule.containsChapterZero() ? 0 : 1;
 			}
 		}
 	}
 
 	public void prevChapter(){
-		Module currModule = getModule(currModuleID);
-		if (currModule == null) {
+		if (currModule == null || currBook == null) {
 			return;
 		}
 		
 		if (currChapter != (currModule.containsChapterZero() ? 0 : 1)) {
 			currChapter--;
 		} else {
-			ArrayList<String> books = currModule.getBooksIDs();
-			int pos = books.indexOf(currBookID);
+			ArrayList<Book> books = currModule.getBooks();
+			int pos = books.indexOf(currBook);
 			if (pos > 0) {
-				currBookID = books.get(--pos);
-				Book currBook = currModule.getBook(currBookID);
-				if (currBook == null) {
-					return;
-				}
+				currBook = books.get(--pos);
 				Integer chapterQty = currBook.getChapterQty();
 				currChapter = chapterQty - (currModule.containsChapterZero() ? 1 : 0);
 			}
@@ -243,7 +253,7 @@ public class Librarian {
 	public String getChapterHTMLView(String moduleID, String bookID, Integer chapter) {
 		Log.i(TAG, "getChapterHTMLView(" + moduleID + ", " + bookID + ", " + chapter  + ")");
 		// Получим модуль по его ID
-		Module currModule = getModule(moduleID);
+		IModule currModule = getModule(moduleID);
 		if (currModule == null) {
 			return "";
 		}
@@ -293,7 +303,6 @@ public class Librarian {
 	}
 	
 	public Boolean isBible() {
-		Module currModule = getModule(currModuleID);
 		if (currModule == null) {
 			return false;
 		} else {
@@ -378,7 +387,6 @@ public class Librarian {
 	}
 	
 	public LinkedHashMap<String, String> search(String query, String fromBook, String toBook){
-		Module currModule = getModule(currModuleID);
 		if (currModule == null) {
 			return new LinkedHashMap<String, String>();
 		} else {
@@ -391,7 +399,6 @@ public class Librarian {
 	// GET LINK OF STRING
 		
 	public String getModuleFullName(String moduleID){
-		Module currModule = getModule(currModuleID);
 		if (currModule == null) {
 			return "";
 		}
@@ -400,29 +407,29 @@ public class Librarian {
 
 	public String getBookFullName(String moduleID, String bookID){
 		// Получим модуль по его ID
-		Module currModule = getModule(moduleID);
-		if (currModule == null) {
+		IModule module = getModule(moduleID);
+		if (module == null) {
 			return "---";
 		} else {
-			Book currBook = currModule.getBook(bookID);
-			if (currBook == null) {
+			Book book = module.getBook(bookID);
+			if (book == null) {
 				return "---";
 			}
-			return currBook.getName();
+			return book.getName();
 		}
 	}
 
 	public String getBookShortName(String moduleID, String bookID){
 		// Получим модуль по его ID
-		Module currModule = getModule(moduleID);
-		if (currModule == null) {
+		IModule module = getModule(moduleID);
+		if (module == null) {
 			return "---";
 		} else {
-			Book currBook = currModule.getBook(bookID);
-			if (currBook == null) {
+			Book book = module.getBook(bookID);
+			if (book == null) {
 				return "---";
 			}
-			return currBook.getShortName();
+			return book.getShortName();
 		}
 	}
 
@@ -431,33 +438,29 @@ public class Librarian {
 	}
 	
 	public String getCurrentLink(boolean includeModuleID){
-		return (includeModuleID ? currModuleID + ": " : "") 
-			+ this.getBookShortName(currModuleID, currBookID) + " " + currChapter;
+		return (includeModuleID ? currModule.getShortName() + ": " : "") 
+			+ currBook.getShortName() + " " + currChapter;
 	}
 	
 	public CharSequence getModuleName() {
-		Module currModule = getModule(currModuleID);
 		if (currModule == null) {
 			return "";
+		} else {
+			return currModule.getName();
 		}
-		String moduleName = currModule.getName();
-		if (moduleName.length() > 40) {
-			int strLenght = moduleName.length();
-			moduleName = moduleName.substring(0, 18) + "..." + moduleName.substring(strLenght - 18, strLenght);
-		}
-		return moduleName;
+//		String moduleName = currModule.getName();
+//		if (moduleName.length() > 40) {
+//			int strLenght = moduleName.length();
+//			moduleName = moduleName.substring(0, 18) + "..." + moduleName.substring(strLenght - 18, strLenght);
+//		}
+//		return moduleName;
 	}
 	
-	public CharSequence getHumanBookLink(String moduleID, String bookID, int chapter) {
-		Module currModule = getModule(moduleID);
-		if (currModule == null) {
+	public CharSequence getHumanBookLink() {
+		if (currModule == null || currBook == null) {
 			return "";
 		}
-		Book currBook = currModule.getBook(bookID);
-		if (currBook == null) {
-			return "";
-		}
-		String bookLink = currBook.getShortName() + " " + chapter;
+		String bookLink = currBook.getShortName() + " " + currChapter;
 		if (bookLink.length() > 10) {
 			int strLenght = bookLink.length();
 			bookLink = bookLink.substring(0, 4) + "..." + bookLink.substring(strLenght - 4, strLenght);
@@ -465,12 +468,11 @@ public class Librarian {
 		return bookLink;
 	}
 	
-	public CharSequence getHumanBookLink() {
-		return this.getHumanBookLink(currModuleID, currBookID, currChapter);
-	}
-	
 	public String getCurrentOSISLink(){
-		return currModuleID + "." + currBookID + "." + currChapter;
+		if (currModule == null || currBook == null) {
+			return "";
+		}
+		return currModule.getShortName() + "." + currBook.getBookID() + "." + currChapter;
 	}
 	
 	public String getOSIStoHuman(String linkOSIS) {
@@ -483,7 +485,7 @@ public class Librarian {
 		String bookID = param[1];
 		String chapter = param[2];
 		
-		Module currModule = getModule(moduleID);
+		IModule currModule = getModule(moduleID);
 		if (currModule == null) {
 			return "";
 		}
@@ -578,9 +580,13 @@ public class Librarian {
 			verseLink.append(fromVerse + "-" + toVerse);
 		}
 		
-		shareText.append(" (" + getCurrentLink(false) + ":" + verseLink 
-				+ ") - http://b-bq.eu/" 
-				+ currBookID + "/" + currChapter + "_" + verseLink + "/" + currModuleID);
+		shareText.append(" (" + getCurrentLink(false) + ":" + verseLink + ")");
+		if (currModule != null && currBook != null) {
+			shareText.append("- http://b-bq.eu/" 
+				+ currBook.getBookID() + "/" + currChapter + "_" + verseLink 
+				+ "/" + currModule.getShortName()); 
+		}
+		
 		return shareText.toString();
 	}
 }

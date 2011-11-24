@@ -69,4 +69,7 @@
     <string name="menu_search">Búsqueda</string>
     <string name="db_search">Búsqueda</string>
     <string name="db_bibles">Biblia</string>
+    <string name="copy">Copia</string>
+    <string name="menu_help">Ayuda</string>
+    <string name="db_help">Ayuda</string>
 </resources>

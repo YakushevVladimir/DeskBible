@@ -23,20 +23,8 @@ import android.content.DialogInterface.OnCancelListener;
 public final class AsyncTaskManager implements IProgressTracker,
 		OnCancelListener {
 
-	/**
-	 * @uml.property  name="mTaskCompleteListener"
-	 * @uml.associationEnd  multiplicity="(1 1)"
-	 */
 	private final OnTaskCompleteListener mTaskCompleteListener;
-	/**
-	 * @uml.property  name="mProgressDialog"
-	 * @uml.associationEnd  multiplicity="(1 1)"
-	 */
 	private final ProgressDialog mProgressDialog;
-	/**
-	 * @uml.property  name="mAsyncTask"
-	 * @uml.associationEnd  
-	 */
 	private Task mAsyncTask;
 
 	public AsyncTaskManager(Context context,
