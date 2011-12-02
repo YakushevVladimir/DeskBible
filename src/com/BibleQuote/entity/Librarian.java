@@ -22,17 +22,19 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import android.content.Context;
-import android.content.res.Resources.NotFoundException;
+import android.os.AsyncTask;
 
-import com.BibleQuote.R;
 import com.BibleQuote.entity.modules.IModule;
 import com.BibleQuote.entity.modules.bq.FileModule;
 import com.BibleQuote.entity.modules.bq.ZipFileModule;
 import com.BibleQuote.exceptions.CreateModuleErrorException;
 import com.BibleQuote.utils.FileUtilities;
 import com.BibleQuote.utils.Log;
+import com.BibleQuote.utils.OnlyBQIni;
+import com.BibleQuote.utils.OnlyBQZipIni;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.StringProc;
+import com.BibleQuote.utils.cache.ICacheModuleManager;
 
 public class Librarian {
 	
@@ -65,6 +67,8 @@ public class Librarian {
 	
 	ArrayList<String> verses = new ArrayList<String>();
 	Context mContext;
+	private ICacheModuleManager cacheModManager;
+	private ChangeListener listener;
 	
 	private static final Byte delimeter1 = (byte) 0xFE;
 	private static final Byte delimeter2 = (byte) 0xFF;
@@ -73,27 +77,23 @@ public class Librarian {
 	 * Производит заполнение списка доступных модулей с книгами Библии,
 	 * апокрифами, книгами
 	 */
-	public Librarian(Context context) {
-		Log.i(TAG, "Инициализация библиотеки");
+	public Librarian(Context context, ICacheModuleManager cacheManager) {
+		Log.i(TAG, "Инициализация библиотеки модулей");
 		
-		try {
-			ZipFileModule zipModule = new ZipFileModule(context, R.raw.rst_strong);
-			modules.put(zipModule.getShortName(), zipModule);
-		} catch (NotFoundException e) {
-			Log.e(TAG, e);
-		} catch (CreateModuleErrorException e) {
-			Log.e(TAG, e);
-		}
+		this.cacheModManager = cacheManager;
+		this.mContext = context;
 		
-		ArrayList<String> bqIniFiles = FileUtilities.SearchModules();
-		for (String iniFile : bqIniFiles) {
-			try {
-				FileModule fileModule = new FileModule(iniFile);
-				modules.put(fileModule.getShortName(), fileModule);
-			} catch (CreateModuleErrorException e) {
-				Log.e(TAG, e);
-				continue;
+		if (this.cacheModManager.isCacheExist()) {
+			android.util.Log.i(TAG, "Download library of the cache");
+			ArrayList<IModule> library = this.cacheModManager.load();
+			modules.clear();
+			for (IModule module : library) {
+				modules.put(module.getShortName(), module);
 			}
+			new UpdateLibrary().execute(true);
+		} else {
+			modules = loadModules();
+			new SaveLibrary().execute(true);
 		}
 		
 		if (currModule == null && modules.size() > 0) {
@@ -106,7 +106,87 @@ public class Librarian {
 		}
 	}
 	
+	private class SaveLibrary extends AsyncTask<Boolean, Void, Boolean> {
+		@Override
+		protected void onPostExecute(Boolean result) {
+			super.onPostExecute(result);
+		}
+
+		@Override
+		protected Boolean doInBackground(Boolean... params) {
+			ArrayList<IModule> library = new ArrayList<IModule>();
+			for (IModule module : modules.values()) {
+				library.add(module);
+			}
+			cacheModManager.save(library);
+			return true;
+		}
+	}
 	
+	private class UpdateLibrary extends AsyncTask<Boolean, Void, TreeMap<String, IModule>> {
+		@Override
+		protected void onPostExecute(TreeMap<String, IModule> result) {
+			super.onPostExecute(result);
+			modules = result;
+			ChangeListenerEvent();
+			android.util.Log.i(TAG, "Library has been updated");
+			new SaveLibrary().execute(true);
+		}
+
+		@Override
+		protected TreeMap<String, IModule> doInBackground(Boolean... params) {
+			return loadModules();
+		}
+	}
+	
+	private TreeMap<String, IModule> loadModules() {
+		android.util.Log.i(TAG, "The library is loaded from external media");
+		TreeMap<String, IModule> library = new TreeMap<String, IModule>();
+		
+		// Add zip-compressed BQ-modules
+		ArrayList<String> bqZipIniFiles = FileUtilities.SearchModules(new OnlyBQZipIni());
+		for (String iniZipFile : bqZipIniFiles) {
+			try {
+				ZipFileModule zipModule = new ZipFileModule(iniZipFile);
+				library.put(zipModule.getShortName(), zipModule);
+			} catch (CreateModuleErrorException e) {
+				Log.e(TAG, e);
+				continue;
+			}
+		}
+		
+		// Add standart BQ-modules
+		ArrayList<String> bqIniFiles = FileUtilities.SearchModules(new OnlyBQIni());
+		for (String iniFile : bqIniFiles) {
+			try {
+				FileModule fileModule = new FileModule(iniFile);
+				library.put(fileModule.getShortName(), fileModule);
+			} catch (CreateModuleErrorException e) {
+				Log.e(TAG, e);
+				continue;
+			}
+		}
+		
+		return library;
+	}
+
+	///////////////////////////////////////////////////////////////////////////
+	// CHANGE LISTENER
+	
+	public interface ChangeListener {
+		void onLibraryChanged();
+	}
+	
+	public void setOnChangeListener(ChangeListener object) {
+		listener = object;
+	}
+	
+	private void ChangeListenerEvent() {
+		if (listener != null) {
+			listener.onLibraryChanged();
+		}
+	}
+
 	///////////////////////////////////////////////////////////////////////////
 	// NAVIGATION
 	
@@ -145,6 +225,9 @@ public class Librarian {
 	}
 
 	public ArrayList<ItemList> getModuleBooksList() {
+		if (currModule == null) {
+			return new ArrayList<ItemList>();
+		}
 		return this.getModuleBooksList(currModule.getShortName());
 	}
 

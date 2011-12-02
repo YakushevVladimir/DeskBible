@@ -16,6 +16,8 @@
 package com.BibleQuote.entity.modules.bq;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -23,10 +25,9 @@ import java.util.ArrayList;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import android.content.Context;
-
 import com.BibleQuote.entity.Book;
 import com.BibleQuote.exceptions.CreateModuleErrorException;
+import com.BibleQuote.utils.FileUtilities;
 import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.StringProc;
 
@@ -36,26 +37,31 @@ import com.BibleQuote.utils.StringProc;
  */
 public class ZipFileModule extends Module {
 
+	private static final long serialVersionUID = 8442160236940112858L;
 	private final String TAG = "ZipFileModule";
-	private Context context;
-	private int rawID;
+	private String modulePath = "";
 
-	public ZipFileModule(Context context, int rawID) throws CreateModuleErrorException {
+	public ZipFileModule(String modulePath) throws CreateModuleErrorException {
 		Log.i(TAG, "ZipFileModule()");
 		
-		this.context = context;
-		this.rawID = rawID;
-		
-		defaultEncoding = "utf-8";
+		this.modulePath = modulePath;
+		this.defaultEncoding = getEncoding();
 
 		BufferedReader bReader = getReader("bibleqt.ini");
 		if (bReader == null) {
 			throw new CreateModuleErrorException();
 		}
-
 		fillParameters(bReader);
 	}
 	
+	protected String getEncoding() {
+		BufferedReader bReader = getReader("bibleqt.ini");
+		if (bReader == null) {
+			return "utf-8";
+		}
+		return FileUtilities.getModuleEncoding(bReader);
+	}
+
 	/**
 	 * @param bReader
 	 * @throws CreateModuleErrorException
@@ -167,11 +173,11 @@ public class ZipFileModule extends Module {
 	
 	protected BufferedReader getReader(String file) {
 		try {
-			InputStream moduleStream = context.getResources().openRawResource(rawID);
+			InputStream moduleStream = new FileInputStream(new File(modulePath));
 			ZipInputStream zStream = new ZipInputStream(moduleStream);
 			ZipEntry entry;
 			while ((entry = zStream.getNextEntry()) != null) {
-				if (entry.getName().equals(file)) {
+				if (entry.getName().toLowerCase().contains(file.toLowerCase())) {
 					InputStreamReader iReader = new InputStreamReader(zStream, defaultEncoding);
 					return new BufferedReader(iReader);
 				};

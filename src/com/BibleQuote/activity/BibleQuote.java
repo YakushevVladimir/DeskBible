@@ -59,6 +59,4 @@ public class BibleQuote extends GDActivity {
 			return true;
 		}
 	}
-
-
 }

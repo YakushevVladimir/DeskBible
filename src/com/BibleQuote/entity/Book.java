@@ -15,11 +15,13 @@
  */
 package com.BibleQuote.entity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 
-public class Book {
+public class Book implements Serializable {
 
+	private static final long serialVersionUID = 8383919987833889615L;
 	private String name;
 	private ArrayList<String> shortNames = new ArrayList<String>();
 	private String OSIS_ID;

@@ -70,11 +70,8 @@ public class ReaderWebView extends WebView
 	}
 	
 	public void setText(String text, int currVerse, Boolean nightMode, Boolean isBible) {
-		Log.i(TAG, "setText()");
 		mPageLoaded = false;
-		
 		String modStyle = isBible ? "bible_style.css" : "book_style.css";
-
 		String html = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\"> "
 				+ "<html>\r\n"
 				+ "<head>\r\n"
@@ -90,7 +87,6 @@ public class ReaderWebView extends WebView
 				+ "</body>\r\n" + "</html>";
 
 		loadDataWithBaseURL("file:///url_initial_load", html, "text/html", "UTF-8", "about:config");
-		
 		jsInterface.clearSelectedVerse();
 	}
 
@@ -203,13 +199,11 @@ public class ReaderWebView extends WebView
 
 	@Override
 	public boolean onSingleTapUp(MotionEvent event) {
-		Log.i(TAG, "onSingleTapUp()");
 		return false;
 	}
 
 	@Override
 	public boolean onSingleTapConfirmed(MotionEvent event) {
-		Log.i(TAG, "onSingleTapConfirmed()");
 		int x = (int) event.getX();
 		int y = (int) event.getY();
 		if (isStudyMode) {
@@ -241,21 +235,18 @@ public class ReaderWebView extends WebView
 	
 	@Override
 	public boolean onDown(MotionEvent event) {
-		Log.i(TAG, "onDown()");
 		return false;
 	}
 
 	@Override
 	public boolean onFling(MotionEvent e1, MotionEvent e2, 
 			float velocityX, float velocityY) {
-		Log.i(TAG, "onFling()");
 		viewChapterNav();
 		return false;
 	}
 
 	@Override
 	public void onLongPress(MotionEvent event) {
-		Log.i(TAG, "onLongPress()");
 		if (isStudyMode) {
 			viewChapterNav();
 		} else {
@@ -266,18 +257,15 @@ public class ReaderWebView extends WebView
 	@Override
 	public boolean onScroll(MotionEvent e1, MotionEvent e2, 
 			float distanceX, float distanceY) {
-		Log.i(TAG, "onScroll()");
 		return false;
 	}
 
 	@Override
 	public void onShowPress(MotionEvent event) {
-		Log.i(TAG, "onShowPress()");
 	}
 
 	@Override
 	public boolean onDoubleTap(MotionEvent event) {
-		Log.i(TAG, "onDoubleTap()");
 		isStudyMode = !isStudyMode;
 		((Reader)getContext()).updateActivityMode();
 		if (!isStudyMode) {
@@ -288,7 +276,6 @@ public class ReaderWebView extends WebView
 
 	@Override
 	public boolean onDoubleTapEvent(MotionEvent event) {
-		Log.i(TAG, "onDoubleTapEvent()");
 		return false;
 	}
 

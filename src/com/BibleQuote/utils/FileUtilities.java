@@ -42,10 +42,9 @@ public class FileUtilities {
 
 	/**
 	 * Выполняет поиск папок с модулями Цитаты на внешнем носителе устройства
-	 * 
 	 * @return Возвращает ArrayList со списком ini-файлов модулей
 	 */
-	public static ArrayList<String> SearchModules() {
+	public static ArrayList<String> SearchModules(FileFilter filter) {
 
 		Log.i(TAG, "SearchModules()");
 
@@ -63,7 +62,7 @@ public class FileUtilities {
 		}
 
 		try {
-			SearchBQIni(fileSearchDir, iniFiles);
+			SearchBQIni(fileSearchDir, iniFiles, filter);
 		} catch (Exception e) {
 			Log.i(TAG,
 					"Exception in SearchModules(): \r\n"
@@ -78,11 +77,10 @@ public class FileUtilities {
 	 * Рекурсивная функция проходит по всем каталогам в поисках ini-файлов
 	 * Цитаты
 	 */
-	private static void SearchBQIni(File currentFile, ArrayList<String> iniFiles)
+	private static void SearchBQIni(File currentFile, ArrayList<String> iniFiles, FileFilter filter)
 			throws IOException {
 
 		try {
-			OnlyBQIni filter = new OnlyBQIni();
 			File[] files = currentFile.listFiles(filter);
 			if (files == null) {
 				return;
@@ -91,10 +89,9 @@ public class FileUtilities {
 				if (!file.canRead()) {
 					continue;
 				} else if (file.isDirectory()) {
-					SearchBQIni(file, iniFiles);
+					SearchBQIni(file, iniFiles, filter);
 				} else {
 					iniFiles.add(file.getAbsolutePath());
-					break;
 				}
 			}
 		} catch (Exception e) {
@@ -217,7 +214,7 @@ public class FileUtilities {
 		return getModuleEncoding(bReader);
 	}
 
-	private static String getModuleEncoding(BufferedReader bReader) {
+	public static String getModuleEncoding(BufferedReader bReader) {
 		String encoding = "cp1251";
 
 		HashMap<String, String> charsets = getCharsets();
@@ -282,23 +279,5 @@ public class FileUtilities {
 		}
 
 		return true;
-	}
-}
-
-class OnlyBQIni implements FileFilter {
-	private String filter;
-
-	public OnlyBQIni() {
-		this.filter = "bibleqt.ini";
-	}
-
-	public OnlyBQIni(String filter) {
-		this.filter = filter;
-	}
-
-	@Override
-	public boolean accept(File myFile) {
-		return myFile.getName().toLowerCase().equals(this.filter)
-				|| myFile.isDirectory();
 	}
 }

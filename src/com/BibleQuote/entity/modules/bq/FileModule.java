@@ -32,6 +32,7 @@ import com.BibleQuote.utils.StringProc;
  */
 public class FileModule extends Module {
 
+	private static final long serialVersionUID = 4642023848287389980L;
 	private final String TAG = "FileModule";
 	private String modulePath = "";
 

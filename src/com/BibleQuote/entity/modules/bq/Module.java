@@ -1,13 +1,15 @@
 package com.BibleQuote.entity.modules.bq;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 import com.BibleQuote.entity.Book;
 import com.BibleQuote.entity.modules.IModule;
 
-public abstract class Module implements IModule  {
+public abstract class Module implements IModule, Serializable {
 
+	private static final long serialVersionUID = 443137641904273487L;
 	protected String Name = "";
 	protected String ShortName = "";
 	protected String ChapterSign = "";

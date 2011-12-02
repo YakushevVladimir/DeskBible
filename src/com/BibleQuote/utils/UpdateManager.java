@@ -1,9 +1,15 @@
 package com.BibleQuote.utils;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import com.BibleQuote.R;
 import com.BibleQuote.entity.Book;
 import com.BibleQuote.entity.modules.IModule;
 import com.BibleQuote.entity.modules.bq.FileModule;
@@ -74,7 +80,34 @@ public class UpdateManager {
 			Settings.edit().putBoolean("nightMode", false).commit();
 			update = true;
 		}
+		if (currVersion.contains("0.03.02")
+				|| currVersion.length() == 0
+				|| update) {
+			saveExternalModule(context);
+			update = true;
+		}
+		
 		Settings.edit().putString("myversion", myversion).commit();
+	}
+
+	private static void saveExternalModule(Context context) {
+		try {
+			InputStream moduleStream = context.getResources().openRawResource(
+					R.raw.rst_strong);
+			File moduleDir = new File(Environment.getExternalStorageDirectory().toString() + "/BibleQuote/modules/");
+			OutputStream newModule = new FileOutputStream(new File(moduleDir, "rst_strong.zip"));
+			byte[] buf = new byte[1024];
+			int len;
+			while ((len = moduleStream.read(buf)) > 0) {
+				newModule.write(buf, 0, len);
+			}
+			moduleStream.close();
+			newModule.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static void convertFavorities(SharedPreferences settings) {

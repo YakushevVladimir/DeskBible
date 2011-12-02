@@ -49,7 +49,7 @@ public class Log {
 		
 		String state = Environment.getExternalStorageState();
 		if (Environment.MEDIA_MOUNTED.equals(state)) {
-			logFile = new File(Environment.getExternalStorageDirectory().toString() + "/jbible_log.txt");
+			logFile = new File(Environment.getExternalStorageDirectory(), "bibleqt_log.txt");
 			if (logFile.exists()) {
 				logFile.delete();
 			}
