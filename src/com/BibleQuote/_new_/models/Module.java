@@ -16,7 +16,7 @@ public abstract class Module implements Serializable {
 	public String ShortName = "";
 	public String ChapterSign = "";
 	public String VerseSign = "";
-	public String XFilter = "";
+	public String HtmlFilter = "";
 	public boolean ChapterZero = false;
 	public boolean containsStrong = false;
 	public boolean isBible = false;
@@ -24,32 +24,12 @@ public abstract class Module implements Serializable {
 	
 	public LinkedHashMap<String, Book> Books = new LinkedHashMap<String, Book>();
 	
-	/**
-	 * Идентификатор модуля в БД
-	 */
-	public Long Id;
-	
 	// private String Categories = "";
 	// private String Copyright = "";
 	// private boolean containsOT = false;
 	// private boolean containsNT = false;
 	// private boolean containsAP = false;
 	
-	public ArrayList<Book> getBooks() {
-		ArrayList<Book> books = new ArrayList<Book>();
-		for (Book currBook : Books.values()) {
-			books.add(currBook);
-		}
-		return books;
-	}
-
-	public Book getBook(String bookID) {
-		if (bookID == null || !Books.containsKey(bookID)) {
-			return null;
-		}
-		return Books.get(bookID);
-	}
-
 	public String toString() {
 		return this.Name;
 	}

@@ -23,14 +23,6 @@ import greendroid.widget.item.SubtitleItem;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
-import com.BibleQuote.R;
-import com.BibleQuote.BibleQuoteApp;
-import com.BibleQuote.entity.ItemList;
-import com.BibleQuote.entity.Librarian;
-import com.BibleQuote.utils.AsyncTaskManager;
-import com.BibleQuote.utils.OnTaskCompleteListener;
-import com.BibleQuote.utils.Task;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -39,9 +31,17 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Spinner;
+
+import com.BibleQuote.BibleQuoteApp;
+import com.BibleQuote.R;
+import com.BibleQuote.entity.ItemList;
+import com.BibleQuote.entity.Librarian;
+import com.BibleQuote.utils.AsyncTaskManager;
+import com.BibleQuote.utils.OnTaskCompleteListener;
+import com.BibleQuote.utils.Task;
 
 public class Search extends GDActivity implements OnTaskCompleteListener {
 

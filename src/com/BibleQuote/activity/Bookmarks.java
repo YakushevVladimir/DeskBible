@@ -22,12 +22,6 @@ import greendroid.widget.QuickAction;
 import greendroid.widget.QuickActionGrid;
 import greendroid.widget.QuickActionWidget;
 import greendroid.widget.QuickActionWidget.OnQuickActionClickListener;
-
-import com.BibleQuote.R;
-import com.BibleQuote.BibleQuoteApp;
-import com.BibleQuote.entity.Librarian;
-import com.BibleQuote.utils.Log;
-
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
@@ -43,6 +37,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.BibleQuote.BibleQuoteApp;
+import com.BibleQuote.R;
+import com.BibleQuote.entity.Librarian;
+import com.BibleQuote.utils.Log;
 
 public class Bookmarks extends GDActivity {
 

@@ -1,6 +1,7 @@
 package com.BibleQuote._new_.controllers;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.TreeMap;
 
 import android.content.Context;
@@ -8,6 +9,7 @@ import android.content.Context;
 import com.BibleQuote._new_.dal.FsLibraryUnitOfWork;
 import com.BibleQuote._new_.dal.repository.FsBookRepository;
 import com.BibleQuote._new_.models.Book;
+import com.BibleQuote._new_.models.Module;
 
 public class FsBookController {
 	private final String TAG = "FsBookController";
@@ -19,9 +21,10 @@ public class FsBookController {
 		br = unit.getFsBookRepository();
     }
 	
-	public TreeMap<String, Book> loadBooks(String moduleShortName) {
+	
+	public LinkedHashMap<String, Book> loadBooks(String moduleShortName) {
 		android.util.Log.i(TAG, "Loading books from a file system storage.");
-		TreeMap<String, Book> result = new TreeMap<String, Book>();
+		LinkedHashMap<String, Book> result = new LinkedHashMap<String, Book>();
 		
 		ArrayList<Book> bookList = new ArrayList<Book>();
 		bookList.addAll(br.getBooks(moduleShortName));
@@ -32,8 +35,35 @@ public class FsBookController {
 		return result;
 	}
 
+	
+	public ArrayList<Book> getBooks(Module module) {
+		ArrayList<Book> books = new ArrayList<Book>();
+		if (module.Books == null) {
+			module.Books = loadBooks(module.ShortName);
+		}
+		if (module.Books != null) {
+			for (Book currBook : module.Books.values()) {
+				books.add(currBook);
+			}
+		}
+		return books;
+	}	
+	
+
 	public Book getBook(String moduleShortName) {
 		return br.getBookById(moduleShortName);
 	}
+	
+	
+	public Book getBook(Module module, String bookID) {
+		if (module.Books == null) {
+			module.Books = loadBooks(module.ShortName);
+		}
+		if (module.Books == null || bookID == null || !module.Books.containsKey(bookID)) {
+			return null;
+		}
+		return module.Books.get(bookID);
+	}		
+	
 	
 }

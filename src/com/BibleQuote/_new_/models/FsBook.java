@@ -13,6 +13,8 @@ public class FsBook extends Book {
 	 */
 	public String PathName;
 	
+	public String ModuleShortName;
+	
 	public FsBook(String name, String pathName, String shortNames,
 			int chapterQty) {
 		super(name, shortNames, chapterQty);

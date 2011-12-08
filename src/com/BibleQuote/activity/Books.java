@@ -15,14 +15,9 @@
  */
 package com.BibleQuote.activity;
 
-import java.util.ArrayList;
-
 import greendroid.app.GDActivity;
 
-import com.BibleQuote.R;
-import com.BibleQuote.BibleQuoteApp;
-import com.BibleQuote.entity.ItemList;
-import com.BibleQuote.entity.Librarian;
+import java.util.ArrayList;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -33,6 +28,11 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+
+import com.BibleQuote.BibleQuoteApp;
+import com.BibleQuote.R;
+import com.BibleQuote.entity.ItemList;
+import com.BibleQuote.entity.Librarian;
 
 public class Books extends GDActivity {
 

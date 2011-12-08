@@ -33,6 +33,11 @@ public class Book implements Serializable {
 	 */	
 	public Integer ChapterQty = 0;
 	
+	public ArrayList<String> ChapterNumbers = new ArrayList<String>();
+	
+	public ArrayList<Chapter> ChapterList;	// to lazy loading on demand
+	
+	
 	public Book(String name, String shortNames,  int chapterQty) {
 		this.Name = name;
 		this.ChapterQty = chapterQty;
@@ -58,6 +63,13 @@ public class Book implements Serializable {
 		if (OSIS_ID == null) {
 			OSIS_ID = this.ShortNames.get(0);
 		}
+	}
+	
+	/**
+	 * @return Возвращает краткое имя книги. являющееся первым в списке кратких имен
+	 */
+	public String getShortName() {
+		return ShortNames.get(0);
 	}
 
 }

@@ -22,7 +22,7 @@ package com.BibleQuote._new_.models;
 public class FsFldModule extends Module {
 
 	private static final long serialVersionUID = -660821372799486761L;
-	private static final String iniFileName = "bibleqt.ini";
+	public static final String iniFileName = "bibleqt.ini";
 	
 	/**
 	 * moduleFullPath is a directory path (plus a file name for an archive module).
