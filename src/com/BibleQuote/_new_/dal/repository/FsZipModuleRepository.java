@@ -29,7 +29,7 @@ public class FsZipModuleRepository implements IModuleRepository<String> {
 		// Add zip-compressed BQ-modules
 		ArrayList<String> bqZipIniFiles = context.SearchModules(new OnlyBQZipIni());
 		for (String iniZipFile : bqZipIniFiles) {
-			FsZipModule zipModule = (FsZipModule) getModuleById(iniZipFile.substring( 0, iniZipFile.lastIndexOf("/") ));
+			FsZipModule zipModule = (FsZipModule) getModuleById(iniZipFile);
 			moduleList.add(zipModule);
 		}
 		
@@ -43,7 +43,7 @@ public class FsZipModuleRepository implements IModuleRepository<String> {
 		BufferedReader reader = null;
 		try {
 			module = new FsZipModule(moduleId);
-			reader = context.getTextFileReaderFromZipArchive(module.moduleFullPath, module.getIniFullPath(), module.defaultEncoding);
+			reader = context.getTextFileReaderFromZipArchive(module.moduleFullPath, module.iniFileName, module.defaultEncoding);
 			context.fillModule(module, reader);
 		} catch (CreateModuleErrorException e) {
 			e.printStackTrace();

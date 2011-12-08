@@ -33,7 +33,7 @@ public class FsModuleController {
     /**
      * @return Возвращает коллекцию модулей с ключом по Module.ShortName
      */
-	public TreeMap<String, Module> loadModules() {
+	public synchronized TreeMap<String, Module> loadModules() {
 		android.util.Log.i(TAG, "Loading modules from a file system storage.");
 		TreeMap<String, Module> result = new TreeMap<String, Module>();
 		

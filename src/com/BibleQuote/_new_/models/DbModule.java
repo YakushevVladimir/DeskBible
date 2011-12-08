@@ -8,7 +8,10 @@ public class DbModule extends Module {
 	
 	private static final long serialVersionUID = -3650606026193395583L;
 	
-	private long Id = 0;
+	/**
+	 * Идентификатор модуля в БД
+	 */
+	public Long Id;	
 
 	public DbModule(long Id) {
 		this.Id = Id;

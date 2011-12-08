@@ -14,10 +14,16 @@ public class DbBook extends Book {
 	public Long Id;
 
 	/**
-	 * Путь к файлу с книгой
+	 * Идентификатор модуля книги в БД
+	 */
+	public Long ModuleId;
+	
+	/**
+	 * Путь к файлу с книгой в папке модуля
 	 */
 	public String PathName;
 	
+
 	public DbBook(String name, String pathName, String shortNames, int chapterQty, long id) {
 		super(name, shortNames, chapterQty);
 		this.Id = id;
