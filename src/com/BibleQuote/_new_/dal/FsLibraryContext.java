@@ -164,7 +164,7 @@ public class FsLibraryContext extends FsContext {
 
 		String separator = "";
 		for (String tag : TagArray) {
-			module.XFilter += separator + "(" + tag + ")|(/" + tag + ")" + "|("
+			module.HtmlFilter += separator + "(" + tag + ")|(/" + tag + ")" + "|("
 					+ tag.toUpperCase() + ")|(/" + tag.toUpperCase() + ")";
 			separator = "|";
 		}

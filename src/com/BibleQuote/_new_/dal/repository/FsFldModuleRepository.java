@@ -41,7 +41,7 @@ public class FsFldModuleRepository implements IModuleRepository<String> {
 		BufferedReader reader = null;
 		try {
 			module = new FsFldModule(moduleId);
-			reader = fsContext.getTextFileReader(module.moduleFullPath, module.getIniFullPath(), module.defaultEncoding);
+			reader = fsContext.getTextFileReader(module.moduleFullPath, module.iniFileName, module.defaultEncoding);
 			fsContext.fillModule(module, reader);
 		} catch (CreateModuleErrorException e) {
 			e.printStackTrace();

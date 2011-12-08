@@ -32,6 +32,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.Contacts.Settings;
 import android.text.ClipboardManager;
 import android.view.Display;
 import android.view.KeyEvent;
@@ -46,17 +47,21 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
+import com.BibleQuote.TempBibleQuoteApp;
+import com.BibleQuote._new_.listeners.ChangeLibraryEvent;
+import com.BibleQuote._new_.listeners.IChangeListener;
+import com.BibleQuote._new_.listeners.ISearchListener;
+import com.BibleQuote._new_.listeners.SearchInLibraryEvent;
+import com.BibleQuote._new_.managers.Librarian;
 import com.BibleQuote.controls.ReaderWebView;
-import com.BibleQuote.entity.Librarian;
 import com.BibleQuote.utils.AsyncTaskManager;
 import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.OnTaskCompleteListener;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.Task;
 
-public class Reader extends GDActivity implements OnTaskCompleteListener {
+public class TempReader extends GDActivity implements OnTaskCompleteListener, IChangeListener, ISearchListener {
 
 	private static final String TAG = "Reader";
 	private static final int VIEW_CHAPTER_NAV_LENGHT = 5000;
@@ -93,8 +98,10 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
 		mAsyncTaskManager = new AsyncTaskManager(this, this);
 		mAsyncTaskManager.handleRetainedTask(getLastNonConfigurationInstance());
 
-		BibleQuoteApp app = (BibleQuoteApp) getGDApplication();
+		TempBibleQuoteApp app = (TempBibleQuoteApp) getGDApplication();
 		myLibrarian = app.getLibrarian();
+		myLibrarian.eventManager.addChangeListener(this);
+		myLibrarian.eventManager.addSearchListener(this);
 		
 		btnChapterNav = (LinearLayout)findViewById(R.id.btn_chapter_nav);
 		
@@ -467,9 +474,9 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
     @Override
     public void onTaskComplete(Task task) {
 		Log.i(TAG, "onTaskComplete()");
-		if (!task.isCancelled()) {
-			setTextinWebView();
-		}
+		//if (!task.isCancelled()) {
+		//	setTextinWebView();
+		//}
     }
     
 	private class ChapterLoader extends Task {
@@ -504,5 +511,37 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
 			return true;
 		}
 	}
+
+
+	@Override
+	public void onChangeLibrary(final ChangeLibraryEvent event) {
+		// TODO Auto-generated method stub
+		runOnUiThread(new Runnable() {
+			public void run() {
+				switch (event.code) {
+					case ModulesChanged:
+						break;
+					case BooksChanged:
+						break;
+				}
+			}
+		});		
+	}
+
+	@Override
+	public void onSearchInLibrary(final SearchInLibraryEvent event) {
+		// TODO Auto-generated method stub
+		runOnUiThread(new Runnable() {
+			public void run() {
+				switch (event.code) {
+					case Found:
+						break;
+					case NotFound:
+						break;
+				}
+			}
+		});		
+	}
+
 
 }
