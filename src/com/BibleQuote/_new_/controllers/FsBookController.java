@@ -2,7 +2,6 @@ package com.BibleQuote._new_.controllers;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.TreeMap;
 
 import android.content.Context;
 
@@ -22,12 +21,12 @@ public class FsBookController {
     }
 	
 	
-	public LinkedHashMap<String, Book> loadBooks(String moduleShortName) {
+	public LinkedHashMap<String, Book> loadBooks(Module module) {
 		android.util.Log.i(TAG, "Loading books from a file system storage.");
 		LinkedHashMap<String, Book> result = new LinkedHashMap<String, Book>();
 		
 		ArrayList<Book> bookList = new ArrayList<Book>();
-		bookList.addAll(br.getBooks(moduleShortName));
+		bookList.addAll(br.getBooks(module.getID()));
 		for (Book book : bookList) {
 			result.put(book.Name, book);
 		}
@@ -39,7 +38,7 @@ public class FsBookController {
 	public ArrayList<Book> getBooks(Module module) {
 		ArrayList<Book> books = new ArrayList<Book>();
 		if (module.Books == null) {
-			module.Books = loadBooks(module.ShortName);
+			module.Books = loadBooks(module);
 		}
 		if (module.Books != null) {
 			for (Book currBook : module.Books.values()) {
@@ -57,7 +56,7 @@ public class FsBookController {
 	
 	public Book getBook(Module module, String bookID) {
 		if (module.Books == null) {
-			module.Books = loadBooks(module.ShortName);
+			module.Books = loadBooks(module);
 		}
 		if (module.Books == null || bookID == null || !module.Books.containsKey(bookID)) {
 			return null;

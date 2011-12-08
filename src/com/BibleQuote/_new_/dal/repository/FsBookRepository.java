@@ -9,8 +9,7 @@ public class FsBookRepository implements IBookRepository<String> {
 	
 	FsLibraryContext context;
 
-    public FsBookRepository(FsLibraryContext context)
-    {
+    public FsBookRepository(FsLibraryContext context) {
     	this.context = context;
     }
     

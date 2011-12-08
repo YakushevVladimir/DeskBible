@@ -32,7 +32,7 @@ import android.widget.SimpleAdapter;
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
 import com.BibleQuote.entity.ItemList;
-import com.BibleQuote.entity.Librarian;
+import com.BibleQuote._new_.managers.Librarian;
 
 public class Books extends GDActivity {
 

@@ -19,12 +19,22 @@ package com.BibleQuote._new_.models;
  * @author Yakushev Vladimir, Sergey Ursul
  * 
  */
-public class FsZipModule extends FsFldModule {
+public class FsZipModule extends Module {
 
-	private static final long serialVersionUID = 7876516169598273924L;
+	private static final long serialVersionUID = -660821372799486761L;
 	
-	public FsZipModule(String moduleFullPath) {
-		super( moduleFullPath );
+	/**
+	 * modulePath is a directory path
+	 */
+	public final String modulePath;
+
+	public static final String iniFileName = "bibleqt.ini";
+	
+	public FsZipModule(String modulePath) {
+		this.modulePath = modulePath;
 	}
 	
+	public String getID() {
+		return this.modulePath;
+	}
 }

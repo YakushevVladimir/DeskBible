@@ -28,8 +28,8 @@ public class FsZipModuleRepository implements IModuleRepository<String> {
 		
 		// Add zip-compressed BQ-modules
 		ArrayList<String> bqZipIniFiles = context.SearchModules(new OnlyBQZipIni());
-		for (String iniZipFile : bqZipIniFiles) {
-			FsZipModule zipModule = (FsZipModule) getModuleById(iniZipFile);
+		for (String zipFile : bqZipIniFiles) {
+			FsZipModule zipModule = (FsZipModule) getModuleById(zipFile);
 			moduleList.add(zipModule);
 		}
 		
@@ -38,12 +38,14 @@ public class FsZipModuleRepository implements IModuleRepository<String> {
 	
 
 	@Override
-	public Module getModuleById(String moduleId) {
+	public Module getModuleById(String zipFile) {
 		FsZipModule module = null;
 		BufferedReader reader = null;
 		try {
-			module = new FsZipModule(moduleId);
-			reader = context.getTextFileReaderFromZipArchive(module.moduleFullPath, module.iniFileName, module.defaultEncoding);
+			module = new FsZipModule(zipFile);
+			reader = context.getTextFileReaderFromZipArchive(module.modulePath, FsZipModule.iniFileName, module.defaultEncoding);
+			module.defaultEncoding = context.getModuleEncoding(reader);
+			reader = context.getTextFileReaderFromZipArchive(module.modulePath, FsZipModule.iniFileName, module.defaultEncoding);
 			context.fillModule(module, reader);
 		} catch (CreateModuleErrorException e) {
 			e.printStackTrace();
@@ -57,7 +59,6 @@ public class FsZipModuleRepository implements IModuleRepository<String> {
 		
 		return module;
 	}
-
 	
 	@Override
 	public void insertModule(Module module) {

@@ -22,20 +22,23 @@ package com.BibleQuote._new_.models;
 public class FsFldModule extends Module {
 
 	private static final long serialVersionUID = -660821372799486761L;
-	public static final String iniFileName = "bibleqt.ini";
 	
 	/**
-	 * moduleFullPath is a directory path (plus a file name for an archive module).
+	 * modulePath is a directory path
 	 */
-	public String moduleFullPath = "";
+	public final String modulePath;
 
-	public FsFldModule(String moduleFullPath) {
-		this.moduleFullPath = moduleFullPath.charAt(moduleFullPath.length()-1) == '/'  
-				? moduleFullPath				
-				: moduleFullPath + "/";
+	/**
+	 * Путь к ini-файлу (раскладка в названии файла может быть произвольной)
+	 */
+	public final String iniFileName;
+	
+	public FsFldModule(String modulePath) {
+		this.modulePath = modulePath.substring(0, modulePath.lastIndexOf("/"));
+		this.iniFileName = modulePath.substring(modulePath.lastIndexOf("/") + 1);
 	}
 	
-	public String getIniFullPath() {
-		return this.moduleFullPath + iniFileName;
+	public String getID() {
+		return this.modulePath + this.iniFileName;
 	}
 }

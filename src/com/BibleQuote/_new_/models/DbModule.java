@@ -16,4 +16,10 @@ public class DbModule extends Module {
 	public DbModule(long Id) {
 		this.Id = Id;
 	}
+
+	@Override
+	public String getID() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

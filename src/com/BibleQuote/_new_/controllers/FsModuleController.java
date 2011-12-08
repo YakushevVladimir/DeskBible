@@ -10,7 +10,7 @@ import com.BibleQuote._new_.dal.FsLibraryUnitOfWork;
 import com.BibleQuote._new_.dal.repository.FsFldModuleRepository;
 import com.BibleQuote._new_.dal.repository.FsZipModuleRepository;
 import com.BibleQuote._new_.listeners.ChangeLibraryEvent;
-import com.BibleQuote._new_.listeners.IChangeListener;
+import com.BibleQuote._new_.listeners.IChangeListener.ChangeCode;
 import com.BibleQuote._new_.managers.EventManager;
 import com.BibleQuote._new_.models.Module;
 
@@ -18,28 +18,27 @@ public class FsModuleController {
 	private final String TAG = "FsModuleController";
 	
 	private FsLibraryUnitOfWork unit;
-	private FsFldModuleRepository mr;
-	private FsZipModuleRepository zmr;
-	private EventManager em;
+	private FsFldModuleRepository fsModRepository;
+	private FsZipModuleRepository fsZipModRepository;
+	private EventManager eventManager;
 
 	public FsModuleController(Context context, String libraryPath, EventManager eventManager) {
-		unit = new FsLibraryUnitOfWork(context, libraryPath);
-		mr = unit.getFsModuleRepository();
-		zmr = unit.getFsZipModuleRepository();
-		em = eventManager;
+		this.unit = new FsLibraryUnitOfWork(context, libraryPath);
+		this.fsModRepository = unit.getFsModuleRepository();
+		this.fsZipModRepository = unit.getFsZipModuleRepository();
+		this.eventManager = eventManager;
     }
-    
 	
     /**
      * @return Возвращает коллекцию модулей с ключом по Module.ShortName
      */
-	public synchronized TreeMap<String, Module> loadModules() {
+	public TreeMap<String, Module> loadModules() {
 		android.util.Log.i(TAG, "Loading modules from a file system storage.");
 		TreeMap<String, Module> result = new TreeMap<String, Module>();
 		
 		ArrayList<Module> moduleList = new ArrayList<Module>();
-		moduleList.addAll(mr.getModules());
-		moduleList.addAll(zmr.getModules());
+		moduleList.addAll(fsModRepository.getModules());
+		moduleList.addAll(fsZipModRepository.getModules());
 		for (Module module : moduleList) {
 			result.put(module.ShortName, module);
 		}
@@ -55,10 +54,9 @@ public class FsModuleController {
 		@Override
 		protected void onPostExecute(TreeMap<String, Module> result) {
 			super.onPostExecute(result);
-			ChangeLibraryEvent event = new ChangeLibraryEvent();
-			event.modules = result;
-			event.code = IChangeListener.ChangeCode.ModulesChanged;
-			em.fireChangeLibraryEvent(event);
+			
+			ChangeLibraryEvent event = new ChangeLibraryEvent(ChangeCode.ModulesChanged, result);
+			eventManager.fireChangeLibraryEvent(event);
 		}
 
 		@Override

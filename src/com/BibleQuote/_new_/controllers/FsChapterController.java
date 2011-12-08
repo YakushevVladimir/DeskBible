@@ -23,7 +23,7 @@ public class FsChapterController {
 	
 	public ArrayList<String> getChapterNumbers(Module module, Book book) {
 		ArrayList<String> result = new ArrayList<String>();
-		Book currBook = br.getBookById(book.OSIS_ID);
+		Book currBook = book; //br.getBookById(book.OSIS_ID);
 		if (currBook != null) {
 			for (int i = 0; i < currBook.ChapterQty; i++) {
 				result.add(String.valueOf(i + (module.ChapterZero ? 0 : 1)));

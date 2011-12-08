@@ -32,7 +32,6 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.Contacts.Settings;
 import android.text.ClipboardManager;
 import android.view.Display;
 import android.view.KeyEvent;
@@ -48,7 +47,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.BibleQuote.R;
-import com.BibleQuote.TempBibleQuoteApp;
+import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote._new_.listeners.ChangeLibraryEvent;
 import com.BibleQuote._new_.listeners.IChangeListener;
 import com.BibleQuote._new_.listeners.ISearchListener;
@@ -98,7 +97,7 @@ public class TempReader extends GDActivity implements OnTaskCompleteListener, IC
 		mAsyncTaskManager = new AsyncTaskManager(this, this);
 		mAsyncTaskManager.handleRetainedTask(getLastNonConfigurationInstance());
 
-		TempBibleQuoteApp app = (TempBibleQuoteApp) getGDApplication();
+		BibleQuoteApp app = (BibleQuoteApp) getGDApplication();
 		myLibrarian = app.getLibrarian();
 		myLibrarian.eventManager.addChangeListener(this);
 		myLibrarian.eventManager.addSearchListener(this);
@@ -515,7 +514,7 @@ public class TempReader extends GDActivity implements OnTaskCompleteListener, IC
 
 	@Override
 	public void onChangeLibrary(final ChangeLibraryEvent event) {
-		// TODO Auto-generated method stub
+		// TODO: Зачем activity TempReader подписано на ChangeLibraryEvent
 		runOnUiThread(new Runnable() {
 			public void run() {
 				switch (event.code) {
@@ -530,7 +529,7 @@ public class TempReader extends GDActivity implements OnTaskCompleteListener, IC
 
 	@Override
 	public void onSearchInLibrary(final SearchInLibraryEvent event) {
-		// TODO Auto-generated method stub
+		// TODO: Зачем activity TempReader подписано на SearchInLibraryEvent
 		runOnUiThread(new Runnable() {
 			public void run() {
 				switch (event.code) {

@@ -28,6 +28,8 @@ import com.BibleQuote._new_.controllers.CacheController;
 import com.BibleQuote._new_.controllers.FsBookController;
 import com.BibleQuote._new_.controllers.FsChapterController;
 import com.BibleQuote._new_.controllers.FsModuleController;
+import com.BibleQuote._new_.listeners.ChangeLibraryEvent;
+import com.BibleQuote._new_.listeners.IChangeListener;
 import com.BibleQuote._new_.models.Book;
 import com.BibleQuote._new_.models.Module;
 import com.BibleQuote.entity.BibleBooksID;
@@ -36,37 +38,16 @@ import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.StringProc;
 
-public class Librarian {
+public class Librarian implements IChangeListener  {
 	
 	private final String TAG = "Librarian";
 	
-	/** 
-	 * Содержит список доступных модулей
-	 */
 	private TreeMap<String, Module> modules  = new TreeMap<String, Module>();
-	
-	/**
-	 * Содержит ссылки по результатм последнего поиска
-	 */
 	private LinkedHashMap<String, String> searchResults = new LinkedHashMap<String, String>();
-
-	/**
-	 * Текущий открытый модуль
-	 */
 	private Module currModule; 
-	
-	/**
-	 * Текущая открытая книга активного модуля
-	 */
 	private Book currBook; 
-	
-	/**
-	 * Текущая открытая глава активной книги
-	 */
 	private Integer currChapter = 1;
-	
 	private ArrayList<String> verses = new ArrayList<String>();
-	private Context mContext;
 	private CacheController cacheController;
 	private String moduleCache = "library.cash";
 	private FsModuleController fsModuleCtrl;
@@ -87,20 +68,20 @@ public class Librarian {
 	public Librarian(Context context) {
 		Log.i(TAG, "Инициализация библиотеки модулей");
 		
-		mContext = context;
-		cacheController = new CacheController(context.getCacheDir(), eventManager);
+		eventManager.addChangeListener(this);
+		
+		cacheController = new CacheController(context.getCacheDir(), moduleCache, eventManager);
 		libraryPath = Environment.getExternalStorageDirectory().toString() + "/BibleQuote/modules/";
 		fsModuleCtrl = new FsModuleController(context, libraryPath, eventManager);
-		fsBookCtrl = new FsBookController(context, libraryPath); 
+		fsBookCtrl = new FsBookController(context, libraryPath);
+		fsChapterCtrl = new FsChapterController(context, libraryPath);
 				
 		if (cacheController.isCacheExist(moduleCache)) {
 			modules = cacheController.loadModules(moduleCache);
 			fsModuleCtrl.loadModulesAsync();
 		} else {
-			fsModuleCtrl = new FsModuleController(context, libraryPath, eventManager);
 			modules = fsModuleCtrl.loadModules();
-			//cacheController.saveModulesAsync(modules, moduleCache);
-			cacheController.saveModules(modules, moduleCache);
+			cacheController.saveModulesAsync(modules, moduleCache);
 		}
 		
 		if (currModule == null && modules.size() > 0) {
@@ -110,6 +91,13 @@ public class Librarian {
 				currBook = books.get(0);
 			}
 			currChapter = currModule.ChapterZero ? 0 : 1;
+		}
+	}
+
+	@Override
+	public void onChangeLibrary(ChangeLibraryEvent event) {
+		if (event.code == ChangeCode.ModulesChanged) {
+			modules = event.modules;
 		}
 	}
 	
@@ -166,6 +154,9 @@ public class Librarian {
 			return new ArrayList<String>();
 		}
 		currBook = fsBookCtrl.getBook(currModule, bookID);
+		if (currBook == null) {
+			return new ArrayList<String>();
+		}
 		return  fsChapterCtrl.getChapterNumbers(currModule, currBook);
 	}
 

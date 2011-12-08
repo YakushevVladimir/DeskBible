@@ -16,11 +16,9 @@ public class FsFldModuleRepository implements IModuleRepository<String> {
 	protected final String TAG = "FsFldModuleRepository";
 	private FsLibraryContext fsContext;
 	
-    public FsFldModuleRepository(FsLibraryContext fsContext)
-    {
+    public FsFldModuleRepository(FsLibraryContext fsContext) {
     	this.fsContext = fsContext;
     }
-    
     
 	@Override
 	public Collection<Module> getModules() {
@@ -28,20 +26,21 @@ public class FsFldModuleRepository implements IModuleRepository<String> {
 		// Add standard BQ-modules
 		ArrayList<String> bqIniFiles = fsContext.SearchModules(new OnlyBQIni());
 		for (String iniFile : bqIniFiles) {
-			FsFldModule fileModule = (FsFldModule) getModuleById(iniFile.substring( 0, iniFile.lastIndexOf("/") ));
+			FsFldModule fileModule = (FsFldModule) getModuleById(iniFile);
 			moduleList.add(fileModule);			
 		}
 		return moduleList;		
 	}
 	
-
 	@Override
-	public Module getModuleById(String moduleId) {
+	public Module getModuleById(String iniFile) {
 		FsFldModule module = null;
 		BufferedReader reader = null;
 		try {
-			module = new FsFldModule(moduleId);
-			reader = fsContext.getTextFileReader(module.moduleFullPath, module.iniFileName, module.defaultEncoding);
+			module = new FsFldModule(iniFile);
+			reader = fsContext.getTextFileReader(module.modulePath, module.iniFileName, module.defaultEncoding);
+			module.defaultEncoding = fsContext.getModuleEncoding(reader);
+			reader = fsContext.getTextFileReader(module.modulePath, module.iniFileName, module.defaultEncoding);
 			fsContext.fillModule(module, reader);
 		} catch (CreateModuleErrorException e) {
 			e.printStackTrace();
@@ -54,7 +53,7 @@ public class FsFldModuleRepository implements IModuleRepository<String> {
 		}		
 		return module;	
 	}
-
+	
 		
 	@Override
 	public void insertModule(Module module) {

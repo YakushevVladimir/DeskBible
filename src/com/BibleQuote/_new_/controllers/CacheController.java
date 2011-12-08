@@ -15,10 +15,14 @@ public class CacheController {
 	private final String TAG = "CacheController";
 	
 	private File cacheDir;
-	private EventManager em;
+	private String cacheName;
+	//private EventManager em;
 
-	public CacheController(File cacheDir, EventManager eventManager) {
+	public CacheController(File cacheDir, String cacheName, EventManager eventManager) {
 		this.cacheDir = cacheDir;
+		this.cacheName = cacheName;
+		// TODO: Выяснить зачем CacheController имеет поле EventManager
+		//this.em = eventManager;
     }
     
 	public TreeMap<String, Module> loadModules(String cacheName) {
@@ -27,18 +31,16 @@ public class CacheController {
 
 		CacheContext context = new CacheContext(cacheDir, cacheName);
 		ArrayList<Module> moduleList = context.loadData();
-//		Iterator<Module> it = moduleList.iterator();
-//		while(it.hasNext()) {
-//			Module module = it.next();
-//			modules.put(module.ShortName, module);
-//		}
-		for (Module module : moduleList) {  
+		Iterator<Module> it = moduleList.iterator();
+		while(it.hasNext()) {
+			Module module = it.next();
 			modules.put(module.ShortName, module);
 		}
+
 		return modules;
 	}
 	
-	public void saveModules(TreeMap<String, Module> modules, String cacheName) {
+	public void saveModules(TreeMap<String, Module> modules) {
 		android.util.Log.i(TAG, "Save modules to a file system cache.");
 		ArrayList<Module> moduleList = new ArrayList<Module>();
 		for (Module module : modules.values()) {
@@ -48,8 +50,9 @@ public class CacheController {
 		context.saveData(moduleList);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void saveModulesAsync(TreeMap<String, Module> modules, String cacheName) {
-		new SaveModulesAsync().execute(true);
+		new SaveModulesAsync().execute(modules);
 	}
 	
 	
@@ -59,19 +62,16 @@ public class CacheController {
 	}
 	
 	
-	private class SaveModulesAsync extends AsyncTask<Boolean, Void, Boolean> {
+	private class SaveModulesAsync extends AsyncTask<TreeMap<String, Module>, Void, Boolean> {
 		@Override
 		protected void onPostExecute(Boolean result) {
 			super.onPostExecute(result);
 		}
 
 		@Override
-		protected Boolean doInBackground(Boolean... params) {
-			ArrayList<Module> library = new ArrayList<Module>();
-//			for (Module module : modules.values()) {
-//				library.add(module);
-//			}
-//			saveModules(modules, cacheName);
+		protected Boolean doInBackground(TreeMap<String, Module>... params) {
+			TreeMap<String, Module> modules = params[0];
+			saveModules(modules);
 			return true;
 		}
 	}

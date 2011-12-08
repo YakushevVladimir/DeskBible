@@ -49,7 +49,7 @@ import android.widget.Toast;
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
 import com.BibleQuote.controls.ReaderWebView;
-import com.BibleQuote.entity.Librarian;
+import com.BibleQuote._new_.managers.Librarian;
 import com.BibleQuote.utils.AsyncTaskManager;
 import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.OnTaskCompleteListener;

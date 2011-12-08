@@ -44,7 +44,7 @@ public class CacheContext {
 			e.printStackTrace();
 		}
 
-		Log.i(TAG, String.format("Data are loaded from the cache %1$s/%2$s", cacheDir, cacheName));
+		Log.i(TAG, String.format("Data are loaded from the cache %1$s%2$s", cacheDir, cacheName));
 		return data;
 	}	
 	

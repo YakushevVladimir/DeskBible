@@ -18,11 +18,11 @@ public class FsLibraryContext extends FsContext {
 	private final String TAG = "FsLibraryContext";
 	
 	private File libraryDir = null;
-	private Context context;
+	//private Context context;
 	
 	// libraryPath should be = Environment.getExternalStorageDirectory().toString() + "/BibleQuote/modules/"
 	public FsLibraryContext(Context context, String libraryPath) {
-		this.context = context;
+		//this.context = context;
 		
 		String state = Environment.getExternalStorageState();
 		if (Environment.MEDIA_MOUNTED.equals(state)) {
@@ -96,8 +96,7 @@ public class FsLibraryContext extends FsContext {
 				} else if (key.equals("chaptersign")) {
 					module.ChapterSign = value.toLowerCase();
 				} else if (key.equals("chapterzero")) {
-					module.ChapterZero = value.toLowerCase().contains("y") ? true
-							: false;
+					module.ChapterZero = value.toLowerCase().contains("y") ? true : false;
 				} else if (key.equals("versesign")) {
 					module.VerseSign = value.toLowerCase();
 				} else if (key.equals("htmlfilter")) {

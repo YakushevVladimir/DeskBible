@@ -15,17 +15,16 @@
  */
 package com.BibleQuote;
 
+import greendroid.app.GDApplication;
+
+import com.BibleQuote._new_.managers.Librarian;
 import com.BibleQuote.activity.Reader;
-import com.BibleQuote.entity.Librarian;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.UpdateManager;
-import com.BibleQuote.utils.cache.FileCacheModuleManager;
-
-import greendroid.app.GDApplication;
 
 public class BibleQuoteApp extends GDApplication {
 	
-	Librarian myLibararian;
+	private Librarian myLibararian;
 
 	@Override
 	public Class<?> getHomeActivityClass() {
@@ -35,15 +34,12 @@ public class BibleQuoteApp extends GDApplication {
 	public void Init() {
 		PreferenceHelper.Init(this);
 		UpdateManager.Init(this);
-		
-		
-		myLibararian = new Librarian(this, new FileCacheModuleManager(this.getCacheDir()));
+		getLibrarian();
 	}
 
 	public Librarian getLibrarian() {
 		if (myLibararian == null) {
-			PreferenceHelper.Init(this);
-			myLibararian = new Librarian(this, new FileCacheModuleManager(this.getCacheDir()));
+			myLibararian = new Librarian(this);
 		}
 		return myLibararian;
 	}

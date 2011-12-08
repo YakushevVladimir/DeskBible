@@ -86,6 +86,15 @@ public class UpdateManager {
 			saveExternalModule(context);
 			update = true;
 		}
+		if (currVersion.contains("0.03.04") || update) {
+			File cacheDir = context.getCacheDir();
+			File cacheFile = new File(cacheDir, "library.cash");
+			if (cacheFile.exists()) {
+				android.util.Log.i(TAG, "Delete library cache file");
+				cacheFile.delete();
+			}
+			update = true;
+		}
 		
 		Settings.edit().putString("myversion", myversion).commit();
 	}
