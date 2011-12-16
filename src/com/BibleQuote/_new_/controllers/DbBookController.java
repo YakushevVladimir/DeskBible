@@ -31,7 +31,7 @@ public class DbBookController implements IBookController {
 		ArrayList<Book> bookList = new ArrayList<Book>();
 		bookList.addAll(br.loadBooks((DbModule)module));
 		for (Book book : bookList) {
-			result.put(book.Name, book);
+			result.put(book.getID(), book);
 		}
 		
 		return result;

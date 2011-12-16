@@ -15,6 +15,8 @@ public class DataConstants {
    public  static final String LIBRARY_CACHE = "library.cache";
    public  static final String DEFAULT_INI_FILE_NAME = "bibleqt.ini";
    
+   // TODO >> Туда же я включил вариант хранения во внутренней памяти.
+   // Для чего будет использоваться FS_DATA_PATH, а для чего FS_EXTERNAL_DATA_PATH
    public static final String FS_DATA_PATH = Environment.getDataDirectory() + File.separator 
 		   + "data" + File.separator + DataConstants.APP_PACKAGE_NAME + File.separator + FS_DATA_DIR_NAME;
    
@@ -33,6 +35,7 @@ public class DataConstants {
 
    public static final String MODULE_TABLE = "module";
    public static final String BOOK_TABLE = "book";
+   // TODO А в какой таблице хранится сам текст модуля?
 
    private DataConstants() {
    }

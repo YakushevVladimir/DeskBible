@@ -48,14 +48,14 @@ public abstract class Book implements Serializable {
 	public ArrayList<String> getChapterNumbers(Boolean isChapterZero) {
 		if (ChapterQty > 0 && chapterNumbers.size() == 0) {
 			for (int i = 0; i < ChapterQty; i++) {
-				chapterNumbers.add("" + i + (isChapterZero ? 0 : 1));
+				chapterNumbers.add("" + (i + (isChapterZero ? 0 : 1)));
 			}
 		}
 		return chapterNumbers;
 	}
 	
 	public String getID() {
-		return Name;
+		return OSIS_ID;
 	}
 	
 	

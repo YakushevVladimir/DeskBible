@@ -35,7 +35,7 @@
     	android:label="@string/app_name" 
     	android:icon="@drawable/icon"    
     	android:theme="@style/Theme.GDCatalog" 
-    	android:name=".TempBibleQuoteApp">
+    	android:name=".BibleQuoteApp">
     	
         <activity android:label="@string/app_name" android:name=".activity.TempBibleQuote">
             <intent-filter>

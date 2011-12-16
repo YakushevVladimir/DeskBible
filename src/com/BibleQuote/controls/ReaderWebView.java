@@ -17,7 +17,7 @@ package com.BibleQuote.controls;
 
 import java.util.TreeSet;
 
-import com.BibleQuote.activity.Reader;
+import com.BibleQuote.activity.TempReader;
 import com.BibleQuote.utils.PreferenceHelper;
 
 import android.content.Context;
@@ -121,7 +121,7 @@ public class ReaderWebView extends WebView
 	
 	public void clearSelectedVerse() {
 		jsInterface.clearSelectedVerse();
-		((Reader) getContext()).setTextActionVisibility(false);
+		((TempReader) getContext()).setTextActionVisibility(false);
 	}
 	
 	private String getStyle(Boolean nightMode) {
@@ -182,7 +182,7 @@ public class ReaderWebView extends WebView
 		mHandler.post(new Runnable() {
 			@Override
 			public void run() {
-				((Reader) getContext()).viewChapterNav();
+				((TempReader) getContext()).viewChapterNav();
 			}
 		});
 	}
@@ -225,9 +225,9 @@ public class ReaderWebView extends WebView
 			} else if (((float) y / height) > 0.67) {
 				pageDown(false);
 			} else if (((float) x / width) <= 0.33) {
-				((Reader)getContext()).prevChapter();
+				((TempReader)getContext()).prevChapter();
 			} else if (((float) x / width) > 0.67) {
-				((Reader)getContext()).nextChapter();
+				((TempReader)getContext()).nextChapter();
 			}
 		}
 		return false;
@@ -250,7 +250,7 @@ public class ReaderWebView extends WebView
 		if (isStudyMode) {
 			viewChapterNav();
 		} else {
-			((Reader)getContext()).onChooseChapterClick();
+			((TempReader)getContext()).onChooseChapterClick();
 		}
 	}
 
@@ -267,7 +267,7 @@ public class ReaderWebView extends WebView
 	@Override
 	public boolean onDoubleTap(MotionEvent event) {
 		isStudyMode = !isStudyMode;
-		((Reader)getContext()).updateActivityMode();
+		((TempReader)getContext()).updateActivityMode();
 		if (!isStudyMode) {
 			clearSelectedVerse();
 		}
@@ -321,7 +321,7 @@ public class ReaderWebView extends WebView
 			mHandler.post(new Runnable() {
 				@Override
 				public void run() {
-					((Reader) getContext()).setTextActionVisibility(selectedVerse.size() != 0);
+					((TempReader) getContext()).setTextActionVisibility(selectedVerse.size() != 0);
 				}
 			});
 		}

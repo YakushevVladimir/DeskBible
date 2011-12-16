@@ -35,8 +35,8 @@ public class LibraryController {
 
 		case LocalDb:
 			libraryPath = Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED) 
-				? DataConstants.FS_EXTERNAL_DATA_PATH
-				: DataConstants.FS_DATA_PATH;
+				? DataConstants.DB_EXTERNAL_DATA_PATH
+				: DataConstants.DB_DATA_PATH;
 			libraryDir = new File(libraryPath);
 			return new LibraryController(new DbLibraryUnitOfWork(libraryDir, context), eventManager);
 

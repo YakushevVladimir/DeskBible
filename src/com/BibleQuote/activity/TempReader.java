@@ -514,7 +514,6 @@ public class TempReader extends GDActivity implements OnTaskCompleteListener, IC
 
 	@Override
 	public void onChangeModules(final ChangeModulesEvent event) {
-		// TODO: Зачем activity TempReader подписано на ChangeLibraryEvent
 		runOnUiThread(new Runnable() {
 			public void run() {
 				switch (event.code) {
@@ -529,7 +528,6 @@ public class TempReader extends GDActivity implements OnTaskCompleteListener, IC
 
 	@Override
 	public void onSearchInLibrary(final SearchInLibraryEvent event) {
-		// TODO: Зачем activity TempReader подписано на SearchInLibraryEvent
 		runOnUiThread(new Runnable() {
 			public void run() {
 				switch (event.code) {

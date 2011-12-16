@@ -24,7 +24,7 @@ import com.BibleQuote.utils.UpdateManager;
 
 public class TempBibleQuoteApp extends GDApplication {
 	
-	Librarian myLibararian;
+	private Librarian myLibararian;
 
 	@Override
 	public Class<?> getHomeActivityClass() {

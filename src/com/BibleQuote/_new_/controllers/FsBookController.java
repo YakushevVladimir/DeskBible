@@ -35,7 +35,7 @@ public class FsBookController implements IBookController {
 		ArrayList<Book> bookList = new ArrayList<Book>();
 		bookList.addAll(br.loadBooks((FsModule)module));
 		for (Book book : bookList) {
-			result.put(book.Name, book);
+			result.put(book.getID(), book);
 		}
 		
 		return result;
@@ -55,7 +55,7 @@ public class FsBookController implements IBookController {
 		
 		LinkedHashMap<String, Book> result = new LinkedHashMap<String, Book>();
 		for (Book book : bookList) {
-			result.put(book.Name, book);
+			result.put(book.getID(), book);
 		}
 		
 		return result;		

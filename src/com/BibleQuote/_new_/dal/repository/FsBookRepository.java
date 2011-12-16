@@ -56,12 +56,12 @@ public class FsBookRepository implements IBookRepository<FsModule, FsBook> {
 
 	
 	@Override
-	public FsBook getBookByName(FsModule module, String bookName) {
+	public FsBook getBookByName(FsModule module, String bookID) {
 		if (!context.isModuleLoaded(module)) {
 			context.moduleSet.put(module.ShortName, module);
 		}
 		
-		return (FsBook)module.Books.get(bookName);
+		return (FsBook)module.Books.get(bookID);
 	}
 
 	

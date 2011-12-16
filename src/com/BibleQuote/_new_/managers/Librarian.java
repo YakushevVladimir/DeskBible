@@ -87,7 +87,7 @@ public class Librarian implements IChangeModulesListener, IChangeBooksListener  
 		
 		if (cacheCtrl.isCacheExist(DataConstants.LIBRARY_CACHE)) {
 			modules = cacheCtrl.loadModules(DataConstants.LIBRARY_CACHE);
-			//moduleCtrl.loadModulesAsync();
+			moduleCtrl.loadModulesAsync();
 		} else {
 			modules = moduleCtrl.loadModules();
 			cacheCtrl.saveModulesAsync(modules, DataConstants.LIBRARY_CACHE);

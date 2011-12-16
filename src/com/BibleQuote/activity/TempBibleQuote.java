@@ -23,7 +23,7 @@ import android.view.View;
 import android.view.WindowManager;
 
 import com.BibleQuote.R;
-import com.BibleQuote.TempBibleQuoteApp;
+import com.BibleQuote.BibleQuoteApp;
 
 public class TempBibleQuote extends GDActivity {
 
@@ -41,7 +41,7 @@ public class TempBibleQuote extends GDActivity {
     
     public void startHomeActivity(){
 		startActivity(new Intent(this, TempReader.class));
-		finish();;
+		finish();
     }
 
 	private class InitApplication extends AsyncTask<Boolean, Void, Boolean> {
@@ -53,7 +53,7 @@ public class TempBibleQuote extends GDActivity {
 
 		@Override
 		protected Boolean doInBackground(Boolean... params) {
-			TempBibleQuoteApp app = (TempBibleQuoteApp) getGDApplication();
+			BibleQuoteApp app = (BibleQuoteApp) getGDApplication();
 			app.Init();
 			return true;
 		}
