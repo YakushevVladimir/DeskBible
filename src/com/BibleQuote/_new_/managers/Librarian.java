@@ -22,44 +22,51 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import android.content.Context;
-import android.os.Environment;
 
 import com.BibleQuote._new_.controllers.CacheController;
-import com.BibleQuote._new_.controllers.FsBookController;
-import com.BibleQuote._new_.controllers.FsChapterController;
-import com.BibleQuote._new_.controllers.FsModuleController;
-import com.BibleQuote._new_.listeners.ChangeLibraryEvent;
-import com.BibleQuote._new_.listeners.IChangeListener;
+import com.BibleQuote._new_.controllers.IBookController;
+import com.BibleQuote._new_.controllers.IChapterController;
+import com.BibleQuote._new_.controllers.IModuleController;
+import com.BibleQuote._new_.controllers.LibraryController;
+import com.BibleQuote._new_.controllers.LibraryController.LibrarySource;
+import com.BibleQuote._new_.dal.CacheContext;
+import com.BibleQuote._new_.listeners.ChangeBooksEvent;
+import com.BibleQuote._new_.listeners.ChangeModulesEvent;
+import com.BibleQuote._new_.listeners.IChangeBooksListener;
+import com.BibleQuote._new_.listeners.IChangeModulesListener;
 import com.BibleQuote._new_.models.Book;
 import com.BibleQuote._new_.models.Module;
+import com.BibleQuote._new_.models.Verse;
+import com.BibleQuote._new_.utils.DataConstants;
 import com.BibleQuote.entity.BibleBooksID;
 import com.BibleQuote.entity.ItemList;
 import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.StringProc;
 
-public class Librarian implements IChangeListener  {
+public class Librarian implements IChangeModulesListener, IChangeBooksListener  {
 	
 	private final String TAG = "Librarian";
 	
 	private TreeMap<String, Module> modules  = new TreeMap<String, Module>();
 	private LinkedHashMap<String, String> searchResults = new LinkedHashMap<String, String>();
+	private ArrayList<Verse> verses = new ArrayList<Verse>();
+	
 	private Module currModule; 
 	private Book currBook; 
 	private Integer currChapter = 1;
-	private ArrayList<String> verses = new ArrayList<String>();
-	private CacheController cacheController;
-	private String moduleCache = "library.cash";
-	private FsModuleController fsModuleCtrl;
-	private FsBookController fsBookCtrl;
-	private FsChapterController fsChapterCtrl;
-	private String libraryPath;
+	private CacheController cacheCtrl;
+	
+	private IModuleController moduleCtrl;
+	private IBookController bookCtrl;
+	private IChapterController chapterCtrl;
+	private LibraryController libCtrl; 
 	
 	private static final Byte delimeter1 = (byte) 0xFE;
 	private static final Byte delimeter2 = (byte) 0xFF;
 
-	
 	public EventManager eventManager = new EventManager();
+	
 	
 	/**
 	 * Производит заполнение списка доступных модулей с книгами Библии,
@@ -68,25 +75,27 @@ public class Librarian implements IChangeListener  {
 	public Librarian(Context context) {
 		Log.i(TAG, "Инициализация библиотеки модулей");
 		
-		eventManager.addChangeListener(this);
+		eventManager.addChangeModulesListener(this);
+		eventManager.addChangeBooksListener(this);
 		
-		cacheController = new CacheController(context.getCacheDir(), moduleCache, eventManager);
-		libraryPath = Environment.getExternalStorageDirectory().toString() + "/BibleQuote/modules/";
-		fsModuleCtrl = new FsModuleController(context, libraryPath, eventManager);
-		fsBookCtrl = new FsBookController(context, libraryPath);
-		fsChapterCtrl = new FsChapterController(context, libraryPath);
-				
-		if (cacheController.isCacheExist(moduleCache)) {
-			modules = cacheController.loadModules(moduleCache);
-			fsModuleCtrl.loadModulesAsync();
+		cacheCtrl = new CacheController(new CacheContext(context.getCacheDir(), DataConstants.LIBRARY_CACHE));
+		
+		libCtrl = LibraryController.create(LibrarySource.FileSystem, eventManager, context);
+		moduleCtrl = libCtrl.getModuleCtrl();
+		bookCtrl = libCtrl.getBookCtrl();
+		chapterCtrl = libCtrl.getChapterCtrl();
+		
+		if (cacheCtrl.isCacheExist(DataConstants.LIBRARY_CACHE)) {
+			modules = cacheCtrl.loadModules(DataConstants.LIBRARY_CACHE);
+			//moduleCtrl.loadModulesAsync();
 		} else {
-			modules = fsModuleCtrl.loadModules();
-			cacheController.saveModulesAsync(modules, moduleCache);
+			modules = moduleCtrl.loadModules();
+			cacheCtrl.saveModulesAsync(modules, DataConstants.LIBRARY_CACHE);
 		}
 		
 		if (currModule == null && modules.size() > 0) {
 			currModule = modules.get(modules.firstKey());
-			ArrayList<Book> books = fsBookCtrl.getBooks(currModule);
+			ArrayList<Book> books = bookCtrl.getBookList(currModule);
 			if (books.size() > 0) {
 				currBook = books.get(0);
 			}
@@ -95,10 +104,17 @@ public class Librarian implements IChangeListener  {
 	}
 
 	@Override
-	public void onChangeLibrary(ChangeLibraryEvent event) {
-		if (event.code == ChangeCode.ModulesChanged) {
+	public void onChangeModules(ChangeModulesEvent event) {
+		if (event.code == IChangeModulesListener.ChangeCode.ModulesLoaded) {
 			modules = event.modules;
+			cacheCtrl.saveModulesAsync(modules, DataConstants.LIBRARY_CACHE);
 		}
+	}
+	
+	@Override
+	public void onChangeBooks(ChangeBooksEvent event) {
+		if (event.code == IChangeBooksListener.ChangeCode.BooksLoaded) {
+		}		
 	}
 	
 	///////////////////////////////////////////////////////////////////////////
@@ -131,7 +147,7 @@ public class Librarian implements IChangeListener  {
 			return new ArrayList<ItemList>();
 		}
 		ArrayList<ItemList> booksList = new ArrayList<ItemList>();
-		for (Book book : fsBookCtrl.getBooks(currModule)) {
+		for (Book book : bookCtrl.getBookList(currModule)) {
 			booksList.add(new ItemList(book.OSIS_ID, book.Name));
 		}
 		return booksList;
@@ -153,11 +169,11 @@ public class Librarian implements IChangeListener  {
 		if (currModule == null) {
 			return new ArrayList<String>();
 		}
-		currBook = fsBookCtrl.getBook(currModule, bookID);
+		currBook = bookCtrl.getBook(currModule, bookID);
 		if (currBook == null) {
 			return new ArrayList<String>();
 		}
-		return  fsChapterCtrl.getChapterNumbers(currModule, currBook);
+		return currBook.getChapterNumbers(currModule.ChapterZero);
 	}
 
 	private Module getModule(String moduleID){
@@ -182,7 +198,7 @@ public class Librarian implements IChangeListener  {
 	
 	public String OpenLink(String moduleID, String bookID, Integer chapter){
 		currModule  = modules.get(moduleID);
-		currBook    = fsBookCtrl.getBook(currModule, bookID);
+		currBook    = bookCtrl.getBook(currModule, bookID);
 		currChapter = chapter;
 
 		String chapterText = getChapterHTMLView(moduleID, bookID, currChapter);
@@ -217,7 +233,7 @@ public class Librarian implements IChangeListener  {
 		if (chapterQty > (currChapter + (currModule.ChapterZero ? 1 : 0))) {
 			currChapter++;
 		} else {
-			ArrayList<Book> books = fsBookCtrl.getBooks(currModule);
+			ArrayList<Book> books = bookCtrl.getBookList(currModule);
 			int pos = books.indexOf(currBook);
 			if (++pos < books.size()) {
 				currBook = books.get(pos);
@@ -234,7 +250,7 @@ public class Librarian implements IChangeListener  {
 		if (currChapter != (currModule.ChapterZero ? 0 : 1)) {
 			currChapter--;
 		} else {
-			ArrayList<Book> books = fsBookCtrl.getBooks(currModule);
+			ArrayList<Book> books = bookCtrl.getBookList(currModule);
 			int pos = books.indexOf(currBook);
 			if (pos > 0) {
 				currBook = books.get(--pos);
@@ -257,15 +273,15 @@ public class Librarian implements IChangeListener  {
 		}
 		
 		// Получим книгу модуля по её ID
-		Book currBook = fsBookCtrl.getBook(currModule, bookID);
+		Book currBook = bookCtrl.getBook(currModule, bookID);
 		if (currBook == null) {
 			return "";
 		}
 		
-		verses = fsChapterCtrl.getChapterVerses(currModule, currBook, chapter.toString()); 
+		verses = chapterCtrl.getChapter(currBook, chapter).getVerseList(); 
 		StringBuilder chapterHTML = new StringBuilder();
 		for (int verse = 1; verse <= verses.size(); verse++) {
-			String verseText = verses.get(verse - 1);
+			String verseText = verses.get(verse - 1).getText();
 
 			if (currModule.containsStrong) {
 				// убираем номера Стронга
@@ -295,7 +311,7 @@ public class Librarian implements IChangeListener  {
 		if (verses.size() < --verse) {
 			return "";
 		};
-		return StringProc.stripTags(this.verses.get(verse), "", true)
+		return StringProc.stripTags(this.verses.get(verse).getText(), "", true)
 			.replaceAll("^\\d+\\s+", "")
 			.replaceAll("\\s\\d+", "");
 	}
@@ -409,7 +425,7 @@ public class Librarian implements IChangeListener  {
 		if (module == null) {
 			return "---";
 		} else {
-			Book book = fsBookCtrl.getBook(module, bookID);
+			Book book = bookCtrl.getBook(module, bookID);
 			if (book == null) {
 				return "---";
 			}
@@ -423,7 +439,7 @@ public class Librarian implements IChangeListener  {
 		if (module == null) {
 			return "---";
 		} else {
-			Book book = fsBookCtrl.getBook(module, bookID);
+			Book book = bookCtrl.getBook(module, bookID);
 			if (book == null) {
 				return "---";
 			}
@@ -487,7 +503,7 @@ public class Librarian implements IChangeListener  {
 		if (currModule == null) {
 			return "";
 		}
-		Book currBook = fsBookCtrl.getBook(currModule, bookID);
+		Book currBook = bookCtrl.getBook(currModule, bookID);
 		if (currBook == null) {
 			return "";
 		}
@@ -587,4 +603,6 @@ public class Librarian implements IChangeListener  {
 		
 		return shareText.toString();
 	}
+
+
 }

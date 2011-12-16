@@ -4,35 +4,56 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.BibleQuote._new_.listeners.ChangeLibraryEvent;
-import com.BibleQuote._new_.listeners.IChangeListener;
+import com.BibleQuote._new_.listeners.ChangeBooksEvent;
+import com.BibleQuote._new_.listeners.ChangeModulesEvent;
+import com.BibleQuote._new_.listeners.IChangeBooksListener;
+import com.BibleQuote._new_.listeners.IChangeModulesListener;
 import com.BibleQuote._new_.listeners.ISearchListener;
 import com.BibleQuote._new_.listeners.SearchInLibraryEvent;
 
 
 public class EventManager {
 	
-	private final List<IChangeListener> myChangeListeners = Collections.synchronizedList(new LinkedList<IChangeListener>());
-	private final List<ISearchListener> mySearchListeners = Collections.synchronizedList(new LinkedList<ISearchListener>());
-	
-	///////////////// IChangeListener
-	public void addChangeListener(IChangeListener listener) {
-		myChangeListeners.add(listener);
+	///////////////// IChangeModulesListener
+	private final List<IChangeModulesListener> myChangeModuleListeners = Collections.synchronizedList(new LinkedList<IChangeModulesListener>());
+	public void addChangeModulesListener(IChangeModulesListener listener) {
+		myChangeModuleListeners.add(listener);
 	}
 
-	public void removeChangeListener(IChangeListener listener) {
-		myChangeListeners.remove(listener);
+	public void removeChangeModulesListener(IChangeModulesListener listener) {
+		myChangeModuleListeners.remove(listener);
 	}
 	
-	public void fireChangeLibraryEvent(ChangeLibraryEvent event) {
-		synchronized (myChangeListeners) {
-			for (IChangeListener l : myChangeListeners) {
-				l.onChangeLibrary(event);
+	public void fireChangeModulesEvent(ChangeModulesEvent event) {
+		synchronized (myChangeModuleListeners) {
+			for (IChangeModulesListener l : myChangeModuleListeners) {
+				l.onChangeModules(event);
 			}
 		}
 	}
 	
+
+	///////////////// IChangeBooksListener
+	private final List<IChangeBooksListener> myChangeBooksListeners = Collections.synchronizedList(new LinkedList<IChangeBooksListener>());
+	public void addChangeBooksListener(IChangeBooksListener listener) {
+		myChangeBooksListeners.add(listener);
+	}
+
+	public void removeChangeBooksListener(IChangeBooksListener listener) {
+		myChangeBooksListeners.remove(listener);
+	}
+		
+	public void fireChangeBooksEvent(ChangeBooksEvent event) {
+		synchronized (myChangeBooksListeners) {
+			for (IChangeBooksListener l : myChangeBooksListeners) {
+				l.onChangeBooks(event);
+			}
+		}
+	}
+
+
 	/////////////// ISearchListener
+	private final List<ISearchListener> mySearchListeners = Collections.synchronizedList(new LinkedList<ISearchListener>());
 	public void addSearchListener(ISearchListener listener) {
 		mySearchListeners.add(listener);
 	}
