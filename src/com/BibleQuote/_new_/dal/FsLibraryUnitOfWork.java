@@ -1,45 +1,39 @@
 package com.BibleQuote._new_.dal;
 
+import java.io.File;
+
 import com.BibleQuote._new_.dal.repository.FsBookRepository;
-import com.BibleQuote._new_.dal.repository.FsFldModuleRepository;
-import com.BibleQuote._new_.dal.repository.FsZipModuleRepository;
+import com.BibleQuote._new_.dal.repository.FsChapterRepository;
+import com.BibleQuote._new_.dal.repository.FsModuleRepository;
+import com.BibleQuote._new_.dal.repository.IBookRepository;
+import com.BibleQuote._new_.dal.repository.IChapterRepository;
+import com.BibleQuote._new_.dal.repository.IModuleRepository;
+import com.BibleQuote._new_.models.FsBook;
+import com.BibleQuote._new_.models.FsModule;
 
-import android.content.Context;
+public class FsLibraryUnitOfWork implements ILibraryUnitOfWork<String, FsModule, FsBook> {
 
-public class FsLibraryUnitOfWork {
-    private FsLibraryContext context;
-    private FsFldModuleRepository moduleRepository;
-    private FsZipModuleRepository zipModuleRepository;
-    private FsBookRepository bookRepository;
+	private FsLibraryContext context;
+    private IModuleRepository<String, FsModule> moduleRepository;
+    private IBookRepository<FsModule, FsBook> bookRepository;
+    private IChapterRepository<FsBook> chapterRepository;
 
-    public FsLibraryUnitOfWork(Context context, String libraryPath) {
-    	this.context = new FsLibraryContext(context, libraryPath);
-    }
-
-    public FsLibraryContext getContext()
-    {
-    	return this.context;
+    public FsLibraryUnitOfWork(File libraryDir) {
+    	context = new FsLibraryContext(libraryDir);
     }
     
-    public FsFldModuleRepository getFsModuleRepository()
+    @Override
+    public IModuleRepository<String, FsModule> getModuleRepository()
     {
         if (this.moduleRepository == null)
         {
-            this.moduleRepository = new FsFldModuleRepository(context);
+            this.moduleRepository = new FsModuleRepository(context);
         }
         return this.moduleRepository;
     }
 
-    public FsZipModuleRepository getFsZipModuleRepository()
-    {
-        if (this.zipModuleRepository == null)
-        {
-            this.zipModuleRepository = new FsZipModuleRepository(context);
-        }
-        return this.zipModuleRepository;
-    }
-    
-    public FsBookRepository getFsBookRepository()
+    @Override
+    public IBookRepository<FsModule, FsBook> getBookRepository()
     {
         if (this.bookRepository == null)
         {
@@ -47,4 +41,14 @@ public class FsLibraryUnitOfWork {
         }
         return bookRepository;
     }
+
+	@Override
+	public IChapterRepository<FsBook> getChapterRepository() {
+        if (this.chapterRepository == null)
+        {
+            this.chapterRepository = new FsChapterRepository(context);
+        }
+        return chapterRepository;
+	}
+
 }

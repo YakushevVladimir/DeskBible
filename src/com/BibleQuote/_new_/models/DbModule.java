@@ -18,8 +18,7 @@ public class DbModule extends Module {
 	}
 
 	@Override
-	public String getID() {
-		// TODO Auto-generated method stub
-		return null;
+	public Object getDataSourceID() {
+		return Id;
 	}
 }

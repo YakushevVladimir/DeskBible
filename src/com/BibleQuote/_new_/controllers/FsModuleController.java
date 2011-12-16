@@ -3,31 +3,27 @@ package com.BibleQuote._new_.controllers;
 import java.util.ArrayList;
 import java.util.TreeMap;
 
-import android.content.Context;
 import android.os.AsyncTask;
 
 import com.BibleQuote._new_.dal.FsLibraryUnitOfWork;
-import com.BibleQuote._new_.dal.repository.FsFldModuleRepository;
-import com.BibleQuote._new_.dal.repository.FsZipModuleRepository;
-import com.BibleQuote._new_.listeners.ChangeLibraryEvent;
-import com.BibleQuote._new_.listeners.IChangeListener.ChangeCode;
+import com.BibleQuote._new_.dal.repository.IModuleRepository;
+import com.BibleQuote._new_.listeners.ChangeModulesEvent;
+import com.BibleQuote._new_.listeners.IChangeModulesListener.ChangeCode;
 import com.BibleQuote._new_.managers.EventManager;
+import com.BibleQuote._new_.models.FsModule;
 import com.BibleQuote._new_.models.Module;
 
-public class FsModuleController {
+public class FsModuleController implements IModuleController {
 	private final String TAG = "FsModuleController";
 	
-	private FsLibraryUnitOfWork unit;
-	private FsFldModuleRepository fsModRepository;
-	private FsZipModuleRepository fsZipModRepository;
 	private EventManager eventManager;
+	private IModuleRepository<String, FsModule> mRepository;
 
-	public FsModuleController(Context context, String libraryPath, EventManager eventManager) {
-		this.unit = new FsLibraryUnitOfWork(context, libraryPath);
-		this.fsModRepository = unit.getFsModuleRepository();
-		this.fsZipModRepository = unit.getFsZipModuleRepository();
+	public FsModuleController(FsLibraryUnitOfWork unit, EventManager eventManager) {
 		this.eventManager = eventManager;
+		mRepository = unit.getModuleRepository();
     }
+	
 	
     /**
      * @return Возвращает коллекцию модулей с ключом по Module.ShortName
@@ -37,16 +33,30 @@ public class FsModuleController {
 		TreeMap<String, Module> result = new TreeMap<String, Module>();
 		
 		ArrayList<Module> moduleList = new ArrayList<Module>();
-		moduleList.addAll(fsModRepository.getModules());
-		moduleList.addAll(fsZipModRepository.getModules());
+		moduleList.addAll(mRepository.loadModules());
 		for (Module module : moduleList) {
 			result.put(module.ShortName, module);
 		}
+		
 		return result;
 	}
 
+	
 	public void loadModulesAsync() {
 		new LoadModulesAsync().execute(true);
+	}
+	
+	
+	public TreeMap<String, Module> getModules() {
+		TreeMap<String, Module> result = new TreeMap<String, Module>();
+		
+		ArrayList<Module> moduleList = new ArrayList<Module>();
+		moduleList.addAll(mRepository.getModules());
+		for (Module module : moduleList) {
+			result.put(module.ShortName, module);
+		}
+		
+		return result;		
 	}
 	
 	
@@ -55,8 +65,8 @@ public class FsModuleController {
 		protected void onPostExecute(TreeMap<String, Module> result) {
 			super.onPostExecute(result);
 			
-			ChangeLibraryEvent event = new ChangeLibraryEvent(ChangeCode.ModulesChanged, result);
-			eventManager.fireChangeLibraryEvent(event);
+			ChangeModulesEvent event = new ChangeModulesEvent(ChangeCode.ModulesLoaded, result);
+			eventManager.fireChangeModulesEvent(event);
 		}
 
 		@Override

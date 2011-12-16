@@ -11,14 +11,16 @@ public class FsBook extends Book {
 	/**
 	 * Путь к файлу с книгой
 	 */
-	public String PathName;
+	public final String FileName;
 	
-	public String ModuleShortName;
-	
-	public FsBook(String name, String pathName, String shortNames,
-			int chapterQty) {
-		super(name, shortNames, chapterQty);
-		this.PathName = pathName;
+	public FsBook(FsModule module, String name, String fileName, String shortNames, int chapterQty) {
+		super(module, name, shortNames, chapterQty);
+		this.FileName = fileName;
+	}
+
+	@Override
+	public String getDataSourceID() {
+		return this.FileName;
 	}
 
 }

@@ -3,22 +3,22 @@ package com.BibleQuote._new_.controllers;
 import java.util.ArrayList;
 import java.util.TreeMap;
 
-import android.content.Context;
-
 import com.BibleQuote._new_.dal.DbLibraryUnitOfWork;
-import com.BibleQuote._new_.dal.repository.DbModuleRepository;
+import com.BibleQuote._new_.dal.repository.IModuleRepository;
+import com.BibleQuote._new_.managers.EventManager;
+import com.BibleQuote._new_.models.DbModule;
 import com.BibleQuote._new_.models.Module;
 
-public class DbModuleController {
+public class DbModuleController implements IModuleController {
 	private final String TAG = "DbModuleController";
 	
-	private DbLibraryUnitOfWork unit;
-	private DbModuleRepository mr;
+	//private EventManager eventManager;
+	private IModuleRepository<Long, DbModule> mRepository;
 	
-    public DbModuleController(Context context)
+    public DbModuleController(DbLibraryUnitOfWork unit, EventManager eventManager)
     {
-    	unit = new DbLibraryUnitOfWork(context);
-    	mr = unit.getDbModuleRepository();
+		//this.eventManager = eventManager;
+		mRepository = unit.getModuleRepository();    	
     }
     
     
@@ -30,7 +30,7 @@ public class DbModuleController {
 		TreeMap<String, Module> result = new TreeMap<String, Module>();
 		
 		ArrayList<Module> moduleList = new ArrayList<Module>();
-		moduleList.addAll(mr.getModules());
+		moduleList.addAll(mRepository.loadModules());
 		for (Module module : moduleList) {
 			result.put(module.ShortName, module);
 		}
@@ -38,15 +38,23 @@ public class DbModuleController {
 		return result;
 	}
 	
-	
-	public Module getModule(long moduleId) {
-		return mr.getModuleById(moduleId);
+
+	@Override
+	public void loadModulesAsync() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public TreeMap<String, Module> getModules() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
-
-	private void workIsDone(int flag) {
-		// if Created fireEvent(Created)
-		// else if Updated fireEvent(UPdated)
+	
+	public Module getModule(String moduleShortName) {
+		return mRepository.getModuleByShortName(moduleShortName);
 	}
 
 }

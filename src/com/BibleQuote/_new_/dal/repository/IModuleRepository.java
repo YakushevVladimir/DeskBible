@@ -2,18 +2,29 @@ package com.BibleQuote._new_.dal.repository;
 
 import java.util.Collection;
 
-import com.BibleQuote._new_.models.Module;
-
-public interface IModuleRepository<T> {
+public interface IModuleRepository<TModuleId, TModule> {
     
-	Collection<Module> getModules();
-    
-	Module getModuleById(T moduleId);
+	/*
+	 * Data source related methods
+	 * 
+	 */
+	Collection<TModule> loadModules();
 	
-    void insertModule(Module module);
+	TModule loadModuleById(TModuleId moduleDataSourceId);
+	
+    void insertModule(TModule module);
     
-    void deleteModule(T moduleId);
+    void deleteModule(TModule module);
 
-    void updateModule(Module module);
+    void updateModule(TModule module);
+    
+	
+	/*
+	 * Internal cache related methods
+	 *
+	 */
+	Collection<TModule> getModules();
+    
+	TModule getModuleByShortName(String moduleShortName);
     
 }

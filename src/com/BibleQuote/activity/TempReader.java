@@ -48,8 +48,8 @@ import android.widget.Toast;
 
 import com.BibleQuote.R;
 import com.BibleQuote.BibleQuoteApp;
-import com.BibleQuote._new_.listeners.ChangeLibraryEvent;
-import com.BibleQuote._new_.listeners.IChangeListener;
+import com.BibleQuote._new_.listeners.ChangeModulesEvent;
+import com.BibleQuote._new_.listeners.IChangeModulesListener;
 import com.BibleQuote._new_.listeners.ISearchListener;
 import com.BibleQuote._new_.listeners.SearchInLibraryEvent;
 import com.BibleQuote._new_.managers.Librarian;
@@ -60,7 +60,7 @@ import com.BibleQuote.utils.OnTaskCompleteListener;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.Task;
 
-public class TempReader extends GDActivity implements OnTaskCompleteListener, IChangeListener, ISearchListener {
+public class TempReader extends GDActivity implements OnTaskCompleteListener, IChangeModulesListener, ISearchListener {
 
 	private static final String TAG = "Reader";
 	private static final int VIEW_CHAPTER_NAV_LENGHT = 5000;
@@ -99,7 +99,7 @@ public class TempReader extends GDActivity implements OnTaskCompleteListener, IC
 
 		BibleQuoteApp app = (BibleQuoteApp) getGDApplication();
 		myLibrarian = app.getLibrarian();
-		myLibrarian.eventManager.addChangeListener(this);
+		myLibrarian.eventManager.addChangeModulesListener(this);
 		myLibrarian.eventManager.addSearchListener(this);
 		
 		btnChapterNav = (LinearLayout)findViewById(R.id.btn_chapter_nav);
@@ -513,14 +513,14 @@ public class TempReader extends GDActivity implements OnTaskCompleteListener, IC
 
 
 	@Override
-	public void onChangeLibrary(final ChangeLibraryEvent event) {
+	public void onChangeModules(final ChangeModulesEvent event) {
 		// TODO: Зачем activity TempReader подписано на ChangeLibraryEvent
 		runOnUiThread(new Runnable() {
 			public void run() {
 				switch (event.code) {
 					case ModulesChanged:
 						break;
-					case BooksChanged:
+					case ModulesAdded:
 						break;
 				}
 			}

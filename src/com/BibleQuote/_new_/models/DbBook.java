@@ -24,10 +24,17 @@ public class DbBook extends Book {
 	public String PathName;
 	
 
-	public DbBook(String name, String pathName, String shortNames, int chapterQty, long id) {
-		super(name, shortNames, chapterQty);
+	public DbBook(Module module, String name, String pathName, String shortNames, int chapterQty, long id) {
+		super(module, name, shortNames, chapterQty);
 		this.Id = id;
 		this.PathName = pathName;
 	}
+
+
+	@Override
+	public Object getDataSourceID() {
+		return Id;
+	}
+
 
 }
