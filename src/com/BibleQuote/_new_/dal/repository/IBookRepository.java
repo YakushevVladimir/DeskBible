@@ -2,18 +2,27 @@ package com.BibleQuote._new_.dal.repository;
 
 import java.util.Collection;
 
-import com.BibleQuote._new_.models.Book;
 
+public interface IBookRepository<TModule, TBook> {
+    
+	/*
+	 * Data source related methods
+	 * 
+	 */
+	Collection<TBook> loadBooks(TModule module);
+	
+	void insertBook(TBook book);
+    
+	void deleteBook(TBook book);
+	
+	void updateBook(TBook book);
+	
+	/*
+	 * Internal cache related methods
+	 *
+	 */
+	Collection<TBook> getBooks(TModule module);
+	
+	TBook getBookByName(TModule module, String bookName);
 
-public interface IBookRepository<T> {
-    
-	Collection<Book> getBooks(T moduleId);
-	
-	Book getBookById(T bookId);
-	
-	void insertBook(Book book);
-    
-	void deleteBook(T bookId);
-	
-	void updateBook(Book book);
 }

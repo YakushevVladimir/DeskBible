@@ -1,27 +1,29 @@
 package com.BibleQuote._new_.dal;
 
 
-import com.BibleQuote._new_.dal.repository.DbBookRepository;
-import com.BibleQuote._new_.dal.repository.DbModuleRepository;
+import java.io.File;
 
 import android.content.Context;
 
-public class DbLibraryUnitOfWork {
+import com.BibleQuote._new_.dal.repository.DbBookRepository;
+import com.BibleQuote._new_.dal.repository.DbModuleRepository;
+import com.BibleQuote._new_.dal.repository.IBookRepository;
+import com.BibleQuote._new_.dal.repository.IChapterRepository;
+import com.BibleQuote._new_.dal.repository.IModuleRepository;
+import com.BibleQuote._new_.models.DbBook;
+import com.BibleQuote._new_.models.DbModule;
+
+public class DbLibraryUnitOfWork  implements ILibraryUnitOfWork<Long, DbModule, DbBook> {
 	
     private DbLibraryContext context;
-    private DbModuleRepository moduleRepository;
-    private DbBookRepository bookRepository;
+    private IModuleRepository<Long, DbModule> moduleRepository;
+    private IBookRepository<DbModule, DbBook> bookRepository;
 
-    public DbLibraryUnitOfWork(Context context) {
-    	this.context = new DbLibraryContext(context);
+    public DbLibraryUnitOfWork(File libraryDir, Context context) {
+    	this.context = new DbLibraryContext(libraryDir, context);
     }
 
-    public DbLibraryContext getContext()
-    {
-    	return this.context;
-    }
-    
-    public DbModuleRepository getDbModuleRepository()
+    public IModuleRepository<Long, DbModule> getModuleRepository()
     {
         if (this.moduleRepository == null)
         {
@@ -30,7 +32,7 @@ public class DbLibraryUnitOfWork {
         return this.moduleRepository;
     }
 
-    public DbBookRepository getDbBookRepository()
+    public IBookRepository<DbModule, DbBook> getBookRepository()
     {
         if (this.bookRepository == null)
         {
@@ -38,4 +40,10 @@ public class DbLibraryUnitOfWork {
         }
         return bookRepository;
     }
+
+	@Override
+	public IChapterRepository<DbBook> getChapterRepository() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

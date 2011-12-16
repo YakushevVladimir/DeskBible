@@ -2,6 +2,7 @@ package com.BibleQuote._new_.models;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 import com.BibleQuote.entity.BibleBooksID;
 
@@ -9,7 +10,7 @@ import com.BibleQuote.entity.BibleBooksID;
  * @author Yakushev Vladimir, Sergey Ursul
  * 
  */
-public class Book implements Serializable {
+public abstract class Book implements Serializable {
 	
 	private static final long serialVersionUID = -6348188202419079481L;
 
@@ -33,14 +34,39 @@ public class Book implements Serializable {
 	 */	
 	public Integer ChapterQty = 0;
 	
-	public ArrayList<String> ChapterNumbers = new ArrayList<String>();
-	
-	public ArrayList<Chapter> ChapterList;	// to lazy loading on demand
+	public LinkedHashMap<Integer, Chapter> Chapters = new LinkedHashMap<Integer, Chapter>();	// to lazy loading on demand
 	
 	
-	public Book(String name, String shortNames,  int chapterQty) {
+	/**
+	 * @return Возвращает краткое имя книги. являющееся первым в списке кратких имен
+	 */
+	public String getShortName() {
+		return ShortNames.get(0);
+	}
+
+	
+	public ArrayList<String> getChapterNumbers(Boolean isChapterZero) {
+		if (ChapterQty > 0 && chapterNumbers.size() == 0) {
+			for (int i = 0; i < ChapterQty; i++) {
+				chapterNumbers.add("" + i + (isChapterZero ? 0 : 1));
+			}
+		}
+		return chapterNumbers;
+	}
+	
+	public String getID() {
+		return Name;
+	}
+	
+	
+	public Module getModule() {
+		return module;
+	}	
+	
+	public Book(Module module, String name, String shortNames,  int chapterQty) {
 		this.Name = name;
 		this.ChapterQty = chapterQty;
+		this.module = module;
 		
 		String[] names = shortNames.trim().split(" ");
 		if (names.length == 0) {
@@ -65,11 +91,9 @@ public class Book implements Serializable {
 		}
 	}
 	
-	/**
-	 * @return Возвращает краткое имя книги. являющееся первым в списке кратких имен
-	 */
-	public String getShortName() {
-		return ShortNames.get(0);
-	}
+	public abstract Object getDataSourceID();
 
+	private Module module;
+	private ArrayList<String> chapterNumbers = new ArrayList<String>();
+	
 }

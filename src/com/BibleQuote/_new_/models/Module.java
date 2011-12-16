@@ -1,7 +1,6 @@
 package com.BibleQuote._new_.models;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 /**
@@ -22,8 +21,6 @@ public abstract class Module implements Serializable {
 	public boolean isBible = false;
 	public String defaultEncoding = "utf-8";
 	
-	public ArrayList<String> BookIds = new ArrayList<String>();
-	
 	public LinkedHashMap<String, Book> Books = new LinkedHashMap<String, Book>();	// to lazy loading on demand
 	
 	// private String Categories = "";
@@ -36,5 +33,9 @@ public abstract class Module implements Serializable {
 		return this.Name;
 	}
 	
-	abstract public String getID();
+	public String getID() {
+		return ShortName;
+	}
+	
+	public abstract Object getDataSourceID();
 }

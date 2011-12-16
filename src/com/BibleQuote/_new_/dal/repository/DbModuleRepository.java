@@ -8,10 +8,9 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.BibleQuote._new_.dal.DbLibraryContext;
 import com.BibleQuote._new_.models.DbModule;
-import com.BibleQuote._new_.models.Module;
 
 
-public class DbModuleRepository implements IModuleRepository<Long> {
+public class DbModuleRepository implements IModuleRepository<Long, DbModule> {
     
 	private SQLiteDatabase db;
 
@@ -22,8 +21,8 @@ public class DbModuleRepository implements IModuleRepository<Long> {
     
     
 	@Override
-	public Collection<Module> getModules() {
-		ArrayList<Module> moduleList = new ArrayList<Module>();
+	public Collection<DbModule> loadModules() {
+		ArrayList<DbModule> moduleList = new ArrayList<DbModule>();
 		final Cursor cursor = db.rawQuery("SELECT * FROM Module ", null);
 		if (cursor.moveToNext()) {
 			final long Id = cursor.getLong(0);
@@ -37,8 +36,8 @@ public class DbModuleRepository implements IModuleRepository<Long> {
 	
 
 	@Override
-	public Module getModuleById(Long moduleId) {
-		Module module = null;
+	public DbModule loadModuleById(Long moduleId) {
+		DbModule module = null;
 		final Cursor cursor = db.rawQuery("SELECT * FROM Module WHERE module_id = ? ", new String[] {"" + moduleId});
 		if (cursor.moveToNext()) {
 			final long id = cursor.getLong(0);
@@ -49,19 +48,32 @@ public class DbModuleRepository implements IModuleRepository<Long> {
 		return module;		
 	}
 	
+	
+	@Override
+	public Collection<DbModule> getModules() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 
 	@Override
-	public void insertModule(Module module) {
+	public DbModule getModuleByShortName(String moduleShortName) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+
+	@Override
+	public void insertModule(DbModule module) {
 	}
 
 	@Override
-	public void deleteModule(Long moduleId) {
+	public void deleteModule(DbModule module) {
 	}
 
     
 	@Override
-	public void updateModule(Module module) {
+	public void updateModule(DbModule module) {
 	}
-
 
 }
