@@ -40,6 +40,7 @@ public class BibleQuoteApp extends GDApplication {
 	public Librarian getLibrarian() {
 		if (myLibararian == null) {
 			myLibararian = new Librarian(this);
+			myLibararian.openModules();
 		}
 		return myLibararian;
 	}

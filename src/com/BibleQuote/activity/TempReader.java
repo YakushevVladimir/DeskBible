@@ -46,13 +46,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.BibleQuote.R;
 import com.BibleQuote.BibleQuoteApp;
-import com.BibleQuote._new_.listeners.ChangeModulesEvent;
-import com.BibleQuote._new_.listeners.IChangeModulesListener;
+import com.BibleQuote.R;
+import com.BibleQuote._new_.listeners.ChangeChaptersEvent;
 import com.BibleQuote._new_.listeners.ISearchListener;
 import com.BibleQuote._new_.listeners.SearchInLibraryEvent;
+import com.BibleQuote._new_.managers.AsyncLoadModule;
+import com.BibleQuote._new_.managers.AsyncOpenChapter;
 import com.BibleQuote._new_.managers.Librarian;
+import com.BibleQuote._new_.utils.OSISLink;
 import com.BibleQuote.controls.ReaderWebView;
 import com.BibleQuote.utils.AsyncTaskManager;
 import com.BibleQuote.utils.Log;
@@ -60,7 +62,7 @@ import com.BibleQuote.utils.OnTaskCompleteListener;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.Task;
 
-public class TempReader extends GDActivity implements OnTaskCompleteListener, IChangeModulesListener, ISearchListener {
+public class TempReader extends GDActivity implements OnTaskCompleteListener, ISearchListener {
 
 	private static final String TAG = "Reader";
 	private static final int VIEW_CHAPTER_NAV_LENGHT = 5000;
@@ -94,12 +96,11 @@ public class TempReader extends GDActivity implements OnTaskCompleteListener, IC
 		initActionBar();
 		prepareQuickActionBar();
 		
-		mAsyncTaskManager = new AsyncTaskManager(this, this);
+		mAsyncTaskManager = new AsyncTaskManager(this, this, false);
 		mAsyncTaskManager.handleRetainedTask(getLastNonConfigurationInstance());
 
 		BibleQuoteApp app = (BibleQuoteApp) getGDApplication();
 		myLibrarian = app.getLibrarian();
-		myLibrarian.eventManager.addChangeModulesListener(this);
 		myLibrarian.eventManager.addSearchListener(this);
 		
 		btnChapterNav = (LinearLayout)findViewById(R.id.btn_chapter_nav);
@@ -127,16 +128,13 @@ public class TempReader extends GDActivity implements OnTaskCompleteListener, IC
 		vWeb.setReadingMode(PreferenceHelper.isReadModeByDefault());
 		updateActivityMode();
 		
-	    String linkOSIS = PreferenceHelper.restoreStateString("last_read");
-		if (linkOSIS == null) {
-			linkOSIS = myLibrarian.getCurrentOSISLink();
-			if (linkOSIS == null) {
-				return;
-			}
+		OSISLink OSISLink = new OSISLink(PreferenceHelper.restoreStateString("last_read"));
+		if (OSISLink.getPath() == null) {
+			OSISLink = myLibrarian.getCurrentOSISLink();
 		}
-		Log.i(TAG, "Open " + linkOSIS);
-		
-		mAsyncTaskManager.setupTask(new ChapterLoader(progressMessage), linkOSIS);
+		if (OSISLink.getPath() != null) {
+			mAsyncTaskManager.setupTask(new AsyncOpenChapter("Open Chapter", myLibrarian, OSISLink));
+		}
 	}
 	
 	private void initActionBar() {
@@ -316,16 +314,15 @@ public class TempReader extends GDActivity implements OnTaskCompleteListener, IC
 					|| (requestCode == R.id.action_bar_chooseCh)) {
 				verse = 1;
 				Bundle extras = data.getExtras();
-				String linkOSIS = extras.getString("linkOSIS");
+				OSISLink OSISLink = new OSISLink(extras.getString("linkOSIS"));
 				
-				AsyncTaskManager mAsyncTaskManager = new AsyncTaskManager(this, this);
-				mAsyncTaskManager.setupTask(new ChapterLoader(progressMessage), linkOSIS);
+				mAsyncTaskManager.setupTask(new AsyncOpenChapter("Open Chapter", myLibrarian, OSISLink));
+				
 			}
 		} else if (requestCode == R.id.action_bar_settings) {
 			vWeb.setReadingMode(PreferenceHelper.isReadModeByDefault());
 			updateActivityMode();
-			AsyncTaskManager mAsyncTaskManager = new AsyncTaskManager(this, this);
-			mAsyncTaskManager.setupTask(new ChapterLoader(progressMessage), myLibrarian.getCurrentOSISLink());
+			mAsyncTaskManager.setupTask(new AsyncOpenChapter("Open Chapter", myLibrarian, myLibrarian.getCurrentOSISLink()));
 		}
 	}
 
@@ -334,7 +331,7 @@ public class TempReader extends GDActivity implements OnTaskCompleteListener, IC
 		
 		vWeb.setText(chapterInHTML, verse, nightMode, myLibrarian.isBible());
 		
-		PreferenceHelper.saveStateString("last_read", myLibrarian.getCurrentOSISLink());
+		PreferenceHelper.saveStateString("last_read", myLibrarian.getCurrentOSISLinkPath());
 		
 		vModuleName.setText(myLibrarian.getModuleName());
 		vBookLink.setText(myLibrarian.getHumanBookLink());
@@ -368,12 +365,12 @@ public class TempReader extends GDActivity implements OnTaskCompleteListener, IC
 
 	public void prevChapter() {
 		myLibrarian.prevChapter();
-		viewNewChapter();
+		viewCurrentChapter();
 	}
 
 	public void nextChapter() {
 		myLibrarian.nextChapter();
-		viewNewChapter();
+		viewCurrentChapter();
 	}
 
 	OnClickListener onClickPageUp = new OnClickListener() {
@@ -394,12 +391,11 @@ public class TempReader extends GDActivity implements OnTaskCompleteListener, IC
 		}
 	};
 
-	private void viewNewChapter() {
-		verse = 1;
-		AsyncTaskManager mAsyncTaskManager = new AsyncTaskManager(this, this);
-		mAsyncTaskManager.setupTask(
-				new ChapterLoader(progressMessage),
-				myLibrarian.getCurrentOSISLink());
+	private void viewCurrentChapter() {
+		mAsyncTaskManager.setupTask(new AsyncOpenChapter(String.format(
+				"Open Chapter %1$s", myLibrarian.getCurrentChapterNumber()), 
+				myLibrarian, 
+				myLibrarian.getCurrentOSISLink()));
 	}
 	
 	public void setTextActionVisibility(boolean visibility) {
@@ -465,67 +461,27 @@ public class TempReader extends GDActivity implements OnTaskCompleteListener, IC
 			return super.onKeyDown(keyCode, event);
 		}
 	}
+	
     @Override
     public Object onRetainNonConfigurationInstance() {
     	return mAsyncTaskManager.retainTask();
     }
-
+    
     @Override
     public void onTaskComplete(Task task) {
 		Log.i(TAG, "onTaskComplete()");
-		//if (!task.isCancelled()) {
-		//	setTextinWebView();
-		//}
+		if (!task.isCancelled()) {
+			if (task instanceof AsyncOpenChapter) {
+				ChangeChaptersEvent event = ((AsyncOpenChapter) task).getEvent();
+				if (event != null) {
+					chapterInHTML = myLibrarian.getChapterHTMLView(event.chapter);
+					setTextinWebView();
+				}
+				myLibrarian.loadModulesAsync(mAsyncTaskManager);
+			}
+		}
     }
     
-	private class ChapterLoader extends Task {
-		public ChapterLoader(String message) {
-			super(message);
-		}
-
-		@Override
-		protected void onPostExecute(Boolean result) {
-			super.onPostExecute(result);
-		}
-
-		@Override
-		protected Boolean doInBackground(String... params) {
-			Log.i(TAG, "doInBackground(\"" + params + "\")");
-			try {
-				String linkOSIS = params[0];
-				String[] linkParam = linkOSIS.split("\\.");
-				if (linkParam.length > 3) {
-					try {
-						verse = Integer.parseInt(linkParam[3]);
-					} catch (NumberFormatException e) {
-						verse = 1;
-					}
-				}
-				
-				chapterInHTML = myLibrarian.OpenLink(linkOSIS);
-			} catch (NullPointerException e) {
-				chapterInHTML = "";
-				Log.e(TAG, e);
-			}
-			return true;
-		}
-	}
-
-
-	@Override
-	public void onChangeModules(final ChangeModulesEvent event) {
-		runOnUiThread(new Runnable() {
-			public void run() {
-				switch (event.code) {
-					case ModulesChanged:
-						break;
-					case ModulesAdded:
-						break;
-				}
-			}
-		});		
-	}
-
 	@Override
 	public void onSearchInLibrary(final SearchInLibraryEvent event) {
 		runOnUiThread(new Runnable() {
@@ -539,6 +495,5 @@ public class TempReader extends GDActivity implements OnTaskCompleteListener, IC
 			}
 		});		
 	}
-
 
 }

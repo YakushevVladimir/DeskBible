@@ -33,19 +33,6 @@ public class DbBookRepository implements IBookRepository<DbModule, DbBook> {
 	}
 	
 
-//	@Override
-//	public Book getBookById(Long bookId) {
-//		DbBook book = null;
-//		final Cursor cursor = db.rawQuery("SELECT * FROM Book WHERE book_id = ? ", new String[] {"" + bookId});
-//		if (cursor.moveToNext()) {
-//			final long id = cursor.getLong(0);
-//			book = new DbBook("", "", "", 0, id);   
-//		}
-//		cursor.close();
-//		return book;			
-//	}
-	
-	
 	@Override
 	public Collection<DbBook> getBooks(DbModule module) {
 		// TODO Auto-generated method stub
@@ -54,8 +41,16 @@ public class DbBookRepository implements IBookRepository<DbModule, DbBook> {
 
 	
 	@Override
-	public DbBook getBookByName(DbModule module, String bookName) {
+	public DbBook getBookByID(DbModule module, String bookID) {
 		// TODO Auto-generated method stub
+//		DbBook book = null;
+//		final Cursor cursor = db.rawQuery("SELECT * FROM Book WHERE book_id = ? ", new String[] {"" + bookId});
+//		if (cursor.moveToNext()) {
+//			final long id = cursor.getLong(0);
+//			book = new DbBook("", "", "", 0, id);   
+//		}
+//		cursor.close();
+//		return book;	
 		return null;
 	}
 	

@@ -7,6 +7,7 @@ import java.util.LinkedHashMap;
 
 import com.BibleQuote._new_.dal.FsLibraryContext;
 import com.BibleQuote._new_.models.Book;
+import com.BibleQuote._new_.models.Chapter;
 import com.BibleQuote._new_.models.FsBook;
 import com.BibleQuote._new_.models.FsModule;
 import com.BibleQuote.exceptions.CreateModuleErrorException;
@@ -23,10 +24,11 @@ public class FsBookRepository implements IBookRepository<FsModule, FsBook> {
 	@Override
 	public Collection<FsBook> loadBooks(FsModule module) {
 		if (!context.isModuleLoaded(module)) {
-			context.moduleSet.put(module.ShortName, module);
+			context.moduleSet.put(module.getID(), module);
 		}
 		
 		module.Books = context.bookSet = new LinkedHashMap<String, Book>();
+		context.chapterSet = new LinkedHashMap<Integer, Chapter>();
 		BufferedReader reader = null;
 		try {
 			reader = context.getModuleReader(module); 
@@ -48,7 +50,7 @@ public class FsBookRepository implements IBookRepository<FsModule, FsBook> {
 	@Override
 	public Collection<FsBook> getBooks(FsModule module) {
 		if (!context.isModuleLoaded(module)) {
-			context.moduleSet.put(module.ShortName, module);
+			context.moduleSet.put(module.getID(), module);
 		}
 		
 		return context.getBookList(module.Books); 
@@ -56,9 +58,9 @@ public class FsBookRepository implements IBookRepository<FsModule, FsBook> {
 
 	
 	@Override
-	public FsBook getBookByName(FsModule module, String bookID) {
+	public FsBook getBookByID(FsModule module, String bookID) {
 		if (!context.isModuleLoaded(module)) {
-			context.moduleSet.put(module.ShortName, module);
+			context.moduleSet.put(module.getID(), module);
 		}
 		
 		return (FsBook)module.Books.get(bookID);

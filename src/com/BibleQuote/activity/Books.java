@@ -31,11 +31,18 @@ import android.widget.SimpleAdapter;
 
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
-import com.BibleQuote.entity.ItemList;
+import com.BibleQuote._new_.listeners.ChangeModulesEvent;
+import com.BibleQuote._new_.managers.AsyncLoadModule;
 import com.BibleQuote._new_.managers.Librarian;
+import com.BibleQuote._new_.utils.OSISLink;
+import com.BibleQuote.entity.ItemList;
+import com.BibleQuote.utils.AsyncTaskManager;
+import com.BibleQuote.utils.Log;
+import com.BibleQuote.utils.OnTaskCompleteListener;
+import com.BibleQuote.utils.Task;
 
-public class Books extends GDActivity {
-
+public class Books extends GDActivity implements OnTaskCompleteListener {
+	private static final String TAG = "Books";
 	private final int MODULE_VIEW = 1, BOOK_VIEW = 2, CHAPTER_VIEW = 3;
 	private int viewMode = 1;
 
@@ -50,6 +57,7 @@ public class Books extends GDActivity {
 	private int modulePos = 0, bookPos = 0, chapterPos = 0;
 	private String moduleID = "---", bookID = "---", chapter = "-";
 	private Librarian myLibrarian;
+	private AsyncTaskManager mAsyncTaskManager;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -57,6 +65,9 @@ public class Books extends GDActivity {
 		setActionBarContentView(R.layout.books);
 		initActionBar();
 
+		mAsyncTaskManager = new AsyncTaskManager(this, this, true);
+		mAsyncTaskManager.handleRetainedTask(getLastNonConfigurationInstance());
+		
 		BibleQuoteApp app = (BibleQuoteApp) getGDApplication();
 		myLibrarian = app.getLibrarian();
 
@@ -73,11 +84,11 @@ public class Books extends GDActivity {
 		chapterList = (GridView) findViewById(R.id.chapterChoose);
 		chapterList.setOnItemClickListener(chapterList_onClick);
 
-		String[] currLink = myLibrarian.getCurrentOSISLink().split("\\.");
-		if (currLink.length == 3) {
-			moduleID = currLink[0];
-			bookID   = currLink[1];
-			chapter  = currLink[2];
+		OSISLink OSISLink = myLibrarian.getCurrentOSISLink();
+		if (OSISLink.getPath() != null) {
+			moduleID = OSISLink.getModuleID();
+			bookID   = OSISLink.getBookID();
+			chapter  = OSISLink.getChapterNumber().toString();
 			
 			modulesList.setAdapter(getModuleAdapter());
 			booksList.setAdapter(getBookAdapter());
@@ -88,6 +99,7 @@ public class Books extends GDActivity {
 			UpdateView(MODULE_VIEW);
 		}
 		setButtonText();
+		myLibrarian.loadModulesAsync(mAsyncTaskManager);
 	}
 	
 	private void initActionBar() {
@@ -170,6 +182,7 @@ public class Books extends GDActivity {
 			if (modulePos >= 0) {
 				modulesList.setSelection(modulePos);
 			}
+			myLibrarian.loadModulesAsync(mAsyncTaskManager);
 
 			break;
 
@@ -258,4 +271,23 @@ public class Books extends GDActivity {
 		super.onPostResume();
 		UpdateView(viewMode);
 	}
+
+	@Override
+	public void onTaskComplete(Task task) {
+		Log.i(TAG, "onTaskComplete()");
+		if (task != null && !task.isCancelled()) {
+			if (task instanceof AsyncLoadModule) {
+				ChangeModulesEvent event = ((AsyncLoadModule) task).getEvent();
+				if (event != null && this.viewMode == MODULE_VIEW) {
+					myLibrarian.openModules();
+					UpdateView(MODULE_VIEW);
+				}
+			}
+		}	
+	}
+	
+    @Override
+    public Object onRetainNonConfigurationInstance() {
+    	return mAsyncTaskManager.retainTask();
+    }
 }

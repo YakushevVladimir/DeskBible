@@ -23,6 +23,6 @@ public interface IBookRepository<TModule, TBook> {
 	 */
 	Collection<TBook> getBooks(TModule module);
 	
-	TBook getBookByName(TModule module, String bookName);
+	TBook getBookByID(TModule module, String bookID);
 
 }

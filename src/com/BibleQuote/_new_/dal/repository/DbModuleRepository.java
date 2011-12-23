@@ -57,7 +57,7 @@ public class DbModuleRepository implements IModuleRepository<Long, DbModule> {
 	
 
 	@Override
-	public DbModule getModuleByShortName(String moduleShortName) {
+	public DbModule getModuleByID(String moduleID) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -74,6 +74,13 @@ public class DbModuleRepository implements IModuleRepository<Long, DbModule> {
     
 	@Override
 	public void updateModule(DbModule module) {
+	}
+
+
+	@Override
+	public DbModule getInvalidatedModule() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

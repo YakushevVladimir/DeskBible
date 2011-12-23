@@ -25,36 +25,38 @@ public class DbModuleController implements IModuleController {
     /**
      * @return Возвращает коллекцию модулей с ключом по Module.ShortName
      */
-	public TreeMap<String, Module> loadModules() {
+	@Override
+	public TreeMap<String, Module> getModules() {
 		android.util.Log.i(TAG, "Loading modules from a DB storage.");
 		TreeMap<String, Module> result = new TreeMap<String, Module>();
 		
 		ArrayList<Module> moduleList = new ArrayList<Module>();
 		moduleList.addAll(mRepository.loadModules());
 		for (Module module : moduleList) {
-			result.put(module.ShortName, module);
+			result.put(module.getID(), module);
 		}
 		
-		return result;
+		return result;	
 	}
 	
+	
+	@Override
+	public Module getModuleByID(String moduleID) {
+		return mRepository.getModuleByID(moduleID);
+	}
+
 
 	@Override
-	public void loadModulesAsync() {
+	public void invalidateModules() {
 		// TODO Auto-generated method stub
 		
 	}
 
 
 	@Override
-	public TreeMap<String, Module> getModules() {
+	public Module getInvalidatedModule() {
 		// TODO Auto-generated method stub
 		return null;
-	}
-	
-	
-	public Module getModule(String moduleShortName) {
-		return mRepository.getModuleByShortName(moduleShortName);
 	}
 
 }

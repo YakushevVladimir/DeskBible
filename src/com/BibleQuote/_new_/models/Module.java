@@ -11,7 +11,7 @@ public abstract class Module implements Serializable {
 	
 	private static final long serialVersionUID = -499369158022814559L;
 	
-	public String Name = "";
+	private String Name = "";
 	public String ShortName = "";
 	public String ChapterSign = "";
 	public String VerseSign = "";
@@ -33,9 +33,22 @@ public abstract class Module implements Serializable {
 		return this.Name;
 	}
 	
-	public String getID() {
-		return ShortName;
-	}
+	public abstract String getID();
 	
 	public abstract Object getDataSourceID();
+	
+	public abstract String getModuleFileName();
+	
+	public abstract Boolean getIsInvalidated();
+	
+	public abstract void setIsInvalidated(Boolean value);
+
+	public String getName() {
+		return Name;
+	}
+
+	public void setName(String name) {
+		Name = name;
+	}
+	
 }

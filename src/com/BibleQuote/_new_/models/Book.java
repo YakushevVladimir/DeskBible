@@ -2,7 +2,6 @@ package com.BibleQuote._new_.models;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 
 import com.BibleQuote.entity.BibleBooksID;
 
@@ -34,7 +33,7 @@ public abstract class Book implements Serializable {
 	 */	
 	public Integer ChapterQty = 0;
 	
-	public LinkedHashMap<Integer, Chapter> Chapters = new LinkedHashMap<Integer, Chapter>();	// to lazy loading on demand
+	//public LinkedHashMap<Integer, Chapter> Chapters = new LinkedHashMap<Integer, Chapter>();	// to lazy loading on demand
 	
 	
 	/**
