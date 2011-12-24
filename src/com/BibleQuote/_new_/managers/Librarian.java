@@ -84,8 +84,9 @@ public class Librarian implements IChangeBooksListener  {
 		return moduleCtrl.getInvalidatedModule() == null;
 	}
 	
-	public void openModules() {
+	public TreeMap<String, Module> openModules() {
 		modules = moduleCtrl.getModules();
+		return modules;
 	}
 	
 	public void loadModulesAsync(AsyncTaskManager asyncTaskManager) {
@@ -106,7 +107,11 @@ public class Librarian implements IChangeBooksListener  {
 		}		
 	}
 	
-	
+	public void loadBooksAsync(AsyncTaskManager asyncTaskManager, Module module) {
+		if (module != null) {
+			asyncTaskManager.setupTask(new AsyncLoadBooks("Load books", this, module, asyncTaskManager));
+		}	
+	}	
 	
 	public Module getCurrentModule() {
 		if (currModule == null && modules.size() > 0) {
@@ -375,6 +380,9 @@ public class Librarian implements IChangeBooksListener  {
 		if (module == null) {
 			return "---";
 		} else {
+			if (bookID == "---") {
+				return "---";
+			}
 			Book book = bookCtrl.getBook(module, bookID);
 			if (book == null) {
 				return "---";
@@ -389,6 +397,9 @@ public class Librarian implements IChangeBooksListener  {
 		if (module == null) {
 			return "---";
 		} else {
+			if (bookID == "---") {
+				return "---";
+			}
 			Book book = bookCtrl.getBook(module, bookID);
 			if (book == null) {
 				return "---";

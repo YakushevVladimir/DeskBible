@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 
+import com.BibleQuote._new_.controllers.CacheModuleController;
 import com.BibleQuote._new_.dal.FsLibraryContext;
 import com.BibleQuote._new_.models.Book;
 import com.BibleQuote._new_.models.Chapter;
@@ -15,9 +16,11 @@ import com.BibleQuote.exceptions.CreateModuleErrorException;
 public class FsBookRepository implements IBookRepository<FsModule, FsBook> {
 	
 	private FsLibraryContext context;
+	private CacheModuleController<FsModule> cache;
 	
     public FsBookRepository(FsLibraryContext context) {
     	this.context = context;
+    	this.cache = context.getCache();
     }
     
     
@@ -33,6 +36,10 @@ public class FsBookRepository implements IBookRepository<FsModule, FsBook> {
 		try {
 			reader = context.getModuleReader(module); 
 			context.fillBooks(module, reader);
+			
+			// Update cache with just added books
+			cache.saveModuleList(context.getModuleList(context.moduleSet));
+			
 		} catch (CreateModuleErrorException e) {
 			e.printStackTrace();
 		} finally {

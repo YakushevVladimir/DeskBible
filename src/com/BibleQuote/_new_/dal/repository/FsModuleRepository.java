@@ -45,26 +45,20 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 			// Load standard BQ-modules
 			ArrayList<String> bqIniFiles = context.SearchModules(new OnlyBQIni());
 			for (String moduleDataSourceId : bqIniFiles) {
-				//FsModule fileModule = loadModuleById(moduleDataSourceId);
-				//moduleSet.put(fileModule.getID(), fileModule);			
 				FsModule fileModule = new FsModule(moduleDataSourceId);
 				fileModule.ShortName = fileModule.getModuleFileName();
 				fileModule.setName(fileModule.ShortName);
 				moduleList.add(fileModule);
-				//moduleSet.put(fileModule.modulePath, fileModule);
 			}
 			
 			// Load zip-compressed BQ-modules
 			ArrayList<String> bqZipIniFiles = context.SearchModules(new OnlyBQZipIni());
 			for (String bqZipIniFile : bqZipIniFiles) {
 				String moduleDataSourceId = bqZipIniFile + File.separator + DataConstants.DEFAULT_INI_FILE_NAME;
-				//FsModule zipModule = loadModuleById(moduleDataSourceId);
-				//moduleSet.put(zipModule.getID(), zipModule);
 				FsModule zipModule = new FsModule(moduleDataSourceId);
 				zipModule.ShortName = zipModule.getModuleFileName();
 				zipModule.setName(zipModule.ShortName);
 				moduleList.add(zipModule);
-				//moduleSet.put(zipModule.modulePath, zipModule);			
 			}
 		}
 

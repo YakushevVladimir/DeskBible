@@ -32,8 +32,10 @@ import android.widget.SimpleAdapter;
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
 import com.BibleQuote._new_.listeners.ChangeModulesEvent;
+import com.BibleQuote._new_.managers.AsyncLoadBooks;
 import com.BibleQuote._new_.managers.AsyncLoadModule;
 import com.BibleQuote._new_.managers.Librarian;
+import com.BibleQuote._new_.models.Module;
 import com.BibleQuote._new_.utils.OSISLink;
 import com.BibleQuote.entity.ItemList;
 import com.BibleQuote.utils.AsyncTaskManager;
@@ -65,7 +67,7 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 		setActionBarContentView(R.layout.books);
 		initActionBar();
 
-		mAsyncTaskManager = new AsyncTaskManager(this, this, true);
+		mAsyncTaskManager = new AsyncTaskManager(this, this, false);
 		mAsyncTaskManager.handleRetainedTask(getLastNonConfigurationInstance());
 		
 		BibleQuoteApp app = (BibleQuoteApp) getGDApplication();
@@ -99,7 +101,7 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 			UpdateView(MODULE_VIEW);
 		}
 		setButtonText();
-		myLibrarian.loadModulesAsync(mAsyncTaskManager);
+		//myLibrarian.loadModulesAsync(mAsyncTaskManager);
 	}
 	
 	private void initActionBar() {
@@ -117,8 +119,11 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 			bookPos    = 0;
 			chapterPos = 0;
 			
-			UpdateView(BOOK_VIEW);
-			setButtonText();
+			Module module = myLibrarian.openModule(moduleID);
+			myLibrarian.loadBooksAsync(mAsyncTaskManager, module);
+			
+			//UpdateView(BOOK_VIEW);
+			//setButtonText();
 		}
 	};
 
@@ -279,9 +284,12 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 			if (task instanceof AsyncLoadModule) {
 				ChangeModulesEvent event = ((AsyncLoadModule) task).getEvent();
 				if (event != null && this.viewMode == MODULE_VIEW) {
-					myLibrarian.openModules();
+					//myLibrarian.openModules();
 					UpdateView(MODULE_VIEW);
 				}
+			} else if (task instanceof AsyncLoadBooks) {
+				UpdateView(BOOK_VIEW);
+				setButtonText();
 			}
 		}	
 	}
