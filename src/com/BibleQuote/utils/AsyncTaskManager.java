@@ -28,14 +28,19 @@ public final class AsyncTaskManager implements IProgressTracker,
 	private Task mAsyncTask;
 
 	public AsyncTaskManager(Context context,
-			OnTaskCompleteListener taskCompleteListener) {
+			OnTaskCompleteListener taskCompleteListener, Boolean isHidden) {
 		// Save reference to complete listener (activity)
 		mTaskCompleteListener = taskCompleteListener;
+		
 		// Setup progress dialog
-		mProgressDialog = new ProgressDialog(context);
-		mProgressDialog.setIndeterminate(true);
-		mProgressDialog.setCancelable(true);
-		mProgressDialog.setOnCancelListener(this);
+		if (!isHidden) {
+			mProgressDialog = new ProgressDialog(context);
+			mProgressDialog.setIndeterminate(true);
+			mProgressDialog.setCancelable(true);
+			mProgressDialog.setOnCancelListener(this);
+		} else {
+			mProgressDialog = null;
+		}
 	}
 
 	public void setupTask(Task asyncTask, String...params) {
@@ -58,13 +63,15 @@ public final class AsyncTaskManager implements IProgressTracker,
 
 	@Override
 	public void onProgress(String message) {
-		// Show dialog if it wasn't shown yet or was removed on configuration
-		// (rotation) change
-		if (!mProgressDialog.isShowing()) {
-			mProgressDialog.show();
+		if (mProgressDialog != null) {
+			// Show dialog if it wasn't shown yet or was removed on configuration
+			// (rotation) change
+			if (!mProgressDialog.isShowing()) {
+				mProgressDialog.show();
+			}
+			// Show current message in progress dialog
+			mProgressDialog.setMessage(message);
 		}
-		// Show current message in progress dialog
-		mProgressDialog.setMessage(message);
 	}
 
 	@Override
@@ -80,7 +87,7 @@ public final class AsyncTaskManager implements IProgressTracker,
 	@Override
 	public void onComplete() {
 		// Close progress dialog
-		mProgressDialog.dismiss();
+		if (mProgressDialog != null) mProgressDialog.dismiss();
 		// Notify activity about completion
 		mTaskCompleteListener.onTaskComplete(mAsyncTask);
 		// Reset task

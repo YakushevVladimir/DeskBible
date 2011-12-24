@@ -13,6 +13,8 @@ public class DbModule extends Module {
 	 */
 	public Long Id;	
 
+	private Boolean isInvalid;
+	
 	public DbModule(long Id) {
 		this.Id = Id;
 	}
@@ -20,5 +22,26 @@ public class DbModule extends Module {
 	@Override
 	public Object getDataSourceID() {
 		return Id;
+	}
+	
+	@Override
+	public Boolean getIsInvalidated() {
+		return isInvalid;
+	}
+	
+	@Override
+	public void setIsInvalidated(Boolean value) {
+		isInvalid = value;
+	}
+
+	@Override
+	public String getModuleFileName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getID() {
+		return ShortName;
 	}
 }

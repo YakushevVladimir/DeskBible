@@ -46,10 +46,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
+import com.BibleQuote.TempBibleQuoteApp;
 import com.BibleQuote.controls.ReaderWebView;
-import com.BibleQuote._new_.managers.Librarian;
+import com.BibleQuote.entity.Librarian;
 import com.BibleQuote.utils.AsyncTaskManager;
 import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.OnTaskCompleteListener;
@@ -90,10 +90,10 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
 		initActionBar();
 		prepareQuickActionBar();
 		
-		mAsyncTaskManager = new AsyncTaskManager(this, this);
+		mAsyncTaskManager = new AsyncTaskManager(this, this, false);
 		mAsyncTaskManager.handleRetainedTask(getLastNonConfigurationInstance());
 
-		BibleQuoteApp app = (BibleQuoteApp) getGDApplication();
+		TempBibleQuoteApp app = (TempBibleQuoteApp) getGDApplication();
 		myLibrarian = app.getLibrarian();
 		
 		btnChapterNav = (LinearLayout)findViewById(R.id.btn_chapter_nav);
@@ -312,13 +312,13 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
 				Bundle extras = data.getExtras();
 				String linkOSIS = extras.getString("linkOSIS");
 				
-				AsyncTaskManager mAsyncTaskManager = new AsyncTaskManager(this, this);
+				AsyncTaskManager mAsyncTaskManager = new AsyncTaskManager(this, this, false);
 				mAsyncTaskManager.setupTask(new ChapterLoader(progressMessage), linkOSIS);
 			}
 		} else if (requestCode == R.id.action_bar_settings) {
 			vWeb.setReadingMode(PreferenceHelper.isReadModeByDefault());
 			updateActivityMode();
-			AsyncTaskManager mAsyncTaskManager = new AsyncTaskManager(this, this);
+			AsyncTaskManager mAsyncTaskManager = new AsyncTaskManager(this, this, false);
 			mAsyncTaskManager.setupTask(new ChapterLoader(progressMessage), myLibrarian.getCurrentOSISLink());
 		}
 	}
@@ -390,7 +390,7 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
 
 	private void viewNewChapter() {
 		verse = 1;
-		AsyncTaskManager mAsyncTaskManager = new AsyncTaskManager(this, this);
+		AsyncTaskManager mAsyncTaskManager = new AsyncTaskManager(this, this, false);
 		mAsyncTaskManager.setupTask(
 				new ChapterLoader(progressMessage),
 				myLibrarian.getCurrentOSISLink());

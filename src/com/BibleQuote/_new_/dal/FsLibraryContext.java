@@ -9,6 +9,9 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.TreeMap;
 
+import android.content.Context;
+
+import com.BibleQuote._new_.controllers.CacheModuleController;
 import com.BibleQuote._new_.models.Book;
 import com.BibleQuote._new_.models.Chapter;
 import com.BibleQuote._new_.models.FsBook;
@@ -21,21 +24,24 @@ import com.BibleQuote.utils.Log;
 public class FsLibraryContext extends LibraryContext {
 	private final String TAG = "FsLibraryContext";
 	private File libraryDir = null;
+	public CacheModuleController<FsModule> cache;
 
-	public FsLibraryContext(File libraryDir) {
+	public FsLibraryContext(File libraryDir, Context context, CacheModuleController<FsModule> cache) {
+		super(context);
+		this.cache = cache;
 		this.libraryDir = libraryDir;
 		if (libraryDir != null && !libraryDir.exists()) {
 			libraryDir.mkdir();
 		}		
 	}
 
-	
-	public File getLibraryDir() {
-		return libraryDir;
+		
+	public CacheModuleController<FsModule> getCache() {
+		return cache;
 	}
 	
 	
-	public boolean isLibraryExist() {
+	private boolean isLibraryExist() {
 		return libraryDir != null && libraryDir.exists();
 	}
 	
@@ -130,7 +136,7 @@ public class FsLibraryContext extends LibraryContext {
 						delimiterPos, str.length()).trim();
 
 				if (key.equals("biblename")) {
-					module.Name = value;
+					module.setName(value);
 				} else if (key.equals("bibleshortname")) {
 					module.ShortName = value.replaceAll("\\.", "");
 				} else if (key.equals("chaptersign")) {
@@ -176,6 +182,8 @@ public class FsLibraryContext extends LibraryContext {
 					+ tag.toUpperCase() + ")|(/" + tag.toUpperCase() + ")";
 			separator = "|";
 		}
+		
+		module.setIsInvalidated(false);
 	}	
 	
 	

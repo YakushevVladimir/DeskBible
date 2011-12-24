@@ -15,6 +15,8 @@
  */
 package com.BibleQuote._new_.models;
 
+import java.io.File;
+
 /**
  * @author Yakushev Vladimir, Sergey Ursul
  * 
@@ -35,18 +37,44 @@ public class FsModule extends Module {
 	
 	public final Boolean isArchive;
 	
+	private Boolean isInvalidated;
+	
+	private final String moduleFileName;
+	
 	/**
 	 * iniFilePath = modulePath + iniFileName
 	 */
 	public FsModule(String iniFilePath) {
-		modulePath = iniFilePath.substring(0, iniFilePath.lastIndexOf("/"));
-		iniFileName = iniFilePath.substring(iniFilePath.lastIndexOf("/") + 1);
+		modulePath = iniFilePath.substring(0, iniFilePath.lastIndexOf(File.separator));
+		iniFileName = iniFilePath.substring(iniFilePath.lastIndexOf(File.separator) + 1);
+		moduleFileName = modulePath.substring(modulePath.lastIndexOf(File.separator) + 1);
 		isArchive = modulePath.endsWith("zip");
+		isInvalidated = true;
 	}
 	
 	@Override
 	public String getDataSourceID() {
-		return this.modulePath + this.iniFileName;
+		return this.modulePath + File.separator + this.iniFileName;
+	}
+
+	@Override
+	public Boolean getIsInvalidated() {
+		return isInvalidated;
 	}
 	
+	@Override
+	public void setIsInvalidated(Boolean value) {
+		isInvalidated = value;
+	}
+
+	@Override
+	public String getModuleFileName() {
+		return moduleFileName;
+	}
+	
+	@Override
+	public String getID() {
+		return isInvalidated ? modulePath : ShortName;
+	}
+
 }

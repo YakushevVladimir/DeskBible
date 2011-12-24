@@ -1,10 +1,9 @@
 package com.BibleQuote._new_.dal;
 
 
-import java.io.File;
-
 import android.content.Context;
 
+import com.BibleQuote._new_.controllers.CacheModuleController;
 import com.BibleQuote._new_.dal.repository.DbBookRepository;
 import com.BibleQuote._new_.dal.repository.DbModuleRepository;
 import com.BibleQuote._new_.dal.repository.IBookRepository;
@@ -15,19 +14,24 @@ import com.BibleQuote._new_.models.DbModule;
 
 public class DbLibraryUnitOfWork  implements ILibraryUnitOfWork<Long, DbModule, DbBook> {
 	
-    private DbLibraryContext context;
+    private DbLibraryContext dbLibraryContext;
     private IModuleRepository<Long, DbModule> moduleRepository;
     private IBookRepository<DbModule, DbBook> bookRepository;
 
-    public DbLibraryUnitOfWork(File libraryDir, Context context) {
-    	this.context = new DbLibraryContext(libraryDir, context);
+    public DbLibraryUnitOfWork(DbLibraryContext dbLibraryContext) {
+    	this.dbLibraryContext = dbLibraryContext;
     }
 
+	@Override
+	public Context getLibraryContext() {
+		return dbLibraryContext.getContext();
+	}
+	
     public IModuleRepository<Long, DbModule> getModuleRepository()
     {
         if (this.moduleRepository == null)
         {
-            this.moduleRepository = new DbModuleRepository(context);
+            this.moduleRepository = new DbModuleRepository(dbLibraryContext);
         }
         return this.moduleRepository;
     }
@@ -36,7 +40,7 @@ public class DbLibraryUnitOfWork  implements ILibraryUnitOfWork<Long, DbModule, 
     {
         if (this.bookRepository == null)
         {
-            this.bookRepository = new DbBookRepository(context);
+            this.bookRepository = new DbBookRepository(dbLibraryContext);
         }
         return bookRepository;
     }
@@ -46,4 +50,12 @@ public class DbLibraryUnitOfWork  implements ILibraryUnitOfWork<Long, DbModule, 
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public CacheModuleController<DbModule> getCacheModuleController() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
 }

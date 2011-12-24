@@ -1,77 +1,68 @@
 package com.BibleQuote._new_.controllers;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.TreeMap;
-
-import android.os.AsyncTask;
 
 import com.BibleQuote._new_.dal.FsLibraryUnitOfWork;
 import com.BibleQuote._new_.dal.repository.IModuleRepository;
-import com.BibleQuote._new_.listeners.ChangeModulesEvent;
-import com.BibleQuote._new_.listeners.IChangeModulesListener.ChangeCode;
-import com.BibleQuote._new_.managers.EventManager;
 import com.BibleQuote._new_.models.FsModule;
 import com.BibleQuote._new_.models.Module;
 
 public class FsModuleController implements IModuleController {
 	private final String TAG = "FsModuleController";
 	
-	private EventManager eventManager;
 	private IModuleRepository<String, FsModule> mRepository;
+	private CacheModuleController<FsModule> cache; 
 
-	public FsModuleController(FsLibraryUnitOfWork unit, EventManager eventManager) {
-		this.eventManager = eventManager;
+	public FsModuleController(FsLibraryUnitOfWork unit) {
 		mRepository = unit.getModuleRepository();
+		cache = unit.getCacheModuleController();
     }
 	
 	
     /**
      * @return Возвращает коллекцию модулей с ключом по Module.ShortName
      */
-	public TreeMap<String, Module> loadModules() {
-		android.util.Log.i(TAG, "Loading modules from a file system storage.");
-		TreeMap<String, Module> result = new TreeMap<String, Module>();
-		
-		ArrayList<Module> moduleList = new ArrayList<Module>();
-		moduleList.addAll(mRepository.loadModules());
-		for (Module module : moduleList) {
-			result.put(module.ShortName, module);
+	@Override
+	public TreeMap<String, Module> getModules() {
+		ArrayList<FsModule> moduleList = (ArrayList<FsModule>) mRepository.getModules();
+		if (moduleList.size() == 0) {
+			moduleList = (ArrayList<FsModule>) mRepository.loadModules();
 		}
 		
-		return result;
-	}
-
-	
-	public void loadModulesAsync() {
-		new LoadModulesAsync().execute(true);
-	}
-	
-	
-	public TreeMap<String, Module> getModules() {
 		TreeMap<String, Module> result = new TreeMap<String, Module>();
-		
-		ArrayList<Module> moduleList = new ArrayList<Module>();
-		moduleList.addAll(mRepository.getModules());
 		for (Module module : moduleList) {
-			result.put(module.ShortName, module);
+			result.put(module.getID(), module);
 		}
 		
 		return result;		
 	}
 	
-	
-	private class LoadModulesAsync extends AsyncTask<Boolean, Void, TreeMap<String, Module>> {
-		@Override
-		protected void onPostExecute(TreeMap<String, Module> result) {
-			super.onPostExecute(result);
-			
-			ChangeModulesEvent event = new ChangeModulesEvent(ChangeCode.ModulesLoaded, result);
-			eventManager.fireChangeModulesEvent(event);
-		}
 
-		@Override
-		protected TreeMap<String, Module> doInBackground(Boolean... params) {
-			return loadModules();
+	@Override
+	public Module getModuleByID(String moduleID) {
+		FsModule fsModule = mRepository.getModuleByID(moduleID);
+		if (fsModule != null && fsModule.getIsInvalidated()) {
+			fsModule = mRepository.loadModuleById(fsModule.getDataSourceID());
 		}
-	}	
+		return 	fsModule;		
+	}
+	
+	
+	@Override
+	public void invalidateModules() {
+		ArrayList<FsModule> modules = (ArrayList<FsModule>) mRepository.getModules();
+		for (FsModule module : modules) {
+			module.setIsInvalidated(true);
+		}
+	}
+	
+
+	@Override
+	public Module getInvalidatedModule() {
+		return mRepository.getInvalidatedModule();
+	}
+	
+
 }
