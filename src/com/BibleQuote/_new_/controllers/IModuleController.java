@@ -6,9 +6,15 @@ import com.BibleQuote._new_.models.Module;
 
 public interface IModuleController {
 	
-	public TreeMap<String, Module> loadModules();
+//	public TreeMap<String, Module> loadModules();
 	
-	public void loadModulesAsync();
+//	public void loadModulesAsync();
 	
 	public TreeMap<String, Module> getModules();
+	
+	public Module getModuleByID(String moduleID);
+	
+	public void invalidateModules();
+
+	public Module getInvalidatedModule();
 }

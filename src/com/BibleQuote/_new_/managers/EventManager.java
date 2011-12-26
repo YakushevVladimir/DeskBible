@@ -5,8 +5,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.BibleQuote._new_.listeners.ChangeBooksEvent;
+import com.BibleQuote._new_.listeners.ChangeChaptersEvent;
 import com.BibleQuote._new_.listeners.ChangeModulesEvent;
 import com.BibleQuote._new_.listeners.IChangeBooksListener;
+import com.BibleQuote._new_.listeners.IChangeChaptersListener;
 import com.BibleQuote._new_.listeners.IChangeModulesListener;
 import com.BibleQuote._new_.listeners.ISearchListener;
 import com.BibleQuote._new_.listeners.SearchInLibraryEvent;
@@ -51,6 +53,25 @@ public class EventManager {
 		}
 	}
 
+	
+	///////////////// IChangeChaptersListener
+	private final List<IChangeChaptersListener> myChangeChaptersListeners = Collections.synchronizedList(new LinkedList<IChangeChaptersListener>());
+	public void addChangeChaptersListener(IChangeChaptersListener listener) {
+		myChangeChaptersListeners.add(listener);
+	}
+
+	public void removeChangeChaptersListener(IChangeChaptersListener listener) {
+		myChangeChaptersListeners.remove(listener);
+	}
+		
+	public void fireChangeChaptersEvent(ChangeChaptersEvent event) {
+		synchronized (myChangeChaptersListeners) {
+			for (IChangeChaptersListener l : myChangeChaptersListeners) {
+				l.onChangeChapters(event);
+			}
+		}
+	}
+	
 
 	/////////////// ISearchListener
 	private final List<ISearchListener> mySearchListeners = Collections.synchronizedList(new LinkedList<ISearchListener>());

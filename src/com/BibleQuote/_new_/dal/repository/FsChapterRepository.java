@@ -15,11 +15,9 @@ import com.BibleQuote._new_.models.Verse;
 public class FsChapterRepository implements IChapterRepository<FsBook> {
 
 	private FsLibraryContext context;
-	private LinkedHashMap<Integer, Chapter> chapterSet;
 	
     public FsChapterRepository(FsLibraryContext context) {
     	this.context = context;
-    	this.chapterSet = context.chapterSet;
     }
     	
 	
@@ -29,13 +27,13 @@ public class FsChapterRepository implements IChapterRepository<FsBook> {
 			context.bookSet.put(book.Name, book);
 		}
 		
-		book.Chapters = context.chapterSet = new LinkedHashMap<Integer, Chapter>();
+		context.chapterSet = new LinkedHashMap<Integer, Chapter>();
 		
 		BufferedReader reader = context.getBookReader(book);
 		ArrayList<String> numbers = book.getChapterNumbers(book.getModule().ChapterZero);
 		for (String chapterNumber : numbers) {
 			Chapter chapter = loadChapter(book, Integer.valueOf(chapterNumber), reader);
-			book.Chapters.put(Integer.valueOf(chapterNumber), chapter);
+			context.chapterSet.put(Integer.valueOf(chapterNumber), chapter);
 		}
 		try {
 			reader.close();
@@ -43,7 +41,7 @@ public class FsChapterRepository implements IChapterRepository<FsBook> {
 			e.printStackTrace(); 
 		}
 		
-		return context.getChapterList(book.Chapters); 	
+		return context.getChapterList(context.chapterSet); 	
 	}
 
 	
@@ -55,7 +53,7 @@ public class FsChapterRepository implements IChapterRepository<FsBook> {
 		
 		BufferedReader reader = context.getBookReader(book);
 		Chapter chapter = loadChapter(book, chapterNumber, reader);
-		book.Chapters.put(chapterNumber, chapter);
+		context.chapterSet.put(chapterNumber, chapter);
 		try {
 			reader.close();
 		} catch (IOException e) {
@@ -67,27 +65,24 @@ public class FsChapterRepository implements IChapterRepository<FsBook> {
 	
 	@Override
 	public void insertChapter(Chapter chapter) {
-		// TODO Auto-generated method stub
-
 	}
+	
 
 	@Override
 	public void deleteChapter(Chapter chapter) {
-		// TODO Auto-generated method stub
-
 	}
+	
 
 	@Override
 	public void updateChapter(Chapter chapter) {
-		// TODO Auto-generated method stub
-
 	}
 
+	
 	@Override
 	public Collection<Chapter> getChapters(FsBook book) {
-		book.Chapters = chapterSet;
-		return context.getChapterList(book.Chapters);	
+		return context.getChapterList(context.chapterSet);	
 	}
+	
 
 	@Override
 	public Chapter getChapterByNumber(FsBook book, Integer chapterNumber) {
@@ -95,7 +90,7 @@ public class FsChapterRepository implements IChapterRepository<FsBook> {
 			context.bookSet.put(book.Name, book);
 		}
 		
-		return book.Chapters.get(chapterNumber);
+		return context.chapterSet.get(chapterNumber);
 	}
 
 
@@ -135,7 +130,6 @@ public class FsChapterRepository implements IChapterRepository<FsBook> {
 				
 				lines.add(str);
 			}
-			bReader.close();
 		} catch (IOException e) {
 			return null;
 		}
@@ -152,7 +146,7 @@ public class FsChapterRepository implements IChapterRepository<FsBook> {
 			}
 		}
 
-		return new Chapter(chapterNumber, verseNumbers, verseList);
+		return new Chapter(book, chapterNumber, verseNumbers, verseList);
 	}		
 	
 }

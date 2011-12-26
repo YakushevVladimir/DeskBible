@@ -12,6 +12,8 @@ public class Chapter {
 	
 	private ArrayList<Verse> verseList = new ArrayList<Verse>();	// to lazy loading on demand
 	
+	private Book book;
+	
 	
 	public Integer getNumber() {
 		return number;
@@ -36,9 +38,14 @@ public class Chapter {
 		return verseList;
 	}
 	
-	public Chapter(Integer number, ArrayList<Integer> verseNumbers, ArrayList<Verse> verseList) {
+	public Chapter(Book book, Integer number, ArrayList<Integer> verseNumbers, ArrayList<Verse> verseList) {
+		this.book = book;
 		this.number = number;
 		this.verseNumbers = verseNumbers;
 		this.verseList = verseList;
+	}
+	
+	public Book getBook() {
+		return book;
 	}
 }

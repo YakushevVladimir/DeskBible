@@ -5,9 +5,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.TreeMap;
 
+import com.BibleQuote._new_.controllers.CacheModuleController;
 import com.BibleQuote._new_.dal.FsLibraryContext;
+import com.BibleQuote._new_.models.Book;
+import com.BibleQuote._new_.models.Chapter;
 import com.BibleQuote._new_.models.FsModule;
 import com.BibleQuote._new_.models.Module;
 import com.BibleQuote._new_.utils.DataConstants;
@@ -17,34 +21,56 @@ import com.BibleQuote.utils.OnlyBQZipIni;
 
 public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 
-	protected final String TAG = "FsFldModuleRepository";
+	protected final String TAG = "FsModuleRepository";
 	private FsLibraryContext context;
 	private TreeMap<String, Module> moduleSet;
+	private CacheModuleController<FsModule> cache;
 	
     public FsModuleRepository(FsLibraryContext context) {
     	this.context = context;
-    	moduleSet = context.moduleSet;
+    	this.moduleSet = context.moduleSet;
+    	this.cache = context.getCache();
     }
     
 
 	@Override
 	public Collection<FsModule> loadModules() {
+		ArrayList<FsModule> moduleList = new ArrayList<FsModule>();
+		
+		if (cache.isCacheExist()) {
+			moduleList = cache.getModuleList();
+		
+		} else {
+		
+			// Load standard BQ-modules
+			ArrayList<String> bqIniFiles = context.SearchModules(new OnlyBQIni());
+			for (String moduleDataSourceId : bqIniFiles) {
+				FsModule fileModule = new FsModule(moduleDataSourceId);
+				fileModule.ShortName = fileModule.getModuleFileName();
+				fileModule.setName(fileModule.ShortName);
+				moduleList.add(fileModule);
+			}
+			
+			// Load zip-compressed BQ-modules
+			ArrayList<String> bqZipIniFiles = context.SearchModules(new OnlyBQZipIni());
+			for (String bqZipIniFile : bqZipIniFiles) {
+				String moduleDataSourceId = bqZipIniFile + File.separator + DataConstants.DEFAULT_INI_FILE_NAME;
+				FsModule zipModule = new FsModule(moduleDataSourceId);
+				zipModule.ShortName = zipModule.getModuleFileName();
+				zipModule.setName(zipModule.ShortName);
+				moduleList.add(zipModule);
+			}
+		}
+
 		moduleSet = new TreeMap<String, Module>();
-		// Load standard BQ-modules
-		ArrayList<String> bqIniFiles = context.SearchModules(new OnlyBQIni());
-		for (String bqIniFile : bqIniFiles) {
-			FsModule fileModule = loadModuleById(bqIniFile);
-			moduleSet.put(fileModule.ShortName, fileModule);			
+		for (FsModule fsModule : moduleList) {
+			moduleSet.put(fsModule.getID(), fsModule);
 		}
-		
-		// Load zip-compressed BQ-modules
-		ArrayList<String> bqZipIniFiles = context.SearchModules(new OnlyBQZipIni());
-		for (String bqZipIniFile : bqZipIniFiles) {
-			FsModule zipModule = loadModuleById(bqZipIniFile + File.separator + DataConstants.DEFAULT_INI_FILE_NAME);
-			moduleSet.put(zipModule.ShortName, zipModule);	
-		}
-		
-		return context.getModuleList(moduleSet);
+
+		context.bookSet = new LinkedHashMap<String, Book>();
+		context.chapterSet = new LinkedHashMap<Integer, Chapter>();
+
+		return moduleList;
 	}
 
 
@@ -59,6 +85,14 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 			reader = context.getModuleReader(module);
 			
 			context.fillModule(module, reader);
+			
+			moduleSet.remove(module.modulePath);
+			moduleSet.put(module.getID(), module);
+			
+			if (getInvalidatedModule() == null) {
+				cache.saveModuleList(context.getModuleList(moduleSet));
+			}
+			
 		} catch (CreateModuleErrorException e) {
 			e.printStackTrace();
 		} finally {
@@ -79,8 +113,8 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 	
 	
 	@Override
-	public FsModule getModuleByShortName(String moduleShortName) {
-		return (FsModule)moduleSet.get(moduleShortName);	
+	public FsModule getModuleByID(String moduleID) {
+		return (FsModule)moduleSet.get(moduleID);
 	}
 	
 		
@@ -98,6 +132,15 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 	public void updateModule(FsModule module) {
 	}
 
-
+	
+	@Override
+	public FsModule getInvalidatedModule() {
+		for (Module module : moduleSet.values()) {
+			if (((FsModule)module).getIsInvalidated()) {
+				return (FsModule)module;
+			}
+		}
+		return null;
+	}
 
 }

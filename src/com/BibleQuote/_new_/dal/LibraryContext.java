@@ -4,21 +4,34 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.TreeMap;
 
+import android.content.Context;
+
+import com.BibleQuote._new_.controllers.CacheModuleController;
 import com.BibleQuote._new_.models.Book;
 import com.BibleQuote._new_.models.Chapter;
 import com.BibleQuote._new_.models.Module;
 
 public class LibraryContext {
 	private final String TAG = "LibraryContext";
+	private Context context;
 	
 	public TreeMap<String, Module> moduleSet = new TreeMap<String, Module>();
 	public LinkedHashMap<String, Book> bookSet = new LinkedHashMap<String, Book>();
 	public LinkedHashMap<Integer, Chapter> chapterSet = new LinkedHashMap<Integer, Chapter>();
 
+	public LibraryContext(Context context) {
+		this.context = context; 
+	}
 	
+	
+	public Context getContext() {
+		return context;
+	}
+	
+
 	public Boolean isModuleLoaded(Module module) {
-		if (module == null || !moduleSet.containsKey(module.ShortName)) {
-			android.util.Log.i(TAG, String.format("Books can't be loaded for an unknown module %1$s", module == null ? "" : module.ShortName));
+		if (module == null || !moduleSet.containsKey(module.getID())) {
+			android.util.Log.i(TAG, String.format("Books can't be loaded for an unknown module %1$s", module == null ? "" : module.getID()));
 			return false;
 		}
 		return true;
@@ -26,8 +39,8 @@ public class LibraryContext {
 	
 	
 	public Boolean isBookLoaded(Book book) {
-		if (!bookSet.containsKey(book.Name)) {
-			android.util.Log.i(TAG, String.format("Book %1$sis was not loaded to a book repository", book == null ? "" : book.Name));
+		if (!bookSet.containsKey(book.getID())) {
+			android.util.Log.i(TAG, String.format("Book %1$s was not loaded to a book repository", book == null ? "" : book.getID()));
 			return false;
 		}
 		return true;

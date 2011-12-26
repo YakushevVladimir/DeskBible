@@ -25,7 +25,7 @@ public class CacheContext {
 		return cacheDir;
 	}
 	
-	public boolean isCacheExist(String cacheName) {
+	public boolean isCacheExist() {
 		File cache = new File(cacheDir, cacheName);
 		return cache.exists();
 	}

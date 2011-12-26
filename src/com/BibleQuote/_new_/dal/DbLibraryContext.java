@@ -7,11 +7,12 @@ import com.BibleQuote._new_.utils.DataConstants;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
-public class DbLibraryContext {
+public class DbLibraryContext extends LibraryContext {
 	
 	private SQLiteDatabase db;
 	
 	public DbLibraryContext(File libraryDir, Context context) {
+		super(context);
 		if (libraryDir != null && !libraryDir.exists()) {
 			libraryDir.mkdir();
 		}			

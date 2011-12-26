@@ -1,7 +1,6 @@
 package com.BibleQuote._new_.controllers;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 
 import com.BibleQuote._new_.dal.DbLibraryUnitOfWork;
 import com.BibleQuote._new_.dal.repository.IBookRepository;
@@ -45,36 +44,16 @@ public class DbChapterController implements IChapterController {
 
 
 	@Override
-	public LinkedHashMap<Integer, Chapter> loadChapters(Book book) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
-	public void loadChaptersAsync(Book book) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	@Override
-	public Chapter loadChapter(Book book, Integer chapterNumber) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
-	public void loadChapterAsync(Book book, Integer chapterNumber) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	@Override
 	public ArrayList<Chapter> getChapterList(Book book) {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public String getChapterHTMLView(Chapter chapter) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
 }

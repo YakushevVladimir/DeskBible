@@ -25,6 +25,8 @@ public interface IModuleRepository<TModuleId, TModule> {
 	 */
 	Collection<TModule> getModules();
     
-	TModule getModuleByShortName(String moduleShortName);
+	TModule getModuleByID(String moduleID);
+	
+	public TModule getInvalidatedModule();
     
 }
