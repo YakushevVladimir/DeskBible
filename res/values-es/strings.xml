@@ -46,7 +46,7 @@
     <string name="settings_other_write_debug">Escribe los datos de depuración</string>
     <string name="fav_delete_all_question">¿Está seguro que desea eliminar todos los marcadores?</string>
     <string name="db_notes">Notas</string>
-    <string name="messageLoad">De carga ...</string>
+    <string name="messageLoad">De carga...</string>
     <string name="share">Compartir</string>
     <string name="disable_auto_screen_rotation">Desactivar el auto-rotación de pantalla</string>
     <string name="db_parallels">Paralelas</string>

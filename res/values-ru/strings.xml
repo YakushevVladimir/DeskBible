@@ -26,8 +26,8 @@
     <string name="db_plans">Планы чтения</string>
     <string name="db_settings">Настройки</string>
     <string name="db_search">Поиск</string>
-   <string name="db_help">Помощь</string>
-     <!-- About -->
+    <string name="db_help">Помощь</string>
+    <!-- About -->
     <string name="about">О программе</string>
     <string name="app_about_text">Разработчики:\nВладимир Якушев: ru.phoenix@gmail.com</string>
     <!-- Settings -->
@@ -36,7 +36,7 @@
     <string name="text_color">Цвет текста</string>
     <string name="background">Цвет фона</string>
     <string name="current_text_size">Текущий размер шрифта: %1$d</string>
-    <string name="text_color_summary">Выберите размер шрифта</string>
+    <string name="text_color_summary">Выберите цвет шрифта</string>
     <string name="background_summary">Выберите цвет фона</string>
     <string name="settings_category_other">Прочее</string>
     <string name="settings_other_write_debug">Записывать отладочную информацию</string>
@@ -64,6 +64,8 @@
     <string name="added">Добавлена</string>
     <string name="removed">Удалено</string>
     <string name="messageLoad">Загрузка...</string>
+    <string name="messageLoadBooks">Загрузка книг...</string>
+    <string name="messageLoadModules">Загрузка модулей...</string>
     <string name="messageLoadCanceled">Загрузка завершена</string>
     <string name="messageSearch">Поиск...</string>
     <string name="messageSearchCanceled">Поиск завершен</string>

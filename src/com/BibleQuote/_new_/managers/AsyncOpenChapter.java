@@ -34,6 +34,7 @@ public class AsyncOpenChapter extends Task {
 				if (book != null) {
 					Chapter chapter = librarian.openChapter(book, link.getChapterNumber());
 					if (chapter != null) {
+						librarian.setCurrentVerse(link.getVerseNumber());
 						event = new ChangeChaptersEvent(ChangeCode.ChapterAdded, module, book, chapter);
 					}
 				}

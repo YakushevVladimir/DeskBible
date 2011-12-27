@@ -48,7 +48,7 @@
     <string name="menu_night_day_mode">Nigth / Dag modus</string>
     <string name="settings_other_write_debug">Skriv debug data</string>
     <string name="fav_delete_all_question">Er du sikker på at du vil slette alle bokmerker?</string>
-    <string name="messageLoad">Load ...</string>
+    <string name="messageLoad">Load...</string>
     <string name="db_notes">Merknader</string>
     <string name="share">Share</string>
     <string name="split_verse_summary_on">Tvunget delt verset i teksten</string>

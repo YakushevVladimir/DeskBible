@@ -6,7 +6,6 @@ import java.util.TreeMap;
 
 import android.content.Context;
 
-import com.BibleQuote._new_.controllers.CacheModuleController;
 import com.BibleQuote._new_.models.Book;
 import com.BibleQuote._new_.models.Chapter;
 import com.BibleQuote._new_.models.Module;

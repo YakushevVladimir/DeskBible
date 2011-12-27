@@ -49,7 +49,7 @@
     <string name="settings_other_write_debug">Skriv debug uppgifter</string>
     <string name="fav_delete_all_question">Är du säker på att du vill ta bort alla bokmärken?</string>
     <string name="db_notes">Anteckningar</string>
-    <string name="messageLoad">Ladda ...</string>
+    <string name="messageLoad">Ladda...</string>
     <string name="share">Dela</string>
     <string name="disable_auto_screen_rotation">Inaktivera automatisk skärmrotation</string>
     <string name="db_parallels">Parallels</string>

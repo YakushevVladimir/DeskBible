@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.BibleQuote.activity;
 
 import greendroid.app.GDActivity;
@@ -62,7 +63,7 @@ public class Search extends GDActivity implements OnTaskCompleteListener {
 
 		BibleQuoteApp app = (BibleQuoteApp) getGDApplication();
 		myLibararian = app.getLibrarian();
-		
+
 		mAsyncTaskManager = new AsyncTaskManager(this, this, false);
 		mAsyncTaskManager.handleRetainedTask(getLastNonConfigurationInstance());
 		progressMessage = getResources().getString(R.string.messageSearch);
@@ -72,7 +73,7 @@ public class Search extends GDActivity implements OnTaskCompleteListener {
 		LV.setOnItemClickListener(search_OnClick);
 		setAdapter();
 
-        SpinnerInit();
+		SpinnerInit();
 	}
 
 	/**
@@ -81,35 +82,36 @@ public class Search extends GDActivity implements OnTaskCompleteListener {
 	private void setAdapter() {
 		searchItems.clear();
 		for (String key : searchResults.keySet()) {
-			searchItems.add(new SubtitleItem(myLibararian.getOSIStoHuman(key), searchResults.get(key)));
+			searchItems.add(new SubtitleItem(myLibararian.getOSIStoHuman(key),
+					searchResults.get(key)));
 		}
-        ItemAdapter adapter = new ItemAdapter(this, searchItems);
-        LV.setAdapter(adapter);
-        
-        String title = getResources().getString(R.string.db_search); 
-        if (searchResults.size() > 0) {
+		ItemAdapter adapter = new ItemAdapter(this, searchItems);
+		LV.setAdapter(adapter);
+
+		String title = getResources().getString(R.string.db_search);
+		if (searchResults.size() > 0) {
 			title += " (" + searchResults.size() + " "
-        	+ getResources().getString(R.string.results) + ")";
+					+ getResources().getString(R.string.results) + ")";
 		}
-        getActionBar().setTitle(title);
- 	}
+		getActionBar().setTitle(title);
+	}
 
 	private void SpinnerInit() {
 		books = myLibararian.getModuleBooksList();
-		
+
 		SimpleAdapter AA = new SimpleAdapter(this, books,
 				android.R.layout.simple_spinner_item,
-				new String[] { ItemList.Name }, 
-				new int[] { android.R.id.text1 });;
+				new String[]{ItemList.Name}, new int[]{android.R.id.text1});;
 		AA.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		SimpleAdapter.ViewBinder viewBinder = new SimpleAdapter.ViewBinder() {
-	        public boolean setViewValue(View view, Object data, String textRepresentation) {
-	            TextView textView = (TextView) view;
-	            textView.setText(textRepresentation);
-	            return true;
-	        }
-	    };
-	    AA.setViewBinder(viewBinder);
+			public boolean setViewValue(View view, Object data,
+					String textRepresentation) {
+				TextView textView = (TextView) view;
+				textView.setText(textRepresentation);
+				return true;
+			}
+		};
+		AA.setViewBinder(viewBinder);
 
 		s1 = (Spinner) findViewById(R.id.FromBookCB);
 		s1.setAdapter(AA);
@@ -123,8 +125,9 @@ public class Search extends GDActivity implements OnTaskCompleteListener {
 
 	private AdapterView.OnItemClickListener search_OnClick = new AdapterView.OnItemClickListener() {
 		public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-			String humanLink = ((SubtitleItem)LV.getAdapter().getItem(position)).text;
-			
+			String humanLink = ((SubtitleItem) LV.getAdapter()
+					.getItem(position)).text;
+
 			Intent intent = new Intent();
 			intent.putExtra("linkOSIS", myLibararian.getHumanToOSIS(humanLink));
 			setResult(RESULT_OK, intent);
@@ -141,8 +144,8 @@ public class Search extends GDActivity implements OnTaskCompleteListener {
 	@Override
 	public void onTaskComplete(Task task) {
 		if (task.isCancelled()) {
-		    Toast.makeText(this, R.string.messageSearchCanceled, Toast.LENGTH_LONG)
-			    .show();
+			Toast.makeText(this, R.string.messageSearchCanceled,
+					Toast.LENGTH_LONG).show();
 		}
 	}
 
@@ -162,17 +165,19 @@ public class Search extends GDActivity implements OnTaskCompleteListener {
 			if (query.equals("")) {
 				return true;
 			}
-			
+
 			int posFrom = s1.getSelectedItemPosition();
 			int posTo = s2.getSelectedItemPosition();
-			if (posFrom == AdapterView.INVALID_POSITION 
+			if (posFrom == AdapterView.INVALID_POSITION
 					|| posTo == AdapterView.INVALID_POSITION) {
 				return true;
 			}
-			
-			String fromBookID = ((ItemList)s1.getItemAtPosition(posFrom)).get("ID");
-			String toBookID = ((ItemList)s2.getItemAtPosition(posTo)).get("ID");
-			
+
+			String fromBookID = ((ItemList) s1.getItemAtPosition(posFrom))
+					.get("ID");
+			String toBookID = ((ItemList) s2.getItemAtPosition(posTo))
+					.get("ID");
+
 			searchResults = myLibararian.search(query, fromBookID, toBookID);
 			return true;
 		}
@@ -189,10 +194,10 @@ public class Search extends GDActivity implements OnTaskCompleteListener {
 		mAsyncTaskManager.setupTask(new StartSearch(progressMessage));
 	}
 
-	private OnItemSelectedListener onClick_FromBook = new OnItemSelectedListener() { 
+	private OnItemSelectedListener onClick_FromBook = new OnItemSelectedListener() {
 		@Override
-		public void onItemSelected(AdapterView<?> arg0, View arg1,
-				int arg2, long arg3) {
+		public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2,
+				long arg3) {
 			int fromBook = s1.getSelectedItemPosition();
 			int toBook = s2.getSelectedItemPosition();
 			if (fromBook > toBook) {
@@ -207,8 +212,8 @@ public class Search extends GDActivity implements OnTaskCompleteListener {
 
 	private OnItemSelectedListener onClick_ToBook = new OnItemSelectedListener() {
 		@Override
-		public void onItemSelected(AdapterView<?> arg0, View arg1,
-				int arg2, long arg3) {
+		public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2,
+				long arg3) {
 			int fromBook = s1.getSelectedItemPosition();
 			int toBook = s2.getSelectedItemPosition();
 			if (fromBook > toBook) {

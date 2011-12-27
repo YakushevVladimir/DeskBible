@@ -24,7 +24,7 @@ public class FsUtils {
 			ZipInputStream zStream = new ZipInputStream(moduleStream);
 			ZipEntry entry;
 			while ((entry = zStream.getNextEntry()) != null) {
-				if (entry.getName().toLowerCase().contains(textFileInArchive.toLowerCase())) {
+				if (entry.getName().toLowerCase().equals(textFileInArchive.toLowerCase())) {
 					InputStreamReader iReader = new InputStreamReader(zStream, textFileEncoding);
 					return new BufferedReader(iReader);
 				};

@@ -45,13 +45,11 @@ public class DbChapterController implements IChapterController {
 
 	@Override
 	public ArrayList<Chapter> getChapterList(Book book) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public String getChapterHTMLView(Chapter chapter) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

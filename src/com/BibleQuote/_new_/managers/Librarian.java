@@ -23,6 +23,7 @@ import java.util.TreeSet;
 
 import android.content.Context;
 
+import com.BibleQuote.R;
 import com.BibleQuote._new_.controllers.IBookController;
 import com.BibleQuote._new_.controllers.IChapterController;
 import com.BibleQuote._new_.controllers.IModuleController;
@@ -54,6 +55,9 @@ public class Librarian implements IChangeBooksListener  {
 	private Book currBook; 
 	private Chapter currChapter;
 	private Integer currChapterNumber = 1;
+	private Integer currVerseNumber = 1;
+	
+	private Context context;
 	
 	private IModuleController moduleCtrl;
 	private IBookController bookCtrl;
@@ -74,6 +78,8 @@ public class Librarian implements IChangeBooksListener  {
 		
 		eventManager.addChangeBooksListener(this);
 		
+		this.context = context;
+		
 		libCtrl = LibraryController.create(LibrarySource.FileSystem, eventManager, context);
 		moduleCtrl = libCtrl.getModuleCtrl();
 		bookCtrl = libCtrl.getBookCtrl();
@@ -92,7 +98,8 @@ public class Librarian implements IChangeBooksListener  {
 	public void loadModulesAsync(AsyncTaskManager asyncTaskManager) {
 		Module module = moduleCtrl.getInvalidatedModule();
 		if (module != null) {
-			asyncTaskManager.setupTask(new AsyncLoadModule("Load module", this, module, asyncTaskManager));
+			String message = context.getResources().getString(R.string.messageLoadModules);
+			asyncTaskManager.setupTask(new AsyncLoadModule(message, this, module, asyncTaskManager));
 		}	
 	}
 	
@@ -109,7 +116,8 @@ public class Librarian implements IChangeBooksListener  {
 	
 	public void loadBooksAsync(AsyncTaskManager asyncTaskManager, Module module) {
 		if (module != null) {
-			asyncTaskManager.setupTask(new AsyncLoadBooks("Load books", this, module, asyncTaskManager));
+			String message = context.getResources().getString(R.string.messageLoadBooks);
+			asyncTaskManager.setupTask(new AsyncLoadBooks(message, this, module, asyncTaskManager));
 		}	
 	}	
 	
@@ -149,9 +157,13 @@ public class Librarian implements IChangeBooksListener  {
 	public Chapter openChapter(Book book, Integer chapterNumber) {
 		currChapter = chapterCtrl.getChapter(book, chapterNumber);
 		currChapterNumber = currChapter.getNumber();
+		currVerseNumber = 1;
 		return currChapter;
 	}
 	
+	public void setCurrentVerse(int verse) {
+		currVerseNumber = verse;
+	}
 	
 	///////////////////////////////////////////////////////////////////////////
 	// NAVIGATION
@@ -286,7 +298,8 @@ public class Librarian implements IChangeBooksListener  {
 	public void addBookmark(Integer verse){
 		String fav = PreferenceHelper.restoreStateString("Favorits");
 		fav = this.getCurrentLink() + ":" + verse + delimeter2
-			+ this.getCurrentOSISLinkPath() + "." + verse + delimeter1
+			+ new OSISLink(currModule, currBook, currChapterNumber, currVerseNumber).getChapterPath()
+			+ "." + verse + delimeter1
 			+ fav;
 		PreferenceHelper.saveStateString("Favorits", fav);
 	}
@@ -423,12 +436,6 @@ public class Librarian implements IChangeBooksListener  {
 		} else {
 			return currModule.getName();
 		}
-//		String moduleName = currModule.getName();
-//		if (moduleName.length() > 40) {
-//			int strLenght = moduleName.length();
-//			moduleName = moduleName.substring(0, 18) + "..." + moduleName.substring(strLenght - 18, strLenght);
-//		}
-//		return moduleName;
 	}
 	
 	public CharSequence getHumanBookLink() {
@@ -444,11 +451,7 @@ public class Librarian implements IChangeBooksListener  {
 	}
 	
 	public OSISLink getCurrentOSISLink(){
-		return new OSISLink(currModule, currBook, currChapterNumber);
-	}
-	
-	public String getCurrentOSISLinkPath(){
-		return new OSISLink(currModule, currBook, currChapterNumber).getPath();
+		return new OSISLink(currModule, currBook, currChapterNumber, currVerseNumber);
 	}
 	
 	public String getOSIStoHuman(String linkOSIS) {

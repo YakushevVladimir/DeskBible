@@ -3,28 +3,28 @@ package com.BibleQuote._new_.controllers;
 import java.util.ArrayList;
 
 import com.BibleQuote._new_.dal.FsLibraryUnitOfWork;
-import com.BibleQuote._new_.dal.repository.IBookRepository;
+//import com.BibleQuote._new_.dal.repository.IBookRepository;
 import com.BibleQuote._new_.dal.repository.IChapterRepository;
-import com.BibleQuote._new_.dal.repository.IModuleRepository;
+//import com.BibleQuote._new_.dal.repository.IModuleRepository;
 import com.BibleQuote._new_.models.Book;
 import com.BibleQuote._new_.models.Chapter;
 import com.BibleQuote._new_.models.FsBook;
-import com.BibleQuote._new_.models.FsModule;
+//import com.BibleQuote._new_.models.FsModule;
 import com.BibleQuote._new_.models.Module;
 import com.BibleQuote._new_.models.Verse;
 import com.BibleQuote.utils.StringProc;
 
 public class FsChapterController implements IChapterController {
-	private final String TAG = "FsChapterController";
+	//private final String TAG = "FsChapterController";
 	
-	private IModuleRepository<String, FsModule> moduleRep;
-	private IBookRepository<FsModule, FsBook> bookRep;
+	//private IModuleRepository<String, FsModule> moduleRep;
+	//private IBookRepository<FsModule, FsBook> bookRep;
 	private IChapterRepository<FsBook> chapterRep;
 	
 	
 	public FsChapterController(FsLibraryUnitOfWork unit) {
-		moduleRep = unit.getModuleRepository();
-		bookRep = unit.getBookRepository();
+		//moduleRep = unit.getModuleRepository();
+		//bookRep = unit.getBookRepository();
 		chapterRep = unit.getChapterRepository();
     }
 	

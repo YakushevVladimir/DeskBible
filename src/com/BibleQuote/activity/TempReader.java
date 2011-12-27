@@ -51,7 +51,6 @@ import com.BibleQuote.R;
 import com.BibleQuote._new_.listeners.ChangeChaptersEvent;
 import com.BibleQuote._new_.listeners.ISearchListener;
 import com.BibleQuote._new_.listeners.SearchInLibraryEvent;
-import com.BibleQuote._new_.managers.AsyncLoadModule;
 import com.BibleQuote._new_.managers.AsyncOpenChapter;
 import com.BibleQuote._new_.managers.Librarian;
 import com.BibleQuote._new_.utils.OSISLink;
@@ -73,7 +72,6 @@ public class TempReader extends GDActivity implements OnTaskCompleteListener, IS
 	private QuickActionWidget textQAction;
 
 	private String chapterInHTML = "";
-	private int verse = 1;
 	private boolean nightMode = false;
 	private String progressMessage = "";
 	private int runtimeOrientation;
@@ -133,7 +131,7 @@ public class TempReader extends GDActivity implements OnTaskCompleteListener, IS
 			OSISLink = myLibrarian.getCurrentOSISLink();
 		}
 		if (OSISLink.getPath() != null) {
-			mAsyncTaskManager.setupTask(new AsyncOpenChapter("Open Chapter", myLibrarian, OSISLink));
+			mAsyncTaskManager.setupTask(new AsyncOpenChapter(progressMessage, myLibrarian, OSISLink));
 		}
 	}
 	
@@ -312,26 +310,24 @@ public class TempReader extends GDActivity implements OnTaskCompleteListener, IS
 			if ((requestCode == R.id.action_bar_bookmarks) 
 					|| (requestCode == R.id.action_bar_search )
 					|| (requestCode == R.id.action_bar_chooseCh)) {
-				verse = 1;
 				Bundle extras = data.getExtras();
 				OSISLink OSISLink = new OSISLink(extras.getString("linkOSIS"));
-				
-				mAsyncTaskManager.setupTask(new AsyncOpenChapter("Open Chapter", myLibrarian, OSISLink));
-				
+				mAsyncTaskManager.setupTask(new AsyncOpenChapter(progressMessage, myLibrarian, OSISLink));
 			}
 		} else if (requestCode == R.id.action_bar_settings) {
 			vWeb.setReadingMode(PreferenceHelper.isReadModeByDefault());
 			updateActivityMode();
-			mAsyncTaskManager.setupTask(new AsyncOpenChapter("Open Chapter", myLibrarian, myLibrarian.getCurrentOSISLink()));
+			mAsyncTaskManager.setupTask(new AsyncOpenChapter(progressMessage, myLibrarian, myLibrarian.getCurrentOSISLink()));
 		}
 	}
 
 	public void setTextinWebView() {
 		Log.i(TAG, "WebLoadDataWithBaseURL()");
 		
-		vWeb.setText(chapterInHTML, verse, nightMode, myLibrarian.isBible());
+		OSISLink OSISLink = myLibrarian.getCurrentOSISLink();
+		vWeb.setText(chapterInHTML, OSISLink.getVerseNumber(), nightMode, myLibrarian.isBible());
 		
-		PreferenceHelper.saveStateString("last_read", myLibrarian.getCurrentOSISLinkPath());
+		PreferenceHelper.saveStateString("last_read", OSISLink.getPath());
 		
 		vModuleName.setText(myLibrarian.getModuleName());
 		vBookLink.setText(myLibrarian.getHumanBookLink());
@@ -392,8 +388,8 @@ public class TempReader extends GDActivity implements OnTaskCompleteListener, IS
 	};
 
 	private void viewCurrentChapter() {
-		mAsyncTaskManager.setupTask(new AsyncOpenChapter(String.format(
-				"Open Chapter %1$s", myLibrarian.getCurrentChapterNumber()), 
+		mAsyncTaskManager.setupTask(new AsyncOpenChapter(
+				progressMessage, 
 				myLibrarian, 
 				myLibrarian.getCurrentOSISLink()));
 	}

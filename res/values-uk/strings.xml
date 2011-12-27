@@ -46,7 +46,7 @@
     <string name="settings_other_write_debug">Написати налагоджувальних даних</string>
     <string name="fav_delete_all_question">Ви дійсно хочете видалити всі закладки?</string>
     <string name="db_notes">Примітки</string>
-    <string name="messageLoad">Завантажити ...</string>
+    <string name="messageLoad">Завантажити...</string>
     <string name="share">Частка</string>
     <string name="disable_auto_screen_rotation">Вимкнути автоматичний поворот екрану</string>
     <string name="db_parallels">Parallels</string>

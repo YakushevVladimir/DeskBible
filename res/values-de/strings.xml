@@ -49,7 +49,7 @@
     <string name="settings_other_write_debug">Schreiben Sie Debug-Daten</string>
     <string name="fav_delete_all_question">Sind Sie sicher, dass Sie alle Lesezeichen löschen?</string>
     <string name="db_notes">Hinweise</string>
-    <string name="messageLoad">Laden ...</string>
+    <string name="messageLoad">Laden...</string>
     <string name="share">Anteil</string>
     <string name="disable_auto_screen_rotation">Deaktivieren Sie die automatische Bildschirm-Rotation</string>
     <string name="db_parallels">Parallels</string>

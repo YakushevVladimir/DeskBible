@@ -30,7 +30,7 @@
     <string name="db_help">Help</string>
     <!-- About -->
     <string name="about">About</string>
-    <string name="app_name_about">BibleQuote 0.03.04</string>
+    <string name="app_name_about">BibleQuote 0.03.05</string>
     <string name="app_license">Apache License Version 2.0</string>
     <string name="app_about_text">Developers:\nVladimir Yakushev: ru.phoenix@gmail.com</string>
     <string name="app_about_www">www.scripturesoftware.org</string>
@@ -39,7 +39,7 @@
     <string name="text_size">Font size</string>
     <string name="current_text_size">Current text size: %1$d</string>
     <string name="text_color">Text color</string>
-    <string name="text_color_summary">Choose font size</string>
+    <string name="text_color_summary">Choose font color</string>
     <string name="background">Background color</string>
     <string name="background_summary">Choose background color</string>
     <string name="split_verse">Split verses</string>
@@ -69,6 +69,8 @@
     <string name="removed">Deleted</string>
     <string name="messageLoad">Load...</string>
     <string name="messageLoadCanceled">Load canceled</string>
+    <string name="messageLoadBooks">Load books...</string>
+    <string name="messageLoadModules">Load modules...</string>
     <string name="messageSearch">Search...</string>
     <string name="messageSearchCanceled">Search canceled</string>
     <string name="results">results</string>
