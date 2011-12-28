@@ -183,7 +183,7 @@ public class FsLibraryContext extends LibraryContext {
 			separator = "|";
 		}
 		
-		module.setIsInvalidated(false);
+		module.setIsClosed(false);
 	}	
 	
 	

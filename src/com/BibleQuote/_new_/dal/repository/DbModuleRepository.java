@@ -78,7 +78,7 @@ public class DbModuleRepository implements IModuleRepository<Long, DbModule> {
 
 
 	@Override
-	public DbModule getInvalidatedModule() {
+	public DbModule getClosedModule() {
 		// TODO Auto-generated method stub
 		return null;
 	}

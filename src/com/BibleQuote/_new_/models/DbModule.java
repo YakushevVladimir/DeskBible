@@ -25,12 +25,12 @@ public class DbModule extends Module {
 	}
 	
 	@Override
-	public Boolean getIsInvalidated() {
+	public Boolean getIsClosed() {
 		return isInvalid;
 	}
 	
 	@Override
-	public void setIsInvalidated(Boolean value) {
+	public void setIsClosed(Boolean value) {
 		isInvalid = value;
 	}
 

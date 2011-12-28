@@ -159,7 +159,7 @@ public class FsBookController implements IBookController {
 	
 	
 	private Module getValidModule(Module module) {
-		if (module.getIsInvalidated()) {
+		if (module.getIsClosed()) {
 			module = mRepository.loadModuleById((String) module.getDataSourceID());
 		}
 		return module;

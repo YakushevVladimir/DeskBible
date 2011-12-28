@@ -15,12 +15,9 @@
  */
 package com.BibleQuote;
 
-import java.util.TreeMap;
-
 import greendroid.app.GDApplication;
 
 import com.BibleQuote._new_.managers.Librarian;
-import com.BibleQuote._new_.models.Module;
 import com.BibleQuote.activity.TempReader;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.UpdateManager;
@@ -43,13 +40,11 @@ public class BibleQuoteApp extends GDApplication {
 	public Librarian getLibrarian() {
 		if (myLibararian == null) {
 			myLibararian = new Librarian(this);
-			// Temporary solution to open modules in foreground
-			TreeMap<String, Module> modules = myLibararian.openModules();
-			for (Module module : modules.values()) {
-				myLibararian.openModule(module.getID());
+			
+			myLibararian.getModules();
+			if (myLibararian.hasClosedModules()) {
+				myLibararian.openModules(null);
 			}
-			// Really this line is required only to open in background
-			myLibararian.openModules();
 		}
 		return myLibararian;
 	}

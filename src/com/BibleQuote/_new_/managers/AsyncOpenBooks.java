@@ -7,7 +7,7 @@ import com.BibleQuote.utils.AsyncTaskManager;
 import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.Task;
 
-public class AsyncLoadBooks extends Task {
+public class AsyncOpenBooks extends Task {
 	private final String TAG = "AsyncTaskChapterOpen";
 	
 	private ChangeBooksEvent event;
@@ -15,7 +15,7 @@ public class AsyncLoadBooks extends Task {
 	private Module module;
 	AsyncTaskManager asyncTaskManager;
 	
-	public AsyncLoadBooks(String message, Librarian librarian, Module module, AsyncTaskManager asyncTaskManager) {
+	public AsyncOpenBooks(String message, Librarian librarian, Module module, AsyncTaskManager asyncTaskManager) {
 		super(message);
 		this.librarian = librarian;
 		this.module = module;
@@ -43,10 +43,10 @@ public class AsyncLoadBooks extends Task {
 	@Override
 	protected void onPostExecute(Boolean result) {
 		super.onPostExecute(result);
-		librarian.openModules();
-		if (!librarian.isModulesLoaded()) {
-			librarian.loadModulesAsync(asyncTaskManager);
-		}
+//		librarian.openModules();
+//		if (!librarian.isModulesLoaded()) {
+//			librarian.loadModulesAsync(asyncTaskManager);
+//		}
 	}
 
 	

@@ -32,8 +32,8 @@ import android.widget.SimpleAdapter;
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
 import com.BibleQuote._new_.listeners.ChangeModulesEvent;
-import com.BibleQuote._new_.managers.AsyncLoadBooks;
-import com.BibleQuote._new_.managers.AsyncLoadModule;
+import com.BibleQuote._new_.managers.AsyncOpenBooks;
+import com.BibleQuote._new_.managers.AsyncOpenModule;
 import com.BibleQuote._new_.managers.Librarian;
 import com.BibleQuote._new_.models.Module;
 import com.BibleQuote._new_.utils.OSISLink;
@@ -187,7 +187,7 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 			if (modulePos >= 0) {
 				modulesList.setSelection(modulePos);
 			}
-			myLibrarian.loadModulesAsync(mAsyncTaskManager);
+			myLibrarian.openModulesAsync(mAsyncTaskManager);
 
 			break;
 
@@ -281,13 +281,13 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 	public void onTaskComplete(Task task) {
 		Log.i(TAG, "onTaskComplete()");
 		if (task != null && !task.isCancelled()) {
-			if (task instanceof AsyncLoadModule) {
-				ChangeModulesEvent event = ((AsyncLoadModule) task).getEvent();
+			if (task instanceof AsyncOpenModule) {
+				ChangeModulesEvent event = ((AsyncOpenModule) task).getEvent();
 				if (event != null && this.viewMode == MODULE_VIEW) {
 					//myLibrarian.openModules();
 					UpdateView(MODULE_VIEW);
 				}
-			} else if (task instanceof AsyncLoadBooks) {
+			} else if (task instanceof AsyncOpenBooks) {
 				UpdateView(BOOK_VIEW);
 				setButtonText();
 			}

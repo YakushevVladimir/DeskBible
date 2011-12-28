@@ -23,12 +23,10 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 
 	protected final String TAG = "FsModuleRepository";
 	private FsLibraryContext context;
-	private TreeMap<String, Module> moduleSet;
 	private CacheModuleController<FsModule> cache;
 	
     public FsModuleRepository(FsLibraryContext context) {
     	this.context = context;
-    	this.moduleSet = context.moduleSet;
     	this.cache = context.getCache();
     }
     
@@ -37,36 +35,31 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 	public Collection<FsModule> loadModules() {
 		ArrayList<FsModule> moduleList = new ArrayList<FsModule>();
 		
-		if (cache.isCacheExist()) {
-			moduleList = cache.getModuleList();
+		// Load standard BQ-modules
+		ArrayList<String> bqIniFiles = context.SearchModules(new OnlyBQIni());
+		for (String moduleDataSourceId : bqIniFiles) {
+			FsModule fileModule = new FsModule(moduleDataSourceId);
+			fileModule.ShortName = fileModule.getModuleFileName();
+			fileModule.setName(fileModule.ShortName);
+			moduleList.add(fileModule);
+		}
 		
-		} else {
-		
-			// Load standard BQ-modules
-			ArrayList<String> bqIniFiles = context.SearchModules(new OnlyBQIni());
-			for (String moduleDataSourceId : bqIniFiles) {
-				FsModule fileModule = new FsModule(moduleDataSourceId);
-				fileModule.ShortName = fileModule.getModuleFileName();
-				fileModule.setName(fileModule.ShortName);
-				moduleList.add(fileModule);
-			}
-			
-			// Load zip-compressed BQ-modules
-			ArrayList<String> bqZipIniFiles = context.SearchModules(new OnlyBQZipIni());
-			for (String bqZipIniFile : bqZipIniFiles) {
-				String moduleDataSourceId = bqZipIniFile + File.separator + DataConstants.DEFAULT_INI_FILE_NAME;
-				FsModule zipModule = new FsModule(moduleDataSourceId);
-				zipModule.ShortName = zipModule.getModuleFileName();
-				zipModule.setName(zipModule.ShortName);
-				moduleList.add(zipModule);
-			}
+		// Load zip-compressed BQ-modules
+		ArrayList<String> bqZipIniFiles = context.SearchModules(new OnlyBQZipIni());
+		for (String bqZipIniFile : bqZipIniFiles) {
+			String moduleDataSourceId = bqZipIniFile + File.separator + DataConstants.DEFAULT_INI_FILE_NAME;
+			FsModule zipModule = new FsModule(moduleDataSourceId);
+			zipModule.ShortName = zipModule.getModuleFileName();
+			zipModule.setName(zipModule.ShortName);
+			moduleList.add(zipModule);
 		}
 
-		moduleSet = new TreeMap<String, Module>();
+		cache.saveModuleList(moduleList);
+
+		context.moduleSet = new TreeMap<String, Module>();
 		for (FsModule fsModule : moduleList) {
-			moduleSet.put(fsModule.getID(), fsModule);
+			context.moduleSet.put(fsModule.getID(), fsModule);
 		}
-
 		context.bookSet = new LinkedHashMap<String, Book>();
 		context.chapterSet = new LinkedHashMap<Integer, Chapter>();
 
@@ -86,12 +79,12 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 			
 			context.fillModule(module, reader);
 			
-			moduleSet.remove(module.modulePath);
-			moduleSet.put(module.getID(), module);
+			context.moduleSet.remove(module.modulePath);
+			context.moduleSet.put(module.getID(), module);
 			
-			if (getInvalidatedModule() == null) {
-				cache.saveModuleList(context.getModuleList(moduleSet));
-			}
+			//if (getClosedModule() == null) {
+				cache.saveModuleList(context.getModuleList(context.moduleSet));
+			//}
 			
 		} catch (CreateModuleErrorException e) {
 			e.printStackTrace();
@@ -108,13 +101,16 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 	
 	@Override
 	public Collection<FsModule> getModules() {
-		return context.getModuleList(moduleSet);	
+		if (context.moduleSet == null && cache.isCacheExist()) {
+			loadCachedModules();
+		}
+		return context.getModuleList(context.moduleSet);	
 	}
 	
 	
 	@Override
 	public FsModule getModuleByID(String moduleID) {
-		return (FsModule)moduleSet.get(moduleID);
+		return (FsModule)context.moduleSet.get(moduleID);
 	}
 	
 		
@@ -134,13 +130,21 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 
 	
 	@Override
-	public FsModule getInvalidatedModule() {
-		for (Module module : moduleSet.values()) {
-			if (((FsModule)module).getIsInvalidated()) {
+	public FsModule getClosedModule() {
+		for (Module module : context.moduleSet.values()) {
+			if (((FsModule)module).getIsClosed()) {
 				return (FsModule)module;
 			}
 		}
 		return null;
 	}
 
+	
+	private void loadCachedModules() {
+		ArrayList<FsModule> moduleList = cache.getModuleList();
+		context.moduleSet = new TreeMap<String, Module>();
+		for (FsModule fsModule : moduleList) {
+			context.moduleSet.put(fsModule.getID(), fsModule);
+		}
+	}
 }
