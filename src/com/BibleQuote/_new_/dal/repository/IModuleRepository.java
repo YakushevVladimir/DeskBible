@@ -27,6 +27,6 @@ public interface IModuleRepository<TModuleId, TModule> {
     
 	TModule getModuleByID(String moduleID);
 	
-	public TModule getInvalidatedModule();
+	public TModule getClosedModule();
     
 }

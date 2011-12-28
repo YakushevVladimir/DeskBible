@@ -47,9 +47,7 @@ public class Librarian implements IChangeBooksListener  {
 	
 	private final String TAG = "Librarian";
 	
-	private TreeMap<String, Module> modules  = new TreeMap<String, Module>();
 	private LinkedHashMap<String, String> searchResults = new LinkedHashMap<String, String>();
-	private ArrayList<Verse> verses = new ArrayList<Verse>();
 	
 	private Module currModule; 
 	private Book currBook; 
@@ -86,28 +84,38 @@ public class Librarian implements IChangeBooksListener  {
 		chapterCtrl = libCtrl.getChapterCtrl();
 	}
 	
-	public Boolean isModulesLoaded() {
-		return moduleCtrl.getInvalidatedModule() == null;
+	public Boolean hasClosedModules() {
+		return moduleCtrl.getClosedModule() != null;
 	}
 	
-	public TreeMap<String, Module> openModules() {
-		modules = moduleCtrl.getModules();
-		return modules;
+	public TreeMap<String, Module> getModules() {
+		return moduleCtrl.getModules();
 	}
 	
-	public void loadModulesAsync(AsyncTaskManager asyncTaskManager) {
-		Module module = moduleCtrl.getInvalidatedModule();
+	public void openModulesAsync(AsyncTaskManager asyncTaskManager) {
+		Module module = moduleCtrl.getClosedModule();
 		if (module != null) {
 			String message = context.getResources().getString(R.string.messageLoadModules);
-			asyncTaskManager.setupTask(new AsyncLoadModule(message, this, module, asyncTaskManager));
+			asyncTaskManager.setupTask(new AsyncOpenModule(message, this, module, asyncTaskManager));
 		}	
 	}
 	
 	public void refreshModules(AsyncTaskManager asyncTaskManager) {
-		moduleCtrl.invalidateModules();
-		loadModulesAsync(asyncTaskManager);
+		moduleCtrl.loadModules();
+		openModules(asyncTaskManager);
 	}
 
+	public void openModules(AsyncTaskManager asyncTaskManager) {
+		TreeMap<String, Module> modules = moduleCtrl.getModules();
+		if (asyncTaskManager != null) {
+			openModulesAsync(asyncTaskManager);
+		} else {
+			for (Module module : modules.values()) {
+				this.openModule(module.getID());
+			}
+		}
+	}
+	
 	@Override
 	public void onChangeBooks(ChangeBooksEvent event) {
 		if (event.code == IChangeBooksListener.ChangeCode.BooksLoaded) {
@@ -117,14 +125,17 @@ public class Librarian implements IChangeBooksListener  {
 	public void loadBooksAsync(AsyncTaskManager asyncTaskManager, Module module) {
 		if (module != null) {
 			String message = context.getResources().getString(R.string.messageLoadBooks);
-			asyncTaskManager.setupTask(new AsyncLoadBooks(message, this, module, asyncTaskManager));
+			asyncTaskManager.setupTask(new AsyncOpenBooks(message, this, module, asyncTaskManager));
 		}	
 	}	
 	
 	public Module getCurrentModule() {
-		if (currModule == null && modules.size() > 0) {
-			currModule = modules.get(modules.firstKey());
-			currChapterNumber = currModule.ChapterZero ? 0 : 1;
+		if (currModule == null) { 
+			TreeMap<String, Module> modules = moduleCtrl.getModules();
+			if (modules.size() > 0) {
+				currModule = modules.get(modules.firstKey());
+				currChapterNumber = currModule.ChapterZero ? 0 : 1;
+			}
 		}		
 		return currModule;
 	}
@@ -175,7 +186,7 @@ public class Librarian implements IChangeBooksListener  {
 	public ArrayList<ItemList> getModulesList() {
 		// Сначала отсортируем список по наименованием модулей
 		TreeMap<String, Module> tMap = new TreeMap<String, Module>();
-		for (Module currModule : modules.values()) {
+		for (Module currModule : moduleCtrl.getModules().values()) {
 			tMap.put(currModule.getName(), currModule);
 		}
 		
@@ -191,7 +202,7 @@ public class Librarian implements IChangeBooksListener  {
 	
 	public ArrayList<ItemList> getModuleBooksList(String moduleID) {
 		// Получим модуль по его ID
-		currModule = modules.get(moduleID);
+		currModule = moduleCtrl.getModules().get(moduleID);
 		if (currModule == null) {
 			return new ArrayList<ItemList>();
 		}
@@ -275,10 +286,14 @@ public class Librarian implements IChangeBooksListener  {
 	}
 	
 	public String getVerseText(Integer verse) {
+		if (currChapter == null) {
+			return "";
+		}
+		ArrayList<Verse> verses = currChapter.getVerseList();
 		if (verses.size() < --verse) {
 			return "";
 		}
-		return StringProc.stripTags(this.verses.get(verse).getText(), "", true)
+		return StringProc.stripTags(verses.get(verse).getText(), "", true)
 			.replaceAll("^\\d+\\s+", "")
 			.replaceAll("\\s\\d+", "");
 	}
