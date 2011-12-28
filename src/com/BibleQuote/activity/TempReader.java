@@ -128,9 +128,8 @@ public class TempReader extends GDActivity implements OnTaskCompleteListener, IS
 		
 		OSISLink OSISLink = new OSISLink(PreferenceHelper.restoreStateString("last_read"));
 		if (OSISLink.getPath() == null) {
-			OSISLink = myLibrarian.getCurrentOSISLink();
-		}
-		if (OSISLink.getPath() != null) {
+			onChooseChapterClick();
+		} else {
 			mAsyncTaskManager.setupTask(new AsyncOpenChapter(progressMessage, myLibrarian, OSISLink));
 		}
 	}
