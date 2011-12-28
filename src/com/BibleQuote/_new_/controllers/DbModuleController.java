@@ -47,14 +47,14 @@ public class DbModuleController implements IModuleController {
 
 
 	@Override
-	public void invalidateModules() {
+	public Module getClosedModule() {
 		// TODO Auto-generated method stub
-		
+		return null;
 	}
 
 
 	@Override
-	public Module getInvalidatedModule() {
+	public TreeMap<String, Module> loadModules() {
 		// TODO Auto-generated method stub
 		return null;
 	}

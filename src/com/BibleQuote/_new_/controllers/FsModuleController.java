@@ -1,7 +1,6 @@
 package com.BibleQuote._new_.controllers;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.TreeMap;
 
 import com.BibleQuote._new_.dal.FsLibraryUnitOfWork;
@@ -21,15 +20,9 @@ public class FsModuleController implements IModuleController {
     }
 	
 	
-    /**
-     * @return Возвращает коллекцию модулей с ключом по Module.ShortName
-     */
 	@Override
-	public TreeMap<String, Module> getModules() {
-		ArrayList<FsModule> moduleList = (ArrayList<FsModule>) mRepository.getModules();
-		if (moduleList.size() == 0) {
-			moduleList = (ArrayList<FsModule>) mRepository.loadModules();
-		}
+	public TreeMap<String, Module> loadModules() {
+		ArrayList<FsModule> moduleList = (ArrayList<FsModule>) mRepository.loadModules();
 		
 		TreeMap<String, Module> result = new TreeMap<String, Module>();
 		for (Module module : moduleList) {
@@ -39,29 +32,37 @@ public class FsModuleController implements IModuleController {
 		return result;		
 	}
 	
+    /**
+     * @return Возвращает коллекцию модулей с ключом по Module.ShortName
+     */
+	@Override
+	public TreeMap<String, Module> getModules() {
+		ArrayList<FsModule> moduleList = (ArrayList<FsModule>) mRepository.getModules();
+		if (moduleList.size() == 0) {
+			return loadModules();
+		} else {
+			TreeMap<String, Module> result = new TreeMap<String, Module>();
+			for (Module module : moduleList) {
+				result.put(module.getID(), module);
+			}			
+			return result;		
+		}
+	}
+	
 
 	@Override
 	public Module getModuleByID(String moduleID) {
 		FsModule fsModule = mRepository.getModuleByID(moduleID);
-		if (fsModule != null && fsModule.getIsInvalidated()) {
+		if (fsModule != null && fsModule.getIsClosed()) {
 			fsModule = mRepository.loadModuleById(fsModule.getDataSourceID());
 		}
 		return 	fsModule;		
 	}
 	
-	
-	@Override
-	public void invalidateModules() {
-		ArrayList<FsModule> modules = (ArrayList<FsModule>) mRepository.getModules();
-		for (FsModule module : modules) {
-			module.setIsInvalidated(true);
-		}
-	}
-	
 
 	@Override
-	public Module getInvalidatedModule() {
-		return mRepository.getInvalidatedModule();
+	public Module getClosedModule() {
+		return mRepository.getClosedModule();
 	}
 	
 

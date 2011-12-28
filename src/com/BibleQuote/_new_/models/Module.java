@@ -39,9 +39,9 @@ public abstract class Module implements Serializable {
 	
 	public abstract String getModuleFileName();
 	
-	public abstract Boolean getIsInvalidated();
+	public abstract Boolean getIsClosed();
 	
-	public abstract void setIsInvalidated(Boolean value);
+	public abstract void setIsClosed(Boolean value);
 
 	public String getName() {
 		return Name;

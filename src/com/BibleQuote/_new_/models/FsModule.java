@@ -37,7 +37,7 @@ public class FsModule extends Module {
 	
 	public final Boolean isArchive;
 	
-	private Boolean isInvalidated;
+	private Boolean isClosed;
 	
 	private final String moduleFileName;
 	
@@ -49,7 +49,7 @@ public class FsModule extends Module {
 		iniFileName = iniFilePath.substring(iniFilePath.lastIndexOf(File.separator) + 1);
 		moduleFileName = modulePath.substring(modulePath.lastIndexOf(File.separator) + 1);
 		isArchive = modulePath.endsWith("zip");
-		isInvalidated = true;
+		isClosed = true;
 	}
 	
 	@Override
@@ -58,13 +58,13 @@ public class FsModule extends Module {
 	}
 
 	@Override
-	public Boolean getIsInvalidated() {
-		return isInvalidated;
+	public Boolean getIsClosed() {
+		return isClosed;
 	}
 	
 	@Override
-	public void setIsInvalidated(Boolean value) {
-		isInvalidated = value;
+	public void setIsClosed(Boolean value) {
+		isClosed = value;
 	}
 
 	@Override
@@ -74,7 +74,7 @@ public class FsModule extends Module {
 	
 	@Override
 	public String getID() {
-		return isInvalidated ? modulePath : ShortName;
+		return isClosed ? modulePath : ShortName;
 	}
 
 }

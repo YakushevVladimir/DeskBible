@@ -472,7 +472,7 @@ public class TempReader extends GDActivity implements OnTaskCompleteListener, IS
 					chapterInHTML = myLibrarian.getChapterHTMLView(event.chapter);
 					setTextinWebView();
 				}
-				myLibrarian.loadModulesAsync(mAsyncTaskManager);
+				myLibrarian.openModulesAsync(mAsyncTaskManager);
 			}
 		}
     }
