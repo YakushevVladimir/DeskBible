@@ -2,6 +2,7 @@ package com.BibleQuote._new_.dal.repository;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashMap;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -53,21 +54,13 @@ public class DbBookRepository implements IBookRepository<DbModule, DbBook> {
 //		return book;	
 		return null;
 	}
-	
-	
-	@Override
-	public void insertBook(DbBook book) {
-	}
 
-	
 	@Override
-	public void deleteBook(DbBook book) {
+	public LinkedHashMap<String, String> searchInBook(DbModule module,
+			String bookID, String regQuery) {
+		// TODO Auto-generated method stub
+		return null;
 	}
-
 	
-	@Override
-	public void updateBook(DbBook book) {
-	}
-
 
 }
