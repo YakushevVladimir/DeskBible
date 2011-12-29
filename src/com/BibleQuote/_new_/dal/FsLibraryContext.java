@@ -37,17 +37,14 @@ public class FsLibraryContext extends LibraryContext {
 			libraryDir.mkdir();
 		}		
 	}
-
 		
 	public CacheModuleController<FsModule> getCache() {
 		return cache;
 	}
 	
-	
 	private boolean isLibraryExist() {
 		return libraryDir != null && libraryDir.exists();
 	}
-	
 	
 	public ArrayList<FsModule> getModuleList(TreeMap<String, Module> moduleSet) {
 		ArrayList<FsModule> moduleList = new ArrayList<FsModule>();
@@ -57,7 +54,6 @@ public class FsLibraryContext extends LibraryContext {
 		return moduleList;
 	}
 	
-	
 	public ArrayList<FsBook> getBookList(LinkedHashMap<String, Book> bookSet) {
 		ArrayList<FsBook> bookList = new ArrayList<FsBook>();
 		for (Book currBook : bookSet.values()) {
@@ -66,7 +62,6 @@ public class FsLibraryContext extends LibraryContext {
 		return bookList;
 	}
 	
-	
 	public ArrayList<Chapter> getChapterList(LinkedHashMap<Integer, Chapter> chapterSet) {
 		ArrayList<Chapter> chapterList = new ArrayList<Chapter>();
 		for (Chapter currChapter : chapterSet.values()) {
@@ -74,7 +69,6 @@ public class FsLibraryContext extends LibraryContext {
 		}
 		return chapterList;
 	}	
-	
 	
 	public BufferedReader getModuleReader(FsModule fsModule) {
 		return fsModule.isArchive 
@@ -90,7 +84,6 @@ public class FsLibraryContext extends LibraryContext {
 				: FsUtils.getTextFileReader(fsModule.modulePath, book.getDataSourceID(), fsModule.defaultEncoding);
 		return reader;
 	}
-	
 	
 	/**
 	 * Выполняет поиск папок с модулями Цитаты на внешнем носителе устройства
@@ -117,9 +110,12 @@ public class FsLibraryContext extends LibraryContext {
 		return iniFiles;
 	}
 	
-	
 	public void fillModule(FsModule module, BufferedReader bReader) throws CreateModuleErrorException {
 		String str, HTMLFilter = "", key, value;
+
+		if (bReader == null) {
+			throw new CreateModuleErrorException();
+		}
 
 		int pos;
 		try {
@@ -189,9 +185,14 @@ public class FsLibraryContext extends LibraryContext {
 		module.setIsClosed(false);
 	}	
 	
-	
 	public void fillBooks(FsModule module, BufferedReader bReader) throws CreateModuleErrorException {
 		String str, key, value;
+		
+		if (bReader == null) {
+			//moduleSet.remove(module.getID());
+			throw new CreateModuleErrorException();
+		}
+		
 		ArrayList<String> fullNames = new ArrayList<String>();
 		ArrayList<String> pathNames = new ArrayList<String>();
 		ArrayList<String> shortNames = new ArrayList<String>();
@@ -248,13 +249,17 @@ public class FsLibraryContext extends LibraryContext {
 			module.Books.put(book.getID(), book);
 		}
 		if (module.Books.size() == 0) {
+			Log.e(TAG, String.format("The module $1$s does not contain the books", module.getModuleFileName()));
 			throw new CreateModuleErrorException();
 		}
 	}		
 	
-	
 	public String getModuleEncoding(BufferedReader bReader) {
 		String encoding = "cp1251";
+		
+		if (bReader == null) {
+			return encoding;
+		}
 
 		HashMap<String, String> charsets = getCharsets();
 		String str = "", key, value;

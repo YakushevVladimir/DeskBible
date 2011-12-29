@@ -16,6 +16,7 @@ import com.BibleQuote._new_.models.FsModule;
 import com.BibleQuote._new_.models.Module;
 import com.BibleQuote._new_.utils.DataConstants;
 import com.BibleQuote.exceptions.CreateModuleErrorException;
+import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.OnlyBQIni;
 import com.BibleQuote.utils.OnlyBQZipIni;
 
@@ -35,15 +36,6 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 	public Collection<FsModule> loadModules() {
 		ArrayList<FsModule> moduleList = new ArrayList<FsModule>();
 		
-		// Load standard BQ-modules
-		ArrayList<String> bqIniFiles = context.SearchModules(new OnlyBQIni());
-		for (String moduleDataSourceId : bqIniFiles) {
-			FsModule fileModule = new FsModule(moduleDataSourceId);
-			fileModule.ShortName = fileModule.getModuleFileName();
-			fileModule.setName(fileModule.ShortName);
-			moduleList.add(fileModule);
-		}
-		
 		// Load zip-compressed BQ-modules
 		ArrayList<String> bqZipIniFiles = context.SearchModules(new OnlyBQZipIni());
 		for (String bqZipIniFile : bqZipIniFiles) {
@@ -54,6 +46,15 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 			moduleList.add(zipModule);
 		}
 
+		// Load standard BQ-modules
+		ArrayList<String> bqIniFiles = context.SearchModules(new OnlyBQIni());
+		for (String moduleDataSourceId : bqIniFiles) {
+			FsModule fileModule = new FsModule(moduleDataSourceId);
+			fileModule.ShortName = fileModule.getModuleFileName();
+			fileModule.setName(fileModule.ShortName);
+			moduleList.add(fileModule);
+		}
+		
 		cache.saveModuleList(moduleList);
 
 		context.moduleSet = new TreeMap<String, Module>();
@@ -87,10 +88,14 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 			//}
 			
 		} catch (CreateModuleErrorException e) {
+			Log.e(TAG, "Can't load module by " + moduleDataSourceId);
+			context.moduleSet.remove(module.modulePath);
 			e.printStackTrace();
 		} finally {
 			try {
-				reader.close();
+				if (reader != null) {
+					reader.close();
+				}
 			} catch (IOException e) {
 				e.printStackTrace(); 
 			}

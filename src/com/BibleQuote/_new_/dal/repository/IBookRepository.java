@@ -3,7 +3,6 @@ package com.BibleQuote._new_.dal.repository;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 
-
 public interface IBookRepository<TModule, TBook> {
     
 	/*
