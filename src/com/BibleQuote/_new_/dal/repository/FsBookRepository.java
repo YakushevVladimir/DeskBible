@@ -47,7 +47,9 @@ public class FsBookRepository implements IBookRepository<FsModule, FsBook> {
 			e.printStackTrace();
 		} finally {
 			try {
-				reader.close();
+				if (reader != null) {
+					reader.close();
+				}
 			} catch (IOException e) {
 				e.printStackTrace(); 
 			}

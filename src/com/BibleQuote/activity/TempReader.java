@@ -465,7 +465,7 @@ public class TempReader extends GDActivity implements OnTaskCompleteListener, IS
     @Override
     public void onTaskComplete(Task task) {
 		Log.i(TAG, "onTaskComplete()");
-		if (!task.isCancelled()) {
+		if (task != null && !task.isCancelled()) {
 			if (task instanceof AsyncOpenChapter) {
 				ChangeChaptersEvent event = ((AsyncOpenChapter) task).getEvent();
 				if (event != null) {

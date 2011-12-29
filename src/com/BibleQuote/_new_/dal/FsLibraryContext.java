@@ -186,6 +186,7 @@ public class FsLibraryContext extends LibraryContext {
 		String str, key, value;
 		
 		if (bReader == null) {
+			//moduleSet.remove(module.getID());
 			throw new CreateModuleErrorException();
 		}
 		

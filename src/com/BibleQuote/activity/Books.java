@@ -16,8 +16,9 @@
 package com.BibleQuote.activity;
 
 import greendroid.app.GDActivity;
+import greendroid.widget.ActionBar;
 import greendroid.widget.ActionBarItem;
-import greendroid.widget.ActionBarItem.Type;
+import greendroid.widget.NormalActionBarItem;
 
 import java.util.ArrayList;
 
@@ -107,7 +108,10 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 	}
 	
 	private void initActionBar() {
-        addActionBarItem(Type.Refresh, R.id.action_bar_refresh);
+		ActionBar bar = getActionBar();
+		ActionBarItem itemCont = bar.newActionBarItem(NormalActionBarItem.class);
+		itemCont.setDrawable(R.drawable.ic_action_bar_refresh);
+		addActionBarItem(itemCont, R.id.action_bar_refresh);
 	}
 
 	@Override

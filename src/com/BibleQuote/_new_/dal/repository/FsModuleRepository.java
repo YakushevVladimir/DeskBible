@@ -89,10 +89,13 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 			
 		} catch (CreateModuleErrorException e) {
 			Log.e(TAG, "Can't load module by " + moduleDataSourceId);
+			context.moduleSet.remove(module.modulePath);
 			e.printStackTrace();
 		} finally {
 			try {
-				reader.close();
+				if (reader != null) {
+					reader.close();
+				}
 			} catch (IOException e) {
 				e.printStackTrace(); 
 			}
