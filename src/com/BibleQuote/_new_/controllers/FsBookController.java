@@ -1,8 +1,5 @@
 package com.BibleQuote._new_.controllers;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
@@ -13,12 +10,9 @@ import com.BibleQuote._new_.models.Book;
 import com.BibleQuote._new_.models.FsBook;
 import com.BibleQuote._new_.models.FsModule;
 import com.BibleQuote._new_.models.Module;
-import com.BibleQuote.utils.FileUtilities;
-import com.BibleQuote.utils.Log;
-import com.BibleQuote.utils.StringProc;
 
 public class FsBookController implements IBookController {
-	private final String TAG = "FsBookController";
+	//private final String TAG = "FsBookController";
 
 	private IBookRepository<FsModule, FsBook> bRepository;
 	private IModuleRepository<String, FsModule> mRepository;
@@ -71,14 +65,13 @@ public class FsBookController implements IBookController {
 
 	
 	public LinkedHashMap<String, String> search(Module module, String query, String fromBookID, String toBookID) {
-		LinkedHashMap<String, String> ret = new LinkedHashMap<String, String>();
+		LinkedHashMap<String, String> searchRes = new LinkedHashMap<String, String>();
 	
 		if (query.trim().equals("")) {
 			// Передана пустая строка
-			return ret;
+			return searchRes;
 		}
 		
-		LinkedHashMap<String, String> SearchRes = new LinkedHashMap<String, String>();
 		// Подготовим регулярное выражение для поиска
 		String regQuery = "";
 		String[] words = query.toLowerCase().split("\\s+");
@@ -87,7 +80,7 @@ public class FsBookController implements IBookController {
 		}
 		regQuery = ".*?" + regQuery + ".*?"; // любые символы в начале и конце
 	
-		SearchRes.clear();
+		//searchRes.clear();
 		
 		boolean startSearch = false;
 		for (String bookID : getBooks(module).keySet()) {
@@ -97,64 +90,12 @@ public class FsBookController implements IBookController {
 					continue;
 				}
 			} 
-			searchInBook(module, bookID, regQuery, SearchRes);
+			searchRes.putAll(bRepository.searchInBook((FsModule)module, bookID, regQuery));
 			if (bookID.equals(toBookID)) {
 				break;
 			}
 		}
-		return SearchRes;
-	}
-	
-	
-	private void searchInBook(Module module, String bookID, String regQuery, LinkedHashMap<String, String> SearchRes) {
-		
-		Book book = bRepository.getBookByID((FsModule)module, bookID);
-
-		BufferedReader bReader = getReader(
-				((FsModule)module).modulePath, 
-				((FsBook)book).getDataSourceID(),
-				module.defaultEncoding);
-		if (bReader == null) {
-			return;
-		}
-
-		String str;
-		int chapter = module.ChapterZero ? -1 : 0;
-		int verse = 0;
-		try {
-			while ((str = bReader.readLine()) != null) {
-				str = str.replaceAll("\\s(\\d)+", "");
-				if (str.toLowerCase().contains(module.ChapterSign)) {
-					chapter++;
-					verse = 0;
-				}
-				if (str.toLowerCase().contains(module.VerseSign))
-					verse++;
-
-				if (str.toLowerCase().matches(regQuery)) {
-					String linkOSIS = module.ShortName + "." + bookID + "." + chapter + "." + verse;
-					String content = StringProc.stripTags(str, module.HtmlFilter, true)
-						.replaceAll("^\\d+\\s+", "");
-					SearchRes.put(linkOSIS, content);
-				}
-			}
-			bReader.close();
-		} catch (IOException e) {
-			Log.e(TAG, e);
-		}
-	}
-	
-	private BufferedReader getReader(String dir, String path, String defaultEncoding) {
-		File file = new File(dir, path);
-		if (!file.exists()) {
-			return null;
-		}
-
-		BufferedReader bReader = FileUtilities.OpenFile(file, defaultEncoding);
-		if (bReader == null) {
-			return null;
-		}
-		return bReader;
+		return searchRes;
 	}
 	
 	

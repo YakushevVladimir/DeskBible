@@ -73,19 +73,20 @@ public class FsBookRepository implements IBookRepository<FsModule, FsBook> {
 		return (FsBook)module.Books.get(bookID);
 	}
 
-	
-	@Override
-	public void insertBook(FsBook book) {
-	}
-
-	
-	@Override
-	public void deleteBook(FsBook book) {
-	}
-
 
 	@Override
-	public void updateBook(FsBook book) {
+	public LinkedHashMap<String, String> searchInBook(FsModule module, String bookID, String regQuery) {
+		FsBook book = getBookByID((FsModule)module, bookID);
+		BufferedReader bReader = context.getBookReader(book);
+		LinkedHashMap<String, String> searchRes = context.searchInBook(module, bookID, regQuery, bReader);
+		
+		try {
+			bReader.close();
+		} catch (IOException e) {
+			e.printStackTrace(); 
+		}
+		
+		return searchRes;
 	}
 
 

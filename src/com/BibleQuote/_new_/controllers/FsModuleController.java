@@ -9,14 +9,12 @@ import com.BibleQuote._new_.models.FsModule;
 import com.BibleQuote._new_.models.Module;
 
 public class FsModuleController implements IModuleController {
-	private final String TAG = "FsModuleController";
+	//private final String TAG = "FsModuleController";
 	
 	private IModuleRepository<String, FsModule> mRepository;
-	private CacheModuleController<FsModule> cache; 
 
 	public FsModuleController(FsLibraryUnitOfWork unit) {
 		mRepository = unit.getModuleRepository();
-		cache = unit.getCacheModuleController();
     }
 	
 	

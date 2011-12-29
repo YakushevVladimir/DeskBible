@@ -3,20 +3,17 @@ package com.BibleQuote._new_.controllers;
 import java.util.ArrayList;
 
 import com.BibleQuote._new_.dal.DbLibraryUnitOfWork;
-import com.BibleQuote._new_.dal.repository.IBookRepository;
 import com.BibleQuote._new_.models.Book;
 import com.BibleQuote._new_.models.Chapter;
-import com.BibleQuote._new_.models.DbBook;
-import com.BibleQuote._new_.models.DbModule;
 import com.BibleQuote._new_.models.Verse;
 
 public class DbChapterController implements IChapterController {
-	private final String TAG = "DbChapterController";
+	//private final String TAG = "DbChapterController";
 	
-	private IBookRepository<DbModule, DbBook> br;
+	//private IBookRepository<DbModule, DbBook> br;
 
 	public DbChapterController(DbLibraryUnitOfWork unit) {
-		br = unit.getBookRepository();
+		//br = unit.getBookRepository();
     }
 	
 	@Override
