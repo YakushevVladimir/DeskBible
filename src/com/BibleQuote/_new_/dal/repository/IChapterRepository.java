@@ -4,7 +4,6 @@ import java.util.Collection;
 
 import com.BibleQuote._new_.models.Chapter;
 
-
 public interface IChapterRepository<TBook> {
     
 	/*

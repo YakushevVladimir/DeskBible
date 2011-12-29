@@ -12,9 +12,11 @@ import com.BibleQuote._new_.models.Chapter;
 import com.BibleQuote._new_.models.FsBook;
 import com.BibleQuote._new_.models.FsModule;
 import com.BibleQuote.exceptions.CreateModuleErrorException;
+import com.BibleQuote.utils.Log;
 
 public class FsBookRepository implements IBookRepository<FsModule, FsBook> {
 	
+	private String TAG = "FsBookRepository";
 	private FsLibraryContext context;
 	private CacheModuleController<FsModule> cache;
 	
@@ -41,6 +43,7 @@ public class FsBookRepository implements IBookRepository<FsModule, FsBook> {
 			cache.saveModuleList(context.getModuleList(context.moduleSet));
 			
 		} catch (CreateModuleErrorException e) {
+			Log.e(TAG, "Can't load books by module " + module.getModuleFileName());
 			e.printStackTrace();
 		} finally {
 			try {

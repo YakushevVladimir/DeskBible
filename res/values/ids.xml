@@ -28,6 +28,7 @@
 	<item type="id" name="action_bar_search" />
 	<item type="id" name="action_bar_bookmarks" />
 	<item type="id" name="action_bar_settings" />
-	<item type="id" name="view_chapter_nav" />
+	<item type="id" name="action_bar_refresh" />
+		<item type="id" name="view_chapter_nav" />
 
 </resources>

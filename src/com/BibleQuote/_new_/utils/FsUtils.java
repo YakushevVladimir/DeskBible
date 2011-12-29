@@ -24,11 +24,17 @@ public class FsUtils {
 			ZipInputStream zStream = new ZipInputStream(moduleStream);
 			ZipEntry entry;
 			while ((entry = zStream.getNextEntry()) != null) {
-				if (entry.getName().toLowerCase().equals(textFileInArchive.toLowerCase())) {
+				String entryName = entry.getName().toLowerCase();
+				if (entryName.contains(File.separator)) {
+					entryName = entryName.substring(entryName.lastIndexOf(File.separator) + 1);
+				}
+				String fileName = textFileInArchive.toLowerCase();
+				if (entryName.equals(fileName)) {
 					InputStreamReader iReader = new InputStreamReader(zStream, textFileEncoding);
 					return new BufferedReader(iReader);
 				};
 			}
+			android.util.Log.d(TAG, String.format("File %1$s in zip-arhive %2$s not found", textFileInArchive, archivePath));
 			return null;
 		} catch (IOException e) {
 			Log.e(TAG, e);
@@ -69,7 +75,7 @@ public class FsUtils {
 				}
 			}
 		} catch (Exception e) {
-			Log.i(TAG, e.getMessage());
+			Log.e(TAG, e);
 		}
 		
 	}

@@ -95,10 +95,19 @@ public class Log {
 	/**
 	 * Запись в протокол событий сообщения об ошибке
 	 * @param Tag имя класса-инициатора события
-	 * @param text текст помещаемый в протокол событий 
+	 * @param Exception исключение вызванное ошибкой 
 	 */
 	public static void e(String Tag, Exception e){
 		Write(Tag, "Error: " + e.getMessage());
+	}
+	
+	/**
+	 * Запись в протокол событий сообщения об ошибке
+	 * @param Tag имя класса-инициатора события
+	 * @param text текст помещаемый в протокол событий 
+	 */
+	public static void e(String Tag, String text){
+		Write(Tag, "Error: " + text);
 	}
 	
 	/**

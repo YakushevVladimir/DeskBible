@@ -31,13 +31,16 @@ public class FsBookController implements IBookController {
 	
 	public LinkedHashMap<String, Book> getBooks(Module module) {
 		module = getValidModule(module);
+		if (module == null) {
+			return new LinkedHashMap<String, Book>();
+		}
 		
+		LinkedHashMap<String, Book> result = new LinkedHashMap<String, Book>();
 		ArrayList<FsBook> bookList = (ArrayList<FsBook>) bRepository.getBooks((FsModule)module);
 		if (bookList.size() == 0) {
 			bookList = (ArrayList<FsBook>) bRepository.loadBooks((FsModule)module);
 		}		
 		
-		LinkedHashMap<String, Book> result = new LinkedHashMap<String, Book>();
 		for (Book book : bookList) {
 			result.put(book.getID(), book);
 		}
@@ -48,6 +51,9 @@ public class FsBookController implements IBookController {
 	
 	public ArrayList<Book> getBookList(Module module) {
 		module = getValidModule(module);
+		if (module == null) {
+			return new ArrayList<Book>();
+		}
 
 		ArrayList<FsBook> bookList = (ArrayList<FsBook>) bRepository.getBooks((FsModule)module);
 		if (bookList.size() == 0) {
@@ -60,10 +66,13 @@ public class FsBookController implements IBookController {
 	
 	public Book getBook(Module module, String bookID) {
 		module = getValidModule(module);
+		if (module == null) {
+			return null;
+		}
 
 		Book book = bRepository.getBookByID((FsModule)module, bookID);
 		if (book == null) {
-			bRepository.loadBooks((FsModule)module);
+			bRepository.loadBooks((FsModule) module);
 			book = bRepository.getBookByID((FsModule)module, bookID);
 		}
 		return book;
@@ -110,6 +119,7 @@ public class FsBookController implements IBookController {
 		
 		Book book = bRepository.getBookByID((FsModule)module, bookID);
 
+		// TODO: Получение BufferedReader некорректное. Работает только с несжатыми модулями 
 		BufferedReader bReader = getReader(
 				((FsModule)module).modulePath, 
 				((FsBook)book).getDataSourceID(),

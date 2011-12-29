@@ -16,6 +16,8 @@
 package com.BibleQuote.activity;
 
 import greendroid.app.GDActivity;
+import greendroid.widget.ActionBarItem;
+import greendroid.widget.ActionBarItem.Type;
 
 import java.util.ArrayList;
 
@@ -34,6 +36,7 @@ import com.BibleQuote.R;
 import com.BibleQuote._new_.listeners.ChangeModulesEvent;
 import com.BibleQuote._new_.managers.AsyncOpenBooks;
 import com.BibleQuote._new_.managers.AsyncOpenModule;
+import com.BibleQuote._new_.managers.AsyncRefreshLibrary;
 import com.BibleQuote._new_.managers.Librarian;
 import com.BibleQuote._new_.models.Module;
 import com.BibleQuote._new_.utils.OSISLink;
@@ -101,17 +104,27 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 			UpdateView(MODULE_VIEW);
 		}
 		setButtonText();
-		//myLibrarian.loadModulesAsync(mAsyncTaskManager);
 	}
 	
 	private void initActionBar() {
-//		addActionBarItem(
-//				getActionBar()
-//				.newActionBarItem(NormalActionBarItem.class)
-//				.setDrawable(R.drawable.ic_menu_more),
-//				R.id.action_bar_more);
+        addActionBarItem(Type.Refresh, R.id.action_bar_refresh);
 	}
 
+	@Override
+	public boolean onHandleActionBarItemClick(ActionBarItem item, int position) {
+		Log.i(TAG, "onHandleActionBarItemClick(" + item + ", " + position + ")");
+		switch (item.getItemId()) {
+		case R.id.action_bar_refresh:
+			String message = getResources().getString(R.string.messageLoad);
+			mAsyncTaskManager.setupTask(new AsyncRefreshLibrary(message, myLibrarian));
+			break;
+		default:
+			return super.onHandleActionBarItemClick(item, position);
+		}
+
+		return true;
+	}
+	
 	private AdapterView.OnItemClickListener modulesList_onClick = new AdapterView.OnItemClickListener() {
 		public void onItemClick(AdapterView<?> a, View v, int position, long id) {
 			modulePos  = position;
@@ -121,9 +134,6 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 			
 			Module module = myLibrarian.openModule(moduleID);
 			myLibrarian.loadBooksAsync(mAsyncTaskManager, module);
-			
-			//UpdateView(BOOK_VIEW);
-			//setButtonText();
 		}
 	};
 
@@ -289,6 +299,9 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 				}
 			} else if (task instanceof AsyncOpenBooks) {
 				UpdateView(BOOK_VIEW);
+				setButtonText();
+			} else if (task instanceof AsyncRefreshLibrary) {
+				UpdateView(MODULE_VIEW);
 				setButtonText();
 			}
 		}	

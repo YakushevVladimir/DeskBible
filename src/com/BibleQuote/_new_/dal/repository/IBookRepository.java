@@ -2,7 +2,6 @@ package com.BibleQuote._new_.dal.repository;
 
 import java.util.Collection;
 
-
 public interface IBookRepository<TModule, TBook> {
     
 	/*
