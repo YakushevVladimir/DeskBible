@@ -81,7 +81,7 @@ public class ReaderWebView extends WebView
 				+ "<link rel=\"stylesheet\" type=\"text/css\" href=\"file:///android_asset/" + modStyle + "\">"
 				+ getStyle(nightMode)
 				+ "</head>\r\n"
-				+ "<body onLoad=\"document.location.href='#verse_" + currVerse + "';\""
+				+ "<body" + (currVerse > 1 ? (" onLoad=\"document.location.href='#verse_" + currVerse + "';\"") : "")
 				+ ">\r\n"
 				+ text
 				+ "</body>\r\n" + "</html>";

@@ -246,6 +246,7 @@ public class Librarian implements IChangeBooksListener  {
 			return;
 		}
 		
+		currVerseNumber = 1;
 		Integer chapterQty = currBook.ChapterQty;
 		if (chapterQty > (currChapterNumber + (currModule.ChapterZero ? 1 : 0))) {
 			currChapterNumber++;
@@ -264,6 +265,7 @@ public class Librarian implements IChangeBooksListener  {
 			return;
 		}
 		
+		currVerseNumber = 1;
 		if (currChapterNumber != (currModule.ChapterZero ? 0 : 1)) {
 			currChapterNumber--;
 		} else {
