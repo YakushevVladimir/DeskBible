@@ -1,6 +1,7 @@
 package com.BibleQuote._new_.dal.repository;
 
 import java.util.Collection;
+import java.util.LinkedHashMap;
 
 public interface IBookRepository<TModule, TBook> {
     
@@ -10,11 +11,11 @@ public interface IBookRepository<TModule, TBook> {
 	 */
 	Collection<TBook> loadBooks(TModule module);
 	
-	void insertBook(TBook book);
-    
-	void deleteBook(TBook book);
-	
-	void updateBook(TBook book);
+//	void insertBook(TBook book);
+//    
+//	void deleteBook(TBook book);
+//	
+//	void updateBook(TBook book);
 	
 	/*
 	 * Internal cache related methods
@@ -23,5 +24,7 @@ public interface IBookRepository<TModule, TBook> {
 	Collection<TBook> getBooks(TModule module);
 	
 	TBook getBookByID(TModule module, String bookID);
+	
+	LinkedHashMap<String, String> searchInBook(TModule module, String bookID, String regQuery);
 
 }

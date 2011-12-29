@@ -17,9 +17,12 @@ import com.BibleQuote._new_.models.Chapter;
 import com.BibleQuote._new_.models.FsBook;
 import com.BibleQuote._new_.models.FsModule;
 import com.BibleQuote._new_.models.Module;
+import com.BibleQuote._new_.models.Verse;
 import com.BibleQuote._new_.utils.FsUtils;
+import com.BibleQuote._new_.utils.OSISLink;
 import com.BibleQuote.exceptions.CreateModuleErrorException;
 import com.BibleQuote.utils.Log;
+import com.BibleQuote.utils.StringProc;
 
 public class FsLibraryContext extends LibraryContext {
 	private final String TAG = "FsLibraryContext";
@@ -288,4 +291,92 @@ public class FsLibraryContext extends LibraryContext {
 
 		return encoding;
 	}
+	
+	
+	public Chapter loadChapter(Book book, Integer chapterNumber, BufferedReader bReader)  {
+		
+		ArrayList<Integer> verseNumbers = new ArrayList<Integer>();
+		ArrayList<Verse> verseList = new ArrayList<Verse>();
+		
+		ArrayList<String> lines = new ArrayList<String>();
+		try {
+			String str;
+			int currentChapter = book.getModule().ChapterZero ? 0 : 1;
+			String chapterSign = book.getModule().ChapterSign;
+			boolean chapterFind = false;
+			while ((str = bReader.readLine()) != null) {
+				if (str.toLowerCase().contains(chapterSign)) {
+					if (chapterFind) {
+						// Тег начала главы может быть не вначале строки.
+						// Возьмем то, что есть до теги начала главы и добавим
+						// к найденным строкам
+						str = str.substring(0, str.toLowerCase().indexOf(chapterSign));
+						if (str.trim().length() > 0) {
+							lines.add(str);
+						}
+						break;
+					} else if (currentChapter++ == chapterNumber) {
+						chapterFind = true;
+						// Тег начала главы может быть не вначале строки.
+						// Обрежем все, что есть до теги начала главы и добавим
+						// к найденным строкам
+						str = str.substring(str.toLowerCase().indexOf(chapterSign));
+					}
+				}
+				if (!chapterFind){
+					continue;
+				}
+				
+				lines.add(str);
+			}
+		} catch (IOException e) {
+			return null;
+		}
+
+		String verseSign = book.getModule().VerseSign;
+		int i = -1;
+		for (String currLine : lines) {
+			if (currLine.toLowerCase().contains(verseSign)) {
+				i++;
+				verseList.add(new Verse(i, currLine));
+				verseNumbers.add(i);
+			} else if (verseList.size() > 0) {
+				verseList.set(i, new Verse(i, verseList.get(i).getText() + " " + currLine));
+			}
+		}
+
+		return new Chapter(book, chapterNumber, verseNumbers, verseList);
+	}	
+	
+	
+	public LinkedHashMap<String, String> searchInBook(Module module, String bookID, String regQuery, BufferedReader bReader) {
+		LinkedHashMap<String, String> searchRes = new LinkedHashMap<String, String>();
+		
+		String str;
+		int chapterNumber = module.ChapterZero ? -1 : 0;
+		int verseNumber = 0;
+		try {
+			while ((str = bReader.readLine()) != null) {
+				str = str.replaceAll("\\s(\\d)+", "");
+				if (str.toLowerCase().contains(module.ChapterSign)) {
+					chapterNumber++;
+					verseNumber = 0;
+				}
+				if (str.toLowerCase().contains(module.VerseSign))
+					verseNumber++;
+
+				if (str.toLowerCase().matches(regQuery)) {
+					OSISLink osisLink = new OSISLink(module.ShortName, bookID, chapterNumber, verseNumber);
+					String content = StringProc.stripTags(str, module.HtmlFilter, true)
+						.replaceAll("^\\d+\\s+", "");
+					searchRes.put(osisLink.getPath(), content);
+				}
+			}
+		} catch (IOException e) {
+			Log.e(TAG, e);
+		}
+		return searchRes;
+	}
+	
+	
 }
