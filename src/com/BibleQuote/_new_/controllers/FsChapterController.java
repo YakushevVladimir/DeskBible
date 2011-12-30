@@ -3,57 +3,58 @@ package com.BibleQuote._new_.controllers;
 import java.util.ArrayList;
 
 import com.BibleQuote._new_.dal.FsLibraryUnitOfWork;
-//import com.BibleQuote._new_.dal.repository.IBookRepository;
+import com.BibleQuote._new_.dal.repository.IBookRepository;
 import com.BibleQuote._new_.dal.repository.IChapterRepository;
-//import com.BibleQuote._new_.dal.repository.IModuleRepository;
 import com.BibleQuote._new_.models.Book;
 import com.BibleQuote._new_.models.Chapter;
 import com.BibleQuote._new_.models.FsBook;
-//import com.BibleQuote._new_.models.FsModule;
+import com.BibleQuote._new_.models.FsModule;
 import com.BibleQuote._new_.models.Module;
 import com.BibleQuote._new_.models.Verse;
+import com.BibleQuote.exceptions.BookNotFoundException;
 import com.BibleQuote.utils.StringProc;
 
 public class FsChapterController implements IChapterController {
 	//private final String TAG = "FsChapterController";
 	
-	//private IModuleRepository<String, FsModule> moduleRep;
-	//private IBookRepository<FsModule, FsBook> bookRep;
-	private IChapterRepository<FsBook> chapterRep;
+	private IBookRepository<FsModule, FsBook> bRepository;
+	private IChapterRepository<FsBook> chRepository;
 	
 	
 	public FsChapterController(FsLibraryUnitOfWork unit) {
-		//moduleRep = unit.getModuleRepository();
-		//bookRep = unit.getBookRepository();
-		chapterRep = unit.getChapterRepository();
+		bRepository = unit.getBookRepository();
+		chRepository = unit.getChapterRepository();
     }
 	
 
 	@Override
-	public ArrayList<Chapter> getChapterList(Book book) {
-		ArrayList<Chapter> chapterList = (ArrayList<Chapter>) chapterRep.getChapters((FsBook)book);
+	public ArrayList<Chapter> getChapterList(Book book) throws BookNotFoundException {
+		book = getValidBook(book);
+		ArrayList<Chapter> chapterList = (ArrayList<Chapter>) chRepository.getChapters((FsBook)book);
 		if (chapterList.size() == 0) {
-			chapterList =  (ArrayList<Chapter>) chapterRep.loadChapters((FsBook)book);
+			chapterList =  (ArrayList<Chapter>) chRepository.loadChapters((FsBook)book);
 		}
 		return chapterList;
 	}
 
 	
 	@Override
-	public Chapter getChapter(Book book, Integer chapterNumber) {
-		Chapter chapter = chapterRep.getChapterByNumber((FsBook)book, chapterNumber);
+	public Chapter getChapter(Book book, Integer chapterNumber) throws BookNotFoundException {
+		book = getValidBook(book);
+		Chapter chapter = chRepository.getChapterByNumber((FsBook)book, chapterNumber);
 		if (chapter == null) {
-			chapter = chapterRep.loadChapter((FsBook)book, chapterNumber);
+			chapter = chRepository.loadChapter((FsBook)book, chapterNumber);
 		}
 		return chapter;
 	}
 	
 	
 	@Override
-	public ArrayList<Integer> getVerseNumbers(Book book, Integer chapterNumber) {
-		Chapter chapter = chapterRep.getChapterByNumber((FsBook)book, chapterNumber);
+	public ArrayList<Integer> getVerseNumbers(Book book, Integer chapterNumber) throws BookNotFoundException {
+		book = getValidBook(book);
+		Chapter chapter = chRepository.getChapterByNumber((FsBook)book, chapterNumber);
 		if (chapter == null) {
-			chapter = chapterRep.loadChapter((FsBook)book, chapterNumber);
+			chapter = chRepository.loadChapter((FsBook)book, chapterNumber);
 		}
 		return chapter.getVerseNumbers();
 	}
@@ -91,5 +92,20 @@ public class FsChapterController implements IChapterController {
 
 		return chapterHTML.toString();
 	}
+
 	
+	private Book getValidBook(Book book) throws BookNotFoundException {
+		String moduleID = null;
+		String bookID = null;
+		try {
+			Module module = book.getModule();
+			book = bRepository.getBookByID((FsModule)module, book.getID());
+			if (book == null) {
+				throw new BookNotFoundException(moduleID, bookID);
+			}
+		} catch (Exception e) {
+			throw new BookNotFoundException(moduleID, bookID);
+		}
+		return book;
+	}
 }

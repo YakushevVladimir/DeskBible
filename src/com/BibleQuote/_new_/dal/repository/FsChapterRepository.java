@@ -4,11 +4,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedHashMap;
 
 import com.BibleQuote._new_.dal.FsLibraryContext;
 import com.BibleQuote._new_.models.Chapter;
 import com.BibleQuote._new_.models.FsBook;
+import com.BibleQuote._new_.utils.OSISLink;
 
 public class FsChapterRepository implements IChapterRepository<FsBook> {
 
@@ -21,17 +21,12 @@ public class FsChapterRepository implements IChapterRepository<FsBook> {
 	
 	@Override
 	public Collection<Chapter> loadChapters(FsBook book) {
-		if (!context.isBookLoaded(book)) {
-			context.bookSet.put(book.Name, book);
-		}
-		
-		context.chapterSet = new LinkedHashMap<Integer, Chapter>();
-		
 		BufferedReader reader = context.getBookReader(book);
 		ArrayList<String> numbers = book.getChapterNumbers(book.getModule().ChapterZero);
 		for (String chapterNumber : numbers) {
 			Chapter chapter = context.loadChapter(book, Integer.valueOf(chapterNumber), reader);
-			context.chapterSet.put(Integer.valueOf(chapterNumber), chapter);
+			OSISLink osislink = new OSISLink(book.getModule(), book, chapter.getNumber(), book.getFirstChapterNumber());
+			context.chapterPool.put(osislink.getPath(), chapter);
 		}
 		try {
 			reader.close();
@@ -39,19 +34,17 @@ public class FsChapterRepository implements IChapterRepository<FsBook> {
 			e.printStackTrace(); 
 		}
 		
-		return context.getChapterList(context.chapterSet); 	
+		return context.getChapterList(context.chapterPool); 	
 	}
 
 	
 	@Override
 	public Chapter loadChapter(FsBook book, Integer chapterNumber) {
-		if (!context.isBookLoaded(book)) {
-			context.bookSet.put(book.Name, book);
-		}		
-		
 		BufferedReader reader = context.getBookReader(book);
 		Chapter chapter = context.loadChapter(book, chapterNumber, reader);
-		context.chapterSet.put(chapterNumber, chapter);
+		OSISLink osislink = new OSISLink(book.getModule(), book, chapterNumber, book.getFirstChapterNumber());
+		context.chapterPool.put(osislink.getPath(), chapter);
+		
 		try {
 			reader.close();
 		} catch (IOException e) {
@@ -78,20 +71,14 @@ public class FsChapterRepository implements IChapterRepository<FsBook> {
 	
 	@Override
 	public Collection<Chapter> getChapters(FsBook book) {
-		return context.getChapterList(context.chapterSet);	
+		return context.getChapterList(context.chapterPool);	
 	}
 	
 
 	@Override
 	public Chapter getChapterByNumber(FsBook book, Integer chapterNumber) {
-		if (!context.isBookLoaded(book)) {
-			context.bookSet.put(book.Name, book);
-		}
-		
-		return context.chapterSet.get(chapterNumber);
+		OSISLink osislink = new OSISLink(book.getModule(), book, chapterNumber, book.getFirstChapterNumber());
+		return context.chapterPool.get(osislink.getPath());
 	}
-
-
-	
 	
 }

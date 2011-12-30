@@ -39,13 +39,16 @@ import android.widget.Toast;
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
 import com.BibleQuote.entity.ItemList;
+import com.BibleQuote.exceptions.BookNotFoundException;
+import com.BibleQuote.exceptions.ModuleNotFoundException;
 import com.BibleQuote._new_.managers.Librarian;
 import com.BibleQuote.utils.AsyncTaskManager;
+import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.OnTaskCompleteListener;
 import com.BibleQuote.utils.Task;
 
 public class Search extends GDActivity implements OnTaskCompleteListener {
-
+	private static final String TAG = "Search";
 	private Spinner s1, s2;
 	private ListView LV;
 	private AsyncTaskManager mAsyncTaskManager;
@@ -82,8 +85,15 @@ public class Search extends GDActivity implements OnTaskCompleteListener {
 	private void setAdapter() {
 		searchItems.clear();
 		for (String key : searchResults.keySet()) {
-			searchItems.add(new SubtitleItem(myLibararian.getOSIStoHuman(key),
-					searchResults.get(key)));
+			String humanLink;
+			try {
+				humanLink = myLibararian.getOSIStoHuman(key);
+				searchItems.add(new SubtitleItem(humanLink, searchResults.get(key)));
+			} catch (BookNotFoundException e) {
+				Log.i(TAG, e.toString());
+			} catch (ModuleNotFoundException e) {
+				Log.i(TAG, e.toString());
+			}
 		}
 		ItemAdapter adapter = new ItemAdapter(this, searchItems);
 		LV.setAdapter(adapter);
@@ -97,7 +107,12 @@ public class Search extends GDActivity implements OnTaskCompleteListener {
 	}
 
 	private void SpinnerInit() {
-		books = myLibararian.getModuleBooksList();
+		try {
+			books = myLibararian.getCurrentModuleBooksList();
+		} catch (ModuleNotFoundException e) {
+			Log.i(TAG, e.toString());
+			books = new ArrayList<ItemList>();
+		}
 
 		SimpleAdapter AA = new SimpleAdapter(this, books,
 				android.R.layout.simple_spinner_item,
@@ -178,7 +193,11 @@ public class Search extends GDActivity implements OnTaskCompleteListener {
 			String toBookID = ((ItemList) s2.getItemAtPosition(posTo))
 					.get("ID");
 
-			searchResults = myLibararian.search(query, fromBookID, toBookID);
+			try {
+				searchResults = myLibararian.search(query, fromBookID, toBookID);
+			} catch (ModuleNotFoundException e) {
+				searchResults = new LinkedHashMap<String, String>();
+			}
 			return true;
 		}
 	}
