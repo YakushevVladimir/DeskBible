@@ -55,6 +55,7 @@ import com.BibleQuote._new_.managers.AsyncOpenChapter;
 import com.BibleQuote._new_.managers.Librarian;
 import com.BibleQuote._new_.utils.OSISLink;
 import com.BibleQuote.controls.ReaderWebView;
+import com.BibleQuote.exceptions.ModuleNotFoundException;
 import com.BibleQuote.utils.AsyncTaskManager;
 import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.OnTaskCompleteListener;
@@ -359,12 +360,20 @@ public class TempReader extends GDActivity implements OnTaskCompleteListener, IS
 	};
 
 	public void prevChapter() {
-		myLibrarian.prevChapter();
+		try {
+			myLibrarian.prevChapter();
+		} catch (ModuleNotFoundException e) {
+			Log.i(TAG, e.toString());
+		}
 		viewCurrentChapter();
 	}
 
 	public void nextChapter() {
-		myLibrarian.nextChapter();
+		try {
+			myLibrarian.nextChapter();
+		} catch (ModuleNotFoundException e) {
+			Log.i(TAG, e.toString());
+		}
 		viewCurrentChapter();
 	}
 
