@@ -51,7 +51,7 @@ public class DbBookController implements IBookController {
 	}
 
 	
-	public Book getBook(Module module, String bookName) {
+	public Book getBookByID(Module module, String bookName) {
 		return br.getBookByID((DbModule)module, bookName);
 	}
 

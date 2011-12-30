@@ -90,6 +90,12 @@ public abstract class Book implements Serializable {
 		}
 	}
 	
+	
+	public Integer getFirstChapterNumber() {
+		return module.ChapterZero ? 0 : 1;
+	}
+
+	
 	public abstract Object getDataSourceID();
 
 	private Module module;

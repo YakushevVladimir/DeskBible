@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.TreeMap;
 
 import android.content.Context;
@@ -54,7 +55,7 @@ public class FsLibraryContext extends LibraryContext {
 		return moduleList;
 	}
 	
-	public ArrayList<FsBook> getBookList(LinkedHashMap<String, Book> bookSet) {
+	public ArrayList<FsBook> getBookList(Map<String, Book> bookSet) {
 		ArrayList<FsBook> bookList = new ArrayList<FsBook>();
 		for (Book currBook : bookSet.values()) {
 			bookList.add((FsBook)currBook);
@@ -62,7 +63,7 @@ public class FsLibraryContext extends LibraryContext {
 		return bookList;
 	}
 	
-	public ArrayList<Chapter> getChapterList(LinkedHashMap<Integer, Chapter> chapterSet) {
+	public ArrayList<Chapter> getChapterList(Map<String, Chapter> chapterSet) {
 		ArrayList<Chapter> chapterList = new ArrayList<Chapter>();
 		for (Chapter currChapter : chapterSet.values()) {
 			chapterList.add(currChapter);

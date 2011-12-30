@@ -36,12 +36,14 @@ import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
 import com.BibleQuote._new_.listeners.ChangeModulesEvent;
 import com.BibleQuote._new_.managers.AsyncOpenBooks;
-import com.BibleQuote._new_.managers.AsyncOpenModule;
+import com.BibleQuote._new_.managers.AsyncOpenModules;
 import com.BibleQuote._new_.managers.AsyncRefreshLibrary;
 import com.BibleQuote._new_.managers.Librarian;
 import com.BibleQuote._new_.models.Module;
 import com.BibleQuote._new_.utils.OSISLink;
 import com.BibleQuote.entity.ItemList;
+import com.BibleQuote.exceptions.BookNotFoundException;
+import com.BibleQuote.exceptions.ModuleNotFoundException;
 import com.BibleQuote.utils.AsyncTaskManager;
 import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.OnTaskCompleteListener;
@@ -136,8 +138,14 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 			bookPos    = 0;
 			chapterPos = 0;
 			
-			Module module = myLibrarian.openModule(moduleID);
-			myLibrarian.loadBooksAsync(mAsyncTaskManager, module);
+			Module module;
+			try {
+				module = myLibrarian.openModule(moduleID);
+				myLibrarian.loadBooksAsync(mAsyncTaskManager, module);
+			} catch (ModuleNotFoundException e) {
+				Log.i(TAG, e.toString());
+			}
+			
 		}
 	};
 
@@ -175,8 +183,18 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 	}
 
 	private void setButtonText(){
+
+		String bookShortName = "---";
+		try {
+			bookShortName = myLibrarian.getBookShortName(moduleID, bookID);
+		} catch (BookNotFoundException e) {
+			Log.i(TAG, e.toString());
+		} catch (ModuleNotFoundException e) {
+			Log.i(TAG, e.toString());
+		}
+		
 		btnModule.setText(moduleID);
-		btnBook.setText(myLibrarian.getBookShortName(moduleID, bookID));
+		btnBook.setText(bookShortName);
 		btnChapter.setText(chapter);
 	}
 
@@ -216,12 +234,18 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 
 			booksList.setAdapter(getBookAdapter());
 
-			ItemList itemBook = new ItemList(bookID, myLibrarian.getBookFullName(moduleID, bookID));
-			bookPos = books.indexOf(itemBook);
-			if (bookPos >= 0) {
-				booksList.setSelection(bookPos);
+			ItemList itemBook;
+			try {
+				itemBook = new ItemList(bookID, myLibrarian.getBookFullName(moduleID, bookID));
+				bookPos = books.indexOf(itemBook);
+				if (bookPos >= 0) {
+					booksList.setSelection(bookPos);
+				}
+			} catch (BookNotFoundException e) {
+				Log.i(TAG, e.toString());
+			} catch (ModuleNotFoundException e) {
+				Log.i(TAG, e.toString());
 			}
-
 			break;
 
 		case CHAPTER_VIEW:
@@ -259,7 +283,12 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 		if (modulesList.getCount() == 0) {
 			books = new ArrayList<ItemList>();
 		} else {
-			books = myLibrarian.getModuleBooksList(moduleID);
+			try {
+				books = myLibrarian.getModuleBooksList(moduleID);
+			} catch (ModuleNotFoundException e) {
+				Log.i(TAG, e.toString());
+				books = new ArrayList<ItemList>();
+			}
 		}
 		return new SimpleAdapter(this, books,
 				R.layout.item_list,
@@ -268,7 +297,14 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 	}
 
 	private ArrayAdapter<String> getChapterAdapter() {
-		chapters = myLibrarian.getChaptersList(moduleID, bookID);
+		chapters = new ArrayList<String>();
+		try {
+			chapters = myLibrarian.getChaptersList(moduleID, bookID);
+		} catch (BookNotFoundException e) {
+			Log.i(TAG, e.toString());
+		} catch (ModuleNotFoundException e) {
+			Log.i(TAG, e.toString());
+		}
 		return new ArrayAdapter<String>(this, R.layout.chapter_item,
 				R.id.chapter, chapters);
 	}
@@ -295,8 +331,8 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 	public void onTaskComplete(Task task) {
 		Log.i(TAG, "onTaskComplete()");
 		if (task != null && !task.isCancelled()) {
-			if (task instanceof AsyncOpenModule) {
-				ChangeModulesEvent event = ((AsyncOpenModule) task).getEvent();
+			if (task instanceof AsyncOpenModules) {
+				ChangeModulesEvent event = ((AsyncOpenModules) task).getEvent();
 				if (event != null && this.viewMode == MODULE_VIEW) {
 					//myLibrarian.openModules();
 					UpdateView(MODULE_VIEW);

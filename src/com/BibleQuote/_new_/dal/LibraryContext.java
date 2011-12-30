@@ -1,7 +1,9 @@
 package com.BibleQuote._new_.dal;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.TreeMap;
 
 import android.content.Context;
@@ -9,14 +11,15 @@ import android.content.Context;
 import com.BibleQuote._new_.models.Book;
 import com.BibleQuote._new_.models.Chapter;
 import com.BibleQuote._new_.models.Module;
+import com.BibleQuote._new_.utils.ChapterPool;
 
 public class LibraryContext {
 	private final String TAG = "LibraryContext";
 	private Context context;
 	
 	public TreeMap<String, Module> moduleSet = new TreeMap<String, Module>();
-	public LinkedHashMap<String, Book> bookSet = new LinkedHashMap<String, Book>();
-	public LinkedHashMap<Integer, Chapter> chapterSet = new LinkedHashMap<Integer, Chapter>();
+	public Map<String, Book> bookSet = Collections.synchronizedMap(new LinkedHashMap<String, Book>());
+	public Map<String, Chapter> chapterPool = Collections.synchronizedMap(new ChapterPool());
 
 	public LibraryContext(Context context) {
 		this.context = context; 
@@ -47,7 +50,7 @@ public class LibraryContext {
 	
 	
 	public Boolean isChapterLoaded(Integer chapterNumber) {
-		if (!chapterSet.containsKey(chapterNumber)) {
+		if (!chapterPool.containsKey(chapterNumber)) {
 			android.util.Log.i(TAG, String.format("Chapter %1$sis was not loaded to a chapter repository",  chapterNumber));
 			return false;
 		}

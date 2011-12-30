@@ -11,7 +11,6 @@ import java.util.TreeMap;
 import com.BibleQuote._new_.controllers.CacheModuleController;
 import com.BibleQuote._new_.dal.FsLibraryContext;
 import com.BibleQuote._new_.models.Book;
-import com.BibleQuote._new_.models.Chapter;
 import com.BibleQuote._new_.models.FsModule;
 import com.BibleQuote._new_.models.Module;
 import com.BibleQuote._new_.utils.DataConstants;
@@ -62,7 +61,6 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 			context.moduleSet.put(fsModule.getID(), fsModule);
 		}
 		context.bookSet = new LinkedHashMap<String, Book>();
-		context.chapterSet = new LinkedHashMap<Integer, Chapter>();
 
 		return moduleList;
 	}
@@ -83,9 +81,7 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 			context.moduleSet.remove(module.modulePath);
 			context.moduleSet.put(module.getID(), module);
 			
-			//if (getClosedModule() == null) {
-				cache.saveModuleList(context.getModuleList(context.moduleSet));
-			//}
+			cache.saveModuleList(context.getModuleList(context.moduleSet));
 			
 		} catch (CreateModuleErrorException e) {
 			Log.e(TAG, "Can't load module by " + moduleDataSourceId);

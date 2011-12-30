@@ -7,6 +7,7 @@ import com.BibleQuote._new_.dal.FsLibraryUnitOfWork;
 import com.BibleQuote._new_.dal.repository.IModuleRepository;
 import com.BibleQuote._new_.models.FsModule;
 import com.BibleQuote._new_.models.Module;
+import com.BibleQuote.exceptions.ModuleNotFoundException;
 
 public class FsModuleController implements IModuleController {
 	//private final String TAG = "FsModuleController";
@@ -49,10 +50,13 @@ public class FsModuleController implements IModuleController {
 	
 
 	@Override
-	public Module getModuleByID(String moduleID) {
+	public Module getModuleByID(String moduleID) throws ModuleNotFoundException {
 		FsModule fsModule = mRepository.getModuleByID(moduleID);
 		if (fsModule != null && fsModule.getIsClosed()) {
 			fsModule = mRepository.loadModuleById(fsModule.getDataSourceID());
+		}
+		if (fsModule == null) {
+			throw new ModuleNotFoundException(moduleID);
 		}
 		return 	fsModule;		
 	}
@@ -62,6 +66,6 @@ public class FsModuleController implements IModuleController {
 	public Module getClosedModule() {
 		return mRepository.getClosedModule();
 	}
-	
+
 
 }
