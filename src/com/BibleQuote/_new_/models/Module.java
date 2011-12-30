@@ -2,6 +2,7 @@ package com.BibleQuote._new_.models;
 
 import java.io.Serializable;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Yakushev Vladimir, Sergey Ursul
@@ -21,7 +22,7 @@ public abstract class Module implements Serializable {
 	public boolean isBible = false;
 	public String defaultEncoding = "utf-8";
 	
-	public LinkedHashMap<String, Book> Books = new LinkedHashMap<String, Book>();	// to lazy loading on demand
+	public Map<String, Book> Books = new LinkedHashMap<String, Book>();	// to lazy loading on demand
 	
 	// private String Categories = "";
 	// private String Copyright = "";
