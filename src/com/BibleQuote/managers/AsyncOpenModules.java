@@ -14,7 +14,7 @@ public class AsyncOpenModules extends Task {
 	private ChangeModulesEvent event;
 	private Librarian librarian;
 	private Module module;
-	private AsyncTaskManager asyncTaskManager;
+	AsyncTaskManager asyncTaskManager;
 	
 	public AsyncOpenModules(String message, Librarian librarian, Module module, AsyncTaskManager asyncTaskManager) {
 		super(message);
@@ -31,7 +31,7 @@ public class AsyncOpenModules extends Task {
 			module = librarian.openModule(module.getID());
 			event = new ChangeModulesEvent(ChangeCode.ModulesAdded, null);
 		} catch (ModuleNotFoundException e) {
-			Log.e(TAG, e);
+			Log.e(TAG, String.format("doInBackground(%1$s)", module.getID()), e);
 		}
 		return true;
 	}
@@ -40,11 +40,8 @@ public class AsyncOpenModules extends Task {
 	@Override
 	protected void onPostExecute(Boolean result) {
 		super.onPostExecute(result);
-		if (librarian.hasClosedModules()) {
-			librarian.openModulesAsync(asyncTaskManager, 
-					asyncTaskManager.getContext(), 
-					asyncTaskManager.getTaskCompleteListener(), 
-					asyncTaskManager.isHidden());
+		if (!librarian.hasClosedModules()) {
+			librarian.openModulesAsync(asyncTaskManager);
 		}
 	}
 

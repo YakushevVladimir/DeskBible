@@ -20,4 +20,9 @@ public class OnlyBQIni implements FileFilter {
 		return myFile.getName().toLowerCase().equals(this.filter)
 				|| myFile.isDirectory();
 	}
+
+	@Override
+	public String toString() {
+		return this.filter;
+	}
 }

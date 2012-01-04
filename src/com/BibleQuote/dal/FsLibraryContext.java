@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2011 Scripture Software (http://scripturesoftware.org/)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.BibleQuote.dal;
 
 import java.io.BufferedReader;
@@ -104,7 +119,7 @@ public class FsLibraryContext extends LibraryContext {
 			// Рекурсивная функция проходит по всем каталогам в поисках ini-файлов Цитаты
 			FsUtils.SearchByFilter(libraryDir, iniFiles, filter);
 		} catch (Exception e) {
-			Log.i(TAG, "Exception in SearchModules(): \r\n" + e.getLocalizedMessage());
+			Log.e(TAG, "SearchModules()", e);
 			return iniFiles;
 		}
 
@@ -155,7 +170,7 @@ public class FsLibraryContext extends LibraryContext {
 			}
 			
 		} catch (IOException e) {
-			Log.e(TAG, e);
+			Log.e(TAG, String.format("fillModule(%1$s)", module.getDataSourceID()), e);
 		}
 
 		String TagFilter[] = { "p", "b", "i", "em", "strong", "q", "big",
@@ -232,7 +247,7 @@ public class FsLibraryContext extends LibraryContext {
 			}
 			
 		} catch (IOException e) {
-			Log.e(TAG, e);
+			Log.e(TAG, String.format("fillBooks(%1$s)", module.getDataSourceID()), e);
 		}
 
 		for (int i = 0; i < fullNames.size(); i++) {
@@ -250,7 +265,7 @@ public class FsLibraryContext extends LibraryContext {
 			module.Books.put(book.getID(), book);
 		}
 		if (module.Books.size() == 0) {
-			Log.e(TAG, String.format("The module $1$s does not contain the books", module.getModuleFileName()));
+			Log.e(TAG, String.format("The module $1$s does not contain the books", module.getDataSourceID()));
 			throw new CreateModuleErrorException();
 		}
 	}		
@@ -287,6 +302,8 @@ public class FsLibraryContext extends LibraryContext {
 				}
 			}
 		} catch (IOException e) {
+			Log.e(TAG, "getModuleEncoding()", e);
+			e.printStackTrace();
 			return encoding;
 		}
 
@@ -331,6 +348,7 @@ public class FsLibraryContext extends LibraryContext {
 				lines.add(str);
 			}
 		} catch (IOException e) {
+			Log.e(TAG, String.format("loadChapter(%1$s, %2$s)", book.getID(), chapterNumber), e);
 			return null;
 		}
 
@@ -374,7 +392,8 @@ public class FsLibraryContext extends LibraryContext {
 				}
 			}
 		} catch (IOException e) {
-			Log.e(TAG, e);
+			Log.e(TAG, String.format("searchInBook(%1$s, %2$s, %3$s)", module.getID(), bookID, regQuery), e);
+			e.printStackTrace();
 		}
 		return searchRes;
 	}

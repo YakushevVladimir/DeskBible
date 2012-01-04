@@ -28,11 +28,10 @@ public class AsyncOpenBooks extends Task {
 	protected Boolean doInBackground(String... arg0) {
 		Log.i(TAG, String.format("Load books for module with moduleID=%1$s", module.getID()));
 		try {
-			//librarian.getModuleBooksList(module.getID());
-			librarian.getBookList(module);
+			librarian.getModuleBooksList(module.getID());
 			event = new ChangeBooksEvent(ChangeCode.BooksAdded, module, null);
 		} catch (ModuleNotFoundException e) {
-			Log.e(TAG, e);
+			Log.e(TAG, String.format("AsyncOpenBooks(%1$s)", module.getID()), e);
 		}
 		return true;
 	}

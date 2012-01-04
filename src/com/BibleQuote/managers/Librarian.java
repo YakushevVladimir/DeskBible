@@ -42,7 +42,6 @@ import com.BibleQuote.models.Verse;
 import com.BibleQuote.utils.AsyncTaskManager;
 import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.OSISLink;
-import com.BibleQuote.utils.OnTaskCompleteListener;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.StringProc;
 
@@ -75,7 +74,7 @@ public class Librarian implements IChangeBooksListener  {
 	 * апокрифами, книгами
 	 */
 	public Librarian(Context context) {
-		Log.i(TAG, "Инициализация библиотеки модулей");
+		Log.i(TAG, "Librarian()");
 		
 		eventManager.addChangeBooksListener(this);
 		
@@ -95,34 +94,29 @@ public class Librarian implements IChangeBooksListener  {
 		return moduleCtrl.getModules();
 	}
 	
-	public void openModulesAsync(AsyncTaskManager asyncTaskManager, Context context,
-			OnTaskCompleteListener taskCompleteListener, Boolean isHidden) {
+	public void openModulesAsync(AsyncTaskManager asyncTaskManager) {
 		Module module = moduleCtrl.getClosedModule();
 		if (module != null) {
 			String message = context.getResources().getString(R.string.messageLoadModules);
-			asyncTaskManager.setupTask(
-					new AsyncOpenModules(message, this, module, asyncTaskManager),
-					context, taskCompleteListener, isHidden);
+			asyncTaskManager.setupTask(new AsyncOpenModules(message, this, module, asyncTaskManager));
 		}	
 	}
 	
-	public void refreshModules(AsyncTaskManager asyncTaskManager, Context context,
-			OnTaskCompleteListener taskCompleteListener, Boolean isHidden) {
+	public void refreshModules(AsyncTaskManager asyncTaskManager) {
 		moduleCtrl.loadModules();
-		openModules(asyncTaskManager, context, taskCompleteListener, isHidden);
+		openModules(asyncTaskManager);
 	}
 
-	public void openModules(AsyncTaskManager asyncTaskManager, Context context,
-			OnTaskCompleteListener taskCompleteListener, Boolean isHidden) {
+	public void openModules(AsyncTaskManager asyncTaskManager) {
+		TreeMap<String, Module> modules = moduleCtrl.getModules();
 		if (asyncTaskManager != null) {
-			openModulesAsync(asyncTaskManager, context, taskCompleteListener, isHidden);
+			openModulesAsync(asyncTaskManager);
 		} else {
-			TreeMap<String, Module> modules = moduleCtrl.getModules();
 			for (Module module : modules.values()) {
 				try {
 					this.openModule(module.getID());
 				} catch (ModuleNotFoundException e) {
-					Log.i(TAG, e.toString());
+					Log.e(TAG, "openModules()", e);
 				}
 			}
 		}
@@ -134,17 +128,10 @@ public class Librarian implements IChangeBooksListener  {
 		}		
 	}
 	
-	public ArrayList<Book> getBookList(Module module) throws ModuleNotFoundException {
-		return bookCtrl.getBookList(module);
-	}
-	
-	public void loadBooksAsync(AsyncTaskManager asyncTaskManager, Context context,
-			OnTaskCompleteListener taskCompleteListener, Boolean isHidden, Module module) {
+	public void loadBooksAsync(AsyncTaskManager asyncTaskManager, Module module) {
 		if (module != null) {
 			String message = context.getResources().getString(R.string.messageLoadBooks);
-			asyncTaskManager.setupTask(
-					new AsyncOpenBooks(message, this, module, asyncTaskManager),
-					context, taskCompleteListener, isHidden);
+			asyncTaskManager.setupTask(new AsyncOpenBooks(message, this, module, asyncTaskManager));
 		}	
 	}	
 

@@ -16,15 +16,14 @@
 package com.BibleQuote.activity;
 
 import greendroid.app.GDActivity;
-
-import com.BibleQuote.R;
-import com.BibleQuote.BibleQuoteApp;
-
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
+
+import com.BibleQuote.R;
+import com.BibleQuote.BibleQuoteApp;
 
 public class BibleQuote extends GDActivity {
 
@@ -42,7 +41,7 @@ public class BibleQuote extends GDActivity {
     
     public void startHomeActivity(){
 		startActivity(new Intent(this, Reader.class));
-		finish();;
+		finish();
     }
 
 	private class InitApplication extends AsyncTask<Boolean, Void, Boolean> {

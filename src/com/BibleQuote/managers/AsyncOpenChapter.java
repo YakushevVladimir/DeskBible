@@ -41,10 +41,10 @@ public class AsyncOpenChapter extends Task {
 					event = new ChangeChaptersEvent(ChangeCode.ChapterAdded, module, book, chapter);
 				}
 			} catch (BookNotFoundException e) {
-				Log.e(TAG, e);
+				Log.e(TAG, String.format("doInBackground(%1$s)", link), e);
 			}
 		} catch (ModuleNotFoundException e) {
-			Log.e(TAG, e);
+			Log.e(TAG, String.format("doInBackground(%1$s)", link), e);
 		}
 		return true;
 	}

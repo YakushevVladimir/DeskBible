@@ -25,7 +25,7 @@ public class OSISLink {
 					verseNumber = Integer.parseInt(linkParam[3]);
 				} catch (NumberFormatException  e) {}
 			} catch (Exception e) {
-				Log.e(TAG, e);
+				Log.e(TAG, String.format("OSISLink(%1$s)", OSISLinkPath), e);
 			}
 		}
 	}

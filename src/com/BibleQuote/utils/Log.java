@@ -39,6 +39,7 @@ import android.os.Environment;
  */
 public class Log {
 	static private File logFile = null;
+	static private int maxLenghtFileSize = 5242880; // 5Mb 
 
 	/**
 	 * Подготовка файла-протокола событий. Создание нового файла,
@@ -51,7 +52,13 @@ public class Log {
 		if (Environment.MEDIA_MOUNTED.equals(state)) {
 			logFile = new File(Environment.getExternalStorageDirectory(), "bibleqt_log.txt");
 			if (logFile.exists()) {
-				logFile.delete();
+				if (logFile.length() > maxLenghtFileSize) {
+					logFile.delete();
+				} else {
+					Write("");
+					Write("////////////////////////////////////////");
+					Write("");
+				}
 			}
 						
 			String myversion;
@@ -95,17 +102,13 @@ public class Log {
 	/**
 	 * Запись в протокол событий сообщения об ошибке
 	 * @param Tag имя класса-инициатора события
-	 * @param Exception исключение вызванное ошибкой 
+	 * @param text текст помещаемый в протокол событий 
+	 * @param e ссылка на полученный Exception 
 	 */
-	public static void e(String Tag, Exception e){
-		Write(Tag, "Error: " + e.getMessage());
+	public static void e(String Tag, String text, Exception e){
+		Write(Tag, String.format("Error: $1$s\r\nMessage: %2$s", text, e.getMessage()));
 	}
 	
-	/**
-	 * Запись в протокол событий сообщения об ошибке
-	 * @param Tag имя класса-инициатора события
-	 * @param text текст помещаемый в протокол событий 
-	 */
 	public static void e(String Tag, String text){
 		Write(Tag, "Error: " + text);
 	}

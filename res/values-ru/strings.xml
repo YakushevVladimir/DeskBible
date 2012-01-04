@@ -27,9 +27,6 @@
     <string name="db_settings">Настройки</string>
     <string name="db_search">Поиск</string>
     <string name="db_help">Помощь</string>
-    <!-- About -->
-    <string name="about">О программе</string>
-    <string name="app_about_text">Разработчики:\nВладимир Якушев: ru.phoenix@gmail.com</string>
     <!-- Settings -->
     <string name="category_reader">Настройки окна чтения</string>
     <string name="text_size">Размер шрифта</string>

@@ -6,6 +6,7 @@ import java.util.TreeMap;
 import com.BibleQuote.dal.CacheContext;
 import com.BibleQuote.dal.repository.CacheRepository;
 import com.BibleQuote.models.Module;
+import com.BibleQuote.utils.Log;
 
 public class CacheModuleController<TModule> {
 	private final String TAG = "CacheRepository";
@@ -18,7 +19,7 @@ public class CacheModuleController<TModule> {
 	
     
 	public ArrayList<TModule> getModuleList() {
-		android.util.Log.i(TAG, "Loading modules from a cache.");
+		Log.i(TAG, "getModuleList()");
 		return cacheRepository.getData();
 	}
 	
@@ -36,7 +37,7 @@ public class CacheModuleController<TModule> {
 	
 	
 	public void saveModuleList(ArrayList<TModule> moduleList) {
-		android.util.Log.i(TAG, "Save modules to a cache.");
+		Log.i(TAG, "saveModuleList()");
 		cacheRepository.saveData(moduleList);
 	}
 	
