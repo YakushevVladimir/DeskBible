@@ -40,7 +40,7 @@ import android.widget.Toast;
 
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
-import com.BibleQuote._new_.managers.Librarian;
+import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.utils.Log;
 
 public class Bookmarks extends GDActivity {

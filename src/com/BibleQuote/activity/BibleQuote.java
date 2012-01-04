@@ -41,7 +41,7 @@ public class BibleQuote extends GDActivity {
 	}
     
     public void startHomeActivity(){
-		startActivity(new Intent(this, TempReader.class));
+		startActivity(new Intent(this, Reader.class));
 		finish();;
     }
 

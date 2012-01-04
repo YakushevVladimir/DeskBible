@@ -3,7 +3,6 @@ package com.BibleQuote.utils;
 import java.io.File;
 import java.io.FileFilter;
 
-import com.BibleQuote._new_.utils.DataConstants;
 
 public class OnlyBQIni implements FileFilter {
 	private String filter;

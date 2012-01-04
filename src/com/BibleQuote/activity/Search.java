@@ -41,7 +41,7 @@ import com.BibleQuote.R;
 import com.BibleQuote.entity.ItemList;
 import com.BibleQuote.exceptions.BookNotFoundException;
 import com.BibleQuote.exceptions.ModuleNotFoundException;
-import com.BibleQuote._new_.managers.Librarian;
+import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.utils.AsyncTaskManager;
 import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.OnTaskCompleteListener;
@@ -67,8 +67,9 @@ public class Search extends GDActivity implements OnTaskCompleteListener {
 		BibleQuoteApp app = (BibleQuoteApp) getGDApplication();
 		myLibararian = app.getLibrarian();
 
-		mAsyncTaskManager = new AsyncTaskManager(this, this, false);
+		mAsyncTaskManager = app.getAsyncTaskManager();
 		mAsyncTaskManager.handleRetainedTask(getLastNonConfigurationInstance());
+		
 		progressMessage = getResources().getString(R.string.messageSearch);
 		searchResults = myLibararian.getSearchResults();
 
@@ -210,7 +211,9 @@ public class Search extends GDActivity implements OnTaskCompleteListener {
 	public void onSearchClick(View v) {
 		query = ((EditText) findViewById(R.id.SearchEdit)).getText().toString()
 				.trim();
-		mAsyncTaskManager.setupTask(new StartSearch(progressMessage));
+		mAsyncTaskManager.setupTask(
+				new StartSearch(progressMessage),
+				this, this, false);
 	}
 
 	private OnItemSelectedListener onClick_FromBook = new OnItemSelectedListener() {

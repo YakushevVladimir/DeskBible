@@ -17,18 +17,20 @@ package com.BibleQuote;
 
 import greendroid.app.GDApplication;
 
-import com.BibleQuote._new_.managers.Librarian;
-import com.BibleQuote.activity.TempReader;
+import com.BibleQuote.activity.Reader;
+import com.BibleQuote.managers.Librarian;
+import com.BibleQuote.utils.AsyncTaskManager;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.UpdateManager;
 
 public class BibleQuoteApp extends GDApplication {
 	
-	private Librarian myLibararian;
-
+	private Librarian myLibrarian;
+	private AsyncTaskManager mAsyncTaskManager = new AsyncTaskManager();
+	
 	@Override
 	public Class<?> getHomeActivityClass() {
-		return TempReader.class;
+		return Reader.class;
 	}
 
 	public void Init() {
@@ -38,14 +40,23 @@ public class BibleQuoteApp extends GDApplication {
 	}
 
 	public Librarian getLibrarian() {
-		if (myLibararian == null) {
-			myLibararian = new Librarian(this);
+		if (myLibrarian == null) {
+			myLibrarian = new Librarian(this);
 			
-			myLibararian.getModules();
-			if (myLibararian.hasClosedModules()) {
-				myLibararian.openModules(null);
-			}
+			myLibrarian.getModules();
+//			if (myLibrarian.hasClosedModules()) {
+//				myLibrarian.openModules(mAsyncTaskManager);
+//			}
 		}
-		return myLibararian;
+		return myLibrarian;
 	}
+
+	public AsyncTaskManager getAsyncTaskManager() {
+		return mAsyncTaskManager;
+	}
+	
+//	public void setAsyncTaskManager(AsyncTaskManager asyncTaskManager) {
+//		mAsyncTaskManager = asyncTaskManager;
+//	}
+	
 }
