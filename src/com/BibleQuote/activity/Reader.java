@@ -78,7 +78,7 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
 	private LinearLayout btnChapterNav;
 	private ReaderWebView vWeb;
 	
-	@Override
+	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setActionBarContentView(R.layout.reader);
@@ -146,7 +146,7 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
 		addActionBarItem(itemSearch, R.id.action_bar_search);
 	}
 
-	@Override
+	
 	public boolean onHandleActionBarItemClick(ActionBarItem item, int position) {
 		Log.i(TAG, "onHandleActionBarItemClick(" + item + ", " + position + ")");
 		switch (item.getItemId()) {
@@ -174,7 +174,7 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
     }
     
     OnClickListener onClickBtnTextAction = new OnClickListener() {
-		@Override
+		
 		public void onClick(View btnTextAction) {
 	    	textQAction.show(btnTextAction);
 		}
@@ -221,7 +221,7 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
         }
     };
     
-	@Override
+	
 	public void onConfigurationChanged(Configuration newConfig) {
 		Log.i(TAG, "onConfigurationChanged()");
 		if (PreferenceHelper.restoreStateBoolean("DisableAutoScreenRotation")) {
@@ -255,7 +255,7 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
 		return orientation;
 	}
 
-	@Override
+	
 	public boolean onCreateOptionsMenu(Menu menu) {
 		Log.i(TAG, "onCreateOptionsMenu()");
 		MenuInflater infl = getMenuInflater();
@@ -263,7 +263,7 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
 		return true;
 	}
 
-	@Override
+	
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Log.i(TAG, "onOptionsItemSelected()");
 		switch (item.getItemId()) {
@@ -345,7 +345,7 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
 	}
 
 	OnClickListener onClickChapterPrev = new OnClickListener() {
-		@Override
+		
 		public void onClick(View v) {
 			Log.i(TAG, "onClickChapterPrev()");
 			prevChapter();
@@ -353,7 +353,7 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
 	};
 	
 	OnClickListener onClickChapterNext = new OnClickListener() {
-		@Override
+		
 		public void onClick(View v) {
 			Log.i(TAG, "onClickChapterPrev()");
 			nextChapter();
@@ -371,7 +371,7 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
 	}
 
 	OnClickListener onClickPageUp = new OnClickListener() {
-		@Override
+		
 		public void onClick(View v) {
 			Log.i(TAG, "onClickPageUp()");
 			vWeb.pageUp(false);
@@ -380,7 +380,7 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
 	};
 
 	OnClickListener onClickPageDown = new OnClickListener() {
-		@Override
+		
 		public void onClick(View v) {
 			Log.i(TAG, "onClickPageUp()");
 			vWeb.pageDown(false);
@@ -419,7 +419,7 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
 	}
 	
 	private Handler chapterNavHandler = new Handler() {
-		@Override
+		
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case R.id.view_chapter_nav:
@@ -430,7 +430,7 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
 		}
 	};
 	
-	@Override
+	
 	public boolean onSearchRequested() {
 		Intent intentSearch = new Intent().setClass(
 		getApplicationContext(), Search.class);
@@ -445,7 +445,7 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
 		}
 	}
 
-	@Override
+	
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
 			vWeb.pageUp(false);
@@ -459,12 +459,12 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
 			return super.onKeyDown(keyCode, event);
 		}
 	}
-    @Override
+    
     public Object onRetainNonConfigurationInstance() {
     	return mAsyncTaskManager.retainTask();
     }
 
-    @Override
+    
     public void onTaskComplete(Task task) {
 		Log.i(TAG, "onTaskComplete()");
 		if (!task.isCancelled()) {
@@ -477,12 +477,12 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
 			super(message);
 		}
 
-		@Override
+		
 		protected void onPostExecute(Boolean result) {
 			super.onPostExecute(result);
 		}
 
-		@Override
+		
 		protected Boolean doInBackground(String... params) {
 			Log.i(TAG, "doInBackground(\"" + params + "\")");
 			try {

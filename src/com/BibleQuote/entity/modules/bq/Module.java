@@ -28,7 +28,7 @@ public abstract class Module implements IModule, Serializable {
 	// private boolean containsNT = false;
 	// private boolean containsAP = false;
 	
-	@Override
+	
 	public ArrayList<Book> getBooks() {
 		ArrayList<Book> books = new ArrayList<Book>();
 		for (Book currBook : Books.values()) {
@@ -37,37 +37,37 @@ public abstract class Module implements IModule, Serializable {
 		return books;
 	}
 
-	@Override
+	
 	public String getShortName() {
 		return ShortName;
 	}
 
-	@Override
+	
 	public String getName() {
 		return Name;
 	}
 
-	@Override
+	
 	public boolean isBible() {
 		return this.isBible;
 	}
 
-	@Override
+	
 	public boolean isContainsStrong() {
 		return containsStrong;
 	}
 
-	@Override
+	
 	public String getHtmlFilter() {
 		return XFilter;
 	}
 
-	@Override
+	
 	public Boolean containsChapterZero() {
 		return this.ChapterZero;
 	}
 
-	@Override
+	
 	public Book getBook(String bookID) {
 		if (bookID == null || !Books.containsKey(bookID)) {
 			return null;
@@ -75,7 +75,7 @@ public abstract class Module implements IModule, Serializable {
 		return Books.get(bookID);
 	}
 
-	@Override
+	
 	public ArrayList<String> getChapters(String bookID) {
 		ArrayList<String> ret = new ArrayList<String>();
 		Book currBook = this.getBook(bookID);
@@ -87,10 +87,10 @@ public abstract class Module implements IModule, Serializable {
 		return ret;
 	}
 
-	@Override
+	
 	public abstract ArrayList<String> getChapterVerses(Book book, Integer chapterToView);
 
-	@Override
+	
 	public LinkedHashMap<String, String> search(String query, String fromBookID, String toBookID) {
 		LinkedHashMap<String, String> ret = new LinkedHashMap<String, String>();
 	

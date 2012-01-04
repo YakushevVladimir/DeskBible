@@ -180,7 +180,7 @@ public class ReaderWebView extends WebView
 		}
 		Handler mHandler = getHandler();
 		mHandler.post(new Runnable() {
-			@Override
+			
 			public void run() {
 				((TempReader) getContext()).viewChapterNav();
 			}
@@ -197,12 +197,12 @@ public class ReaderWebView extends WebView
 		}
 	}
 
-	@Override
+	
 	public boolean onSingleTapUp(MotionEvent event) {
 		return false;
 	}
 
-	@Override
+	
 	public boolean onSingleTapConfirmed(MotionEvent event) {
 		int x = (int) event.getX();
 		int y = (int) event.getY();
@@ -233,19 +233,19 @@ public class ReaderWebView extends WebView
 		return false;
 	}
 	
-	@Override
+	
 	public boolean onDown(MotionEvent event) {
 		return false;
 	}
 
-	@Override
+	
 	public boolean onFling(MotionEvent e1, MotionEvent e2, 
 			float velocityX, float velocityY) {
 		viewChapterNav();
 		return false;
 	}
 
-	@Override
+	
 	public void onLongPress(MotionEvent event) {
 		if (isStudyMode) {
 			viewChapterNav();
@@ -254,17 +254,17 @@ public class ReaderWebView extends WebView
 		}
 	}
 
-	@Override
+	
 	public boolean onScroll(MotionEvent e1, MotionEvent e2, 
 			float distanceX, float distanceY) {
 		return false;
 	}
 
-	@Override
+	
 	public void onShowPress(MotionEvent event) {
 	}
 
-	@Override
+	
 	public boolean onDoubleTap(MotionEvent event) {
 		isStudyMode = !isStudyMode;
 		((TempReader)getContext()).updateActivityMode();
@@ -274,7 +274,7 @@ public class ReaderWebView extends WebView
 		return false;
 	}
 
-	@Override
+	
 	public boolean onDoubleTapEvent(MotionEvent event) {
 		return false;
 	}
@@ -319,7 +319,7 @@ public class ReaderWebView extends WebView
 			
 			Handler mHandler = getHandler();
 			mHandler.post(new Runnable() {
-				@Override
+				
 				public void run() {
 					((TempReader) getContext()).setTextActionVisibility(selectedVerse.size() != 0);
 				}

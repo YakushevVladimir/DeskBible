@@ -61,7 +61,7 @@ public final class AsyncTaskManager implements IProgressTracker,
 		mAsyncTask.execute();
 	}
 
-	@Override
+	
 	public void onProgress(String message) {
 		if (mProgressDialog != null) {
 			// Show dialog if it wasn't shown yet or was removed on configuration
@@ -74,7 +74,7 @@ public final class AsyncTaskManager implements IProgressTracker,
 		}
 	}
 
-	@Override
+	
 	public void onCancel(DialogInterface dialog) {
 		// Cancel task
 		mAsyncTask.cancel(true);
@@ -84,7 +84,7 @@ public final class AsyncTaskManager implements IProgressTracker,
 		mAsyncTask = null;
 	}
 
-	@Override
+	
 	public void onComplete() {
 		// Close progress dialog
 		if (mProgressDialog != null) mProgressDialog.dismiss();

@@ -14,7 +14,7 @@ public class OnlyBQZipIni implements FileFilter {
 		this.filter = filter;
 	}
 
-	@Override
+	
 	public boolean accept(File myFile) {
 		return myFile.getName().toLowerCase().endsWith(this.filter)
 				|| myFile.isDirectory();

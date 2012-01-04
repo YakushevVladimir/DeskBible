@@ -16,7 +16,7 @@ public class OnlyBQIni implements FileFilter {
 		this.filter = filter;
 	}
 
-	@Override
+	
 	public boolean accept(File myFile) {
 		return myFile.getName().toLowerCase().equals(this.filter)
 				|| myFile.isDirectory();

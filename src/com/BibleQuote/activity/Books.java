@@ -67,7 +67,7 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 	private Librarian myLibrarian;
 	private AsyncTaskManager mAsyncTaskManager;
 
-	@Override
+	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setActionBarContentView(R.layout.books);
@@ -116,7 +116,7 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 		addActionBarItem(itemCont, R.id.action_bar_refresh);
 	}
 
-	@Override
+	
 	public boolean onHandleActionBarItemClick(ActionBarItem item, int position) {
 		Log.i(TAG, "onHandleActionBarItemClick(" + item + ", " + position + ")");
 		switch (item.getItemId()) {
@@ -321,13 +321,13 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 		UpdateView(CHAPTER_VIEW);
 	}
 
-	@Override
+	
 	protected void onPostResume() {
 		super.onPostResume();
 		UpdateView(viewMode);
 	}
 
-	@Override
+	
 	public void onTaskComplete(Task task) {
 		Log.i(TAG, "onTaskComplete()");
 		if (task != null && !task.isCancelled()) {
@@ -347,7 +347,7 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 		}	
 	}
 	
-    @Override
+    
     public Object onRetainNonConfigurationInstance() {
     	return mAsyncTaskManager.retainTask();
     }

@@ -37,14 +37,12 @@ public class DbBookController implements IBookController {
 		return result;
 	}
 
-	@Override
 	public LinkedHashMap<String, Book> getBooks(Module module) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
-	@Override
 	public ArrayList<Book> getBookList(Module module) {
 		// TODO Auto-generated method stub
 		return null;
@@ -56,7 +54,6 @@ public class DbBookController implements IBookController {
 	}
 
 
-	@Override
 	public LinkedHashMap<String, String> search(Module module, String query,
 			String fromBookID, String toBookID) {
 		// TODO Auto-generated method stub

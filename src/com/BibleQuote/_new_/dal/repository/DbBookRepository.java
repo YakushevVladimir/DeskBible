@@ -20,7 +20,6 @@ public class DbBookRepository implements IBookRepository<DbModule, DbBook> {
         db = context.getDB();
     }
     
-	@Override
 	public Collection<DbBook> loadBooks(DbModule module) {
 		Cursor cursor = db.rawQuery("SELECT * FROM Book WHERE `moduleId` = " + module.getID(), null);
 		final ArrayList<DbBook> bookList = new ArrayList<DbBook>();
@@ -34,14 +33,12 @@ public class DbBookRepository implements IBookRepository<DbModule, DbBook> {
 	}
 	
 
-	@Override
 	public Collection<DbBook> getBooks(DbModule module) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	
-	@Override
 	public DbBook getBookByID(DbModule module, String bookID) {
 		// TODO Auto-generated method stub
 //		DbBook book = null;
@@ -55,7 +52,7 @@ public class DbBookRepository implements IBookRepository<DbModule, DbBook> {
 		return null;
 	}
 
-	@Override
+
 	public LinkedHashMap<String, String> searchInBook(DbModule module,
 			String bookID, String regQuery) {
 		// TODO Auto-generated method stub

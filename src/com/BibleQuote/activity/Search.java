@@ -151,12 +151,12 @@ public class Search extends GDActivity implements OnTaskCompleteListener {
 		}
 	};
 
-	@Override
+	
 	public Object onRetainNonConfigurationInstance() {
 		return mAsyncTaskManager.retainTask();
 	}
 
-	@Override
+	
 	public void onTaskComplete(Task task) {
 		if (task.isCancelled()) {
 			Toast.makeText(this, R.string.messageSearchCanceled,
@@ -169,13 +169,13 @@ public class Search extends GDActivity implements OnTaskCompleteListener {
 			super(message);
 		}
 
-		@Override
+		
 		protected void onPostExecute(Boolean result) {
 			viewSearchResult();
 			super.onPostExecute(result);
 		}
 
-		@Override
+		
 		protected Boolean doInBackground(String... params) {
 			if (query.equals("")) {
 				return true;
@@ -214,7 +214,7 @@ public class Search extends GDActivity implements OnTaskCompleteListener {
 	}
 
 	private OnItemSelectedListener onClick_FromBook = new OnItemSelectedListener() {
-		@Override
+		
 		public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2,
 				long arg3) {
 			int fromBook = s1.getSelectedItemPosition();
@@ -224,13 +224,13 @@ public class Search extends GDActivity implements OnTaskCompleteListener {
 			}
 		}
 
-		@Override
+		
 		public void onNothingSelected(AdapterView<?> arg0) {
 		}
 	};
 
 	private OnItemSelectedListener onClick_ToBook = new OnItemSelectedListener() {
-		@Override
+		
 		public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2,
 				long arg3) {
 			int fromBook = s1.getSelectedItemPosition();
@@ -240,12 +240,12 @@ public class Search extends GDActivity implements OnTaskCompleteListener {
 			}
 		}
 
-		@Override
+		
 		public void onNothingSelected(AdapterView<?> arg0) {
 		}
 	};
 
-	@Override
+	
 	protected void onPostResume() {
 		super.onPostResume();
 		SpinnerInit();

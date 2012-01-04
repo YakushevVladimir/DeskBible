@@ -16,7 +16,6 @@ public class DbChapterController implements IChapterController {
 		//br = unit.getBookRepository();
     }
 	
-	@Override
 	public Chapter getChapter(Book book, Integer chapterNumber) {
 		ArrayList<String> verseNumbers = new ArrayList<String>();
 		verseNumbers.add("1");
@@ -33,19 +32,16 @@ public class DbChapterController implements IChapterController {
 		return null;
 	}
 	
-	@Override
 	public ArrayList<Integer> getVerseNumbers(Book book, Integer chapterNumber) {
 		Chapter chapter = getChapter(book, chapterNumber);
 		return chapter.getVerseNumbers();
 	}
 
 
-	@Override
 	public ArrayList<Chapter> getChapterList(Book book) {
 		return null;
 	}
 
-	@Override
 	public String getChapterHTMLView(Chapter chapter) {
 		return null;
 	}

@@ -83,7 +83,7 @@ public class TempReader extends GDActivity implements OnTaskCompleteListener, IS
 	private LinearLayout btnChapterNav;
 	private ReaderWebView vWeb;
 	
-	@Override
+	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setActionBarContentView(R.layout.reader);
@@ -148,7 +148,7 @@ public class TempReader extends GDActivity implements OnTaskCompleteListener, IS
 		addActionBarItem(itemSearch, R.id.action_bar_search);
 	}
 
-	@Override
+	
 	public boolean onHandleActionBarItemClick(ActionBarItem item, int position) {
 		Log.i(TAG, "onHandleActionBarItemClick(" + item + ", " + position + ")");
 		switch (item.getItemId()) {
@@ -176,7 +176,7 @@ public class TempReader extends GDActivity implements OnTaskCompleteListener, IS
     }
     
     OnClickListener onClickBtnTextAction = new OnClickListener() {
-		@Override
+		
 		public void onClick(View btnTextAction) {
 	    	textQAction.show(btnTextAction);
 		}
@@ -223,7 +223,7 @@ public class TempReader extends GDActivity implements OnTaskCompleteListener, IS
         }
     };
     
-	@Override
+	
 	public void onConfigurationChanged(Configuration newConfig) {
 		Log.i(TAG, "onConfigurationChanged()");
 		if (PreferenceHelper.restoreStateBoolean("DisableAutoScreenRotation")) {
@@ -257,7 +257,7 @@ public class TempReader extends GDActivity implements OnTaskCompleteListener, IS
 		return orientation;
 	}
 
-	@Override
+	
 	public boolean onCreateOptionsMenu(Menu menu) {
 		Log.i(TAG, "onCreateOptionsMenu()");
 		MenuInflater infl = getMenuInflater();
@@ -265,7 +265,7 @@ public class TempReader extends GDActivity implements OnTaskCompleteListener, IS
 		return true;
 	}
 
-	@Override
+	
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Log.i(TAG, "onOptionsItemSelected()");
 		switch (item.getItemId()) {
@@ -344,7 +344,7 @@ public class TempReader extends GDActivity implements OnTaskCompleteListener, IS
 	}
 
 	OnClickListener onClickChapterPrev = new OnClickListener() {
-		@Override
+		
 		public void onClick(View v) {
 			Log.i(TAG, "onClickChapterPrev()");
 			prevChapter();
@@ -352,7 +352,7 @@ public class TempReader extends GDActivity implements OnTaskCompleteListener, IS
 	};
 	
 	OnClickListener onClickChapterNext = new OnClickListener() {
-		@Override
+		
 		public void onClick(View v) {
 			Log.i(TAG, "onClickChapterPrev()");
 			nextChapter();
@@ -378,7 +378,7 @@ public class TempReader extends GDActivity implements OnTaskCompleteListener, IS
 	}
 
 	OnClickListener onClickPageUp = new OnClickListener() {
-		@Override
+		
 		public void onClick(View v) {
 			Log.i(TAG, "onClickPageUp()");
 			vWeb.pageUp(false);
@@ -387,7 +387,7 @@ public class TempReader extends GDActivity implements OnTaskCompleteListener, IS
 	};
 
 	OnClickListener onClickPageDown = new OnClickListener() {
-		@Override
+		
 		public void onClick(View v) {
 			Log.i(TAG, "onClickPageUp()");
 			vWeb.pageDown(false);
@@ -425,7 +425,7 @@ public class TempReader extends GDActivity implements OnTaskCompleteListener, IS
 	}
 	
 	private Handler chapterNavHandler = new Handler() {
-		@Override
+		
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case R.id.view_chapter_nav:
@@ -436,7 +436,7 @@ public class TempReader extends GDActivity implements OnTaskCompleteListener, IS
 		}
 	};
 	
-	@Override
+	
 	public boolean onSearchRequested() {
 		Intent intentSearch = new Intent().setClass(
 		getApplicationContext(), Search.class);
@@ -451,7 +451,7 @@ public class TempReader extends GDActivity implements OnTaskCompleteListener, IS
 		}
 	}
 
-	@Override
+	
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
 			vWeb.pageUp(false);
@@ -466,12 +466,12 @@ public class TempReader extends GDActivity implements OnTaskCompleteListener, IS
 		}
 	}
 	
-    @Override
+    
     public Object onRetainNonConfigurationInstance() {
     	return mAsyncTaskManager.retainTask();
     }
     
-    @Override
+    
     public void onTaskComplete(Task task) {
 		Log.i(TAG, "onTaskComplete()");
 		if (task != null && !task.isCancelled()) {
@@ -486,7 +486,7 @@ public class TempReader extends GDActivity implements OnTaskCompleteListener, IS
 		}
     }
     
-	@Override
+	
 	public void onSearchInLibrary(final SearchInLibraryEvent event) {
 		runOnUiThread(new Runnable() {
 			public void run() {
