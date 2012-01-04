@@ -22,7 +22,6 @@ public class DbLibraryUnitOfWork  implements ILibraryUnitOfWork<Long, DbModule, 
     	this.dbLibraryContext = dbLibraryContext;
     }
 
-	@Override
 	public Context getLibraryContext() {
 		return dbLibraryContext.getContext();
 	}
@@ -45,13 +44,11 @@ public class DbLibraryUnitOfWork  implements ILibraryUnitOfWork<Long, DbModule, 
         return bookRepository;
     }
 
-	@Override
 	public IChapterRepository<DbBook> getChapterRepository() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
 	public CacheModuleController<DbModule> getCacheModuleController() {
 		// TODO Auto-generated method stub
 		return null;

@@ -20,7 +20,6 @@ public class DbModuleRepository implements IModuleRepository<Long, DbModule> {
     }
     
     
-	@Override
 	public Collection<DbModule> loadModules() {
 		ArrayList<DbModule> moduleList = new ArrayList<DbModule>();
 		final Cursor cursor = db.rawQuery("SELECT * FROM Module ", null);
@@ -35,7 +34,6 @@ public class DbModuleRepository implements IModuleRepository<Long, DbModule> {
 	}
 	
 
-	@Override
 	public DbModule loadModuleById(Long moduleId) {
 		DbModule module = null;
 		final Cursor cursor = db.rawQuery("SELECT * FROM Module WHERE module_id = ? ", new String[] {"" + moduleId});
@@ -49,35 +47,29 @@ public class DbModuleRepository implements IModuleRepository<Long, DbModule> {
 	}
 	
 	
-	@Override
 	public Collection<DbModule> getModules() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 	
 
-	@Override
 	public DbModule getModuleByID(String moduleID) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 	
 
-	@Override
 	public void insertModule(DbModule module) {
 	}
 
-	@Override
 	public void deleteModule(DbModule module) {
 	}
 
     
-	@Override
 	public void updateModule(DbModule module) {
 	}
 
 
-	@Override
 	public DbModule getClosedModule() {
 		// TODO Auto-generated method stub
 		return null;

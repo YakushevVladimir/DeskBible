@@ -176,7 +176,6 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
     }
     
     OnClickListener onClickBtnTextAction = new OnClickListener() {
-		@Override
 		public void onClick(View btnTextAction) {
 	    	textQAction.show(btnTextAction);
 		}
@@ -334,14 +333,12 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
 	}
 
 	OnClickListener onClickChapterPrev = new OnClickListener() {
-		@Override
 		public void onClick(View v) {
 			prevChapter();
 		}
 	};
 	
 	OnClickListener onClickChapterNext = new OnClickListener() {
-		@Override
 		public void onClick(View v) {
 			nextChapter();
 		}
@@ -366,7 +363,6 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
 	}
 
 	OnClickListener onClickPageUp = new OnClickListener() {
-		@Override
 		public void onClick(View v) {
 			vWeb.pageUp(false);
 			viewChapterNav();
@@ -374,7 +370,6 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
 	};
 
 	OnClickListener onClickPageDown = new OnClickListener() {
-		@Override
 		public void onClick(View v) {
 			vWeb.pageDown(false);
 			viewChapterNav();
@@ -457,7 +452,6 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
     	return mAsyncTaskManager.retainTask();
     }
     
-    @Override
     public void onTaskComplete(Task task) {
 		if (task != null && !task.isCancelled()) {
 			if (task instanceof AsyncOpenChapter) {
@@ -471,7 +465,6 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
 		}
     }
     
-	@Override
 	public void onSearchInLibrary(final SearchInLibraryEvent event) {
 		runOnUiThread(new Runnable() {
 			public void run() {

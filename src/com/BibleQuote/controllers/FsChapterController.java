@@ -27,7 +27,6 @@ public class FsChapterController implements IChapterController {
     }
 	
 
-	@Override
 	public ArrayList<Chapter> getChapterList(Book book) throws BookNotFoundException {
 		book = getValidBook(book);
 		ArrayList<Chapter> chapterList = (ArrayList<Chapter>) chRepository.getChapters((FsBook)book);
@@ -38,7 +37,6 @@ public class FsChapterController implements IChapterController {
 	}
 
 	
-	@Override
 	public Chapter getChapter(Book book, Integer chapterNumber) throws BookNotFoundException {
 		book = getValidBook(book);
 		Chapter chapter = chRepository.getChapterByNumber((FsBook)book, chapterNumber);
@@ -49,7 +47,6 @@ public class FsChapterController implements IChapterController {
 	}
 	
 	
-	@Override
 	public ArrayList<Integer> getVerseNumbers(Book book, Integer chapterNumber) throws BookNotFoundException {
 		book = getValidBook(book);
 		Chapter chapter = chRepository.getChapterByNumber((FsBook)book, chapterNumber);
@@ -60,7 +57,6 @@ public class FsChapterController implements IChapterController {
 	}
 
 
-	@Override
 	public String getChapterHTMLView(Chapter chapter) {
 		Module currModule = chapter.getBook().getModule();
 		

@@ -338,7 +338,6 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 		UpdateView(viewMode);
 	}
 
-	@Override
 	public void onTaskComplete(Task task) {
 		Log.i(TAG, "onTaskComplete()");
 		if (task != null && !task.isCancelled()) {

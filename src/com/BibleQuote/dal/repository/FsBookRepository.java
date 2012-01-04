@@ -25,7 +25,6 @@ public class FsBookRepository implements IBookRepository<FsModule, FsBook> {
     }
     
     
-	@Override
 	public Collection<FsBook> loadBooks(FsModule module) {
 		module.Books = context.bookSet = new LinkedHashMap<String, Book>();
 		BufferedReader reader = null;
@@ -53,19 +52,16 @@ public class FsBookRepository implements IBookRepository<FsModule, FsBook> {
 	}
 	
 	
-	@Override
 	public Collection<FsBook> getBooks(FsModule module) {
 		return context.getBookList(module.Books); 
 	}
 
 	
-	@Override
 	public FsBook getBookByID(FsModule module, String bookID) {
 		return (FsBook)module.Books.get(bookID);
 	}
 
 
-	@Override
 	public LinkedHashMap<String, String> searchInBook(FsModule module, String bookID, String regQuery) {
 		FsBook book = getBookByID((FsModule)module, bookID);
 		BufferedReader bReader = context.getBookReader(book);
