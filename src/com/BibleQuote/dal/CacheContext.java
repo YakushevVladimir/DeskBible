@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import com.BibleQuote.utils.Log;
+import android.util.Log;
 
 public class CacheContext {
 	private final String TAG = "CacheContext";
@@ -38,35 +38,28 @@ public class CacheContext {
 			ObjectInputStream out = new ObjectInputStream(fStr);
 			data = (T) out.readObject();
 			out.close();
-			Log.i(TAG, String.format("Data are loaded from the cache %1$s%2$s", cacheDir, cacheName));
 		} catch (ClassNotFoundException e) {
-			Log.e(TAG, String.format("Data are don't loaded from the cache %1$s%2$s: $3$s",
-					cacheDir, cacheName, e.getMessage()));
 			e.printStackTrace();
 		} catch (IOException e) {
-			Log.e(TAG, String.format("Data are don't loaded from the cache %1$s%2$s: $3$s",
-					cacheDir, cacheName, e.getMessage()));
 			e.printStackTrace();
 		}
 
+		Log.i(TAG, String.format("Data are loaded from the cache %1$s%2$s", cacheDir, cacheName));
 		return data;
 	}	
 	
 	public <T> void saveData(T data) {
-		try {
-			FileOutputStream fStr = new FileOutputStream(new File(cacheDir, cacheName));
-			ObjectOutputStream out = new ObjectOutputStream(fStr);
-			out.writeObject(data);
-			out.close();
-			Log.i(TAG, String.format("Data are stored in the cache %1$s%2$s", cacheDir, cacheName));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			Log.i(TAG, String.format("Data are don't stored in the cache %1$s%2$s: $3$s", 
-					cacheDir, cacheName, e.getMessage()));
-		} catch (IOException e) {
-			e.printStackTrace();
-			Log.i(TAG, String.format("Data are don't stored in the cache %1$s%2$s: $3$s", 
-					cacheDir, cacheName, e.getMessage()));
-		}
+		return;
+//		try {
+//			FileOutputStream fStr = new FileOutputStream(new File(cacheDir, cacheName));
+//			ObjectOutputStream out = new ObjectOutputStream(fStr);
+//			out.writeObject(data);
+//			out.close();
+//		} catch (FileNotFoundException e) {
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//		Log.i(TAG, String.format("Data are stored in the cache %1$s%2$s", cacheDir, cacheName));
 	}	
 }
