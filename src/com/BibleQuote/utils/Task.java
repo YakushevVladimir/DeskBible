@@ -49,13 +49,13 @@ public abstract class Task extends AsyncTask<String, String, Boolean> {
 	}
 
 	public Task(String message) {
-		mProgressMessage = message;
+		mProgressMessage = message;;
 	}
 
 	public void setProgressTracker(IProgressTracker progressTracker) {
 		// Attach to progress tracker
 		mProgressTracker = progressTracker;
-		// Initialise progress tracker with current task state
+		// Initialize progress tracker with current task state
 		if (mProgressTracker != null) {
 			mProgressTracker.onProgress(mProgressMessage);
 			if (mResult != null) {

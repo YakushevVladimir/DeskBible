@@ -67,8 +67,9 @@ public class Search extends GDActivity implements OnTaskCompleteListener {
 		BibleQuoteApp app = (BibleQuoteApp) getGDApplication();
 		myLibararian = app.getLibrarian();
 
-		mAsyncTaskManager = new AsyncTaskManager(this, this, false);
+		mAsyncTaskManager = app.getAsyncTaskManager();
 		mAsyncTaskManager.handleRetainedTask(getLastNonConfigurationInstance());
+		
 		progressMessage = getResources().getString(R.string.messageSearch);
 		searchResults = myLibararian.getSearchResults();
 
@@ -210,7 +211,7 @@ public class Search extends GDActivity implements OnTaskCompleteListener {
 	public void onSearchClick(View v) {
 		query = ((EditText) findViewById(R.id.SearchEdit)).getText().toString()
 				.trim();
-		mAsyncTaskManager.setupTask(new StartSearch(progressMessage));
+		mAsyncTaskManager.setupTask(new StartSearch(progressMessage), this, false);
 	}
 
 	private OnItemSelectedListener onClick_FromBook = new OnItemSelectedListener() {

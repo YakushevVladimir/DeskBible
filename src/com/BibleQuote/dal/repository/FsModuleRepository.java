@@ -54,7 +54,7 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 			moduleList.add(fileModule);
 		}
 		
-		cache.saveModuleList(moduleList);
+		//cache.saveModuleList(moduleList);
 
 		context.moduleSet = new TreeMap<String, Module>();
 		for (FsModule fsModule : moduleList) {

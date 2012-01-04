@@ -34,7 +34,7 @@ public class FsBookRepository implements IBookRepository<FsModule, FsBook> {
 			context.fillBooks(module, reader);
 			
 			// Update cache with just added books
-			cache.saveModuleList(context.getModuleList(context.moduleSet));
+			//cache.saveModuleList(context.getModuleList(context.moduleSet));
 			
 		} catch (CreateModuleErrorException e) {
 			Log.e(TAG, "Can't load books by module " + module.getModuleFileName());

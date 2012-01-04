@@ -54,6 +54,7 @@ import com.BibleQuote.listeners.ChangeChaptersEvent;
 import com.BibleQuote.listeners.ISearchListener;
 import com.BibleQuote.listeners.SearchInLibraryEvent;
 import com.BibleQuote.managers.AsyncOpenChapter;
+import com.BibleQuote.managers.AsyncOpenModules;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.utils.AsyncTaskManager;
 import com.BibleQuote.utils.Log;
@@ -75,6 +76,7 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
 	private String chapterInHTML = "";
 	private boolean nightMode = false;
 	private String progressMessage = "";
+	private String messageLoadModules;
 	private int runtimeOrientation;
 
 	private TextView vModuleName;
@@ -93,13 +95,15 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
 		initActionBar();
 		prepareQuickActionBar();
 		
-		mAsyncTaskManager = new AsyncTaskManager(this, this, false);
-		mAsyncTaskManager.handleRetainedTask(getLastNonConfigurationInstance());
-
 		BibleQuoteApp app = (BibleQuoteApp) getGDApplication();
 		myLibrarian = app.getLibrarian();
 		myLibrarian.eventManager.addSearchListener(this);
+
+		mAsyncTaskManager = app.getAsyncTaskManager();
+		mAsyncTaskManager.handleRetainedTask(getLastNonConfigurationInstance());
 		
+		messageLoadModules = getResources().getString(R.string.messageLoadModules);
+			
 		btnChapterNav = (LinearLayout)findViewById(R.id.btn_chapter_nav);
 		
 		ImageButton btnChapterPrev = (ImageButton)findViewById(R.id.btn_reader_prev);
@@ -129,7 +133,7 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
 		if (OSISLink.getPath() == null) {
 			onChooseChapterClick();
 		} else {
-			mAsyncTaskManager.setupTask(new AsyncOpenChapter(progressMessage, myLibrarian, OSISLink));
+			mAsyncTaskManager.setupTask(new AsyncOpenChapter(progressMessage, myLibrarian, OSISLink), this, false);
 		}
 	}
 	
@@ -301,12 +305,12 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
 					|| (requestCode == R.id.action_bar_chooseCh)) {
 				Bundle extras = data.getExtras();
 				OSISLink OSISLink = new OSISLink(extras.getString("linkOSIS"));
-				mAsyncTaskManager.setupTask(new AsyncOpenChapter(progressMessage, myLibrarian, OSISLink));
+				mAsyncTaskManager.setupTask(new AsyncOpenChapter(progressMessage, myLibrarian, OSISLink), this, false);
 			}
 		} else if (requestCode == R.id.action_bar_settings) {
 			vWeb.setReadingMode(PreferenceHelper.isReadModeByDefault());
 			updateActivityMode();
-			mAsyncTaskManager.setupTask(new AsyncOpenChapter(progressMessage, myLibrarian, myLibrarian.getCurrentOSISLink()));
+			mAsyncTaskManager.setupTask(new AsyncOpenChapter(progressMessage, myLibrarian, myLibrarian.getCurrentOSISLink()), this, false);
 		}
 	}
 
@@ -381,7 +385,7 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
 		mAsyncTaskManager.setupTask(new AsyncOpenChapter(
 				progressMessage, 
 				myLibrarian, 
-				myLibrarian.getCurrentOSISLink()));
+				myLibrarian.getCurrentOSISLink()), this, false);
 	}
 	
 	public void setTextActionVisibility(boolean visibility) {
@@ -462,7 +466,7 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
 					chapterInHTML = myLibrarian.getChapterHTMLView(event.chapter);
 					setTextinWebView();
 				}
-				myLibrarian.openModulesAsync(mAsyncTaskManager);
+				mAsyncTaskManager.setupTask(new AsyncOpenModules(messageLoadModules, myLibrarian), Reader.this, true);
 			}
 		}
     }

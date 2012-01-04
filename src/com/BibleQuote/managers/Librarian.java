@@ -23,7 +23,6 @@ import java.util.TreeSet;
 
 import android.content.Context;
 
-import com.BibleQuote.R;
 import com.BibleQuote.controllers.IBookController;
 import com.BibleQuote.controllers.IChapterController;
 import com.BibleQuote.controllers.IModuleController;
@@ -39,7 +38,6 @@ import com.BibleQuote.models.Book;
 import com.BibleQuote.models.Chapter;
 import com.BibleQuote.models.Module;
 import com.BibleQuote.models.Verse;
-import com.BibleQuote.utils.AsyncTaskManager;
 import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.OSISLink;
 import com.BibleQuote.utils.PreferenceHelper;
@@ -56,8 +54,6 @@ public class Librarian implements IChangeBooksListener  {
 	private Chapter currChapter;
 	private Integer currChapterNumber = -1;
 	private Integer currVerseNumber = 1;
-	
-	private Context context;
 	
 	private IModuleController moduleCtrl;
 	private IBookController bookCtrl;
@@ -78,49 +74,51 @@ public class Librarian implements IChangeBooksListener  {
 		
 		eventManager.addChangeBooksListener(this);
 		
-		this.context = context;
-		
 		libCtrl = LibraryController.create(LibrarySource.FileSystem, eventManager, context);
 		moduleCtrl = libCtrl.getModuleCtrl();
 		bookCtrl = libCtrl.getBookCtrl();
 		chapterCtrl = libCtrl.getChapterCtrl();
 	}
-	
-	public Boolean hasClosedModules() {
-		return moduleCtrl.getClosedModule() != null;
+
+	public Module getClosedModule() {
+		return moduleCtrl.getClosedModule();
 	}
 	
 	public TreeMap<String, Module> getModules() {
 		return moduleCtrl.getModules();
 	}
 	
-	public void openModulesAsync(AsyncTaskManager asyncTaskManager) {
-		Module module = moduleCtrl.getClosedModule();
-		if (module != null) {
-			String message = context.getResources().getString(R.string.messageLoadModules);
-			asyncTaskManager.setupTask(new AsyncOpenModules(message, this, module, asyncTaskManager));
-		}	
+	public TreeMap<String, Module> loadModules() {
+		return moduleCtrl.loadModules();
 	}
 	
-	public void refreshModules(AsyncTaskManager asyncTaskManager) {
-		moduleCtrl.loadModules();
-		openModules(asyncTaskManager);
-	}
+//	public void openModulesAsync(AsyncTaskManager asyncTaskManager) {
+//		Module module = moduleCtrl.getClosedModule();
+//		if (module != null) {
+//			String message = context.getResources().getString(R.string.messageLoadModules);
+//			asyncTaskManager.setupTask(new AsyncOpenModules(message, this, module, asyncTaskManager));
+//		}	
+//	}
+	
+//	public void refreshModules(AsyncTaskManager asyncTaskManager) {
+//		moduleCtrl.loadModules();
+//		openModules(asyncTaskManager);
+//	}
 
-	public void openModules(AsyncTaskManager asyncTaskManager) {
-		TreeMap<String, Module> modules = moduleCtrl.getModules();
-		if (asyncTaskManager != null) {
-			openModulesAsync(asyncTaskManager);
-		} else {
-			for (Module module : modules.values()) {
-				try {
-					this.openModule(module.getID());
-				} catch (ModuleNotFoundException e) {
-					Log.e(TAG, "openModules()", e);
-				}
-			}
-		}
-	}
+//	public void openModules(AsyncTaskManager asyncTaskManager) {
+//		TreeMap<String, Module> modules = moduleCtrl.getModules();
+//		if (asyncTaskManager != null) {
+//			openModulesAsync(asyncTaskManager);
+//		} else {
+//			for (Module module : modules.values()) {
+//				try {
+//					this.openModule(module.getID());
+//				} catch (ModuleNotFoundException e) {
+//					Log.e(TAG, "openModules()", e);
+//				}
+//			}
+//		}
+//	}
 	
 	@Override
 	public void onChangeBooks(ChangeBooksEvent event) {
@@ -128,13 +126,17 @@ public class Librarian implements IChangeBooksListener  {
 		}		
 	}
 	
-	public void loadBooksAsync(AsyncTaskManager asyncTaskManager, Module module) {
-		if (module != null) {
-			String message = context.getResources().getString(R.string.messageLoadBooks);
-			asyncTaskManager.setupTask(new AsyncOpenBooks(message, this, module, asyncTaskManager));
-		}	
-	}	
+//	public void loadBooksAsync(AsyncTaskManager asyncTaskManager, Module module) {
+//		if (module != null) {
+//			String message = context.getResources().getString(R.string.messageLoadBooks);
+//			asyncTaskManager.setupTask(new AsyncOpenBooks(message, this, module, asyncTaskManager));
+//		}	
+//	}	
 
+	public ArrayList<Book> getBookList(Module module) throws ModuleNotFoundException {
+		return bookCtrl.getBookList(module);
+	}
+	
 	public Module openModule(String moduleID) throws ModuleNotFoundException {
 		currModule = moduleCtrl.getModuleByID(moduleID);
 		currBook = null;

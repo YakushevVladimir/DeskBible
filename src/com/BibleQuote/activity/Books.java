@@ -37,10 +37,9 @@ import com.BibleQuote.R;
 import com.BibleQuote.entity.ItemList;
 import com.BibleQuote.exceptions.BookNotFoundException;
 import com.BibleQuote.exceptions.ModuleNotFoundException;
-import com.BibleQuote.listeners.ChangeModulesEvent;
+import com.BibleQuote.managers.AsyncLoadModules;
 import com.BibleQuote.managers.AsyncOpenBooks;
 import com.BibleQuote.managers.AsyncOpenModules;
-import com.BibleQuote.managers.AsyncRefreshLibrary;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.models.Module;
 import com.BibleQuote.utils.AsyncTaskManager;
@@ -66,19 +65,24 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 	private String moduleID = "---", bookID = "---", chapter = "-";
 	private Librarian myLibrarian;
 	private AsyncTaskManager mAsyncTaskManager;
-
+	private String messageLoadModules;
+	private String messageLoad;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setActionBarContentView(R.layout.books);
 		initActionBar();
 
-		mAsyncTaskManager = new AsyncTaskManager(this, this, false);
-		mAsyncTaskManager.handleRetainedTask(getLastNonConfigurationInstance());
-		
 		BibleQuoteApp app = (BibleQuoteApp) getGDApplication();
 		myLibrarian = app.getLibrarian();
 
+		mAsyncTaskManager = app.getAsyncTaskManager();
+		mAsyncTaskManager.handleRetainedTask(getLastNonConfigurationInstance());		
+		
+		messageLoadModules = getResources().getString(R.string.messageLoadModules);
+		messageLoad = getResources().getString(R.string.messageLoad);
+		
 		btnModule  = (Button) findViewById(R.id.btnModule);
 		btnBook    = (Button) findViewById(R.id.btnBook);
 		btnChapter = (Button) findViewById(R.id.btnChapter);
@@ -107,6 +111,11 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 			UpdateView(MODULE_VIEW);
 		}
 		setButtonText();
+		
+		if (!mAsyncTaskManager.isWorking()) {
+			mAsyncTaskManager.setupTask(
+				new AsyncOpenModules(messageLoadModules, myLibrarian), this, true);
+		}		
 	}
 	
 	private void initActionBar() {
@@ -121,8 +130,8 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 		Log.i(TAG, "onHandleActionBarItemClick(" + item + ", " + position + ")");
 		switch (item.getItemId()) {
 		case R.id.action_bar_refresh:
-			String message = getResources().getString(R.string.messageLoad);
-			mAsyncTaskManager.setupTask(new AsyncRefreshLibrary(message, myLibrarian));
+			mAsyncTaskManager.setupTask(
+				new AsyncLoadModules(messageLoad, myLibrarian), this, false);
 			break;
 		default:
 			return super.onHandleActionBarItemClick(item, position);
@@ -141,7 +150,9 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 			Module module;
 			try {
 				module = myLibrarian.openModule(moduleID);
-				myLibrarian.loadBooksAsync(mAsyncTaskManager, module);
+				String message = getResources().getString(R.string.messageLoadBooks);
+				AsyncOpenBooks asyncOpenBooksTask = new AsyncOpenBooks(message, myLibrarian, module);
+				mAsyncTaskManager.setupTask(asyncOpenBooksTask, Books.this, false);
 			} catch (ModuleNotFoundException e) {
 				Log.i(TAG, e.toString());
 			}
@@ -219,7 +230,7 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 			if (modulePos >= 0) {
 				modulesList.setSelection(modulePos);
 			}
-			myLibrarian.openModulesAsync(mAsyncTaskManager);
+			//myLibrarian.openModulesAsync(mAsyncTaskManager);
 
 			break;
 
@@ -332,19 +343,26 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 		Log.i(TAG, "onTaskComplete()");
 		if (task != null && !task.isCancelled()) {
 			if (task instanceof AsyncOpenModules) {
-				ChangeModulesEvent event = ((AsyncOpenModules) task).getEvent();
-				if (event != null && this.viewMode == MODULE_VIEW) {
-					//myLibrarian.openModules();
+				//ChangeModulesEvent event = ((AsyncOpenModules) task).getEvent();
+				if (this.viewMode == MODULE_VIEW) {
 					UpdateView(MODULE_VIEW);
 				}
+				if (((AsyncOpenModules) task).getNextClosedModule() != null) {
+					mAsyncTaskManager.setupTask(
+						new AsyncOpenModules(messageLoadModules, myLibrarian), Books.this, true);
+				}
+			} else if (task instanceof AsyncLoadModules) {
+				UpdateView(MODULE_VIEW);
+				setButtonText();
+				mAsyncTaskManager.setupTask(
+					new AsyncOpenModules(messageLoadModules, myLibrarian), Books.this, true);
+
 			} else if (task instanceof AsyncOpenBooks) {
 				UpdateView(BOOK_VIEW);
 				setButtonText();
-			} else if (task instanceof AsyncRefreshLibrary) {
-				UpdateView(MODULE_VIEW);
-				setButtonText();
 			}
 		}	
+
 	}
 	
     @Override

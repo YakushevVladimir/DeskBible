@@ -23,42 +23,47 @@ import android.content.DialogInterface.OnCancelListener;
 public final class AsyncTaskManager implements IProgressTracker,
 		OnCancelListener {
 
-	private final OnTaskCompleteListener mTaskCompleteListener;
-	private final ProgressDialog mProgressDialog;
+	private OnTaskCompleteListener mTaskCompleteListener;
+	private ProgressDialog mProgressDialog;
 	private Task mAsyncTask;
-
-	public AsyncTaskManager(Context context,
-			OnTaskCompleteListener taskCompleteListener, Boolean isHidden) {
+	private Context mContext;
+	private Boolean mIsHidden;
+	
+	public void setupTask(Task asyncTask, OnTaskCompleteListener taskCompleteListener, Boolean isHidden, String...params) {
 		// Save reference to complete listener (activity)
 		mTaskCompleteListener = taskCompleteListener;
+		mIsHidden = isHidden;
+		mContext = (Context) taskCompleteListener;
 		
 		// Setup progress dialog
-		if (!isHidden) {
-			mProgressDialog = new ProgressDialog(context);
+		if (!mIsHidden) {
+			mProgressDialog = new ProgressDialog(mContext);
 			mProgressDialog.setIndeterminate(true);
 			mProgressDialog.setCancelable(true);
 			mProgressDialog.setOnCancelListener(this);
 		} else {
 			mProgressDialog = null;
 		}
-	}
-
-	public void setupTask(Task asyncTask, String...params) {
+		
+		if (mAsyncTask != null) {
+			mAsyncTask.cancel(true);
+			mAsyncTask = null;
+		}		
+		
 		// Keep task
 		mAsyncTask = asyncTask;
 		// Wire task to tracker (this)
 		mAsyncTask.setProgressTracker(this);
 		// Start task
-		mAsyncTask.execute(params);
+		if (params != null) {
+			mAsyncTask.execute(params);
+		} else {
+			mAsyncTask.execute();
+		}
 	}
 
-	public void setupTask(Task asyncTask) {
-		// Keep task
-		mAsyncTask = asyncTask;
-		// Wire task to tracker (this)
-		mAsyncTask.setProgressTracker(this);
-		// Start task
-		mAsyncTask.execute();
+	public void setupTask(Task asyncTask, OnTaskCompleteListener taskCompleteListener, Boolean isHidden) {
+		setupTask(asyncTask, taskCompleteListener, isHidden, (String[])null);
 	}
 
 	@Override
@@ -78,20 +83,26 @@ public final class AsyncTaskManager implements IProgressTracker,
 	public void onCancel(DialogInterface dialog) {
 		// Cancel task
 		mAsyncTask.cancel(true);
-		// Notify activity about completion
-		mTaskCompleteListener.onTaskComplete(mAsyncTask);
+		
+		Task resultTask = mAsyncTask;
 		// Reset task
 		mAsyncTask = null;
+		
+		// Notify activity about completion
+		mTaskCompleteListener.onTaskComplete(resultTask);
 	}
 
 	@Override
 	public void onComplete() {
 		// Close progress dialog
 		if (mProgressDialog != null) mProgressDialog.dismiss();
-		// Notify activity about completion
-		mTaskCompleteListener.onTaskComplete(mAsyncTask);
+
+		Task resultTask = mAsyncTask;
 		// Reset task
 		mAsyncTask = null;
+
+		// Notify activity about completion
+		mTaskCompleteListener.onTaskComplete(resultTask);
 	}
 
 	public Object retainTask() {
@@ -114,5 +125,9 @@ public final class AsyncTaskManager implements IProgressTracker,
 	public boolean isWorking() {
 		// Track current status
 		return mAsyncTask != null;
+	}
+	
+	public Context getContext() {
+		return mContext;
 	}
 }

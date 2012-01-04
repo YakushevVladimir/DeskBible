@@ -19,13 +19,15 @@ import greendroid.app.GDApplication;
 
 import com.BibleQuote.activity.Reader;
 import com.BibleQuote.managers.Librarian;
+import com.BibleQuote.utils.AsyncTaskManager;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.UpdateManager;
 
 public class BibleQuoteApp extends GDApplication {
 	
 	private Librarian myLibararian;
-
+	private AsyncTaskManager mAsyncTaskManager;
+	
 	@Override
 	public Class<?> getHomeActivityClass() {
 		return Reader.class;
@@ -41,11 +43,16 @@ public class BibleQuoteApp extends GDApplication {
 		if (myLibararian == null) {
 			myLibararian = new Librarian(this);
 			
+			mAsyncTaskManager = new AsyncTaskManager();
 			myLibararian.getModules();
-			if (myLibararian.hasClosedModules()) {
-				myLibararian.openModules(null);
-			}
+//			if (myLibararian.hasClosedModules()) {
+//				myLibararian.openModules(null);
+//			}
 		}
 		return myLibararian;
+	}
+	
+	public AsyncTaskManager getAsyncTaskManager() {
+		return mAsyncTaskManager;
 	}
 }
