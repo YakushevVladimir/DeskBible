@@ -3,7 +3,6 @@ package com.BibleQuote.utils;
 import java.io.File;
 import java.io.FileFilter;
 
-import com.BibleQuote._new_.utils.DataConstants;
 
 public class OnlyBQIni implements FileFilter {
 	private String filter;
@@ -20,5 +19,10 @@ public class OnlyBQIni implements FileFilter {
 	public boolean accept(File myFile) {
 		return myFile.getName().toLowerCase().equals(this.filter)
 				|| myFile.isDirectory();
+	}
+
+	@Override
+	public String toString() {
+		return this.filter;
 	}
 }

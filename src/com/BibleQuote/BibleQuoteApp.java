@@ -17,8 +17,8 @@ package com.BibleQuote;
 
 import greendroid.app.GDApplication;
 
-import com.BibleQuote._new_.managers.Librarian;
-import com.BibleQuote.activity.TempReader;
+import com.BibleQuote.activity.Reader;
+import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.UpdateManager;
 
@@ -28,7 +28,7 @@ public class BibleQuoteApp extends GDApplication {
 
 	@Override
 	public Class<?> getHomeActivityClass() {
-		return TempReader.class;
+		return Reader.class;
 	}
 
 	public void Init() {

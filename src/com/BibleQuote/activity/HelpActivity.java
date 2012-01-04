@@ -1,7 +1,7 @@
 package com.BibleQuote.activity;
 
 import com.BibleQuote.R;
-import com.BibleQuote.utils.FileUtilities;
+import com.BibleQuote.utils.FsUtils;
 
 import android.os.Bundle;
 import android.webkit.WebView;
@@ -14,7 +14,7 @@ public class HelpActivity extends GDActivity {
 		super.onCreate(savedInstanceState);
 		setActionBarContentView(R.layout.help);
 		
-		String helpText = FileUtilities.getAssetString(getApplicationContext(), "help.html");
+		String helpText = FsUtils.getAssetString(getApplicationContext(), "help.html");
 		WebView vWeb = (WebView)findViewById(R.id.helpView);
 		vWeb.loadDataWithBaseURL("file:///url_initial_load", helpText, "text/html", "UTF-8", "about:config");
 	}

@@ -46,17 +46,23 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
-import com.BibleQuote.TempBibleQuoteApp;
 import com.BibleQuote.controls.ReaderWebView;
-import com.BibleQuote.entity.Librarian;
+import com.BibleQuote.exceptions.ModuleNotFoundException;
+import com.BibleQuote.listeners.ChangeChaptersEvent;
+import com.BibleQuote.listeners.ISearchListener;
+import com.BibleQuote.listeners.SearchInLibraryEvent;
+import com.BibleQuote.managers.AsyncOpenChapter;
+import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.utils.AsyncTaskManager;
 import com.BibleQuote.utils.Log;
+import com.BibleQuote.utils.OSISLink;
 import com.BibleQuote.utils.OnTaskCompleteListener;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.Task;
 
-public class Reader extends GDActivity implements OnTaskCompleteListener {
+public class Reader extends GDActivity implements OnTaskCompleteListener, ISearchListener {
 
 	private static final String TAG = "Reader";
 	private static final int VIEW_CHAPTER_NAV_LENGHT = 5000;
@@ -67,7 +73,6 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
 	private QuickActionWidget textQAction;
 
 	private String chapterInHTML = "";
-	private int verse = 1;
 	private boolean nightMode = false;
 	private String progressMessage = "";
 	private int runtimeOrientation;
@@ -85,16 +90,15 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		runtimeOrientation = getScreenOrientation();
 		
-		Log.i(TAG, "onCreate()");
-		
 		initActionBar();
 		prepareQuickActionBar();
 		
 		mAsyncTaskManager = new AsyncTaskManager(this, this, false);
 		mAsyncTaskManager.handleRetainedTask(getLastNonConfigurationInstance());
 
-		TempBibleQuoteApp app = (TempBibleQuoteApp) getGDApplication();
+		BibleQuoteApp app = (BibleQuoteApp) getGDApplication();
 		myLibrarian = app.getLibrarian();
+		myLibrarian.eventManager.addSearchListener(this);
 		
 		btnChapterNav = (LinearLayout)findViewById(R.id.btn_chapter_nav);
 		
@@ -121,20 +125,15 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
 		vWeb.setReadingMode(PreferenceHelper.isReadModeByDefault());
 		updateActivityMode();
 		
-	    String linkOSIS = PreferenceHelper.restoreStateString("last_read");
-		if (linkOSIS == null) {
-			linkOSIS = myLibrarian.getCurrentOSISLink();
-			if (linkOSIS == null) {
-				return;
-			}
+		OSISLink OSISLink = new OSISLink(PreferenceHelper.restoreStateString("last_read"));
+		if (OSISLink.getPath() == null) {
+			onChooseChapterClick();
+		} else {
+			mAsyncTaskManager.setupTask(new AsyncOpenChapter(progressMessage, myLibrarian, OSISLink));
 		}
-		Log.i(TAG, "Open " + linkOSIS);
-		
-		mAsyncTaskManager.setupTask(new ChapterLoader(progressMessage), linkOSIS);
 	}
 	
 	private void initActionBar() {
-		Log.i(TAG, "initActionBar()");
 		ActionBar bar = getActionBar();
 		
 		ActionBarItem itemCont = bar.newActionBarItem(NormalActionBarItem.class);
@@ -148,7 +147,6 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
 
 	@Override
 	public boolean onHandleActionBarItemClick(ActionBarItem item, int position) {
-		Log.i(TAG, "onHandleActionBarItemClick(" + item + ", " + position + ")");
 		switch (item.getItemId()) {
 		case R.id.action_bar_chooseCh:
 			onChooseChapterClick();
@@ -182,8 +180,6 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
 
    private OnQuickActionClickListener mActionListener = new OnQuickActionClickListener() {
         public void onQuickActionClicked(QuickActionWidget widget, int position) {
-    		Log.i(TAG, "onQuickActionClicked(" + widget + ", " + position + ")");
-			
     		ReaderWebView wView = (ReaderWebView)findViewById(R.id.readerView);
 			TreeSet<Integer> selVerses = wView.getSelectVerses();
 			if (selVerses.size() == 0) {
@@ -223,7 +219,6 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
     
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
-		Log.i(TAG, "onConfigurationChanged()");
 		if (PreferenceHelper.restoreStateBoolean("DisableAutoScreenRotation")) {
 			super.onConfigurationChanged(newConfig);
 			this.setRequestedOrientation(runtimeOrientation);
@@ -235,7 +230,6 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
 	}
 
 	protected int getScreenOrientation() {
-		Log.i(TAG, "getScreenOrientation()");
 		Display display = getWindowManager().getDefaultDisplay();
 		int orientation = display.getOrientation();
 
@@ -257,7 +251,6 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		Log.i(TAG, "onCreateOptionsMenu()");
 		MenuInflater infl = getMenuInflater();
 		infl.inflate(R.menu.menu_reader, menu);
 		return true;
@@ -265,7 +258,6 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		Log.i(TAG, "onOptionsItemSelected()");
 		switch (item.getItemId()) {
 		case R.id.NightDayMode:
 			nightMode = !nightMode;
@@ -301,34 +293,28 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
 	}
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		Log.i(TAG, "onActivityResult(" + requestCode + ", " + resultCode + ")");
 		super.onActivityResult(requestCode, resultCode, data);
 
 		if (resultCode == RESULT_OK) {
 			if ((requestCode == R.id.action_bar_bookmarks) 
 					|| (requestCode == R.id.action_bar_search )
 					|| (requestCode == R.id.action_bar_chooseCh)) {
-				verse = 1;
 				Bundle extras = data.getExtras();
-				String linkOSIS = extras.getString("linkOSIS");
-				
-				AsyncTaskManager mAsyncTaskManager = new AsyncTaskManager(this, this, false);
-				mAsyncTaskManager.setupTask(new ChapterLoader(progressMessage), linkOSIS);
+				OSISLink OSISLink = new OSISLink(extras.getString("linkOSIS"));
+				mAsyncTaskManager.setupTask(new AsyncOpenChapter(progressMessage, myLibrarian, OSISLink));
 			}
 		} else if (requestCode == R.id.action_bar_settings) {
 			vWeb.setReadingMode(PreferenceHelper.isReadModeByDefault());
 			updateActivityMode();
-			AsyncTaskManager mAsyncTaskManager = new AsyncTaskManager(this, this, false);
-			mAsyncTaskManager.setupTask(new ChapterLoader(progressMessage), myLibrarian.getCurrentOSISLink());
+			mAsyncTaskManager.setupTask(new AsyncOpenChapter(progressMessage, myLibrarian, myLibrarian.getCurrentOSISLink()));
 		}
 	}
 
 	public void setTextinWebView() {
-		Log.i(TAG, "WebLoadDataWithBaseURL()");
+		OSISLink OSISLink = myLibrarian.getCurrentOSISLink();
+		vWeb.setText(chapterInHTML, OSISLink.getVerseNumber(), nightMode, myLibrarian.isBible());
 		
-		vWeb.setText(chapterInHTML, verse, nightMode, myLibrarian.isBible());
-		
-		PreferenceHelper.saveStateString("last_read", myLibrarian.getCurrentOSISLink());
+		PreferenceHelper.saveStateString("last_read", OSISLink.getPath());
 		
 		vModuleName.setText(myLibrarian.getModuleName());
 		vBookLink.setText(myLibrarian.getHumanBookLink());
@@ -338,7 +324,6 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
 	}
 
 	public void onChooseChapterClick() {
-		Log.i(TAG, "onChooseChapterClick()");
 		Intent intent = new Intent();
 		intent.setClass(this, Books.class);
 		startActivityForResult(intent, R.id.action_bar_chooseCh);
@@ -347,7 +332,6 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
 	OnClickListener onClickChapterPrev = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
-			Log.i(TAG, "onClickChapterPrev()");
 			prevChapter();
 		}
 	};
@@ -355,25 +339,31 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
 	OnClickListener onClickChapterNext = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
-			Log.i(TAG, "onClickChapterPrev()");
 			nextChapter();
 		}
 	};
 
 	public void prevChapter() {
-		myLibrarian.prevChapter();
-		viewNewChapter();
+		try {
+			myLibrarian.prevChapter();
+		} catch (ModuleNotFoundException e) {
+			Log.e(TAG, "prevChapter()", e);
+		}
+		viewCurrentChapter();
 	}
 
 	public void nextChapter() {
-		myLibrarian.nextChapter();
-		viewNewChapter();
+		try {
+			myLibrarian.nextChapter();
+		} catch (ModuleNotFoundException e) {
+			Log.e(TAG, "nextChapter()", e);
+		}
+		viewCurrentChapter();
 	}
 
 	OnClickListener onClickPageUp = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
-			Log.i(TAG, "onClickPageUp()");
 			vWeb.pageUp(false);
 			viewChapterNav();
 		}
@@ -382,18 +372,16 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
 	OnClickListener onClickPageDown = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
-			Log.i(TAG, "onClickPageUp()");
 			vWeb.pageDown(false);
 			viewChapterNav();
 		}
 	};
 
-	private void viewNewChapter() {
-		verse = 1;
-		AsyncTaskManager mAsyncTaskManager = new AsyncTaskManager(this, this, false);
-		mAsyncTaskManager.setupTask(
-				new ChapterLoader(progressMessage),
-				myLibrarian.getCurrentOSISLink());
+	private void viewCurrentChapter() {
+		mAsyncTaskManager.setupTask(new AsyncOpenChapter(
+				progressMessage, 
+				myLibrarian, 
+				myLibrarian.getCurrentOSISLink()));
 	}
 	
 	public void setTextActionVisibility(boolean visibility) {
@@ -459,50 +447,38 @@ public class Reader extends GDActivity implements OnTaskCompleteListener {
 			return super.onKeyDown(keyCode, event);
 		}
 	}
+	
     @Override
     public Object onRetainNonConfigurationInstance() {
     	return mAsyncTaskManager.retainTask();
     }
-
+    
     @Override
     public void onTaskComplete(Task task) {
-		Log.i(TAG, "onTaskComplete()");
-		if (!task.isCancelled()) {
-			setTextinWebView();
+		if (task != null && !task.isCancelled()) {
+			if (task instanceof AsyncOpenChapter) {
+				ChangeChaptersEvent event = ((AsyncOpenChapter) task).getEvent();
+				if (event != null) {
+					chapterInHTML = myLibrarian.getChapterHTMLView(event.chapter);
+					setTextinWebView();
+				}
+				myLibrarian.openModulesAsync(mAsyncTaskManager);
+			}
 		}
     }
     
-	private class ChapterLoader extends Task {
-		public ChapterLoader(String message) {
-			super(message);
-		}
-
-		@Override
-		protected void onPostExecute(Boolean result) {
-			super.onPostExecute(result);
-		}
-
-		@Override
-		protected Boolean doInBackground(String... params) {
-			Log.i(TAG, "doInBackground(\"" + params + "\")");
-			try {
-				String linkOSIS = params[0];
-				String[] linkParam = linkOSIS.split("\\.");
-				if (linkParam.length > 3) {
-					try {
-						verse = Integer.parseInt(linkParam[3]);
-					} catch (NumberFormatException e) {
-						verse = 1;
-					}
+	@Override
+	public void onSearchInLibrary(final SearchInLibraryEvent event) {
+		runOnUiThread(new Runnable() {
+			public void run() {
+				switch (event.code) {
+					case Found:
+						break;
+					case NotFound:
+						break;
 				}
-				
-				chapterInHTML = myLibrarian.OpenLink(linkOSIS);
-			} catch (NullPointerException e) {
-				chapterInHTML = "";
-				Log.e(TAG, e);
 			}
-			return true;
-		}
+		});		
 	}
 
 }

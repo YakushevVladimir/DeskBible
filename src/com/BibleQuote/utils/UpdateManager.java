@@ -6,14 +6,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 import com.BibleQuote.R;
-import com.BibleQuote.entity.Book;
-import com.BibleQuote.entity.modules.IModule;
-import com.BibleQuote.entity.modules.bq.FileModule;
-import com.BibleQuote.exceptions.CreateModuleErrorException;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -57,36 +51,17 @@ public class UpdateManager {
 		String currVersion = Settings.getString("myversion", "");
 		Log.i(TAG, "Update from version " + currVersion);
 		Boolean update = false;
-		if (currVersion.contains("0.9")) {
-			// На более поздних обновления надо будет удалить
-			// этот блок обновления, т.к. в данном случае присваиваем
-			// меньшую версию
-			Settings.edit().remove("Modules").commit();
-			Settings.edit().remove("ActiveModulesIndex").commit();
-			update = true;
-		}
-		if (currVersion.contains("0.01.11") || update) {
-			// Сменился формат харения данных о цвете текста и фона
-			// Удалим старые значения
-			Settings.edit().remove("TextBG").commit();
-			Settings.edit().remove("TextColor").commit();
-			update = true;
-		} 
-		if (currVersion.contains("0.01.17") || update) {
-			UpdateManager.convertFavorities(Settings);
-			update = true;
-		}
-		if (currVersion.contains("0.02.01") || update) {
-			Settings.edit().putBoolean("nightMode", false).commit();
-			update = true;
-		}
+
 		if (currVersion.contains("0.03.02")
 				|| currVersion.length() == 0
 				|| update) {
 			saveExternalModule(context);
 			update = true;
 		}
-		if (currVersion.contains("0.03.04") || update) {
+		
+		if (currVersion.contains("0.03.04") 
+				|| currVersion.contains("0.03.05") 
+				|| update) {
 			Log.i(TAG, "Delete library cache file");
 			File cacheDir = context.getCacheDir();
 			File cacheFile = new File(cacheDir, "library.cash");
@@ -119,72 +94,4 @@ public class UpdateManager {
 			e.printStackTrace();
 		}
 	}
-
-	public static void convertFavorities(SharedPreferences settings) {
-		Byte delimeter1 = (byte) 0xFE;
-		Byte delimeter2 = (byte) 0xFF;
-		ArrayList<String> oldFavorits = new ArrayList<String>();
-		ArrayList<String> newFavorits = new ArrayList<String>();
-		
-		String fav = settings.getString("Favorits", "");
-		
-		Log.i(TAG, "oldFav = " + fav);
-		
-		oldFavorits.addAll(Arrays.asList(fav.split(delimeter1.toString())));
-		for (String favItem : oldFavorits) {
-			try {
-				String[] param = favItem.split(delimeter2.toString());
-				
-				Log.i(TAG, "favItem = " + favItem);
-				Log.i(TAG, "favItem.split(delimeter2).length = " + param.length);
-				
-				if (param.length == 6) {
-					String humanLink = param[0];
-					String path = param[1];
-					int bookNum = Integer.parseInt(param[2]);
-					int chapter = Integer.parseInt(param[3]);
-					String verse = param[4];
-					
-				
-					IModule mod = new FileModule(path);
-					ArrayList<Book> books = mod.getBooks();
-					
-					String moduleID = mod.getShortName();
-					String bookID = books.get(bookNum).getBookID();
-					String linkOSIS = moduleID + "." + bookID + "." + (++chapter) + "." + verse;
-					
-					Log.i(TAG, "newItem = " + humanLink + " : " + linkOSIS);
-					newFavorits.add(humanLink + delimeter2 + linkOSIS); 
-				} else {
-					param = favItem.split("\\.");
-					if (param.length == 4) {
-						String humanLink = param[0] + ": " + param[1] + " " + param[2] + ":" + param[3];
-					Log.i(TAG, "newItem = " + humanLink + " : " + favItem);
-						newFavorits.add(humanLink + delimeter2 + favItem); 
-					} else {
-						Log.i(TAG, "favItem.split(.).length = " + param.length);
-						Log.i(TAG, "Error convert bookmark");
-					}
-				}
-				
-			} catch (CreateModuleErrorException e) {
-				// Модуль либо отсутствует, либо перемещён, либо ещё какая-то ошибка
-				Log.e(TAG, e);
-				continue;
-			} catch (NumberFormatException e) {
-				// Не удалось преобразовать к числу номер книги или главы
-				Log.e(TAG, e);
-				continue;
-			}
-		}
-		
-		fav = "";
-		for (String favItem : newFavorits) {
-			fav += favItem + delimeter1;
-		}
-		
-		Log.i(TAG, "newFav = " + fav);
-		settings.edit().putString("Favorits", fav).commit();
-	}
-
 }

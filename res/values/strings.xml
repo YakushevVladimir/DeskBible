@@ -30,9 +30,17 @@
     <string name="db_help">Help</string>
     <!-- About -->
     <string name="about">About</string>
-    <string name="app_name_about">BibleQuote 0.03.05</string>
-    <string name="app_license">Apache License Version 2.0</string>
-    <string name="app_about_text">Developers:\nVladimir Yakushev: ru.phoenix@gmail.com</string>
+    <string name="app_about_name">BibleQuote 0.04.01</string>
+    <string name="app_about_license">Apache License Version 2.0</string>
+    <string name="app_about_dev_label">Developers:</string>
+    <string name="app_about_dev">Vladimir Yakushev\nSergey Ursul</string>
+    <string name="app_about_design_label">Design:</string>
+    <string name="app_about_design">Vladimir Yakovlev</string>
+    <string name="app_about_thanks_label">Thanks:</string>
+    <string name="app_about_thanks">Timothy Ha\nVolodimir Atapin\nNikolay Shemereko\nRoman Goncharenko</string>
+    <string name="app_about_email_label">E-mail:</string>
+    <string name="app_about_email">ru.phoenix@gmail.com</string>
+    <string name="app_about_www_label">WWW:</string>
     <string name="app_about_www">www.scripturesoftware.org</string>
     <!-- Settings -->
     <string name="category_reader">Reading window settings</string>

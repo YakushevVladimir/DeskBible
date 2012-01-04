@@ -34,18 +34,18 @@ import android.widget.SimpleAdapter;
 
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
-import com.BibleQuote._new_.listeners.ChangeModulesEvent;
-import com.BibleQuote._new_.managers.AsyncOpenBooks;
-import com.BibleQuote._new_.managers.AsyncOpenModules;
-import com.BibleQuote._new_.managers.AsyncRefreshLibrary;
-import com.BibleQuote._new_.managers.Librarian;
-import com.BibleQuote._new_.models.Module;
-import com.BibleQuote._new_.utils.OSISLink;
 import com.BibleQuote.entity.ItemList;
 import com.BibleQuote.exceptions.BookNotFoundException;
 import com.BibleQuote.exceptions.ModuleNotFoundException;
+import com.BibleQuote.listeners.ChangeModulesEvent;
+import com.BibleQuote.managers.AsyncOpenBooks;
+import com.BibleQuote.managers.AsyncOpenModules;
+import com.BibleQuote.managers.AsyncRefreshLibrary;
+import com.BibleQuote.managers.Librarian;
+import com.BibleQuote.models.Module;
 import com.BibleQuote.utils.AsyncTaskManager;
 import com.BibleQuote.utils.Log;
+import com.BibleQuote.utils.OSISLink;
 import com.BibleQuote.utils.OnTaskCompleteListener;
 import com.BibleQuote.utils.Task;
 

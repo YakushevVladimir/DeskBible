@@ -18,9 +18,6 @@
 -->
 <resources>
     <string name="app_name">Bibelen</string>
-    <!-- About -->
-    <string name="about">Om program</string>
-    <string name="app_about_text">Utviklere:\nVladimir Yakushev: ru.phoenix@gmail.com</string>
     <!-- Tab's -->
     <string name="favorites">Bokmerker</string>
     <!-- Settings -->

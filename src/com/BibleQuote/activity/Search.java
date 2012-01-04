@@ -41,7 +41,7 @@ import com.BibleQuote.R;
 import com.BibleQuote.entity.ItemList;
 import com.BibleQuote.exceptions.BookNotFoundException;
 import com.BibleQuote.exceptions.ModuleNotFoundException;
-import com.BibleQuote._new_.managers.Librarian;
+import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.utils.AsyncTaskManager;
 import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.OnTaskCompleteListener;
