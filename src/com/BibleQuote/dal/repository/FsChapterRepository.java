@@ -19,7 +19,6 @@ public class FsChapterRepository implements IChapterRepository<FsBook> {
     }
     	
 	
-	@Override
 	public Collection<Chapter> loadChapters(FsBook book) {
 		BufferedReader reader = context.getBookReader(book);
 		ArrayList<String> numbers = book.getChapterNumbers(book.getModule().ChapterZero);
@@ -38,7 +37,6 @@ public class FsChapterRepository implements IChapterRepository<FsBook> {
 	}
 
 	
-	@Override
 	public Chapter loadChapter(FsBook book, Integer chapterNumber) {
 		BufferedReader reader = context.getBookReader(book);
 		Chapter chapter = context.loadChapter(book, chapterNumber, reader);
@@ -54,28 +52,23 @@ public class FsChapterRepository implements IChapterRepository<FsBook> {
 	}
 
 	
-	@Override
 	public void insertChapter(Chapter chapter) {
 	}
 	
 
-	@Override
 	public void deleteChapter(Chapter chapter) {
 	}
 	
 
-	@Override
 	public void updateChapter(Chapter chapter) {
 	}
 
 	
-	@Override
 	public Collection<Chapter> getChapters(FsBook book) {
 		return context.getChapterList(context.chapterPool);	
 	}
 	
 
-	@Override
 	public Chapter getChapterByNumber(FsBook book, Integer chapterNumber) {
 		OSISLink osislink = new OSISLink(book.getModule(), book, chapterNumber, book.getFirstChapterNumber());
 		return context.chapterPool.get(osislink.getPath());
