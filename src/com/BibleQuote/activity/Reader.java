@@ -90,18 +90,16 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		runtimeOrientation = getScreenOrientation();
 		
-		Log.i(TAG, "onCreate()");
-		
 		initActionBar();
 		prepareQuickActionBar();
 		
+		mAsyncTaskManager = new AsyncTaskManager(this, this, false);
+		mAsyncTaskManager.handleRetainedTask(getLastNonConfigurationInstance());
+
 		BibleQuoteApp app = (BibleQuoteApp) getGDApplication();
 		myLibrarian = app.getLibrarian();
 		myLibrarian.eventManager.addSearchListener(this);
-
-		mAsyncTaskManager = app.getAsyncTaskManager();
-		mAsyncTaskManager.handleRetainedTask(getLastNonConfigurationInstance());
-
+		
 		btnChapterNav = (LinearLayout)findViewById(R.id.btn_chapter_nav);
 		
 		ImageButton btnChapterPrev = (ImageButton)findViewById(R.id.btn_reader_prev);
@@ -131,14 +129,11 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
 		if (OSISLink.getPath() == null) {
 			onChooseChapterClick();
 		} else {
-			mAsyncTaskManager.setupTask(
-					new AsyncOpenChapter(progressMessage, myLibrarian, OSISLink),
-					this, this, false);
+			mAsyncTaskManager.setupTask(new AsyncOpenChapter(progressMessage, myLibrarian, OSISLink));
 		}
 	}
 	
 	private void initActionBar() {
-		Log.i(TAG, "initActionBar()");
 		ActionBar bar = getActionBar();
 		
 		ActionBarItem itemCont = bar.newActionBarItem(NormalActionBarItem.class);
@@ -152,7 +147,6 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
 
 	@Override
 	public boolean onHandleActionBarItemClick(ActionBarItem item, int position) {
-		Log.i(TAG, "onHandleActionBarItemClick(" + item + ", " + position + ")");
 		switch (item.getItemId()) {
 		case R.id.action_bar_chooseCh:
 			onChooseChapterClick();
@@ -186,8 +180,6 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
 
    private OnQuickActionClickListener mActionListener = new OnQuickActionClickListener() {
         public void onQuickActionClicked(QuickActionWidget widget, int position) {
-    		Log.i(TAG, "onQuickActionClicked(" + widget + ", " + position + ")");
-			
     		ReaderWebView wView = (ReaderWebView)findViewById(R.id.readerView);
 			TreeSet<Integer> selVerses = wView.getSelectVerses();
 			if (selVerses.size() == 0) {
@@ -227,7 +219,6 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
     
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
-		Log.i(TAG, "onConfigurationChanged()");
 		if (PreferenceHelper.restoreStateBoolean("DisableAutoScreenRotation")) {
 			super.onConfigurationChanged(newConfig);
 			this.setRequestedOrientation(runtimeOrientation);
@@ -239,7 +230,6 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
 	}
 
 	protected int getScreenOrientation() {
-		Log.i(TAG, "getScreenOrientation()");
 		Display display = getWindowManager().getDefaultDisplay();
 		int orientation = display.getOrientation();
 
@@ -261,7 +251,6 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		Log.i(TAG, "onCreateOptionsMenu()");
 		MenuInflater infl = getMenuInflater();
 		infl.inflate(R.menu.menu_reader, menu);
 		return true;
@@ -269,7 +258,6 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		Log.i(TAG, "onOptionsItemSelected()");
 		switch (item.getItemId()) {
 		case R.id.NightDayMode:
 			nightMode = !nightMode;
@@ -305,7 +293,6 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
 	}
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		Log.i(TAG, "onActivityResult(" + requestCode + ", " + resultCode + ")");
 		super.onActivityResult(requestCode, resultCode, data);
 
 		if (resultCode == RESULT_OK) {
@@ -314,22 +301,16 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
 					|| (requestCode == R.id.action_bar_chooseCh)) {
 				Bundle extras = data.getExtras();
 				OSISLink OSISLink = new OSISLink(extras.getString("linkOSIS"));
-				mAsyncTaskManager.setupTask(
-						new AsyncOpenChapter(progressMessage, myLibrarian, OSISLink),
-						this, this, false);
+				mAsyncTaskManager.setupTask(new AsyncOpenChapter(progressMessage, myLibrarian, OSISLink));
 			}
 		} else if (requestCode == R.id.action_bar_settings) {
 			vWeb.setReadingMode(PreferenceHelper.isReadModeByDefault());
 			updateActivityMode();
-			mAsyncTaskManager.setupTask(
-					new AsyncOpenChapter(progressMessage, myLibrarian, myLibrarian.getCurrentOSISLink()),
-					this, this, false);
+			mAsyncTaskManager.setupTask(new AsyncOpenChapter(progressMessage, myLibrarian, myLibrarian.getCurrentOSISLink()));
 		}
 	}
 
 	public void setTextinWebView() {
-		Log.i(TAG, "WebLoadDataWithBaseURL()");
-		
 		OSISLink OSISLink = myLibrarian.getCurrentOSISLink();
 		vWeb.setText(chapterInHTML, OSISLink.getVerseNumber(), nightMode, myLibrarian.isBible());
 		
@@ -343,7 +324,6 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
 	}
 
 	public void onChooseChapterClick() {
-		Log.i(TAG, "onChooseChapterClick()");
 		Intent intent = new Intent();
 		intent.setClass(this, Books.class);
 		startActivityForResult(intent, R.id.action_bar_chooseCh);
@@ -352,7 +332,6 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
 	OnClickListener onClickChapterPrev = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
-			Log.i(TAG, "onClickChapterPrev()");
 			prevChapter();
 		}
 	};
@@ -360,7 +339,6 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
 	OnClickListener onClickChapterNext = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
-			Log.i(TAG, "onClickChapterPrev()");
 			nextChapter();
 		}
 	};
@@ -369,7 +347,7 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
 		try {
 			myLibrarian.prevChapter();
 		} catch (ModuleNotFoundException e) {
-			Log.i(TAG, e.toString());
+			Log.e(TAG, "prevChapter()", e);
 		}
 		viewCurrentChapter();
 	}
@@ -378,7 +356,7 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
 		try {
 			myLibrarian.nextChapter();
 		} catch (ModuleNotFoundException e) {
-			Log.i(TAG, e.toString());
+			Log.e(TAG, "nextChapter()", e);
 		}
 		viewCurrentChapter();
 	}
@@ -386,7 +364,6 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
 	OnClickListener onClickPageUp = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
-			Log.i(TAG, "onClickPageUp()");
 			vWeb.pageUp(false);
 			viewChapterNav();
 		}
@@ -395,16 +372,16 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
 	OnClickListener onClickPageDown = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
-			Log.i(TAG, "onClickPageUp()");
 			vWeb.pageDown(false);
 			viewChapterNav();
 		}
 	};
 
 	private void viewCurrentChapter() {
-		mAsyncTaskManager.setupTask(
-				new AsyncOpenChapter(progressMessage, myLibrarian, myLibrarian.getCurrentOSISLink()),
-				this, this, false);
+		mAsyncTaskManager.setupTask(new AsyncOpenChapter(
+				progressMessage, 
+				myLibrarian, 
+				myLibrarian.getCurrentOSISLink()));
 	}
 	
 	public void setTextActionVisibility(boolean visibility) {
@@ -478,7 +455,6 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
     
     @Override
     public void onTaskComplete(Task task) {
-		Log.i(TAG, "onTaskComplete()");
 		if (task != null && !task.isCancelled()) {
 			if (task instanceof AsyncOpenChapter) {
 				ChangeChaptersEvent event = ((AsyncOpenChapter) task).getEvent();
@@ -486,7 +462,7 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
 					chapterInHTML = myLibrarian.getChapterHTMLView(event.chapter);
 					setTextinWebView();
 				}
-				myLibrarian.openModules(mAsyncTaskManager, Reader.this, Reader.this, true);
+				myLibrarian.openModulesAsync(mAsyncTaskManager);
 			}
 		}
     }

@@ -2,29 +2,22 @@ package com.BibleQuote.managers;
 
 import android.util.Log;
 
-import com.BibleQuote.utils.AsyncTaskManager;
 import com.BibleQuote.utils.Task;
 
 public class AsyncRefreshLibrary extends Task {
 	private final String TAG = "AsyncTaskChapterOpen";
 	
 	private Librarian librarian;
-	private AsyncTaskManager asyncTaskManager;
 	
-	public AsyncRefreshLibrary(String message, Librarian librarian, AsyncTaskManager asyncTaskManager) {
+	public AsyncRefreshLibrary(String message, Librarian librarian) {
 		super(message);
 		this.librarian = librarian;
-		this.asyncTaskManager = asyncTaskManager;
 	}
 	
 	@Override
 	protected Boolean doInBackground(String... arg0) {
 		Log.d(TAG, "Refresh library...");
-		librarian.refreshModules(
-				asyncTaskManager, 
-				asyncTaskManager.getContext(), 
-				asyncTaskManager.getTaskCompleteListener(), 
-				asyncTaskManager.isHidden());
+		librarian.refreshModules(null);		
 		return true;
 	}
 	

@@ -23,18 +23,12 @@ import android.content.DialogInterface.OnCancelListener;
 public final class AsyncTaskManager implements IProgressTracker,
 		OnCancelListener {
 
-	private OnTaskCompleteListener mTaskCompleteListener;
-	private ProgressDialog mProgressDialog;
+	private final OnTaskCompleteListener mTaskCompleteListener;
+	private final ProgressDialog mProgressDialog;
 	private Task mAsyncTask;
-	private Context mContext;
-	private Boolean mIsHidden;
 
-	public void setupTask(Task asyncTask, Context context,
-			OnTaskCompleteListener taskCompleteListener, Boolean isHidden, String...params) {
-		
-		mContext = context;
-		mIsHidden = isHidden;
-		
+	public AsyncTaskManager(Context context,
+			OnTaskCompleteListener taskCompleteListener, Boolean isHidden) {
 		// Save reference to complete listener (activity)
 		mTaskCompleteListener = taskCompleteListener;
 		
@@ -47,26 +41,24 @@ public final class AsyncTaskManager implements IProgressTracker,
 		} else {
 			mProgressDialog = null;
 		}
-		
-		if (mAsyncTask != null) {
-			mAsyncTask.cancel(true);
-			mAsyncTask = null;
-		}
+	}
+
+	public void setupTask(Task asyncTask, String...params) {
 		// Keep task
 		mAsyncTask = asyncTask;
 		// Wire task to tracker (this)
 		mAsyncTask.setProgressTracker(this);
 		// Start task
-		if (params != null) {
-			mAsyncTask.execute(params);
-		} else {
-			mAsyncTask.execute();
-		}
+		mAsyncTask.execute(params);
 	}
 
-	public void setupTask(Task asyncTask, Context context,
-			OnTaskCompleteListener taskCompleteListener, Boolean isHidden) {
-		setupTask(asyncTask, context, taskCompleteListener, isHidden, (String[])null);
+	public void setupTask(Task asyncTask) {
+		// Keep task
+		mAsyncTask = asyncTask;
+		// Wire task to tracker (this)
+		mAsyncTask.setProgressTracker(this);
+		// Start task
+		mAsyncTask.execute();
 	}
 
 	@Override
@@ -122,17 +114,5 @@ public final class AsyncTaskManager implements IProgressTracker,
 	public boolean isWorking() {
 		// Track current status
 		return mAsyncTask != null;
-	}
-	
-	public boolean isHidden() {
-		return mIsHidden;
-	}
-	
-	public Context getContext() {
-		return mContext;
-	}
-	
-	public OnTaskCompleteListener getTaskCompleteListener() {
-		return mTaskCompleteListener;
 	}
 }
