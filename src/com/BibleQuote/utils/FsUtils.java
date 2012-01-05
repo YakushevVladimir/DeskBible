@@ -63,7 +63,7 @@ public class FsUtils {
 							archivePath, textFileInArchive, textFileEncoding), e);
 			return null;
 		}
-	}
+	} 
 	
 	public static BufferedReader getTextFileReader(String dir, String textfileName, String textFileEncoding) {
 		File file = new File(dir, textfileName);

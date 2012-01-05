@@ -155,15 +155,12 @@ public class Librarian implements IChangeBooksListener  {
 	
 	public Chapter openChapter(Book book, Integer chapterNumber) throws BookNotFoundException {
 		currChapter = chapterCtrl.getChapter(book, chapterNumber);
-		currChapterNumber = currChapter.getNumber();
+		currChapterNumber = chapterNumber;
 		currVerseNumber = 1;
 		return currChapter;
 	}
 	
-	public void openVerse(int verseNumber) {
-		currVerseNumber = verseNumber;
-	}
-	
+
 	///////////////////////////////////////////////////////////////////////////
 	// NAVIGATION
 	
@@ -199,6 +196,9 @@ public class Librarian implements IChangeBooksListener  {
 	}
 
 	public ArrayList<ItemList> getCurrentModuleBooksList() throws ModuleNotFoundException {
+		if (currModule == null) {
+			return new ArrayList<ItemList>();
+		}
 		return this.getModuleBooksList(currModule.getID());
 	}
 
@@ -262,6 +262,9 @@ public class Librarian implements IChangeBooksListener  {
 	// GET CONTENT
 	
 	public String getChapterHTMLView(Chapter chapter) {
+		if (chapter == null) {
+			return "";
+		}
 		return chapterCtrl.getChapterHTMLView(chapter);
 	}
 	

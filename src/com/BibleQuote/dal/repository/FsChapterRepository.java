@@ -21,6 +21,9 @@ public class FsChapterRepository implements IChapterRepository<FsBook> {
 	
 	public Collection<Chapter> loadChapters(FsBook book) {
 		BufferedReader reader = context.getBookReader(book);
+		if (reader == null) {
+			return new ArrayList<Chapter>();
+		}
 		ArrayList<String> numbers = book.getChapterNumbers(book.getModule().ChapterZero);
 		for (String chapterNumber : numbers) {
 			Chapter chapter = context.loadChapter(book, Integer.valueOf(chapterNumber), reader);
@@ -39,6 +42,9 @@ public class FsChapterRepository implements IChapterRepository<FsBook> {
 	
 	public Chapter loadChapter(FsBook book, Integer chapterNumber) {
 		BufferedReader reader = context.getBookReader(book);
+		if (reader == null) {
+			return null;
+		}
 		Chapter chapter = context.loadChapter(book, chapterNumber, reader);
 		OSISLink osislink = new OSISLink(book.getModule(), book, chapterNumber, book.getFirstChapterNumber());
 		context.chapterPool.put(osislink.getPath(), chapter);

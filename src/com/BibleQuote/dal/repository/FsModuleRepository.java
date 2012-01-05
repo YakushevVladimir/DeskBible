@@ -66,25 +66,22 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 
 
 	public FsModule loadModuleById(String moduleDataSourceId) {
-		FsModule module = null;
+		FsModule fsModule = null;
 		BufferedReader reader = null;
 		try {
-			module = new FsModule(moduleDataSourceId);
-			reader = context.getModuleReader(module);
-			module.defaultEncoding = context.getModuleEncoding(reader);
-			reader = context.getModuleReader(module);
+			fsModule = new FsModule(moduleDataSourceId);
+			reader = context.getModuleReader(fsModule);
+			fsModule.defaultEncoding = context.getModuleEncoding(reader);
+			reader = context.getModuleReader(fsModule);
 			
-			context.fillModule(module, reader);
+			context.fillModule(fsModule, reader);
 			
-			context.moduleSet.remove(module.modulePath);
-			context.moduleSet.put(module.getID(), module);
-			
-			cache.saveModuleList(context.getModuleList(context.moduleSet));
+			context.moduleSet.remove(fsModule.modulePath);
+			context.moduleSet.put(fsModule.getID(), fsModule);
 			
 		} catch (CreateModuleErrorException e) {
-			Log.e(TAG, "Can't load module by " + moduleDataSourceId);
-			context.moduleSet.remove(module.modulePath);
-			e.printStackTrace();
+			Log.e(TAG, "Can't load module by " + moduleDataSourceId, e);
+			context.moduleSet.remove(fsModule.modulePath);
 		} finally {
 			try {
 				if (reader != null) {
@@ -94,7 +91,14 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 				e.printStackTrace(); 
 			}
 		}		
-		return module;	
+
+		try {
+			cache.saveModuleList(context.getModuleList(context.moduleSet));
+		} catch (Exception e) {
+			Log.e(TAG, "Can't save modules to cache", e);
+		}
+
+		return fsModule;	
 	}
 	
 	
