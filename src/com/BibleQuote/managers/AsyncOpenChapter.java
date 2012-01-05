@@ -36,10 +36,7 @@ public class AsyncOpenChapter extends Task {
 			try {
 				book = librarian.openBook(module, link.getBookID());
 				Chapter chapter = librarian.openChapter(book, link.getChapterNumber());
-				if (chapter != null) {
-					librarian.openVerse(link.getVerseNumber());
-					event = new ChangeChaptersEvent(ChangeCode.ChapterAdded, module, book, chapter);
-				}
+				event = new ChangeChaptersEvent(ChangeCode.ChapterAdded, module, book, chapter);
 			} catch (BookNotFoundException e) {
 				Log.e(TAG, String.format("doInBackground(%1$s)", link), e);
 			}
