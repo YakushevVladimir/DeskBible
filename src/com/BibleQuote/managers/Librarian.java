@@ -31,6 +31,7 @@ import com.BibleQuote.controllers.LibraryController.LibrarySource;
 import com.BibleQuote.entity.BibleBooksID;
 import com.BibleQuote.entity.ItemList;
 import com.BibleQuote.exceptions.BookNotFoundException;
+import com.BibleQuote.exceptions.CreateModuleErrorException;
 import com.BibleQuote.exceptions.ModuleNotFoundException;
 import com.BibleQuote.listeners.ChangeBooksEvent;
 import com.BibleQuote.listeners.IChangeBooksListener;
@@ -262,9 +263,6 @@ public class Librarian implements IChangeBooksListener  {
 	// GET CONTENT
 	
 	public String getChapterHTMLView(Chapter chapter) {
-		if (chapter == null) {
-			return "";
-		}
 		return chapterCtrl.getChapterHTMLView(chapter);
 	}
 	
@@ -366,7 +364,7 @@ public class Librarian implements IChangeBooksListener  {
 		return searchResults;
 	}
 	
-	public LinkedHashMap<String, String> search(String query, String fromBook, String toBook) throws ModuleNotFoundException{
+	public LinkedHashMap<String, String> search(String query, String fromBook, String toBook) throws ModuleNotFoundException, CreateModuleErrorException, BookNotFoundException{
 		if (currModule == null) {
 			return new LinkedHashMap<String, String>();
 		} else {

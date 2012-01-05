@@ -2,12 +2,12 @@ package com.BibleQuote.dal;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import com.BibleQuote.exceptions.FileAccessException;
 import com.BibleQuote.utils.Log;
 
 public class CacheContext {
@@ -31,7 +31,7 @@ public class CacheContext {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public <T> T loadData() {
+	public <T> T loadData() throws FileAccessException {
 		T data = null;
 		try {
 			FileInputStream fStr = new FileInputStream(new File(cacheDir, cacheName));
@@ -40,33 +40,32 @@ public class CacheContext {
 			out.close();
 			Log.i(TAG, String.format("Data are loaded from the cache %1$s%2$s", cacheDir, cacheName));
 		} catch (ClassNotFoundException e) {
-			Log.e(TAG, String.format("Data are don't loaded from the cache %1$s%2$s: $3$s",
-					cacheDir, cacheName, e.getMessage()));
-			e.printStackTrace();
+			String message = String.format("Unexpected data format in the cache %1$s%2$s: $3$s",
+					cacheDir, cacheName, e.getMessage());
+			Log.e(TAG, message);
+			throw new FileAccessException(message);			
 		} catch (IOException e) {
-			Log.e(TAG, String.format("Data are don't loaded from the cache %1$s%2$s: $3$s",
-					cacheDir, cacheName, e.getMessage()));
-			e.printStackTrace();
+			String message = String.format("Data isn't loaded from the cache %1$s%2$s: $3$s",
+					cacheDir, cacheName, e.getMessage());
+			Log.e(TAG, message);
+			throw new FileAccessException(message);	
 		}
 
 		return data;
 	}	
 	
-	public <T> void saveData(T data) {
+	public <T> void saveData(T data) throws FileAccessException {
 		try {
 			FileOutputStream fStr = new FileOutputStream(new File(cacheDir, cacheName));
 			ObjectOutputStream out = new ObjectOutputStream(fStr);
 			out.writeObject(data);
 			out.close();
-			Log.i(TAG, String.format("Data are stored in the cache %1$s%2$s", cacheDir, cacheName));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			Log.i(TAG, String.format("Data are don't stored in the cache %1$s%2$s: $3$s", 
-					cacheDir, cacheName, e.getMessage()));
+			Log.i(TAG, String.format("Data is stored in the cache %1$s%2$s", cacheDir, cacheName));
 		} catch (IOException e) {
-			e.printStackTrace();
-			Log.i(TAG, String.format("Data are don't stored in the cache %1$s%2$s: $3$s", 
-					cacheDir, cacheName, e.getMessage()));
+			String message = String.format("Data isn't stored in the cache %1$s%2$s: $3$s", 
+					cacheDir, cacheName, e.getMessage());
+			Log.e(TAG, message);
+			throw new FileAccessException(message);
 		}
 	}	
 }

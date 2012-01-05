@@ -7,7 +7,9 @@ import java.util.LinkedHashMap;
 
 import com.BibleQuote.controllers.CacheModuleController;
 import com.BibleQuote.dal.FsLibraryContext;
-import com.BibleQuote.exceptions.CreateModuleErrorException;
+import com.BibleQuote.exceptions.BookNotFoundException;
+import com.BibleQuote.exceptions.FileAccessException;
+import com.BibleQuote.exceptions.ModuleNotFoundException;
 import com.BibleQuote.models.Book;
 import com.BibleQuote.models.FsBook;
 import com.BibleQuote.models.FsModule;
@@ -25,19 +27,19 @@ public class FsBookRepository implements IBookRepository<FsModule, FsBook> {
     }
     
     
-	public Collection<FsBook> loadBooks(FsModule module) {
+	public Collection<FsBook> loadBooks(FsModule module) throws ModuleNotFoundException {
 		module.Books = context.bookSet = new LinkedHashMap<String, Book>();
 		BufferedReader reader = null;
+		String moduleID = "";
 		try {
+			moduleID = module.getID();
 			reader = context.getModuleReader(module); 
 			context.fillBooks(module, reader);
 			
-			// Update cache with just added books
-			//cache.saveModuleList(context.getModuleList(context.moduleSet));
+		} catch (FileAccessException e) {
+			Log.e(TAG, "Can't load books from module with ID=" + moduleID);
+			throw new ModuleNotFoundException(moduleID);
 			
-		} catch (CreateModuleErrorException e) {
-			Log.e(TAG, "Can't load books by module " + module.getModuleFileName());
-			e.printStackTrace();
 		} finally {
 			try {
 				if (reader != null) {
@@ -47,7 +49,10 @@ public class FsBookRepository implements IBookRepository<FsModule, FsBook> {
 				e.printStackTrace(); 
 			}
 		}
-		
+
+		// Update cache with just added books
+		//cache.saveModuleList(context.getModuleList(context.moduleSet));
+
 		return context.getBookList(module.Books); 	
 	}
 	
@@ -62,17 +67,28 @@ public class FsBookRepository implements IBookRepository<FsModule, FsBook> {
 	}
 
 
-	public LinkedHashMap<String, String> searchInBook(FsModule module, String bookID, String regQuery) {
+	public LinkedHashMap<String, String> searchInBook(FsModule module, String bookID, String regQuery) throws BookNotFoundException {
 		FsBook book = getBookByID((FsModule)module, bookID);
-		BufferedReader bReader = context.getBookReader(book);
-		LinkedHashMap<String, String> searchRes = context.searchInBook(module, bookID, regQuery, bReader);
-		
+		LinkedHashMap<String, String> searchRes = null;
+		BufferedReader bReader = null;
+		String moduleID = "";
 		try {
-			bReader.close();
-		} catch (IOException e) {
-			e.printStackTrace(); 
+			moduleID = module.getID();
+			bReader = context.getBookReader(book);
+			searchRes = context.searchInBook(module, bookID, regQuery, bReader);
+		} catch (FileAccessException e) {
+			Log.e(TAG, "Can't load books from module with ID=" + moduleID);
+			throw new BookNotFoundException(moduleID, bookID);
+			
+		} finally {
+			try {
+				if (bReader != null) {
+					bReader.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace(); 
+			}
 		}
-		
 		return searchRes;
 	}
 

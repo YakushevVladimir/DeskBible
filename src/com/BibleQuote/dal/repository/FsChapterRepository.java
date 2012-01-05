@@ -6,12 +6,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import com.BibleQuote.dal.FsLibraryContext;
+import com.BibleQuote.exceptions.BookNotFoundException;
+import com.BibleQuote.exceptions.FileAccessException;
 import com.BibleQuote.models.Chapter;
 import com.BibleQuote.models.FsBook;
+import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.OSISLink;
 
 public class FsChapterRepository implements IChapterRepository<FsBook> {
-
+	private final String TAG = "FsChapterRepository";
 	private FsLibraryContext context;
 	
     public FsChapterRepository(FsLibraryContext context) {
@@ -19,40 +22,64 @@ public class FsChapterRepository implements IChapterRepository<FsBook> {
     }
     	
 	
-	public Collection<Chapter> loadChapters(FsBook book) {
-		BufferedReader reader = context.getBookReader(book);
-		if (reader == null) {
-			return new ArrayList<Chapter>();
-		}
-		ArrayList<String> numbers = book.getChapterNumbers(book.getModule().ChapterZero);
-		for (String chapterNumber : numbers) {
-			Chapter chapter = context.loadChapter(book, Integer.valueOf(chapterNumber), reader);
-			OSISLink osislink = new OSISLink(book.getModule(), book, chapter.getNumber(), book.getFirstChapterNumber());
-			context.chapterPool.put(osislink.getPath(), chapter);
-		}
+	public Collection<Chapter> loadChapters(FsBook book) throws BookNotFoundException {
+		BufferedReader reader = null;
+		String bookID = "";
+		String moduleID = "";
 		try {
-			reader.close();
-		} catch (IOException e) {
-			e.printStackTrace(); 
+			bookID = book.getID();
+			moduleID = book.getModule().getID();
+			reader = context.getBookReader(book);
+			
+			ArrayList<String> numbers = book.getChapterNumbers(book.getModule().ChapterZero);
+			for (String chapterNumber : numbers) {
+				Chapter chapter = context.loadChapter(book, Integer.valueOf(chapterNumber), reader);
+				OSISLink osislink = new OSISLink(book.getModule(), book, chapter.getNumber(), book.getFirstChapterNumber());
+				context.chapterPool.put(osislink.getPath(), chapter);
+			}			
+		} catch (FileAccessException e) {
+			Log.e(TAG, "Can't load chapters of book with ID=" + bookID, e);
+			throw new BookNotFoundException(moduleID, bookID);
+						
+		} finally {
+			try {
+				if (reader != null) {
+					reader.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace(); 
+			}
 		}
 		
 		return context.getChapterList(context.chapterPool); 	
 	}
 
 	
-	public Chapter loadChapter(FsBook book, Integer chapterNumber) {
-		BufferedReader reader = context.getBookReader(book);
-		if (reader == null) {
-			return null;
-		}
-		Chapter chapter = context.loadChapter(book, chapterNumber, reader);
-		OSISLink osislink = new OSISLink(book.getModule(), book, chapterNumber, book.getFirstChapterNumber());
-		context.chapterPool.put(osislink.getPath(), chapter);
-		
+	public Chapter loadChapter(FsBook book, Integer chapterNumber) throws BookNotFoundException {
+		Chapter chapter = null;
+		BufferedReader reader = null;
+		String bookID = "";
+		String moduleID = "";
 		try {
-			reader.close();
-		} catch (IOException e) {
-			e.printStackTrace(); 
+			bookID = book.getID();
+			moduleID = book.getModule().getID();		
+			reader = context.getBookReader(book);
+			
+			chapter = context.loadChapter(book, chapterNumber, reader);
+			OSISLink osislink = new OSISLink(book.getModule(), book, chapterNumber, book.getFirstChapterNumber());
+			context.chapterPool.put(osislink.getPath(), chapter);
+		} catch (FileAccessException e) {
+			Log.e(TAG, "Can't load chapters of book with ID=" + bookID, e);
+			throw new BookNotFoundException(moduleID, bookID);
+						
+		} finally {
+			try {
+				if (reader != null) {
+					reader.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace(); 
+			}
 		}
 		return chapter;
 	}

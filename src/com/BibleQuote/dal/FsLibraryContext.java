@@ -28,7 +28,7 @@ import java.util.TreeMap;
 import android.content.Context;
 
 import com.BibleQuote.controllers.CacheModuleController;
-import com.BibleQuote.exceptions.CreateModuleErrorException;
+import com.BibleQuote.exceptions.FileAccessException;
 import com.BibleQuote.models.Book;
 import com.BibleQuote.models.Chapter;
 import com.BibleQuote.models.FsBook;
@@ -86,14 +86,14 @@ public class FsLibraryContext extends LibraryContext {
 		return chapterList;
 	}	
 	
-	public BufferedReader getModuleReader(FsModule fsModule) {
+	public BufferedReader getModuleReader(FsModule fsModule) throws FileAccessException {
 		return fsModule.isArchive 
 				? FsUtils.getTextFileReaderFromZipArchive(fsModule.modulePath, fsModule.iniFileName, fsModule.defaultEncoding)
 				: FsUtils.getTextFileReader(fsModule.modulePath, fsModule.iniFileName, fsModule.defaultEncoding);
 	}
 	
 	
-	public BufferedReader getBookReader(FsBook book) {
+	public BufferedReader getBookReader(FsBook book) throws FileAccessException {
 		FsModule fsModule = (FsModule) book.getModule();
 		BufferedReader reader = fsModule.isArchive 
 				? FsUtils.getTextFileReaderFromZipArchive(fsModule.modulePath, book.getDataSourceID(), fsModule.defaultEncoding)
@@ -126,12 +126,8 @@ public class FsLibraryContext extends LibraryContext {
 		return iniFiles;
 	}
 	
-	public void fillModule(FsModule module, BufferedReader bReader) throws CreateModuleErrorException {
+	public void fillModule(FsModule module, BufferedReader bReader) throws FileAccessException {
 		String str, HTMLFilter = "", key, value;
-
-		if (bReader == null) {
-			throw new CreateModuleErrorException();
-		}
 
 		int pos;
 		try {
@@ -170,7 +166,9 @@ public class FsLibraryContext extends LibraryContext {
 			}
 			
 		} catch (IOException e) {
-			Log.e(TAG, String.format("fillModule(%1$s)", module.getDataSourceID()), e);
+			String message = String.format("fillModule(%1$s)", module.getDataSourceID());
+			Log.e(TAG, message, e);
+			throw new FileAccessException(message);
 		}
 
 		String TagFilter[] = { "p", "b", "i", "em", "strong", "q", "big",
@@ -201,13 +199,8 @@ public class FsLibraryContext extends LibraryContext {
 		module.setIsClosed(false);
 	}	
 	
-	public void fillBooks(FsModule module, BufferedReader bReader) throws CreateModuleErrorException {
+	public void fillBooks(FsModule module, BufferedReader bReader) throws FileAccessException {
 		String str, key, value;
-		
-		if (bReader == null) {
-			//moduleSet.remove(module.getID());
-			throw new CreateModuleErrorException();
-		}
 		
 		ArrayList<String> fullNames = new ArrayList<String>();
 		ArrayList<String> pathNames = new ArrayList<String>();
@@ -247,7 +240,9 @@ public class FsLibraryContext extends LibraryContext {
 			}
 			
 		} catch (IOException e) {
-			Log.e(TAG, String.format("fillBooks(%1$s)", module.getDataSourceID()), e);
+			String message = String.format("fillBooks(%1$s)", module.getDataSourceID(), e);
+			Log.e(TAG, message, e);
+			throw new FileAccessException(message);			
 		}
 
 		for (int i = 0; i < fullNames.size(); i++) {
@@ -263,10 +258,6 @@ public class FsLibraryContext extends LibraryContext {
 					(shortNames.size() > i ? shortNames.get(i) : ""), 
 					chapterQty.get(i));
 			module.Books.put(book.getID(), book);
-		}
-		if (module.Books.size() == 0) {
-			Log.e(TAG, String.format("The module $1$s does not contain the books", module.getDataSourceID()));
-			throw new CreateModuleErrorException();
 		}
 	}		
 	

@@ -58,6 +58,9 @@ public class FsChapterController implements IChapterController {
 
 
 	public String getChapterHTMLView(Chapter chapter) {
+		if (chapter == null) {
+			return "";
+		}		
 		Module currModule = chapter.getBook().getModule();
 		
 		ArrayList<Verse> verses = chapter.getVerseList(); 

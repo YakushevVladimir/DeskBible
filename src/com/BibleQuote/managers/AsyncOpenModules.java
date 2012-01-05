@@ -17,8 +17,8 @@ public class AsyncOpenModules extends Task {
 	private Module nextClosedModule = null;
 	
 	
-	public AsyncOpenModules(String message, Librarian librarian) {
-		super(message);
+	public AsyncOpenModules(String message, Boolean isHidden, Librarian librarian) {
+		super(message, isHidden);
 		this.librarian = librarian;
 	}
 

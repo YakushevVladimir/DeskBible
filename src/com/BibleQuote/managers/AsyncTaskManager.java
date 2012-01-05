@@ -13,93 +13,97 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- package com.BibleQuote.utils;
+ package com.BibleQuote.managers;
 
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 
+import com.BibleQuote.utils.IProgressTracker;
+import com.BibleQuote.utils.OnTaskCompleteListener;
+import com.BibleQuote.utils.Task;
+
 public final class AsyncTaskManager implements IProgressTracker,
 		OnCancelListener {
 
-	private OnTaskCompleteListener mTaskCompleteListener;
-	private ProgressDialog mProgressDialog;
+	private final OnTaskCompleteListener mTaskCompleteListener;
+	private final ProgressDialog mProgressDialog;
 	private Task mAsyncTask;
-	private Context mContext;
-	private Boolean mIsHidden;
-	
-	public void setupTask(Task asyncTask, OnTaskCompleteListener taskCompleteListener, Boolean isHidden, String...params) {
+
+	public AsyncTaskManager(Context context,
+			OnTaskCompleteListener taskCompleteListener) {
+		
 		// Save reference to complete listener (activity)
 		mTaskCompleteListener = taskCompleteListener;
-		mIsHidden = isHidden;
-		mContext = (Context) taskCompleteListener;
-		
 		// Setup progress dialog
-		if (!mIsHidden) {
-			mProgressDialog = new ProgressDialog(mContext);
-			mProgressDialog.setIndeterminate(true);
-			mProgressDialog.setCancelable(true);
-			mProgressDialog.setOnCancelListener(this);
-		} else {
-			mProgressDialog = null;
-		}
-		
-		if (mAsyncTask != null) {
-			mAsyncTask.cancel(true);
-			mAsyncTask = null;
-		}		
-		
+		mProgressDialog = new ProgressDialog(context);
+		mProgressDialog.setIndeterminate(true);
+		mProgressDialog.setCancelable(true);
+		mProgressDialog.setOnCancelListener(this);
+	}
+
+	public void setupTask(Task asyncTask, String...params) {
 		// Keep task
 		mAsyncTask = asyncTask;
 		// Wire task to tracker (this)
 		mAsyncTask.setProgressTracker(this);
 		// Start task
-		if (params != null) {
-			mAsyncTask.execute(params);
-		} else {
-			mAsyncTask.execute();
-		}
+		mAsyncTask.execute(params);
 	}
 
-	public void setupTask(Task asyncTask, OnTaskCompleteListener taskCompleteListener, Boolean isHidden) {
-		setupTask(asyncTask, taskCompleteListener, isHidden, (String[])null);
+	public void setupTask(Task asyncTask) {
+		// Keep task
+		mAsyncTask = asyncTask;
+		// Wire task to tracker (this)
+		mAsyncTask.setProgressTracker(this);
+		// Start task
+		mAsyncTask.execute();
 	}
 
+	@Override
 	public void onProgress(String message) {
-		if (mProgressDialog != null) {
-			// Show dialog if it wasn't shown yet or was removed on configuration
-			// (rotation) change
+		if (mAsyncTask.isHidden()) {
+			return;
+		}
+		
+		// Show dialog if it wasn't shown yet or was removed on configuration
+		// (rotation) change
+		try {
 			if (!mProgressDialog.isShowing()) {
 				mProgressDialog.show();
 			}
-			// Show current message in progress dialog
-			mProgressDialog.setMessage(message);
+		} catch (Exception e) {
 		}
+
+		// Show current message in progress dialog
+		mProgressDialog.setMessage(message);
 	}
 
+	@Override
 	public void onCancel(DialogInterface dialog) {
 		// Cancel task
 		mAsyncTask.cancel(true);
-		
-		Task resultTask = mAsyncTask;
+		// Notify activity about completion
+		mTaskCompleteListener.onTaskComplete(mAsyncTask);
 		// Reset task
 		mAsyncTask = null;
-		
-		// Notify activity about completion
-		mTaskCompleteListener.onTaskComplete(resultTask);
 	}
 
+	@Override
 	public void onComplete() {
-		// Close progress dialog
-		if (mProgressDialog != null) mProgressDialog.dismiss();
+		try {
+			// Close progress dialog
+			mProgressDialog.dismiss();
+		} catch (Exception e) {
+		}
 
-		Task resultTask = mAsyncTask;
+		Task completedTask = mAsyncTask;
 		// Reset task
 		mAsyncTask = null;
-
+		
 		// Notify activity about completion
-		mTaskCompleteListener.onTaskComplete(resultTask);
+		mTaskCompleteListener.onTaskComplete(completedTask);
 	}
 
 	public Object retainTask() {
@@ -122,9 +126,5 @@ public final class AsyncTaskManager implements IProgressTracker,
 	public boolean isWorking() {
 		// Track current status
 		return mAsyncTask != null;
-	}
-	
-	public Context getContext() {
-		return mContext;
 	}
 }

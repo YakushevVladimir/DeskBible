@@ -10,7 +10,8 @@ import java.util.TreeMap;
 
 import com.BibleQuote.controllers.CacheModuleController;
 import com.BibleQuote.dal.FsLibraryContext;
-import com.BibleQuote.exceptions.CreateModuleErrorException;
+import com.BibleQuote.exceptions.FileAccessException;
+import com.BibleQuote.exceptions.ModuleNotFoundException;
 import com.BibleQuote.models.Book;
 import com.BibleQuote.models.FsModule;
 import com.BibleQuote.models.Module;
@@ -21,7 +22,7 @@ import com.BibleQuote.utils.OnlyBQZipIni;
 
 public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 
-	protected final String TAG = "FsModuleRepository";
+	private final String TAG = "FsModuleRepository";
 	private FsLibraryContext context;
 	private CacheModuleController<FsModule> cache;
 	
@@ -65,7 +66,7 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 	}
 
 
-	public FsModule loadModuleById(String moduleDataSourceId) {
+	public FsModule loadModuleById(String moduleDataSourceId) throws ModuleNotFoundException {
 		FsModule fsModule = null;
 		BufferedReader reader = null;
 		try {
@@ -79,9 +80,11 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 			context.moduleSet.remove(fsModule.modulePath);
 			context.moduleSet.put(fsModule.getID(), fsModule);
 			
-		} catch (CreateModuleErrorException e) {
+		} catch (FileAccessException e) {
 			Log.e(TAG, "Can't load module by " + moduleDataSourceId, e);
 			context.moduleSet.remove(fsModule.modulePath);
+			throw new ModuleNotFoundException(fsModule.modulePath);
+			
 		} finally {
 			try {
 				if (reader != null) {
@@ -92,11 +95,7 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 			}
 		}		
 
-		try {
-			cache.saveModuleList(context.getModuleList(context.moduleSet));
-		} catch (Exception e) {
-			Log.e(TAG, "Can't save modules to cache", e);
-		}
+		//cache.saveModuleList(context.getModuleList(context.moduleSet));
 
 		return fsModule;	
 	}
@@ -110,27 +109,22 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 	}
 	
 	
-	
 	public FsModule getModuleByID(String moduleID) {
 		return (FsModule)context.moduleSet.get(moduleID);
 	}
-	
 		
 	
 	public void insertModule(FsModule module) {
 	}
 
 	
-	
 	public void deleteModule(FsModule module) {
 	}
 
 	
-	
 	public void updateModule(FsModule module) {
 	}
 
-	
 	
 	public FsModule getClosedModule() {
 		for (Module module : context.moduleSet.values()) {

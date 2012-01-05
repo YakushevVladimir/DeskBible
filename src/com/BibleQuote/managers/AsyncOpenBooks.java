@@ -18,8 +18,8 @@ public class AsyncOpenBooks extends Task {
 	private Librarian librarian;
 	private Module module;
 	
-	public AsyncOpenBooks(String message, Librarian librarian, Module module) {
-		super(message);
+	public AsyncOpenBooks(String message, Boolean isHidden, Librarian librarian, Module module) {
+		super(message, isHidden);
 		this.librarian = librarian;
 		this.module = module;
 	}
