@@ -86,4 +86,8 @@ public abstract class Task extends AsyncTask<String, String, Boolean> {
 	public Boolean isHidden() {
 		return mIsHidden;
 	}
+	
+	public void setVisible(Boolean value) {
+		mIsHidden = value;
+	}
 }

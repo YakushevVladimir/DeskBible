@@ -79,7 +79,7 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 		myLibrarian = app.getLibrarian();
 
 		mAsyncManager = app.getAsyncManager();
-		mAsyncManager.handleRetainedTask(getLastNonConfigurationInstance());
+		mAsyncManager.handleRetainedTask(getLastNonConfigurationInstance(), this);
 		
 		messageLoadModules = getResources().getString(R.string.messageLoadModules);
 		messageLoad = getResources().getString(R.string.messageLoad);

@@ -70,12 +70,17 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 		FsModule fsModule = null;
 		BufferedReader reader = null;
 		try {
+			
+			// DEBUG cycle
+			//for (int i=0; i<10; i++) {
+				
 			fsModule = new FsModule(moduleDataSourceId);
 			reader = context.getModuleReader(fsModule);
 			fsModule.defaultEncoding = context.getModuleEncoding(reader);
 			reader = context.getModuleReader(fsModule);
 			
 			context.fillModule(fsModule, reader);
+			//}
 			
 			context.moduleSet.remove(fsModule.modulePath);
 			context.moduleSet.put(fsModule.getID(), fsModule);

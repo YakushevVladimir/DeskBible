@@ -69,7 +69,7 @@ public class Search extends GDActivity implements OnTaskCompleteListener {
 		myLibararian = app.getLibrarian();
 
 		mAsyncManager = app.getAsyncManager();
-		mAsyncManager.handleRetainedTask(getLastNonConfigurationInstance());
+		mAsyncManager.handleRetainedTask(getLastNonConfigurationInstance(), this);
 		
 		progressMessage = getResources().getString(R.string.messageSearch);
 		searchResults = myLibararian.getSearchResults();

@@ -27,20 +27,15 @@ import com.BibleQuote.utils.Task;
 public final class AsyncTaskManager implements IProgressTracker,
 		OnCancelListener {
 
-	private final OnTaskCompleteListener mTaskCompleteListener;
-	private final ProgressDialog mProgressDialog;
+	private OnTaskCompleteListener mTaskCompleteListener;
+	private ProgressDialog mProgressDialog;
 	private Task mAsyncTask;
 
-	public AsyncTaskManager(Context context,
-			OnTaskCompleteListener taskCompleteListener) {
-		
+	public AsyncTaskManager(Context context, OnTaskCompleteListener taskCompleteListener) {
 		// Save reference to complete listener (activity)
 		mTaskCompleteListener = taskCompleteListener;
 		// Setup progress dialog
-		mProgressDialog = new ProgressDialog(context);
-		mProgressDialog.setIndeterminate(true);
-		mProgressDialog.setCancelable(true);
-		mProgressDialog.setOnCancelListener(this);
+		setupProgressDialog(context, taskCompleteListener);
 	}
 
 	public void setupTask(Task asyncTask, String...params) {
@@ -92,11 +87,8 @@ public final class AsyncTaskManager implements IProgressTracker,
 
 	@Override
 	public void onComplete() {
-		try {
-			// Close progress dialog
-			mProgressDialog.dismiss();
-		} catch (Exception e) {
-		}
+		// Close progress dialog
+		mProgressDialog.dismiss();
 
 		Task completedTask = mAsyncTask;
 		// Reset task
@@ -107,6 +99,9 @@ public final class AsyncTaskManager implements IProgressTracker,
 	}
 
 	public Object retainTask() {
+		// Close progress dialog
+		mProgressDialog.dismiss();
+		
 		// Detach task from tracker (this) before retain
 		if (mAsyncTask != null) {
 			mAsyncTask.setProgressTracker(null);
@@ -115,7 +110,15 @@ public final class AsyncTaskManager implements IProgressTracker,
 		return mAsyncTask;
 	}
 
-	public void handleRetainedTask(Object instance) {
+	public void handleRetainedTask(Object instance, OnTaskCompleteListener taskCompleteListener) {
+		if (taskCompleteListener instanceof Context) {
+			// Save reference to complete listener (activity)
+			mTaskCompleteListener = taskCompleteListener;
+
+			// Setup progress dialog
+			setupProgressDialog((Context)mTaskCompleteListener, mTaskCompleteListener);
+		}
+		
 		// Restore retained task and attach it to tracker (this)
 		if (instance instanceof Task) {
 			mAsyncTask = (Task) instance;
@@ -126,5 +129,25 @@ public final class AsyncTaskManager implements IProgressTracker,
 	public boolean isWorking() {
 		// Track current status
 		return mAsyncTask != null;
+	}
+	
+	public boolean isHidden() {
+		// Either progress dialog visible or not
+		return mAsyncTask.isHidden();
+	}
+	
+	public void setVisible(boolean value) {
+		// Either progress dialog visible or not
+		mAsyncTask.setVisible(value);
+		// Setup progress dialog
+		setupProgressDialog((Context)mTaskCompleteListener, mTaskCompleteListener);
+	}
+	
+	private void setupProgressDialog(Context context, OnTaskCompleteListener taskCompleteListener) {
+		// Setup progress dialog
+		mProgressDialog = new ProgressDialog(context);
+		mProgressDialog.setIndeterminate(true);
+		mProgressDialog.setCancelable(true);
+		mProgressDialog.setOnCancelListener(this);
 	}
 }
