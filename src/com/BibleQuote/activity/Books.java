@@ -37,6 +37,7 @@ import com.BibleQuote.R;
 import com.BibleQuote.entity.ItemList;
 import com.BibleQuote.exceptions.BookNotFoundException;
 import com.BibleQuote.exceptions.ModuleNotFoundException;
+import com.BibleQuote.listeners.ChangeBooksEvent;
 import com.BibleQuote.managers.AsyncLoadModules;
 import com.BibleQuote.managers.AsyncManager;
 import com.BibleQuote.managers.AsyncOpenBooks;
@@ -291,7 +292,7 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 	}
 
 	private SimpleAdapter getBookAdapter() {
-		if (modulesList.getCount() == 0) {
+		if (myLibrarian.getModulesList().size() == 0) {
 			books = new ArrayList<ItemList>();
 		} else {
 			try {
@@ -357,6 +358,8 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 					new AsyncOpenModules(messageLoadModules, true, myLibrarian), Books.this);
 
 			} else if (task instanceof AsyncOpenBooks) {
+				ChangeBooksEvent event = ((AsyncOpenBooks) task).getEvent();
+				moduleID = event.module.getID();
 				UpdateView(BOOK_VIEW);
 				setButtonText();
 			}

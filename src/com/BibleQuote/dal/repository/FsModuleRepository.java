@@ -102,7 +102,7 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 	
 	
 	public Collection<FsModule> getModules() {
-		if (context.moduleSet == null && cache.isCacheExist()) {
+		if ((context.moduleSet == null || context.moduleSet.size() == 0) && cache.isCacheExist()) {
 			loadCachedModules();
 		}
 		return context.getModuleList(context.moduleSet);	

@@ -100,7 +100,7 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
 		myLibrarian.eventManager.addSearchListener(this);
 
 		mAsyncManager = app.getAsyncManager();
-		mAsyncManager.setupTask(getLastNonConfigurationInstance(), this);
+		mAsyncManager.handleRetainedTask(getLastNonConfigurationInstance());
 		
 		messageLoadModules = getResources().getString(R.string.messageLoadModules);
 			
