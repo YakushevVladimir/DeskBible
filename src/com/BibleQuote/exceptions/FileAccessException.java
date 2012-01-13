@@ -15,12 +15,16 @@
  */
 package com.BibleQuote.exceptions;
 
-public class CreateModuleErrorException extends Exception {
+public class FileAccessException extends Exception {
 
-	private static final long serialVersionUID = -1652902166548627455L;
+	private static final long serialVersionUID = -897391086822306905L;
 
-	public String toString(){
-		return "CreateModuleErrorException";
+	public FileAccessException(String message) {
+		super(message);
+	}
+
+	public FileAccessException(Exception parent) {
+		super(parent);
 	}
 
 }

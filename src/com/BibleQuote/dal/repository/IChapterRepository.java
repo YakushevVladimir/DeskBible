@@ -2,6 +2,7 @@ package com.BibleQuote.dal.repository;
 
 import java.util.Collection;
 
+import com.BibleQuote.exceptions.BookNotFoundException;
 import com.BibleQuote.models.Chapter;
 
 public interface IChapterRepository<TBook> {
@@ -10,9 +11,9 @@ public interface IChapterRepository<TBook> {
 	 * Data source related methods
 	 * 
 	 */
-	Collection<Chapter> loadChapters(TBook book);
+	Collection<Chapter> loadChapters(TBook book) throws BookNotFoundException;
 	
-	Chapter loadChapter(TBook book, Integer chapterNumber);
+	Chapter loadChapter(TBook book, Integer chapterNumber) throws BookNotFoundException;
 	
 	void insertChapter(Chapter chapter);
     

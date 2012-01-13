@@ -19,7 +19,6 @@ public class FsModuleController implements IModuleController {
     }
 	
 	
-	@Override
 	public TreeMap<String, Module> loadModules() {
 		ArrayList<FsModule> moduleList = (ArrayList<FsModule>) mRepository.loadModules();
 		
@@ -34,7 +33,6 @@ public class FsModuleController implements IModuleController {
     /**
      * @return Возвращает коллекцию модулей с ключом по Module.ShortName
      */
-	@Override
 	public TreeMap<String, Module> getModules() {
 		ArrayList<FsModule> moduleList = (ArrayList<FsModule>) mRepository.getModules();
 		if (moduleList.size() == 0) {
@@ -49,7 +47,6 @@ public class FsModuleController implements IModuleController {
 	}
 	
 
-	@Override
 	public Module getModuleByID(String moduleID) throws ModuleNotFoundException {
 		FsModule fsModule = mRepository.getModuleByID(moduleID);
 		if (fsModule != null && fsModule.getIsClosed()) {
@@ -62,7 +59,6 @@ public class FsModuleController implements IModuleController {
 	}
 	
 
-	@Override
 	public Module getClosedModule() {
 		return mRepository.getClosedModule();
 	}

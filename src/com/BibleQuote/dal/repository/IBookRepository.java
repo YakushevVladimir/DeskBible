@@ -3,13 +3,16 @@ package com.BibleQuote.dal.repository;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 
+import com.BibleQuote.exceptions.BookNotFoundException;
+import com.BibleQuote.exceptions.ModuleNotFoundException;
+
 public interface IBookRepository<TModule, TBook> {
     
 	/*
 	 * Data source related methods
 	 * 
 	 */
-	Collection<TBook> loadBooks(TModule module);
+	Collection<TBook> loadBooks(TModule module) throws ModuleNotFoundException;
 	
 //	void insertBook(TBook book);
 //    
@@ -25,6 +28,6 @@ public interface IBookRepository<TModule, TBook> {
 	
 	TBook getBookByID(TModule module, String bookID);
 	
-	LinkedHashMap<String, String> searchInBook(TModule module, String bookID, String regQuery);
+	LinkedHashMap<String, String> searchInBook(TModule module, String bookID, String regQuery) throws BookNotFoundException;
 
 }

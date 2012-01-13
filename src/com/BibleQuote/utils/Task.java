@@ -33,6 +33,8 @@ public abstract class Task extends AsyncTask<String, String, Boolean> {
 	 */
 	private IProgressTracker mProgressTracker;
 
+	private Boolean mIsHidden = false;
+	
 	@Override
 	protected abstract Boolean doInBackground(String... arg0);
 	
@@ -48,14 +50,15 @@ public abstract class Task extends AsyncTask<String, String, Boolean> {
 		mProgressTracker = null;
 	}
 
-	public Task(String message) {
+	public Task(String message, Boolean isHidden) {
 		mProgressMessage = message;
+		mIsHidden = isHidden;
 	}
 
 	public void setProgressTracker(IProgressTracker progressTracker) {
 		// Attach to progress tracker
 		mProgressTracker = progressTracker;
-		// Initialise progress tracker with current task state
+		// Initialize progress tracker with current task state
 		if (mProgressTracker != null) {
 			mProgressTracker.onProgress(mProgressMessage);
 			if (mResult != null) {
@@ -78,5 +81,13 @@ public abstract class Task extends AsyncTask<String, String, Boolean> {
 		if (mProgressTracker != null) {
 			mProgressTracker.onProgress(mProgressMessage);
 		}
+	}
+	
+	public Boolean isHidden() {
+		return mIsHidden;
+	}
+	
+	public void setVisible(Boolean value) {
+		mIsHidden = value;
 	}
 }

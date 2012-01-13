@@ -14,12 +14,12 @@ import com.BibleQuote.utils.Task;
 public class AsyncOpenChapter extends Task {
 	private final String TAG = "AsyncTaskChapterOpen";
 	
-	private ChangeChaptersEvent event;
+	private ChangeChaptersEvent event = null;
 	private Librarian librarian;
 	private OSISLink link;
 	
-	public AsyncOpenChapter(String message, Librarian librarian, OSISLink link) {
-		super(message);
+	public AsyncOpenChapter(String message, Boolean isHidden, Librarian librarian, OSISLink link) {
+		super(message, isHidden);
 		this.librarian = librarian;
 		this.link = link;
 	}

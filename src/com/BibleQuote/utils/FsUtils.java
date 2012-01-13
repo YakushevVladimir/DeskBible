@@ -34,12 +34,14 @@ import org.apache.http.util.ByteArrayBuffer;
 
 import android.content.Context;
 
+import com.BibleQuote.exceptions.FileAccessException;
+
 
 public class FsUtils {
 	private static final String TAG = "FsUtils";
 	
 	public static BufferedReader getTextFileReaderFromZipArchive(String archivePath, String textFileInArchive,
-			String textFileEncoding) {
+			String textFileEncoding) throws FileAccessException {
 		try {
 			InputStream moduleStream = new FileInputStream(new File(archivePath));
 			ZipInputStream zStream = new ZipInputStream(moduleStream);
@@ -55,25 +57,27 @@ public class FsUtils {
 					return new BufferedReader(iReader);
 				};
 			}
-			android.util.Log.d(TAG, String.format("File %1$s in zip-arhive %2$s not found", textFileInArchive, archivePath));
-			return null;
+			String message = String.format("File %1$s in zip-arhive %2$s not found", textFileInArchive, archivePath);
+			android.util.Log.d(TAG, message);
+			throw new FileAccessException(message);
 		} catch (IOException e) {
 			Log.e(TAG, 
 					String.format("getTextFileReaderFromZipArchive(%1$s, %2$s, %3$s)", 
 							archivePath, textFileInArchive, textFileEncoding), e);
-			return null;
+			throw new FileAccessException(e);
 		}
-	}
+	} 
 	
-	public static BufferedReader getTextFileReader(String dir, String textfileName, String textFileEncoding) {
-		File file = new File(dir, textfileName);
-		if (!file.exists()) {
-			return null;
-		}
-
-		BufferedReader bReader = FsUtils.OpenFile(file, textFileEncoding);
-		if (bReader == null) {
-			return null;
+	public static BufferedReader getTextFileReader(String dir, String textfileName, String textFileEncoding) throws FileAccessException {
+		BufferedReader bReader = null;
+		try {
+			File file = new File(dir, textfileName);
+			bReader = FsUtils.OpenFile(file, textFileEncoding);
+			if (bReader == null) {
+				throw new FileAccessException(String.format("File %1$s not exists", textfileName));
+			}
+		} catch(Exception e) {
+			throw new FileAccessException(e);
 		}
 		return bReader;
 	}

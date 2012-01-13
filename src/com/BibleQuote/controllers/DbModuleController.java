@@ -25,7 +25,6 @@ public class DbModuleController implements IModuleController {
     /**
      * @return Возвращает коллекцию модулей с ключом по Module.ShortName
      */
-	@Override
 	public TreeMap<String, Module> getModules() {
 		android.util.Log.i(TAG, "Loading modules from a DB storage.");
 		TreeMap<String, Module> result = new TreeMap<String, Module>();
@@ -40,20 +39,17 @@ public class DbModuleController implements IModuleController {
 	}
 	
 	
-	@Override
 	public Module getModuleByID(String moduleID) {
 		return mRepository.getModuleByID(moduleID);
 	}
 
 
-	@Override
 	public Module getClosedModule() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
-	@Override
 	public TreeMap<String, Module> loadModules() {
 		// TODO Auto-generated method stub
 		return null;

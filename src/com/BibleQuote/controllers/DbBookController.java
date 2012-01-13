@@ -12,7 +12,7 @@ import com.BibleQuote.models.DbModule;
 import com.BibleQuote.models.Module;
 
 public class DbBookController implements IBookController {
-	private final String TAG = "DbBookController";
+	//private final String TAG = "DbBookController";
 	
 	//private EventManager eventManager;
 	private IBookRepository<DbModule, DbBook> br;
@@ -24,27 +24,25 @@ public class DbBookController implements IBookController {
     }
 
     
-	public LinkedHashMap<String, Book> loadBooks(Module module) {
-		android.util.Log.i(TAG, "Loading books from a DB storage.");
-		LinkedHashMap<String, Book> result = new LinkedHashMap<String, Book>();
-		
-		ArrayList<Book> bookList = new ArrayList<Book>();
-		bookList.addAll(br.loadBooks((DbModule)module));
-		for (Book book : bookList) {
-			result.put(book.getID(), book);
-		}
-		
-		return result;
-	}
+//	public LinkedHashMap<String, Book> loadBooks(Module module) {
+//		android.util.Log.i(TAG, "Loading books from a DB storage.");
+//		LinkedHashMap<String, Book> result = new LinkedHashMap<String, Book>();
+//		
+//		ArrayList<Book> bookList = new ArrayList<Book>();
+//		bookList.addAll(br.loadBooks((DbModule)module));
+//		for (Book book : bookList) {
+//			result.put(book.getID(), book);
+//		}
+//		
+//		return result;
+//	}
 
-	@Override
 	public LinkedHashMap<String, Book> getBooks(Module module) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
-	@Override
 	public ArrayList<Book> getBookList(Module module) {
 		// TODO Auto-generated method stub
 		return null;
@@ -56,7 +54,6 @@ public class DbBookController implements IBookController {
 	}
 
 
-	@Override
 	public LinkedHashMap<String, String> search(Module module, String query,
 			String fromBookID, String toBookID) {
 		// TODO Auto-generated method stub
