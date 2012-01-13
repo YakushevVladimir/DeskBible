@@ -40,9 +40,10 @@ import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
 import com.BibleQuote.entity.ItemList;
 import com.BibleQuote.exceptions.BookNotFoundException;
+import com.BibleQuote.exceptions.CreateModuleErrorException;
 import com.BibleQuote.exceptions.ModuleNotFoundException;
+import com.BibleQuote.managers.AsyncManager;
 import com.BibleQuote.managers.Librarian;
-import com.BibleQuote.utils.AsyncTaskManager;
 import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.OnTaskCompleteListener;
 import com.BibleQuote.utils.Task;
@@ -51,7 +52,7 @@ public class Search extends GDActivity implements OnTaskCompleteListener {
 	private static final String TAG = "Search";
 	private Spinner s1, s2;
 	private ListView LV;
-	private AsyncTaskManager mAsyncTaskManager;
+	private AsyncManager mAsyncManager;
 	private String progressMessage = "";
 
 	private LinkedHashMap<String, String> searchResults = new LinkedHashMap<String, String>();
@@ -67,8 +68,9 @@ public class Search extends GDActivity implements OnTaskCompleteListener {
 		BibleQuoteApp app = (BibleQuoteApp) getGDApplication();
 		myLibararian = app.getLibrarian();
 
-		mAsyncTaskManager = new AsyncTaskManager(this, this, false);
-		mAsyncTaskManager.handleRetainedTask(getLastNonConfigurationInstance());
+		mAsyncManager = app.getAsyncManager();
+		mAsyncManager.handleRetainedTask(getLastNonConfigurationInstance(), this);
+		
 		progressMessage = getResources().getString(R.string.messageSearch);
 		searchResults = myLibararian.getSearchResults();
 
@@ -153,10 +155,9 @@ public class Search extends GDActivity implements OnTaskCompleteListener {
 
 	@Override
 	public Object onRetainNonConfigurationInstance() {
-		return mAsyncTaskManager.retainTask();
+		return mAsyncManager.retainTask();
 	}
 
-	@Override
 	public void onTaskComplete(Task task) {
 		if (task.isCancelled()) {
 			Toast.makeText(this, R.string.messageSearchCanceled,
@@ -165,8 +166,8 @@ public class Search extends GDActivity implements OnTaskCompleteListener {
 	}
 
 	private class StartSearch extends Task {
-		public StartSearch(String message) {
-			super(message);
+		public StartSearch(String message, Boolean isHidden) {
+			super(message, isHidden);
 		}
 
 		@Override
@@ -195,6 +196,10 @@ public class Search extends GDActivity implements OnTaskCompleteListener {
 
 			try {
 				searchResults = myLibararian.search(query, fromBookID, toBookID);
+			} catch (CreateModuleErrorException e) {
+				searchResults = new LinkedHashMap<String, String>();
+			} catch (BookNotFoundException e) {
+				searchResults = new LinkedHashMap<String, String>();
 			} catch (ModuleNotFoundException e) {
 				searchResults = new LinkedHashMap<String, String>();
 			}
@@ -210,11 +215,10 @@ public class Search extends GDActivity implements OnTaskCompleteListener {
 	public void onSearchClick(View v) {
 		query = ((EditText) findViewById(R.id.SearchEdit)).getText().toString()
 				.trim();
-		mAsyncTaskManager.setupTask(new StartSearch(progressMessage));
+		mAsyncManager.setupTask(new StartSearch(progressMessage, false), this);
 	}
 
 	private OnItemSelectedListener onClick_FromBook = new OnItemSelectedListener() {
-		@Override
 		public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2,
 				long arg3) {
 			int fromBook = s1.getSelectedItemPosition();
@@ -224,13 +228,11 @@ public class Search extends GDActivity implements OnTaskCompleteListener {
 			}
 		}
 
-		@Override
 		public void onNothingSelected(AdapterView<?> arg0) {
 		}
 	};
 
 	private OnItemSelectedListener onClick_ToBook = new OnItemSelectedListener() {
-		@Override
 		public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2,
 				long arg3) {
 			int fromBook = s1.getSelectedItemPosition();
@@ -240,7 +242,6 @@ public class Search extends GDActivity implements OnTaskCompleteListener {
 			}
 		}
 
-		@Override
 		public void onNothingSelected(AdapterView<?> arg0) {
 		}
 	};

@@ -5,6 +5,7 @@ import java.util.TreeMap;
 
 import com.BibleQuote.dal.CacheContext;
 import com.BibleQuote.dal.repository.CacheRepository;
+import com.BibleQuote.exceptions.FileAccessException;
 import com.BibleQuote.models.Module;
 import com.BibleQuote.utils.Log;
 
@@ -20,7 +21,11 @@ public class CacheModuleController<TModule> {
     
 	public ArrayList<TModule> getModuleList() {
 		Log.i(TAG, "getModuleList()");
-		return cacheRepository.getData();
+		try {
+			return cacheRepository.getData();
+		} catch (FileAccessException e) {
+			return new ArrayList<TModule>(); 
+		}
 	}
 	
 	
@@ -38,7 +43,11 @@ public class CacheModuleController<TModule> {
 	
 	public void saveModuleList(ArrayList<TModule> moduleList) {
 		Log.i(TAG, "saveModuleList()");
-		cacheRepository.saveData(moduleList);
+		try {
+			cacheRepository.saveData(moduleList);
+		} catch (FileAccessException e) {
+			Log.e(TAG, "Can't save modules to a cache.", e);
+		}
 	}
 	
 	
@@ -49,7 +58,7 @@ public class CacheModuleController<TModule> {
 		for (TModule module : modules.values()) {
 			moduleList.add(module);
 		}
-		cacheRepository.saveData(moduleList);
+		saveModuleList(moduleList);
 	}
 	
 	

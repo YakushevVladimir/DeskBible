@@ -27,13 +27,11 @@ public class FsLibraryUnitOfWork implements ILibraryUnitOfWork<String, FsModule,
     }
     
 
-	@Override
 	public Context getLibraryContext() {
 		return this.fsLibraryContext.getContext();
 	}
  
     
-    @Override
     public IModuleRepository<String, FsModule> getModuleRepository()
     {
         if (this.moduleRepository == null)
@@ -43,7 +41,6 @@ public class FsLibraryUnitOfWork implements ILibraryUnitOfWork<String, FsModule,
         return this.moduleRepository;
     }
 
-    @Override
     public IBookRepository<FsModule, FsBook> getBookRepository()
     {
         if (this.bookRepository == null)
@@ -53,7 +50,6 @@ public class FsLibraryUnitOfWork implements ILibraryUnitOfWork<String, FsModule,
         return bookRepository;
     }
 
-	@Override
 	public IChapterRepository<FsBook> getChapterRepository() {
         if (this.chapterRepository == null)
         {
@@ -63,7 +59,6 @@ public class FsLibraryUnitOfWork implements ILibraryUnitOfWork<String, FsModule,
 	}
 
 
-	@Override
 	public CacheModuleController<FsModule> getCacheModuleController() {
 		return this.cacheModuleController;
 	}

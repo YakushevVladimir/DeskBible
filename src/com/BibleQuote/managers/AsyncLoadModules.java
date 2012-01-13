@@ -9,7 +9,7 @@ import com.BibleQuote.models.Module;
 import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.Task;
 
-public class AsyncOpenModules extends Task {
+public class AsyncLoadModules extends Task {
 	private final String TAG = "AsyncTaskChapterOpen";
 	
 	private ChangeModulesEvent event;
@@ -17,7 +17,7 @@ public class AsyncOpenModules extends Task {
 	private Module nextClosedModule = null;
 	
 	
-	public AsyncOpenModules(String message, Boolean isHidden, Librarian librarian) {
+	public AsyncLoadModules(String message, Boolean isHidden, Librarian librarian) {
 		super(message, isHidden);
 		this.librarian = librarian;
 	}

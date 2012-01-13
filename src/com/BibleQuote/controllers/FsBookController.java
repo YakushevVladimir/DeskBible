@@ -7,14 +7,16 @@ import com.BibleQuote.dal.FsLibraryUnitOfWork;
 import com.BibleQuote.dal.repository.IBookRepository;
 import com.BibleQuote.dal.repository.IModuleRepository;
 import com.BibleQuote.exceptions.BookNotFoundException;
+import com.BibleQuote.exceptions.CreateModuleErrorException;
 import com.BibleQuote.exceptions.ModuleNotFoundException;
 import com.BibleQuote.models.Book;
 import com.BibleQuote.models.FsBook;
 import com.BibleQuote.models.FsModule;
 import com.BibleQuote.models.Module;
+import com.BibleQuote.utils.Log;
 
 public class FsBookController implements IBookController {
-	//private final String TAG = "FsBookController";
+	private final String TAG = "FsBookController";
 
 	private IBookRepository<FsModule, FsBook> bRepository;
 	private IModuleRepository<String, FsModule> mRepository;
@@ -25,7 +27,7 @@ public class FsBookController implements IBookController {
     }
 	
 	
-	public LinkedHashMap<String, Book> getBooks(Module module) throws ModuleNotFoundException {
+	public LinkedHashMap<String, Book> getBooks(Module module) throws ModuleNotFoundException, CreateModuleErrorException {
 		module = getValidModule(module);
 		
 		LinkedHashMap<String, Book> result = new LinkedHashMap<String, Book>();
@@ -37,6 +39,11 @@ public class FsBookController implements IBookController {
 		for (Book book : bookList) {
 			result.put(book.getID(), book);
 		}
+		
+		if (bookList.size() == 0) {
+			Log.e(TAG, String.format("The module $1$s does not contain the books", module.getDataSourceID()));
+			throw new CreateModuleErrorException();
+		}		
 		
 		return result;		
 	}
@@ -69,7 +76,7 @@ public class FsBookController implements IBookController {
 	}		
 
 	
-	public LinkedHashMap<String, String> search(Module module, String query, String fromBookID, String toBookID) throws ModuleNotFoundException {
+	public LinkedHashMap<String, String> search(Module module, String query, String fromBookID, String toBookID) throws ModuleNotFoundException, CreateModuleErrorException, BookNotFoundException {
 		LinkedHashMap<String, String> searchRes = new LinkedHashMap<String, String>();
 	
 		if (query.trim().equals("")) {

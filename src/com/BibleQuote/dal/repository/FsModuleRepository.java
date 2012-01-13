@@ -10,7 +10,8 @@ import java.util.TreeMap;
 
 import com.BibleQuote.controllers.CacheModuleController;
 import com.BibleQuote.dal.FsLibraryContext;
-import com.BibleQuote.exceptions.CreateModuleErrorException;
+import com.BibleQuote.exceptions.FileAccessException;
+import com.BibleQuote.exceptions.ModuleNotFoundException;
 import com.BibleQuote.models.Book;
 import com.BibleQuote.models.FsModule;
 import com.BibleQuote.models.Module;
@@ -21,7 +22,7 @@ import com.BibleQuote.utils.OnlyBQZipIni;
 
 public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 
-	protected final String TAG = "FsModuleRepository";
+	private final String TAG = "FsModuleRepository";
 	private FsLibraryContext context;
 	private CacheModuleController<FsModule> cache;
 	
@@ -31,7 +32,6 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
     }
     
 
-	@Override
 	public Collection<FsModule> loadModules() {
 		ArrayList<FsModule> moduleList = new ArrayList<FsModule>();
 		
@@ -54,7 +54,7 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 			moduleList.add(fileModule);
 		}
 		
-		cache.saveModuleList(moduleList);
+		//cache.saveModuleList(moduleList);
 
 		context.moduleSet = new TreeMap<String, Module>();
 		for (FsModule fsModule : moduleList) {
@@ -66,27 +66,30 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 	}
 
 
-	@Override
-	public FsModule loadModuleById(String moduleDataSourceId) {
-		FsModule module = null;
+	public FsModule loadModuleById(String moduleDataSourceId) throws ModuleNotFoundException {
+		FsModule fsModule = null;
 		BufferedReader reader = null;
 		try {
-			module = new FsModule(moduleDataSourceId);
-			reader = context.getModuleReader(module);
-			module.defaultEncoding = context.getModuleEncoding(reader);
-			reader = context.getModuleReader(module);
 			
-			context.fillModule(module, reader);
+			// DEBUG cycle
+			//for (int i=0; i<10; i++) {
+				
+			fsModule = new FsModule(moduleDataSourceId);
+			reader = context.getModuleReader(fsModule);
+			fsModule.defaultEncoding = context.getModuleEncoding(reader);
+			reader = context.getModuleReader(fsModule);
 			
-			context.moduleSet.remove(module.modulePath);
-			context.moduleSet.put(module.getID(), module);
+			context.fillModule(fsModule, reader);
+			//}
 			
-			cache.saveModuleList(context.getModuleList(context.moduleSet));
+			context.moduleSet.remove(fsModule.modulePath);
+			context.moduleSet.put(fsModule.getID(), fsModule);
 			
-		} catch (CreateModuleErrorException e) {
-			Log.e(TAG, "Can't load module by " + moduleDataSourceId);
-			context.moduleSet.remove(module.modulePath);
-			e.printStackTrace();
+		} catch (FileAccessException e) {
+			Log.e(TAG, "Can't load module by " + moduleDataSourceId, e);
+			context.moduleSet.remove(fsModule.modulePath);
+			throw new ModuleNotFoundException(fsModule.modulePath);
+			
 		} finally {
 			try {
 				if (reader != null) {
@@ -96,41 +99,38 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 				e.printStackTrace(); 
 			}
 		}		
-		return module;	
+
+		//cache.saveModuleList(context.getModuleList(context.moduleSet));
+
+		return fsModule;	
 	}
 	
 	
-	@Override
 	public Collection<FsModule> getModules() {
-		if (context.moduleSet == null && cache.isCacheExist()) {
+		if ((context.moduleSet == null || context.moduleSet.size() == 0) && cache.isCacheExist()) {
 			loadCachedModules();
 		}
 		return context.getModuleList(context.moduleSet);	
 	}
 	
 	
-	@Override
 	public FsModule getModuleByID(String moduleID) {
 		return (FsModule)context.moduleSet.get(moduleID);
 	}
-	
 		
-	@Override
+	
 	public void insertModule(FsModule module) {
 	}
 
 	
-	@Override
 	public void deleteModule(FsModule module) {
 	}
 
 	
-	@Override
 	public void updateModule(FsModule module) {
 	}
 
 	
-	@Override
 	public FsModule getClosedModule() {
 		for (Module module : context.moduleSet.values()) {
 			if (((FsModule)module).getIsClosed()) {
