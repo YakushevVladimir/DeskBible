@@ -29,6 +29,8 @@ public interface IModuleRepository<TModuleId, TModule> {
     
 	TModule getModuleByID(String moduleID);
 	
+	TModule getModuleByDatasourceID(String moduleDatasourceID);
+	
 	public TModule getClosedModule();
     
 }

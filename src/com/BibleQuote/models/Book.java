@@ -33,8 +33,6 @@ public abstract class Book implements Serializable {
 	 */	
 	public Integer ChapterQty = 0;
 	
-	//public LinkedHashMap<Integer, Chapter> Chapters = new LinkedHashMap<Integer, Chapter>();	// to lazy loading on demand
-	
 	
 	/**
 	 * @return Возвращает краткое имя книги. являющееся первым в списке кратких имен

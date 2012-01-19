@@ -26,15 +26,9 @@ public class AsyncManager implements OnTaskCompleteListener {
 				}
 				
 				if (mWaitTaskManager == null) {
-					// Make background task's progress dialog visible 
-					if (mAsyncTaskManager.isHidden()) {
-						mAsyncTaskManager.setVisible(true);
-					}
-
 					// Start a wait thread until mAsyncTaskManager has completed
 					mWaitTaskManager = new AsyncTaskManager(context, this);
-					mWaitTaskManager.setupTask(	new AsyncWait("", true, mAsyncTaskManager));
-					//mWaitTaskManager.setupTask(	new AsyncWait("Please wait ...", false, mAsyncTaskManager));
+					mWaitTaskManager.setupTask(	new AsyncWait("Please wait ...", false, mAsyncTaskManager));
 				}
 			} else {
 				mAsyncTaskManager = newAsyncTaskManager;
@@ -78,7 +72,10 @@ public class AsyncManager implements OnTaskCompleteListener {
 
 	@Override
 	public void onTaskComplete(Task task) {
-		mWaitTaskManager = null;
+		if (mWaitTaskManager != null) {
+			mWaitTaskManager.retainTask();
+			mWaitTaskManager = null;
+		}
 		try {
 			Task newTask = waitTask;
 			waitTask = null;

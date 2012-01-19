@@ -131,18 +131,6 @@ public final class AsyncTaskManager implements IProgressTracker,
 		return mAsyncTask != null;
 	}
 	
-	public boolean isHidden() {
-		// Either progress dialog visible or not
-		return mAsyncTask.isHidden();
-	}
-	
-	public void setVisible(boolean value) {
-		// Either progress dialog visible or not
-		mAsyncTask.setVisible(value);
-		// Setup progress dialog
-		setupProgressDialog((Context)mTaskCompleteListener, mTaskCompleteListener);
-	}
-	
 	private void setupProgressDialog(Context context, OnTaskCompleteListener taskCompleteListener) {
 		// Setup progress dialog
 		mProgressDialog = new ProgressDialog(context);

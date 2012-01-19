@@ -20,8 +20,8 @@ public class DbModule extends Module {
 	}
 
 	@Override
-	public Object getDataSourceID() {
-		return Id;
+	public String getDataSourceID() {
+		return Id.toString();
 	}
 	
 	@Override

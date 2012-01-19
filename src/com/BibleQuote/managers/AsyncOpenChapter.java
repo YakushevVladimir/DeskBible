@@ -31,7 +31,7 @@ public class AsyncOpenChapter extends Task {
 				link.getModuleID(), link.getBookID(), link.getChapterNumber()));
 		Module module;
 		try {
-			module = librarian.openModule(link.getModuleID());
+			module = librarian.openModule(link.getModuleID(), link.getModuleDatasourceID());
 			Book book;
 			try {
 				book = librarian.openBook(module, link.getBookID());

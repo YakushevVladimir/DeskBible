@@ -93,52 +93,21 @@ public class Librarian implements IChangeBooksListener  {
 		return moduleCtrl.loadModules();
 	}
 	
-//	public void openModulesAsync(AsyncTaskManager asyncTaskManager) {
-//		Module module = moduleCtrl.getClosedModule();
-//		if (module != null) {
-//			String message = context.getResources().getString(R.string.messageLoadModules);
-//			asyncTaskManager.setupTask(new AsyncOpenModules(message, this, module, asyncTaskManager));
-//		}	
-//	}
-	
-//	public void refreshModules(AsyncTaskManager asyncTaskManager) {
-//		moduleCtrl.loadModules();
-//		openModules(asyncTaskManager);
-//	}
-
-//	public void openModules(AsyncTaskManager asyncTaskManager) {
-//		TreeMap<String, Module> modules = moduleCtrl.getModules();
-//		if (asyncTaskManager != null) {
-//			openModulesAsync(asyncTaskManager);
-//		} else {
-//			for (Module module : modules.values()) {
-//				try {
-//					this.openModule(module.getID());
-//				} catch (ModuleNotFoundException e) {
-//					Log.e(TAG, "openModules()", e);
-//				}
-//			}
-//		}
-//	}
-	
 	public void onChangeBooks(ChangeBooksEvent event) {
 		if (event.code == IChangeBooksListener.ChangeCode.BooksLoaded) {
 		}		
 	}
 	
-//	public void loadBooksAsync(AsyncTaskManager asyncTaskManager, Module module) {
-//		if (module != null) {
-//			String message = context.getResources().getString(R.string.messageLoadBooks);
-//			asyncTaskManager.setupTask(new AsyncOpenBooks(message, this, module, asyncTaskManager));
-//		}	
-//	}	
-
 	public ArrayList<Book> getBookList(Module module) throws ModuleNotFoundException {
 		return bookCtrl.getBookList(module);
 	}
 	
-	public Module openModule(String moduleID) throws ModuleNotFoundException {
-		currModule = moduleCtrl.getModuleByID(moduleID);
+	public Module openModule(String moduleID, String moduleDatasourceID) throws ModuleNotFoundException {
+		try {
+			currModule = moduleCtrl.getModuleByID(moduleID);
+		} catch(ModuleNotFoundException e) {
+			currModule = moduleCtrl.getModuleByDatasourceID(moduleDatasourceID);
+		}
 		currBook = null;
 		currChapter = null;
 		currChapterNumber = -1;
@@ -179,7 +148,7 @@ public class Librarian implements IChangeBooksListener  {
 		// Теперь создадим результирующий список на основе отсортированных данных
 		ArrayList<ItemList> moduleList = new ArrayList<ItemList>();
 		for (Module currModule : tMap.values()) {
-			moduleList.add(new ItemList(currModule.getID(), currModule.getName()));
+			moduleList.add(new ItemList(currModule.getID(), currModule.getName(), (String)currModule.getDataSourceID()));
 		}
 
 		return moduleList;
@@ -191,7 +160,7 @@ public class Librarian implements IChangeBooksListener  {
 		currModule = moduleCtrl.getModuleByID(moduleID);
 		ArrayList<ItemList> booksList = new ArrayList<ItemList>();
 		for (Book book : bookCtrl.getBookList(currModule)) {
-			booksList.add(new ItemList(book.getID(), book.Name));
+			booksList.add(new ItemList(book.getID(), book.Name, (String)book.getDataSourceID()));
 		}
 		return booksList;
 	}
