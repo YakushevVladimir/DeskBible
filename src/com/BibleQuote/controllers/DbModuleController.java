@@ -5,6 +5,7 @@ import java.util.TreeMap;
 
 import com.BibleQuote.dal.DbLibraryUnitOfWork;
 import com.BibleQuote.dal.repository.IModuleRepository;
+import com.BibleQuote.exceptions.ModuleNotFoundException;
 import com.BibleQuote.managers.EventManager;
 import com.BibleQuote.models.DbModule;
 import com.BibleQuote.models.Module;
@@ -51,6 +52,14 @@ public class DbModuleController implements IModuleController {
 
 
 	public TreeMap<String, Module> loadModules() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public Module getModuleByDatasourceID(String moduleDatasourceID)
+			throws ModuleNotFoundException {
 		// TODO Auto-generated method stub
 		return null;
 	}

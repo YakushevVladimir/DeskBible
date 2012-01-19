@@ -51,7 +51,7 @@ public class FsBookRepository implements IBookRepository<FsModule, FsBook> {
 		}
 
 		// Update cache with just added books
-		//cache.saveModuleList(context.getModuleList(context.moduleSet));
+		cache.saveModuleList(context.getModuleList(context.moduleSet));
 
 		return context.getBookList(module.Books); 	
 	}

@@ -45,9 +45,6 @@ public class BibleQuoteApp extends GDApplication {
 			
 			mAsyncManager = new AsyncManager();
 			myLibararian.getModules();
-//			if (myLibararian.hasClosedModules()) {
-//				myLibararian.openModules(null);
-//			}
 		}
 		return myLibararian;
 	}

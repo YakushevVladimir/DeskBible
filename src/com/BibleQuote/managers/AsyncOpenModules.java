@@ -15,21 +15,26 @@ public class AsyncOpenModules extends Task {
 	private ChangeModulesEvent event;
 	private Librarian librarian;
 	private Module nextClosedModule = null;
+	private Boolean isReload = false;
 	
-	
-	public AsyncOpenModules(String message, Boolean isHidden, Librarian librarian) {
+	public AsyncOpenModules(String message, Boolean isHidden, Librarian librarian, Boolean isReload) {
 		super(message, isHidden);
 		this.librarian = librarian;
+		this.isReload = isReload;
 	}
 
 	
 	@Override
 	protected Boolean doInBackground(String... arg0) {
 		try {
+			if (isReload) {
+				librarian.loadModules();
+				isReload = false;
+			}
 			Module module = librarian.getClosedModule();
 			if (module != null) {
 				Log.i(TAG, String.format("Open module with moduleID=%1$s", module.getID()));
-				module = librarian.openModule(module.getID());
+				module = librarian.openModule(module.getID(), module.getDataSourceID());
 				TreeMap<String, Module> modules = new TreeMap<String, Module>();
 				modules.put(module.getID(), module);
 				event = new ChangeModulesEvent(ChangeCode.ModulesChanged, modules);
