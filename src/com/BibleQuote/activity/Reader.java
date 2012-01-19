@@ -55,7 +55,6 @@ import com.BibleQuote.listeners.ISearchListener;
 import com.BibleQuote.listeners.SearchInLibraryEvent;
 import com.BibleQuote.managers.AsyncManager;
 import com.BibleQuote.managers.AsyncOpenChapter;
-import com.BibleQuote.managers.AsyncOpenModules;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.OSISLink;
@@ -76,7 +75,6 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
 	private String chapterInHTML = "";
 	private boolean nightMode = false;
 	private String progressMessage = "";
-	private String messageLoadModules;
 	private int runtimeOrientation;
 
 	private TextView vModuleName;
@@ -102,8 +100,6 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
 		mAsyncManager = app.getAsyncManager();
 		mAsyncManager.handleRetainedTask(getLastNonConfigurationInstance(), this);
 		
-		messageLoadModules = getResources().getString(R.string.messageLoadModules);
-			
 		btnChapterNav = (LinearLayout)findViewById(R.id.btn_chapter_nav);
 		
 		ImageButton btnChapterPrev = (ImageButton)findViewById(R.id.btn_reader_prev);
@@ -317,7 +313,7 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
 		OSISLink OSISLink = myLibrarian.getCurrentOSISLink();
 		vWeb.setText(chapterInHTML, OSISLink.getVerseNumber(), nightMode, myLibrarian.isBible());
 		
-		PreferenceHelper.saveStateString("last_read", OSISLink.getPath());
+		PreferenceHelper.saveStateString("last_read", OSISLink.getExtendedPath());
 		
 		vModuleName.setText(myLibrarian.getModuleName());
 		vBookLink.setText(myLibrarian.getHumanBookLink());
@@ -457,10 +453,11 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
 				if (event != null) {
 					chapterInHTML = myLibrarian.getChapterHTMLView(event.chapter);
 					setTextinWebView();
+					// TODO open the next chapter in background
+					//mAsyncManager.setupTask(new AsyncOpenChapter(progressMessage, false, myLibrarian, OSISLink), this);
 				} else {
 					// TODO Notify User about error in Model
 				}
-				mAsyncManager.setupTask(new AsyncOpenModules(messageLoadModules, true, myLibrarian), Reader.this);
 			}
 		}
     }

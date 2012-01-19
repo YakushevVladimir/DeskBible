@@ -58,10 +58,22 @@ public class FsModuleController implements IModuleController {
 		return 	fsModule;		
 	}
 	
-
+	
+	@Override
+	public Module getModuleByDatasourceID(String moduleDatasourceID) throws ModuleNotFoundException {
+		FsModule fsModule = mRepository.getModuleByDatasourceID(moduleDatasourceID);
+		if (fsModule != null && fsModule.getIsClosed()) {
+			fsModule = mRepository.loadModuleById(fsModule.getDataSourceID());
+		}
+		if (fsModule == null) {
+			throw new ModuleNotFoundException(moduleDatasourceID);
+		}
+		return 	fsModule;		
+	}
+	
+	
 	public Module getClosedModule() {
 		return mRepository.getClosedModule();
 	}
-
 
 }

@@ -36,7 +36,7 @@ public abstract class Module implements Serializable {
 	
 	public abstract String getID();
 	
-	public abstract Object getDataSourceID();
+	public abstract String getDataSourceID();
 	
 	public abstract String getModuleFileName();
 	

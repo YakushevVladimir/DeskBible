@@ -13,5 +13,7 @@ public interface IModuleController {
 	
 	public Module getModuleByID(String moduleID) throws ModuleNotFoundException;
 	
+	public Module getModuleByDatasourceID(String moduleDatasourceID) throws ModuleNotFoundException;
+	
 	public Module getClosedModule();
 }

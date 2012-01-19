@@ -75,4 +75,11 @@ public class DbModuleRepository implements IModuleRepository<Long, DbModule> {
 		return null;
 	}
 
+
+	@Override
+	public DbModule getModuleByDatasourceID(String modulePath) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

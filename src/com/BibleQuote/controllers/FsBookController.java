@@ -31,11 +31,7 @@ public class FsBookController implements IBookController {
 		module = getValidModule(module);
 		
 		LinkedHashMap<String, Book> result = new LinkedHashMap<String, Book>();
-		ArrayList<FsBook> bookList = (ArrayList<FsBook>) bRepository.getBooks((FsModule)module);
-		if (bookList.size() == 0) {
-			bookList = (ArrayList<FsBook>) bRepository.loadBooks((FsModule)module);
-		}		
-		
+		ArrayList<Book> bookList = getBookList(module);
 		for (Book book : bookList) {
 			result.put(book.getID(), book);
 		}
