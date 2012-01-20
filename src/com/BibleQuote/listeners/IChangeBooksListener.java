@@ -5,7 +5,8 @@ public interface IChangeBooksListener {
 		BooksLoaded,
 		BooksAdded,
 		BooksChanged,
-		BooksDeleted
+		BooksDeleted,
+		BooksFailed
 	}
 	
 	public void onChangeBooks(ChangeBooksEvent event);

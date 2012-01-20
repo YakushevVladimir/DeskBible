@@ -22,5 +22,12 @@ public class CreateModuleErrorException extends Exception {
 	public String toString(){
 		return "CreateModuleErrorException";
 	}
+	
+	public CreateModuleErrorException(String message) {
+		super(message);
+	}
 
+	public CreateModuleErrorException(Exception parent) {
+		super(parent);
+	}
 }

@@ -90,8 +90,8 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 				context.moduleSet.put(fsModule.getID(), fsModule);
 				
 			} catch (FileAccessException e) {
-				Log.e(TAG, "Can't load module by " + moduleDataSourceId, e);
-				context.moduleSet.remove(fsModule.modulePath);
+				Log.e(TAG, "Can't load module " + moduleDataSourceId, e);
+				context.moduleSet.remove(fsModule.getDataSourceID());
 				throw new ModuleNotFoundException(fsModule.modulePath);
 				
 			} finally {

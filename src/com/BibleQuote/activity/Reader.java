@@ -49,14 +49,15 @@ import android.widget.Toast;
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
 import com.BibleQuote.controls.ReaderWebView;
+import com.BibleQuote.exceptions.BookNotFoundException;
 import com.BibleQuote.exceptions.ModuleNotFoundException;
-import com.BibleQuote.listeners.ChangeChaptersEvent;
 import com.BibleQuote.listeners.ISearchListener;
 import com.BibleQuote.listeners.SearchInLibraryEvent;
 import com.BibleQuote.managers.AsyncManager;
 import com.BibleQuote.managers.AsyncOpenChapter;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.utils.Log;
+import com.BibleQuote.utils.NotifyDialog;
 import com.BibleQuote.utils.OSISLink;
 import com.BibleQuote.utils.OnTaskCompleteListener;
 import com.BibleQuote.utils.PreferenceHelper;
@@ -449,14 +450,23 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
     public void onTaskComplete(Task task) {
 		if (task != null && !task.isCancelled()) {
 			if (task instanceof AsyncOpenChapter) {
-				ChangeChaptersEvent event = ((AsyncOpenChapter) task).getEvent();
-				if (event != null) {
-					chapterInHTML = myLibrarian.getChapterHTMLView(event.chapter);
+				AsyncOpenChapter t = ((AsyncOpenChapter) task);
+				if (t.isSuccess()) {
+					chapterInHTML = myLibrarian.getChapterHTMLView(t.getChapter());
 					setTextinWebView();
 					// TODO open the next chapter in background
 					//mAsyncManager.setupTask(new AsyncOpenChapter(progressMessage, false, myLibrarian, OSISLink), this);
 				} else {
-					// TODO Notify User about error in Model
+					Exception e = t.getException();
+					if (e instanceof ModuleNotFoundException) {
+						// TODO Show an alert with an error message 
+						Log.e(TAG, e.getMessage());
+						new NotifyDialog(e.getMessage(), this).show();
+					} else if (e instanceof BookNotFoundException) {
+						// TODO Show an alert with an error message 
+						Log.e(TAG, e.getMessage());
+						new NotifyDialog(e.getMessage(), this).show();
+					}  
 				}
 			}
 		}

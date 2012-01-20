@@ -31,7 +31,7 @@ public class CacheContext {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public <T> T loadData() throws FileAccessException {
+	public synchronized <T> T loadData() throws FileAccessException {
 		T data = null;
 		try {
 			FileInputStream fStr = new FileInputStream(new File(cacheDir, cacheName));
@@ -54,7 +54,7 @@ public class CacheContext {
 		return data;
 	}	
 	
-	public <T> void saveData(T data) throws FileAccessException {
+	public synchronized <T> void saveData(T data) throws FileAccessException {
 		try {
 			FileOutputStream fStr = new FileOutputStream(new File(cacheDir, cacheName));
 			ObjectOutputStream out = new ObjectOutputStream(fStr);

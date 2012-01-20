@@ -7,7 +7,9 @@ import java.util.LinkedHashMap;
 
 import com.BibleQuote.controllers.CacheModuleController;
 import com.BibleQuote.dal.FsLibraryContext;
+import com.BibleQuote.exceptions.BookDefinitionException;
 import com.BibleQuote.exceptions.BookNotFoundException;
+import com.BibleQuote.exceptions.BooksDefinitionException;
 import com.BibleQuote.exceptions.FileAccessException;
 import com.BibleQuote.exceptions.ModuleNotFoundException;
 import com.BibleQuote.models.Book;
@@ -27,7 +29,8 @@ public class FsBookRepository implements IBookRepository<FsModule, FsBook> {
     }
     
     
-	public Collection<FsBook> loadBooks(FsModule module) throws ModuleNotFoundException {
+	public Collection<FsBook> loadBooks(FsModule module) 
+			throws ModuleNotFoundException, BooksDefinitionException, BookDefinitionException {
 		module.Books = context.bookSet = new LinkedHashMap<String, Book>();
 		BufferedReader reader = null;
 		String moduleID = "";
