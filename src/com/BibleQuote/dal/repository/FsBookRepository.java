@@ -11,7 +11,7 @@ import com.BibleQuote.exceptions.BookDefinitionException;
 import com.BibleQuote.exceptions.BookNotFoundException;
 import com.BibleQuote.exceptions.BooksDefinitionException;
 import com.BibleQuote.exceptions.FileAccessException;
-import com.BibleQuote.exceptions.ModuleNotFoundException;
+import com.BibleQuote.exceptions.OpenModuleException;
 import com.BibleQuote.models.Book;
 import com.BibleQuote.models.FsBook;
 import com.BibleQuote.models.FsModule;
@@ -30,18 +30,20 @@ public class FsBookRepository implements IBookRepository<FsModule, FsBook> {
     
     
 	public Collection<FsBook> loadBooks(FsModule module) 
-			throws ModuleNotFoundException, BooksDefinitionException, BookDefinitionException {
+			throws OpenModuleException, BooksDefinitionException, BookDefinitionException {
 		module.Books = context.bookSet = new LinkedHashMap<String, Book>();
 		BufferedReader reader = null;
 		String moduleID = "";
+		String moduleDatasourceID = "";
 		try {
 			moduleID = module.getID();
+			moduleDatasourceID = module.getDataSourceID();
 			reader = context.getModuleReader(module); 
 			context.fillBooks(module, reader);
 			
 		} catch (FileAccessException e) {
-			Log.e(TAG, "Can't load books from module with ID=" + moduleID);
-			throw new ModuleNotFoundException(moduleID);
+			Log.e(TAG, String.format("Can't load books from module (%1$s, %2$s)", moduleID, moduleDatasourceID));
+			throw new OpenModuleException(moduleID, moduleDatasourceID);
 			
 		} finally {
 			try {

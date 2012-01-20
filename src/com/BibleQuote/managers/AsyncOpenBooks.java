@@ -2,7 +2,7 @@ package com.BibleQuote.managers;
 
 import com.BibleQuote.exceptions.BookDefinitionException;
 import com.BibleQuote.exceptions.BooksDefinitionException;
-import com.BibleQuote.exceptions.ModuleNotFoundException;
+import com.BibleQuote.exceptions.OpenModuleException;
 import com.BibleQuote.models.Module;
 import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.OSISLink;
@@ -36,7 +36,7 @@ public class AsyncOpenBooks extends Task {
 			librarian.getBookList(module);
 
 			isSuccess = true;
-		} catch (ModuleNotFoundException e) {
+		} catch (OpenModuleException e) {
 			//Log.e(TAG, String.format("AsyncOpenBooks(): ", e.toString()), e);
 			exception = e;
 		} catch (BooksDefinitionException e) {

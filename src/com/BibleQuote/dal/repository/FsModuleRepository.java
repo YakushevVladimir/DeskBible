@@ -11,7 +11,7 @@ import java.util.TreeMap;
 import com.BibleQuote.controllers.CacheModuleController;
 import com.BibleQuote.dal.FsLibraryContext;
 import com.BibleQuote.exceptions.FileAccessException;
-import com.BibleQuote.exceptions.ModuleNotFoundException;
+import com.BibleQuote.exceptions.OpenModuleException;
 import com.BibleQuote.models.Book;
 import com.BibleQuote.models.FsModule;
 import com.BibleQuote.models.Module;
@@ -69,30 +69,29 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 	}
 
 
-	public FsModule loadModuleById(String moduleDataSourceId) throws ModuleNotFoundException {
+	public FsModule loadModuleById(String moduleDatasourceId) throws OpenModuleException {
 		FsModule fsModule = null;
 		BufferedReader reader = null;
 		synchronized (context.moduleSet) {
+			String moduleID = "";
 			try {
 				
-				// DEBUG cycle
-				//for (int i=0; i<10; i++) {
-					
-				fsModule = new FsModule(moduleDataSourceId);
+				fsModule = new FsModule(moduleDatasourceId);
 				reader = context.getModuleReader(fsModule);
 				fsModule.defaultEncoding = context.getModuleEncoding(reader);
 				reader = context.getModuleReader(fsModule);
 				
 				context.fillModule(fsModule, reader);
-				//}
 				
-				context.moduleSet.remove(fsModule.getDataSourceID());
-				context.moduleSet.put(fsModule.getID(), fsModule);
+				moduleID = fsModule.getID();
+				
+				context.moduleSet.remove(moduleDatasourceId);
+				context.moduleSet.put(moduleID, fsModule);
 				
 			} catch (FileAccessException e) {
-				Log.e(TAG, "Can't load module " + moduleDataSourceId, e);
+				Log.e(TAG, "Can't load module " + moduleDatasourceId, e);
 				context.moduleSet.remove(fsModule.getDataSourceID());
-				throw new ModuleNotFoundException(fsModule.modulePath);
+				throw new OpenModuleException(moduleID, fsModule.modulePath);
 				
 			} finally {
 				try {

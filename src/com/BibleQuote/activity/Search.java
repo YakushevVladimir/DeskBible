@@ -43,7 +43,7 @@ import com.BibleQuote.exceptions.BookDefinitionException;
 import com.BibleQuote.exceptions.BookNotFoundException;
 import com.BibleQuote.exceptions.BooksDefinitionException;
 import com.BibleQuote.exceptions.CreateModuleErrorException;
-import com.BibleQuote.exceptions.ModuleNotFoundException;
+import com.BibleQuote.exceptions.OpenModuleException;
 import com.BibleQuote.managers.AsyncManager;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.utils.Log;
@@ -96,7 +96,7 @@ public class Search extends GDActivity implements OnTaskCompleteListener {
 				searchItems.add(new SubtitleItem(humanLink, searchResults.get(key)));
 			} catch (BookNotFoundException e) {
 				Log.i(TAG, e.toString());
-			} catch (ModuleNotFoundException e) {
+			} catch (OpenModuleException e) {
 				Log.i(TAG, e.toString());
 			}
 		}
@@ -115,7 +115,7 @@ public class Search extends GDActivity implements OnTaskCompleteListener {
 		books = new ArrayList<ItemList>();
 		try {
 			books = myLibararian.getCurrentModuleBooksList();
-		} catch (ModuleNotFoundException e) {
+		} catch (OpenModuleException e) {
 			// TODO Show an alert with an error message 
 			Log.i(TAG, e.toString());
 			new NotifyDialog(e.getMessage(), this).show();
@@ -214,7 +214,7 @@ public class Search extends GDActivity implements OnTaskCompleteListener {
 				Log.e(TAG, e.getMessage());
 			} catch (BookNotFoundException e) {
 				Log.e(TAG, e.getMessage());
-			} catch (ModuleNotFoundException e) {
+			} catch (OpenModuleException e) {
 				Log.e(TAG, e.getMessage());
 			}
 			return true;

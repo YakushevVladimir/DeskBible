@@ -15,20 +15,24 @@
  */
 package com.BibleQuote.exceptions;
 
-public class ModuleNotFoundException extends Exception {
+public class OpenModuleException extends Exception {
 
 	private static final long serialVersionUID = -941193264792260938L;
 
 	private String moduleId;
+	private String moduleDatasourceId;
 	
-	public ModuleNotFoundException(String moduleId) {
+	public OpenModuleException(String moduleId, String moduleDatasourceId) {
 		this.moduleId = moduleId;
+		this.moduleDatasourceId = moduleDatasourceId;
 	}
-	
-	public String toString() {
-		return moduleId == null 
-				? String.format("Module with ID=%1$s is not found", moduleId)
-				: String.format("Module is not found");
+
+	public String getModuleId() {
+		return moduleId;
+	}
+
+	public String getModuleDatasourceId() {
+		return moduleDatasourceId;
 	}
 
 }
