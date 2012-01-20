@@ -35,14 +35,16 @@ import android.widget.SimpleAdapter;
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
 import com.BibleQuote.entity.ItemList;
+import com.BibleQuote.exceptions.BookDefinitionException;
 import com.BibleQuote.exceptions.BookNotFoundException;
+import com.BibleQuote.exceptions.BooksDefinitionException;
 import com.BibleQuote.exceptions.ModuleNotFoundException;
-import com.BibleQuote.listeners.ChangeBooksEvent;
 import com.BibleQuote.managers.AsyncManager;
 import com.BibleQuote.managers.AsyncOpenBooks;
-import com.BibleQuote.managers.AsyncOpenModules;
+import com.BibleQuote.managers.AsyncOpenModule;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.utils.Log;
+import com.BibleQuote.utils.NotifyDialog;
 import com.BibleQuote.utils.OSISLink;
 import com.BibleQuote.utils.OnTaskCompleteListener;
 import com.BibleQuote.utils.Task;
@@ -117,7 +119,7 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 			// to continue open closed modules in background 
 			if (myLibrarian.getClosedModule() != null) {
 				mAsyncManager.setupTask(
-						new AsyncOpenModules(messageLoadModules, true, myLibrarian, false), this);
+						new AsyncOpenModule(messageLoadModules, true, myLibrarian, false), this);
 			}
 		}		
 	}
@@ -136,7 +138,7 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 		case R.id.action_bar_refresh:
 			if (this.viewMode == MODULE_VIEW) {
 				mAsyncManager.setupTask(
-						new AsyncOpenModules(messageLoad, false, myLibrarian, true), this);
+						new AsyncOpenModule(messageLoad, false, myLibrarian, true), this);
 			}
 			break;
 		default:
@@ -299,14 +301,22 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 	}
 
 	private SimpleAdapter getBookAdapter() {
-		if (myLibrarian.getModulesList().size() == 0) {
-			books = new ArrayList<ItemList>();
-		} else {
+		books = new ArrayList<ItemList>();
+		if (myLibrarian.getModulesList().size() > 0) {
 			try {
 				books = myLibrarian.getModuleBooksList(moduleID);
 			} catch (ModuleNotFoundException e) {
+				// TODO Show an alert with an error message 
 				Log.i(TAG, e.toString());
-				books = new ArrayList<ItemList>();
+				new NotifyDialog(e.getMessage(), this).show();
+			} catch (BooksDefinitionException e) {
+				// TODO Show an alert with an error message 
+				Log.i(TAG, e.toString());
+				new NotifyDialog(e.getMessage(), this).show();
+			} catch (BookDefinitionException e) {
+				// TODO Show an alert with an error message 
+				Log.i(TAG, e.toString());
+				new NotifyDialog(e.getMessage(), this).show();
 			}
 		}
 		return new SimpleAdapter(this, books,
@@ -349,20 +359,48 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 	public void onTaskComplete(Task task) {
 		Log.i(TAG, "onTaskComplete()");
 		if (task != null && !task.isCancelled()) {
-			if (task instanceof AsyncOpenModules) {
-				if (this.viewMode == MODULE_VIEW) {
-					UpdateView(MODULE_VIEW);
+			if (task instanceof AsyncOpenModule) {
+				AsyncOpenModule t = ((AsyncOpenModule) task);
+				if (t.isSuccess()) {
+					if (this.viewMode == MODULE_VIEW) {
+						UpdateView(MODULE_VIEW);
+					}
+					// to continue open closed modules in background 
+					if (t.getNextClosedModule() != null) {
+						mAsyncManager.setupTask(
+							new AsyncOpenModule(messageLoadModules, true, myLibrarian, false), Books.this);
+					}
+				} else {
+					Exception e = t.getException();
+					if (e instanceof ModuleNotFoundException) {
+						// TODO Show an alert with an error message 
+						Log.e(TAG, e.getMessage());
+						new NotifyDialog(e.getMessage(), this).show();
+					}  
 				}
-				// to continue open closed modules in background 
-				if (((AsyncOpenModules) task).getNextClosedModule() != null) {
-					mAsyncManager.setupTask(
-						new AsyncOpenModules(messageLoadModules, true, myLibrarian, false), Books.this);
-				}
+				
 			} else if (task instanceof AsyncOpenBooks) {
-				ChangeBooksEvent event = ((AsyncOpenBooks) task).getEvent();
-				moduleID = event.module.getID();
-				UpdateView(BOOK_VIEW);
-				setButtonText();
+				AsyncOpenBooks t = ((AsyncOpenBooks) task);
+				if (t.isSuccess()) {
+					moduleID = t.getModule().getID();
+					setButtonText();
+					UpdateView(BOOK_VIEW);
+				} else {
+					Exception e = t.getException();
+					if (e instanceof ModuleNotFoundException) {
+						// TODO Show an alert with an error message 
+						Log.e(TAG, e.getMessage());
+						new NotifyDialog(e.getMessage(), this).show();
+					} else if (e instanceof BooksDefinitionException) {
+						// TODO Show an alert with an error message 
+						Log.e(TAG, e.getMessage());
+						new NotifyDialog(e.getMessage(), this).show();
+					} else if (e instanceof BookDefinitionException) {
+						// TODO Show an alert with an error message 
+						Log.e(TAG, e.getMessage());
+						new NotifyDialog(e.getMessage(), this).show();
+					}  
+				}
 			}
 		}	
 	}

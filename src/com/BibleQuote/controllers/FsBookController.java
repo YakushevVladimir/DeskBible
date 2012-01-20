@@ -3,17 +3,19 @@ package com.BibleQuote.controllers;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
+import android.util.Log;
+
 import com.BibleQuote.dal.FsLibraryUnitOfWork;
 import com.BibleQuote.dal.repository.IBookRepository;
 import com.BibleQuote.dal.repository.IModuleRepository;
+import com.BibleQuote.exceptions.BookDefinitionException;
 import com.BibleQuote.exceptions.BookNotFoundException;
-import com.BibleQuote.exceptions.CreateModuleErrorException;
+import com.BibleQuote.exceptions.BooksDefinitionException;
 import com.BibleQuote.exceptions.ModuleNotFoundException;
 import com.BibleQuote.models.Book;
 import com.BibleQuote.models.FsBook;
 import com.BibleQuote.models.FsModule;
 import com.BibleQuote.models.Module;
-import com.BibleQuote.utils.Log;
 
 public class FsBookController implements IBookController {
 	private final String TAG = "FsBookController";
@@ -27,7 +29,7 @@ public class FsBookController implements IBookController {
     }
 	
 	
-	public LinkedHashMap<String, Book> getBooks(Module module) throws ModuleNotFoundException, CreateModuleErrorException {
+	public LinkedHashMap<String, Book> getBooks(Module module) throws ModuleNotFoundException, BooksDefinitionException, BookDefinitionException {
 		module = getValidModule(module);
 		
 		LinkedHashMap<String, Book> result = new LinkedHashMap<String, Book>();
@@ -36,16 +38,17 @@ public class FsBookController implements IBookController {
 			result.put(book.getID(), book);
 		}
 		
-		if (bookList.size() == 0) {
-			Log.e(TAG, String.format("The module $1$s does not contain the books", module.getDataSourceID()));
-			throw new CreateModuleErrorException();
-		}		
+//		if (bookList.size() == 0) {
+//			String message = String.format("The module $1$s does not contain the books", module.getDataSourceID());
+//			Log.e(TAG, message);
+//			throw new CreateModuleErrorException(message);
+//		}		
 		
 		return result;		
 	}
 	
 	
-	public ArrayList<Book> getBookList(Module module) throws ModuleNotFoundException {
+	public ArrayList<Book> getBookList(Module module) throws ModuleNotFoundException, BooksDefinitionException, BookDefinitionException {
 		module = getValidModule(module);
 
 		ArrayList<FsBook> bookList = (ArrayList<FsBook>) bRepository.getBooks((FsModule)module);
@@ -62,7 +65,13 @@ public class FsBookController implements IBookController {
 
 		Book book = bRepository.getBookByID((FsModule)module, bookID);
 		if (book == null) {
-			bRepository.loadBooks((FsModule) module);
+			try {
+				bRepository.loadBooks((FsModule) module);
+			} catch (BooksDefinitionException e) {
+				Log.e(TAG, e.getMessage());
+			} catch (BookDefinitionException e) {
+				Log.e(TAG, e.getMessage());
+			}
 			book = bRepository.getBookByID((FsModule)module, bookID);
 		}
 		if (book == null) {
@@ -72,7 +81,8 @@ public class FsBookController implements IBookController {
 	}		
 
 	
-	public LinkedHashMap<String, String> search(Module module, String query, String fromBookID, String toBookID) throws ModuleNotFoundException, CreateModuleErrorException, BookNotFoundException {
+	public LinkedHashMap<String, String> search(Module module, String query, String fromBookID, String toBookID) 
+			throws ModuleNotFoundException, BookNotFoundException {
 		LinkedHashMap<String, String> searchRes = new LinkedHashMap<String, String>();
 	
 		if (query.trim().equals("")) {
@@ -89,17 +99,23 @@ public class FsBookController implements IBookController {
 		regQuery = ".*?" + regQuery + ".*?"; // любые символы в начале и конце
 	
 		boolean startSearch = false;
-		for (String bookID : getBooks(module).keySet()) {
-			if (!startSearch) {
-				startSearch = bookID.equals(fromBookID);
+		try {
+			for (String bookID : getBooks(module).keySet()) {
 				if (!startSearch) {
-					continue;
+					startSearch = bookID.equals(fromBookID);
+					if (!startSearch) {
+						continue;
+					}
+				} 
+				searchRes.putAll(bRepository.searchInBook((FsModule)module, bookID, regQuery));
+				if (bookID.equals(toBookID)) {
+					break;
 				}
-			} 
-			searchRes.putAll(bRepository.searchInBook((FsModule)module, bookID, regQuery));
-			if (bookID.equals(toBookID)) {
-				break;
 			}
+		} catch (BooksDefinitionException e) {
+			Log.e(TAG, e.getMessage());
+		} catch (BookDefinitionException e) {
+			Log.e(TAG, e.getMessage());
 		}
 
 		return searchRes;

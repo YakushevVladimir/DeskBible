@@ -1,23 +1,20 @@
 package com.BibleQuote.managers;
 
-import java.util.TreeMap;
-
 import com.BibleQuote.exceptions.ModuleNotFoundException;
-import com.BibleQuote.listeners.ChangeModulesEvent;
-import com.BibleQuote.listeners.ChangeModulesEvent.ChangeCode;
 import com.BibleQuote.models.Module;
 import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.Task;
 
-public class AsyncOpenModules extends Task {
+public class AsyncOpenModule extends Task {
 	private final String TAG = "AsyncTaskChapterOpen";
 	
-	private ChangeModulesEvent event;
 	private Librarian librarian;
 	private Module nextClosedModule = null;
 	private Boolean isReload = false;
+	private Exception exception;
+	private Boolean isSuccess;
 	
-	public AsyncOpenModules(String message, Boolean isHidden, Librarian librarian, Boolean isReload) {
+	public AsyncOpenModule(String message, Boolean isHidden, Librarian librarian, Boolean isReload) {
 		super(message, isHidden);
 		this.librarian = librarian;
 		this.isReload = isReload;
@@ -26,6 +23,7 @@ public class AsyncOpenModules extends Task {
 	
 	@Override
 	protected Boolean doInBackground(String... arg0) {
+		isSuccess = false;
 		try {
 			if (isReload) {
 				librarian.loadModules();
@@ -35,13 +33,12 @@ public class AsyncOpenModules extends Task {
 			if (module != null) {
 				Log.i(TAG, String.format("Open module with moduleID=%1$s", module.getID()));
 				module = librarian.openModule(module.getID(), module.getDataSourceID());
-				TreeMap<String, Module> modules = new TreeMap<String, Module>();
-				modules.put(module.getID(), module);
-				event = new ChangeModulesEvent(ChangeCode.ModulesChanged, modules);
 				nextClosedModule = librarian.getClosedModule();
 			}
+			isSuccess = true;
 		} catch (ModuleNotFoundException e) {
-			Log.e(TAG, String.format("doInBackground(): %1$s", e.toString()), e);
+			//Log.e(TAG, String.format("doInBackground(): %1$s", e.toString()), e);
+			exception = e;
 		}
 		return true;
 	}
@@ -52,11 +49,13 @@ public class AsyncOpenModules extends Task {
 		super.onPostExecute(result);
 	}
 
-	
-	public ChangeModulesEvent getEvent() {
-		return event;
+	public Exception getException() {
+		return exception;
 	}
-	
+
+	public Boolean isSuccess() {
+		return isSuccess;
+	}
 	
 	public Module getNextClosedModule() {
 		return nextClosedModule;
