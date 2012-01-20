@@ -5,7 +5,7 @@ import com.BibleQuote.models.Module;
 import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.Task;
 
-public class AsyncOpenModules extends Task {
+public class AsyncOpenModule extends Task {
 	private final String TAG = "AsyncTaskChapterOpen";
 	
 	private Librarian librarian;
@@ -14,7 +14,7 @@ public class AsyncOpenModules extends Task {
 	private Exception exception;
 	private Boolean isSuccess;
 	
-	public AsyncOpenModules(String message, Boolean isHidden, Librarian librarian, Boolean isReload) {
+	public AsyncOpenModule(String message, Boolean isHidden, Librarian librarian, Boolean isReload) {
 		super(message, isHidden);
 		this.librarian = librarian;
 		this.isReload = isReload;

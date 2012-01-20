@@ -27,10 +27,10 @@ public class AsyncOpenChapter extends Task {
 	
 	@Override
 	protected Boolean doInBackground(String... arg0) {
-		Log.i(TAG, String.format("Open OSIS link with moduleID=%1$s, bookID=%2$s, chapterNumber=%3$s", 
-				link.getModuleID(), link.getBookID(), link.getChapterNumber()));
 		isSuccess = false;
 		try {
+			Log.i(TAG, String.format("Open OSIS link with moduleID=%1$s, bookID=%2$s, chapterNumber=%3$s", 
+					link.getModuleID(), link.getBookID(), link.getChapterNumber()));
 
 			Module module = librarian.openModule(link.getModuleID(), link.getModuleDatasourceID());
 			Book book = librarian.openBook(module, link.getBookID());
