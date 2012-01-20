@@ -2,7 +2,7 @@ package com.BibleQuote.dal.repository;
 
 import java.util.Collection;
 
-import com.BibleQuote.exceptions.ModuleNotFoundException;
+import com.BibleQuote.exceptions.OpenModuleException;
 
 public interface IModuleRepository<TModuleId, TModule> {
     
@@ -12,7 +12,7 @@ public interface IModuleRepository<TModuleId, TModule> {
 	 */
 	Collection<TModule> loadModules();
 	
-	TModule loadModuleById(TModuleId moduleDataSourceId) throws ModuleNotFoundException;
+	TModule loadModuleById(TModuleId moduleDataSourceId) throws OpenModuleException;
 	
     void insertModule(TModule module);
     

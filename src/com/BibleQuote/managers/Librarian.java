@@ -34,7 +34,7 @@ import com.BibleQuote.exceptions.BookDefinitionException;
 import com.BibleQuote.exceptions.BookNotFoundException;
 import com.BibleQuote.exceptions.BooksDefinitionException;
 import com.BibleQuote.exceptions.CreateModuleErrorException;
-import com.BibleQuote.exceptions.ModuleNotFoundException;
+import com.BibleQuote.exceptions.OpenModuleException;
 import com.BibleQuote.listeners.ChangeBooksEvent;
 import com.BibleQuote.listeners.IChangeBooksListener;
 import com.BibleQuote.models.Book;
@@ -100,14 +100,14 @@ public class Librarian implements IChangeBooksListener  {
 		}		
 	}
 	
-	public ArrayList<Book> getBookList(Module module) throws ModuleNotFoundException, BooksDefinitionException, BookDefinitionException {
+	public ArrayList<Book> getBookList(Module module) throws OpenModuleException, BooksDefinitionException, BookDefinitionException {
 		return bookCtrl.getBookList(module);
 	}
 	
-	public Module openModule(String moduleID, String moduleDatasourceID) throws ModuleNotFoundException {
+	public Module openModule(String moduleID, String moduleDatasourceID) throws OpenModuleException {
 		try {
 			currModule = moduleCtrl.getModuleByID(moduleID);
-		} catch(ModuleNotFoundException e) {
+		} catch(OpenModuleException e) {
 			currModule = moduleCtrl.getModuleByDatasourceID(moduleDatasourceID);
 		}
 		currBook = null;
@@ -117,7 +117,7 @@ public class Librarian implements IChangeBooksListener  {
 		return currModule;
 	}
 	
-	public Book openBook(Module module, String bookID) throws BookNotFoundException, ModuleNotFoundException {
+	public Book openBook(Module module, String bookID) throws BookNotFoundException, OpenModuleException {
 		currBook = bookCtrl.getBookByID(module, bookID);
 		currChapter = null;
 		currChapterNumber = -1;
@@ -157,7 +157,7 @@ public class Librarian implements IChangeBooksListener  {
 	}
 	
 	
-	public ArrayList<ItemList> getModuleBooksList(String moduleID) throws ModuleNotFoundException, BooksDefinitionException, BookDefinitionException {
+	public ArrayList<ItemList> getModuleBooksList(String moduleID) throws OpenModuleException, BooksDefinitionException, BookDefinitionException {
 		// Получим модуль по его ID
 		currModule = moduleCtrl.getModuleByID(moduleID);
 		ArrayList<ItemList> booksList = new ArrayList<ItemList>();
@@ -167,7 +167,7 @@ public class Librarian implements IChangeBooksListener  {
 		return booksList;
 	}
 
-	public ArrayList<ItemList> getCurrentModuleBooksList() throws ModuleNotFoundException, BooksDefinitionException, BookDefinitionException {
+	public ArrayList<ItemList> getCurrentModuleBooksList() throws OpenModuleException, BooksDefinitionException, BookDefinitionException {
 		if (currModule == null) {
 			return new ArrayList<ItemList>();
 		}
@@ -176,24 +176,24 @@ public class Librarian implements IChangeBooksListener  {
 
 	/**
 	 * Возвращает список глав книги
-	 * @throws ModuleNotFoundException 
+	 * @throws OpenModuleException 
 	 * @throws BookNotFoundException 
 	 * @throws LoadBooksException 
 	 */
 	public ArrayList<String> getChaptersList(String moduleID, String bookID) 
-			throws BookNotFoundException, ModuleNotFoundException {
+			throws BookNotFoundException, OpenModuleException {
 		// Получим модуль по его ID
 		currModule = getModule(moduleID);
 		currBook = bookCtrl.getBookByID(currModule, bookID);
 		return currBook.getChapterNumbers(currModule.ChapterZero);
 	}
 
-	private Module getModule(String moduleID) throws ModuleNotFoundException{
+	private Module getModule(String moduleID) throws OpenModuleException{
 		return moduleCtrl.getModuleByID(moduleID);
 	}
 	
 
-	public void nextChapter() throws ModuleNotFoundException{
+	public void nextChapter() throws OpenModuleException{
 		if (currModule == null || currBook == null) {
 			return;
 		}
@@ -219,7 +219,7 @@ public class Librarian implements IChangeBooksListener  {
 		}
 	}
 
-	public void prevChapter() throws ModuleNotFoundException{
+	public void prevChapter() throws OpenModuleException{
 		if (currModule == null || currBook == null) {
 			return;
 		}
@@ -351,7 +351,7 @@ public class Librarian implements IChangeBooksListener  {
 		return searchResults;
 	}
 	
-	public LinkedHashMap<String, String> search(String query, String fromBook, String toBook) throws ModuleNotFoundException, CreateModuleErrorException, BookNotFoundException{
+	public LinkedHashMap<String, String> search(String query, String fromBook, String toBook) throws OpenModuleException, CreateModuleErrorException, BookNotFoundException{
 		if (currModule == null) {
 			return new LinkedHashMap<String, String>();
 		} else {
@@ -370,12 +370,12 @@ public class Librarian implements IChangeBooksListener  {
 		return currModule.getName();
 	}
 
-	public String getBookFullName(String moduleID, String bookID) throws BookNotFoundException, ModuleNotFoundException{
+	public String getBookFullName(String moduleID, String bookID) throws BookNotFoundException, OpenModuleException{
 		// Получим модуль по его ID
 		Module module;
 		try {
 			module = getModule(moduleID);
-		} catch (ModuleNotFoundException e) {
+		} catch (OpenModuleException e) {
 			return "---";
 		}
 
@@ -389,12 +389,12 @@ public class Librarian implements IChangeBooksListener  {
 		return book.Name;
 	}
 
-	public String getBookShortName(String moduleID, String bookID) throws BookNotFoundException, ModuleNotFoundException{
+	public String getBookShortName(String moduleID, String bookID) throws BookNotFoundException, OpenModuleException{
 		// Получим модуль по его ID
 		Module module;
 		try {
 			module = getModule(moduleID);
-		} catch (ModuleNotFoundException e) {
+		} catch (OpenModuleException e) {
 			return "---";
 		}
 		if (bookID == "---") {
@@ -440,7 +440,7 @@ public class Librarian implements IChangeBooksListener  {
 		return new OSISLink(currModule, currBook, currChapterNumber, currVerseNumber);
 	}
 	
-	public String getOSIStoHuman(String linkOSIS) throws BookNotFoundException, ModuleNotFoundException {
+	public String getOSIStoHuman(String linkOSIS) throws BookNotFoundException, OpenModuleException {
 		String[] param = linkOSIS.split("\\.");
 		if (param.length < 3) {
 			return "";
@@ -453,7 +453,7 @@ public class Librarian implements IChangeBooksListener  {
 		Module currModule;
 		try {
 			currModule = getModule(moduleID);
-		} catch (ModuleNotFoundException e) {
+		} catch (OpenModuleException e) {
 			return "";
 		}
 		Book currBook = bookCtrl.getBookByID(currModule, bookID);

@@ -38,7 +38,7 @@ import com.BibleQuote.entity.ItemList;
 import com.BibleQuote.exceptions.BookDefinitionException;
 import com.BibleQuote.exceptions.BookNotFoundException;
 import com.BibleQuote.exceptions.BooksDefinitionException;
-import com.BibleQuote.exceptions.ModuleNotFoundException;
+import com.BibleQuote.exceptions.OpenModuleException;
 import com.BibleQuote.managers.AsyncManager;
 import com.BibleQuote.managers.AsyncOpenBooks;
 import com.BibleQuote.managers.AsyncOpenModule;
@@ -212,7 +212,7 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 			bookShortName = myLibrarian.getBookShortName(moduleID, bookID);
 		} catch (BookNotFoundException e) {
 			Log.i(TAG, e.toString());
-		} catch (ModuleNotFoundException e) {
+		} catch (OpenModuleException e) {
 			Log.i(TAG, e.toString());
 		}
 		
@@ -264,7 +264,7 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 				}
 			} catch (BookNotFoundException e) {
 				Log.i(TAG, e.toString());
-			} catch (ModuleNotFoundException e) {
+			} catch (OpenModuleException e) {
 				Log.i(TAG, e.toString());
 			}
 			break;
@@ -305,7 +305,7 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 		if (myLibrarian.getModulesList().size() > 0) {
 			try {
 				books = myLibrarian.getModuleBooksList(moduleID);
-			} catch (ModuleNotFoundException e) {
+			} catch (OpenModuleException e) {
 				// TODO Show an alert with an error message 
 				Log.i(TAG, e.toString());
 				new NotifyDialog(e.getMessage(), this).show();
@@ -331,7 +331,7 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 			chapters = myLibrarian.getChaptersList(moduleID, bookID);
 		} catch (BookNotFoundException e) {
 			Log.i(TAG, e.toString());
-		} catch (ModuleNotFoundException e) {
+		} catch (OpenModuleException e) {
 			Log.i(TAG, e.toString());
 		}
 		return new ArrayAdapter<String>(this, R.layout.chapter_item,
@@ -360,50 +360,76 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 		Log.i(TAG, "onTaskComplete()");
 		if (task != null && !task.isCancelled()) {
 			if (task instanceof AsyncOpenModule) {
-				AsyncOpenModule t = ((AsyncOpenModule) task);
-				if (t.isSuccess()) {
-					if (this.viewMode == MODULE_VIEW) {
-						UpdateView(MODULE_VIEW);
-					}
-					// to continue open closed modules in background 
-					if (t.getNextClosedModule() != null) {
-						mAsyncManager.setupTask(
-							new AsyncOpenModule(messageLoadModules, true, myLibrarian, false), Books.this);
-					}
-				} else {
-					Exception e = t.getException();
-					if (e instanceof ModuleNotFoundException) {
-						// TODO Show an alert with an error message 
-						Log.e(TAG, e.getMessage());
-						new NotifyDialog(e.getMessage(), this).show();
-					}  
-				}
+				onAsyncOpenModuleComplete((AsyncOpenModule) task); 
 				
 			} else if (task instanceof AsyncOpenBooks) {
-				AsyncOpenBooks t = ((AsyncOpenBooks) task);
-				if (t.isSuccess()) {
-					moduleID = t.getModule().getID();
-					setButtonText();
-					UpdateView(BOOK_VIEW);
-				} else {
-					Exception e = t.getException();
-					if (e instanceof ModuleNotFoundException) {
-						// TODO Show an alert with an error message 
-						Log.e(TAG, e.getMessage());
-						new NotifyDialog(e.getMessage(), this).show();
-					} else if (e instanceof BooksDefinitionException) {
-						// TODO Show an alert with an error message 
-						Log.e(TAG, e.getMessage());
-						new NotifyDialog(e.getMessage(), this).show();
-					} else if (e instanceof BookDefinitionException) {
-						// TODO Show an alert with an error message 
-						Log.e(TAG, e.getMessage());
-						new NotifyDialog(e.getMessage(), this).show();
-					}  
-				}
+				onAsyncOpenBooksComplete((AsyncOpenBooks) task);
 			}
 		}	
 	}
+	
+	private void onAsyncOpenModuleComplete(AsyncOpenModule task) {
+		if (task.isSuccess()) {
+			if (this.viewMode == MODULE_VIEW) {
+				UpdateView(MODULE_VIEW);
+			}
+			// to continue open closed modules in background 
+			if (task.getNextClosedModule() != null) {
+				mAsyncManager.setupTask(
+					new AsyncOpenModule(messageLoadModules, true, myLibrarian, false), Books.this);
+			}
+			
+		} else {
+			Exception e = task.getException();
+			if (e instanceof OpenModuleException) {
+				OpenModuleException ex = (OpenModuleException) e;
+				String message = String.format(
+						getResources().getString(R.string.exception_open_module), 
+						ex.getModuleId(), ex.getModuleDatasourceId());
+				Log.e(TAG, message);
+				new NotifyDialog(message, this).show();		
+			}  
+		}		
+	}
+	
+	
+	private void onAsyncOpenBooksComplete(AsyncOpenBooks task) {
+		if (task.isSuccess()) {
+			moduleID = task.getModule().getID();
+			setButtonText();
+			UpdateView(BOOK_VIEW);
+			
+		} else {
+			Exception e = task.getException();
+			if (e instanceof OpenModuleException) {
+				OpenModuleException ex = (OpenModuleException) e;
+				String message = String.format(
+						getResources().getString(R.string.exception_open_module), 
+						ex.getModuleId(), ex.getModuleDatasourceId());
+				Log.e(TAG, message);
+				new NotifyDialog(message, this).show();				
+				
+			} else if (e instanceof BooksDefinitionException) {
+				BooksDefinitionException ex = (BooksDefinitionException) e;
+				String message = String.format(
+						getResources().getString(R.string.exception_books_definition), 
+						ex.getModuleDatasourceID(), ex.getBooksCount(), 
+						ex.getPathNameCount(), ex.getFullNameCount(), ex.getShortNameCount(), ex.getChapterQtyCount());
+				Log.e(TAG, message);
+				new NotifyDialog(message, this).show();
+				
+			} else if (e instanceof BookDefinitionException) {
+				BookDefinitionException ex = (BookDefinitionException) e;
+				String message = String.format( 
+						getResources().getString(R.string.exception_book_definition),
+						ex.getBookNumber(), ex.getModuleDatasourceID(), 
+						ex.getPathName(), ex.getFullName(), ex.getShortName(), ex.getChapterQty());
+				Log.e(TAG, message);
+				new NotifyDialog(message, this).show();
+			}  
+		}		
+	}
+	
 	
     @Override
     public Object onRetainNonConfigurationInstance() {

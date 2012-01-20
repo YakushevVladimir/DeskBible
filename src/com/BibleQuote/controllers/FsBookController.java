@@ -11,7 +11,7 @@ import com.BibleQuote.dal.repository.IModuleRepository;
 import com.BibleQuote.exceptions.BookDefinitionException;
 import com.BibleQuote.exceptions.BookNotFoundException;
 import com.BibleQuote.exceptions.BooksDefinitionException;
-import com.BibleQuote.exceptions.ModuleNotFoundException;
+import com.BibleQuote.exceptions.OpenModuleException;
 import com.BibleQuote.models.Book;
 import com.BibleQuote.models.FsBook;
 import com.BibleQuote.models.FsModule;
@@ -29,7 +29,7 @@ public class FsBookController implements IBookController {
     }
 	
 	
-	public LinkedHashMap<String, Book> getBooks(Module module) throws ModuleNotFoundException, BooksDefinitionException, BookDefinitionException {
+	public LinkedHashMap<String, Book> getBooks(Module module) throws OpenModuleException, BooksDefinitionException, BookDefinitionException {
 		module = getValidModule(module);
 		
 		LinkedHashMap<String, Book> result = new LinkedHashMap<String, Book>();
@@ -48,7 +48,7 @@ public class FsBookController implements IBookController {
 	}
 	
 	
-	public ArrayList<Book> getBookList(Module module) throws ModuleNotFoundException, BooksDefinitionException, BookDefinitionException {
+	public ArrayList<Book> getBookList(Module module) throws OpenModuleException, BooksDefinitionException, BookDefinitionException {
 		module = getValidModule(module);
 
 		ArrayList<FsBook> bookList = (ArrayList<FsBook>) bRepository.getBooks((FsModule)module);
@@ -60,7 +60,7 @@ public class FsBookController implements IBookController {
 	}	
 	
 	
-	public Book getBookByID(Module module, String bookID) throws BookNotFoundException, ModuleNotFoundException {
+	public Book getBookByID(Module module, String bookID) throws BookNotFoundException, OpenModuleException {
 		module = getValidModule(module);
 
 		Book book = bRepository.getBookByID((FsModule)module, bookID);
@@ -82,7 +82,7 @@ public class FsBookController implements IBookController {
 
 	
 	public LinkedHashMap<String, String> search(Module module, String query, String fromBookID, String toBookID) 
-			throws ModuleNotFoundException, BookNotFoundException {
+			throws OpenModuleException, BookNotFoundException {
 		LinkedHashMap<String, String> searchRes = new LinkedHashMap<String, String>();
 	
 		if (query.trim().equals("")) {
@@ -122,14 +122,23 @@ public class FsBookController implements IBookController {
 	}
 	
 	
-	private Module getValidModule(Module module) throws ModuleNotFoundException {
-		if (module.getIsClosed()) {
-			module = mRepository.loadModuleById((String) module.getDataSourceID());
+	private Module getValidModule(Module module) throws OpenModuleException {
+		if (module == null) {
+			throw new OpenModuleException("", "");
 		}
+		
 		String moduleID = module.getID();
+		String moduleDatasourceID = module.getDataSourceID();
+		if (module.getIsClosed()) {
+			module = mRepository.loadModuleById(moduleDatasourceID);
+			if (module != null) {
+				moduleID = module.getID();
+			}
+		}
+		
 		module = mRepository.getModuleByID(moduleID);
 		if (module == null) {
-			throw new ModuleNotFoundException(moduleID);
+			throw new OpenModuleException(moduleID, moduleDatasourceID);
 		}
 		return module;
 	}

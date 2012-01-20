@@ -1,6 +1,6 @@
 package com.BibleQuote.managers;
 
-import com.BibleQuote.exceptions.ModuleNotFoundException;
+import com.BibleQuote.exceptions.OpenModuleException;
 import com.BibleQuote.models.Module;
 import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.Task;
@@ -36,7 +36,7 @@ public class AsyncOpenModule extends Task {
 				nextClosedModule = librarian.getClosedModule();
 			}
 			isSuccess = true;
-		} catch (ModuleNotFoundException e) {
+		} catch (OpenModuleException e) {
 			//Log.e(TAG, String.format("doInBackground(): %1$s", e.toString()), e);
 			exception = e;
 		}

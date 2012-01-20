@@ -1,7 +1,7 @@
 package com.BibleQuote.managers;
 
 import com.BibleQuote.exceptions.BookNotFoundException;
-import com.BibleQuote.exceptions.ModuleNotFoundException;
+import com.BibleQuote.exceptions.OpenModuleException;
 import com.BibleQuote.models.Book;
 import com.BibleQuote.models.Chapter;
 import com.BibleQuote.models.Module;
@@ -38,7 +38,7 @@ public class AsyncOpenChapter extends Task {
 			chapter = librarian.openChapter(book, link.getChapterNumber(), link.getVerseNumber());
 			isSuccess = true;
 
-		} catch (ModuleNotFoundException e) {
+		} catch (OpenModuleException e) {
 			//Log.e(TAG, String.format("doInBackground(%1$s)", link), e);
 			exception = e;
 		} catch (BookNotFoundException e) {
