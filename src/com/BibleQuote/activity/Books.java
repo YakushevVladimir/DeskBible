@@ -384,9 +384,7 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 				if (t.isSuccess()) {
 					moduleID = t.getModule().getID();
 					setButtonText();
-					if (this.viewMode == BOOK_VIEW) {
-						UpdateView(BOOK_VIEW);
-					}
+					UpdateView(BOOK_VIEW);
 				} else {
 					Exception e = t.getException();
 					if (e instanceof ModuleNotFoundException) {

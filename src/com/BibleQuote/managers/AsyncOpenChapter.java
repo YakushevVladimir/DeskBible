@@ -17,6 +17,7 @@ public class AsyncOpenChapter extends Task {
 	private Exception exception;
 	private Boolean isSuccess;
 	private Chapter chapter;
+	private Integer verseNumber;
 	
 	public AsyncOpenChapter(String message, Boolean isHidden, Librarian librarian, OSISLink link) {
 		super(message, isHidden);
@@ -29,12 +30,12 @@ public class AsyncOpenChapter extends Task {
 	protected Boolean doInBackground(String... arg0) {
 		isSuccess = false;
 		try {
-			Log.i(TAG, String.format("Open OSIS link with moduleID=%1$s, bookID=%2$s, chapterNumber=%3$s", 
-					link.getModuleID(), link.getBookID(), link.getChapterNumber()));
+			Log.i(TAG, String.format("Open OSIS link with moduleID=%1$s, bookID=%2$s, chapterNumber=%3$s, verseNumber=%4$s", 
+					link.getModuleID(), link.getBookID(), link.getChapterNumber(), link.getVerseNumber()));
 
 			Module module = librarian.openModule(link.getModuleID(), link.getModuleDatasourceID());
 			Book book = librarian.openBook(module, link.getBookID());
-			chapter = librarian.openChapter(book, link.getChapterNumber());
+			chapter = librarian.openChapter(book, link.getChapterNumber(), link.getVerseNumber());
 			isSuccess = true;
 
 		} catch (ModuleNotFoundException e) {
@@ -64,4 +65,9 @@ public class AsyncOpenChapter extends Task {
 	public Chapter getChapter() {
 		return chapter;
 	}
+
+	public Integer getVerseNumber() {
+		return verseNumber;
+	}
+
 }

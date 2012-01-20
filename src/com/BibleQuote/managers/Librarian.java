@@ -125,10 +125,10 @@ public class Librarian implements IChangeBooksListener  {
 		return currBook;
 	}
 	
-	public Chapter openChapter(Book book, Integer chapterNumber) throws BookNotFoundException {
+	public Chapter openChapter(Book book, Integer chapterNumber, Integer verseNumber) throws BookNotFoundException {
 		currChapter = chapterCtrl.getChapter(book, chapterNumber);
 		currChapterNumber = chapterNumber;
-		currVerseNumber = 1;
+		currVerseNumber = verseNumber != null ? verseNumber : 1;
 		return currChapter;
 	}
 	
