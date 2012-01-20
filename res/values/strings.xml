@@ -91,4 +91,8 @@
     <string name="fav_sort_alphabetically">Sort</string>
     <string name="fav_delete_all">Delete all</string>
     <string name="fav_delete_all_question">Are you sure you want to delete all bookmarks?</string>
+    <!-- Exceptions -->
+    <string name="exception_book_definition">Incorrect attributes of book #%1$s in module %2$s: PathName=%3$s, FullName=%4$s, ShortName=%5$s, ChapterQty=%6$s</string>
+    <string name="exception_books_definition">Incorrect books definition in module %1$s: BookQty=%2$s, PathName#=%3$s, FullName#=%4$s, ShortName#=%5$s, ChapterQty#=%6$s</string>
+    <string name="exception_open_module">Incorrect module %1$s(%2$s)</string>
 </resources>

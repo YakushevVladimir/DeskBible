@@ -6,7 +6,7 @@ import java.util.LinkedHashMap;
 import com.BibleQuote.exceptions.BookDefinitionException;
 import com.BibleQuote.exceptions.BookNotFoundException;
 import com.BibleQuote.exceptions.BooksDefinitionException;
-import com.BibleQuote.exceptions.ModuleNotFoundException;
+import com.BibleQuote.exceptions.OpenModuleException;
 
 public interface IBookRepository<TModule, TBook> {
     
@@ -14,7 +14,7 @@ public interface IBookRepository<TModule, TBook> {
 	 * Data source related methods
 	 * 
 	 */
-	Collection<TBook> loadBooks(TModule module) throws ModuleNotFoundException, BooksDefinitionException, BookDefinitionException;
+	Collection<TBook> loadBooks(TModule module) throws OpenModuleException, BooksDefinitionException, BookDefinitionException;
 	
 //	void insertBook(TBook book);
 //    

@@ -5,7 +5,7 @@ import java.util.TreeMap;
 
 import com.BibleQuote.dal.FsLibraryUnitOfWork;
 import com.BibleQuote.dal.repository.IModuleRepository;
-import com.BibleQuote.exceptions.ModuleNotFoundException;
+import com.BibleQuote.exceptions.OpenModuleException;
 import com.BibleQuote.models.FsModule;
 import com.BibleQuote.models.Module;
 
@@ -47,26 +47,28 @@ public class FsModuleController implements IModuleController {
 	}
 	
 
-	public Module getModuleByID(String moduleID) throws ModuleNotFoundException {
+	public Module getModuleByID(String moduleID) throws OpenModuleException {
 		FsModule fsModule = mRepository.getModuleByID(moduleID);
+		String moduleDatasourceID = "";
 		if (fsModule != null && fsModule.getIsClosed()) {
-			fsModule = mRepository.loadModuleById(fsModule.getDataSourceID());
+			moduleDatasourceID = fsModule.getDataSourceID();
+			fsModule = mRepository.loadModuleById(moduleDatasourceID);
 		}
 		if (fsModule == null) {
-			throw new ModuleNotFoundException(moduleID);
+			throw new OpenModuleException(moduleID, moduleDatasourceID);
 		}
 		return 	fsModule;		
 	}
 	
 	
 	@Override
-	public Module getModuleByDatasourceID(String moduleDatasourceID) throws ModuleNotFoundException {
+	public Module getModuleByDatasourceID(String moduleDatasourceID) throws OpenModuleException {
 		FsModule fsModule = mRepository.getModuleByDatasourceID(moduleDatasourceID);
 		if (fsModule != null && fsModule.getIsClosed()) {
 			fsModule = mRepository.loadModuleById(fsModule.getDataSourceID());
 		}
 		if (fsModule == null) {
-			throw new ModuleNotFoundException(moduleDatasourceID);
+			throw new OpenModuleException("", moduleDatasourceID);
 		}
 		return 	fsModule;		
 	}

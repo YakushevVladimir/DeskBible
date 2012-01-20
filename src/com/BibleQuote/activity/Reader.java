@@ -50,7 +50,7 @@ import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
 import com.BibleQuote.controls.ReaderWebView;
 import com.BibleQuote.exceptions.BookNotFoundException;
-import com.BibleQuote.exceptions.ModuleNotFoundException;
+import com.BibleQuote.exceptions.OpenModuleException;
 import com.BibleQuote.listeners.ISearchListener;
 import com.BibleQuote.listeners.SearchInLibraryEvent;
 import com.BibleQuote.managers.AsyncManager;
@@ -344,7 +344,7 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
 	public void prevChapter() {
 		try {
 			myLibrarian.prevChapter();
-		} catch (ModuleNotFoundException e) {
+		} catch (OpenModuleException e) {
 			Log.e(TAG, "prevChapter()", e);
 		}
 		viewCurrentChapter();
@@ -353,7 +353,7 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
 	public void nextChapter() {
 		try {
 			myLibrarian.nextChapter();
-		} catch (ModuleNotFoundException e) {
+		} catch (OpenModuleException e) {
 			Log.e(TAG, "nextChapter()", e);
 		}
 		viewCurrentChapter();
@@ -458,7 +458,7 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
 					//mAsyncManager.setupTask(new AsyncOpenChapter(progressMessage, false, myLibrarian, OSISLink), this);
 				} else {
 					Exception e = t.getException();
-					if (e instanceof ModuleNotFoundException) {
+					if (e instanceof OpenModuleException) {
 						// TODO Show an alert with an error message 
 						Log.e(TAG, e.getMessage());
 						new NotifyDialog(e.getMessage(), this).show();
