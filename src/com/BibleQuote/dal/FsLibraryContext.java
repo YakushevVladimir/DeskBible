@@ -28,6 +28,8 @@ import java.util.TreeMap;
 import android.content.Context;
 
 import com.BibleQuote.controllers.CacheModuleController;
+import com.BibleQuote.exceptions.BookDefinitionException;
+import com.BibleQuote.exceptions.BooksDefinitionException;
 import com.BibleQuote.exceptions.FileAccessException;
 import com.BibleQuote.models.Book;
 import com.BibleQuote.models.Chapter;
@@ -199,14 +201,15 @@ public class FsLibraryContext extends LibraryContext {
 		module.setIsClosed(false);
 	}	
 	
-	public void fillBooks(FsModule module, BufferedReader bReader) throws FileAccessException {
+	public void fillBooks(FsModule module, BufferedReader bReader) throws FileAccessException, BooksDefinitionException, BookDefinitionException {
 		String str, key, value;
 		
 		ArrayList<String> fullNames = new ArrayList<String>();
 		ArrayList<String> pathNames = new ArrayList<String>();
 		ArrayList<String> shortNames = new ArrayList<String>();
 		ArrayList<Integer> chapterQty = new ArrayList<Integer>();
-
+		int booksCount = 0;
+		
 		int pos;
 		try {
 			while ((str = bReader.readLine()) != null) {
@@ -221,8 +224,9 @@ public class FsLibraryContext extends LibraryContext {
 
 				key = str.substring(0, delimiterPos).trim().toLowerCase();
 				delimiterPos++;
-				value = delimiterPos >= str.length() ? "" : str.substring(
-						delimiterPos, str.length()).trim();
+				value = delimiterPos >= str.length() 
+						? "" 
+						: str.substring(delimiterPos, str.length()).trim();
 
 				if (key.equals("pathname")) {
 					pathNames.add(value);
@@ -236,6 +240,10 @@ public class FsLibraryContext extends LibraryContext {
 					} catch (NumberFormatException e) {
 						chapterQty.add(0);
 					}
+				} else if (key.equals("bookqty")) {
+					try {
+						booksCount = Integer.valueOf(value);
+					} catch (NumberFormatException e) {}				
 				}
 			}
 			
@@ -245,14 +253,20 @@ public class FsLibraryContext extends LibraryContext {
 			throw new FileAccessException(message);			
 		}
 
-		for (int i = 0; i < fullNames.size(); i++) {
-			if (pathNames.size() < i || chapterQty.size() < i) {
-				break;
-			} else if (fullNames.get(i).equals("")
-					|| pathNames.get(i).equals("") || chapterQty.get(i) == 0) {
-				// Имя книги, путь к книге и кол-во глав должны быть обязательно
-				// указаны
-				continue;
+		if (booksCount == 0 || pathNames.size() < booksCount || fullNames.size() < booksCount || shortNames.size() < booksCount || chapterQty.size() < booksCount) {
+			String message = String.format(
+					"Incorrect books definition in module %1$s: BookQty=%2$s, PathNameCount=%3$s, FullNameCount=%4$s, ShortNameCount=%5$s, ChapterQtyCount=%6$s", 
+					module.getDataSourceID(), booksCount, pathNames.size(), fullNames.size(), shortNames.size(), chapterQty.size());
+			throw new BooksDefinitionException(message, module.getDataSourceID(), booksCount, pathNames.size(), fullNames.size(), shortNames.size(), chapterQty.size());	
+		}
+		
+		for (int i = 0; i < booksCount; i++) {
+			if (pathNames.get(i).equals("") || fullNames.get(i).equals("") || shortNames.get(i).equals("") || chapterQty.get(i) == 0) {
+				// Имя книги, путь к книге и кол-во глав должны быть обязательно указаны
+				String message = String.format(
+						"Incorrect attributes of book #%1$s in module %2$s: PathName=%3$s, FullName=%4$s, ShortName=%5$s, ChapterQty=%6$s", 
+						i, module.getDataSourceID(), pathNames.get(i), fullNames.get(i), shortNames.get(i), chapterQty.get(i));
+				throw new BookDefinitionException(message, module.getDataSourceID(), i, pathNames.get(i), fullNames.get(i), shortNames.get(i), chapterQty.get(i));					
 			}
 			FsBook book = new FsBook(module, fullNames.get(i), pathNames.get(i), 
 					(shortNames.size() > i ? shortNames.get(i) : ""), 

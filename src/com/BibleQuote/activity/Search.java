@@ -39,12 +39,15 @@ import android.widget.Toast;
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
 import com.BibleQuote.entity.ItemList;
+import com.BibleQuote.exceptions.BookDefinitionException;
 import com.BibleQuote.exceptions.BookNotFoundException;
+import com.BibleQuote.exceptions.BooksDefinitionException;
 import com.BibleQuote.exceptions.CreateModuleErrorException;
 import com.BibleQuote.exceptions.ModuleNotFoundException;
 import com.BibleQuote.managers.AsyncManager;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.utils.Log;
+import com.BibleQuote.utils.NotifyDialog;
 import com.BibleQuote.utils.OnTaskCompleteListener;
 import com.BibleQuote.utils.Task;
 
@@ -109,11 +112,21 @@ public class Search extends GDActivity implements OnTaskCompleteListener {
 	}
 
 	private void SpinnerInit() {
+		books = new ArrayList<ItemList>();
 		try {
 			books = myLibararian.getCurrentModuleBooksList();
 		} catch (ModuleNotFoundException e) {
+			// TODO Show an alert with an error message 
 			Log.i(TAG, e.toString());
-			books = new ArrayList<ItemList>();
+			new NotifyDialog(e.getMessage(), this).show();
+		} catch (BooksDefinitionException e) {
+			// TODO Show an alert with an error message 
+			Log.i(TAG, e.toString());
+			new NotifyDialog(e.getMessage(), this).show();
+		} catch (BookDefinitionException e) {
+			// TODO Show an alert with an error message 
+			Log.i(TAG, e.toString());
+			new NotifyDialog(e.getMessage(), this).show();
 		}
 
 		SimpleAdapter AA = new SimpleAdapter(this, books,
@@ -193,15 +206,16 @@ public class Search extends GDActivity implements OnTaskCompleteListener {
 					.get("ID");
 			String toBookID = ((ItemList) s2.getItemAtPosition(posTo))
 					.get("ID");
-
+			
+			searchResults = new LinkedHashMap<String, String>();
 			try {
 				searchResults = myLibararian.search(query, fromBookID, toBookID);
 			} catch (CreateModuleErrorException e) {
-				searchResults = new LinkedHashMap<String, String>();
+				Log.e(TAG, e.getMessage());
 			} catch (BookNotFoundException e) {
-				searchResults = new LinkedHashMap<String, String>();
+				Log.e(TAG, e.getMessage());
 			} catch (ModuleNotFoundException e) {
-				searchResults = new LinkedHashMap<String, String>();
+				Log.e(TAG, e.getMessage());
 			}
 			return true;
 		}

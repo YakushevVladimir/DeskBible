@@ -3,7 +3,9 @@ package com.BibleQuote.controllers;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
+import com.BibleQuote.exceptions.BookDefinitionException;
 import com.BibleQuote.exceptions.BookNotFoundException;
+import com.BibleQuote.exceptions.BooksDefinitionException;
 import com.BibleQuote.exceptions.CreateModuleErrorException;
 import com.BibleQuote.exceptions.ModuleNotFoundException;
 import com.BibleQuote.models.Book;
@@ -11,9 +13,9 @@ import com.BibleQuote.models.Module;
 
 public interface IBookController {
 	
-	public LinkedHashMap<String, Book> getBooks(Module module) throws ModuleNotFoundException, CreateModuleErrorException;
+	public LinkedHashMap<String, Book> getBooks(Module module) throws ModuleNotFoundException, CreateModuleErrorException, BooksDefinitionException, BookDefinitionException;
 	
-	public ArrayList<Book> getBookList(Module module) throws ModuleNotFoundException;
+	public ArrayList<Book> getBookList(Module module) throws ModuleNotFoundException, BooksDefinitionException, BookDefinitionException;
 	
 	public Book getBookByID(Module module, String bookID) throws BookNotFoundException, ModuleNotFoundException;
 	

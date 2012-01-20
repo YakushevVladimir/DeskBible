@@ -30,7 +30,9 @@ import com.BibleQuote.controllers.LibraryController;
 import com.BibleQuote.controllers.LibraryController.LibrarySource;
 import com.BibleQuote.entity.BibleBooksID;
 import com.BibleQuote.entity.ItemList;
+import com.BibleQuote.exceptions.BookDefinitionException;
 import com.BibleQuote.exceptions.BookNotFoundException;
+import com.BibleQuote.exceptions.BooksDefinitionException;
 import com.BibleQuote.exceptions.CreateModuleErrorException;
 import com.BibleQuote.exceptions.ModuleNotFoundException;
 import com.BibleQuote.listeners.ChangeBooksEvent;
@@ -98,7 +100,7 @@ public class Librarian implements IChangeBooksListener  {
 		}		
 	}
 	
-	public ArrayList<Book> getBookList(Module module) throws ModuleNotFoundException {
+	public ArrayList<Book> getBookList(Module module) throws ModuleNotFoundException, BooksDefinitionException, BookDefinitionException {
 		return bookCtrl.getBookList(module);
 	}
 	
@@ -123,10 +125,10 @@ public class Librarian implements IChangeBooksListener  {
 		return currBook;
 	}
 	
-	public Chapter openChapter(Book book, Integer chapterNumber) throws BookNotFoundException {
+	public Chapter openChapter(Book book, Integer chapterNumber, Integer verseNumber) throws BookNotFoundException {
 		currChapter = chapterCtrl.getChapter(book, chapterNumber);
 		currChapterNumber = chapterNumber;
-		currVerseNumber = 1;
+		currVerseNumber = verseNumber != null ? verseNumber : 1;
 		return currChapter;
 	}
 	
@@ -155,7 +157,7 @@ public class Librarian implements IChangeBooksListener  {
 	}
 	
 	
-	public ArrayList<ItemList> getModuleBooksList(String moduleID) throws ModuleNotFoundException {
+	public ArrayList<ItemList> getModuleBooksList(String moduleID) throws ModuleNotFoundException, BooksDefinitionException, BookDefinitionException {
 		// Получим модуль по его ID
 		currModule = moduleCtrl.getModuleByID(moduleID);
 		ArrayList<ItemList> booksList = new ArrayList<ItemList>();
@@ -165,7 +167,7 @@ public class Librarian implements IChangeBooksListener  {
 		return booksList;
 	}
 
-	public ArrayList<ItemList> getCurrentModuleBooksList() throws ModuleNotFoundException {
+	public ArrayList<ItemList> getCurrentModuleBooksList() throws ModuleNotFoundException, BooksDefinitionException, BookDefinitionException {
 		if (currModule == null) {
 			return new ArrayList<ItemList>();
 		}
@@ -176,8 +178,10 @@ public class Librarian implements IChangeBooksListener  {
 	 * Возвращает список глав книги
 	 * @throws ModuleNotFoundException 
 	 * @throws BookNotFoundException 
+	 * @throws LoadBooksException 
 	 */
-	public ArrayList<String> getChaptersList(String moduleID, String bookID) throws BookNotFoundException, ModuleNotFoundException {
+	public ArrayList<String> getChaptersList(String moduleID, String bookID) 
+			throws BookNotFoundException, ModuleNotFoundException {
 		// Получим модуль по его ID
 		currModule = getModule(moduleID);
 		currBook = bookCtrl.getBookByID(currModule, bookID);
@@ -194,16 +198,23 @@ public class Librarian implements IChangeBooksListener  {
 			return;
 		}
 		
-		currVerseNumber = 1;
 		Integer chapterQty = currBook.ChapterQty;
 		if (chapterQty > (currChapterNumber + (currModule.ChapterZero ? 1 : 0))) {
 			currChapterNumber++;
+			currVerseNumber = 1;
 		} else {
-			ArrayList<Book> books = bookCtrl.getBookList(currModule);
-			int pos = books.indexOf(currBook);
-			if (++pos < books.size()) {
-				currBook = books.get(pos);
-				currChapterNumber = currBook.getFirstChapterNumber();
+			try {
+				ArrayList<Book> books = bookCtrl.getBookList(currModule);
+				int pos = books.indexOf(currBook);
+				if (++pos < books.size()) {
+					currBook = books.get(pos);
+					currChapterNumber = currBook.getFirstChapterNumber();
+					currVerseNumber = 1;
+				}
+			} catch (BooksDefinitionException e) {
+				Log.e(TAG, e.getMessage());
+			} catch (BookDefinitionException e) {
+				Log.e(TAG, e.getMessage());
 			}
 		}
 	}
@@ -213,17 +224,24 @@ public class Librarian implements IChangeBooksListener  {
 			return;
 		}
 		
-		currVerseNumber = 1;
 		if (currChapterNumber != currBook.getFirstChapterNumber()) {
 			currChapterNumber--;
+			currVerseNumber = 1;
 		} else {
-			ArrayList<Book> books = bookCtrl.getBookList(currModule);
-			int pos = books.indexOf(currBook);
-			if (pos > 0) {
-				currBook = books.get(--pos);
-				Integer chapterQty = currBook.ChapterQty;
-				currChapterNumber = chapterQty - (currModule.ChapterZero ? 1 : 0);
-			}
+			try {			
+				ArrayList<Book> books = bookCtrl.getBookList(currModule);
+				int pos = books.indexOf(currBook);
+				if (pos > 0) {
+					currBook = books.get(--pos);
+					Integer chapterQty = currBook.ChapterQty;
+					currChapterNumber = chapterQty - (currModule.ChapterZero ? 1 : 0);
+					currVerseNumber = 1;
+				}
+			} catch (BooksDefinitionException e) {
+				Log.e(TAG, e.getMessage());
+			} catch (BookDefinitionException e) {
+				Log.e(TAG, e.getMessage());
+			}			
 		}
 	}
 	
