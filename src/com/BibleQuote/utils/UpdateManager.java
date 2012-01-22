@@ -40,39 +40,24 @@ public class UpdateManager {
 			}
 		}
 
-		String myversion;
-		try {
-			myversion = context.getPackageManager().getPackageInfo(
-					context.getPackageName(), 0).versionName;
-		} catch (NameNotFoundException e) {
-			myversion = "0.00.01";
-		}
+		int currVersionCode = Settings.getInt("versionCode", 29);
 
-		String currVersion = Settings.getString("myversion", "");
-		Log.i(TAG, "Update from version " + currVersion);
-		Boolean update = false;
-
-		if (currVersion.contains("0.03.02")
-				|| currVersion.length() == 0
-				|| update) {
-			saveExternalModule(context);
-			update = true;
-		}
-		
-		if (currVersion.contains("0.03.04") 
-				|| currVersion.contains("0.03.05") 
-				|| update) {
-			Log.i(TAG, "Delete library cache file");
+		if (currVersionCode < 30) {
+			Log.i(TAG, "Update to version 0.04.05");
+			Settings.edit().remove("myversion");
 			File cacheDir = context.getCacheDir();
-			File cacheFile = new File(cacheDir, "library.cash");
-			if (cacheFile.exists()) {
-				android.util.Log.i(TAG, "Delete library cache file");
-				cacheFile.delete();
+			for (File currFile : cacheDir.listFiles()) {
+				android.util.Log.i(TAG, String.format("Delete library cache file %1$s", currFile.getName()));
+				currFile.delete();
 			}
-			update = true;
 		}
 		
-		Settings.edit().putString("myversion", myversion).commit();
+		try {
+			int versionCode = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode;
+			Settings.edit().putInt("versionCode", versionCode);
+		} catch (NameNotFoundException e) {
+			Settings.edit().putInt("versionCode", 30);
+		}
 	}
 
 	private static void saveExternalModule(Context context) {
