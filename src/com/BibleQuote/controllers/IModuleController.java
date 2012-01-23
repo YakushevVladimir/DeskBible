@@ -7,7 +7,7 @@ import com.BibleQuote.models.Module;
 
 public interface IModuleController {
 	
-	public TreeMap<String, Module> loadModules();
+	public TreeMap<String, Module> loadFileModules();
 	
 	public TreeMap<String, Module> getModules();
 	

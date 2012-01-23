@@ -26,13 +26,13 @@ public class AsyncOpenModule extends Task {
 		isSuccess = false;
 		try {
 			if (isReload) {
-				librarian.loadModules();
+				librarian.loadFileModules();
 				isReload = false;
 			}
 			Module module = librarian.getClosedModule();
 			if (module != null) {
 				Log.i(TAG, String.format("Open module with moduleID=%1$s", module.getID()));
-				module = librarian.openModule(module.getID(), module.getDataSourceID());
+				module = librarian.getModuleByID(module.getID(), module.getDataSourceID());
 				nextClosedModule = librarian.getClosedModule();
 			}
 			isSuccess = true;
