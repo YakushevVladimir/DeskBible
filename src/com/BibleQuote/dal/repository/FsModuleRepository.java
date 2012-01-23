@@ -159,7 +159,9 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 		synchronized (context.moduleSet) {
 			context.moduleSet = new TreeMap<String, Module>();
 			for (FsModule fsModule : moduleList) {
-				context.moduleSet.put(fsModule.getID(), fsModule);
+				context.moduleSet.put(
+						fsModule.getIsClosed() ? fsModule.getDataSourceID() : fsModule.getID(), 
+						fsModule);
 			}
 		}
 	}

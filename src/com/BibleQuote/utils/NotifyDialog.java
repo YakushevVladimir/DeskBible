@@ -9,7 +9,7 @@ public class NotifyDialog {
 	
 	public NotifyDialog(String message, Context context) {
 		alertDialog = new AlertDialog.Builder(context).create();
-		alertDialog.setTitle("OOPS!");
+		alertDialog.setTitle("Oops!");
 		alertDialog.setMessage(message);
 		alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
 		   public void onClick(DialogInterface dialog, int which) {

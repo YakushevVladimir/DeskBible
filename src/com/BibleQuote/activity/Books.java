@@ -42,6 +42,7 @@ import com.BibleQuote.exceptions.OpenModuleException;
 import com.BibleQuote.managers.AsyncManager;
 import com.BibleQuote.managers.AsyncOpenBooks;
 import com.BibleQuote.managers.AsyncOpenModule;
+import com.BibleQuote.managers.AsyncRefreshModules;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.NotifyDialog;
@@ -69,6 +70,7 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 	private AsyncManager mAsyncManager;
 	private String messageLoadModules;
 	private String messageLoad;
+	private String messageRefresh;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -84,6 +86,7 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 		
 		messageLoadModules = getResources().getString(R.string.messageLoadModules);
 		messageLoad = getResources().getString(R.string.messageLoad);
+		messageRefresh = getResources().getString(R.string.messageRefresh);
 		
 		btnModule  = (Button) findViewById(R.id.btnModule);
 		btnBook    = (Button) findViewById(R.id.btnBook);
@@ -118,8 +121,8 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 		if (!mAsyncManager.isWorking()) {
 			// to continue open closed modules in background 
 			if (myLibrarian.getClosedModule() != null) {
-				mAsyncManager.setupTask(
-						new AsyncOpenModule(messageLoadModules, true, myLibrarian, false), this);
+//				mAsyncManager.setupTask(
+//						new AsyncOpenModule(messageLoadModules, true, myLibrarian, false), this);
 			}
 		}		
 	}
@@ -138,7 +141,8 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 		case R.id.action_bar_refresh:
 			if (this.viewMode == MODULE_VIEW) {
 				mAsyncManager.setupTask(
-						new AsyncOpenModule(messageLoad, false, myLibrarian, true), this);
+						new AsyncRefreshModules(messageRefresh, false, myLibrarian, this), this);
+//						new AsyncOpenModule(messageLoad, false, myLibrarian, true), this);
 			}
 			break;
 		default:
