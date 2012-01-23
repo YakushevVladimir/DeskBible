@@ -75,11 +75,12 @@
     <string name="select_module">Select a module</string>
     <string name="added">Added</string>
     <string name="removed">Deleted</string>
-    <string name="messageLoad">Load...</string>
+    <string name="messageLoad">Load ...</string>
     <string name="messageLoadCanceled">Load canceled</string>
-    <string name="messageLoadBooks">Load books...</string>
-    <string name="messageLoadModules">Load modules...</string>
-    <string name="messageSearch">Search...</string>
+    <string name="messageLoadBooks">Load books ...</string>
+    <string name="messageLoadModules">Load modules ...</string>
+    <string name="messageSearch">Search ...</string>
+    <string name="messageRefresh">Refresh ...</string>
     <string name="messageSearchCanceled">Search canceled</string>
     <string name="results">results</string>
     <string name="share">Share</string>

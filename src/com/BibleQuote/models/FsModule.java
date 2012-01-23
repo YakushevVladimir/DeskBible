@@ -74,7 +74,7 @@ public class FsModule extends Module {
 	
 	@Override
 	public String getID() {
-		return ShortName;
+		return ShortName.toUpperCase();
 	}
 
 }

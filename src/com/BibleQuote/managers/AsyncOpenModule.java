@@ -6,7 +6,7 @@ import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.Task;
 
 public class AsyncOpenModule extends Task {
-	private final String TAG = "AsyncTaskChapterOpen";
+	private final String TAG = "AsyncOpenModule";
 	
 	private Librarian librarian;
 	private Module nextClosedModule = null;

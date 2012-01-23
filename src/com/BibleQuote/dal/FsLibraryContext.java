@@ -132,7 +132,7 @@ public class FsLibraryContext extends LibraryContext {
 		String str, HTMLFilter = "", key, value;
 
 		int pos;
-		try {
+		try { 
 			while ((str = bReader.readLine()) != null) {
 				pos = str.indexOf("//");
 				if (pos >= 0)
