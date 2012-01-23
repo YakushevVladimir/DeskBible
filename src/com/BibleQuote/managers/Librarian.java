@@ -91,8 +91,8 @@ public class Librarian implements IChangeBooksListener  {
 		return moduleCtrl.getModules();
 	}
 	
-	public TreeMap<String, Module> loadModules() {
-		return moduleCtrl.loadModules();
+	public TreeMap<String, Module> loadFileModules() {
+		return moduleCtrl.loadFileModules();
 	}
 	
 	public void onChangeBooks(ChangeBooksEvent event) {
@@ -104,13 +104,13 @@ public class Librarian implements IChangeBooksListener  {
 		return bookCtrl.getBookList(module);
 	}
 	
-	public String openModules(String incorrectModuleTemplate) {
+	public String loadModules(String incorrectModuleTemplate) {
 		StringBuilder errorList = new StringBuilder();
 		this.getModules();
 		Module module = this.getClosedModule();
 		while (module != null) {
 			try {
-				this.openModule(module.getID(), module.getDataSourceID());
+				this.getModuleByID(module.getID(), module.getDataSourceID());
 			} catch (OpenModuleException e) {
 				errorList
 					.append( String.format(incorrectModuleTemplate, e.getModuleId(), e.getModuleDatasourceId() ))
@@ -121,12 +121,26 @@ public class Librarian implements IChangeBooksListener  {
 		return errorList.toString();
 	}
 	
-	public Module openModule(String moduleID, String moduleDatasourceID) throws OpenModuleException {
+	public Module getModuleByID(String moduleID, String moduleDatasourceID) throws OpenModuleException {
+		Module result;
 		try {
-			currModule = moduleCtrl.getModuleByID(moduleID);
+			result = moduleCtrl.getModuleByID(moduleID);
 		} catch(OpenModuleException e) {
-			currModule = moduleCtrl.getModuleByDatasourceID(moduleDatasourceID);
+			result = moduleCtrl.getModuleByDatasourceID(moduleDatasourceID);
 		}
+		return result;
+	}
+	
+	public Book getBookByID(Module module, String bookID) throws BookNotFoundException, OpenModuleException {
+		return bookCtrl.getBookByID(module, bookID);
+	}
+	
+	public Chapter getChapterByNumber(Book book, Integer chapterNumber) throws BookNotFoundException {
+		return chapterCtrl.getChapter(book, chapterNumber);
+	}
+	
+	public Module openModule(String moduleID, String moduleDatasourceID) throws OpenModuleException {
+		currModule = getModuleByID(moduleID, moduleDatasourceID);
 		currBook = null;
 		currChapter = null;
 		currChapterNumber = -1;
@@ -135,7 +149,7 @@ public class Librarian implements IChangeBooksListener  {
 	}
 	
 	public Book openBook(Module module, String bookID) throws BookNotFoundException, OpenModuleException {
-		currBook = bookCtrl.getBookByID(module, bookID);
+		currBook = getBookByID(module, bookID);
 		currChapter = null;
 		currChapterNumber = -1;
 		currVerseNumber = 1;		
@@ -143,7 +157,7 @@ public class Librarian implements IChangeBooksListener  {
 	}
 	
 	public Chapter openChapter(Book book, Integer chapterNumber, Integer verseNumber) throws BookNotFoundException {
-		currChapter = chapterCtrl.getChapter(book, chapterNumber);
+		currChapter = getChapterByNumber(book, chapterNumber);
 		currChapterNumber = chapterNumber;
 		currVerseNumber = verseNumber != null ? verseNumber : 1;
 		return currChapter;

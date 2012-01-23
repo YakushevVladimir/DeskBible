@@ -19,8 +19,8 @@ public class FsModuleController implements IModuleController {
     }
 	
 	
-	public TreeMap<String, Module> loadModules() {
-		ArrayList<FsModule> moduleList = (ArrayList<FsModule>) mRepository.loadModules();
+	public TreeMap<String, Module> loadFileModules() {
+		ArrayList<FsModule> moduleList = (ArrayList<FsModule>) mRepository.loadFileModules();
 		
 		TreeMap<String, Module> result = new TreeMap<String, Module>();
 		for (Module module : moduleList) {
@@ -36,7 +36,7 @@ public class FsModuleController implements IModuleController {
 	public TreeMap<String, Module> getModules() {
 		ArrayList<FsModule> moduleList = (ArrayList<FsModule>) mRepository.getModules();
 		if (moduleList.size() == 0) {
-			return loadModules();
+			return loadFileModules();
 		} else {
 			TreeMap<String, Module> result = new TreeMap<String, Module>();
 			for (Module module : moduleList) {

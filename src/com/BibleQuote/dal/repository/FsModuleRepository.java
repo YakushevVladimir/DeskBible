@@ -32,7 +32,7 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
     }
     
 
-	public Collection<FsModule> loadModules() {
+	public Collection<FsModule> loadFileModules() {
 		ArrayList<FsModule> moduleList = new ArrayList<FsModule>();
 		
 		synchronized (context.moduleSet) {

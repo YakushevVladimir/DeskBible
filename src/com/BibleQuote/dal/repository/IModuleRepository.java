@@ -10,7 +10,7 @@ public interface IModuleRepository<TModuleId, TModule> {
 	 * Data source related methods
 	 * 
 	 */
-	Collection<TModule> loadModules();
+	Collection<TModule> loadFileModules();
 	
 	TModule loadModuleById(TModuleId moduleDataSourceId) throws OpenModuleException;
 	
