@@ -20,7 +20,7 @@ public class DbModuleRepository implements IModuleRepository<Long, DbModule> {
     }
     
     
-	public Collection<DbModule> loadModules() {
+	public Collection<DbModule> loadFileModules() {
 		ArrayList<DbModule> moduleList = new ArrayList<DbModule>();
 		final Cursor cursor = db.rawQuery("SELECT * FROM Module ", null);
 		if (cursor.moveToNext()) {

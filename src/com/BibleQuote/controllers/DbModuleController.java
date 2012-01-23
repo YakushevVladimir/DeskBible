@@ -31,7 +31,7 @@ public class DbModuleController implements IModuleController {
 		TreeMap<String, Module> result = new TreeMap<String, Module>();
 		
 		ArrayList<Module> moduleList = new ArrayList<Module>();
-		moduleList.addAll(mRepository.loadModules());
+		moduleList.addAll(mRepository.loadFileModules());
 		for (Module module : moduleList) {
 			result.put(module.getID(), module);
 		}
@@ -51,7 +51,7 @@ public class DbModuleController implements IModuleController {
 	}
 
 
-	public TreeMap<String, Module> loadModules() {
+	public TreeMap<String, Module> loadFileModules() {
 		// TODO Auto-generated method stub
 		return null;
 	}

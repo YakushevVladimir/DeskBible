@@ -22,8 +22,8 @@ public class AsyncRefreshModules extends Task {
 	
 	@Override
 	protected Boolean doInBackground(String... arg0) {
-		librarian.loadModules();
-		errorMessage = librarian.openModules(context.getResources().getString(R.string.exception_open_module));
+		librarian.loadFileModules();
+		errorMessage = librarian.loadModules(context.getResources().getString(R.string.exception_open_module));
 		return true;
 	}
 	
