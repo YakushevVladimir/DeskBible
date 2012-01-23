@@ -6,7 +6,7 @@ import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.Task;
 
 public class AsyncOpenModule extends Task {
-	private final String TAG = "AsyncTaskChapterOpen";
+	private final String TAG = "AsyncOpenModule";
 	
 	private Librarian librarian;
 	private Module nextClosedModule = null;
@@ -24,22 +24,22 @@ public class AsyncOpenModule extends Task {
 	@Override
 	protected Boolean doInBackground(String... arg0) {
 		isSuccess = false;
-		if (isReload) {
-			librarian.loadModules();
-			isReload = false;
-		}
-		Module module = librarian.getClosedModule();
-		if (module != null) {
-			Log.i(TAG, String.format("Open module with moduleID=%1$s", module.getID()));
 		try {
-			module = librarian.openModule(module.getID(), module.getDataSourceID());
+			if (isReload) {
+				librarian.loadModules();
+				isReload = false;
+			}
+			Module module = librarian.getClosedModule();
+			if (module != null) {
+				Log.i(TAG, String.format("Open module with moduleID=%1$s", module.getID()));
+				module = librarian.openModule(module.getID(), module.getDataSourceID());
+				nextClosedModule = librarian.getClosedModule();
+			}
+			isSuccess = true;
 		} catch (OpenModuleException e) {
-			module.setIsClosed(true);
+			//Log.e(TAG, String.format("doInBackground(): %1$s", e.toString()), e);
 			exception = e;
 		}
-			nextClosedModule = librarian.getClosedModule();
-		}
-		isSuccess = true;
 		return true;
 	}
 	

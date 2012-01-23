@@ -104,6 +104,23 @@ public class Librarian implements IChangeBooksListener  {
 		return bookCtrl.getBookList(module);
 	}
 	
+	public String openModules(String incorrectModuleTemplate) {
+		StringBuilder errorList = new StringBuilder();
+		this.getModules();
+		Module module = this.getClosedModule();
+		while (module != null) {
+			try {
+				this.openModule(module.getID(), module.getDataSourceID());
+			} catch (OpenModuleException e) {
+				errorList
+					.append( String.format(incorrectModuleTemplate, e.getModuleId(), e.getModuleDatasourceId() ))
+					.append("\n");
+			}
+			module = this.getClosedModule();
+		}
+		return errorList.toString();
+	}
+	
 	public Module openModule(String moduleID, String moduleDatasourceID) throws OpenModuleException {
 		try {
 			currModule = moduleCtrl.getModuleByID(moduleID);

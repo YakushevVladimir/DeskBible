@@ -10,7 +10,7 @@ import com.BibleQuote.utils.OSISLink;
 import com.BibleQuote.utils.Task;
 
 public class AsyncOpenChapter extends Task {
-	private final String TAG = "AsyncTaskChapterOpen";
+	private final String TAG = "AsyncOpenChapter";
 	
 	private Librarian librarian;
 	private OSISLink link;

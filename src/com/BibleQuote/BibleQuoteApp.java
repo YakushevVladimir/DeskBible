@@ -37,19 +37,20 @@ public class BibleQuoteApp extends GDApplication {
 		PreferenceHelper.Init(this);
 		UpdateManager.Init(this);
 		getLibrarian();
+		myLibararian.openModules(getResources().getString(R.string.exception_open_module));
 	}
 
 	public Librarian getLibrarian() {
 		if (myLibararian == null) {
 			myLibararian = new Librarian(this);
-			
-			mAsyncManager = new AsyncManager();
-			myLibararian.getModules();
 		}
 		return myLibararian;
 	}
 	
 	public AsyncManager getAsyncManager() {
+		if (mAsyncManager == null) {
+			mAsyncManager = new AsyncManager();
+		}
 		return mAsyncManager;
 	}
 }
