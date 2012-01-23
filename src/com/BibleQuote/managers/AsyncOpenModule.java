@@ -24,22 +24,22 @@ public class AsyncOpenModule extends Task {
 	@Override
 	protected Boolean doInBackground(String... arg0) {
 		isSuccess = false;
+		if (isReload) {
+			librarian.loadModules();
+			isReload = false;
+		}
+		Module module = librarian.getClosedModule();
+		if (module != null) {
+			Log.i(TAG, String.format("Open module with moduleID=%1$s", module.getID()));
 		try {
-			if (isReload) {
-				librarian.loadModules();
-				isReload = false;
-			}
-			Module module = librarian.getClosedModule();
-			if (module != null) {
-				Log.i(TAG, String.format("Open module with moduleID=%1$s", module.getID()));
-				module = librarian.openModule(module.getID(), module.getDataSourceID());
-				nextClosedModule = librarian.getClosedModule();
-			}
-			isSuccess = true;
+			module = librarian.openModule(module.getID(), module.getDataSourceID());
 		} catch (OpenModuleException e) {
-			//Log.e(TAG, String.format("doInBackground(): %1$s", e.toString()), e);
+			module.setIsClosed(true);
 			exception = e;
 		}
+			nextClosedModule = librarian.getClosedModule();
+		}
+		isSuccess = true;
 		return true;
 	}
 	
