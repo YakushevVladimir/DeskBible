@@ -37,12 +37,12 @@ public class BibleQuoteApp extends GDApplication {
 		PreferenceHelper.Init(this);
 		UpdateManager.Init(this);
 		getLibrarian();
-		myLibararian.loadModules(getResources().getString(R.string.exception_open_module));
 	}
 
 	public Librarian getLibrarian() {
 		if (myLibararian == null) {
 			myLibararian = new Librarian(this);
+			myLibararian.loadModules(getResources().getString(R.string.exception_open_module));
 		}
 		return myLibararian;
 	}

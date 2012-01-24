@@ -33,7 +33,6 @@ import com.BibleQuote.entity.ItemList;
 import com.BibleQuote.exceptions.BookDefinitionException;
 import com.BibleQuote.exceptions.BookNotFoundException;
 import com.BibleQuote.exceptions.BooksDefinitionException;
-import com.BibleQuote.exceptions.CreateModuleErrorException;
 import com.BibleQuote.exceptions.OpenModuleException;
 import com.BibleQuote.listeners.ChangeBooksEvent;
 import com.BibleQuote.listeners.IChangeBooksListener;
@@ -382,7 +381,7 @@ public class Librarian implements IChangeBooksListener  {
 		return searchResults;
 	}
 	
-	public LinkedHashMap<String, String> search(String query, String fromBook, String toBook) throws OpenModuleException, CreateModuleErrorException, BookNotFoundException{
+	public LinkedHashMap<String, String> search(String query, String fromBook, String toBook) throws OpenModuleException, BookNotFoundException{
 		if (currModule == null) {
 			return new LinkedHashMap<String, String>();
 		} else {

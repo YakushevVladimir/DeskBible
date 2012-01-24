@@ -1,23 +1,27 @@
 package com.BibleQuote.managers;
 
+import com.BibleQuote.exceptions.BookDefinitionException;
+import com.BibleQuote.exceptions.BooksDefinitionException;
 import com.BibleQuote.exceptions.OpenModuleException;
 import com.BibleQuote.models.Module;
 import com.BibleQuote.utils.Log;
+import com.BibleQuote.utils.OSISLink;
 import com.BibleQuote.utils.Task;
 
 public class AsyncOpenModule extends Task {
-	private final String TAG = "AsyncOpenModule";
+	private final String TAG = "AsyncOpenBooks";
 	
 	private Librarian librarian;
-	private Module nextClosedModule = null;
-	private Boolean isReload = false;
+	private OSISLink link;
 	private Exception exception;
 	private Boolean isSuccess;
+	private Module module;
 	
-	public AsyncOpenModule(String message, Boolean isHidden, Librarian librarian, Boolean isReload) {
+	
+	public AsyncOpenModule(String message, Boolean isHidden, Librarian librarian, OSISLink link) {
 		super(message, isHidden);
 		this.librarian = librarian;
-		this.isReload = isReload;
+		this.link = link;
 	}
 
 	
@@ -25,21 +29,22 @@ public class AsyncOpenModule extends Task {
 	protected Boolean doInBackground(String... arg0) {
 		isSuccess = false;
 		try {
-			if (isReload) {
-				librarian.loadFileModules();
-				isReload = false;
-			}
-			Module module = librarian.getClosedModule();
-			if (module != null) {
-				Log.i(TAG, String.format("Open module with moduleID=%1$s", module.getID()));
-				module = librarian.getModuleByID(module.getID(), module.getDataSourceID());
-				nextClosedModule = librarian.getClosedModule();
-			}
+			Log.i(TAG, String.format("Open OSIS link with moduleID=%1$s", link.getModuleID()));
+			module = librarian.openModule(link.getModuleID(), link.getModuleDatasourceID());
+			
+			Log.i(TAG, String.format("Load books for module with moduleID=%1$s", module.getID()));
+			librarian.getBookList(module);
+
 			isSuccess = true;
 		} catch (OpenModuleException e) {
-			//Log.e(TAG, String.format("doInBackground(): %1$s", e.toString()), e);
+			//Log.e(TAG, String.format("AsyncOpenBooks(): ", e.toString()), e);
+			exception = e;
+		} catch (BooksDefinitionException e) {
+			exception = e;
+		} catch (BookDefinitionException e) {
 			exception = e;
 		}
+		
 		return true;
 	}
 	
@@ -56,8 +61,9 @@ public class AsyncOpenModule extends Task {
 	public Boolean isSuccess() {
 		return isSuccess;
 	}
-	
-	public Module getNextClosedModule() {
-		return nextClosedModule;
+
+	public Module getModule() {
+		return module;
 	}
+
 }
