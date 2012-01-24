@@ -42,12 +42,11 @@ import com.BibleQuote.entity.ItemList;
 import com.BibleQuote.exceptions.BookDefinitionException;
 import com.BibleQuote.exceptions.BookNotFoundException;
 import com.BibleQuote.exceptions.BooksDefinitionException;
-import com.BibleQuote.exceptions.CreateModuleErrorException;
+import com.BibleQuote.exceptions.ExceptionHelper;
 import com.BibleQuote.exceptions.OpenModuleException;
 import com.BibleQuote.managers.AsyncManager;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.utils.Log;
-import com.BibleQuote.utils.NotifyDialog;
 import com.BibleQuote.utils.OnTaskCompleteListener;
 import com.BibleQuote.utils.Task;
 
@@ -116,17 +115,11 @@ public class Search extends GDActivity implements OnTaskCompleteListener {
 		try {
 			books = myLibararian.getCurrentModuleBooksList();
 		} catch (OpenModuleException e) {
-			// TODO Show an alert with an error message 
-			Log.i(TAG, e.toString());
-			new NotifyDialog(e.getMessage(), this).show();
+			ExceptionHelper.onOpenModuleException(e, this, TAG);
 		} catch (BooksDefinitionException e) {
-			// TODO Show an alert with an error message 
-			Log.i(TAG, e.toString());
-			new NotifyDialog(e.getMessage(), this).show();
+			ExceptionHelper.onBooksDefinitionException(e, this, TAG);
 		} catch (BookDefinitionException e) {
-			// TODO Show an alert with an error message 
-			Log.i(TAG, e.toString());
-			new NotifyDialog(e.getMessage(), this).show();
+			ExceptionHelper.onBookDefinitionException(e, this, TAG);
 		}
 
 		SimpleAdapter AA = new SimpleAdapter(this, books,
@@ -210,8 +203,6 @@ public class Search extends GDActivity implements OnTaskCompleteListener {
 			searchResults = new LinkedHashMap<String, String>();
 			try {
 				searchResults = myLibararian.search(query, fromBookID, toBookID);
-			} catch (CreateModuleErrorException e) {
-				Log.e(TAG, e.getMessage());
 			} catch (BookNotFoundException e) {
 				Log.e(TAG, e.getMessage());
 			} catch (OpenModuleException e) {

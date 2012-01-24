@@ -50,6 +50,7 @@ import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
 import com.BibleQuote.controls.ReaderWebView;
 import com.BibleQuote.exceptions.BookNotFoundException;
+import com.BibleQuote.exceptions.ExceptionHelper;
 import com.BibleQuote.exceptions.OpenModuleException;
 import com.BibleQuote.listeners.ISearchListener;
 import com.BibleQuote.listeners.SearchInLibraryEvent;
@@ -57,7 +58,6 @@ import com.BibleQuote.managers.AsyncManager;
 import com.BibleQuote.managers.AsyncOpenChapter;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.utils.Log;
-import com.BibleQuote.utils.NotifyDialog;
 import com.BibleQuote.utils.OSISLink;
 import com.BibleQuote.utils.OnTaskCompleteListener;
 import com.BibleQuote.utils.PreferenceHelper;
@@ -459,13 +459,9 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
 				} else {
 					Exception e = t.getException();
 					if (e instanceof OpenModuleException) {
-						// TODO Show an alert with an error message 
-						Log.e(TAG, e.getMessage());
-						new NotifyDialog(e.getMessage(), this).show();
+						ExceptionHelper.onOpenModuleException((OpenModuleException) e, this, TAG);
 					} else if (e instanceof BookNotFoundException) {
-						// TODO Show an alert with an error message 
-						Log.e(TAG, e.getMessage());
-						new NotifyDialog(e.getMessage(), this).show();
+						ExceptionHelper.onBookNotFoundException((BookNotFoundException) e, this, TAG);
 					}  
 				}
 			}

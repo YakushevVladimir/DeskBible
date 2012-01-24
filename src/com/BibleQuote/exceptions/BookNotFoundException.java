@@ -19,18 +19,19 @@ public class BookNotFoundException extends Exception {
 
 	private static final long serialVersionUID = -941193264792260938L;
 
-	private String moduleId;
-	private String bookId;
+	private String moduleID;
+	private String bookID;
 	
-	public BookNotFoundException(String moduleId, String bookId) {
-		this.moduleId = moduleId;
-		this.moduleId = bookId;
-	}
-	
-	public String toString() {
-		return bookId != null && bookId != null 
-				? String.format("Book with ID=%1$s in module with ID=%2$s is not found", bookId, moduleId)
-				: String.format("Book is not found");
+	public BookNotFoundException(String moduleID, String bookID) {
+		this.moduleID = moduleID;
+		this.bookID = bookID;
 	}
 
+	public String getBookID() {
+		return bookID;
+	}
+
+	public String getModuleID() {
+		return moduleID;
+	}
 }
