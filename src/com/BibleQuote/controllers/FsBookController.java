@@ -38,12 +38,6 @@ public class FsBookController implements IBookController {
 			result.put(book.getID(), book);
 		}
 		
-//		if (bookList.size() == 0) {
-//			String message = String.format("The module $1$s does not contain the books", module.getDataSourceID());
-//			Log.e(TAG, message);
-//			throw new CreateModuleErrorException(message);
-//		}		
-		
 		return result;		
 	}
 	

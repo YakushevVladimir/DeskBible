@@ -22,8 +22,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 
-import com.BibleQuote.R;
 import com.BibleQuote.BibleQuoteApp;
+import com.BibleQuote.R;
+import com.BibleQuote.utils.OSISLink;
+import com.BibleQuote.utils.PreferenceHelper;
 
 public class BibleQuote extends GDActivity {
 
@@ -40,7 +42,12 @@ public class BibleQuote extends GDActivity {
 	}
     
     public void startHomeActivity(){
-		startActivity(new Intent(this, Reader.class));
+    	OSISLink OSISLink = new OSISLink(PreferenceHelper.restoreStateString("last_read"));
+		if (OSISLink.getPath() == null) {
+			startActivity(new Intent(this, Books.class));
+		} else {
+			startActivity(new Intent(this, Reader.class));
+		}    	
 		finish();
     }
 
