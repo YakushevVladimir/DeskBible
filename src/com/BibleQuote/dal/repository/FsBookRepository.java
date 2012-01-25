@@ -73,12 +73,17 @@ public class FsBookRepository implements IBookRepository<FsModule, FsBook> {
 
 
 	public LinkedHashMap<String, String> searchInBook(FsModule module, String bookID, String regQuery) throws BookNotFoundException {
-		FsBook book = getBookByID((FsModule)module, bookID);
 		LinkedHashMap<String, String> searchRes = null;
 		BufferedReader bReader = null;
-		String moduleID = "";
+		String moduleID = module.getID();
+		
+		FsBook book = getBookByID((FsModule)module, bookID);
+		if (book == null) {
+			Log.e(TAG, "Can't load books from module with ID=" + moduleID);
+			throw new BookNotFoundException(moduleID, bookID);
+		}
+		
 		try {
-			moduleID = module.getID();
 			bReader = context.getBookReader(book);
 			searchRes = context.searchInBook(module, bookID, regQuery, bReader);
 		} catch (FileAccessException e) {

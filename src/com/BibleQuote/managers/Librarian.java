@@ -68,8 +68,8 @@ public class Librarian implements IChangeBooksListener  {
 	public EventManager eventManager = new EventManager();
 	
 	/**
-	 * Производит заполнение списка доступных модулей с книгами Библии,
-	 * апокрифами, книгами
+	 * Инициализация контроллеров библиотеки, модулей, книг и глав.
+	 * Подписка на событие ChangeBooksEvent 
 	 */
 	public Librarian(Context context) {
 		Log.i(TAG, "Librarian()");
@@ -82,14 +82,26 @@ public class Librarian implements IChangeBooksListener  {
 		chapterCtrl = libCtrl.getChapterCtrl();
 	}
 
+	/**
+	 * @return Возвращает первый closed-модуль из коллекции модулей
+	 */
 	public Module getClosedModule() {
 		return moduleCtrl.getClosedModule();
 	}
 	
+    /**
+     * @return Возвращает TreeMap коллекцию модулей с ключом по Module.ShortName
+     */
 	public TreeMap<String, Module> getModules() {
 		return moduleCtrl.getModules();
 	}
 	
+	/**
+	 * Загружает из хранилища список модулей без загрузки их данных. Для каждого из модулей
+	 * установлен флаг isClosed = true.
+	 * @return Возвращает TreeMap, где в качестве ключа путь к модулю, а в качестве значения 
+	 * closed-модуль
+	 */
 	public TreeMap<String, Module> loadFileModules() {
 		return moduleCtrl.loadFileModules();
 	}
@@ -99,10 +111,34 @@ public class Librarian implements IChangeBooksListener  {
 		}		
 	}
 	
+	/**
+	 * Возвращает коллекцию Book для указанного модуля. Данные о книгах в первую
+	 * очередь берутся из контекста библиотеки. Если там для выбранного модуля 
+	 * список книг отсутсвует, то производится загрузка коллекции Book из хранилища
+	 * @param module модуль для которого необходимо получить коллекцию Book
+	 * @return коллекцию Book для указанного модуля
+	 * @throws OpenModuleException
+	 * @throws BooksDefinitionException
+	 * @throws BookDefinitionException
+	 */
 	public ArrayList<Book> getBookList(Module module) throws OpenModuleException, BooksDefinitionException, BookDefinitionException {
 		return bookCtrl.getBookList(module);
 	}
 	
+	/**
+	 * Инициализирует полную загрузку модулей. Сначала проверяется наличие
+	 * модулей в коллекции. Если коллекция пуста, то производится попытка
+	 * загрузки коллекции модулей из кэш. Иначе производится загрузка модулей
+	 * из файлового хранилища. Для всех closed-модулей производится
+	 * полная загрузка данных. Производится запись загруженных модулей в кэш.
+	 * @param incorrectModuleTemplate - строковый шаблон сообщения об ошибках. Должен
+	 * содержать место для двух аргументов:
+	 * <ul>
+	 * <li>ShortName модуля
+	 * <li>Пути к данным модуля
+	 * </ul>
+	 * @return строку, содержащую список ошибок возникших при загрузке модулей
+	 */
 	public String loadModules(String incorrectModuleTemplate) {
 		StringBuilder errorList = new StringBuilder();
 		this.getModules();
@@ -120,6 +156,18 @@ public class Librarian implements IChangeBooksListener  {
 		return errorList.toString();
 	}
 	
+	/**
+	 * Возвращает полностью загруженный модуль. Ищет модуль в коллекции
+	 * модулей. Если он отсутствует в коллекции производит его загрузку
+	 * из хранилища. Для closed-модуля инициируется полная загрузка данных 
+	 * модуля и обновления кэш
+	 * 
+	 * @param moduleID ShortName модуля
+	 * @param moduleDatasourceID путь к данным модуля в хранилище
+	 * @return Возвращает полностью загруженный модуль
+	 * @throws OpenModuleException произошла ошибки при попытке загрузки closed-модуля
+	 * из хранилища
+	 */
 	public Module getModuleByID(String moduleID, String moduleDatasourceID) throws OpenModuleException {
 		Module result;
 		try {
@@ -138,6 +186,19 @@ public class Librarian implements IChangeBooksListener  {
 		return chapterCtrl.getChapter(book, chapterNumber);
 	}
 	
+	/**
+	 * Возвращает полностью загруженный модуль. Ищет модуль в коллекции
+	 * модулей. Если он отсутствует в коллекции производит его загрузку
+	 * из хранилища. Для closed-модуля инициируется полная загрузка данных 
+	 * модуля и обновления кэш.<br/>
+	 * Очищаются ссылки в currBook, currChapter, currChapterNumber и CurrVerseNumber
+	 * 
+	 * @param moduleID ShortName модуля
+	 * @param moduleDatasourceID путь к данным модуля в хранилище
+	 * @return Возвращает полностью загруженный модуль
+	 * @throws OpenModuleException произошла ошибки при попытке загрузки closed-модуля
+	 * из хранилища
+	 */
 	public Module openModule(String moduleID, String moduleDatasourceID) throws OpenModuleException {
 		currModule = getModuleByID(moduleID, moduleDatasourceID);
 		currBook = null;

@@ -33,7 +33,6 @@ public class DataConstants {
 
    public static final String MODULE_TABLE = "module";
    public static final String BOOK_TABLE = "book";
-   // TODO А в какой таблице хранится сам текст модуля?
 
    private DataConstants() {
    }

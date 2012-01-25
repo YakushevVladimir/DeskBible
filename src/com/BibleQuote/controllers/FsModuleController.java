@@ -30,9 +30,6 @@ public class FsModuleController implements IModuleController {
 		return result;		
 	}
 	
-    /**
-     * @return Возвращает коллекцию модулей с ключом по Module.ShortName
-     */
 	public TreeMap<String, Module> getModules() {
 		ArrayList<FsModule> moduleList = (ArrayList<FsModule>) mRepository.getModules();
 		if (moduleList.size() == 0) {

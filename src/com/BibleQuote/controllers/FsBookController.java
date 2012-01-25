@@ -115,7 +115,16 @@ public class FsBookController implements IBookController {
 		return searchRes;
 	}
 	
-	
+	/**
+	 * Проверяет является ли модуль полностью загруженным. Если модуль не
+	 * загружен, производит его загрузку и обновляет коллекцию модулей,
+	 * замещая closed-модуль на полностью загруженный. Также производится
+	 * перезапись кэш.
+	 * @param module исходный модуль
+	 * @return полностью загруженный модуль
+	 * @throws OpenModuleException произошла ошибка загрузки модуля из
+	 * хранилища
+	 */
 	private Module getValidModule(Module module) throws OpenModuleException {
 		if (module == null) {
 			throw new OpenModuleException("", "");

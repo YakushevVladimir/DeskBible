@@ -56,8 +56,6 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 				moduleList.add(fileModule);
 			}
 			
-			cache.saveModuleList(moduleList);
-	
 			context.moduleSet = new TreeMap<String, Module>();
 			for (FsModule fsModule : moduleList) {
 				context.moduleSet.put(fsModule.getDataSourceID(), fsModule);
@@ -102,7 +100,7 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 					e.printStackTrace(); 
 				}
 			}		
-	
+			
 			cache.saveModuleList(context.getModuleList(context.moduleSet));
 		}
 		return fsModule;	
