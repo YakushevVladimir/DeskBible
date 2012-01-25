@@ -236,7 +236,7 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 			modulesList.setVisibility(View.VISIBLE);
 			booksList.setVisibility(View.GONE);
 			chapterList.setVisibility(View.GONE);
-
+			
 			modulesList.setAdapter(getModuleAdapter());
 			
 			ItemList itemModule = new ItemList(moduleID, myLibrarian.getModuleFullName(moduleID), moduleDatasourceID);
@@ -335,14 +335,20 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 	}
 
 	public void onModuleClick(View v) {
+		if (moduleID == "---")
+			return;
 		UpdateView(MODULE_VIEW);
 	}
 
 	public void onBookClick(View v) {
+		if (bookID == "---")
+			return;		
 		UpdateView(BOOK_VIEW);
 	}
 
 	public void onChapterClick(View v) {
+		if (chapter == "-")
+			return;		
 		UpdateView(CHAPTER_VIEW);
 	}
 
@@ -359,7 +365,7 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 				onAsyncLoadModulesComplete((AsyncLoadModules) task); 
 				
 			} else if (task instanceof AsyncOpenModule) {
-				onAsyncOpenBooksComplete((AsyncOpenModule) task);
+				onAsyncOpenModuleComplete((AsyncOpenModule) task);
 			}
 		}	
 	}
@@ -383,9 +389,11 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 		}		
 	}
 	
-	private void onAsyncOpenBooksComplete(AsyncOpenModule task) {
+	private void onAsyncOpenModuleComplete(AsyncOpenModule task) {
 		if (task.isSuccess()) {
 			moduleID = task.getModule().getID();
+			bookID = "---";
+			chapter = "-";
 			setButtonText();
 			UpdateView(BOOK_VIEW);
 			
