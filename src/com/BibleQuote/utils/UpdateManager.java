@@ -54,9 +54,9 @@ public class UpdateManager {
 		
 		try {
 			int versionCode = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode;
-			Settings.edit().putInt("versionCode", versionCode);
+			Settings.edit().putInt("versionCode", versionCode).commit();
 		} catch (NameNotFoundException e) {
-			Settings.edit().putInt("versionCode", 30);
+			Settings.edit().putInt("versionCode", 30).commit();
 		}
 	}
 
