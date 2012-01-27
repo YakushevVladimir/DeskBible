@@ -30,7 +30,7 @@
     <string name="db_help">Help</string>
     <!-- About -->
     <string name="about">About</string>
-    <string name="app_about_name">BibleQuote 0.04.02</string>
+    <string name="app_about_name">BibleQuote 0.04.05</string>
     <string name="app_about_license">Apache License Version 2.0</string>
     <string name="app_about_dev_label">Developers:</string>
     <string name="app_about_dev">Vladimir Yakushev\nSergey Ursul</string>
