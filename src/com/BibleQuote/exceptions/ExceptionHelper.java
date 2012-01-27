@@ -9,15 +9,15 @@ import com.BibleQuote.utils.NotifyDialog;
 public class ExceptionHelper {
 
 	public static void onOpenModuleException(OpenModuleException ex, Context context, String TAG) {
-		if ((ex.getModuleId() == "" && ex.getModuleId() == null) 
-			&& (ex.getModuleDatasourceId() == "" || ex.getModuleDatasourceId() == null)) {
-			return;
-		}
-			
 		String message = String.format(
 				context.getResources().getString(R.string.exception_open_module), 
 				ex.getModuleId(), ex.getModuleDatasourceId());
 		Log.e(TAG, message);
+
+		if ((ex.getModuleId() == "" && ex.getModuleId() == null) 
+				&& (ex.getModuleDatasourceId() == "" || ex.getModuleDatasourceId() == null)) {
+			return;
+		}
 		new NotifyDialog(message, context).show();			
 	}
 	
