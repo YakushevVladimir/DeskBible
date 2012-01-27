@@ -31,33 +31,39 @@ public class FsBookRepository implements IBookRepository<FsModule, FsBook> {
     
 	public Collection<FsBook> loadBooks(FsModule module) 
 			throws OpenModuleException, BooksDefinitionException, BookDefinitionException {
-		module.Books = context.bookSet = new LinkedHashMap<String, Book>();
-		BufferedReader reader = null;
-		String moduleID = "";
-		String moduleDatasourceID = "";
-		try {
-			moduleID = module.getID();
-			moduleDatasourceID = module.getDataSourceID();
-			reader = context.getModuleReader(module); 
-			context.fillBooks(module, reader);
+		
+		synchronized (context.bookSet) {  
 			
-		} catch (FileAccessException e) {
-			Log.e(TAG, String.format("Can't load books from module (%1$s, %2$s)", moduleID, moduleDatasourceID));
-			throw new OpenModuleException(moduleID, moduleDatasourceID);
+			if (module.Books != context.bookSet) {
 			
-		} finally {
-			try {
-				if (reader != null) {
-					reader.close();
+				module.Books = context.bookSet = new LinkedHashMap<String, Book>();
+				BufferedReader reader = null;
+				String moduleID = "";
+				String moduleDatasourceID = "";
+				try {
+					moduleID = module.getID();
+					moduleDatasourceID = module.getDataSourceID();
+					reader = context.getModuleReader(module); 
+					context.fillBooks(module, reader);
+					
+				} catch (FileAccessException e) {
+					Log.e(TAG, String.format("Can't load books from module (%1$s, %2$s)", moduleID, moduleDatasourceID));
+					throw new OpenModuleException(moduleID, moduleDatasourceID);
+					
+				} finally {
+					try {
+						if (reader != null) {
+							reader.close();
+						}
+					} catch (IOException e) {
+						e.printStackTrace(); 
+					}
 				}
-			} catch (IOException e) {
-				e.printStackTrace(); 
+		
+				// Update cache with just added books
+				cache.saveModuleList(context.getModuleList(context.moduleSet));
 			}
 		}
-
-		// Update cache with just added books
-		cache.saveModuleList(context.getModuleList(context.moduleSet));
-
 		return context.getBookList(module.Books); 	
 	}
 	
