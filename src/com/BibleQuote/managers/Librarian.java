@@ -169,11 +169,18 @@ public class Librarian implements IChangeBooksListener  {
 	 * из хранилища
 	 */
 	public Module getModuleByID(String moduleID, String moduleDatasourceID) throws OpenModuleException {
-		Module result;
+		Module result = null;
+		OpenModuleException exception = null;
 		try {
 			result = moduleCtrl.getModuleByID(moduleID);
 		} catch(OpenModuleException e) {
-			result = moduleCtrl.getModuleByDatasourceID(moduleDatasourceID);
+			exception = e;
+			try {
+				result = moduleCtrl.getModuleByDatasourceID(moduleDatasourceID);
+			} catch(OpenModuleException ex) {}
+		}
+		if (exception != null) {
+			throw new OpenModuleException(moduleID, moduleDatasourceID);
 		}
 		return result;
 	}

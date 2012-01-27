@@ -9,14 +9,24 @@ import com.BibleQuote.utils.NotifyDialog;
 public class ExceptionHelper {
 
 	public static void onOpenModuleException(OpenModuleException ex, Context context, String TAG) {
+		String moduleId = ex.getModuleId();
+		if (moduleId == null) moduleId = "";
+		String moduleDatasourceId = ex.getModuleDatasourceId();
+		if (moduleDatasourceId == null) moduleDatasourceId = "";
+		
 		String message = String.format(
 				context.getResources().getString(R.string.exception_open_module), 
-				ex.getModuleId(), ex.getModuleDatasourceId());
+				moduleId, moduleDatasourceId);
 		Log.e(TAG, message);
 
-		if ((ex.getModuleId() == "" && ex.getModuleId() == null) 
-				&& (ex.getModuleDatasourceId() == "" || ex.getModuleDatasourceId() == null)) {
+		if (moduleId == "" && moduleDatasourceId == "") {
 			return;
+		} else if (moduleId != "" && moduleDatasourceId != "") {
+			// the message is defined above
+		} else {
+			message = String.format(
+					context.getResources().getString(R.string.exception_open_module_short), 
+					moduleId != "" ? moduleId : moduleDatasourceId);
 		}
 		new NotifyDialog(message, context).show();			
 	}
