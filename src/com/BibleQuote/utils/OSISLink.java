@@ -43,7 +43,7 @@ public class OSISLink {
 				}				
 				
 			} else {
-				// OSISLinkPath short path format
+				// OSISLinkPath short path format    
 				linkParam = OSISLinkPath.split(SEP_SHORT);
 				try {
 					moduleID = linkParam[0];
