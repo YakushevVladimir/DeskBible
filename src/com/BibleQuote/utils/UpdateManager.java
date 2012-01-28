@@ -1,13 +1,13 @@
 package com.BibleQuote.utils;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-
-import com.BibleQuote.R;
+//import java.io.FileNotFoundException;
+//import java.io.FileOutputStream;
+//import java.io.IOException;
+//import java.io.InputStream;
+//import java.io.OutputStream;
+//
+//import com.BibleQuote.R;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -60,23 +60,23 @@ public class UpdateManager {
 		}
 	}
 
-	private static void saveExternalModule(Context context) {
-		try {
-			InputStream moduleStream = context.getResources().openRawResource(
-					R.raw.rst_strong);
-			File moduleDir = new File(Environment.getExternalStorageDirectory().toString() + "/BibleQuote/modules/");
-			OutputStream newModule = new FileOutputStream(new File(moduleDir, "rst_strong.zip"));
-			byte[] buf = new byte[1024];
-			int len;
-			while ((len = moduleStream.read(buf)) > 0) {
-				newModule.write(buf, 0, len);
-			}
-			moduleStream.close();
-			newModule.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+//	private static void saveExternalModule(Context context) {
+//		try {
+//			InputStream moduleStream = context.getResources().openRawResource(
+//					R.raw.rst_strong);
+//			File moduleDir = new File(Environment.getExternalStorageDirectory().toString() + "/BibleQuote/modules/");
+//			OutputStream newModule = new FileOutputStream(new File(moduleDir, "rst_strong.zip"));
+//			byte[] buf = new byte[1024];
+//			int len;
+//			while ((len = moduleStream.read(buf)) > 0) {
+//				newModule.write(buf, 0, len);
+//			}
+//			moduleStream.close();
+//			newModule.close();
+//		} catch (FileNotFoundException e) {
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//	}
 }

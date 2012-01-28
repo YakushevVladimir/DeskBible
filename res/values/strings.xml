@@ -97,6 +97,6 @@
     <string name="exception_books_definition">Incorrect books definition in module %1$s: BookQty=%2$s, PathName#=%3$s, FullName#=%4$s, ShortName#=%5$s, ChapterQty#=%6$s</string>
     <string name="exception_book_not_found">Book %1$s not found in module %2$s</string>
     <string name="exception_open_module">Incorrect module %1$s(%2$s)</string>
-        <string name="exception_open_module_short">Incorrect module %1$s</string>
-    
+    <string name="exception_open_module_short">Incorrect module %1$s</string>
+    <string name="CrashReport_MailSubject">Crash report</string>
 </resources>

@@ -22,6 +22,8 @@ import com.BibleQuote.managers.AsyncManager;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.UpdateManager;
+import com.BibleQuote.utils.ErrorReporter.ExceptionHandler;
+import com.BibleQuote.utils.ErrorReporter.FileErrorReporter;
 
 public class BibleQuoteApp extends GDApplication {
 	
@@ -34,6 +36,7 @@ public class BibleQuoteApp extends GDApplication {
 	}
 
 	public void Init() {
+		Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this, new FileErrorReporter()));
 		PreferenceHelper.Init(this);
 		UpdateManager.Init(this);
 		getLibrarian();

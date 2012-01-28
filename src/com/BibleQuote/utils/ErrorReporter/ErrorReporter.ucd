@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<editmodel:ClassDiagramEditModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:editmodel="editmodel.xmi" xmlns:options="options.xmi" name="ErrorReporter" size="1177,282" id="com.BibleQuote.utils.ErrorReporter" metadata="uml2-1.0" initialized="true" tag="1000" key="32303037303533312D31303030204269626C6551756F74652FC2EBE0E4E8ECE8F0">
+  <children xsi:type="editmodel:InterfaceEditModel" targetConnections="//@children.1/@sourceConnections.0 //@children.2/@sourceConnections.0 //@children.3/@sourceConnections.0" name="IErrorReporter" location="660,30" size="136,81" id="com.BibleQuote.utils.ErrorReporter/IErrorReporter" runTimeClassModel="Send(Ljava.lang.String;)">
+    <children xsi:type="editmodel:CompartmentEditModel" size="0,0"/>
+    <children xsi:type="editmodel:CompartmentEditModel" size="113,18">
+      <children xsi:type="editmodel:MethodEditModel" name="Send" id="com.BibleQuote.utils.ErrorReporter/IErrorReporter#Send(Ljava.lang.String;LContext;)"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="0,0"/>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" showMethodsParameterTypes="true" showMethodsReturnType="true" showMethodsParameterNames="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showStaticAttributes="true" showPublicMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" packageIndication="3" showAttributeProperty="true" showAssociationMember="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" name="EmailErrorReporter" location="750,195" size="164,67" id="com.BibleQuote.utils.ErrorReporter/EmailErrorReporter" runTimeClassModel="Send(Ljava.lang.String;)">
+    <children xsi:type="editmodel:CompartmentEditModel" size="0,0"/>
+    <children xsi:type="editmodel:CompartmentEditModel" size="113,18">
+      <children xsi:type="editmodel:MethodEditModel" name="Send" id="com.BibleQuote.utils.ErrorReporter/EmailErrorReporter#Send(Ljava.lang.String;Landroid.content.Context;)"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="0,0"/>
+    <sourceConnections xsi:type="editmodel:GeneralizationEditModel" autoLocated="true" id="com.BibleQuote.utils.ErrorReporter/IErrorReporter&lt;-com.BibleQuote.utils.ErrorReporter/EmailErrorReporter" source="//@children.1" target="//@children.0" targetEnd="//@children.1/@sourceConnections.0/@children.1" sourceEnd="//@children.1/@sourceConnections.0/@children.0" connectionRouterKind="Manual">
+      <children xsi:type="editmodel:AssociationEndEditModel" location="22,0" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="112,81"/>
+    </sourceConnections>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" showMethodsParameterTypes="true" showMethodsReturnType="true" showMethodsParameterNames="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showStaticAttributes="true" showPublicMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" packageIndication="3" showAttributeProperty="true" showAssociationMember="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" name="FileErrorReporter" location="570,195" size="152,67" id="com.BibleQuote.utils.ErrorReporter/FileErrorReporter" runTimeClassModel="Send(Ljava.lang.String;)">
+    <children xsi:type="editmodel:CompartmentEditModel" size="0,0"/>
+    <children xsi:type="editmodel:CompartmentEditModel" size="113,18">
+      <children xsi:type="editmodel:MethodEditModel" name="Send" id="com.BibleQuote.utils.ErrorReporter/FileErrorReporter#Send(Ljava.lang.String;LContext;)"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="0,0"/>
+    <sourceConnections xsi:type="editmodel:GeneralizationEditModel" autoLocated="true" id="com.BibleQuote.utils.ErrorReporter/IErrorReporter&lt;-com.BibleQuote.utils.ErrorReporter/FileErrorReporter" source="//@children.2" target="//@children.0" targetEnd="//@children.2/@sourceConnections.0/@children.1" sourceEnd="//@children.2/@sourceConnections.0/@children.0" connectionRouterKind="Manual">
+      <children xsi:type="editmodel:AssociationEndEditModel" location="120,0" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="30,81"/>
+    </sourceConnections>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" showMethodsParameterTypes="true" showMethodsReturnType="true" showMethodsParameterNames="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showStaticAttributes="true" showPublicMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" packageIndication="3" showAttributeProperty="true" showAssociationMember="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" name="ExceptionHandler" location="120,90" size="335,85" id="com.BibleQuote.utils.ErrorReporter/ExceptionHandler" runTimeClassModel="uncaughtException(Ljava.lang.Thread;Ljava.lang.Throwable;),ExceptionHandler(Landroid.content.Context;Lcom.BibleQuote.utils.ErrorReporter.IErrorReporter;)">
+    <children xsi:type="editmodel:CompartmentEditModel" size="0,0"/>
+    <children xsi:type="editmodel:CompartmentEditModel" size="312,36">
+      <children xsi:type="editmodel:MethodEditModel" name="ExceptionHandler" id="com.BibleQuote.utils.ErrorReporter/ExceptionHandler#ExceptionHandler(Landroid.content.Context;Lcom.BibleQuote.utils.ErrorReporter.IErrorReporter;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="uncaughtException" id="com.BibleQuote.utils.ErrorReporter/ExceptionHandler#uncaughtException(Ljava.lang.Thread;Ljava.lang.Throwable;)"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="0,0"/>
+    <sourceConnections xsi:type="editmodel:DependencyEditModel" autoLocated="true" id="com.BibleQuote.utils.ErrorReporter/ExceptionHandler->Soyatec::Import" source="//@children.3" target="//@children.0" targetEnd="//@children.3/@sourceConnections.0/@children.2" label="//@children.3/@sourceConnections.0/@children.0" sourceEnd="//@children.3/@sourceConnections.0/@children.1" connectionRouterKind="Manual">
+      <children xsi:type="editmodel:WireLabelEditModel" name="«Call, Import»" size="64,14" anchorKind="MiddlePart"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="335,10" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="0,70"/>
+    </sourceConnections>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" showMethodsParameterTypes="true" showMethodsReturnType="true" showMethodsParameterNames="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showStaticAttributes="true" showPublicMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" packageIndication="3" showAttributeProperty="true" showAssociationMember="true"/>
+  </children>
+  <diagramOptions xsi:type="options:ClassDiagramOptions" level="-1" showScope="InPackage" properties="wireOptions=7;Product=eUML2"/>
+  <boardSetting snapToGeometry="true" gridEnabled="true" gridSpacing="15,15" gridOrigin="0,0" rulerUnit="pixel" gridVisibility="false">
+    <leftRuler/>
+    <topRuler/>
+  </boardSetting>
+  <classDiagramPreferences xsi:type="editmodel:UMLClassDiagramPreference" showPopupBars="true" showConnectionHandles="true" showMethodsParameterTypes="true" showMethodsReturnType="true" showMethodsParameterNames="true" attributeSorter="Natural" methodSorter="Natural" showClassStereotype="true" showPackageStereotype="true" showDependencyStereotype="true" showInterfaceStereotype="true" innerClassSorter="Natural" showPublicAttributes="true" showStaticAttributes="true" showPublicMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" packageIndication="3" showAttributeProperty="true" showAssociationMember="true"/>
+</editmodel:ClassDiagramEditModel>

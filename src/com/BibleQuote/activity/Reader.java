@@ -91,6 +91,12 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		runtimeOrientation = getScreenOrientation();
 		
+		// Error reporter test
+		Integer a = 1;
+        if (true) a = null;
+        int x = 6;
+        x = x / a;
+		
 		initActionBar();
 		prepareQuickActionBar();
 		
