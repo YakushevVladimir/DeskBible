@@ -19,6 +19,7 @@ public class FsModuleController implements IModuleController {
     }
 	
 	
+	@Override
 	public TreeMap<String, Module> loadFileModules() {
 		ArrayList<FsModule> moduleList = (ArrayList<FsModule>) mRepository.loadFileModules();
 		
@@ -30,6 +31,8 @@ public class FsModuleController implements IModuleController {
 		return result;		
 	}
 	
+	
+	@Override
 	public TreeMap<String, Module> getModules() {
 		ArrayList<FsModule> moduleList = (ArrayList<FsModule>) mRepository.getModules();
 		if (moduleList.size() == 0) {
@@ -43,7 +46,27 @@ public class FsModuleController implements IModuleController {
 		}
 	}
 	
-
+	
+	@Override
+	public Module getModuleByID(String moduleID, String moduleDatasourceID) throws OpenModuleException {
+		Module result = null;
+		OpenModuleException exception = null;
+		try {
+			result = getModuleByID(moduleID);
+		} catch(OpenModuleException e) {
+			exception = e;
+			try {
+				result = getModuleByDatasourceID(moduleDatasourceID);
+			} catch(OpenModuleException ex) {}
+		}
+		if (exception != null) {
+			throw new OpenModuleException(moduleID, moduleDatasourceID);
+		}
+		return result;
+	}
+	
+	
+	@Override
 	public Module getModuleByID(String moduleID) throws OpenModuleException {
 		FsModule fsModule = mRepository.getModuleByID(moduleID);
 		String moduleDatasourceID = "";
@@ -57,9 +80,23 @@ public class FsModuleController implements IModuleController {
 		return 	fsModule;		
 	}
 	
-	
+		
 	@Override
-	public Module getModuleByDatasourceID(String moduleDatasourceID) throws OpenModuleException {
+	public Module getClosedModule() {
+		return mRepository.getClosedModule();
+	}
+
+	
+	/**
+	 * Возвращает полностью загруженный модуль из коллекции по его пути к данным.
+	 * Если модуль в коллекции isClosed, то производит его загрузку
+	 * <br><font color='red'>Производится полная перезапись в кэш коллекции модулей
+	 * при загрузке closed-модуля</font><br>
+	 * @param moduleDatasourceID путь к данным модуля
+	 * @return Возвращает полностью загруженный модуль
+	 * @throws OpenModuleException - произошла ошибка при попытке загрузить данные closed-модуля
+	 */	
+	private Module getModuleByDatasourceID(String moduleDatasourceID) throws OpenModuleException {
 		FsModule fsModule = mRepository.getModuleByDatasourceID(moduleDatasourceID);
 		if (fsModule != null && fsModule.getIsClosed()) {
 			fsModule = mRepository.loadModuleById(fsModule.getDataSourceID());
@@ -68,11 +105,5 @@ public class FsModuleController implements IModuleController {
 			throw new OpenModuleException("", moduleDatasourceID);
 		}
 		return 	fsModule;		
-	}
-	
-	
-	public Module getClosedModule() {
-		return mRepository.getClosedModule();
-	}
-
+	}	
 }
