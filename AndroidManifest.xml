@@ -18,8 +18,8 @@
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	package="com.BibleQuote"
-	android:versionName="0.04.05" 
-	android:versionCode="30"
+	android:versionName="0.04.06" 
+	android:versionCode="31"
 	android:installLocation="auto">
 	
 	<uses-sdk android:targetSdkVersion="8" android:minSdkVersion="4" />
@@ -53,7 +53,11 @@
 		<activity android:name=".activity.AboutActivity" android:label="@string/about"  />
 		<activity android:name=".activity.HelpActivity" android:label="@string/db_help"  />
 		<activity android:name=".activity.Reader" android:configChanges="keyboardHidden|orientation" />
-		
+        
+        <activity android:name="org.acra.CrashReportDialog" android:theme="@android:style/Theme.Dialog" 
+            android:launchMode="singleInstance" android:excludeFromRecents="true" android:finishOnTaskLaunch="true" />
+
+				
     </application>
 
 	<supports-screens

@@ -30,7 +30,7 @@ public class UpdateManager {
 		if (Environment.MEDIA_MOUNTED.equals(state)) {
 			File dir_modules = new File(DataConstants.FS_EXTERNAL_DATA_PATH);
 			if (!dir_modules.exists()) {
-				Log.i(TAG, String.format("Create directory $s", dir_modules));
+				Log.i(TAG, String.format("Create directory %1$s", dir_modules));
 				dir_modules.mkdirs();
 			}
 		}
@@ -61,9 +61,9 @@ public class UpdateManager {
 
 	private static void saveExternalModule(Context context) {
 		try {
-			InputStream moduleStream = context.getResources().openRawResource(R.raw.rst_strong);
+			InputStream moduleStream = context.getResources().openRawResource(R.raw.rst);
 			File moduleDir = new File(DataConstants.FS_EXTERNAL_DATA_PATH);
-			OutputStream newModule = new FileOutputStream(new File(moduleDir, "rst_strong.zip"));
+			OutputStream newModule = new FileOutputStream(new File(moduleDir, "rst.zip"));
 			byte[] buf = new byte[1024];
 			int len;
 			while ((len = moduleStream.read(buf)) > 0) {

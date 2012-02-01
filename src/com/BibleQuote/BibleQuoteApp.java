@@ -28,8 +28,9 @@ import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.UpdateManager;
 
 @ReportsCrashes(
-		formKey = "dHRiaC1CV2RabjdHSzM2ODl4LUx6T3c6MQ", 
-		mode = ReportingInteractionMode.NOTIFICATION, 
+		formKey = "dEhtOGgtYVhyVHBHZzJqMlJEaU9xUVE6MQ", 
+		mode = ReportingInteractionMode.NOTIFICATION,
+		resDialogIcon = R.drawable.icon, 
 		resToastText = R.string.crash_toast_text, 
 		resNotifTickerText = R.string.crash_notif_ticker_text, 
 		resNotifTitle = R.string.crash_notif_title, 
@@ -55,17 +56,28 @@ public class BibleQuoteApp extends GDApplication {
 	}
 
 	public void Init() {
-		PreferenceHelper.Init(this);
+		initPrefernceHelper();
 		UpdateManager.Init(this);
-		getLibrarian();
+		initLibrarian();
 	}
 
 	public Librarian getLibrarian() {
 		if (myLibararian == null) {
-			myLibararian = new Librarian(this);
-			myLibararian.loadModules(getResources().getString(R.string.exception_open_module));
+			// Сборщик мусора уничтожил ссылки на myLibararian и на PreferenceHelper
+			// Восстановим ссылки
+			initPrefernceHelper();
+			initLibrarian();
 		}
 		return myLibararian;
+	}
+	
+	public void initPrefernceHelper() {
+		PreferenceHelper.Init(this);
+	}
+	
+	public void initLibrarian() {
+		myLibararian = new Librarian(this);
+		myLibararian.loadModules(getResources().getString(R.string.exception_open_module));
 	}
 	
 	public AsyncManager getAsyncManager() {

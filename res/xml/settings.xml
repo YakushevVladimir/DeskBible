@@ -17,9 +17,11 @@
  */
 -->
 <PreferenceScreen 
-	xmlns:android="http://schemas.android.com/apk/res/android"><PreferenceCategory 
+	xmlns:android="http://schemas.android.com/apk/res/android">
+	
+	<PreferenceScreen 
 		android:title="@string/category_reader"
-		android:key="reader">
+		android:key="reader" android:summary="@string/category_reader_summary">
 
 		<ListPreference 
 			android:key="TextColor" 
@@ -61,9 +63,9 @@
 			android:persistent="true"
 			android:summary="@string/may_need_to_restart"/>
 
-	</PreferenceCategory>
+	</PreferenceScreen>
 	
-	<PreferenceCategory android:title="@string/category_reports">
+	<PreferenceScreen android:title="@string/category_reports" android:summary="@string/category_reports_summary">
 		<CheckBoxPreference 
 		    android:title="@string/reports_enable" 
 		    android:key="acra.enable" 
@@ -76,7 +78,7 @@
 		    android:summaryOff="@string/pref_acra_syslog_disabled" 
 		    android:title="@string/pref_acra_syslog" 
 		    android:summary="Privacy issue"
-		    android:defaultValue="true"/>
+		    android:defaultValue="false"/>
 		<EditTextPreference 
 		    android:key="acra.user.email" 
 		    android:title="@string/pref_acra_user_email" 
@@ -88,6 +90,6 @@
   			android:key="acra.alwaysaccept" 
   			android:summaryOn="@string/pref_acra_alwaysaccept_enabled"/>
 		    
-	</PreferenceCategory>
+	</PreferenceScreen>
 	
 </PreferenceScreen>

@@ -301,7 +301,9 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
 					|| (requestCode == R.id.action_bar_chooseCh)) {
 				Bundle extras = data.getExtras();
 				OSISLink OSISLink = new OSISLink(extras.getString("linkOSIS"));
-				mAsyncManager.setupTask(new AsyncOpenChapter(progressMessage, false, myLibrarian, OSISLink), this);
+				if (OSISLink.getPath() != null) {
+					mAsyncManager.setupTask(new AsyncOpenChapter(progressMessage, false, myLibrarian, OSISLink), this);
+				}
 			}
 		} else if (requestCode == R.id.action_bar_settings) {
 			vWeb.setReadingMode(PreferenceHelper.isReadModeByDefault());
