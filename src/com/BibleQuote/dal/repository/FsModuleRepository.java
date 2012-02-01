@@ -8,6 +8,8 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.TreeMap;
 
+import android.util.Log;
+
 import com.BibleQuote.controllers.CacheModuleController;
 import com.BibleQuote.dal.FsLibraryContext;
 import com.BibleQuote.exceptions.FileAccessException;
@@ -16,7 +18,6 @@ import com.BibleQuote.models.Book;
 import com.BibleQuote.models.FsModule;
 import com.BibleQuote.models.Module;
 import com.BibleQuote.utils.DataConstants;
-import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.OnlyBQIni;
 import com.BibleQuote.utils.OnlyBQZipIni;
 

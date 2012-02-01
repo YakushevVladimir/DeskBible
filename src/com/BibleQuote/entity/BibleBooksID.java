@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import com.BibleQuote.utils.Log;
+import android.util.Log;
 
 public class BibleBooksID {
 	

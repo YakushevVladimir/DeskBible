@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 
+import android.util.Log;
+
 import com.BibleQuote.controllers.CacheModuleController;
 import com.BibleQuote.dal.FsLibraryContext;
 import com.BibleQuote.exceptions.BookDefinitionException;
@@ -15,7 +17,6 @@ import com.BibleQuote.exceptions.OpenModuleException;
 import com.BibleQuote.models.Book;
 import com.BibleQuote.models.FsBook;
 import com.BibleQuote.models.FsModule;
-import com.BibleQuote.utils.Log;
 
 public class FsBookRepository implements IBookRepository<FsModule, FsBook> {
 	

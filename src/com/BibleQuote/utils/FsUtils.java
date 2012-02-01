@@ -33,6 +33,7 @@ import java.util.zip.ZipInputStream;
 import org.apache.http.util.ByteArrayBuffer;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.BibleQuote.exceptions.FileAccessException;
 

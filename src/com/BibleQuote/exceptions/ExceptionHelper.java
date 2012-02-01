@@ -1,9 +1,9 @@
 package com.BibleQuote.exceptions;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.BibleQuote.R;
-import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.NotifyDialog;
 
 public class ExceptionHelper {

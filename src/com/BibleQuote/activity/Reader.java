@@ -33,6 +33,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.ClipboardManager;
+import android.util.Log;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -57,7 +58,6 @@ import com.BibleQuote.listeners.SearchInLibraryEvent;
 import com.BibleQuote.managers.AsyncManager;
 import com.BibleQuote.managers.AsyncOpenChapter;
 import com.BibleQuote.managers.Librarian;
-import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.OSISLink;
 import com.BibleQuote.utils.OnTaskCompleteListener;
 import com.BibleQuote.utils.PreferenceHelper;
@@ -90,12 +90,6 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
 		setActionBarContentView(R.layout.reader);
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		runtimeOrientation = getScreenOrientation();
-		
-		// Error reporter test
-		Integer a = 1;
-        if (true) a = null;
-        int x = 6;
-        x = x / a;
 		
 		initActionBar();
 		prepareQuickActionBar();

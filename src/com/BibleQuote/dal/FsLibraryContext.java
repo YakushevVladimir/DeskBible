@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.BibleQuote.controllers.CacheModuleController;
 import com.BibleQuote.exceptions.BookDefinitionException;
@@ -38,7 +39,6 @@ import com.BibleQuote.models.FsModule;
 import com.BibleQuote.models.Module;
 import com.BibleQuote.models.Verse;
 import com.BibleQuote.utils.FsUtils;
-import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.OSISLink;
 import com.BibleQuote.utils.StringProc;
 

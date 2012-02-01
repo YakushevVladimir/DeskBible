@@ -24,6 +24,7 @@ import java.util.ArrayList;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -45,7 +46,6 @@ import com.BibleQuote.managers.AsyncManager;
 import com.BibleQuote.managers.AsyncOpenModule;
 import com.BibleQuote.managers.AsyncRefreshModules;
 import com.BibleQuote.managers.Librarian;
-import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.OSISLink;
 import com.BibleQuote.utils.OnTaskCompleteListener;
 import com.BibleQuote.utils.Task;

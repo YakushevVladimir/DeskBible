@@ -22,6 +22,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.BibleQuote.controllers.IBookController;
 import com.BibleQuote.controllers.IChapterController;
@@ -40,7 +41,6 @@ import com.BibleQuote.models.Book;
 import com.BibleQuote.models.Chapter;
 import com.BibleQuote.models.Module;
 import com.BibleQuote.models.Verse;
-import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.OSISLink;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.StringProc;
