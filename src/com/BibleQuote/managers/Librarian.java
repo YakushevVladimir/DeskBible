@@ -156,33 +156,9 @@ public class Librarian implements IChangeBooksListener  {
 		return errorList.toString();
 	}
 	
-	/**
-	 * Возвращает полностью загруженный модуль. Ищет модуль в коллекции
-	 * модулей. Если он отсутствует в коллекции производит его загрузку
-	 * из хранилища. Для closed-модуля инициируется полная загрузка данных 
-	 * модуля и обновления кэш
-	 * 
-	 * @param moduleID ShortName модуля
-	 * @param moduleDatasourceID путь к данным модуля в хранилище
-	 * @return Возвращает полностью загруженный модуль
-	 * @throws OpenModuleException произошла ошибки при попытке загрузки closed-модуля
-	 * из хранилища
-	 */
+
 	public Module getModuleByID(String moduleID, String moduleDatasourceID) throws OpenModuleException {
-		Module result = null;
-		OpenModuleException exception = null;
-		try {
-			result = moduleCtrl.getModuleByID(moduleID);
-		} catch(OpenModuleException e) {
-			exception = e;
-			try {
-				result = moduleCtrl.getModuleByDatasourceID(moduleDatasourceID);
-			} catch(OpenModuleException ex) {}
-		}
-		if (exception != null) {
-			throw new OpenModuleException(moduleID, moduleDatasourceID);
-		}
-		return result;
+		return moduleCtrl.getModuleByID(moduleID, moduleDatasourceID);
 	}
 	
 	public Book getBookByID(Module module, String bookID) throws BookNotFoundException, OpenModuleException {

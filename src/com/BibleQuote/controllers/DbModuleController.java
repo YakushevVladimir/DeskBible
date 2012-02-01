@@ -56,9 +56,9 @@ public class DbModuleController implements IModuleController {
 		return null;
 	}
 
-
+	
 	@Override
-	public Module getModuleByDatasourceID(String moduleDatasourceID)
+	public Module getModuleByID(String moduleID, String moduleDatasourceID)
 			throws OpenModuleException {
 		// TODO Auto-generated method stub
 		return null;
