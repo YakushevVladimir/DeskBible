@@ -5,12 +5,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import android.util.Log;
+
 import com.BibleQuote.dal.FsLibraryContext;
 import com.BibleQuote.exceptions.BookNotFoundException;
 import com.BibleQuote.exceptions.FileAccessException;
 import com.BibleQuote.models.Chapter;
 import com.BibleQuote.models.FsBook;
-import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.OSISLink;
 
 public class FsChapterRepository implements IChapterRepository<FsBook> {

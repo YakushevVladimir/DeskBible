@@ -33,6 +33,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.ClipboardManager;
+import android.util.Log;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -57,7 +58,6 @@ import com.BibleQuote.listeners.SearchInLibraryEvent;
 import com.BibleQuote.managers.AsyncManager;
 import com.BibleQuote.managers.AsyncOpenChapter;
 import com.BibleQuote.managers.Librarian;
-import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.OSISLink;
 import com.BibleQuote.utils.OnTaskCompleteListener;
 import com.BibleQuote.utils.PreferenceHelper;
@@ -301,7 +301,9 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
 					|| (requestCode == R.id.action_bar_chooseCh)) {
 				Bundle extras = data.getExtras();
 				OSISLink OSISLink = new OSISLink(extras.getString("linkOSIS"));
-				mAsyncManager.setupTask(new AsyncOpenChapter(progressMessage, false, myLibrarian, OSISLink), this);
+				if (OSISLink.getPath() != null) {
+					mAsyncManager.setupTask(new AsyncOpenChapter(progressMessage, false, myLibrarian, OSISLink), this);
+				}
 			}
 		} else if (requestCode == R.id.action_bar_settings) {
 			vWeb.setReadingMode(PreferenceHelper.isReadModeByDefault());

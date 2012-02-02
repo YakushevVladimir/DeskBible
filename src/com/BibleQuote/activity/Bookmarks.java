@@ -32,6 +32,7 @@ import android.graphics.ColorFilter;
 import android.graphics.LightingColorFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -41,7 +42,6 @@ import android.widget.Toast;
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
 import com.BibleQuote.managers.Librarian;
-import com.BibleQuote.utils.Log;
 
 public class Bookmarks extends GDActivity {
 

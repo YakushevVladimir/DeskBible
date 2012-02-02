@@ -14,6 +14,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 public class UpdateManager {
 	
@@ -23,25 +24,23 @@ public class UpdateManager {
 
 		SharedPreferences Settings = PreferenceManager.getDefaultSharedPreferences(context);
 
-		Log.Init(context);
-
 		// Инициализация каталога программы
 		String state = Environment.getExternalStorageState();
+		
 		if (Environment.MEDIA_MOUNTED.equals(state)) {
-			String basePath = Environment.getExternalStorageDirectory().toString();
-			File dir_modules = new File(basePath + "/jBible");
-			if (dir_modules.exists()) {
-				Log.i(TAG, "Rename directory \"/jBible\"");
-				dir_modules.renameTo(new File(basePath + "/BibleQuote"));
-			} else {
-				Log.i(TAG, "Create directory \"/BibleQuote/modules\"");
-				dir_modules = new File(basePath + "/BibleQuote/modules/");
+			File dir_modules = new File(DataConstants.FS_EXTERNAL_DATA_PATH);
+			if (!dir_modules.exists()) {
+				Log.i(TAG, String.format("Create directory %1$s", dir_modules));
 				dir_modules.mkdirs();
 			}
 		}
 
-		int currVersionCode = Settings.getInt("versionCode", 29);
-
+		int currVersionCode = Settings.getInt("versionCode", 0);
+		
+		if (currVersionCode == 0 && Environment.MEDIA_MOUNTED.equals(state)) {
+			Log.i(TAG, "Copying built-in module the Bible on external storage");
+			saveExternalModule(context);
+		}
 		if (currVersionCode < 30) {
 			Log.i(TAG, "Update to version 0.04.05");
 			Settings.edit().remove("myversion");
@@ -62,10 +61,9 @@ public class UpdateManager {
 
 	private static void saveExternalModule(Context context) {
 		try {
-			InputStream moduleStream = context.getResources().openRawResource(
-					R.raw.rst_strong);
-			File moduleDir = new File(Environment.getExternalStorageDirectory().toString() + "/BibleQuote/modules/");
-			OutputStream newModule = new FileOutputStream(new File(moduleDir, "rst_strong.zip"));
+			InputStream moduleStream = context.getResources().openRawResource(R.raw.rst);
+			File moduleDir = new File(DataConstants.FS_EXTERNAL_DATA_PATH);
+			OutputStream newModule = new FileOutputStream(new File(moduleDir, "rst.zip"));
 			byte[] buf = new byte[1024];
 			int len;
 			while ((len = moduleStream.read(buf)) > 0) {

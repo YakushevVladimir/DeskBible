@@ -7,3 +7,5 @@
 /project.properties
 /.umlproject
 /.euml2
+/.classpath
+/.lint.xml

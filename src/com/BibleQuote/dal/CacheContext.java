@@ -7,8 +7,9 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import android.util.Log;
+
 import com.BibleQuote.exceptions.FileAccessException;
-import com.BibleQuote.utils.Log;
 
 public class CacheContext {
 	private final String TAG = "CacheContext";

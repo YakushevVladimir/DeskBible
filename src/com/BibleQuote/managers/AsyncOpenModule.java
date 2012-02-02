@@ -1,10 +1,11 @@
 package com.BibleQuote.managers;
 
+import android.util.Log;
+
 import com.BibleQuote.exceptions.BookDefinitionException;
 import com.BibleQuote.exceptions.BooksDefinitionException;
 import com.BibleQuote.exceptions.OpenModuleException;
 import com.BibleQuote.models.Module;
-import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.OSISLink;
 import com.BibleQuote.utils.Task;
 

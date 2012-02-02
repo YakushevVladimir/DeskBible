@@ -15,6 +15,10 @@
  */
 package com.BibleQuote;
 
+import org.acra.ACRA;
+import org.acra.ReportingInteractionMode;
+import org.acra.annotation.ReportsCrashes;
+
 import greendroid.app.GDApplication;
 
 import com.BibleQuote.activity.Reader;
@@ -23,28 +27,57 @@ import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.UpdateManager;
 
+@ReportsCrashes(
+		formKey = "dEhtOGgtYVhyVHBHZzJqMlJEaU9xUVE6MQ", 
+		mode = ReportingInteractionMode.NOTIFICATION,
+		resDialogIcon = R.drawable.icon, 
+		resToastText = R.string.crash_toast_text, 
+		resNotifTickerText = R.string.crash_notif_ticker_text, 
+		resNotifTitle = R.string.crash_notif_title, 
+		resNotifText = R.string.crash_notif_text, 
+		resDialogText = R.string.crash_dialog_text, 
+		resDialogCommentPrompt = R.string.crash_dialog_comment_prompt
+		)
 public class BibleQuoteApp extends GDApplication {
 	
 	private Librarian myLibararian;
 	private AsyncManager mAsyncManager;
 	
-	@Override
+    @Override
+    public void onCreate() {
+        // The following line triggers the initialization of ACRA
+        ACRA.init(this);
+        super.onCreate();
+    }
+    
+    @Override
 	public Class<?> getHomeActivityClass() {
 		return Reader.class;
 	}
 
 	public void Init() {
-		PreferenceHelper.Init(this);
+		initPrefernceHelper();
 		UpdateManager.Init(this);
-		getLibrarian();
+		initLibrarian();
 	}
 
 	public Librarian getLibrarian() {
 		if (myLibararian == null) {
-			myLibararian = new Librarian(this);
-			myLibararian.loadModules(getResources().getString(R.string.exception_open_module));
+			// Сборщик мусора уничтожил ссылки на myLibararian и на PreferenceHelper
+			// Восстановим ссылки
+			initPrefernceHelper();
+			initLibrarian();
 		}
 		return myLibararian;
+	}
+	
+	public void initPrefernceHelper() {
+		PreferenceHelper.Init(this);
+	}
+	
+	public void initLibrarian() {
+		myLibararian = new Librarian(this);
+		myLibararian.loadModules(getResources().getString(R.string.exception_open_module));
 	}
 	
 	public AsyncManager getAsyncManager() {

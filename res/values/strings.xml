@@ -1,21 +1,13 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
-<!--
-/*
- * Copyright (C) 2011 Scripture Software (http://scripturesoftware.org/)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
--->
+<!-- /* * Copyright (C) 2011 Scripture Software (http://scripturesoftware.org/) 
+	* * Licensed under the Apache License, Version 2.0 (the "License"); * you 
+	may not use this file except in compliance with the License. * You may obtain 
+	a copy of the License at * * http://www.apache.org/licenses/LICENSE-2.0 * 
+	* Unless required by applicable law or agreed to in writing, software * distributed 
+	under the License is distributed on an "AS IS" BASIS, * WITHOUT WARRANTIES 
+	OR CONDITIONS OF ANY KIND, either express or implied. * See the License for 
+	the specific language governing permissions and * limitations under the License. 
+	*/ -->
 <resources>
     <string name="app_name">Bible</string>
     <!-- Dash Board -->
@@ -30,7 +22,7 @@
     <string name="db_help">Help</string>
     <!-- About -->
     <string name="about">About</string>
-    <string name="app_about_name">BibleQuote 0.04.05</string>
+    <string name="app_about_name">BibleQuote 0.04.06</string>
     <string name="app_about_license">Apache License Version 2.0</string>
     <string name="app_about_dev_label">Developers:</string>
     <string name="app_about_dev">Vladimir Yakushev\nSergey Ursul</string>
@@ -43,7 +35,7 @@
     <string name="app_about_www_label">WWW:</string>
     <string name="app_about_www">www.scripturesoftware.org</string>
     <!-- Settings -->
-    <string name="category_reader">Reading window settings</string>
+    <string name="category_reader">Reading window</string>
     <string name="text_size">Font size</string>
     <string name="current_text_size">Current text size: %1$d</string>
     <string name="text_color">Text color</string>
@@ -59,6 +51,31 @@
     <string name="may_need_to_restart">May need to restart</string>
     <string name="read_mode_by_default">Read mode by default</string>
     <string name="read_mode_by_default_summary">Use the default read mode</string>
+    <!-- Crash reports -->
+    <string name="category_reports">Crash reports</string>
+    <string name="reports_enable">Bug reports</string>
+    <string name="reports_enable_summaryOn">Send error reports to developers</string>
+    <string name="reports_enable_summaryOff">Do not send error reports to developers</string>
+    <string name="crash_toast_text">Oops! The application crashed, but the report was sent to developers to help them solve the problem!</string>
+    <string name="crash_notif_ticker_text">Unexpected error, please send a report...</string>
+    <string name="crash_notif_title">BibleQuote has crashed...</string>
+    <string name="crash_notif_text">Please click here to help fix the issue.</string>
+    <string name="crash_dialog_title">BibleQuote has crashed</string>
+    <string name="crash_dialog_text">An unexpected error occurred forcing the application to stop. Please help us fix this by sending us error data, all you have to do is click \'OK\'.</string>
+    <string name="crash_dialog_comment_prompt">Your comments (optional):</string>
+    <string name="crash_dialog_email_prompt">Your email (optional):</string>
+    <string name="crash_dialog_ok_toast">Thank you!</string>
+    <string name="pref_acra_deviceid_enabled">Send device id is enabled</string>
+    <string name="pref_acra_deviceid_disabled">Do not send device id</string>
+    <string name="pref_acra_user_email">Add your email address</string>
+    <string name="pref_acra_deviceid">Send device unique id ?</string>
+    <string name="pref_acra_user_email_summary">Developers may contact you to solve issues.</string>
+    <string name="pref_acra_alwaysaccept">Always send crash reports?</string>
+    <string name="pref_acra_alwaysaccept_enabled">Reports are sent without asking.</string>
+    <string name="pref_acra_alwaysaccept_disabled">Each report needs acknowledgement.</string>
+    <string name="pref_acra_syslog_enabled">Sending system logs is enabled</string>
+    <string name="pref_acra_syslog_disabled">Seinding system logs is disabled</string>
+    <string name="pref_acra_syslog">Send system logs (may contain private data) ?</string>
     <!-- Menu -->
     <string name="menu_night_day_mode">Nigth / Day mode</string>
     <string name="menu_favorites">Bookmarks</string>
@@ -88,15 +105,21 @@
     <!-- Favorities -->
     <string name="favorites">Bookmarks</string>
     <string name="fav_question_add_favorities">Do you really want to add bookmark</string>
-    <string name="fav_question_del_fav">Do you really want to delete this bookmark?</string>
+    <string name="fav_question_del_fav">Do you really want to delete this bookmark?
+	</string>
     <string name="fav_sort_alphabetically">Sort</string>
     <string name="fav_delete_all">Delete all</string>
-    <string name="fav_delete_all_question">Are you sure you want to delete all bookmarks?</string>
+    <string name="fav_delete_all_question">Are you sure you want to delete all bookmarks?
+	</string>
     <!-- Exceptions -->
-    <string name="exception_book_definition">Incorrect attributes of book #%1$s in module %2$s: PathName=%3$s, FullName=%4$s, ShortName=%5$s, ChapterQty=%6$s</string>
-    <string name="exception_books_definition">Incorrect books definition in module %1$s: BookQty=%2$s, PathName#=%3$s, FullName#=%4$s, ShortName#=%5$s, ChapterQty#=%6$s</string>
+    <string name="exception_book_definition">Incorrect attributes of book #%1$s in module %2$s:
+		PathName=%3$s, FullName=%4$s, ShortName=%5$s, ChapterQty=%6$s</string>
+    <string name="exception_books_definition">Incorrect books definition in module %1$s:
+		BookQty=%2$s, PathName#=%3$s, FullName#=%4$s, ShortName#=%5$s,
+		ChapterQty#=%6$s</string>
     <string name="exception_book_not_found">Book %1$s not found in module %2$s</string>
     <string name="exception_open_module">Incorrect module %1$s(%2$s)</string>
-        <string name="exception_open_module_short">Incorrect module %1$s</string>
-    
+    <string name="exception_open_module_short">Incorrect module %1$s</string>
+    <string name="category_reports_summary">Crash reports settings</string>
+    <string name="category_reader_summary">Reader window settings</string>
 </resources>

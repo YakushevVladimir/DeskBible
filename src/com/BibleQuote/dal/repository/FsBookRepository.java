@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 
+import android.util.Log;
+
 import com.BibleQuote.controllers.CacheModuleController;
 import com.BibleQuote.dal.FsLibraryContext;
 import com.BibleQuote.exceptions.BookDefinitionException;
