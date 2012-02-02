@@ -8,8 +8,6 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.TreeMap;
 
-import android.util.Log;
-
 import com.BibleQuote.controllers.CacheModuleController;
 import com.BibleQuote.dal.FsLibraryContext;
 import com.BibleQuote.exceptions.FileAccessException;
