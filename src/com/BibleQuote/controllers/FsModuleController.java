@@ -57,6 +57,7 @@ public class FsModuleController implements IModuleController {
 			exception = e;
 			try {
 				result = getModuleByDatasourceID(moduleDatasourceID);
+				exception = null;
 			} catch(OpenModuleException ex) {}
 		}
 		if (exception != null) {

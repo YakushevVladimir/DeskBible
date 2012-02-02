@@ -15,11 +15,10 @@ import com.BibleQuote.exceptions.OpenModuleException;
 import com.BibleQuote.models.Book;
 import com.BibleQuote.models.FsBook;
 import com.BibleQuote.models.FsModule;
-import com.BibleQuote.utils.Log;
 
 public class FsBookRepository implements IBookRepository<FsModule, FsBook> {
 	
-	private String TAG = "FsBookRepository";
+	//private String TAG = "FsBookRepository";
 	private FsLibraryContext context;
 	private CacheModuleController<FsModule> cache;
 	
@@ -47,7 +46,7 @@ public class FsBookRepository implements IBookRepository<FsModule, FsBook> {
 					context.fillBooks(module, reader);
 					
 				} catch (FileAccessException e) {
-					Log.e(TAG, String.format("Can't load books from module (%1$s, %2$s)", moduleID, moduleDatasourceID));
+					//Log.e(TAG, String.format("Can't load books from module (%1$s, %2$s)", moduleID, moduleDatasourceID));
 					throw new OpenModuleException(moduleID, moduleDatasourceID);
 					
 				} finally {
@@ -63,18 +62,21 @@ public class FsBookRepository implements IBookRepository<FsModule, FsBook> {
 				// Update cache with just added books
 				cache.saveModuleList(context.getModuleList(context.moduleSet));
 			}
+			return context.getBookList(context.bookSet); 	
 		}
-		return context.getBookList(module.Books); 	
 	}
 	
 	
 	public Collection<FsBook> getBooks(FsModule module) {
-		return context.getBookList(module.Books); 
+		return context.getBookList( 
+				module.Books == context.bookSet
+					? context.bookSet : null); 
 	}
 
 	
 	public FsBook getBookByID(FsModule module, String bookID) {
-		return (FsBook)module.Books.get(bookID);
+		return module.Books == context.bookSet
+				? (FsBook)context.bookSet.get(bookID) : null;
 	}
 
 
@@ -85,7 +87,7 @@ public class FsBookRepository implements IBookRepository<FsModule, FsBook> {
 		
 		FsBook book = getBookByID((FsModule)module, bookID);
 		if (book == null) {
-			Log.e(TAG, "Can't load books from module with ID=" + moduleID);
+			//Log.e(TAG, "Can't load books from module with ID=" + moduleID);
 			throw new BookNotFoundException(moduleID, bookID);
 		}
 		
@@ -93,7 +95,7 @@ public class FsBookRepository implements IBookRepository<FsModule, FsBook> {
 			bReader = context.getBookReader(book);
 			searchRes = context.searchInBook(module, bookID, regQuery, bReader);
 		} catch (FileAccessException e) {
-			Log.e(TAG, "Can't load books from module with ID=" + moduleID);
+			//Log.e(TAG, "Can't load books from module with ID=" + moduleID);
 			throw new BookNotFoundException(moduleID, bookID);
 			
 		} finally {

@@ -74,8 +74,10 @@ public class FsLibraryContext extends LibraryContext {
 	
 	public ArrayList<FsBook> getBookList(Map<String, Book> bookSet) {
 		ArrayList<FsBook> bookList = new ArrayList<FsBook>();
-		for (Book currBook : bookSet.values()) {
-			bookList.add((FsBook)currBook);
+		if (bookSet != null) {
+			for (Book currBook : bookSet.values()) {
+				bookList.add((FsBook)currBook);
+			}
 		}
 		return bookList;
 	}

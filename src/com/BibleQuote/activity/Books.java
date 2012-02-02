@@ -407,7 +407,8 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 				
 			} else if (e instanceof BookDefinitionException) {
 				ExceptionHelper.onBookDefinitionException((BookDefinitionException) e, this, TAG);
-			}  
+			}
+			UpdateView(MODULE_VIEW);
 		}		
 	}
 	

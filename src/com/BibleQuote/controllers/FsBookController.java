@@ -30,7 +30,7 @@ public class FsBookController implements IBookController {
 	
 	
 	public LinkedHashMap<String, Book> getBooks(Module module) throws OpenModuleException, BooksDefinitionException, BookDefinitionException {
-		module = getValidModule(module);
+		module = getOpenedModule(module);
 		
 		LinkedHashMap<String, Book> result = new LinkedHashMap<String, Book>();
 		ArrayList<Book> bookList = getBookList(module);
@@ -42,12 +42,12 @@ public class FsBookController implements IBookController {
 	}
 	
 	
-	public ArrayList<Book> getBookList(Module module) throws OpenModuleException, BooksDefinitionException, BookDefinitionException {
-		module = getValidModule(module);
+	public ArrayList<Book> getBookList(Module module) throws BooksDefinitionException, BookDefinitionException, OpenModuleException {
+		module = getOpenedModule(module);
 
 		ArrayList<FsBook> bookList = (ArrayList<FsBook>) bRepository.getBooks((FsModule)module);
 		if (bookList.size() == 0) {
-			bookList = (ArrayList<FsBook>) bRepository.loadBooks((FsModule)module);
+			bookList = (ArrayList<FsBook>) loadBooks((FsModule)module);
 		}
 		
 		return new ArrayList<Book>(bookList);
@@ -55,12 +55,12 @@ public class FsBookController implements IBookController {
 	
 	
 	public Book getBookByID(Module module, String bookID) throws BookNotFoundException, OpenModuleException {
-		module = getValidModule(module);
+		module = getOpenedModule(module);
 
 		Book book = bRepository.getBookByID((FsModule)module, bookID);
 		if (book == null) {
 			try {
-				bRepository.loadBooks((FsModule) module);
+				loadBooks((FsModule) module);
 			} catch (BooksDefinitionException e) {
 				Log.e(TAG, e.getMessage());
 			} catch (BookDefinitionException e) {
@@ -125,7 +125,7 @@ public class FsBookController implements IBookController {
 	 * @throws OpenModuleException произошла ошибка загрузки модуля из
 	 * хранилища
 	 */
-	private Module getValidModule(Module module) throws OpenModuleException {
+	private Module getOpenedModule(Module module) throws OpenModuleException {
 		if (module == null) {
 			throw new OpenModuleException("", "");
 		}
@@ -144,6 +144,20 @@ public class FsBookController implements IBookController {
 			throw new OpenModuleException(moduleID, moduleDatasourceID);
 		}
 		return module;
+	}
+	
+	
+	private ArrayList<FsBook> loadBooks(FsModule module) throws OpenModuleException, BooksDefinitionException, BookDefinitionException {
+		ArrayList<FsBook> bookList = null;
+		try {
+			bookList = (ArrayList<FsBook>) bRepository.loadBooks((FsModule) module);
+		} catch (OpenModuleException e) {
+			// if the module is bad it will be removed from the collection
+			mRepository.loadModuleById(module.getDataSourceID());
+			Log.e(TAG, e.getMessage());
+		}
+		
+		return bookList;
 	}
 	
 }

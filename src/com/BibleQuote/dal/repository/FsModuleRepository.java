@@ -16,13 +16,12 @@ import com.BibleQuote.models.Book;
 import com.BibleQuote.models.FsModule;
 import com.BibleQuote.models.Module;
 import com.BibleQuote.utils.DataConstants;
-import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.OnlyBQIni;
 import com.BibleQuote.utils.OnlyBQZipIni;
 
 public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 
-	private final String TAG = "FsModuleRepository";
+	//private final String TAG = "FsModuleRepository";
 	private FsLibraryContext context;
 	private CacheModuleController<FsModule> cache;
 	
@@ -67,28 +66,26 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 	}
 
 
-	public FsModule loadModuleById(String moduleDatasourceId) throws OpenModuleException {
+	public FsModule loadModuleById(String moduleDatasourceID) throws OpenModuleException {
 		FsModule fsModule = null;
 		BufferedReader reader = null;
 		synchronized (context.moduleSet) {
 			String moduleID = "";
 			try {
+				// remove an old module from the module collection
+				moduleID = removeModule(moduleDatasourceID);
 				
-				fsModule = new FsModule(moduleDatasourceId);
+				fsModule = new FsModule(moduleDatasourceID);
 				reader = context.getModuleReader(fsModule);
 				fsModule.defaultEncoding = context.getModuleEncoding(reader);
 				reader = context.getModuleReader(fsModule);
 				
 				context.fillModule(fsModule, reader);
-				
 				moduleID = fsModule.getID();
-				
-				context.moduleSet.remove(moduleDatasourceId);
 				context.moduleSet.put(moduleID, fsModule);
 				
 			} catch (FileAccessException e) {
-				Log.e(TAG, "Can't load module " + moduleDatasourceId, e);
-				context.moduleSet.remove(fsModule.getDataSourceID());
+				//Log.e(TAG, "Can't load module " + moduleDatasourceID, e);
 				throw new OpenModuleException(moduleID, fsModule.modulePath);
 				
 			} finally {
@@ -96,35 +93,40 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 					if (reader != null) {
 						reader.close();
 					}
+					cache.saveModuleList(context.getModuleList(context.moduleSet));
 				} catch (IOException e) {
 					e.printStackTrace(); 
 				}
 			}		
-			
-			cache.saveModuleList(context.getModuleList(context.moduleSet));
 		}
 		return fsModule;	
 	}
 	
 	
 	public Collection<FsModule> getModules() {
-		if ((context.moduleSet == null || context.moduleSet.size() == 0) && cache.isCacheExist()) {
-			loadCachedModules();
+		synchronized (context.moduleSet) {		
+			if ((context.moduleSet == null || context.moduleSet.size() == 0) && cache.isCacheExist()) {
+				loadCachedModules();
+			}
+			return context.getModuleList(context.moduleSet);
 		}
-		return context.getModuleList(context.moduleSet);	
 	}
 	
 	
 	public FsModule getModuleByID(String moduleID) {
-		return (FsModule)context.moduleSet.get(moduleID);
+		synchronized (context.moduleSet) {		
+			return (FsModule)context.moduleSet.get(moduleID);
+		}
 	}
 		
 	
 	@Override
 	public FsModule getModuleByDatasourceID(String moduleDatasourceID) {
-		for (Module module : context.moduleSet.values()) {
-			if ( ((FsModule)module).getDataSourceID().equalsIgnoreCase(moduleDatasourceID) ) {
-				return (FsModule)module;
+		synchronized (context.moduleSet) {		
+			for (Module module : context.moduleSet.values()) {
+				if ( ((FsModule)module).getDataSourceID().equalsIgnoreCase(moduleDatasourceID) ) {
+					return (FsModule)module;
+				}
 			}
 		}
 		return null;
@@ -143,9 +145,11 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 
 	
 	public FsModule getClosedModule() {
-		for (Module module : context.moduleSet.values()) {
-			if (((FsModule)module).getIsClosed()) {
-				return (FsModule)module;
+		synchronized (context.moduleSet) {
+			for (Module module : context.moduleSet.values()) {
+				if (((FsModule)module).getIsClosed()) {
+					return (FsModule)module;
+				}
 			}
 		}
 		return null;
@@ -164,4 +168,18 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 		}
 	}
 
+	
+	private String removeModule(String moduleDatasourceID) {
+		String moduleID = "";
+		for (Module module : context.moduleSet.values()) {
+			if ( module.getDataSourceID().equalsIgnoreCase(moduleDatasourceID) ) {
+				moduleID = module.getID();
+			}
+		}
+		if (moduleID != "") {
+			context.moduleSet.remove(moduleDatasourceID);
+			context.moduleSet.remove(moduleID);			
+		}
+		return moduleID;
+	}	
 }

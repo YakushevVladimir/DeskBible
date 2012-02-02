@@ -25,7 +25,7 @@ public interface IModuleRepository<TModuleId, TModule> {
 	 * @throws OpenModuleException путь к модулю отсутсвует в коллекции модулей, или
 	 * произошла ошибка при попытке загрузить данные модуля
 	 */
-	TModule loadModuleById(TModuleId moduleDataSourceId) throws OpenModuleException;
+	TModule loadModuleById(TModuleId moduleDatasourceID) throws OpenModuleException;
 	
     void insertModule(TModule module);
     

@@ -149,7 +149,7 @@ public class Librarian implements IChangeBooksListener  {
 			} catch (OpenModuleException e) {
 				errorList
 					.append( String.format(incorrectModuleTemplate, e.getModuleId(), e.getModuleDatasourceId() ))
-					.append("\n");
+					.append("\n\n");
 			}
 			module = this.getClosedModule();
 		}
