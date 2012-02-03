@@ -58,7 +58,7 @@ public class BibleQuoteApp extends GDApplication {
 	public void Init() {
 		initPrefernceHelper();
 		UpdateManager.Init(this);
-		initLibrarian();
+		if (myLibararian == null) initLibrarian();
 	}
 
 	public Librarian getLibrarian() {
@@ -71,19 +71,20 @@ public class BibleQuoteApp extends GDApplication {
 		return myLibararian;
 	}
 	
-	public void initPrefernceHelper() {
-		PreferenceHelper.Init(this);
-	}
-	
-	public void initLibrarian() {
-		myLibararian = new Librarian(this);
-		myLibararian.loadModules(getResources().getString(R.string.exception_open_module));
-	}
-	
 	public AsyncManager getAsyncManager() {
 		if (mAsyncManager == null) {
 			mAsyncManager = new AsyncManager();
 		}
 		return mAsyncManager;
 	}
+	
+	private void initPrefernceHelper() {
+		PreferenceHelper.Init(this);
+	}
+	
+	private void initLibrarian() {
+		myLibararian = new Librarian(this);
+		myLibararian.loadModules(getResources().getString(R.string.exception_open_module));
+	}
+
 }
