@@ -42,6 +42,7 @@ import android.widget.Toast;
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
 import com.BibleQuote.managers.Librarian;
+import com.BibleQuote.utils.OSISLink;
 
 public class Bookmarks extends GDActivity {
 
@@ -50,7 +51,7 @@ public class Bookmarks extends GDActivity {
     private QuickActionWidget mGrid;
     
     private ListView LV;
-	private Librarian myLibararian;
+	private Librarian myLibrarian;
 	private String currBookmark;
 
 	public void onCreate(Bundle savedInstanceState) {
@@ -61,11 +62,11 @@ public class Bookmarks extends GDActivity {
 		prepareQuickActionBar();
 
 		BibleQuoteApp app = (BibleQuoteApp) getGDApplication();
-		myLibararian = app.getLibrarian();
+		myLibrarian = app.getLibrarian();
 		
 		LV = (ListView) findViewById(R.id.FavoritsLV);
 		LV.setAdapter(new ArrayAdapter<String>(this,
-				android.R.layout.simple_list_item_1, myLibararian.getBookmarks()));
+				android.R.layout.simple_list_item_1, myLibrarian.getBookmarks()));
 		LV.setOnItemClickListener(OnItemClickListener);
 		LV.setOnItemLongClickListener(OnItemLongClickListener);
 	}
@@ -74,7 +75,7 @@ public class Bookmarks extends GDActivity {
 	protected void onPostResume() {
 		super.onPostResume();
 		LV.setAdapter(new ArrayAdapter<String>(this,
-				android.R.layout.simple_list_item_1, myLibararian.getBookmarks()));
+				android.R.layout.simple_list_item_1, myLibrarian.getBookmarks()));
 	}
 
     private void prepareQuickActionBar() {
@@ -88,7 +89,7 @@ public class Bookmarks extends GDActivity {
         public void onQuickActionClicked(QuickActionWidget widget, int position) {
         	switch (position) {
 			case 0:
-				myLibararian.sortBookmarks();
+				myLibrarian.sortBookmarks();
 				setAdapter();
 				break;
 
@@ -99,7 +100,7 @@ public class Bookmarks extends GDActivity {
 				builder.setMessage(R.string.fav_delete_all_question);
 				builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
-						myLibararian.delAllBookmarks();
+						myLibrarian.delAllBookmarks();
 						setAdapter();
 					}
 				});
@@ -141,16 +142,28 @@ public class Bookmarks extends GDActivity {
 
 	private AdapterView.OnItemClickListener OnItemClickListener = new AdapterView.OnItemClickListener() {
 		public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-			String link = LV.getAdapter().getItem(position).toString();
-			String linkOSIS = myLibararian.getBookmark(link);
+			String currBookmark = LV.getAdapter().getItem(position).toString();
+			String linkOSIS = myLibrarian.getBookmark(currBookmark);
 			
-			Log.i(TAG, "Select bookmark: " + link + " (OSIS link = " + linkOSIS + ")");
+			Log.i(TAG, "Select bookmark: " + currBookmark + " (OSIS link = " + linkOSIS + ")");
 
-			Intent intent = new Intent();
-			intent.putExtra("linkOSIS", linkOSIS);
-			setResult(RESULT_OK, intent);
-
-			finish();
+			OSISLink osisLink = new OSISLink(linkOSIS);
+			
+			if (!myLibrarian.isOSISLinkValid(osisLink)) {
+				Log.i(TAG, "Delete invalid bookmark: " + currBookmark);
+				
+				myLibrarian.delBookmark(currBookmark);
+				setAdapter();
+				Toast.makeText(getApplicationContext(), R.string.bookmark_invalid_removed,
+						Toast.LENGTH_LONG).show();				
+			} else {
+			
+				Intent intent = new Intent();
+				intent.putExtra("linkOSIS", linkOSIS);
+				setResult(RESULT_OK, intent);
+	
+				finish();
+			}
 		}
 	};
 
@@ -172,7 +185,7 @@ public class Bookmarks extends GDActivity {
 		public void onClick(DialogInterface dialog, int which) {
 			Log.i(TAG, "Delete bookmark: " + currBookmark);
 			
-			myLibararian.delBookmark(currBookmark);
+			myLibrarian.delBookmark(currBookmark);
 			setAdapter();
 			Toast.makeText(getApplicationContext(), R.string.removed,
 					Toast.LENGTH_LONG).show();
@@ -181,7 +194,7 @@ public class Bookmarks extends GDActivity {
 	
 	private void setAdapter() {
 		LV.setAdapter(new ArrayAdapter<String>(Bookmarks.this,
-				android.R.layout.simple_list_item_1, myLibararian.getBookmarks()));
+				android.R.layout.simple_list_item_1, myLibrarian.getBookmarks()));
 	}
     
 	private static class MyQuickAction extends QuickAction {

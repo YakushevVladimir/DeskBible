@@ -582,7 +582,22 @@ public class Librarian implements IChangeBooksListener  {
 		}
 	}
 
+	public Boolean isOSISLinkValid(OSISLink link)
+	{
+		if (link.getPath() == null) {
+			return false;
+		}
 
+		try {
+			getModuleByID(link.getModuleID(), link.getModuleDatasourceID());
+		} catch (OpenModuleException e) {
+			return false;
+		}
+		
+		return true;
+	}
+	
+	
 	///////////////////////////////////////////////////////////////////////////
 	// SHARE
 

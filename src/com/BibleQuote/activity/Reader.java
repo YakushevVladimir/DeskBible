@@ -126,11 +126,11 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
 		vWeb.setReadingMode(PreferenceHelper.isReadModeByDefault());
 		updateActivityMode();
 		
-		OSISLink OSISLink = new OSISLink(PreferenceHelper.restoreStateString("last_read"));
-		if (OSISLink.getPath() == null) {
+		OSISLink osisLink = new OSISLink(PreferenceHelper.restoreStateString("last_read"));
+		if (!myLibrarian.isOSISLinkValid(osisLink)) {
 			onChooseChapterClick();
 		} else {
-			mAsyncManager.setupTask(new AsyncOpenChapter(progressMessage, false, myLibrarian, OSISLink), this);
+			mAsyncManager.setupTask(new AsyncOpenChapter(progressMessage, false, myLibrarian, osisLink), this);
 		}
 	}
 	
@@ -300,9 +300,9 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
 					|| (requestCode == R.id.action_bar_search )
 					|| (requestCode == R.id.action_bar_chooseCh)) {
 				Bundle extras = data.getExtras();
-				OSISLink OSISLink = new OSISLink(extras.getString("linkOSIS"));
-				if (OSISLink.getPath() != null) {
-					mAsyncManager.setupTask(new AsyncOpenChapter(progressMessage, false, myLibrarian, OSISLink), this);
+				OSISLink osisLink = new OSISLink(extras.getString("linkOSIS"));
+				if (myLibrarian.isOSISLinkValid(osisLink)) {
+					mAsyncManager.setupTask(new AsyncOpenChapter(progressMessage, false, myLibrarian, osisLink), this);
 				}
 			}
 		} else if (requestCode == R.id.action_bar_settings) {
