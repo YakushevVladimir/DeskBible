@@ -170,13 +170,15 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 
 	
 	private String removeModule(String moduleDatasourceID) {
+		Boolean found = false;
 		String moduleID = "";
 		for (Module module : context.moduleSet.values()) {
 			if ( module.getDataSourceID().equalsIgnoreCase(moduleDatasourceID) ) {
 				moduleID = module.getID();
+				found = true;
 			}
 		}
-		if (moduleID != "") {
+		if (found) {
 			context.moduleSet.remove(moduleDatasourceID);
 			context.moduleSet.remove(moduleID);			
 		}
