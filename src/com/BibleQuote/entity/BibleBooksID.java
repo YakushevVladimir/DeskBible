@@ -1,7 +1,5 @@
 package com.BibleQuote.entity;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 import android.util.Log;
@@ -10,7 +8,8 @@ public class BibleBooksID {
 	
 	private final static String TAG = "BibleBooksID";
 	
-	private static HashMap<String, String[]> qualifier = new HashMap<String, String[]>(){
+	private static HashMap<String, String> qualifier; 
+	private static HashMap<String, String[]> bookShortNames = new HashMap<String, String[]>(){
 		private static final long serialVersionUID = 1L;
 		{
 			
@@ -166,21 +165,22 @@ public class BibleBooksID {
 			put("Herm.Vis" , new String[]{"Herm.Vis","Shepherd of Hermas, Visions"});
 		}
 	};
+
+	private static void qualifierInit() {
+		qualifier = new HashMap<String, String>();
+		for (String key : bookShortNames.keySet()) {
+			String[] bookNames = bookShortNames.get(key);
+			for (String name : bookNames) {
+				qualifier.put(name, key);
+			}
+		}
+	};
 	
 	private static void addBookID(String id, String[] shortNames){
 		Log.i(TAG, "addBookID(" + id + ")");
-		if (!qualifier.containsKey(id)) {
-			return;
-		}
-		
-		ArrayList<String> qualiferShortNames = new ArrayList<String>(Arrays.asList(qualifier.get(id)));
 		for (String name : shortNames) {
-			if (!qualiferShortNames.contains(name)) {
-				qualiferShortNames.add(name);
-			}
+			qualifier.put(name, id);
 		}
-		String[] newShortNames = new String[qualiferShortNames.size()];
-		qualifier.put(id, qualiferShortNames.toArray(newShortNames));
 	}
 	
 	public static String getID(String shortNames){
@@ -196,25 +196,21 @@ public class BibleBooksID {
 			return bookID;
 		}
 		
-		for (String id : qualifier.keySet()) {
-			String[] bookNames = qualifier.get(id);
-			for (String name : bookNames) {
-				for (String moduleBookName : moduleBookNames) {
-					if (name.equals(moduleBookName.trim())) {
-						bookID = id;
-						break;
-					}
-				}
-				if (bookID != null) {
-					break;
-				}
+		if (qualifier == null) {
+			qualifierInit();
+		}
+		
+		for (String moduleBookName : moduleBookNames) {
+			bookID = qualifier.get(moduleBookName);
+			if (bookID != null) {
+				break;
 			}
 		}
 		
 		if (bookID != null) {
 			addBookID(bookID, moduleBookNames);
 		} else {
-			qualifier.put(moduleBookNames[0], moduleBookNames);
+			addBookID(moduleBookNames[0], moduleBookNames);
 		}
 		
 		return bookID;

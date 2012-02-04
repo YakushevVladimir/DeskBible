@@ -47,17 +47,16 @@ public class OSISLink {
 			} else {
 				// OSISLinkPath short path format    
 				linkParam = OSISLinkPath.split(SEP_SHORT);
-				try {
+				if (linkParam.length >= 2) {
 					moduleID = linkParam[0];
 					bookID = linkParam[1];
 					chapterNumber = 1;
 					verseNumber = 1;
 					try {
-						chapterNumber = Integer.parseInt(linkParam[2]);
-						verseNumber = Integer.parseInt(linkParam[3]);
-					} catch (NumberFormatException  e) {}
-				} catch (Exception e) {
-					Log.e(TAG, String.format("OSISLink(%1$s)", OSISLinkPath), e);
+						chapterNumber = (linkParam.length >= 3 ?  Integer.parseInt(linkParam[2]) : 1);
+						verseNumber = (linkParam.length >= 4 ?  Integer.parseInt(linkParam[3]) : 1);
+					} catch (NumberFormatException  e) {
+					}
 				}
 			}
 		}
@@ -147,5 +146,10 @@ public class OSISLink {
 
 	public Integer getVerseNumber() {
 		return verseNumber;
+	}
+
+	@Override
+	public String toString() {
+		return String.format("%1$s:%2$s %3$s:%4$s", moduleID, bookID, chapterNumber, verseNumber);
 	}
 }
