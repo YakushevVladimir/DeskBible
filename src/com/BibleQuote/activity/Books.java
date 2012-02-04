@@ -99,12 +99,12 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 		chapterList = (GridView) findViewById(R.id.chapterChoose);
 		chapterList.setOnItemClickListener(chapterList_onClick);
 
-		OSISLink OSISLink = myLibrarian.getCurrentOSISLink();
-		if (OSISLink.getPath() != null) {
-			moduleDatasourceID = OSISLink.getModuleDatasourceID();
-			moduleID = OSISLink.getModuleID();
-			bookID   = OSISLink.getBookID();
-			chapter  = OSISLink.getChapterNumber().toString();
+		OSISLink osisLink = myLibrarian.getCurrentOSISLink();
+		if (myLibrarian.isOSISLinkValid(osisLink)) {
+			moduleDatasourceID = osisLink.getModuleDatasourceID();
+			moduleID = osisLink.getModuleID();
+			bookID   = osisLink.getBookID();
+			chapter  = osisLink.getChapterNumber().toString();
 			
 			modulesList.setAdapter(getModuleAdapter());
 			booksList.setAdapter(getBookAdapter());
