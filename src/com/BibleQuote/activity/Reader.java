@@ -300,17 +300,9 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
 					|| (requestCode == R.id.action_bar_search )
 					|| (requestCode == R.id.action_bar_chooseCh)) {
 				Bundle extras = data.getExtras();
-<<<<<<< HEAD
-				OSISLink OSISLink = new OSISLink(extras.getString("linkOSIS"));
-				Log.i(TAG, "onActivityResult(" + OSISLink.toString() + ")");
-				if (OSISLink.getPath() != null) {
-					Log.i(TAG, "AsyncOpenChapter()");
-					mAsyncManager.setupTask(new AsyncOpenChapter(progressMessage, false, myLibrarian, OSISLink), this);
-=======
 				OSISLink osisLink = new OSISLink(extras.getString("linkOSIS"));
 				if (myLibrarian.isOSISLinkValid(osisLink)) {
 					mAsyncManager.setupTask(new AsyncOpenChapter(progressMessage, false, myLibrarian, osisLink), this);
->>>>>>> 9f844791216312dbb5361786b8be2a50bc63131c
 				}
 			}
 		} else if (requestCode == R.id.action_bar_settings) {
