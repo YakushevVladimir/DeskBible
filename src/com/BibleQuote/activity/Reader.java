@@ -286,6 +286,11 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
 					AboutActivity.class);
 			startActivity(intentAbout);
 			break;
+		case R.id.Search:
+			Intent intentSearch = new Intent().setClass(
+					getApplicationContext(), Search.class);
+					startActivityForResult(intentSearch, R.id.action_bar_search);
+			break;
 		default:
 			return false;
 		}

@@ -44,7 +44,7 @@
 			android:onClick="onBookClick" />
 		<Button 
 			android:id="@+id/btnChapter" 
-			android:layout_width="50dip" 
+			android:layout_width="80dip" 
 			android:layout_height="wrap_content"
 			android:layout_margin="1dip"
 			style="@style/DefaultButton"
@@ -88,9 +88,9 @@
 			android:layout_height="fill_parent"
 			android:visibility="gone"
 			android:padding="0dip"
-	        android:verticalSpacing="4dip"
-	        android:horizontalSpacing="0dip"
-	        android:columnWidth="40dip"
+	        android:verticalSpacing="@dimen/ch_chapter_spacing"
+	        android:horizontalSpacing="@dimen/ch_chapter_spacing"
+	        android:columnWidth="@dimen/ch_chapter_width"
 	        android:numColumns="auto_fit"
 	        android:gravity="center" />
 	

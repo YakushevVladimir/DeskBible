@@ -27,7 +27,7 @@
 	<RelativeLayout
 		android:id="@+id/bookLink_container"
 		android:layout_width="fill_parent" 
-		android:layout_height="20.0dip"
+		android:layout_height="@dimen/bookLink_container_height"
 		android:orientation="horizontal"
 		android:layout_weight="1"
 		android:background="#ff808080"
@@ -35,26 +35,12 @@
 		
 		<TextView 
 			android:id="@+id/linkBook"
-			android:layout_width="wrap_content" 
-			android:layout_height="wrap_content" 
-			android:padding="2.0dip"
-			android:textSize="11sp"
-			android:textColor="@android:color/white"
-			android:singleLine="true" 
-			android:shadowColor="#ff000000" 
-			android:shadowRadius="2.75" 
+			style="@style/BookLinkContainer" 
 			android:layout_alignParentRight="true" />
 		
 		<TextView 
 			android:id="@+id/moduleName"
-			android:layout_width="wrap_content" 
-			android:layout_height="wrap_content" 
-			android:padding="2.0dip"
-			android:textSize="11sp"
-			android:textColor="@android:color/white"
-			android:singleLine="true" 
-			android:shadowColor="#ff000000" 
-			android:shadowRadius="2.75" 
+			style="@style/BookLinkContainer" 
 			android:layout_toLeftOf="@id/linkBook" 
 			android:layout_alignParentLeft="true" />
 		

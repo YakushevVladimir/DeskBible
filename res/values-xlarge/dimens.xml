@@ -18,21 +18,21 @@
 -->
 <resources>
     
-    <dimen name="text_size_very_small">11.0sp</dimen>
-    <dimen name="text_size_small">12.0sp</dimen>
-    <dimen name="text_size_medium">14.0sp</dimen>
-    <dimen name="text_size_large">18.0sp</dimen>
+    <dimen name="text_size_very_small">14.0sp</dimen>
+    <dimen name="text_size_small">18.0sp</dimen>
+    <dimen name="text_size_medium">22.0sp</dimen>
+    <dimen name="text_size_large">24.0sp</dimen>
 	
-	<dimen name="gd_action_bar_height">40dp</dimen>
-	<dimen name="gd_item_view_height">40dp</dimen>
-	<dimen name="gd_item_view_half_height">24dp</dimen>
-	<dimen name="gd_item_view_padding_left">4dp</dimen>
+	<dimen name="gd_action_bar_height">50dp</dimen>
+	<dimen name="gd_item_view_height">60dp</dimen>
+	<dimen name="gd_item_view_half_height">32dp</dimen>
+	<dimen name="gd_item_view_padding_left">6dp</dimen>
 
-	<dimen name="bookLink_container_height">20dip</dimen>
-	<dimen name="library_item_height">40dip</dimen>
-	<dimen name="ch_chapter_height">40dip</dimen>
-	<dimen name="ch_chapter_width">40dip</dimen>
-	<dimen name="ch_chapter_spacing">5dip</dimen>
-	<dimen name="book_id_width">60dip</dimen>
+	<dimen name="bookLink_container_height">32dip</dimen>
+	<dimen name="library_item_height">60dip</dimen>
+	<dimen name="ch_chapter_height">60dip</dimen>
+	<dimen name="ch_chapter_width">60dip</dimen>
+	<dimen name="ch_chapter_spacing">15dip</dimen>
+	<dimen name="book_id_width">80dip</dimen>
 			
 </resources>

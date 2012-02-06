@@ -21,8 +21,8 @@
     <style name="DefaultButton">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:minWidth">40.0dip</item>
-        <item name="android:minHeight">40.0dip</item>
+        <item name="android:minWidth">60.0dip</item>
+        <item name="android:minHeight">60.0dip</item>
         <item name="android:background">@drawable/btn_default</item>
         <item name="android:textColor">#ff000000</item>
         <item name="android:textSize">@dimen/text_size_medium</item>
@@ -39,7 +39,7 @@
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textSize">@dimen/text_size_very_small</item>
         <item name="android:singleLine">true</item>
-        <item name="android:padding">2.0dip</item>
+        <item name="android:padding">4.0dip</item>
         <item name="android:shadowColor">#ff000000</item>
         <item name="android:shadowRadius">2.75</item>
     </style>

@@ -147,6 +147,7 @@ public class Librarian implements IChangeBooksListener  {
 			try {
 				this.getModuleByID(module.getID(), module.getDataSourceID());
 			} catch (OpenModuleException e) {
+				Log.e(TAG, String.format("Error getModuleByID(%1$s, %2$s)", module.getID(), module.getDataSourceID()), e);
 				errorList
 					.append( String.format(incorrectModuleTemplate, e.getModuleId(), e.getModuleDatasourceId() ))
 					.append("\n\n");
