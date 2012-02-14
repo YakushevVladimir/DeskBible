@@ -106,9 +106,9 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 			bookID   = osisLink.getBookID();
 			chapter  = osisLink.getChapterNumber().toString();
 			
-			modulesList.setAdapter(getModuleAdapter());
-			booksList.setAdapter(getBookAdapter());
-			chapterList.setAdapter(getChapterAdapter());
+			//modulesList.setAdapter(getModuleAdapter());
+			//booksList.setAdapter(getBookAdapter());
+			//chapterList.setAdapter(getChapterAdapter());
 			
 			UpdateView(CHAPTER_VIEW);
 		} else {
