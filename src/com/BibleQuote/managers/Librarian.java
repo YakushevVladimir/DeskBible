@@ -234,7 +234,7 @@ public class Librarian implements IChangeBooksListener  {
 	
 	public ArrayList<ItemList> getModuleBooksList(String moduleID) throws OpenModuleException, BooksDefinitionException, BookDefinitionException {
 		// Получим модуль по его ID
-		currModule = moduleCtrl.getModuleByID(moduleID);
+		Module currModule = moduleCtrl.getModuleByID(moduleID);
 		ArrayList<ItemList> booksList = new ArrayList<ItemList>();
 		for (Book book : bookCtrl.getBookList(currModule)) {
 			booksList.add(new ItemList(book.getID(), book.Name, (String)book.getDataSourceID()));
@@ -258,8 +258,8 @@ public class Librarian implements IChangeBooksListener  {
 	public ArrayList<String> getChaptersList(String moduleID, String bookID) 
 			throws BookNotFoundException, OpenModuleException {
 		// Получим модуль по его ID
-		currModule = getModule(moduleID);
-		currBook = bookCtrl.getBookByID(currModule, bookID);
+		Module currModule = getModule(moduleID);
+		Book currBook = bookCtrl.getBookByID(currModule, bookID);
 		return currBook.getChapterNumbers(currModule.ChapterZero);
 	}
 
