@@ -22,7 +22,7 @@
     <string name="db_help">Help</string>
     <!-- About -->
     <string name="about">About</string>
-    <string name="app_about_name">BibleQuote 0.04.07</string>
+    <string name="app_about_name">BibleQuote 0.04.08</string>
     <string name="app_about_license">Apache License Version 2.0</string>
     <string name="app_about_dev_label">Developers:</string>
     <string name="app_about_dev">Vladimir Yakushev\nSergey Ursul</string>
@@ -115,9 +115,8 @@
     <!-- Exceptions -->
     <string name="exception_book_definition">Incorrect attributes of book #%1$s in module %2$s:
 		PathName=%3$s, FullName=%4$s, ShortName=%5$s, ChapterQty=%6$s</string>
-    <string name="exception_books_definition">Incorrect books definition in module %1$s:
-		BookQty=%2$s, PathName#=%3$s, FullName#=%4$s, ShortName#=%5$s,
-		ChapterQty#=%6$s</string>
+    <string name="exception_book_definition">Incorrect attributes of book #%1$s in module %2$s:
+		PathName=%3$s, FullName=%4$s, ShortName=%5$s, ChapterQty=%6$s</string>
     <string name="exception_book_not_found">Book %1$s not found in module %2$s</string>
     <string name="exception_open_module">Incorrect module %1$s(%2$s)</string>
     <string name="exception_open_module_short">Incorrect module %1$s</string>

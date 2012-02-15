@@ -28,11 +28,11 @@
 	<dimen name="gd_item_view_half_height">32dp</dimen>
 	<dimen name="gd_item_view_padding_left">6dp</dimen>
 
-	<dimen name="bookLink_container_height">32dip</dimen>
-	<dimen name="library_item_height">60dip</dimen>
-	<dimen name="ch_chapter_height">60dip</dimen>
-	<dimen name="ch_chapter_width">60dip</dimen>
-	<dimen name="ch_chapter_spacing">15dip</dimen>
-	<dimen name="book_id_width">80dip</dimen>
+	<dimen name="bookLink_container_height">32dp</dimen>
+	<dimen name="library_item_height">60dp</dimen>
+	<dimen name="ch_chapter_height">60dp</dimen>
+	<dimen name="ch_chapter_width">60dp</dimen>
+	<dimen name="ch_chapter_spacing">15dp</dimen>
+	<dimen name="book_id_width">80dp</dimen>
 			
 </resources>

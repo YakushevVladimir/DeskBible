@@ -23,16 +23,16 @@
     <dimen name="text_size_medium">14.0sp</dimen>
     <dimen name="text_size_large">18.0sp</dimen>
 	
-	<dimen name="gd_action_bar_height">40dp</dimen>
-	<dimen name="gd_item_view_height">40dp</dimen>
+	<dimen name="gd_action_bar_height">48dp</dimen>
+	<dimen name="gd_item_view_height">48dp</dimen>
 	<dimen name="gd_item_view_half_height">24dp</dimen>
 	<dimen name="gd_item_view_padding_left">4dp</dimen>
 
-	<dimen name="bookLink_container_height">20dip</dimen>
-	<dimen name="library_item_height">40dip</dimen>
-	<dimen name="ch_chapter_height">40dip</dimen>
-	<dimen name="ch_chapter_width">40dip</dimen>
-	<dimen name="ch_chapter_spacing">5dip</dimen>
-	<dimen name="book_id_width">60dip</dimen>
+	<dimen name="bookLink_container_height">20dp</dimen>
+	<dimen name="library_item_height">48dp</dimen>
+	<dimen name="ch_chapter_height">40dp</dimen>
+	<dimen name="ch_chapter_width">40dp</dimen>
+	<dimen name="ch_chapter_spacing">5dp</dimen>
+	<dimen name="book_id_width">60dp</dimen>
 			
 </resources>

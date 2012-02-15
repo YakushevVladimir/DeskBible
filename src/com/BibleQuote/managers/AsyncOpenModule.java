@@ -31,7 +31,7 @@ public class AsyncOpenModule extends Task {
 		isSuccess = false;
 		try {
 			Log.i(TAG, String.format("Open OSIS link with moduleID=%1$s", link.getModuleID()));
-			module = librarian.openModule(link.getModuleID(), link.getModuleDatasourceID());
+			module = librarian.getModuleByID(link.getModuleID(), link.getModuleDatasourceID());
 			
 			Log.i(TAG, String.format("Load books for module with moduleID=%1$s", module.getID()));
 			librarian.getBookList(module);

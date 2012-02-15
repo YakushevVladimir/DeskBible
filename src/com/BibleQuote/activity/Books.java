@@ -194,7 +194,6 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 		public void onItemClick(AdapterView<?> a, View v, int position, long id) {
 			chapterPos = position;
 			chapter    = chapters.get(position);
-
 			setButtonText();
 			readChapter();
 		}
@@ -212,8 +211,6 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 		String bookShortName = "---";
 		try {
 			bookShortName = myLibrarian.getBookShortName(moduleID, bookID);
-		} catch (BookNotFoundException e) {
-			ExceptionHelper.onBookNotFoundException(e, this, TAG);
 		} catch (OpenModuleException e) {
 			ExceptionHelper.onOpenModuleException(e, this, TAG);
 		}
@@ -264,8 +261,6 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 				if (bookPos >= 0) {
 					booksList.setSelection(bookPos);
 				}
-			} catch (BookNotFoundException e) {
-				ExceptionHelper.onBookNotFoundException(e, this, TAG);
 			} catch (OpenModuleException e) {
 				ExceptionHelper.onOpenModuleException(e, this, TAG);
 			}
@@ -392,7 +387,6 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 	private void onAsyncOpenModuleComplete(AsyncOpenModule task) {
 		if (task.isSuccess()) {
 			moduleID = task.getModule().getID();
-			bookID = "---";
 			chapter = "-";
 			setButtonText();
 			UpdateView(BOOK_VIEW);

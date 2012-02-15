@@ -118,7 +118,7 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 			return null;
 		}
 		synchronized (context.moduleSet) {		
-			return (FsModule)context.moduleSet.get(moduleID.toUpperCase());
+			return (FsModule)context.moduleSet.get(moduleID);
 		}
 	}
 		

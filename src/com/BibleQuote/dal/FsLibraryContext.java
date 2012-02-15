@@ -392,7 +392,7 @@ public class FsLibraryContext extends LibraryContext {
 					verseNumber++;
 
 				if (str.toLowerCase().matches(regQuery)) {
-					OSISLink osisLink = new OSISLink(OSISLink.MOD_DATASOURCE_FS, module.getDataSourceID(), module.ShortName, bookID, chapterNumber, verseNumber);
+					OSISLink osisLink = new OSISLink(OSISLink.MOD_DATASOURCE_FS, module.getDataSourceID(), module.getID(), bookID, chapterNumber, verseNumber);
 					String content = StringProc.stripTags(str, module.HtmlFilter, true)
 						.replaceAll("^\\d+\\s+", "");
 					searchRes.put(osisLink.getPath(), content);

@@ -170,40 +170,33 @@ public class Librarian implements IChangeBooksListener  {
 		return chapterCtrl.getChapter(book, chapterNumber);
 	}
 	
-	/**
-	 * Возвращает полностью загруженный модуль. Ищет модуль в коллекции
-	 * модулей. Если он отсутствует в коллекции производит его загрузку
-	 * из хранилища. Для closed-модуля инициируется полная загрузка данных 
-	 * модуля и обновления кэш.<br/>
-	 * Очищаются ссылки в currBook, currChapter, currChapterNumber и CurrVerseNumber
-	 * 
-	 * @param moduleID ShortName модуля
-	 * @param moduleDatasourceID путь к данным модуля в хранилище
-	 * @return Возвращает полностью загруженный модуль
-	 * @throws OpenModuleException произошла ошибки при попытке загрузки closed-модуля
-	 * из хранилища
-	 */
-	public Module openModule(String moduleID, String moduleDatasourceID) throws OpenModuleException {
-		currModule = getModuleByID(moduleID, moduleDatasourceID);
-		currBook = null;
-		currChapter = null;
-		currChapterNumber = -1;
-		currVerseNumber = 1;
-		return currModule;
-	}
+//	/**
+//	 * Возвращает полностью загруженный модуль. Ищет модуль в коллекции
+//	 * модулей. Если он отсутствует в коллекции производит его загрузку
+//	 * из хранилища. Для closed-модуля инициируется полная загрузка данных 
+//	 * модуля и обновления кэш.<br/>
+//	 * Очищаются ссылки в currBook, currChapter, currChapterNumber и CurrVerseNumber
+//	 * 
+//	 * @param moduleID ShortName модуля
+//	 * @param moduleDatasourceID путь к данным модуля в хранилище
+//	 * @return Возвращает полностью загруженный модуль
+//	 * @throws OpenModuleException произошла ошибки при попытке загрузки closed-модуля
+//	 * из хранилища
+//	 */
+//	public Module openModule(String moduleID, String moduleDatasourceID) throws OpenModuleException {
+//		return getModuleByID(moduleID, moduleDatasourceID);
+//	}
+//	
+//	public Book openBook(Module module, String bookID) throws BookNotFoundException, OpenModuleException {
+//		return getBookByID(module, bookID);
+//	}
 	
-	public Book openBook(Module module, String bookID) throws BookNotFoundException, OpenModuleException {
-		currBook = getBookByID(module, bookID);
-		currChapter = null;
-		currChapterNumber = -1;
-		currVerseNumber = 1;		
-		return currBook;
-	}
-	
-	public Chapter openChapter(Book book, Integer chapterNumber, Integer verseNumber) throws BookNotFoundException {
-		currChapter = getChapterByNumber(book, chapterNumber);
-		currChapterNumber = chapterNumber;
-		currVerseNumber = verseNumber != null ? verseNumber : 1;
+	public Chapter openChapter(OSISLink link) throws BookNotFoundException, OpenModuleException {
+		currModule = getModuleByID(link.getModuleID(), link.getModuleDatasourceID());
+		currBook = getBookByID(currModule, link.getBookID());
+		currChapter = getChapterByNumber(currBook, link.getChapterNumber());
+		currChapterNumber = link.getChapterNumber();
+		currVerseNumber = link.getVerseNumber();
 		return currChapter;
 	}
 	
@@ -234,9 +227,9 @@ public class Librarian implements IChangeBooksListener  {
 	
 	public ArrayList<ItemList> getModuleBooksList(String moduleID) throws OpenModuleException, BooksDefinitionException, BookDefinitionException {
 		// Получим модуль по его ID
-		Module currModule = moduleCtrl.getModuleByID(moduleID);
+		Module module = moduleCtrl.getModuleByID(moduleID);
 		ArrayList<ItemList> booksList = new ArrayList<ItemList>();
-		for (Book book : bookCtrl.getBookList(currModule)) {
+		for (Book book : bookCtrl.getBookList(module)) {
 			booksList.add(new ItemList(book.getID(), book.Name, (String)book.getDataSourceID()));
 		}
 		return booksList;
@@ -258,9 +251,9 @@ public class Librarian implements IChangeBooksListener  {
 	public ArrayList<String> getChaptersList(String moduleID, String bookID) 
 			throws BookNotFoundException, OpenModuleException {
 		// Получим модуль по его ID
-		Module currModule = getModule(moduleID);
-		Book currBook = bookCtrl.getBookByID(currModule, bookID);
-		return currBook.getChapterNumbers(currModule.ChapterZero);
+		Module module = getModule(moduleID);
+		Book book = bookCtrl.getBookByID(module, bookID);
+		return book.getChapterNumbers(module.ChapterZero);
 	}
 
 	private Module getModule(String moduleID) throws OpenModuleException{
@@ -324,8 +317,8 @@ public class Librarian implements IChangeBooksListener  {
 	///////////////////////////////////////////////////////////////////////////
 	// GET CONTENT
 	
-	public String getChapterHTMLView(Chapter chapter) {
-		return chapterCtrl.getChapterHTMLView(chapter);
+	public String getChapterHTMLView() {
+		return chapterCtrl.getChapterHTMLView(currChapter);
 	}
 	
 	public String getVerseText(Integer verse) {
@@ -445,7 +438,7 @@ public class Librarian implements IChangeBooksListener  {
 		return currModule.getName();
 	}
 
-	public String getBookFullName(String moduleID, String bookID) throws BookNotFoundException, OpenModuleException{
+	public String getBookFullName(String moduleID, String bookID) throws OpenModuleException{
 		// Получим модуль по его ID
 		Module module;
 		try {
@@ -454,17 +447,15 @@ public class Librarian implements IChangeBooksListener  {
 			return "---";
 		}
 
-		if (bookID == "---") {
+		try {
+			Book book = bookCtrl.getBookByID(module, bookID);
+			return book.Name;
+		} catch (BookNotFoundException e) {
 			return "---";
 		}
-		Book book = bookCtrl.getBookByID(module, bookID);
-		if (book == null) {
-			return "---";
-		}
-		return book.Name;
 	}
 
-	public String getBookShortName(String moduleID, String bookID) throws BookNotFoundException, OpenModuleException{
+	public String getBookShortName(String moduleID, String bookID) throws OpenModuleException{
 		// Получим модуль по его ID
 		Module module;
 		try {
@@ -472,14 +463,13 @@ public class Librarian implements IChangeBooksListener  {
 		} catch (OpenModuleException e) {
 			return "---";
 		}
-		if (bookID == "---") {
+
+		try {
+			Book book = bookCtrl.getBookByID(module, bookID);
+			return book.getShortName();
+		} catch (BookNotFoundException e) {
 			return "---";
 		}
-		Book book = bookCtrl.getBookByID(module, bookID);
-		if (book == null) {
-			return "---";
-		}
-		return book.getShortName();
 	}
 
 	public String getCurrentLink(){
@@ -503,7 +493,7 @@ public class Librarian implements IChangeBooksListener  {
 		if (currModule == null || currBook == null) {
 			return "";
 		}
-		String bookLink = currBook.getShortName() + " " + currChapterNumber;
+		String bookLink = currBook.getShortName() + " " + currChapter.getNumber();
 		if (bookLink.length() > 10) {
 			int strLenght = bookLink.length();
 			bookLink = bookLink.substring(0, 4) + "..." + bookLink.substring(strLenght - 4, strLenght);

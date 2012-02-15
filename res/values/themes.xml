@@ -11,7 +11,7 @@
 
     <style name="Theme.GDCatalog.TweakedItems" parent="@style/Theme.GDCatalog">
         <item name="gdTextAppearanceLarge">@style/TextAppearanceLarge</item>
-        <item name="gdItemViewPreferredHeight">45dp</item>       
+        <item name="gdItemViewPreferredHeight">48dp</item>       
         <item name="gdSeparatorItemViewStyle">@style/SeparatorItemView</item>
     </style>
  

@@ -459,7 +459,7 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
 			if (task instanceof AsyncOpenChapter) {
 				AsyncOpenChapter t = ((AsyncOpenChapter) task);
 				if (t.isSuccess()) {
-					chapterInHTML = myLibrarian.getChapterHTMLView(t.getChapter());
+					chapterInHTML = myLibrarian.getChapterHTMLView();
 					setTextinWebView();
 					// TODO Sergey: open the next chapter in background
 					//mAsyncManager.setupTask(new AsyncOpenChapter(progressMessage, false, myLibrarian, OSISLink), this);

@@ -21,12 +21,12 @@
     <style name="DefaultButton">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:minWidth">40.0dip</item>
-        <item name="android:minHeight">40.0dip</item>
+        <item name="android:minWidth">48dp</item>
+        <item name="android:minHeight">48dp</item>
         <item name="android:background">@drawable/btn_default</item>
         <item name="android:textColor">#ff000000</item>
         <item name="android:textSize">@dimen/text_size_medium</item>
-        <item name="android:padding">10.0dip</item>
+        <item name="android:padding">10dp</item>
         <item name="android:shadowColor">#ffffffff</item>
         <item name="android:shadowDx">1.0</item>
         <item name="android:shadowDy">1.0</item>
@@ -39,7 +39,7 @@
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textSize">@dimen/text_size_very_small</item>
         <item name="android:singleLine">true</item>
-        <item name="android:padding">2.0dip</item>
+        <item name="android:padding">2dp</item>
         <item name="android:shadowColor">#ff000000</item>
         <item name="android:shadowRadius">2.75</item>
     </style>
@@ -47,7 +47,7 @@
     <style name="DashBoardText">
 		<item name="android:textColor">@android:color/black</item>
         <item name="android:textSize">@dimen/text_size_large</item>
-        <item name="android:padding">5.0dip</item>
+        <item name="android:padding">5dp</item>
         <item name="android:layout_gravity">center</item>
     </style>
     

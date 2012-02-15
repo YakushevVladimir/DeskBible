@@ -27,6 +27,12 @@ public class ItemList extends HashMap<String, String> {
 		super();
 		super.put(ID, id);
 		super.put(Name, name);
-		super.put(DatasourceID, datasourceID);
+		/* 
+		 * Пока надобности в данном поле нет, а его наличие рушит
+		 * функционал, когда при смене модуля становится активной
+		 * книга с таким же ID
+		 *  		
+		 * super.put(DatasourceID, datasourceID);
+		 */
 	}
 }

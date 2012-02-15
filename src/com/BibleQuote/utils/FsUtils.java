@@ -24,6 +24,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UTFDataFormatException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -43,8 +44,9 @@ public class FsUtils {
 	
 	public static BufferedReader getTextFileReaderFromZipArchive(String archivePath, String textFileInArchive,
 			String textFileEncoding) throws FileAccessException {
+		File zipFile = new File(archivePath);
 		try {
-			InputStream moduleStream = new FileInputStream(new File(archivePath));
+			InputStream moduleStream = new FileInputStream(zipFile);
 			ZipInputStream zStream = new ZipInputStream(moduleStream);
 			ZipEntry entry;
 			while ((entry = zStream.getNextEntry()) != null) {
@@ -59,7 +61,11 @@ public class FsUtils {
 				};
 			}
 			String message = String.format("File %1$s in zip-arhive %2$s not found", textFileInArchive, archivePath);
-			android.util.Log.d(TAG, message);
+			Log.e(TAG, message);
+			throw new FileAccessException(message);
+		} catch (UTFDataFormatException e) {
+			String message = String.format("Archive %1$s contains the file names not in the UTF format", zipFile.getName());
+			Log.e(TAG, message);
 			throw new FileAccessException(message);
 		} catch (IOException e) {
 			Log.e(TAG, 
