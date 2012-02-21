@@ -28,7 +28,7 @@
 	<dimen name="gd_item_view_half_height">24dp</dimen>
 	<dimen name="gd_item_view_padding_left">4dp</dimen>
 
-	<dimen name="bookLink_container_height">20dp</dimen>
+	<dimen name="bookLink_container_height">24dp</dimen>
 	<dimen name="library_item_height">48dp</dimen>
 	<dimen name="ch_chapter_height">40dp</dimen>
 	<dimen name="ch_chapter_width">40dp</dimen>

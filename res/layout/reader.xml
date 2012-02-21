@@ -35,7 +35,7 @@
 		
 		<TextView 
 			android:id="@+id/linkBook"
-			style="@style/BookLinkContainer" 
+			style="@style/BookLinkContainer"
 			android:layout_alignParentRight="true" />
 		
 		<TextView 

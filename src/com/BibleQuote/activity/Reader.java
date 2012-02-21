@@ -53,8 +53,7 @@ import com.BibleQuote.controls.ReaderWebView;
 import com.BibleQuote.exceptions.BookNotFoundException;
 import com.BibleQuote.exceptions.ExceptionHelper;
 import com.BibleQuote.exceptions.OpenModuleException;
-import com.BibleQuote.listeners.ISearchListener;
-import com.BibleQuote.listeners.SearchInLibraryEvent;
+import com.BibleQuote.listeners.IReaderViewListener;
 import com.BibleQuote.managers.AsyncManager;
 import com.BibleQuote.managers.AsyncOpenChapter;
 import com.BibleQuote.managers.Librarian;
@@ -63,10 +62,10 @@ import com.BibleQuote.utils.OnTaskCompleteListener;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.Task;
 
-public class Reader extends GDActivity implements OnTaskCompleteListener, ISearchListener {
+public class Reader extends GDActivity implements OnTaskCompleteListener, IReaderViewListener {
 
 	private static final String TAG = "Reader";
-	private static final int VIEW_CHAPTER_NAV_LENGHT = 5000;
+	private static final int VIEW_CHAPTER_NAV_LENGHT = 3000;
 	
 	private Librarian myLibrarian;
 	private AsyncManager mAsyncManager;
@@ -96,7 +95,6 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
 		
 		BibleQuoteApp app = (BibleQuoteApp) getGDApplication();
 		myLibrarian = app.getLibrarian();
-		myLibrarian.eventManager.addSearchListener(this);
 
 		mAsyncManager = app.getAsyncManager();
 		mAsyncManager.handleRetainedTask(getLastNonConfigurationInstance(), this);
@@ -123,6 +121,7 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
 		nightMode = PreferenceHelper.restoreStateBoolean("nightMode");
 		
 		vWeb = (ReaderWebView)findViewById(R.id.readerView);
+		vWeb.setOnReaderViewListener(this);
 		vWeb.setReadingMode(PreferenceHelper.isReadModeByDefault());
 		updateActivityMode();
 		
@@ -181,7 +180,7 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
    private OnQuickActionClickListener mActionListener = new OnQuickActionClickListener() {
         public void onQuickActionClicked(QuickActionWidget widget, int position) {
     		ReaderWebView wView = (ReaderWebView)findViewById(R.id.readerView);
-			TreeSet<Integer> selVerses = wView.getSelectVerses();
+			TreeSet<Integer> selVerses = wView.getSelectedVerses();
 			if (selVerses.size() == 0) {
 				return;
 			}
@@ -385,11 +384,12 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
 				progressMessage, false, myLibrarian, myLibrarian.getCurrentOSISLink()), this);
 	}
 	
-	public void setTextActionVisibility(boolean visibility) {
-		if (visibility) {
-			btnTextAction.setVisibility(View.VISIBLE);
-		} else {
+	public void setTextActionVisibility() {
+		if (!vWeb.isStudyMode() 
+				|| vWeb.getSelectedVerses().size() == 0) {
 			btnTextAction.setVisibility(View.GONE);
+		} else {
+			btnTextAction.setVisibility(View.VISIBLE);
 		}
 	}
 
@@ -397,13 +397,15 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
 		if (chapterNavHandler.hasMessages(R.id.view_chapter_nav)) {
 			chapterNavHandler.removeMessages(R.id.view_chapter_nav);
 		}
-		btnChapterNav.setVisibility(View.VISIBLE);
-		
-		ReaderWebView vWeb = (ReaderWebView)findViewById(R.id.readerView);
-		if (!vWeb.isScrollToBottom()) {
-			Message msg = new Message();
-			msg.what = R.id.view_chapter_nav;
-			chapterNavHandler.sendMessageDelayed(msg, VIEW_CHAPTER_NAV_LENGHT);
+		if (!vWeb.isStudyMode()) {
+			btnChapterNav.setVisibility(View.GONE);
+		} else {
+			btnChapterNav.setVisibility(View.VISIBLE);
+			if (!vWeb.isScrollToBottom()) {
+				Message msg = new Message();
+				msg.what = R.id.view_chapter_nav;
+				chapterNavHandler.sendMessageDelayed(msg, VIEW_CHAPTER_NAV_LENGHT);
+			}
 		}
 	}
 	
@@ -428,9 +430,11 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
 	}
 
 	public void updateActivityMode() {
-		getActionBar().setVisibility(vWeb.isStudyMode() ? View.VISIBLE : View.GONE);
-		if (!vWeb.isStudyMode() && btnChapterNav.getVisibility() == View.VISIBLE) {
+		int visible = vWeb.isStudyMode() ? View.VISIBLE : View.GONE;
+		getActionBar().setVisibility(visible);
+		if (!vWeb.isStudyMode()) {
 			btnChapterNav.setVisibility(View.GONE);
+			btnTextAction.setVisibility(View.GONE);
 		}
 	}
 
@@ -475,17 +479,31 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, ISearc
 		}
     }
     
-	public void onSearchInLibrary(final SearchInLibraryEvent event) {
-		runOnUiThread(new Runnable() {
-			public void run() {
-				switch (event.code) {
-					case Found:
-						break;
-					case NotFound:
-						break;
-				}
+	@Override
+	public void onReaderViewChange(ChangeCode code) {
+		if (code == ChangeCode.onChangeReaderMode) {
+			updateActivityMode();
+		} else if (code == ChangeCode.onUpdateText
+				|| code == ChangeCode.onScroll) {
+			viewChapterNav();
+		} else if (code == ChangeCode.onChangeSelection) {
+			viewChapterNav();
+			setTextActionVisibility();
+		} else if (code == ChangeCode.onLongPress) {
+			if (vWeb.isStudyMode()) {
+				viewChapterNav();
+			} else {
+				onChooseChapterClick();
 			}
-		});		
+		} else if (code == ChangeCode.onUpNavigation) {
+			vWeb.pageUp(false);
+		} else if (code == ChangeCode.onDownNavigation) {
+			vWeb.pageDown(false);
+		} else if (code == ChangeCode.onLeftNavigation) {
+			prevChapter();
+		} else if (code == ChangeCode.onRightNavigation) {
+			nextChapter();
+		}
 	}
 
 }

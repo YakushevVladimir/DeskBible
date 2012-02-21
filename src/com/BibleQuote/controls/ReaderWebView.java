@@ -15,9 +15,11 @@
  */
 package com.BibleQuote.controls;
 
+import java.util.ArrayList;
 import java.util.TreeSet;
 
-import com.BibleQuote.activity.Reader;
+import com.BibleQuote.listeners.IReaderViewListener;
+import com.BibleQuote.listeners.IReaderViewListener.ChangeCode;
 import com.BibleQuote.utils.PreferenceHelper;
 
 import android.content.Context;
@@ -42,7 +44,8 @@ public class ReaderWebView extends WebView
 	private JavaScriptInterface jsInterface;
 	protected TreeSet<Integer> selectedVerse = new TreeSet<Integer>();
 	private boolean isStudyMode = false;
-
+	private ArrayList<IReaderViewListener> listeners = new ArrayList<IReaderViewListener>();
+	
 	public boolean mPageLoaded = false;
 
 	public ReaderWebView(Context mContext, AttributeSet attributeSet) {
@@ -99,29 +102,32 @@ public class ReaderWebView extends WebView
 	}
 
 	public boolean isScrollToBottom() {
-	    int scrollY = getScrollY();
+		int scrollY = getScrollY();
 	    int scrollExtent = computeVerticalScrollExtent();
 	    int scrollPos = scrollY + scrollExtent;
 	    if (scrollPos >= (computeVerticalScrollRange() - 10)) {
 			return true;
+		} else {
+			return false;
 		}
-		return false;
 	}
 
 	public void computeScroll() {
 		super.computeScroll();
 		if (mPageLoaded && isScrollToBottom()) {
-			viewChapterNav();
+			notifyListeners(ChangeCode.onScroll);
 		}
 	}
 
-	public TreeSet<Integer> getSelectVerses() {
+	public TreeSet<Integer> getSelectedVerses() {
 		return this.selectedVerse;
 	}
 	
 	public void clearSelectedVerse() {
 		jsInterface.clearSelectedVerse();
-		((Reader) getContext()).setTextActionVisibility(false);
+		if (isStudyMode) {
+			notifyListeners(ChangeCode.onChangeSelection);
+		}
 	}
 	
 	private String getStyle(Boolean nightMode) {
@@ -174,18 +180,6 @@ public class ReaderWebView extends WebView
 	    }
 	}
 
-	private void viewChapterNav() {
-		if (!isStudyMode) {
-			return;
-		}
-		Handler mHandler = getHandler();
-		mHandler.post(new Runnable() {
-			public void run() {
-				((Reader) getContext()).viewChapterNav();
-			}
-		});
-	}
-	
 	public boolean onTouchEvent(MotionEvent event) {
 		if (mGestureScanner.onTouchEvent(event)) {
 			return true;
@@ -212,19 +206,19 @@ public class ReaderWebView extends WebView
 			y = (int) (y / density);
 	
 			loadUrl("javascript:handleClick(" + x + ", " + y + ");");
-	
-			viewChapterNav();
+			notifyListeners(ChangeCode.onChangeSelection);
 		} else {
 			int width = this.getWidth();
 			int height = this.getHeight();
+			
 			if (((float) y / height) <= 0.33) {
-				pageUp(false);
+				notifyListeners(ChangeCode.onUpNavigation);
 			} else if (((float) y / height) > 0.67) {
-				pageDown(false);
+				notifyListeners(ChangeCode.onDownNavigation);
 			} else if (((float) x / width) <= 0.33) {
-				((Reader)getContext()).prevChapter();
+				notifyListeners(ChangeCode.onLeftNavigation);
 			} else if (((float) x / width) > 0.67) {
-				((Reader)getContext()).nextChapter();
+				notifyListeners(ChangeCode.onRightNavigation);
 			}
 		}
 		return false;
@@ -236,20 +230,17 @@ public class ReaderWebView extends WebView
 
 	public boolean onFling(MotionEvent e1, MotionEvent e2, 
 			float velocityX, float velocityY) {
-		viewChapterNav();
+		notifyListeners(ChangeCode.onScroll);
 		return false;
 	}
 
 	public void onLongPress(MotionEvent event) {
-		if (isStudyMode) {
-			viewChapterNav();
-		} else {
-			((Reader)getContext()).onChooseChapterClick();
-		}
+		notifyListeners(ChangeCode.onLongPress);
 	}
 
 	public boolean onScroll(MotionEvent e1, MotionEvent e2, 
 			float distanceX, float distanceY) {
+		notifyListeners(ChangeCode.onScroll);
 		return false;
 	}
 
@@ -258,7 +249,7 @@ public class ReaderWebView extends WebView
 
 	public boolean onDoubleTap(MotionEvent event) {
 		isStudyMode = !isStudyMode;
-		((Reader)getContext()).updateActivityMode();
+		notifyListeners(ChangeCode.onChangeReaderMode);
 		if (!isStudyMode) {
 			clearSelectedVerse();
 		}
@@ -310,13 +301,26 @@ public class ReaderWebView extends WebView
 			Handler mHandler = getHandler();
 			mHandler.post(new Runnable() {
 				public void run() {
-					((Reader) getContext()).setTextActionVisibility(selectedVerse.size() != 0);
+					notifyListeners(ChangeCode.onChangeSelection);
 				}
 			});
 		}
 		
 		public void alert(final String message) {
 			Log.i(TAG, "JavaScriptInterface.alert()");
+		}
+	}
+	
+	public void setOnReaderViewListener(IReaderViewListener listener) {
+		if (!listeners.contains(listener)) {
+			listeners.add(listener);
+		}
+	}
+	
+	private void notifyListeners(ChangeCode code) {
+		for (int i = 0; i < listeners.size(); i++) {
+			IReaderViewListener listener = (IReaderViewListener) listeners.get(i);
+			listener.onReaderViewChange(code);
 		}
 	}
 }
