@@ -21,6 +21,7 @@ public class OSISLink {
 	private String moduleDatasourceID = null;
 	private String moduleID = null;
 	private String bookID = null;
+	private String bookName = "";
 	private Integer chapterNumber = 1;
 	private Integer verseNumber = 1;
 	
@@ -84,6 +85,7 @@ public class OSISLink {
 		this.moduleDatasourceID = module == null ? null : (String)module.getDataSourceID();
 		this.moduleID = module == null ? null : module.getID();
 		this.bookID = book == null ? null : book.getID();
+		this.bookName = book == null ? null : book.Name;
 		this.chapterNumber = chapterNumber;
 		this.verseNumber = verseNumber;
 	}
@@ -151,5 +153,9 @@ public class OSISLink {
 	@Override
 	public String toString() {
 		return String.format("%1$s:%2$s %3$s:%4$s", moduleID, bookID, chapterNumber, verseNumber);
+	}
+
+	public String getBookName() {
+		return bookName;
 	}
 }

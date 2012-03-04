@@ -1,8 +1,6 @@
 package com.BibleQuote.dal;
 
 
-import android.content.Context;
-
 import com.BibleQuote.controllers.CacheModuleController;
 import com.BibleQuote.dal.repository.DbBookRepository;
 import com.BibleQuote.dal.repository.DbModuleRepository;
@@ -22,8 +20,8 @@ public class DbLibraryUnitOfWork  implements ILibraryUnitOfWork<Long, DbModule, 
     	this.dbLibraryContext = dbLibraryContext;
     }
 
-	public Context getLibraryContext() {
-		return dbLibraryContext.getContext();
+	public LibraryContext getLibraryContext() {
+		return dbLibraryContext;
 	}
 	
     public IModuleRepository<Long, DbModule> getModuleRepository()

@@ -143,6 +143,10 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, IReade
 		ActionBarItem itemSearch = bar.newActionBarItem(NormalActionBarItem.class);
 		itemSearch.setDrawable(R.drawable.ic_action_bar_search);
 		addActionBarItem(itemSearch, R.id.action_bar_search);
+		
+		ActionBarItem itemHistory = bar.newActionBarItem(NormalActionBarItem.class);
+		itemHistory.setDrawable(R.drawable.ic_menu_recent_history);
+		addActionBarItem(itemHistory, R.id.action_bar_history);
 	}
 
 	@Override
@@ -155,6 +159,11 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, IReade
 			Intent intentSearch = new Intent().setClass(
 					getApplicationContext(), Search.class);
 			startActivityForResult(intentSearch, R.id.action_bar_search);
+			break;
+		case R.id.action_bar_history:
+			Intent intentHistory = new Intent().setClass(
+					getApplicationContext(), HistoryActivity.class);
+			startActivityForResult(intentHistory, R.id.action_bar_history);
 			break;
 		default:
 			return super.onHandleActionBarItemClick(item, position);
@@ -302,7 +311,8 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, IReade
 		if (resultCode == RESULT_OK) {
 			if ((requestCode == R.id.action_bar_bookmarks) 
 					|| (requestCode == R.id.action_bar_search )
-					|| (requestCode == R.id.action_bar_chooseCh)) {
+					|| (requestCode == R.id.action_bar_chooseCh)
+					|| (requestCode == R.id.action_bar_history)) {
 				Bundle extras = data.getExtras();
 				OSISLink osisLink = new OSISLink(extras.getString("linkOSIS"));
 				if (myLibrarian.isOSISLinkValid(osisLink)) {

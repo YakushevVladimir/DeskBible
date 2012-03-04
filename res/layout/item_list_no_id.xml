@@ -16,20 +16,24 @@
  * limitations under the License.
  */
 -->
-
-<greendroid.widget.itemview.TextItemView
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	style="?attr/gdTextItemViewStyle"
-	android:id="@+id/gd_text"
-	android:layout_height="?attr/gdItemViewPreferredHeight"
-	android:minHeight="?attr/gdItemViewPreferredHeight"
-	android:paddingLeft="?attr/gdItemViewPreferredPaddingLeft"
-	
-	android:background="@android:color/white"
-	android:textColor="@android:color/black"
-	android:textSize="@dimen/text_size_large"
-
-	android:singleLine="true"
-	android:ellipsize="end"
-
-	android:gravity="center_vertical" />
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" 
+	android:layout_height="@dimen/library_item_height"
+	android:orientation="horizontal" >
+	<TextView 
+		android:id="@+id/id"
+		android:visibility="gone" 
+		android:layout_width="0dp"
+		android:layout_height="fill_parent" />
+	<TextView 
+		android:id="@+id/name" 
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent" 
+		android:background="#ffffffff"
+		android:paddingLeft="10dp"
+		android:textStyle="bold"
+		android:textColor="#000000" 
+		android:textSize="@dimen/text_size_medium"
+		android:gravity="center_vertical"
+		android:lines="2" />
+</LinearLayout>

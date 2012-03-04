@@ -1,7 +1,5 @@
 package com.BibleQuote.dal;
 
-import android.content.Context;
-
 import com.BibleQuote.controllers.CacheModuleController;
 import com.BibleQuote.dal.repository.IBookRepository;
 import com.BibleQuote.dal.repository.IChapterRepository;
@@ -15,7 +13,7 @@ public interface ILibraryUnitOfWork<TModuleId, TModule, TBook> {
 	
 	public IChapterRepository<TBook> getChapterRepository();
 	
-	public Context getLibraryContext();
+	public LibraryContext getLibraryContext();
 	
 	public CacheModuleController<TModule> getCacheModuleController();
 	

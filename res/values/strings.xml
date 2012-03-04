@@ -14,6 +14,7 @@
     <string name="db_bibles">Bible</string>
     <string name="db_libraries">Library</string>
     <string name="db_bookmarks">Bookmarks</string>
+    <string name="db_history">History</string>
     <string name="db_notes">Notes</string>
     <string name="db_plans">Plans</string>
     <string name="db_settings">Settings</string>
@@ -22,7 +23,7 @@
     <string name="db_help">Help</string>
     <!-- About -->
     <string name="about">About</string>
-    <string name="app_about_name">BibleQuote 0.04.08</string>
+    <string name="app_about_name">BibleQuote 0.04.09</string>
     <string name="app_about_license">Apache License Version 2.0</string>
     <string name="app_about_dev_label">Developers:</string>
     <string name="app_about_dev">Vladimir Yakushev\nSergey Ursul</string>
@@ -51,6 +52,10 @@
     <string name="may_need_to_restart">May need to restart</string>
     <string name="read_mode_by_default">Read mode by default</string>
     <string name="read_mode_by_default_summary">Use the default read mode</string>
+    <string name="category_reader_appearance">Appearance</string>
+    <string name="category_reader_other">Other</string>
+    <string name="category_reader_other_history_size">History size</string>
+    <string name="category_reader_other_history_size_summary">Current history size: %1$d</string>
     <!-- Crash reports -->
     <string name="category_reports">Crash reports</string>
     <string name="reports_enable">Bug reports</string>

@@ -16,10 +16,13 @@
 package com.BibleQuote.activity;
 
 import com.BibleQuote.R;
+import com.BibleQuote.utils.PreferenceHelper;
 
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
+import android.preference.Preference;
+import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
 
 public class Settings extends PreferenceActivity implements
@@ -29,6 +32,10 @@ public class Settings extends PreferenceActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.settings);
+		
+		Preference historySize = (Preference) findPreference("HistorySize");
+		historySize.setOnPreferenceChangeListener(historySizeChangeListener);
+		historySize.setSummary(String.format(historySize.getSummary().toString(), PreferenceHelper.getHistorySize()));
 	}
 
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
@@ -39,4 +46,14 @@ public class Settings extends PreferenceActivity implements
 		getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
 		super.onDestroy();
 	}
+	
+	private OnPreferenceChangeListener historySizeChangeListener = new OnPreferenceChangeListener() {
+		@Override
+		public boolean onPreferenceChange(Preference preference, Object newValue) {
+			int value = Integer.parseInt((String) newValue);
+			String summary = getResources().getString(R.string.category_reader_other_history_size_summary);
+			preference.setSummary(String.format(summary, value));
+			return true;
+		}
+	};
 }

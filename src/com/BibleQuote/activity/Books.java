@@ -65,7 +65,6 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 	
 	private int modulePos = 0, bookPos = 0, chapterPos = 0;
 	private String moduleID = "---", bookID = "---", chapter = "-";
-	private String moduleDatasourceID, bookDatasourceID;
 	private Librarian myLibrarian;
 	private AsyncManager mAsyncManager;
 	private String messageLoadModules;
@@ -101,7 +100,6 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 
 		OSISLink osisLink = myLibrarian.getCurrentOSISLink();
 		if (myLibrarian.isOSISLinkValid(osisLink)) {
-			moduleDatasourceID = osisLink.getModuleDatasourceID();
 			moduleID = osisLink.getModuleID();
 			bookID   = osisLink.getBookID();
 			chapter  = osisLink.getChapterNumber().toString();
@@ -155,7 +153,6 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 			modules = myLibrarian.getModulesList();
 			modulePos  = position;
 			moduleID   = modules.get(modulePos).get(ItemList.ID); 
-			moduleDatasourceID = modules.get(modulePos).get(ItemList.DatasourceID); 
 			bookPos    = 0;
 			chapterPos = 0;
 			
@@ -163,7 +160,7 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 			OSISLink currentOSISLink = myLibrarian.getCurrentOSISLink();
 			OSISLink OSISLink = new OSISLink(
 					currentOSISLink.getModuleDatasource(), 
-					moduleDatasourceID, 
+					null, 
 					moduleID, 
 					currentOSISLink.getBookID(), 
 					currentOSISLink.getChapterNumber(), 
@@ -177,7 +174,6 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 		public void onItemClick(AdapterView<?> a, View v, int position, long id) {
 			bookPos    = position;
 			bookID     = books.get(bookPos).get("ID");
-			bookDatasourceID   = books.get(bookPos).get("Path"); 
 			chapterPos = 0;
 
 			UpdateView(CHAPTER_VIEW);
@@ -236,7 +232,7 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 			
 			modulesList.setAdapter(getModuleAdapter());
 			
-			ItemList itemModule = new ItemList(moduleID, myLibrarian.getModuleFullName(moduleID), moduleDatasourceID);
+			ItemList itemModule = new ItemList(moduleID, myLibrarian.getModuleFullName(moduleID));
 			modulePos = modules.indexOf(itemModule);
 			if (modulePos >= 0) {
 				modulesList.setSelection(modulePos);
@@ -256,7 +252,7 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 
 			ItemList itemBook;
 			try {
-				itemBook = new ItemList(bookID, myLibrarian.getBookFullName(moduleID, bookID), bookDatasourceID);
+				itemBook = new ItemList(bookID, myLibrarian.getBookFullName(moduleID, bookID));
 				bookPos = books.indexOf(itemBook);
 				if (bookPos >= 0) {
 					booksList.setSelection(bookPos);

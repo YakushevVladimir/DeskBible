@@ -18,8 +18,8 @@
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	package="com.BibleQuote"
-	android:versionName="0.04.08" 
-	android:versionCode="33"
+	android:versionName="0.04.09" 
+	android:versionCode="34"
 	android:installLocation="auto">
 	
 	<uses-sdk android:targetSdkVersion="8" android:minSdkVersion="4" />
@@ -47,6 +47,7 @@
 
 		<activity android:name=".activity.Books" android:label="@string/db_libraries" />
 		<activity android:name=".activity.Bookmarks" android:label="@string/db_bookmarks" />
+		<activity android:name=".activity.HistoryActivity" android:label="@string/db_history" />
 		<activity android:name=".activity.Search" android:label="@string/db_search" />
 		<activity android:name=".activity.Settings" android:label="@string/db_settings" />
 		<activity android:name=".activity.ParallelsActivity" android:label="@string/db_parallels" />

@@ -65,17 +65,15 @@ public class Bookmarks extends GDActivity {
 		myLibrarian = app.getLibrarian();
 		
 		LV = (ListView) findViewById(R.id.FavoritsLV);
-		LV.setAdapter(new ArrayAdapter<String>(this,
-				android.R.layout.simple_list_item_1, myLibrarian.getBookmarks()));
 		LV.setOnItemClickListener(OnItemClickListener);
 		LV.setOnItemLongClickListener(OnItemLongClickListener);
+		setAdapter();
 	}
 
 	@Override
 	protected void onPostResume() {
 		super.onPostResume();
-		LV.setAdapter(new ArrayAdapter<String>(this,
-				android.R.layout.simple_list_item_1, myLibrarian.getBookmarks()));
+		setAdapter();
 	}
 
     private void prepareQuickActionBar() {
@@ -194,7 +192,7 @@ public class Bookmarks extends GDActivity {
 	
 	private void setAdapter() {
 		LV.setAdapter(new ArrayAdapter<String>(Bookmarks.this,
-				android.R.layout.simple_list_item_1, myLibrarian.getBookmarks()));
+				R.layout.text_item_view, myLibrarian.getBookmarks()));
 	}
     
 	private static class MyQuickAction extends QuickAction {

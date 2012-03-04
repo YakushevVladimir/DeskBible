@@ -22,6 +22,7 @@
     <string name="db_bibles">Библия</string>
     <string name="db_libraries">Библиотека</string>
     <string name="db_bookmarks">Закладки</string>
+    <string name="db_history">История</string>
     <string name="db_notes">Заметки</string>
     <string name="db_plans">Планы чтения</string>
     <string name="db_settings">Настройки</string>
@@ -44,6 +45,10 @@
     <string name="may_need_to_restart">Может потребоваться перезапуск</string>
     <string name="read_mode_by_default">Режим чтения по-умолчанию</string>
     <string name="read_mode_by_default_summary">Использовать по-умолчанию режим чтения</string>
+    <string name="category_reader_appearance">Внешний вид</string>
+    <string name="category_reader_other">Прочие</string>
+    <string name="category_reader_other_history_size">Размер истории</string>
+    <string name="category_reader_other_history_size_summary">Текущий размер истории: %1$d</string>
     <!-- Menu -->
     <string name="menu_night_day_mode">Режим день \ ночь</string>
     <string name="menu_favorites">Закладки</string>

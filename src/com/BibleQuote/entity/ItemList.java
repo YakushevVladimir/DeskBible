@@ -15,24 +15,17 @@
  */
 package com.BibleQuote.entity;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
-public class ItemList extends HashMap<String, String> {
+public class ItemList extends HashMap<String, String> implements Serializable {
 	private static final long serialVersionUID = 1L;
 	public static final String ID = "ID";
 	public static final String Name = "Name";
-	public static final String DatasourceID = "DatasourceID";
 	
-	public ItemList(String id, String name, String datasourceID){
+	public ItemList(String id, String name){
 		super();
 		super.put(ID, id);
 		super.put(Name, name);
-		/* 
-		 * Пока надобности в данном поле нет, а его наличие рушит
-		 * функционал, когда при смене модуля становится активной
-		 * книга с таким же ID
-		 *  		
-		 * super.put(DatasourceID, datasourceID);
-		 */
 	}
 }

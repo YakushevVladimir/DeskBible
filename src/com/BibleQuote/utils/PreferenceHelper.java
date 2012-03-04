@@ -90,4 +90,11 @@ public class PreferenceHelper {
 		}
 		return preference.getString("TextBG", "#ffffff");
 	}
+
+	public static int getHistorySize() {
+		if (preference == null) {
+			return 10;
+		}
+		return Integer.parseInt(preference.getString("HistorySize", "10"));
+	}
 }

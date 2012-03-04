@@ -33,6 +33,9 @@ public abstract class Book implements Serializable {
 	 */	
 	public Integer ChapterQty = 0;
 	
+	private Module module;
+	private ArrayList<String> chapterNumbers = new ArrayList<String>();
+	
 	
 	/**
 	 * @return Возвращает краткое имя книги. являющееся первым в списке кратких имен
@@ -96,7 +99,4 @@ public abstract class Book implements Serializable {
 	
 	public abstract Object getDataSourceID();
 
-	private Module module;
-	private ArrayList<String> chapterNumbers = new ArrayList<String>();
-	
 }

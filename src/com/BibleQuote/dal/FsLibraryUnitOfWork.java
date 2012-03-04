@@ -1,7 +1,5 @@
 package com.BibleQuote.dal;
 
-import android.content.Context;
-
 import com.BibleQuote.controllers.CacheModuleController;
 import com.BibleQuote.dal.repository.FsBookRepository;
 import com.BibleQuote.dal.repository.FsChapterRepository;
@@ -27,8 +25,8 @@ public class FsLibraryUnitOfWork implements ILibraryUnitOfWork<String, FsModule,
     }
     
 
-	public Context getLibraryContext() {
-		return this.fsLibraryContext.getContext();
+	public LibraryContext getLibraryContext() {
+		return this.fsLibraryContext;
 	}
  
     

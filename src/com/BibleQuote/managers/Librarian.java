@@ -18,6 +18,7 @@ package com.BibleQuote.managers;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
@@ -37,6 +38,9 @@ import com.BibleQuote.exceptions.BooksDefinitionException;
 import com.BibleQuote.exceptions.OpenModuleException;
 import com.BibleQuote.listeners.ChangeBooksEvent;
 import com.BibleQuote.listeners.IChangeBooksListener;
+import com.BibleQuote.managers.History.IHistoryManager;
+import com.BibleQuote.managers.History.SimpleHistoryManager;
+import com.BibleQuote.managers.History.fsHistoryRepository;
 import com.BibleQuote.models.Book;
 import com.BibleQuote.models.Chapter;
 import com.BibleQuote.models.Module;
@@ -56,6 +60,8 @@ public class Librarian implements IChangeBooksListener  {
 	private Chapter currChapter;
 	private Integer currChapterNumber = -1;
 	private Integer currVerseNumber = 1;
+	
+	private IHistoryManager historyManager;
 	
 	private IModuleController moduleCtrl;
 	private IBookController bookCtrl;
@@ -80,6 +86,9 @@ public class Librarian implements IChangeBooksListener  {
 		moduleCtrl = libCtrl.getModuleCtrl();
 		bookCtrl = libCtrl.getBookCtrl();
 		chapterCtrl = libCtrl.getChapterCtrl();
+		
+		fsHistoryRepository repository = new fsHistoryRepository(context.getCacheDir());
+		historyManager = new SimpleHistoryManager(repository, PreferenceHelper.getHistorySize());
 	}
 
 	/**
@@ -170,33 +179,15 @@ public class Librarian implements IChangeBooksListener  {
 		return chapterCtrl.getChapter(book, chapterNumber);
 	}
 	
-//	/**
-//	 * Возвращает полностью загруженный модуль. Ищет модуль в коллекции
-//	 * модулей. Если он отсутствует в коллекции производит его загрузку
-//	 * из хранилища. Для closed-модуля инициируется полная загрузка данных 
-//	 * модуля и обновления кэш.<br/>
-//	 * Очищаются ссылки в currBook, currChapter, currChapterNumber и CurrVerseNumber
-//	 * 
-//	 * @param moduleID ShortName модуля
-//	 * @param moduleDatasourceID путь к данным модуля в хранилище
-//	 * @return Возвращает полностью загруженный модуль
-//	 * @throws OpenModuleException произошла ошибки при попытке загрузки closed-модуля
-//	 * из хранилища
-//	 */
-//	public Module openModule(String moduleID, String moduleDatasourceID) throws OpenModuleException {
-//		return getModuleByID(moduleID, moduleDatasourceID);
-//	}
-//	
-//	public Book openBook(Module module, String bookID) throws BookNotFoundException, OpenModuleException {
-//		return getBookByID(module, bookID);
-//	}
-	
 	public Chapter openChapter(OSISLink link) throws BookNotFoundException, OpenModuleException {
 		currModule = getModuleByID(link.getModuleID(), link.getModuleDatasourceID());
 		currBook = getBookByID(currModule, link.getBookID());
 		currChapter = getChapterByNumber(currBook, link.getChapterNumber());
 		currChapterNumber = link.getChapterNumber();
 		currVerseNumber = link.getVerseNumber();
+		
+		historyManager.addLink(new OSISLink(currModule, currBook, currChapterNumber, currVerseNumber));
+		
 		return currChapter;
 	}
 	
@@ -218,10 +209,14 @@ public class Librarian implements IChangeBooksListener  {
 		// Теперь создадим результирующий список на основе отсортированных данных
 		ArrayList<ItemList> moduleList = new ArrayList<ItemList>();
 		for (Module currModule : tMap.values()) {
-			moduleList.add(new ItemList(currModule.getID(), currModule.getName(), (String)currModule.getDataSourceID()));
+			moduleList.add(new ItemList(currModule.getID(), currModule.getName()));
 		}
 
 		return moduleList;
+	}
+	
+	public LinkedList<ItemList> getHistoryList() {
+		return historyManager.getLinks();
 	}
 	
 	
@@ -230,7 +225,7 @@ public class Librarian implements IChangeBooksListener  {
 		Module module = moduleCtrl.getModuleByID(moduleID);
 		ArrayList<ItemList> booksList = new ArrayList<ItemList>();
 		for (Book book : bookCtrl.getBookList(module)) {
-			booksList.add(new ItemList(book.getID(), book.Name, (String)book.getDataSourceID()));
+			booksList.add(new ItemList(book.getID(), book.Name));
 		}
 		return booksList;
 	}
@@ -489,6 +484,10 @@ public class Librarian implements IChangeBooksListener  {
 		}
 	}
 	
+	public OSISLink getCurrentOSISLink(){
+		return new OSISLink(currModule, currBook, currChapterNumber, currVerseNumber);
+	}
+	
 	public CharSequence getHumanBookLink() {
 		if (currModule == null || currBook == null) {
 			return "";
@@ -499,10 +498,6 @@ public class Librarian implements IChangeBooksListener  {
 			bookLink = bookLink.substring(0, 4) + "..." + bookLink.substring(strLenght - 4, strLenght);
 		}
 		return bookLink;
-	}
-	
-	public OSISLink getCurrentOSISLink(){
-		return new OSISLink(currModule, currBook, currChapterNumber, currVerseNumber);
 	}
 	
 	public String getOSIStoHuman(String linkOSIS) throws BookNotFoundException, OpenModuleException {
