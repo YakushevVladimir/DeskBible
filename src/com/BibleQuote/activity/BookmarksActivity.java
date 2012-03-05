@@ -44,9 +44,9 @@ import com.BibleQuote.R;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.utils.OSISLink;
 
-public class Bookmarks extends GDActivity {
+public class BookmarksActivity extends GDActivity {
 
-	private final String TAG = "Bookmarks";
+	private final String TAG = "BookmarksActivity";
 	
     private QuickActionWidget mGrid;
     
@@ -92,7 +92,7 @@ public class Bookmarks extends GDActivity {
 				break;
 
 			case 1:
-				Builder builder = new AlertDialog.Builder(Bookmarks.this);
+				Builder builder = new AlertDialog.Builder(BookmarksActivity.this);
 				builder.setIcon(R.drawable.icon);
 				builder.setTitle(R.string.favorites);
 				builder.setMessage(R.string.fav_delete_all_question);
@@ -168,7 +168,7 @@ public class Bookmarks extends GDActivity {
 	private AdapterView.OnItemLongClickListener OnItemLongClickListener = new AdapterView.OnItemLongClickListener() {
 		public boolean onItemLongClick(AdapterView<?> a, View v, int position, long id) {
 			currBookmark = LV.getAdapter().getItem(position).toString();
-			Builder b = new AlertDialog.Builder(Bookmarks.this);
+			Builder b = new AlertDialog.Builder(BookmarksActivity.this);
 			b.setIcon(R.drawable.icon);
 			b.setTitle(R.string.favorites);
 			b.setMessage(R.string.fav_question_del_fav);
@@ -191,7 +191,7 @@ public class Bookmarks extends GDActivity {
 	};
 	
 	private void setAdapter() {
-		LV.setAdapter(new ArrayAdapter<String>(Bookmarks.this,
+		LV.setAdapter(new ArrayAdapter<String>(BookmarksActivity.this,
 				R.layout.text_item_view, myLibrarian.getBookmarks()));
 	}
     

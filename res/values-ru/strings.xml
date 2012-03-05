@@ -48,7 +48,7 @@
     <string name="category_reader_appearance">Внешний вид</string>
     <string name="category_reader_other">Прочие</string>
     <string name="category_reader_other_history_size">Размер истории</string>
-    <string name="category_reader_other_history_size_summary">Текущий размер истории: %1$d</string>
+    <string name="category_reader_other_history_size_summary">Текущий размер истории: %1$s</string>
     <!-- Menu -->
     <string name="menu_night_day_mode">Режим день \ ночь</string>
     <string name="menu_favorites">Закладки</string>

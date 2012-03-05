@@ -50,8 +50,8 @@ import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.utils.OnTaskCompleteListener;
 import com.BibleQuote.utils.Task;
 
-public class Search extends GDActivity implements OnTaskCompleteListener {
-	private static final String TAG = "Search";
+public class SearchActivity extends GDActivity implements OnTaskCompleteListener {
+	private static final String TAG = "SearchActivity";
 	private Spinner s1, s2;
 	private ListView LV;
 	private AsyncManager mAsyncManager;

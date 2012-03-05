@@ -25,7 +25,7 @@ import android.view.WindowManager;
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
 
-public class BibleQuote extends GDActivity {
+public class SplashActivity extends GDActivity {
 
     @Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -40,7 +40,7 @@ public class BibleQuote extends GDActivity {
 	}
     
     public void startHomeActivity(){
-    	startActivity(new Intent(this, Reader.class));
+    	startActivity(new Intent(this, ReaderActivity.class));
 		finish();
     }
 

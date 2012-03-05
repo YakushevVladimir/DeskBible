@@ -21,7 +21,7 @@ import org.acra.annotation.ReportsCrashes;
 
 import greendroid.app.GDApplication;
 
-import com.BibleQuote.activity.Reader;
+import com.BibleQuote.activity.ReaderActivity;
 import com.BibleQuote.managers.AsyncManager;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.utils.PreferenceHelper;
@@ -52,7 +52,7 @@ public class BibleQuoteApp extends GDApplication {
     
     @Override
 	public Class<?> getHomeActivityClass() {
-		return Reader.class;
+		return ReaderActivity.class;
 	}
 
 	public void Init() {

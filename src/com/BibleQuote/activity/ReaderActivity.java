@@ -62,9 +62,9 @@ import com.BibleQuote.utils.OnTaskCompleteListener;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.Task;
 
-public class Reader extends GDActivity implements OnTaskCompleteListener, IReaderViewListener {
+public class ReaderActivity extends GDActivity implements OnTaskCompleteListener, IReaderViewListener {
 
-	private static final String TAG = "Reader";
+	private static final String TAG = "ReaderActivity";
 	private static final int VIEW_CHAPTER_NAV_LENGHT = 3000;
 	
 	private Librarian myLibrarian;
@@ -157,7 +157,7 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, IReade
 			break;
 		case R.id.action_bar_search:
 			Intent intentSearch = new Intent().setClass(
-					getApplicationContext(), Search.class);
+					getApplicationContext(), SearchActivity.class);
 			startActivityForResult(intentSearch, R.id.action_bar_search);
 			break;
 		case R.id.action_bar_history:
@@ -275,7 +275,7 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, IReade
 		case R.id.Favorites:
 			Intent intentBookmarks = new Intent().setClass(
 					getApplicationContext(), 
-					Bookmarks.class);
+					BookmarksActivity.class);
 			startActivityForResult(intentBookmarks, R.id.action_bar_bookmarks);
 			break;
 		case R.id.Help:
@@ -285,7 +285,7 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, IReade
 		case R.id.Settings:
 			Intent intentSettings = new Intent().setClass(
 					getApplicationContext(), 
-					Settings.class);
+					SettingsActivity.class);
 			startActivityForResult(intentSettings, R.id.action_bar_settings);
 			break;
 		case R.id.About:
@@ -296,7 +296,7 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, IReade
 			break;
 		case R.id.Search:
 			Intent intentSearch = new Intent().setClass(
-					getApplicationContext(), Search.class);
+					getApplicationContext(), SearchActivity.class);
 					startActivityForResult(intentSearch, R.id.action_bar_search);
 			break;
 		default:
@@ -341,7 +341,7 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, IReade
 
 	public void onChooseChapterClick() {
 		Intent intent = new Intent();
-		intent.setClass(this, Books.class);
+		intent.setClass(this, LibraryActivity.class);
 		startActivityForResult(intent, R.id.action_bar_chooseCh);
 	}
 
@@ -434,7 +434,7 @@ public class Reader extends GDActivity implements OnTaskCompleteListener, IReade
 	@Override
 	public boolean onSearchRequested() {
 		Intent intentSearch = new Intent().setClass(
-		getApplicationContext(), Search.class);
+		getApplicationContext(), SearchActivity.class);
 		startActivityForResult(intentSearch, R.id.action_bar_search);
 		return false;
 	}

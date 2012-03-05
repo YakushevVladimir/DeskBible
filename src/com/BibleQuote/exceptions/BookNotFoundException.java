@@ -34,4 +34,9 @@ public class BookNotFoundException extends Exception {
 	public String getModuleID() {
 		return moduleID;
 	}
+
+	@Override
+	public String getMessage() {
+		return String.format("Book %1$s not found in module %2$s", bookID, moduleID);
+	}
 }

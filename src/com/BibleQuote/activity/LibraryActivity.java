@@ -50,8 +50,8 @@ import com.BibleQuote.utils.OSISLink;
 import com.BibleQuote.utils.OnTaskCompleteListener;
 import com.BibleQuote.utils.Task;
 
-public class Books extends GDActivity implements OnTaskCompleteListener {
-	private static final String TAG = "Books";
+public class LibraryActivity extends GDActivity implements OnTaskCompleteListener {
+	private static final String TAG = "LibraryActivity";
 	private final int MODULE_VIEW = 1, BOOK_VIEW = 2, CHAPTER_VIEW = 3;
 	private int viewMode = 1;
 
@@ -151,6 +151,10 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 	private AdapterView.OnItemClickListener modulesList_onClick = new AdapterView.OnItemClickListener() {
 		public void onItemClick(AdapterView<?> a, View v, int position, long id) {
 			modules = myLibrarian.getModulesList();
+			if (modules.size() <= position) {
+				UpdateView(MODULE_VIEW);
+				return;
+			}
 			modulePos  = position;
 			moduleID   = modules.get(modulePos).get(ItemList.ID); 
 			bookPos    = 0;
@@ -166,7 +170,7 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 					currentOSISLink.getChapterNumber(), 
 					currentOSISLink.getVerseNumber());
 			AsyncOpenModule asyncOpenModuleTask = new AsyncOpenModule(message, false, myLibrarian, OSISLink);
-			mAsyncManager.setupTask(asyncOpenModuleTask, Books.this);
+			mAsyncManager.setupTask(asyncOpenModuleTask, LibraryActivity.this);
 		}
 	};
 
@@ -369,7 +373,7 @@ public class Books extends GDActivity implements OnTaskCompleteListener {
 			// to continue open closed modules in background 
 			if (task.getNextClosedModule() != null) {
 				mAsyncManager.setupTask(
-					new AsyncLoadModules(messageLoadModules, true, myLibrarian, false), Books.this);
+					new AsyncLoadModules(messageLoadModules, true, myLibrarian, false), LibraryActivity.this);
 			}
 			
 		} else {
