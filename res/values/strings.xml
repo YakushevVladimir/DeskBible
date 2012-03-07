@@ -127,4 +127,7 @@
     <string name="exception_open_module_short">Incorrect module %1$s</string>
     <string name="category_reports_summary">Crash reports settings</string>
     <string name="category_reader_summary">Reader window settings</string>
+    <string name="exception_books_definition">Некорректное описание книги в модуле %1$s:
+		BookQty=%2$s, PathName#=%3$s, FullName#=%4$s, ShortName#=%5$s,
+		ChapterQty#=%6$s</string>
 </resources>
