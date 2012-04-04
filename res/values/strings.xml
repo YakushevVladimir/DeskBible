@@ -23,7 +23,7 @@
     <string name="db_help">Help</string>
     <!-- About -->
     <string name="about">About</string>
-    <string name="app_about_name">BibleQuote 0.04.10</string>
+    <string name="app_about_name">BibleQuote 0.04.11</string>
     <string name="app_about_license">Apache License Version 2.0</string>
     <string name="app_about_dev_label">Developers:</string>
     <string name="app_about_dev">Vladimir Yakushev\nSergey Ursul</string>
@@ -84,6 +84,7 @@
     <!-- Menu -->
     <string name="menu_night_day_mode">Nigth / Day mode</string>
     <string name="menu_favorites">Bookmarks</string>
+    <string name="menu_history">History</string>
     <string name="menu_search">Search</string>
     <string name="menu_help">Help</string>
     <string name="menu_settings">Settings</string>

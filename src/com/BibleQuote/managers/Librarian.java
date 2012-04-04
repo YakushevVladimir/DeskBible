@@ -489,7 +489,7 @@ public class Librarian implements IChangeBooksListener  {
 	}
 	
 	public CharSequence getHumanBookLink() {
-		if (currModule == null || currBook == null) {
+		if (currBook == null || currChapter == null) {
 			return "";
 		}
 		String bookLink = currBook.getShortName() + " " + currChapter.getNumber();
@@ -630,6 +630,20 @@ public class Librarian implements IChangeBooksListener  {
 		}
 		
 		return shareText.toString();
+	}
+
+	public String getBaseUrl() {
+		String dataSourceID = currModule.getDataSourceID();
+		int pos = dataSourceID.lastIndexOf("/");
+		if (++pos <= dataSourceID.length()) {
+			return dataSourceID.substring(0, pos);
+		} else {
+			return dataSourceID;
+		}
+	}
+
+	public void clearHistory() {
+		historyManager.clearLinks();
 	}
 
 

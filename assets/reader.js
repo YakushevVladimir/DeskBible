@@ -33,6 +33,8 @@ function handleClick(x, y) {
 		}
 		element = element.parentElement;
 	}
-	reader.onClickVerse(element.id);	
+	if (element != null) {
+		reader.onClickVerse(element.id);	
+	}
 }
 

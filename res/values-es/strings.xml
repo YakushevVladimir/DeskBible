@@ -92,7 +92,7 @@
     <string name="crash_notif_title">BibleQuote se ha estrellado ...</string>
     <string name="crash_dialog_title">BibleQuote se ha estrellado</string>
     <string name="pref_acra_user_email_summary">Los desarrolladores pueden contactar con usted para resolver los problemas.</string>
-    <string name="crash_dialog_text">Ocurrió un error inesperado obliga a la aplicación se detenga. Por favor ayúdenos a solucionar este problema mediante el envío de los datos de error, todo lo que tienes que hacer clic en 'Aceptar'.</string>
+    <string name="crash_dialog_text">Ocurrió un error inesperado obliga a la aplicación se detenga. Por favor ayúdenos a solucionar este problema mediante el envío de los datos de error, todo lo que tienes que hacer clic en `Aceptar`.</string>
     <string name="read_mode_by_default_summary">Utilice el modo de lectura por defecto</string>
     <string name="app_about_thanks_label">Gracias:</string>
     <string name="about">Sobre</string>

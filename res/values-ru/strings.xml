@@ -52,6 +52,7 @@
     <!-- Menu -->
     <string name="menu_night_day_mode">Режим день \ ночь</string>
     <string name="menu_favorites">Закладки</string>
+    <string name="menu_history">История</string>
     <string name="menu_search">Поиск</string>
     <string name="menu_help">Помощь</string>
     <string name="menu_settings">Настройки</string>

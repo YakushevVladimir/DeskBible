@@ -28,5 +28,6 @@ import com.BibleQuote.utils.OSISLink;
 
 public interface IHistoryManager {
 	public void addLink(OSISLink link);
+	public void clearLinks();
 	public LinkedList<ItemList> getLinks();
 }

@@ -72,24 +72,25 @@ public class ReaderWebView extends WebView
 		mGestureScanner.setOnDoubleTapListener(this);
 	}
 	
-	public void setText(String text, int currVerse, Boolean nightMode, Boolean isBible) {
+	public void setText(String baseUrl, String text, int currVerse, Boolean nightMode, Boolean isBible) {
 		mPageLoaded = false;
 		String modStyle = isBible ? "bible_style.css" : "book_style.css";
-		String html = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\"> "
-				+ "<html>\r\n"
-				+ "<head>\r\n"
-				+ "<meta http-equiv=Content-Type content=\"text/html; charset=UTF-8\">\r\n"
-				+ "<script language=\"JavaScript\" src=\"file:///android_asset/reader.js\" type=\"text/javascript\"></script>\r\n"
-				+ "<link rel=\"stylesheet\" type=\"text/css\" href=\"file:///android_asset/reader.css\">"
-				+ "<link rel=\"stylesheet\" type=\"text/css\" href=\"file:///android_asset/" + modStyle + "\">"
-				+ getStyle(nightMode)
-				+ "</head>\r\n"
-				+ "<body" + (currVerse > 1 ? (" onLoad=\"document.location.href='#verse_" + currVerse + "';\"") : "")
-				+ ">\r\n"
-				+ text
-				+ "</body>\r\n" + "</html>";
+		
+		StringBuilder html = new StringBuilder();
+		html.append("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\r\n");
+		html.append("<html>\r\n");
+		html.append("<head>\r\n");
+		html.append("<meta http-equiv=Content-Type content=\"text/html; charset=UTF-8\">\r\n");
+		html.append("<script language=\"JavaScript\" src=\"file:///android_asset/reader.js\" type=\"text/javascript\"></script>\r\n");
+		html.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"file:///android_asset/reader.css\">\r\n");
+		html.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"file:///android_asset/" + modStyle + "\">\r\n");
+		html.append(getStyle(nightMode));
+		html.append("</head>\r\n");
+		html.append("<body" + (currVerse > 1 ? (" onLoad=\"document.location.href='#verse_" + currVerse + "';\"") : "")	+ ">\r\n");
+		html.append(text);
+		html.append("</body>\r\n" + "</html>");
 
-		loadDataWithBaseURL("file:///url_initial_load", html, "text/html", "UTF-8", "about:config");
+		loadDataWithBaseURL("file://" + baseUrl, html.toString(), "text/html", "UTF-8", "about:config");
 		jsInterface.clearSelectedVerse();
 	}
 
@@ -159,6 +160,9 @@ public class ReaderWebView extends WebView
 		style.append("}\r\n");
 		style.append(".selectedVerse {\r\n");
 		style.append("background: " + selTextColor + ";\r\n");
+		style.append("}\r\n");
+		style.append("img {\r\n");
+		style.append("max-width: 100%;\r\n");
 		style.append("}\r\n");
 		style.append("</style>\r\n");
 		

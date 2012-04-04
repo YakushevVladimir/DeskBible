@@ -63,4 +63,10 @@ public class SimpleHistoryManager implements IHistoryManager {
 			return new LinkedList<ItemList>();
 		}
 	}
+
+	@Override
+	public void clearLinks() {
+		LinkedList<ItemList> history = new LinkedList<ItemList>();
+		repository.save(history);		
+	}
 }

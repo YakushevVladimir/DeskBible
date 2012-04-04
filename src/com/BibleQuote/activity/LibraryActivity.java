@@ -41,7 +41,6 @@ import com.BibleQuote.exceptions.BookNotFoundException;
 import com.BibleQuote.exceptions.BooksDefinitionException;
 import com.BibleQuote.exceptions.ExceptionHelper;
 import com.BibleQuote.exceptions.OpenModuleException;
-import com.BibleQuote.managers.AsyncLoadModules;
 import com.BibleQuote.managers.AsyncManager;
 import com.BibleQuote.managers.AsyncOpenModule;
 import com.BibleQuote.managers.AsyncRefreshModules;
@@ -67,7 +66,6 @@ public class LibraryActivity extends GDActivity implements OnTaskCompleteListene
 	private String moduleID = "---", bookID = "---", chapter = "-";
 	private Librarian myLibrarian;
 	private AsyncManager mAsyncManager;
-	private String messageLoadModules;
 	private String messageRefresh;
 	
 	@Override
@@ -82,7 +80,6 @@ public class LibraryActivity extends GDActivity implements OnTaskCompleteListene
 		mAsyncManager = app.getAsyncManager();
 		mAsyncManager.handleRetainedTask(getLastNonConfigurationInstance(), this);
 		
-		messageLoadModules = getResources().getString(R.string.messageLoadModules);
 		messageRefresh = getResources().getString(R.string.messageRefresh);
 		
 		btnModule  = (Button) findViewById(R.id.btnModule);
@@ -126,7 +123,7 @@ public class LibraryActivity extends GDActivity implements OnTaskCompleteListene
 	private void initActionBar() {
 		ActionBar bar = getActionBar();
 		ActionBarItem itemCont = bar.newActionBarItem(NormalActionBarItem.class);
-		itemCont.setDrawable(R.drawable.ic_action_bar_refresh);
+		itemCont.setDrawable(R.drawable.gd_action_bar_refresh);//ic_action_bar_refresh);
 		addActionBarItem(itemCont, R.id.action_bar_refresh);
 	}
 
@@ -356,32 +353,14 @@ public class LibraryActivity extends GDActivity implements OnTaskCompleteListene
 	public void onTaskComplete(Task task) {
 		Log.i(TAG, "onTaskComplete()");
 		if (task != null && !task.isCancelled()) {
-			if (task instanceof AsyncLoadModules) {
-				onAsyncLoadModulesComplete((AsyncLoadModules) task); 
-				
+			if (task instanceof AsyncRefreshModules) {
+				if (this.viewMode == MODULE_VIEW) {
+					UpdateView(MODULE_VIEW);
+				}
 			} else if (task instanceof AsyncOpenModule) {
 				onAsyncOpenModuleComplete((AsyncOpenModule) task);
 			}
 		}	
-	}
-	
-	private void onAsyncLoadModulesComplete(AsyncLoadModules task) {
-		if (task.isSuccess()) {
-			if (this.viewMode == MODULE_VIEW) {
-				UpdateView(MODULE_VIEW);
-			}
-			// to continue open closed modules in background 
-			if (task.getNextClosedModule() != null) {
-				mAsyncManager.setupTask(
-					new AsyncLoadModules(messageLoadModules, true, myLibrarian, false), LibraryActivity.this);
-			}
-			
-		} else {
-			Exception e = task.getException();
-			if (e instanceof OpenModuleException) {
-				ExceptionHelper.onOpenModuleException((OpenModuleException) e, this, TAG);
-			}  
-		}		
 	}
 	
 	private void onAsyncOpenModuleComplete(AsyncOpenModule task) {

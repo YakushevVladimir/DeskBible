@@ -77,6 +77,9 @@ public final class AsyncTaskManager implements IProgressTracker,
 
 	@Override
 	public void onCancel(DialogInterface dialog) {
+		if (mAsyncTask == null) {
+			return;
+		}
 		// Cancel task
 		mAsyncTask.cancel(true);
 		// Notify activity about completion
@@ -88,7 +91,7 @@ public final class AsyncTaskManager implements IProgressTracker,
 	@Override
 	public void onComplete() {
 		// Close progress dialog
-		mProgressDialog.dismiss();
+		mProgressDialog.cancel();
 
 		Task completedTask = mAsyncTask;
 		// Reset task
@@ -100,7 +103,7 @@ public final class AsyncTaskManager implements IProgressTracker,
 
 	public Object retainTask() {
 		// Close progress dialog
-		mProgressDialog.dismiss();
+		mProgressDialog.cancel();
 		
 		// Detach task from tracker (this) before retain
 		if (mAsyncTask != null) {

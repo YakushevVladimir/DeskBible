@@ -79,7 +79,7 @@ public class BookmarksActivity extends GDActivity {
     private void prepareQuickActionBar() {
     	mGrid = new QuickActionGrid(this);
     	mGrid.addQuickAction(new MyQuickAction(this, R.drawable.ic_action_bar_sort, R.string.fav_sort_alphabetically));
-    	mGrid.addQuickAction(new MyQuickAction(this, R.drawable.ic_action_bar_delete, R.string.fav_delete_all));
+    	mGrid.addQuickAction(new MyQuickAction(this, R.drawable.ic_quick_action_bar_delete, R.string.fav_delete_all));
     	mGrid.setOnQuickActionClickListener(mActionListener);
     }
 

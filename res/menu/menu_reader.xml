@@ -34,6 +34,11 @@
     	android:orderInCategory="2" 
     	android:icon="@drawable/ic_menu_bookmarks" />
     <item 
+    	android:title="@string/menu_history" 
+    	android:id="@+id/History" 
+    	android:orderInCategory="2" 
+    	android:icon="@drawable/ic_menu_recent_history" />
+    <item 
     	android:title="@string/menu_settings" 
     	android:id="@+id/Settings" 
     	android:orderInCategory="3" 

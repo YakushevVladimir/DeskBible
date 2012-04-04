@@ -14,6 +14,9 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import greendroid.app.GDActivity;
+import greendroid.widget.ActionBar;
+import greendroid.widget.ActionBarItem;
+import greendroid.widget.NormalActionBarItem;
 
 public class HistoryActivity extends GDActivity {
 
@@ -26,19 +29,23 @@ public class HistoryActivity extends GDActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setActionBarContentView(R.layout.favorits);
+		initActionBar();
         
 		BibleQuoteApp app = (BibleQuoteApp) getGDApplication();
 		myLibrarian = app.getLibrarian();
 		
+		setListAdapter();
+		vHistoryList.setOnItemClickListener(OnItemClickListener);
+    }
+
+	private void setListAdapter() {
 		list = myLibrarian.getHistoryList(); 
-		
 		vHistoryList = (ListView) findViewById(R.id.FavoritsLV);
 		vHistoryList.setAdapter(new SimpleAdapter(this, list,
 				R.layout.item_list_no_id,
 				new String[] { ItemList.ID, ItemList.Name }, new int[] {
 						R.id.id, R.id.name }));
-		vHistoryList.setOnItemClickListener(OnItemClickListener);
-    }
+	}
 	
 	private AdapterView.OnItemClickListener OnItemClickListener = new AdapterView.OnItemClickListener() {
 		public void onItemClick(AdapterView<?> a, View v, int position, long id) {
@@ -49,4 +56,26 @@ public class HistoryActivity extends GDActivity {
 		}
 	};
 
+	private void initActionBar() {
+		ActionBar bar = getActionBar();
+		
+		ActionBarItem itemHistory = bar.newActionBarItem(NormalActionBarItem.class);
+		itemHistory.setDrawable(R.drawable.gd_action_bar_trashcan);
+		addActionBarItem(itemHistory, R.id.action_bar_history_clear);
+	}
+
+	@Override
+	public boolean onHandleActionBarItemClick(ActionBarItem item, int position) {
+		switch (item.getItemId()) {
+		case R.id.action_bar_history_clear:
+			myLibrarian.clearHistory();
+			setListAdapter();
+			break;
+		default:
+			return super.onHandleActionBarItemClick(item, position);
+		}
+
+		return true;
+	}
+	
 }

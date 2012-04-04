@@ -50,7 +50,7 @@ public class fsHistoryRepository implements IHistoryRepository {
 			out.writeObject(list);
 			out.close();
 		} catch (Exception e) {
-			Log.e(TAG, e.getMessage());
+			Log.e(TAG, e.toString());
 		}
 	}
 	
@@ -63,10 +63,10 @@ public class fsHistoryRepository implements IHistoryRepository {
 			out.close();
 			return list;
 		} catch (ClassNotFoundException e) {
-			Log.e(TAG, e.getMessage());
+			Log.e(TAG, e.toString());
 			throw new FileAccessException(e.getMessage());			
 		} catch (IOException e) {
-			Log.e(TAG, e.getMessage());
+			Log.e(TAG, e.toString());
 			throw new FileAccessException(e.getMessage());	
 		}
 	}

@@ -145,7 +145,7 @@ public class ReaderActivity extends GDActivity implements OnTaskCompleteListener
 		addActionBarItem(itemSearch, R.id.action_bar_search);
 		
 		ActionBarItem itemHistory = bar.newActionBarItem(NormalActionBarItem.class);
-		itemHistory.setDrawable(R.drawable.ic_menu_recent_history);
+		itemHistory.setDrawable(R.drawable.ic_action_bar_recent_history);
 		addActionBarItem(itemHistory, R.id.action_bar_history);
 	}
 
@@ -328,7 +328,7 @@ public class ReaderActivity extends GDActivity implements OnTaskCompleteListener
 
 	public void setTextinWebView() {
 		OSISLink OSISLink = myLibrarian.getCurrentOSISLink();
-		vWeb.setText(chapterInHTML, OSISLink.getVerseNumber(), nightMode, myLibrarian.isBible());
+		vWeb.setText(myLibrarian.getBaseUrl(), chapterInHTML, OSISLink.getVerseNumber(), nightMode, myLibrarian.isBible());
 		
 		PreferenceHelper.saveStateString("last_read", OSISLink.getExtendedPath());
 		

@@ -19,14 +19,12 @@ public class AsyncRefreshModules extends Task {
 		this.context = context;
 	}
 
-	
 	@Override
 	protected Boolean doInBackground(String... arg0) {
 		librarian.loadFileModules();
 		errorMessage = librarian.loadModules(context.getResources().getString(R.string.exception_open_module));
 		return true;
 	}
-	
 	
 	@Override
 	protected void onPostExecute(Boolean result) {
@@ -35,5 +33,4 @@ public class AsyncRefreshModules extends Task {
 			new NotifyDialog(errorMessage, context).show();
 		}
 	}
-
 }

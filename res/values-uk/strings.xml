@@ -91,8 +91,8 @@
     <string name="db_history">Історія</string>
     <string name="crash_notif_title">BibleQuote розбився ...</string>
     <string name="crash_dialog_title">BibleQuote розбився</string>
-    <string name="pref_acra_user_email_summary">Розробники можуть зв'язатися з вами, щоб вирішувати проблеми.</string>
-    <string name="crash_dialog_text">Відбулася непередбачена помилка змушує додаток зупинити. Будь ласка, допоможіть нам виправити це, відправивши нам дані про помилки, все що вам потрібно зробити, це натиснути &amp;quot;ОК&amp;quot;.</string>
+    <string name="pref_acra_user_email_summary">Розробники можуть зв`язатися з вами, щоб вирішувати проблеми.</string>
+    <string name="crash_dialog_text">Відбулася непередбачена помилка змушує додаток зупинити. Будь ласка, допоможіть нам виправити це, відправивши нам дані про помилки, все що вам потрібно зробити, це натиснути `ОК`;.</string>
     <string name="read_mode_by_default_summary">Використовуйте режим за замовчуванням для читання</string>
     <string name="app_about_thanks_label">Спасибі:</string>
     <string name="about">Про</string>
@@ -104,7 +104,7 @@
     <string name="messageLoadModules">Завантаження модулів ...</string>
     <string name="pref_acra_deviceid">Надіслати пристрої унікальний ідентифікатор?</string>
     <string name="pref_acra_syslog_enabled">Відправлення системних журналів включено</string>
-    <string name="crash_dialog_email_prompt">Вашу адресу електронної пошти (необов'язково):</string>
+    <string name="crash_dialog_email_prompt">Вашу адресу електронної пошти (необов`язково):</string>
     <string name="read_mode_by_default">Режим читання за замовчуванням</string>
     <string name="category_reader_summary">Налаштування читання вікно</string>
     <string name="pref_acra_alwaysaccept_enabled">Звіти направляються не питаючи.</string>

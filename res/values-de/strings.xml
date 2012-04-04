@@ -95,7 +95,7 @@
     <string name="crash_notif_title">BibleQuote ist abgestürzt ...</string>
     <string name="crash_dialog_title">BibleQuote abgestürzt</string>
     <string name="pref_acra_user_email_summary">Entwickler können mit Ihnen Kontakt aufnehmen, um Probleme zu lösen.</string>
-    <string name="crash_dialog_text">Ein unerwarteter Fehler ist aufgetreten zwingt die Anwendung zu beenden. Bitte helfen Sie uns dieses Problem beheben, indem Sie uns Fehler-Daten, ist alles, was Sie tun müssen klicken Sie auf 'OK'.</string>
+    <string name="crash_dialog_text">Ein unerwarteter Fehler ist aufgetreten zwingt die Anwendung zu beenden. Bitte helfen Sie uns dieses Problem beheben, indem Sie uns Fehler-Daten, ist alles, was Sie tun müssen klicken Sie auf `OK`.</string>
     <string name="read_mode_by_default_summary">Verwenden Sie den standardmäßigen Lese-Modus</string>
     <string name="app_about_thanks_label">Dank:</string>
     <string name="about">Über</string>
