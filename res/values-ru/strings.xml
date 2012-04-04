@@ -119,4 +119,7 @@
 		PathName=%3$s, FullName=%4$s, ShortName=%5$s, ChapterQty=%6$s</string>
     <string name="category_reports_summary">Настройки параметров отправки</string>
     <string name="category_reader_summary">Настройки параметров окна чтения</string>
+    <string name="app_about_design_label">Дизайн:</string>
+    <string name="bookmark_invalid_removed">Недопустимая закладка удалена</string>
+    <string name="app_about_thanks_label">Спасибо:</string>
 </resources>

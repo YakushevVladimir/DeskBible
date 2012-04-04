@@ -2,9 +2,11 @@
 /bin
 /.settings
 /gen
-/default.properties
-/proguard.cfg
 /project.properties
+/default.properties
+/build.properties
+/build.xml
+/proguard.cfg
 /.umlproject
 /.euml2
 /.classpath
