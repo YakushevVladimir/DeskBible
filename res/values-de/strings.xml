@@ -77,7 +77,7 @@
     <string name="crash_notif_text">Bitte klicken Sie hier, um das Problem zu beheben.</string>
     <string name="crash_toast_text">Oops! Die Anwendung abgestürzt, aber der Bericht wurde an die Entwickler geschickt, um ihnen helfen, das Problem zu lösen!</string>
     <string name="bookmark_invalid_removed">Ungültige Lesezeichen entfernt</string>
-    <string name="category_reader_other_history_size_summary">Aktuelle Geschichte size:% 1 $ s</string>
+    <string name="category_reader_other_history_size_summary">Aktuelle Geschichte size: %1$s</string>
     <string name="pref_acra_alwaysaccept">Senden Sie immer Crash-Berichte?</string>
     <string name="reports_enable_summaryOff">Senden Sie keine Fehlerberichte an die Entwickler</string>
     <string name="messageRefresh">Aktualisieren ...</string>

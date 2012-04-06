@@ -274,9 +274,13 @@ public class ReaderActivity extends GDActivity implements OnTaskCompleteListener
 			break;
 		case R.id.Favorites:
 			Intent intentBookmarks = new Intent().setClass(
-					getApplicationContext(), 
-					BookmarksActivity.class);
+					getApplicationContext(), BookmarksActivity.class);
 			startActivityForResult(intentBookmarks, R.id.action_bar_bookmarks);
+			break;
+		case R.id.History:
+			Intent intentHistory = new Intent().setClass(
+					getApplicationContext(), HistoryActivity.class);
+			startActivityForResult(intentHistory, R.id.action_bar_history);
 			break;
 		case R.id.Help:
 			Intent helpIntent = new Intent(this, HelpActivity.class);
@@ -284,20 +288,18 @@ public class ReaderActivity extends GDActivity implements OnTaskCompleteListener
 			break;
 		case R.id.Settings:
 			Intent intentSettings = new Intent().setClass(
-					getApplicationContext(), 
-					SettingsActivity.class);
+					getApplicationContext(), SettingsActivity.class);
 			startActivityForResult(intentSettings, R.id.action_bar_settings);
 			break;
 		case R.id.About:
 			Intent intentAbout = new Intent().setClass(
-					getApplicationContext(), 
-					AboutActivity.class);
+					getApplicationContext(), AboutActivity.class);
 			startActivity(intentAbout);
 			break;
 		case R.id.Search:
 			Intent intentSearch = new Intent().setClass(
 					getApplicationContext(), SearchActivity.class);
-					startActivityForResult(intentSearch, R.id.action_bar_search);
+			startActivityForResult(intentSearch, R.id.action_bar_search);
 			break;
 		default:
 			return false;

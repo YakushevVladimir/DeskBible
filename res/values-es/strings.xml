@@ -74,7 +74,7 @@
     <string name="crash_notif_text">Por favor, haga clic aquí para ayudar a solucionar el problema.</string>
     <string name="crash_toast_text">¡Uy! La aplicación se estrelló, pero el informe fue enviado a los desarrolladores para ayudarles a resolver el problema!</string>
     <string name="bookmark_invalid_removed">No válido marcar eliminado</string>
-    <string name="category_reader_other_history_size_summary">Tamaño de la historia actual:% 1 $ s</string>
+    <string name="category_reader_other_history_size_summary">Tamaño de la historia actual: %1$s</string>
     <string name="pref_acra_alwaysaccept">Siempre envíe los informes de fallos?</string>
     <string name="reports_enable_summaryOff">No enviar informes de errores a los desarrolladores</string>
     <string name="messageRefresh">Actualizar ...</string>

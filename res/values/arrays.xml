@@ -25,8 +25,8 @@
 		<item>#800000</item>
 		<item>#808000</item>
 		<item>#408080</item>
+		<item>#dbf2da</item>
 		<item>#00FF00</item>
-		<item>#FF0000</item>
 		<item>#FF00FF</item>
 		<item>#FF0080</item>
 		<item>#800080</item>
@@ -36,6 +36,8 @@
 		<item>#00FFFF</item>
 		<item>#FFFF00</item>
 		<item>#FFFFFF</item>
+		<item>#F0F0BF</item>
+		<item>#ead4bf</item>
 	</string-array>
 
 	<string-array name="text_color_txt">
@@ -57,6 +59,8 @@
 		<item>Turquoise</item>
 		<item>Yellow</item>
 		<item>White</item>
+		<item>Old paper 1</item>
+		<item>Old paper 2</item>
 	</string-array>
 	
 	<string-array name="reading_mode_txt">
@@ -75,6 +79,10 @@
 		<item>20</item>
 		<item>25</item>
 		<item>30</item>
+		<item>35</item>
+		<item>40</item>
+		<item>45</item>
+		<item>50</item>
 	</string-array>
 	
 </resources>

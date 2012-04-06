@@ -20,6 +20,7 @@ import com.BibleQuote.utils.PreferenceHelper;
 
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.content.res.Resources.NotFoundException;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
@@ -28,6 +29,14 @@ import android.preference.PreferenceActivity;
 public class SettingsActivity extends PreferenceActivity implements
 		OnSharedPreferenceChangeListener {
 
+	private OnPreferenceChangeListener historySizeChangeListener = new OnPreferenceChangeListener() {
+		@Override
+		public boolean onPreferenceChange(Preference preference, Object newValue) {
+			setHistorySummary(preference, (String) newValue);
+			return true;
+		}
+	};
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -35,7 +44,7 @@ public class SettingsActivity extends PreferenceActivity implements
 		
 		Preference historySize = (Preference) findPreference("HistorySize");
 		historySize.setOnPreferenceChangeListener(historySizeChangeListener);
-		historySize.setSummary(String.format(historySize.getSummary().toString(), PreferenceHelper.getHistorySize()));
+		setHistorySummary(historySize, Integer.toString(PreferenceHelper.getHistorySize()));
 	}
 
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
@@ -47,13 +56,14 @@ public class SettingsActivity extends PreferenceActivity implements
 		super.onDestroy();
 	}
 	
-	private OnPreferenceChangeListener historySizeChangeListener = new OnPreferenceChangeListener() {
-		@Override
-		public boolean onPreferenceChange(Preference preference, Object newValue) {
-			int value = Integer.parseInt((String) newValue);
+	private void setHistorySummary(Preference historySize, String value) {
+		try {
 			String summary = getResources().getString(R.string.category_reader_other_history_size_summary);
-			preference.setSummary(String.format(summary, value));
-			return true;
+			historySize.setSummary(String.format(summary, value));
+		} catch (NumberFormatException e) {
+			return;
+		} catch (NotFoundException e) {
+			return;
 		}
-	};
+	}
 }

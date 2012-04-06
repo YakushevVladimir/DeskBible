@@ -123,4 +123,6 @@
     <string name="app_about_design_label">Дизайн:</string>
     <string name="bookmark_invalid_removed">Недопустимая закладка удалена</string>
     <string name="app_about_thanks_label">Спасибо:</string>
+    <string name="dialog_color_picker">Выберите цвет</string>
+    <string name="press_color_to_apply">Нажмите для выбора</string>    
 </resources>

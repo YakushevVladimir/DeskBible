@@ -74,7 +74,7 @@
     <string name="crash_notif_text">Калі ласка, націсніце тут, каб дапамагчы вырашыць праблему.</string>
     <string name="crash_toast_text">Oops! Ужыванне разбіўся, але даклад быў накіраваны для распрацоўшчыкаў, каб дапамагчы ім вырашыць гэтую праблему!</string>
     <string name="bookmark_invalid_removed">Недапушчальная закладка выдаленая</string>
-    <string name="category_reader_other_history_size_summary">Бягучы памер гісторыі:% 1 $ S</string>
+    <string name="category_reader_other_history_size_summary">Бягучы памер гісторыі: %1$s</string>
     <string name="pref_acra_alwaysaccept">Заўсёды адпраўляць справаздачы аб збоях?</string>
     <string name="reports_enable_summaryOff">Не адпраўляць справаздачы аб памылках распрацоўнікам</string>
     <string name="messageRefresh">Абнаўленне ...</string>

@@ -74,7 +74,7 @@
     <string name="crash_notif_text">Будь ласка, натисніть тут, щоб допомогти вирішити проблему.</string>
     <string name="crash_toast_text">Oops! Застосування розбився, але доповідь був направлений для розробників, щоб допомогти їм вирішити цю проблему!</string>
     <string name="bookmark_invalid_removed">Неприпустима закладка видалена</string>
-    <string name="category_reader_other_history_size_summary">Поточний розмір історії:% 1 $ S</string>
+    <string name="category_reader_other_history_size_summary">Поточний розмір історії: %1$s</string>
     <string name="pref_acra_alwaysaccept">Завжди відправляти звіти про збої?</string>
     <string name="reports_enable_summaryOff">Не відправляти звіти про помилки розробникам</string>
     <string name="messageRefresh">Оновлення ...</string>

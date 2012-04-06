@@ -137,9 +137,9 @@ public class ReaderWebView extends WebView
 		String selTextColor;
 		
 		if (!nightMode) {
+			backColor = PreferenceHelper.getTextBackground();
 			textColor = PreferenceHelper.getTextColor();
 			selTextColor = "#FEF8C4";
-			backColor = PreferenceHelper.getTextBackground();
 		} else {
 			textColor = "#FFFFFF";
 			selTextColor = "#562000";
@@ -294,6 +294,9 @@ public class ReaderWebView extends WebView
 			}
 			
 			Integer verse = Integer.parseInt(id.split("_")[1]);
+			if (verse == null) {
+				return;
+			}
 			if (selectedVerse.contains(verse)) {
 				selectedVerse.remove(verse);
 				loadUrl("javascript: deselectVerse('verse_" + verse + "');");

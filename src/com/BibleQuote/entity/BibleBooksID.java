@@ -2,11 +2,11 @@ package com.BibleQuote.entity;
 
 import java.util.HashMap;
 
-import android.util.Log;
+//import android.util.Log;
 
 public class BibleBooksID {
 	
-	private final static String TAG = "BibleBooksID";
+	//private final static String TAG = "BibleBooksID";
 	
 	private static HashMap<String, String> qualifier; 
 	private static HashMap<String, String[]> bookShortNames = new HashMap<String, String[]>(){
@@ -177,7 +177,6 @@ public class BibleBooksID {
 	};
 	
 	private static void addBookID(String id, String[] shortNames){
-		Log.i(TAG, "addBookID(" + id + ")");
 		for (String name : shortNames) {
 			qualifier.put(name, id);
 		}
@@ -188,7 +187,6 @@ public class BibleBooksID {
 	}
 	
 	public static String getID(String shortNames, String separator){
-		Log.i(TAG, "getID(" + shortNames + ", '" + separator + "')");
 		String bookID = null;
 		
 		String [] moduleBookNames = shortNames.split(separator);

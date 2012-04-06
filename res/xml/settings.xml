@@ -26,23 +26,19 @@
         <PreferenceCategory 
             android:title="@string/category_reader_appearance" >
             
-            <ListPreference
-                android:defaultValue="#000000"
-                android:entries="@array/text_color_txt"
-                android:entryValues="@array/text_color"
+            <com.BibleQuote.controls.ColorPicker.ColorPickerPreference
                 android:key="TextColor"
                 android:persistent="true"
+                android:title="@string/text_color"
                 android:summary="@string/text_color_summary"
-                android:title="@string/text_color" />
+                android:defaultValue="#000000" />
             
-            <ListPreference
-                android:defaultValue="#ffffff"
-                android:entries="@array/text_color_txt"
-                android:entryValues="@array/text_color"
+            <com.BibleQuote.controls.ColorPicker.ColorPickerPreference
                 android:key="TextBG"
                 android:persistent="true"
+                android:title="@string/background"
                 android:summary="@string/background_summary"
-                android:title="@string/background" />
+                android:defaultValue="#FFFFFF" />
 
             <com.BibleQuote.controls.NumberChoise
                 android:defaultValue="12"

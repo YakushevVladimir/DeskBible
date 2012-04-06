@@ -633,6 +633,9 @@ public class Librarian implements IChangeBooksListener  {
 	}
 
 	public String getBaseUrl() {
+		if (currModule == null) {
+			return "file:///url_initial_load";
+		}
 		String dataSourceID = currModule.getDataSourceID();
 		int pos = dataSourceID.lastIndexOf("/");
 		if (++pos <= dataSourceID.length()) {

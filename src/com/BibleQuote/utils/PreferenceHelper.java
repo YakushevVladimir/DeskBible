@@ -81,20 +81,31 @@ public class PreferenceHelper {
 		if (preference == null) {
 			return "#000000";
 		}
-		return preference.getString("TextColor", "#000000");
+		String color = preference.getString("TextColor", "#000000");
+		return getWebColor(color);
 	}
 
-	static public String getTextBackground() {
+	public static String getTextBackground() {
 		if (preference == null) {
 			return "#ffffff";
 		}
-		return preference.getString("TextBG", "#ffffff");
+		String background = preference.getString("TextBG", "#ffffff");
+		return getWebColor(background);
 	}
 
-	public static int getHistorySize() {
+	public static Integer getHistorySize() {
 		if (preference == null) {
 			return 10;
 		}
 		return Integer.parseInt(preference.getString("HistorySize", "10"));
+	}
+	
+	private static String getWebColor(String color) {
+		if (color.length() > 7) {
+			int lenght = color.length();
+			return "#" + color.substring(lenght - 6);
+		} else {
+			return color;
+		}
 	}
 }
