@@ -23,10 +23,10 @@
     <!-- Settings -->
     <string name="category_reader">Configuración de la ventana de lectura</string>
     <string name="text_size">El tamaño de fuente</string>
+    <string name="current_text_size">Tamaño del texto actual:: %1$d</string>
     <string name="text_color">Color del texto</string>
     <string name="background">Color del fondo</string>
     <string name="split_verse">Dividir verso por verso</string>
-    <string name="current_text_size">Tamaño del texto actual:: %1$d</string>
     <string name="text_color_summary">Seleccione el tamaño de fuente</string>
     <string name="background_summary">Seleccione el color del fondo</string>
     <!-- Miscellaneous -->
@@ -40,7 +40,6 @@
     <string name="removed">Eliminado</string>
     <string name="split_verse_summary_off">Mostrar el verso en un módulo</string>
     <string name="menu_night_day_mode">Nigth / día de modo de</string>
-    <string name="settings_other_write_debug">Escribe los datos de depuración</string>
     <string name="fav_delete_all_question">¿Está seguro que desea eliminar todos los marcadores?</string>
     <string name="db_notes">Notas</string>
     <string name="messageLoad">De carga...</string>
@@ -70,45 +69,22 @@
     <string name="menu_help">Ayuda</string>
     <string name="db_help">Ayuda</string>
     <string name="app_about_design_label">Diseño:</string>
-    <string name="pref_acra_deviceid_disabled">No envíe el ID del dispositivo</string>
-    <string name="crash_notif_text">Por favor, haga clic aquí para ayudar a solucionar el problema.</string>
-    <string name="crash_toast_text">¡Uy! La aplicación se estrelló, pero el informe fue enviado a los desarrolladores para ayudarles a resolver el problema!</string>
     <string name="bookmark_invalid_removed">No válido marcar eliminado</string>
     <string name="category_reader_other_history_size_summary">Tamaño de la historia actual: %1$s</string>
-    <string name="pref_acra_alwaysaccept">Siempre envíe los informes de fallos?</string>
-    <string name="reports_enable_summaryOff">No enviar informes de errores a los desarrolladores</string>
     <string name="messageRefresh">Actualizar ...</string>
-    <string name="crash_notif_ticker_text">Error inesperado, por favor envíe un informe ...</string>
-    <string name="crash_dialog_comment_prompt">Sus comentarios (opcional):</string>
-    <string name="crash_dialog_ok_toast">¡Gracias!</string>
     <string name="category_reader_appearance">Apariencia</string>
-    <string name="reports_enable_summaryOn">Enviar informes de errores a los desarrolladores</string>
-    <string name="pref_acra_alwaysaccept_disabled">Cada informe tiene acuse de recibo.</string>
     <string name="category_reader_other_history_size">Historia de tamaño</string>
-    <string name="reports_enable">Los informes de fallos</string>
-    <string name="web_view_parallels">Paralelas</string>
     <string name="category_reader_other">Otro</string>
     <string name="db_history">Historia</string>
-    <string name="crash_notif_title">BibleQuote se ha estrellado ...</string>
-    <string name="crash_dialog_title">BibleQuote se ha estrellado</string>
-    <string name="pref_acra_user_email_summary">Los desarrolladores pueden contactar con usted para resolver los problemas.</string>
-    <string name="crash_dialog_text">Ocurrió un error inesperado obliga a la aplicación se detenga. Por favor ayúdenos a solucionar este problema mediante el envío de los datos de error, todo lo que tienes que hacer clic en `Aceptar`.</string>
     <string name="read_mode_by_default_summary">Utilice el modo de lectura por defecto</string>
     <string name="app_about_thanks_label">Gracias:</string>
     <string name="about">Sobre</string>
-    <string name="pref_acra_deviceid_enabled">Enviar ID de dispositivo está habilitado</string>
     <string name="messageLoadBooks">Los libros de carga ...</string>
     <string name="category_reports_summary">Crash ajustes informes</string>
-    <string name="pref_acra_syslog">Enviar los registros del sistema (puede contener datos privados)?</string>
-    <string name="pref_acra_user_email">Añade tu dirección de correo electrónico</string>
     <string name="messageLoadModules">Los módulos de carga ...</string>
-    <string name="pref_acra_deviceid">Enviar ID de dispositivo único?</string>
-    <string name="pref_acra_syslog_enabled">El envío de los registros del sistema está habilitado</string>
-    <string name="crash_dialog_email_prompt">Su dirección de correo electrónico (opcional):</string>
     <string name="read_mode_by_default">Modo de lectura de forma predeterminada</string>
     <string name="category_reader_summary">Lector de configuración de la ventana</string>
-    <string name="pref_acra_alwaysaccept_enabled">Los informes se envían sin pedir permiso.</string>
-    <string name="pref_acra_syslog_disabled">Seinding los registros del sistema está desactivada</string>
     <string name="category_reports">Los informes de choques</string>
     <string name="app_about_dev_label">Desarrolladores:</string>
+    <string name="parallels">Paralelas</string>
 </resources>

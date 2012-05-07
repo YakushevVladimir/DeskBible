@@ -67,6 +67,8 @@ public class ReaderActivity extends GDActivity implements OnTaskCompleteListener
 	private static final String TAG = "ReaderActivity";
 	private static final int VIEW_CHAPTER_NAV_LENGHT = 3000;
 	
+	private static final String VIEW_PARALLELS = "com.BibleQuote.intent.action.VIEW_PARALLELS";
+
 	private Librarian myLibrarian;
 	private AsyncManager mAsyncManager;
     
@@ -76,7 +78,7 @@ public class ReaderActivity extends GDActivity implements OnTaskCompleteListener
 	private boolean nightMode = false;
 	private String progressMessage = "";
 	private int runtimeOrientation;
-
+	
 	private TextView vModuleName;
 	private TextView vBookLink;
 	private ImageButton btnTextAction;
@@ -177,6 +179,7 @@ public class ReaderActivity extends GDActivity implements OnTaskCompleteListener
     	textQAction.addQuickAction(new QuickAction(this, R.drawable.ic_action_bar_bookmark, R.string.fav_add_bookmarks));
     	textQAction.addQuickAction(new QuickAction(this, R.drawable.ic_action_bar_share, R.string.share));
     	textQAction.addQuickAction(new QuickAction(this, R.drawable.ic_action_bar_clipboard, R.string.copy));
+    	textQAction.addQuickAction(new QuickAction(this, R.drawable.ic_action_bar_parallels, R.string.parallels));
     	textQAction.setOnQuickActionClickListener(mActionListener);
     }
     
@@ -219,6 +222,12 @@ public class ReaderActivity extends GDActivity implements OnTaskCompleteListener
 					clpbdManager.setText(clpbdText);
 			    }
 			    
+			case 3:
+				Intent intParallels = new Intent(VIEW_PARALLELS);
+				intParallels.putExtra("link", myLibrarian.getCurrentLink() + ":" + selVerses.first());
+				startActivityForResult(intParallels, R.id.action_bar_parallels);
+				break;
+
 			default:
 				break;
 			}

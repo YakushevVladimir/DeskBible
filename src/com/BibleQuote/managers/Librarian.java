@@ -649,5 +649,19 @@ public class Librarian implements IChangeBooksListener  {
 		historyManager.clearLinks();
 	}
 
-
+	public LinkedHashMap<OSISLink, String> getParallelsList(String link) {
+		LinkedHashMap<OSISLink, String> parallels = new LinkedHashMap<OSISLink, String>();
+		parallels.put(
+				new OSISLink("RST1.Gen.1.3"), 
+				"И сказал Бог: да будет свет. И стал свет.");
+		parallels.put(
+				new OSISLink("RST1.Gen.2.8"), 
+				"И насадил Господь Бог рай в Едеме на востоке, и поместил там человека, которого создал");
+		parallels.put(
+				new OSISLink("RST1.Exo.4.9"), 
+				"если же не поверят и двум сим знамениям и не послушают голоса твоего, то возьми воды " +
+				"из реки и вылей на сушу; и вода, взятая из реки, сделается кровью на суше.");
+		
+		return parallels;
+	}
 }

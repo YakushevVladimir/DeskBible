@@ -39,7 +39,7 @@
     <string name="category_reader">Reading window</string>
     <string name="text_size">Font size</string>
     <string name="current_text_size">Current text size: %1$d</string>
-    <string name="text_color">Text color</string>
+	<string name="text_color">Text color</string>
     <string name="text_color_summary">Choose font color</string>
     <string name="background">Background color</string>
     <string name="background_summary">Choose background color</string>
@@ -47,7 +47,6 @@
     <string name="split_verse_summary_on">Forced split verse in the text</string>
     <string name="split_verse_summary_off">Display verse in a module</string>
     <string name="settings_category_other">Other</string>
-    <string name="settings_other_write_debug">Write debug data</string>
     <string name="disable_auto_screen_rotation">Disable auto-screen rotation</string>
     <string name="may_need_to_restart">May need to restart</string>
     <string name="read_mode_by_default">Read mode by default</string>
@@ -58,29 +57,6 @@
     <string name="category_reader_other_history_size_summary">Current history size: %1$s</string>
     <!-- Crash reports -->
     <string name="category_reports">Crash reports</string>
-    <string name="reports_enable">Bug reports</string>
-    <string name="reports_enable_summaryOn">Send error reports to developers</string>
-    <string name="reports_enable_summaryOff">Do not send error reports to developers</string>
-    <string name="crash_toast_text">Oops! The application crashed, but the report was sent to developers to help them solve the problem!</string>
-    <string name="crash_notif_ticker_text">Unexpected error, please send a report...</string>
-    <string name="crash_notif_title">BibleQuote has crashed...</string>
-    <string name="crash_notif_text">Please click here to help fix the issue.</string>
-    <string name="crash_dialog_title">BibleQuote has crashed</string>
-    <string name="crash_dialog_text">An unexpected error occurred forcing the application to stop. Please help us fix this by sending us error data, all you have to do is click \'OK\'.</string>
-    <string name="crash_dialog_comment_prompt">Your comments (optional):</string>
-    <string name="crash_dialog_email_prompt">Your email (optional):</string>
-    <string name="crash_dialog_ok_toast">Thank you!</string>
-    <string name="pref_acra_deviceid_enabled">Send device id is enabled</string>
-    <string name="pref_acra_deviceid_disabled">Do not send device id</string>
-    <string name="pref_acra_user_email">Add your email address</string>
-    <string name="pref_acra_deviceid">Send device unique id ?</string>
-    <string name="pref_acra_user_email_summary">Developers may contact you to solve issues.</string>
-    <string name="pref_acra_alwaysaccept">Always send crash reports?</string>
-    <string name="pref_acra_alwaysaccept_enabled">Reports are sent without asking.</string>
-    <string name="pref_acra_alwaysaccept_disabled">Each report needs acknowledgement.</string>
-    <string name="pref_acra_syslog_enabled">Sending system logs is enabled</string>
-    <string name="pref_acra_syslog_disabled">Seinding system logs is disabled</string>
-    <string name="pref_acra_syslog">Send system logs (may contain private data) ?</string>
     <!-- Menu -->
     <string name="menu_night_day_mode">Nigth / Day mode</string>
     <string name="menu_favorites">Bookmarks</string>
@@ -90,7 +66,7 @@
     <string name="menu_settings">Settings</string>
     <!-- Reader -->
     <string name="fav_add_bookmarks">Bookmarks</string>
-    <string name="web_view_parallels">Parallels</string>
+    <string name="parallels">Parallels</string>
     <!-- Miscellaneous -->
     <string name="find">Find</string>
     <string name="menu">Menu</string>
@@ -132,5 +108,5 @@
 		BookQty=%2$s, PathName#=%3$s, FullName#=%4$s, ShortName#=%5$s,
 		ChapterQty#=%6$s</string>
     <string name="dialog_color_picker">Choose a color</string>
-    <string name="press_color_to_apply">Press to apply</string>    
+    <string name="press_color_to_apply">Press to apply</string>
 </resources>

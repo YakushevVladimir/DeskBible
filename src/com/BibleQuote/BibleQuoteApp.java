@@ -15,10 +15,6 @@
  */
 package com.BibleQuote;
 
-import org.acra.ACRA;
-import org.acra.ReportingInteractionMode;
-import org.acra.annotation.ReportsCrashes;
-
 import greendroid.app.GDApplication;
 
 import com.BibleQuote.activity.ReaderActivity;
@@ -27,17 +23,6 @@ import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.UpdateManager;
 
-@ReportsCrashes(
-		formKey = "dEhtOGgtYVhyVHBHZzJqMlJEaU9xUVE6MQ", 
-		mode = ReportingInteractionMode.NOTIFICATION,
-		resDialogIcon = R.drawable.icon, 
-		resToastText = R.string.crash_toast_text, 
-		resNotifTickerText = R.string.crash_notif_ticker_text, 
-		resNotifTitle = R.string.crash_notif_title, 
-		resNotifText = R.string.crash_notif_text, 
-		resDialogText = R.string.crash_dialog_text, 
-		resDialogCommentPrompt = R.string.crash_dialog_comment_prompt
-		)
 public class BibleQuoteApp extends GDApplication {
 	
 	private Librarian myLibararian;
@@ -45,8 +30,6 @@ public class BibleQuoteApp extends GDApplication {
 	
     @Override
     public void onCreate() {
-        // The following line triggers the initialization of ACRA
-        ACRA.init(this);
         super.onCreate();
     }
     

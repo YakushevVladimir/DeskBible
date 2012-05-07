@@ -27,17 +27,17 @@
     <string name="db_plans">Планы чтения</string>
     <string name="db_settings">Настройки</string>
     <string name="db_search">Поиск</string>
+    <string name="db_parallels">Ссылки</string>
     <string name="db_help">Помощь</string>
     <!-- Settings -->
     <string name="category_reader">Окно чтения</string>
     <string name="text_size">Размер шрифта</string>
+    <string name="current_text_size">Текущий размер шрифта: %1$d</string>
     <string name="text_color">Цвет текста</string>
     <string name="background">Цвет фона</string>
-    <string name="current_text_size">Текущий размер шрифта: %1$d</string>
     <string name="text_color_summary">Выберите цвет шрифта</string>
     <string name="background_summary">Выберите цвет фона</string>
     <string name="settings_category_other">Прочее</string>
-    <string name="settings_other_write_debug">Записывать отладочную информацию</string>
     <string name="split_verse">Разбивать стихи</string>
     <string name="split_verse_summary_on">Принудительно разбивать стихи</string>
     <string name="split_verse_summary_off">Выводить стихи как есть</string>
@@ -58,7 +58,7 @@
     <string name="menu_settings">Настройки</string>
     <!-- Reader -->
     <string name="fav_add_bookmarks">Закладка</string>
-    <string name="web_view_parallels">Ссылки</string>
+    <string name="parallels">Ссылки</string>
     <!-- Miscellaneous -->
     <string name="find">Найти</string>
     <string name="menu">Меню</string>
@@ -83,39 +83,16 @@
     <string name="fav_delete_all">Очистить</string>
     <string name="fav_delete_all_question">Вы уверены, что хотите удалить все закладки?</string>
     <string name="db_parallels">Parallels</string>
-    <string name="crash_notif_text">Пожалуйста, нажмите здесь, чтобы помочь решить проблему.</string>
-    <string name="crash_toast_text">Упс! Работа приложения завершилась ошибкой, но отчет был отправлен разработчикам, чтобы помочь им решить проблему!</string>
-    <string name="reports_enable_summaryOff">Не отправлять</string>
-    <string name="crash_dialog_comment_prompt">Ваш комментарий (необязательно):</string>
-    <string name="crash_notif_ticker_text">Непредвиденная ошибка, отправьте отчет ...</string>
-    <string name="crash_dialog_ok_toast">Спасибо!</string>
-    <string name="reports_enable_summaryOn">Отправлять</string>
-    <string name="reports_enable">Отправлять отчеты об ошибках?</string>
-    <string name="crash_dialog_title">BibleQuote завершилось с ошибкой</string>
-    <string name="crash_notif_title">BibleQuote завершилось с ошибкой...</string>
-    <string name="crash_dialog_text">Произошла непредвиденная ошибка, которя привела к остановке приложения. Пожалуйста, помогите нам исправить это, отправив нам данные об ошибке, все что вам нужно сделать, это нажать \ "ОК \ '.</string>
     <string name="about">О программе</string>
-    <string name="crash_dialog_email_prompt">Ваш e-mail (необязательно):</string>
     <string name="category_reports">Отчеты об ошибках</string>
     <string name="app_about_dev_label">Разработчики:</string>
     <string name="exception_open_module">Некорректный модуль %1$s(%2$s)</string>
-    <string name="pref_acra_deviceid_disabled">Отправка отключена</string>
-    <string name="pref_acra_alwaysaccept">Всегда отправлять отчеты?</string>
     <string name="messageRefresh">Обновление...</string>
     <string name="exception_books_definition">Некорректное описание книги в модуле %1$s:
 		BookQty=%2$s, PathName#=%3$s, FullName#=%4$s, ShortName#=%5$s,
 		ChapterQty#=%6$s</string>
-    <string name="pref_acra_alwaysaccept_disabled">Получать подтверждение на отправку</string>
-    <string name="pref_acra_user_email_summary">Разработчики могут связаться с вами для решения вопросов</string>
-    <string name="pref_acra_deviceid_enabled">Отправка включена</string>
     <string name="exception_open_module_short">Некорректный модуль %1$s</string>
-    <string name="pref_acra_syslog">Отправлять системные журналы (могут содержать личные данные)?</string>
-    <string name="pref_acra_user_email">Добавьте ваш e-mail адрес</string>
-    <string name="pref_acra_deviceid">Отправлять уникальный номер устройства?</string>
-    <string name="pref_acra_syslog_enabled">Отправка системных журналов включена</string>
     <string name="exception_book_not_found">Книга %1$s не найден а в модуле %2$s</string>
-    <string name="pref_acra_syslog_disabled">Отправка системных журналов отключена</string>
-    <string name="pref_acra_alwaysaccept_enabled">Отправлять автоматически</string>
     <string name="exception_book_definition">Некорректные параметры книги #%1$s в модуле %2$s:
 		PathName=%3$s, FullName=%4$s, ShortName=%5$s, ChapterQty=%6$s</string>
     <string name="category_reports_summary">Настройки параметров отправки</string>
@@ -124,5 +101,5 @@
     <string name="bookmark_invalid_removed">Недопустимая закладка удалена</string>
     <string name="app_about_thanks_label">Спасибо:</string>
     <string name="dialog_color_picker">Выберите цвет</string>
-    <string name="press_color_to_apply">Нажмите для выбора</string>    
+    <string name="press_color_to_apply">Нажмите для выбора</string>
 </resources>

@@ -23,10 +23,10 @@
     <!-- Settings -->
     <string name="category_reader">Valg-vinduet lesing</string>
     <string name="text_size">Skriftstørrelse</string>
+    <string name="current_text_size">Nåværende Tekststørrelse: %1$d</string>
     <string name="text_color">Tekstfargestring</string>
     <string name="background">Bakgrunnsfarge</string>
     <string name="split_verse">Break vers for vers</string>
-    <string name="current_text_size">Nåværende Tekststørrelse: %1$d</string>
     <string name="text_color_summary">Velg skriftstørrelsen</string>
     <string name="background_summary">Velg bakgrunnsfarge</string>
     <!-- Miscellaneous -->
@@ -43,7 +43,6 @@
     <color name="gray_color">#aaa</color>
     <string name="split_verse_summary_off">Vis vers i en modul</string>
     <string name="menu_night_day_mode">Nigth / Dag modus</string>
-    <string name="settings_other_write_debug">Skriv debug data</string>
     <string name="fav_delete_all_question">Er du sikker på at du vil slette alle bokmerker?</string>
     <string name="messageLoad">Load...</string>
     <string name="db_notes">Merknader</string>
@@ -72,46 +71,23 @@
     <string name="menu_help">Hjelp</string>
     <string name="db_help">Hjelp</string>
     <string name="app_about_design_label">Design:</string>
-    <string name="pref_acra_deviceid_disabled">Ikke send enhet id</string>
-    <string name="crash_notif_text">Klikk her for å hjelpe fikse problemet.</string>
-    <string name="crash_toast_text">Oops! Søknaden krasjet, men rapporten ble sendt til utviklere for å hjelpe dem å løse problemet!</string>
     <string name="bookmark_invalid_removed">Ugyldig bokmerke fjernet</string>
     <string name="category_reader_other_history_size_summary">Gjeldende historie size: %1$s</string>
-    <string name="pref_acra_alwaysaccept">Send alltid krasjrapporter?</string>
-    <string name="reports_enable_summaryOff">Ikke send feilrapporter til utviklere</string>
     <string name="messageRefresh">Refresh ...</string>
-    <string name="crash_notif_ticker_text">Uventet feil, vennligst send en rapport ...</string>
-    <string name="crash_dialog_comment_prompt">Dine kommentarer (valgfritt):</string>
-    <string name="crash_dialog_ok_toast">Takk!</string>
     <string name="category_reader_appearance">Utseende</string>
-    <string name="reports_enable_summaryOn">Send feilrapporter til utviklere</string>
-    <string name="pref_acra_alwaysaccept_disabled">Hver rapport trenger anerkjennelse.</string>
     <string name="category_reader_other_history_size">Historie størrelse</string>
-    <string name="reports_enable">Feilrapporter</string>
-    <string name="web_view_parallels">Parallels</string>
     <string name="category_reader_other">Andre</string>
     <string name="db_history">Historie</string>
-    <string name="crash_notif_title">BibleQuote har krasjet ...</string>
-    <string name="crash_dialog_title">BibleQuote har krasjet</string>
-    <string name="pref_acra_user_email_summary">Utviklere kan kontakte deg for å løse problemer.</string>
-    <string name="crash_dialog_text">En uventet feil oppstod tvinge programmet til å stoppe. Vennligst hjelp oss til å løse dette ved å sende oss feil data, er alt du trenger å gjøre klikke &amp;quot;OK&amp;quot;.</string>
     <string name="read_mode_by_default_summary">Bruk standard lesemodus</string>
     <string name="app_about_thanks_label">Takk:</string>
     <string name="about">Om</string>
-    <string name="pref_acra_deviceid_enabled">Send enhet id er aktivert</string>
     <string name="messageLoadBooks">Load bøker ...</string>
     <string name="category_reports_summary">Krasjrapporter innstillinger</string>
-    <string name="pref_acra_syslog">Send systemlogger (kan inneholde private data)?</string>
     <string name="disable_auto_screen_rotation">Deaktiver automatisk skjermen rotasjon</string>
-    <string name="pref_acra_user_email">Legg til din e-postadresse</string>
     <string name="messageLoadModules">Load moduler ...</string>
-    <string name="pref_acra_deviceid">Send enhet unike ID?</string>
-    <string name="pref_acra_syslog_enabled">Sende systemlogger er aktivert</string>
-    <string name="crash_dialog_email_prompt">Din e-post (valgfritt):</string>
     <string name="read_mode_by_default">Les modus som standard</string>
     <string name="category_reader_summary">Reader-vindu innstillinger</string>
-    <string name="pref_acra_alwaysaccept_enabled">Rapporter sendes uten å spørre.</string>
-    <string name="pref_acra_syslog_disabled">Seinding system logger er deaktivert</string>
     <string name="category_reports">Krasjrapporter</string>
     <string name="app_about_dev_label">Utviklere:</string>
+    <string name="parallels">Parallels</string>
 </resources>

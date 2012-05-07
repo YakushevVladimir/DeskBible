@@ -18,11 +18,11 @@
 -->
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <PreferenceScreen
+<!--     <PreferenceScreen
         android:key="reader"
         android:summary="@string/category_reader_summary"
         android:title="@string/category_reader" >
-        
+ -->        
         <PreferenceCategory 
             android:title="@string/category_reader_appearance" >
             
@@ -78,39 +78,6 @@
         
         </PreferenceCategory>
     
-    </PreferenceScreen>
-    
-    <PreferenceScreen
-        android:summary="@string/category_reports_summary"
-        android:title="@string/category_reports" >
-        
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="acra.enable"
-            android:summaryOff="@string/reports_enable_summaryOff"
-            android:summaryOn="@string/reports_enable_summaryOn"
-            android:title="@string/reports_enable" />
-        
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="acra.syslog.enable"
-            android:summary="Privacy issue"
-            android:summaryOff="@string/pref_acra_syslog_disabled"
-            android:summaryOn="@string/pref_acra_syslog_enabled"
-            android:title="@string/pref_acra_syslog" />
-
-        <EditTextPreference
-            android:key="acra.user.email"
-            android:summary="@string/pref_acra_user_email_summary"
-            android:title="@string/pref_acra_user_email" />
-
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="acra.alwaysaccept"
-            android:summaryOff="@string/pref_acra_alwaysaccept_disabled"
-            android:summaryOn="@string/pref_acra_alwaysaccept_enabled"
-            android:title="@string/pref_acra_alwaysaccept" />
-    
-    </PreferenceScreen>
-
+<!--     </PreferenceScreen>
+ -->
 </PreferenceScreen>

@@ -23,10 +23,10 @@
     <!-- Settings -->
     <string name="category_reader">Fenster Einstellungen lesen</string>
     <string name="text_size">Schriftgroesse</string>
+    <string name="current_text_size">Aktuelle Textgroesse: %1$d</string>
     <string name="text_color">Textfarbe</string>
     <string name="background">Hintergrundfarbe</string>
     <string name="split_verse">Bruch von Absätzen</string>
-    <string name="current_text_size">Aktuelle Textgroesse: %1$d</string>
     <string name="text_color_summary">Wahl der Schriftgroesse</string>
     <string name="background_summary">Wahl der Hintergrundfarbe</string>
     <!-- Miscellaneous -->
@@ -43,7 +43,6 @@
     <color name="gray_color">#aaa</color>
     <string name="split_verse_summary_off">Anzeige Vers in einem Modul</string>
     <string name="menu_night_day_mode">Nigth / Day-Modus</string>
-    <string name="settings_other_write_debug">Schreiben Sie Debug-Daten</string>
     <string name="fav_delete_all_question">Sind Sie sicher, dass Sie alle Lesezeichen löschen?</string>
     <string name="db_notes">Hinweise</string>
     <string name="messageLoad">Laden...</string>
@@ -73,45 +72,22 @@
     <string name="menu_help">Hilfe</string>
     <string name="db_help">Hilfe</string>
     <string name="app_about_design_label">Design:</string>
-    <string name="pref_acra_deviceid_disabled">Senden Sie keine Geräte-ID</string>
-    <string name="crash_notif_text">Bitte klicken Sie hier, um das Problem zu beheben.</string>
-    <string name="crash_toast_text">Oops! Die Anwendung abgestürzt, aber der Bericht wurde an die Entwickler geschickt, um ihnen helfen, das Problem zu lösen!</string>
     <string name="bookmark_invalid_removed">Ungültige Lesezeichen entfernt</string>
     <string name="category_reader_other_history_size_summary">Aktuelle Geschichte size: %1$s</string>
-    <string name="pref_acra_alwaysaccept">Senden Sie immer Crash-Berichte?</string>
-    <string name="reports_enable_summaryOff">Senden Sie keine Fehlerberichte an die Entwickler</string>
     <string name="messageRefresh">Aktualisieren ...</string>
-    <string name="crash_notif_ticker_text">Unerwarteter Fehler senden Sie bitte ein Bericht ...</string>
-    <string name="crash_dialog_comment_prompt">Ihr Kommentar (optional):</string>
-    <string name="crash_dialog_ok_toast">Vielen Dank!</string>
     <string name="category_reader_appearance">Aussehen</string>
-    <string name="reports_enable_summaryOn">Senden Sie Fehlerberichte an die Entwickler</string>
-    <string name="pref_acra_alwaysaccept_disabled">Jeder Bericht braucht Anerkennung.</string>
     <string name="category_reader_other_history_size">History Größe</string>
-    <string name="reports_enable">Bug reports</string>
-    <string name="web_view_parallels">Parallels</string>
     <string name="category_reader_other">Andere</string>
     <string name="db_history">Geschichte</string>
-    <string name="crash_notif_title">BibleQuote ist abgestürzt ...</string>
-    <string name="crash_dialog_title">BibleQuote abgestürzt</string>
-    <string name="pref_acra_user_email_summary">Entwickler können mit Ihnen Kontakt aufnehmen, um Probleme zu lösen.</string>
-    <string name="crash_dialog_text">Ein unerwarteter Fehler ist aufgetreten zwingt die Anwendung zu beenden. Bitte helfen Sie uns dieses Problem beheben, indem Sie uns Fehler-Daten, ist alles, was Sie tun müssen klicken Sie auf `OK`.</string>
     <string name="read_mode_by_default_summary">Verwenden Sie den standardmäßigen Lese-Modus</string>
     <string name="app_about_thanks_label">Dank:</string>
     <string name="about">Über</string>
-    <string name="pref_acra_deviceid_enabled">Senden Sie Geräte-ID ist aktiviert</string>
     <string name="messageLoadBooks">Load-Bücher ...</string>
     <string name="category_reports_summary">Crash Reports Einstellungen</string>
-    <string name="pref_acra_syslog">Senden System-Logs (können private Daten enthalten)?</string>
-    <string name="pref_acra_user_email">Fügen Sie Ihre E-Mail Adresse</string>
     <string name="messageLoadModules">Load-Module ...</string>
-    <string name="pref_acra_deviceid">Senden Gerät eindeutige ID?</string>
-    <string name="pref_acra_syslog_enabled">Senden System-Logs aktiviert</string>
-    <string name="crash_dialog_email_prompt">Ihre E-Mail (optional):</string>
     <string name="read_mode_by_default">Lesen Modus standardmäßig</string>
     <string name="category_reader_summary">Reader-Fenster Einstellungen</string>
-    <string name="pref_acra_alwaysaccept_enabled">Die Berichte werden gesendet, ohne zu fragen.</string>
-    <string name="pref_acra_syslog_disabled">Seinding System-Logs ist deaktiviert</string>
     <string name="category_reports">Crash-Berichte</string>
     <string name="app_about_dev_label">Entwickler:</string>
+    <string name="parallels">Parallels</string>
 </resources>
