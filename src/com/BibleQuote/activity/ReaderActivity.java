@@ -50,6 +50,7 @@ import android.widget.Toast;
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
 import com.BibleQuote.controls.ReaderWebView;
+import com.BibleQuote.entity.Bible.BibleReference;
 import com.BibleQuote.exceptions.BookNotFoundException;
 import com.BibleQuote.exceptions.ExceptionHelper;
 import com.BibleQuote.exceptions.OpenModuleException;
@@ -57,7 +58,6 @@ import com.BibleQuote.listeners.IReaderViewListener;
 import com.BibleQuote.managers.AsyncManager;
 import com.BibleQuote.managers.AsyncOpenChapter;
 import com.BibleQuote.managers.Librarian;
-import com.BibleQuote.utils.OSISLink;
 import com.BibleQuote.utils.OnTaskCompleteListener;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.Task;
@@ -127,7 +127,7 @@ public class ReaderActivity extends GDActivity implements OnTaskCompleteListener
 		vWeb.setReadingMode(PreferenceHelper.isReadModeByDefault());
 		updateActivityMode();
 		
-		OSISLink osisLink = new OSISLink(PreferenceHelper.restoreStateString("last_read"));
+		BibleReference osisLink = new BibleReference(PreferenceHelper.restoreStateString("last_read"));
 		if (!myLibrarian.isOSISLinkValid(osisLink)) {
 			onChooseChapterClick();
 		} else {
@@ -223,8 +223,9 @@ public class ReaderActivity extends GDActivity implements OnTaskCompleteListener
 			    }
 			    
 			case 3:
+				myLibrarian.setCurrentVerseNumber(selVerses.first());
 				Intent intParallels = new Intent(VIEW_PARALLELS);
-				intParallels.putExtra("link", myLibrarian.getCurrentLink() + ":" + selVerses.first());
+				intParallels.putExtra("linkOSIS", myLibrarian.getCurrentOSISLink().getPath());
 				startActivityForResult(intParallels, R.id.action_bar_parallels);
 				break;
 
@@ -325,7 +326,7 @@ public class ReaderActivity extends GDActivity implements OnTaskCompleteListener
 					|| (requestCode == R.id.action_bar_chooseCh)
 					|| (requestCode == R.id.action_bar_history)) {
 				Bundle extras = data.getExtras();
-				OSISLink osisLink = new OSISLink(extras.getString("linkOSIS"));
+				BibleReference osisLink = new BibleReference(extras.getString("linkOSIS"));
 				if (myLibrarian.isOSISLinkValid(osisLink)) {
 					mAsyncManager.setupTask(new AsyncOpenChapter(progressMessage, false, myLibrarian, osisLink), this);
 				}
@@ -338,8 +339,8 @@ public class ReaderActivity extends GDActivity implements OnTaskCompleteListener
 	}
 
 	public void setTextinWebView() {
-		OSISLink OSISLink = myLibrarian.getCurrentOSISLink();
-		vWeb.setText(myLibrarian.getBaseUrl(), chapterInHTML, OSISLink.getVerseNumber(), nightMode, myLibrarian.isBible());
+		BibleReference OSISLink = myLibrarian.getCurrentOSISLink();
+		vWeb.setText(myLibrarian.getBaseUrl(), chapterInHTML, OSISLink.getFromVerse(), nightMode, myLibrarian.isBible());
 		
 		PreferenceHelper.saveStateString("last_read", OSISLink.getExtendedPath());
 		

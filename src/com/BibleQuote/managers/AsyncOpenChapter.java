@@ -2,20 +2,20 @@ package com.BibleQuote.managers;
 
 import android.util.Log;
 
+import com.BibleQuote.entity.Bible.BibleReference;
 import com.BibleQuote.exceptions.BookNotFoundException;
 import com.BibleQuote.exceptions.OpenModuleException;
-import com.BibleQuote.utils.OSISLink;
 import com.BibleQuote.utils.Task;
 
 public class AsyncOpenChapter extends Task {
 	private final String TAG = "AsyncOpenChapter";
 	
 	private Librarian librarian;
-	private OSISLink link;
+	private BibleReference link;
 	private Exception exception;
 	private Boolean isSuccess;
 	
-	public AsyncOpenChapter(String message, Boolean isHidden, Librarian librarian, OSISLink link) {
+	public AsyncOpenChapter(String message, Boolean isHidden, Librarian librarian, BibleReference link) {
 		super(message, isHidden);
 		this.librarian = librarian;
 		this.link = link;
@@ -26,7 +26,7 @@ public class AsyncOpenChapter extends Task {
 		isSuccess = false;
 		try {
 			Log.i(TAG, String.format("Open OSIS link with moduleID=%1$s, bookID=%2$s, chapterNumber=%3$s, verseNumber=%4$s", 
-					link.getModuleID(), link.getBookID(), link.getChapterNumber(), link.getVerseNumber()));
+					link.getModuleID(), link.getBook(), link.getChapter(), link.getFromVerse()));
 
 			librarian.openChapter(link);
 			isSuccess = true;

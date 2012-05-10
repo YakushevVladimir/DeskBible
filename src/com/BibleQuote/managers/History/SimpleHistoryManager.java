@@ -24,8 +24,8 @@ package com.BibleQuote.managers.History;
 import java.util.LinkedList;
 
 import com.BibleQuote.entity.ItemList;
+import com.BibleQuote.entity.Bible.BibleReference;
 import com.BibleQuote.exceptions.FileAccessException;
-import com.BibleQuote.utils.OSISLink;
 
 public class SimpleHistoryManager implements IHistoryManager {
 	
@@ -37,10 +37,10 @@ public class SimpleHistoryManager implements IHistoryManager {
 		this.HISTORY_LENGHT = lenght;
 	}
 	
-	public synchronized void addLink(OSISLink link) {
+	public synchronized void addLink(BibleReference link) {
 		String humanLink = String.format("%1$s: %2$s %3$s:%4$s", 
-				link.getModuleID(), link.getBookName(), 
-				link.getChapterNumber(), link.getVerseNumber());
+				link.getModuleID(), link.getBookFullName(), 
+				link.getChapter(), link.getFromVerse());
 		ItemList newItem = new ItemList(link.getPath(), humanLink);
 		
 		LinkedList<ItemList> history = getLinks();

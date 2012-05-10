@@ -48,7 +48,6 @@
 		android:gravity="top|left"
 		android:textColor="#ff5d5d5d"
 		android:textSize="@dimen/text_size_medium"
-		android:lines="2"
 		android:ellipsize="end" />
 
 </greendroid.widget.itemview.SubtitleItemView>

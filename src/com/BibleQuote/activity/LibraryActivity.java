@@ -36,6 +36,7 @@ import android.widget.SimpleAdapter;
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
 import com.BibleQuote.entity.ItemList;
+import com.BibleQuote.entity.Bible.BibleReference;
 import com.BibleQuote.exceptions.BookDefinitionException;
 import com.BibleQuote.exceptions.BookNotFoundException;
 import com.BibleQuote.exceptions.BooksDefinitionException;
@@ -45,7 +46,6 @@ import com.BibleQuote.managers.AsyncManager;
 import com.BibleQuote.managers.AsyncOpenModule;
 import com.BibleQuote.managers.AsyncRefreshModules;
 import com.BibleQuote.managers.Librarian;
-import com.BibleQuote.utils.OSISLink;
 import com.BibleQuote.utils.OnTaskCompleteListener;
 import com.BibleQuote.utils.Task;
 
@@ -95,11 +95,11 @@ public class LibraryActivity extends GDActivity implements OnTaskCompleteListene
 		chapterList = (GridView) findViewById(R.id.chapterChoose);
 		chapterList.setOnItemClickListener(chapterList_onClick);
 
-		OSISLink osisLink = myLibrarian.getCurrentOSISLink();
+		BibleReference osisLink = myLibrarian.getCurrentOSISLink();
 		if (myLibrarian.isOSISLinkValid(osisLink)) {
 			moduleID = osisLink.getModuleID();
-			bookID   = osisLink.getBookID();
-			chapter  = osisLink.getChapterNumber().toString();
+			bookID   = osisLink.getBook();
+			chapter  = String.valueOf(osisLink.getChapter());
 			
 			//modulesList.setAdapter(getModuleAdapter());
 			//booksList.setAdapter(getBookAdapter());
@@ -158,14 +158,14 @@ public class LibraryActivity extends GDActivity implements OnTaskCompleteListene
 			chapterPos = 0;
 			
 			String message = getResources().getString(R.string.messageLoadBooks);
-			OSISLink currentOSISLink = myLibrarian.getCurrentOSISLink();
-			OSISLink OSISLink = new OSISLink(
+			BibleReference currentOSISLink = myLibrarian.getCurrentOSISLink();
+			BibleReference OSISLink = new BibleReference(
 					currentOSISLink.getModuleDatasource(), 
 					null, 
 					moduleID, 
-					currentOSISLink.getBookID(), 
-					currentOSISLink.getChapterNumber(), 
-					currentOSISLink.getVerseNumber());
+					currentOSISLink.getBook(), 
+					currentOSISLink.getChapter(), 
+					currentOSISLink.getFromVerse());
 			AsyncOpenModule asyncOpenModuleTask = new AsyncOpenModule(message, false, myLibrarian, OSISLink);
 			mAsyncManager.setupTask(asyncOpenModuleTask, LibraryActivity.this);
 		}

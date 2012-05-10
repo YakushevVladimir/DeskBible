@@ -29,6 +29,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.BibleQuote.controllers.CacheModuleController;
+import com.BibleQuote.entity.Bible.BibleReference;
 import com.BibleQuote.exceptions.BookDefinitionException;
 import com.BibleQuote.exceptions.BooksDefinitionException;
 import com.BibleQuote.exceptions.FileAccessException;
@@ -39,7 +40,6 @@ import com.BibleQuote.models.FsModule;
 import com.BibleQuote.models.Module;
 import com.BibleQuote.models.Verse;
 import com.BibleQuote.utils.FsUtils;
-import com.BibleQuote.utils.OSISLink;
 import com.BibleQuote.utils.StringProc;
 
 public class FsLibraryContext extends LibraryContext {
@@ -392,7 +392,7 @@ public class FsLibraryContext extends LibraryContext {
 					verseNumber++;
 
 				if (str.toLowerCase().matches(regQuery)) {
-					OSISLink osisLink = new OSISLink(OSISLink.MOD_DATASOURCE_FS, module.getDataSourceID(), module.getID(), bookID, chapterNumber, verseNumber);
+					BibleReference osisLink = new BibleReference(BibleReference.MOD_DATASOURCE_FS, module.getDataSourceID(), module.getID(), bookID, chapterNumber, verseNumber);
 					String content = StringProc.stripTags(str, module.HtmlFilter, true)
 						.replaceAll("^\\d+\\s+", "");
 					searchRes.put(osisLink.getPath(), content);

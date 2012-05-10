@@ -14,7 +14,7 @@ import com.BibleQuote.models.Module;
 import com.BibleQuote.utils.ChapterPool;
 
 public class LibraryContext {
-	private final String TAG = "LibraryContext";
+
 	private Context context;
 	
 	public TreeMap<String, Module> moduleSet = new TreeMap<String, Module>();
@@ -25,39 +25,10 @@ public class LibraryContext {
 		this.context = context; 
 	}
 	
-	
 	public Context getContext() {
 		return context;
 	}
 	
-
-	public Boolean isModuleLoaded(Module module) {
-		if (module == null || !moduleSet.containsKey(module.getID())) {
-			android.util.Log.i(TAG, String.format("Books can't be loaded for an unknown module %1$s", module == null ? "" : module.getID()));
-			return false;
-		}
-		return true;
-	}
-	
-	
-	public Boolean isBookLoaded(Book book) {
-		if (!bookSet.containsKey(book.getID())) {
-			android.util.Log.i(TAG, String.format("Book %1$s was not loaded to a book repository", book == null ? "" : book.getID()));
-			return false;
-		}
-		return true;
-	}
-	
-	
-	public Boolean isChapterLoaded(Integer chapterNumber) {
-		if (!chapterPool.containsKey(chapterNumber)) {
-			android.util.Log.i(TAG, String.format("Chapter %1$sis was not loaded to a chapter repository",  chapterNumber));
-			return false;
-		}
-		return true;
-	}
-	
-
 	protected HashMap<String, String> getCharsets() {
 		HashMap<String, String> charsets = new HashMap<String, String>();
 		charsets.put("0", "ISO-8859-1"); // ANSI charset

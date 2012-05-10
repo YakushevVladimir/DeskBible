@@ -6,11 +6,13 @@ import java.util.List;
 
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
+import com.BibleQuote.entity.Bible.BibleReference;
+import com.BibleQuote.exceptions.BookNotFoundException;
+import com.BibleQuote.exceptions.OpenModuleException;
 import com.BibleQuote.managers.AsyncCommand;
 import com.BibleQuote.managers.AsyncCommand.ICommand;
 import com.BibleQuote.managers.AsyncManager;
 import com.BibleQuote.managers.Librarian;
-import com.BibleQuote.utils.OSISLink;
 import com.BibleQuote.utils.OnTaskCompleteListener;
 import com.BibleQuote.utils.Task;
 
@@ -28,8 +30,8 @@ import greendroid.widget.item.SubtitleItem;
 public class ParallelsActivity extends GDActivity implements OnTaskCompleteListener {
 
 	private Librarian myLibrarian;
-	private LinkedHashMap<OSISLink, String> parallels = new LinkedHashMap<OSISLink, String>();
-	private String link;
+	private LinkedHashMap<BibleReference, String> parallels = new LinkedHashMap<BibleReference, String>();
+	private BibleReference reference;
 	private AsyncManager mAsyncManager;
 	
 	private ListView LV;
@@ -46,11 +48,12 @@ public class ParallelsActivity extends GDActivity implements OnTaskCompleteListe
 		LV.setOnItemClickListener(list_OnClick);
 		
 		Intent parent = getIntent();
-		link = parent.getStringExtra("link");
+		String link = parent.getStringExtra("linkOSIS");
 		if (link == null) {
 			finish();
 			return;
 		}
+		reference = new BibleReference(link);
 		
 		String progressMessage = getResources().getString(R.string.messageLoad);
 		
@@ -72,7 +75,7 @@ public class ParallelsActivity extends GDActivity implements OnTaskCompleteListe
 				AsyncCommand t = (AsyncCommand) task;
 				if (t.isSuccess()) {
 					List<Item> items = new ArrayList<Item>();
-					for (OSISLink key : parallels.keySet()) {
+					for (BibleReference key : parallels.keySet()) {
 						items.add(new SubtitleItem(key.toString(), parallels.get(key)));
 					}
 			        ItemAdapter adapter = new ItemAdapter(this, items);
@@ -87,7 +90,13 @@ public class ParallelsActivity extends GDActivity implements OnTaskCompleteListe
 	class GetParallesLinks implements ICommand {
 		@Override
 		public void execute() {
-			parallels = myLibrarian.getParallelsList(link);
+			try {
+				parallels = myLibrarian.getParallelsList(reference);
+			} catch (BookNotFoundException e) {
+				parallels = new LinkedHashMap<BibleReference, String>();
+			} catch (OpenModuleException e) {
+				parallels = new LinkedHashMap<BibleReference, String>();
+			}
 		}
 	}
 }

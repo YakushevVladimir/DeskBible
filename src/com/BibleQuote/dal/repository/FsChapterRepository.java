@@ -8,11 +8,11 @@ import java.util.Collection;
 import android.util.Log;
 
 import com.BibleQuote.dal.FsLibraryContext;
+import com.BibleQuote.entity.Bible.BibleReference;
 import com.BibleQuote.exceptions.BookNotFoundException;
 import com.BibleQuote.exceptions.FileAccessException;
 import com.BibleQuote.models.Chapter;
 import com.BibleQuote.models.FsBook;
-import com.BibleQuote.utils.OSISLink;
 
 public class FsChapterRepository implements IChapterRepository<FsBook> {
 	private final String TAG = "FsChapterRepository";
@@ -35,7 +35,7 @@ public class FsChapterRepository implements IChapterRepository<FsBook> {
 			ArrayList<String> numbers = book.getChapterNumbers(book.getModule().ChapterZero);
 			for (String chapterNumber : numbers) {
 				Chapter chapter = context.loadChapter(book, Integer.valueOf(chapterNumber), reader);
-				OSISLink osislink = new OSISLink(book.getModule(), book, chapter.getNumber(), book.getFirstChapterNumber());
+				BibleReference osislink = new BibleReference(book.getModule(), book, chapter.getNumber(), book.getFirstChapterNumber());
 				context.chapterPool.put(osislink.getPath(), chapter);
 			}			
 		} catch (FileAccessException e) {
@@ -67,7 +67,7 @@ public class FsChapterRepository implements IChapterRepository<FsBook> {
 			reader = context.getBookReader(book);
 			
 			chapter = context.loadChapter(book, chapterNumber, reader);
-			OSISLink osislink = new OSISLink(book.getModule(), book, chapterNumber, book.getFirstChapterNumber());
+			BibleReference osislink = new BibleReference(book.getModule(), book, chapterNumber, book.getFirstChapterNumber());
 			context.chapterPool.put(osislink.getPath(), chapter);
 		} catch (FileAccessException e) {
 			Log.e(TAG, "Can't load chapters of book with ID=" + bookID, e);
@@ -104,7 +104,7 @@ public class FsChapterRepository implements IChapterRepository<FsBook> {
 	
 
 	public Chapter getChapterByNumber(FsBook book, Integer chapterNumber) {
-		OSISLink osislink = new OSISLink(book.getModule(), book, chapterNumber, book.getFirstChapterNumber());
+		BibleReference osislink = new BibleReference(book.getModule(), book, chapterNumber, book.getFirstChapterNumber());
 		return context.chapterPool.get(osislink.getPath());
 	}
 	

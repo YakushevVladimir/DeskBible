@@ -41,8 +41,8 @@ import android.widget.Toast;
 
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
+import com.BibleQuote.entity.Bible.BibleReference;
 import com.BibleQuote.managers.Librarian;
-import com.BibleQuote.utils.OSISLink;
 
 public class BookmarksActivity extends GDActivity {
 
@@ -145,7 +145,7 @@ public class BookmarksActivity extends GDActivity {
 			
 			Log.i(TAG, "Select bookmark: " + currBookmark + " (OSIS link = " + linkOSIS + ")");
 
-			OSISLink osisLink = new OSISLink(linkOSIS);
+			BibleReference osisLink = new BibleReference(linkOSIS);
 			
 			if (!myLibrarian.isOSISLinkValid(osisLink)) {
 				Log.i(TAG, "Delete invalid bookmark: " + currBookmark);

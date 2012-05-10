@@ -24,10 +24,10 @@ package com.BibleQuote.managers.History;
 import java.util.LinkedList;
 
 import com.BibleQuote.entity.ItemList;
-import com.BibleQuote.utils.OSISLink;
+import com.BibleQuote.entity.Bible.BibleReference;
 
 public interface IHistoryManager {
-	public void addLink(OSISLink link);
+	public void addLink(BibleReference link);
 	public void clearLinks();
 	public LinkedList<ItemList> getLinks();
 }

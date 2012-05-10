@@ -171,7 +171,7 @@ public class BibleBooksID {
 		for (String key : bookShortNames.keySet()) {
 			String[] bookNames = bookShortNames.get(key);
 			for (String name : bookNames) {
-				qualifier.put(name, key);
+				qualifier.put(name.toLowerCase(), key);
 			}
 		}
 	};
@@ -199,7 +199,7 @@ public class BibleBooksID {
 		}
 		
 		for (String moduleBookName : moduleBookNames) {
-			bookID = qualifier.get(moduleBookName);
+			bookID = qualifier.get(moduleBookName.toLowerCase());
 			if (bookID != null) {
 				break;
 			}

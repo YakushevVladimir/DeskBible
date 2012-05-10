@@ -18,7 +18,6 @@ package com.BibleQuote.exceptions;
 public class OpenModuleException extends Exception {
 
 	private static final long serialVersionUID = -941193264792260938L;
-
 	private String moduleId;
 	private String moduleDatasourceId;
 	
@@ -34,5 +33,4 @@ public class OpenModuleException extends Exception {
 	public String getModuleDatasourceId() {
 		return moduleDatasourceId;
 	}
-
 }

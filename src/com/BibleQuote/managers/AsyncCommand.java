@@ -1,11 +1,8 @@
 package com.BibleQuote.managers;
 
-import android.util.Log;
-
 import com.BibleQuote.utils.Task;
 
 public class AsyncCommand extends Task {
-	private final String TAG = "AsyncCommand";
 	
 	private ICommand command;
 	private Exception exception;
@@ -27,7 +24,6 @@ public class AsyncCommand extends Task {
 			command.execute();
 			isSuccess = true;
 		} catch (Exception e) {
-			Log.e(TAG, e.getMessage());
 			exception = e;
 		}
 		return true;

@@ -25,6 +25,7 @@ import java.util.TreeSet;
 import android.content.Context;
 import android.util.Log;
 
+import com.BibleQuote.R;
 import com.BibleQuote.controllers.IBookController;
 import com.BibleQuote.controllers.IChapterController;
 import com.BibleQuote.controllers.IModuleController;
@@ -32,6 +33,8 @@ import com.BibleQuote.controllers.LibraryController;
 import com.BibleQuote.controllers.LibraryController.LibrarySource;
 import com.BibleQuote.entity.BibleBooksID;
 import com.BibleQuote.entity.ItemList;
+import com.BibleQuote.entity.Bible.BibleReference;
+import com.BibleQuote.entity.Bible.TSK;
 import com.BibleQuote.exceptions.BookDefinitionException;
 import com.BibleQuote.exceptions.BookNotFoundException;
 import com.BibleQuote.exceptions.BooksDefinitionException;
@@ -45,7 +48,6 @@ import com.BibleQuote.models.Book;
 import com.BibleQuote.models.Chapter;
 import com.BibleQuote.models.Module;
 import com.BibleQuote.models.Verse;
-import com.BibleQuote.utils.OSISLink;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.StringProc;
 
@@ -89,6 +91,8 @@ public class Librarian implements IChangeBooksListener  {
 		
 		fsHistoryRepository repository = new fsHistoryRepository(context.getCacheDir());
 		historyManager = new SimpleHistoryManager(repository, PreferenceHelper.getHistorySize());
+		
+		loadModules(context.getResources().getString(R.string.exception_open_module));
 	}
 
 	/**
@@ -150,7 +154,7 @@ public class Librarian implements IChangeBooksListener  {
 	 */
 	public String loadModules(String incorrectModuleTemplate) {
 		StringBuilder errorList = new StringBuilder();
-		this.getModules();
+		moduleCtrl.getModules();
 		Module module = this.getClosedModule();
 		while (module != null) {
 			try {
@@ -179,14 +183,14 @@ public class Librarian implements IChangeBooksListener  {
 		return chapterCtrl.getChapter(book, chapterNumber);
 	}
 	
-	public Chapter openChapter(OSISLink link) throws BookNotFoundException, OpenModuleException {
+	public Chapter openChapter(BibleReference link) throws BookNotFoundException, OpenModuleException {
 		currModule = getModuleByID(link.getModuleID(), link.getModuleDatasourceID());
-		currBook = getBookByID(currModule, link.getBookID());
-		currChapter = getChapterByNumber(currBook, link.getChapterNumber());
-		currChapterNumber = link.getChapterNumber();
-		currVerseNumber = link.getVerseNumber();
+		currBook = getBookByID(currModule, link.getBook());
+		currChapter = getChapterByNumber(currBook, link.getChapter());
+		currChapterNumber = link.getChapter();
+		currVerseNumber = link.getFromVerse();
 		
-		historyManager.addLink(new OSISLink(currModule, currBook, currChapterNumber, currVerseNumber));
+		historyManager.addLink(new BibleReference(currModule, currBook, currChapterNumber, currVerseNumber));
 		
 		return currChapter;
 	}
@@ -344,7 +348,7 @@ public class Librarian implements IChangeBooksListener  {
 	public void addBookmark(Integer verse){
 		String fav = PreferenceHelper.restoreStateString("Favorits");
 		fav = this.getCurrentLink() + ":" + verse + delimeter2
-			+ new OSISLink(currModule, currBook, currChapterNumber, currVerseNumber).getChapterPath()
+			+ new BibleReference(currModule, currBook, currChapterNumber, currVerseNumber).getChapterPath()
 			+ "." + verse + delimeter1
 			+ fav;
 		PreferenceHelper.saveStateString("Favorits", fav);
@@ -423,9 +427,9 @@ public class Librarian implements IChangeBooksListener  {
 	}
 
 	
-//	///////////////////////////////////////////////////////////////////////////
-//	// GET LINK OF STRING
-//		
+	///////////////////////////////////////////////////////////////////////////
+	// GET LINK OF STRING
+		
 	public String getModuleFullName(String moduleID){
 		if (currModule == null) {
 			return "";
@@ -484,8 +488,12 @@ public class Librarian implements IChangeBooksListener  {
 		}
 	}
 	
-	public OSISLink getCurrentOSISLink(){
-		return new OSISLink(currModule, currBook, currChapterNumber, currVerseNumber);
+	public BibleReference getCurrentOSISLink(){
+		return new BibleReference(currModule, currBook, currChapterNumber, currVerseNumber);
+	}
+	
+	public void setCurrentVerseNumber(int verse) {
+		this.currVerseNumber = verse;
 	}
 	
 	public CharSequence getHumanBookLink() {
@@ -568,7 +576,7 @@ public class Librarian implements IChangeBooksListener  {
 		}
 	}
 
-	public Boolean isOSISLinkValid(OSISLink link)
+	public Boolean isOSISLinkValid(BibleReference link)
 	{
 		if (link.getPath() == null) {
 			return false;
@@ -649,18 +657,20 @@ public class Librarian implements IChangeBooksListener  {
 		historyManager.clearLinks();
 	}
 
-	public LinkedHashMap<OSISLink, String> getParallelsList(String link) {
-		LinkedHashMap<OSISLink, String> parallels = new LinkedHashMap<OSISLink, String>();
-		parallels.put(
-				new OSISLink("RST1.Gen.1.3"), 
-				"И сказал Бог: да будет свет. И стал свет.");
-		parallels.put(
-				new OSISLink("RST1.Gen.2.8"), 
-				"И насадил Господь Бог рай в Едеме на востоке, и поместил там человека, которого создал");
-		parallels.put(
-				new OSISLink("RST1.Exo.4.9"), 
-				"если же не поверят и двум сим знамениям и не послушают голоса твоего, то возьми воды " +
-				"из реки и вылей на сушу; и вода, взятая из реки, сделается кровью на суше.");
+	public LinkedHashMap<BibleReference, String> getParallelsList(BibleReference linkOSIS) throws BookNotFoundException, OpenModuleException {
+		
+		currModule = getModuleByID(linkOSIS.getModuleID(), linkOSIS.getModuleDatasourceID());
+		currBook = getBookByID(currModule, linkOSIS.getBook());
+		currChapterNumber = linkOSIS.getChapter();
+		currVerseNumber = linkOSIS.getFromVerse();
+		
+		linkOSIS = new BibleReference(currModule, currBook, currChapterNumber, currVerseNumber);
+		ArrayList<BibleReference> paraLinks = TSK.getLinks(linkOSIS);
+		
+		LinkedHashMap<BibleReference, String> parallels = new LinkedHashMap<BibleReference, String>();
+		for (BibleReference bibleLink : paraLinks) {
+			parallels.put(bibleLink, "Которого мы проповедуем, вразумляя всякого человека и научая всякой премудрости, чтобы представить всякого человека совершенным во Христе Иисусе;");
+		}
 		
 		return parallels;
 	}
