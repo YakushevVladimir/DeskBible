@@ -18,6 +18,7 @@ package com.BibleQuote.managers;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -50,6 +51,8 @@ import com.BibleQuote.models.Module;
 import com.BibleQuote.models.Verse;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.StringProc;
+import com.BibleQuote.utils.BibleReference.TskXmlRepository;
+import com.BibleQuote.utils.modules.LinkConverter;
 
 public class Librarian implements IChangeBooksListener  {
 	
@@ -80,8 +83,7 @@ public class Librarian implements IChangeBooksListener  {
 	 * Подписка на событие ChangeBooksEvent 
 	 */
 	public Librarian(Context context) {
-		Log.i(TAG, "Librarian()");
-		
+
 		eventManager.addChangeBooksListener(this);
 		
 		libCtrl = LibraryController.create(LibrarySource.FileSystem, eventManager, context);
@@ -185,7 +187,7 @@ public class Librarian implements IChangeBooksListener  {
 	
 	public Chapter openChapter(BibleReference link) throws BookNotFoundException, OpenModuleException {
 		currModule = getModuleByID(link.getModuleID(), link.getModuleDatasourceID());
-		currBook = getBookByID(currModule, link.getBook());
+		currBook = getBookByID(currModule, link.getBookID());
 		currChapter = getChapterByNumber(currBook, link.getChapter());
 		currChapterNumber = link.getChapter();
 		currVerseNumber = link.getFromVerse();
@@ -657,21 +659,33 @@ public class Librarian implements IChangeBooksListener  {
 		historyManager.clearLinks();
 	}
 
-	public LinkedHashMap<BibleReference, String> getParallelsList(BibleReference linkOSIS) throws BookNotFoundException, OpenModuleException {
+	public LinkedHashMap<String, BibleReference> getParallelsList(BibleReference BibleLink) throws BookNotFoundException, OpenModuleException {
 		
-		currModule = getModuleByID(linkOSIS.getModuleID(), linkOSIS.getModuleDatasourceID());
-		currBook = getBookByID(currModule, linkOSIS.getBook());
-		currChapterNumber = linkOSIS.getChapter();
-		currVerseNumber = linkOSIS.getFromVerse();
+		currModule = getModuleByID(BibleLink.getModuleID(), BibleLink.getModuleDatasourceID());
+		currBook = getBookByID(currModule, BibleLink.getBookID());
+		currChapterNumber = BibleLink.getChapter();
+		currVerseNumber = BibleLink.getFromVerse();
 		
-		linkOSIS = new BibleReference(currModule, currBook, currChapterNumber, currVerseNumber);
-		ArrayList<BibleReference> paraLinks = TSK.getLinks(linkOSIS);
+		BibleLink = new BibleReference(currModule, currBook, currChapterNumber, currVerseNumber);
 		
-		LinkedHashMap<BibleReference, String> parallels = new LinkedHashMap<BibleReference, String>();
-		for (BibleReference bibleLink : paraLinks) {
-			parallels.put(bibleLink, "Которого мы проповедуем, вразумляя всякого человека и научая всякой премудрости, чтобы представить всякого человека совершенным во Христе Иисусе;");
+		TSK tsk = new TSK(new TskXmlRepository());
+		LinkedHashSet<BibleReference> paraLinks = tsk.getLinks(BibleLink);
+		
+		LinkedHashMap<String, BibleReference> parallels = new LinkedHashMap<String, BibleReference>();
+		for (BibleReference reference : paraLinks) {
+			Book book;
+			try {
+				book = getBookByID(currModule, reference.getBookID());
+			} catch (BookNotFoundException e) {
+				Log.e(TAG, String.format("Not found book %1$s in module %2$s", reference.getBookID(), reference.getModuleID()));
+				continue;
+			}
+			BibleReference newReference = new BibleReference(currModule, book,
+					reference.getChapter(), reference.getFromVerse(), reference.getToVerse());
+			parallels.put(LinkConverter.getOSIStoHuman(newReference,
+					moduleCtrl, bookCtrl), newReference);
 		}
-		
+
 		return parallels;
 	}
 }

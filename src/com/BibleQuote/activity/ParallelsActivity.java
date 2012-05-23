@@ -18,10 +18,10 @@ import com.BibleQuote.utils.Task;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 import greendroid.app.GDActivity;
 import greendroid.widget.ItemAdapter;
 import greendroid.widget.item.Item;
@@ -29,8 +29,10 @@ import greendroid.widget.item.SubtitleItem;
 
 public class ParallelsActivity extends GDActivity implements OnTaskCompleteListener {
 
+	private static String TAG = "ParallelsActivity";
+	
 	private Librarian myLibrarian;
-	private LinkedHashMap<BibleReference, String> parallels = new LinkedHashMap<BibleReference, String>();
+	private LinkedHashMap<String, BibleReference> parallels = new LinkedHashMap<String, BibleReference>();
 	private BibleReference reference;
 	private AsyncManager mAsyncManager;
 	
@@ -64,7 +66,13 @@ public class ParallelsActivity extends GDActivity implements OnTaskCompleteListe
 
 	private AdapterView.OnItemClickListener list_OnClick = new AdapterView.OnItemClickListener() {
 		public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-			Toast.makeText(ParallelsActivity.this, R.string.messageSearchCanceled, Toast.LENGTH_SHORT).show();
+			String key = ((SubtitleItem)a.getAdapter().getItem(position)).text;
+			BibleReference ref = parallels.get(key);
+
+			Intent intent = new Intent();
+			intent.putExtra("linkOSIS", ref.getPath());
+			setResult(RESULT_OK, intent);
+			finish();
 		}
 	};
 
@@ -75,8 +83,8 @@ public class ParallelsActivity extends GDActivity implements OnTaskCompleteListe
 				AsyncCommand t = (AsyncCommand) task;
 				if (t.isSuccess()) {
 					List<Item> items = new ArrayList<Item>();
-					for (BibleReference key : parallels.keySet()) {
-						items.add(new SubtitleItem(key.toString(), parallels.get(key)));
+					for (String link : parallels.keySet()) {
+						items.add(new SubtitleItem(link, ""));
 					}
 			        ItemAdapter adapter = new ItemAdapter(this, items);
 			        LV.setAdapter(adapter);
@@ -93,9 +101,11 @@ public class ParallelsActivity extends GDActivity implements OnTaskCompleteListe
 			try {
 				parallels = myLibrarian.getParallelsList(reference);
 			} catch (BookNotFoundException e) {
-				parallels = new LinkedHashMap<BibleReference, String>();
+				Log.e(TAG, String.format("Book not found for reference: %1$s", reference));
+				parallels = new LinkedHashMap<String, BibleReference>();
 			} catch (OpenModuleException e) {
-				parallels = new LinkedHashMap<BibleReference, String>();
+				Log.e(TAG, String.format("Error open module for reference: %1$s", reference));
+				parallels = new LinkedHashMap<String, BibleReference>();
 			}
 		}
 	}

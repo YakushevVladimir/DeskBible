@@ -1,6 +1,6 @@
 package com.BibleQuote.utils;
 
-import java.util.ArrayList;
+import java.util.LinkedHashSet;
 
 import com.BibleQuote.entity.BibleBooksID;
 import com.BibleQuote.entity.Bible.BibleReference;
@@ -12,9 +12,9 @@ public class BibleLinkParser {
 	private static final String TO_VERSE_SEPARATOR = "-";
 	private static final String LINK_SEPARATOR = ";";
 	
-	public static ArrayList<BibleReference> parse(String moduleID, String references) {
+	public static LinkedHashSet<BibleReference> parse(String moduleID, String references) {
 		
-		ArrayList<BibleReference> bibleLinks = new ArrayList<BibleReference>();
+		LinkedHashSet<BibleReference> bibleLinks = new LinkedHashSet<BibleReference>();
 		String currSymbol;
 		StringBuilder book, chapter, fromVerse, toVerse;
 		
@@ -31,7 +31,7 @@ public class BibleLinkParser {
 			// Parse book
 			while (currPos < (currLink.length())) {
 				currSymbol = currLink.substring(currPos, currPos + 1);
-				if (isDigit(currSymbol)) {
+				if (isDigit(currSymbol) && currPos != 0) {
 					break;
 				}
 				currPos++;

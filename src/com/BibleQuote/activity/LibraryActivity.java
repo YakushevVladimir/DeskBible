@@ -98,7 +98,7 @@ public class LibraryActivity extends GDActivity implements OnTaskCompleteListene
 		BibleReference osisLink = myLibrarian.getCurrentOSISLink();
 		if (myLibrarian.isOSISLinkValid(osisLink)) {
 			moduleID = osisLink.getModuleID();
-			bookID   = osisLink.getBook();
+			bookID   = osisLink.getBookID();
 			chapter  = String.valueOf(osisLink.getChapter());
 			
 			//modulesList.setAdapter(getModuleAdapter());
@@ -163,7 +163,7 @@ public class LibraryActivity extends GDActivity implements OnTaskCompleteListene
 					currentOSISLink.getModuleDatasource(), 
 					null, 
 					moduleID, 
-					currentOSISLink.getBook(), 
+					currentOSISLink.getBookID(), 
 					currentOSISLink.getChapter(), 
 					currentOSISLink.getFromVerse());
 			AsyncOpenModule asyncOpenModuleTask = new AsyncOpenModule(message, false, myLibrarian, OSISLink);

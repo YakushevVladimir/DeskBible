@@ -26,7 +26,7 @@ public class AsyncOpenChapter extends Task {
 		isSuccess = false;
 		try {
 			Log.i(TAG, String.format("Open OSIS link with moduleID=%1$s, bookID=%2$s, chapterNumber=%3$s, verseNumber=%4$s", 
-					link.getModuleID(), link.getBook(), link.getChapter(), link.getFromVerse()));
+					link.getModuleID(), link.getBookID(), link.getChapter(), link.getFromVerse()));
 
 			librarian.openChapter(link);
 			isSuccess = true;

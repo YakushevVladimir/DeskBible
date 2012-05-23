@@ -22,7 +22,7 @@ public class BibleBooksID {
 			put("Deut"  , new String[]{"Втор","Вт","Втрзк","Второзаконие","De","Deut","Deu","Dt","","Deuteron","Deuteronomy"});
 			put("Josh"  , new String[]{"ИисНав","Нав","Иисус","Навин","Jos","Josh","Joshua"});
 			put("Judg"  , new String[]{"Суд","Сд","Судьи","Jdg","Judg","Judge","Judges"});
-			put("Ruth"  , new String[]{"Руф","Рф","Руфь","Ru","Ruth","Rth","Rt"});
+			put("Ruth"  , new String[]{"Руф","Рф","Руфь","Ru","Rut","Ruth","Rth","Rt"});
 			put("1Sam"  , new String[]{"1Цар","1Цр","1Ц","1Царств","1Sa","1S","1Sam","1Sm","1Sml","1Samuel"});
 			put("2Sam"  , new String[]{"2Цар","2Цр","2Ц","2Царств","2Sa","2S","2Sam","2Sm","2Sml","2Samuel"});
 			put("1Kgs"  , new String[]{"3Цар","3Цр","3Ц","3Царств","1Ki","1K","1Kn","1Kg","1King","1Kng","1Kings"});
@@ -31,7 +31,7 @@ public class BibleBooksID {
 			put("2Chr"  , new String[]{"2Пар","2Пр","2Chr","2Ch","2Chron"});
 			put("Ezra"  , new String[]{"Ездр","Езд","Ез","Ездра","Ezr","Ezra"});
 			put("Neh"   , new String[]{"Нм","Неемия","Ne","Neh","Nehem","Nehemiah"});
-			put("Esth"  , new String[]{"Есф","Ес","Есфирь","Esth","Est","Esther"});
+			put("Esth"  , new String[]{"Есф","Ес","Есфирь","Esth","Es","Est","Esther"});
 			put("Job"   , new String[]{"Иов","Ив","Job","Jb"});
 			put("Ps"    , new String[]{"Пс","Псалт","Псал","Псл","Псалом","Псалтирь","Псалмы","Ps","Psa","Psal","Psalm","Psalms"});
 			put("Prov"  , new String[]{"Прит","Притч","Пр","Притчи","Притча","Pr","Prov","Pro","Proverb","Proverbs"});

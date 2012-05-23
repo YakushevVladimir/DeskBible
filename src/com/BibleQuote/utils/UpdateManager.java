@@ -1,11 +1,17 @@
 package com.BibleQuote.utils;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import com.BibleQuote.R;
 
@@ -15,6 +21,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.util.Xml.Encoding;
 
 public class UpdateManager {
 	
@@ -51,6 +58,11 @@ public class UpdateManager {
 			}
 		}
 		
+		if (currVersionCode < 38) {
+			Log.i(TAG, "Update to version 0.05.01");
+			saveTSK(context);
+		}
+		
 		try {
 			int versionCode = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode;
 			Settings.edit().putInt("versionCode", versionCode).commit();
@@ -71,6 +83,45 @@ public class UpdateManager {
 			}
 			moduleStream.close();
 			newModule.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private static void saveTSK(Context context) {
+		try {
+			InputStream tskStream = context.getResources().openRawResource(R.raw.tsk);
+			ZipInputStream zStream = new ZipInputStream(tskStream);
+			
+			InputStreamReader isReader = null;
+			ZipEntry entry;
+			while ((entry = zStream.getNextEntry()) != null) {
+				String entryName = entry.getName().toLowerCase();
+				if (entryName.contains(File.separator)) {
+					entryName = entryName.substring(entryName.lastIndexOf(File.separator) + 1);
+				}
+				if (entryName.equalsIgnoreCase("tsk.xml")) {
+					isReader = new InputStreamReader(zStream, Encoding.UTF_8.toString());
+					break;
+				};
+			}
+			if (isReader == null) {
+				return;
+			}
+			
+			BufferedReader tsk_br = new BufferedReader(isReader);
+			File tskDir = new File(DataConstants.FS_EXTERNAL_OTHER_PATH);
+			BufferedWriter tsk_bw = new BufferedWriter(new FileWriter(new File(tskDir, "tsk.xml")));
+			
+			char[] buf = new char[1024];
+			int len;
+			while ((len = tsk_br.read(buf)) > 0) {
+				tsk_bw.write(buf, 0, len);
+			}
+			tsk_bw.close();
+			tsk_br.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

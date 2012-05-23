@@ -1,6 +1,7 @@
 package com.BibleQuote.utils.modules;
 
 import com.BibleQuote.entity.BibleBooksID;
+import com.BibleQuote.entity.Bible.BibleReference;
 import com.BibleQuote.exceptions.BookNotFoundException;
 import com.BibleQuote.exceptions.OpenModuleException;
 import com.BibleQuote.models.Book;
@@ -38,6 +39,20 @@ public class LinkConverter {
 		}
 
 		return humanLink;
+	}
+
+	public static String getOSIStoHuman(BibleReference reference, IModuleController moduleCtrl,
+			IBookController bookCtrl) {
+		if (reference.getFromVerse() != reference.getToVerse()) {
+			return String.format("%1$s: %2$s %3$s:%4$s-%5$s", 
+					reference.getModuleID(), reference.getBookFullName(),
+					reference.getChapter(), reference.getFromVerse(),
+					reference.getToVerse());
+		} else {
+			return String.format("%1$s: %2$s %3$s:%4$s", 
+					reference.getModuleID(), reference.getBookFullName(),
+					reference.getChapter(), reference.getFromVerse());
+		}
 	}
 
 	public static String getHumanToOSIS(String humanLink) {

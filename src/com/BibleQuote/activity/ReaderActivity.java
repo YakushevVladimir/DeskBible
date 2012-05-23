@@ -324,6 +324,7 @@ public class ReaderActivity extends GDActivity implements OnTaskCompleteListener
 			if ((requestCode == R.id.action_bar_bookmarks) 
 					|| (requestCode == R.id.action_bar_search )
 					|| (requestCode == R.id.action_bar_chooseCh)
+					|| (requestCode == R.id.action_bar_parallels)
 					|| (requestCode == R.id.action_bar_history)) {
 				Bundle extras = data.getExtras();
 				BibleReference osisLink = new BibleReference(extras.getString("linkOSIS"));
