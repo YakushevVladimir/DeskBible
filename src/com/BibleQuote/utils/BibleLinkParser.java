@@ -3,7 +3,7 @@ package com.BibleQuote.utils;
 import java.util.LinkedHashSet;
 
 import com.BibleQuote.entity.BibleBooksID;
-import com.BibleQuote.entity.Bible.BibleReference;
+import com.BibleQuote.entity.BibleReference;
 
 public class BibleLinkParser {
 	

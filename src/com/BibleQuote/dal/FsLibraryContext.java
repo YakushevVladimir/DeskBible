@@ -29,7 +29,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.BibleQuote.controllers.CacheModuleController;
-import com.BibleQuote.entity.Bible.BibleReference;
+import com.BibleQuote.entity.BibleReference;
 import com.BibleQuote.exceptions.BookDefinitionException;
 import com.BibleQuote.exceptions.BooksDefinitionException;
 import com.BibleQuote.exceptions.FileAccessException;
@@ -320,9 +320,6 @@ public class FsLibraryContext extends LibraryContext {
 	
 	public Chapter loadChapter(Book book, Integer chapterNumber, BufferedReader bReader)  {
 		
-		ArrayList<Integer> verseNumbers = new ArrayList<Integer>();
-		ArrayList<Verse> verseList = new ArrayList<Verse>();
-		
 		ArrayList<String> lines = new ArrayList<String>();
 		try {
 			String str;
@@ -359,19 +356,19 @@ public class FsLibraryContext extends LibraryContext {
 			return null;
 		}
 
+		ArrayList<Verse> verseList = new ArrayList<Verse>();
 		String verseSign = book.getModule().VerseSign;
 		int i = -1;
 		for (String currLine : lines) {
 			if (currLine.toLowerCase().contains(verseSign)) {
 				i++;
 				verseList.add(new Verse(i, currLine));
-				verseNumbers.add(i);
 			} else if (verseList.size() > 0) {
 				verseList.set(i, new Verse(i, verseList.get(i).getText() + " " + currLine));
 			}
 		}
 
-		return new Chapter(book, chapterNumber, verseNumbers, verseList);
+		return new Chapter(book, chapterNumber, verseList);
 	}	
 	
 	

@@ -17,6 +17,8 @@ package com.BibleQuote.managers;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -31,27 +33,28 @@ import com.BibleQuote.controllers.IBookController;
 import com.BibleQuote.controllers.IChapterController;
 import com.BibleQuote.controllers.IModuleController;
 import com.BibleQuote.controllers.LibraryController;
+import com.BibleQuote.controllers.TSKController;
 import com.BibleQuote.controllers.LibraryController.LibrarySource;
+import com.BibleQuote.dal.repository.XmlTskRepository;
+import com.BibleQuote.dal.repository.fsHistoryRepository;
 import com.BibleQuote.entity.BibleBooksID;
+import com.BibleQuote.entity.BibleReference;
 import com.BibleQuote.entity.ItemList;
-import com.BibleQuote.entity.Bible.BibleReference;
-import com.BibleQuote.entity.Bible.TSK;
 import com.BibleQuote.exceptions.BookDefinitionException;
 import com.BibleQuote.exceptions.BookNotFoundException;
 import com.BibleQuote.exceptions.BooksDefinitionException;
 import com.BibleQuote.exceptions.OpenModuleException;
+import com.BibleQuote.exceptions.TskNotFoundException;
 import com.BibleQuote.listeners.ChangeBooksEvent;
 import com.BibleQuote.listeners.IChangeBooksListener;
 import com.BibleQuote.managers.History.IHistoryManager;
 import com.BibleQuote.managers.History.SimpleHistoryManager;
-import com.BibleQuote.managers.History.fsHistoryRepository;
 import com.BibleQuote.models.Book;
 import com.BibleQuote.models.Chapter;
 import com.BibleQuote.models.Module;
 import com.BibleQuote.models.Verse;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.StringProc;
-import com.BibleQuote.utils.BibleReference.TskXmlRepository;
 import com.BibleQuote.utils.modules.LinkConverter;
 
 public class Librarian implements IChangeBooksListener  {
@@ -71,7 +74,8 @@ public class Librarian implements IChangeBooksListener  {
 	private IModuleController moduleCtrl;
 	private IBookController bookCtrl;
 	private IChapterController chapterCtrl;
-	private LibraryController libCtrl; 
+	private LibraryController libCtrl;
+	private TSKController tskCtrl;
 	
 	private static final Byte delimeter1 = (byte) 0xFE;
 	private static final Byte delimeter2 = (byte) 0xFF;
@@ -659,33 +663,55 @@ public class Librarian implements IChangeBooksListener  {
 		historyManager.clearLinks();
 	}
 
-	public LinkedHashMap<String, BibleReference> getParallelsList(BibleReference BibleLink) throws BookNotFoundException, OpenModuleException {
+	public LinkedHashMap<String, BibleReference> getCrossReference(BibleReference bReference) 
+			throws TskNotFoundException {
 		
-		currModule = getModuleByID(BibleLink.getModuleID(), BibleLink.getModuleDatasourceID());
-		currBook = getBookByID(currModule, BibleLink.getBookID());
-		currChapterNumber = BibleLink.getChapter();
-		currVerseNumber = BibleLink.getFromVerse();
+		if (tskCtrl == null) {
+			tskCtrl = new TSKController(new XmlTskRepository());
+		}
 		
-		BibleLink = new BibleReference(currModule, currBook, currChapterNumber, currVerseNumber);
-		
-		TSK tsk = new TSK(new TskXmlRepository());
-		LinkedHashSet<BibleReference> paraLinks = tsk.getLinks(BibleLink);
+		LinkedHashSet<BibleReference> paraLinks = tskCtrl.getLinks(bReference);
 		
 		LinkedHashMap<String, BibleReference> parallels = new LinkedHashMap<String, BibleReference>();
 		for (BibleReference reference : paraLinks) {
 			Book book;
 			try {
 				book = getBookByID(currModule, reference.getBookID());
+			} catch (OpenModuleException e) {
+				Log.e(TAG, String.format("Error open module %1$s for link %2$s", 
+						reference.getModuleID(), reference.getBookID()));
+				continue;
 			} catch (BookNotFoundException e) {
-				Log.e(TAG, String.format("Not found book %1$s in module %2$s", reference.getBookID(), reference.getModuleID()));
+				Log.e(TAG, String.format("Not found book %1$s in module %2$s", 
+						reference.getBookID(), reference.getModuleID()));
 				continue;
 			}
 			BibleReference newReference = new BibleReference(currModule, book,
 					reference.getChapter(), reference.getFromVerse(), reference.getToVerse());
-			parallels.put(LinkConverter.getOSIStoHuman(newReference,
-					moduleCtrl, bookCtrl), newReference);
+			parallels.put(
+					LinkConverter.getOSIStoHuman(newReference, moduleCtrl, bookCtrl), 
+					newReference);
 		}
 
 		return parallels;
+	}
+
+	public HashMap<BibleReference, String> getCrossReferenceContent(Collection<BibleReference> bReferences) {
+		HashMap<BibleReference, String> crossReferenceContent = new HashMap<BibleReference, String>();
+		for (BibleReference ref : bReferences) {
+			try {
+				int fromVerse = ref.getFromVerse();
+				int toVerse = ref.getToVerse();
+				Chapter chapter = getChapterByNumber(getBookByID(currModule, ref.getBookID()), ref.getChapter());
+				crossReferenceContent.put(ref, 
+						StringProc.stripTags(chapter.getText(fromVerse, toVerse), "", true)
+						.replaceAll("\\s(H|G)*\\d+", "")
+						.replaceAll("\\d+\\s", ""))
+						.trim();
+			} catch (Exception e) {
+				continue;
+			}
+		}
+		return crossReferenceContent;
 	}
 }

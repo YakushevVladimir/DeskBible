@@ -13,21 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- *  @ File Name : IHistoryManager.java
+ *  @ File Name : IHistoryRepository.java
  *  @ Date : 04.03.2012
  *  @ Author : Vladimir Yakushev
  *  
  */
 
-package com.BibleQuote.managers.History;
+package com.BibleQuote.dal.repository;
 
 import java.util.LinkedList;
 
-import com.BibleQuote.entity.BibleReference;
 import com.BibleQuote.entity.ItemList;
+import com.BibleQuote.exceptions.FileAccessException;
 
-public interface IHistoryManager {
-	public void addLink(BibleReference link);
-	public void clearLinks();
-	public LinkedList<ItemList> getLinks();
+public interface IHistoryRepository {
+	public void save(LinkedList<ItemList> list);
+	public LinkedList<ItemList> load() throws FileAccessException;
 }

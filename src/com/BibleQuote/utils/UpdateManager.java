@@ -112,7 +112,7 @@ public class UpdateManager {
 			}
 			
 			BufferedReader tsk_br = new BufferedReader(isReader);
-			File tskDir = new File(DataConstants.FS_EXTERNAL_OTHER_PATH);
+			File tskDir = new File(DataConstants.FS_APP_DIR_NAME);
 			BufferedWriter tsk_bw = new BufferedWriter(new FileWriter(new File(tskDir, "tsk.xml")));
 			
 			char[] buf = new char[1024];

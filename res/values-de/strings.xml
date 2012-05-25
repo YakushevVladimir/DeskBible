@@ -19,14 +19,11 @@
 <resources>
     <string name="app_name">Bibel</string>
     <!-- Tab's -->
-    <string name="favorites">Lesezeichen</string>
     <!-- Settings -->
-    <string name="category_reader">Fenster Einstellungen lesen</string>
     <string name="text_size">Schriftgroesse</string>
     <string name="current_text_size">Aktuelle Textgroesse: %1$d</string>
     <string name="text_color">Textfarbe</string>
     <string name="background">Hintergrundfarbe</string>
-    <string name="split_verse">Bruch von Absätzen</string>
     <string name="text_color_summary">Wahl der Schriftgroesse</string>
     <string name="background_summary">Wahl der Hintergrundfarbe</string>
     <!-- Miscellaneous -->
@@ -41,36 +38,23 @@
     <!-- Color's -->
     <color name="white_color">#fff</color>
     <color name="gray_color">#aaa</color>
-    <string name="split_verse_summary_off">Anzeige Vers in einem Modul</string>
     <string name="menu_night_day_mode">Nigth / Day-Modus</string>
     <string name="fav_delete_all_question">Sind Sie sicher, dass Sie alle Lesezeichen löschen?</string>
-    <string name="db_notes">Hinweise</string>
     <string name="messageLoad">Laden...</string>
     <string name="share">Anteil</string>
     <string name="disable_auto_screen_rotation">Deaktivieren Sie die automatische Bildschirm-Rotation</string>
-    <string name="db_parallels">Parallels</string>
-    <string name="split_verse_summary_on">Forced split Vers im Text</string>
     <string name="results">Ergebnisse</string>
-    <string name="db_plans">Pläne</string>
-    <string name="fav_add_bookmarks">Bookmarks</string>
-    <string name="db_settings">Einstellungen</string>
-    <string name="settings_category_other">Andere</string>
     <string name="may_need_to_restart">Möglicherweise müssen Sie neu starten</string>
     <string name="fav_delete_all">Löschen Sie alle</string>
     <string name="messageLoadCanceled">Laden abgesagt</string>
     <string name="menu_favorites">Bookmarks</string>
     <string name="messageSearchCanceled">Suche abgebrochen</string>
-    <string name="db_bookmarks">Bookmarks</string>
-    <string name="db_libraries">Bibliothek</string>
     <string name="fav_sort_alphabetically">Art</string>
     <string name="messageSearch">Suche nach ...</string>
     <string name="menu_settings">Einstellungen</string>
     <string name="menu_search">Suche</string>
-    <string name="db_search">Suche</string>
-    <string name="db_bibles">Bibel</string>
     <string name="copy">Kopie</string>
     <string name="menu_help">Hilfe</string>
-    <string name="db_help">Hilfe</string>
     <string name="app_about_design_label">Design:</string>
     <string name="bookmark_invalid_removed">Ungültige Lesezeichen entfernt</string>
     <string name="category_reader_other_history_size_summary">Aktuelle Geschichte size: %1$s</string>
@@ -78,7 +62,6 @@
     <string name="category_reader_appearance">Aussehen</string>
     <string name="category_reader_other_history_size">History Größe</string>
     <string name="category_reader_other">Andere</string>
-    <string name="db_history">Geschichte</string>
     <string name="read_mode_by_default_summary">Verwenden Sie den standardmäßigen Lese-Modus</string>
     <string name="app_about_thanks_label">Dank:</string>
     <string name="about">Über</string>
@@ -87,7 +70,11 @@
     <string name="messageLoadModules">Load-Module ...</string>
     <string name="read_mode_by_default">Lesen Modus standardmäßig</string>
     <string name="category_reader_summary">Reader-Fenster Einstellungen</string>
-    <string name="category_reports">Crash-Berichte</string>
     <string name="app_about_dev_label">Entwickler:</string>
-    <string name="parallels">Parallels</string>
+    <string name="settings">Einstellungen</string>
+    <string name="help">Hilfe</string>
+    <string name="search">Suche</string>
+    <string name="history">Geschichte</string>
+    <string name="bookmarks">Bookmarks</string>
+    <string name="library">Bibliothek</string>
 </resources>

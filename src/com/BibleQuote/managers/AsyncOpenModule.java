@@ -2,7 +2,7 @@ package com.BibleQuote.managers;
 
 import android.util.Log;
 
-import com.BibleQuote.entity.Bible.BibleReference;
+import com.BibleQuote.entity.BibleReference;
 import com.BibleQuote.exceptions.BookDefinitionException;
 import com.BibleQuote.exceptions.BooksDefinitionException;
 import com.BibleQuote.exceptions.OpenModuleException;

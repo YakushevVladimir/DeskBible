@@ -19,14 +19,11 @@
 <resources>
     <string name="app_name">Біблія</string>
     <!-- Tab's -->
-    <string name="favorites">Закладкі</string>
     <!-- Settings -->
-    <string name="category_reader">Налады акна чытання</string>
     <string name="text_size">Памер шрыфта</string>
     <string name="current_text_size">Цякучы памер тэксту: %1$d</string>
     <string name="text_color">Колер тэксту</string>
     <string name="background">Колер фону</string>
-    <string name="split_verse">Разбіваць па вершам</string>
     <string name="text_color_summary">Выберыце памер шрыфта</string>
     <string name="background_summary">Выберыце колер фону</string>
     <!-- Miscellaneous -->
@@ -38,36 +35,23 @@
     <string name="select_module">Выберыце модуль</string>
     <string name="added">Даданне</string>
     <string name="removed">Выдаленае</string>
-    <string name="split_verse_summary_off">Паказаць верш у модулі</string>
     <string name="menu_night_day_mode">Nigth / дзённай рэжым</string>
     <string name="fav_delete_all_question">Вы сапраўды жадаеце выдаліць усе закладкі?</string>
-    <string name="db_notes">Заўвагі</string>
     <string name="messageLoad">Загрузіць...</string>
     <string name="share">Доля</string>
     <string name="disable_auto_screen_rotation">Адключэнне аўтаматычнага павароту экрана</string>
-    <string name="db_parallels">Parallels</string>
-    <string name="split_verse_summary_on">Прымусовае раскол верш ў тэкст</string>
     <string name="results">Вынікі</string>
-    <string name="db_plans">Планы</string>
-    <string name="fav_add_bookmarks">Закладкі</string>
-    <string name="db_settings">Налады</string>
-    <string name="settings_category_other">Іншы</string>
     <string name="may_need_to_restart">Магчыма, спатрэбіцца перазагрузіць</string>
     <string name="fav_delete_all">Выдаліць усе</string>
     <string name="messageLoadCanceled">Нагрузка адменены</string>
     <string name="menu_favorites">Закладкі</string>
     <string name="messageSearchCanceled">Пошук адменены</string>
-    <string name="db_bookmarks">Закладкі</string>
-    <string name="db_libraries">Бібліятэка</string>
     <string name="fav_sort_alphabetically">Сартаваць</string>
     <string name="messageSearch">Пошук ...</string>
     <string name="menu_settings">Налады</string>
     <string name="menu_search">Пошук</string>
-    <string name="db_search">Пошук</string>
-    <string name="db_bibles">Біблія</string>
     <string name="copy">Копія</string>
     <string name="menu_help">Дапамога</string>
-    <string name="db_help">Дапамога</string>
     <string name="app_about_design_label">Дызайн:</string>
     <string name="bookmark_invalid_removed">Недапушчальная закладка выдаленая</string>
     <string name="category_reader_other_history_size_summary">Бягучы памер гісторыі: %1$s</string>
@@ -75,7 +59,6 @@
     <string name="category_reader_appearance">Знешні выгляд</string>
     <string name="category_reader_other_history_size">Гісторыя памер</string>
     <string name="category_reader_other">Іншы</string>
-    <string name="db_history">Гісторыя</string>
     <string name="read_mode_by_default_summary">Выкарыстоўвайце рэжым па змаўчанні для чытання</string>
     <string name="app_about_thanks_label">Дзякуй:</string>
     <string name="about">Аб</string>
@@ -84,7 +67,11 @@
     <string name="messageLoadModules">Загрузка модуляў ...</string>
     <string name="read_mode_by_default">Рэжым чытання па змаўчанні</string>
     <string name="category_reader_summary">Налады чытання акно</string>
-    <string name="category_reports">Справаздачы аб збоях</string>
     <string name="app_about_dev_label">Распрацоўнікі:</string>
-    <string name="parallels">Parallels</string>
+    <string name="settings">Налады</string>
+    <string name="help">Дапамога</string>
+    <string name="search">Пошук</string>
+    <string name="history">Гісторыя</string>
+    <string name="bookmarks">Закладкі</string>
+    <string name="library">Бібліятэка</string>
 </resources>

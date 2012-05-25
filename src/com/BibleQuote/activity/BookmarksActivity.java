@@ -41,7 +41,7 @@ import android.widget.Toast;
 
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
-import com.BibleQuote.entity.Bible.BibleReference;
+import com.BibleQuote.entity.BibleReference;
 import com.BibleQuote.managers.Librarian;
 
 public class BookmarksActivity extends GDActivity {
@@ -94,7 +94,7 @@ public class BookmarksActivity extends GDActivity {
 			case 1:
 				Builder builder = new AlertDialog.Builder(BookmarksActivity.this);
 				builder.setIcon(R.drawable.icon);
-				builder.setTitle(R.string.favorites);
+				builder.setTitle(R.string.bookmarks);
 				builder.setMessage(R.string.fav_delete_all_question);
 				builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
@@ -170,7 +170,7 @@ public class BookmarksActivity extends GDActivity {
 			currBookmark = LV.getAdapter().getItem(position).toString();
 			Builder b = new AlertDialog.Builder(BookmarksActivity.this);
 			b.setIcon(R.drawable.icon);
-			b.setTitle(R.string.favorites);
+			b.setTitle(R.string.bookmarks);
 			b.setMessage(R.string.fav_question_del_fav);
 			b.setPositiveButton("OK", positiveButton_OnClick);
 			b.setNegativeButton(R.string.cancel, null);

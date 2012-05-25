@@ -21,6 +21,19 @@
 	android:layout_height="fill_parent"
 	xmlns:android="http://schemas.android.com/apk/res/android">
 
+	<TextView
+	    android:id="@+id/referenceSource"
+		style="@style/BookLinkContainer" 
+	    android:layout_width="fill_parent"
+	    android:layout_height="@dimen/bookLink_container_height"
+	    android:gravity="center"
+	    android:background="#ff808080" />
+	
+	<ImageView 
+	    android:background="@drawable/line_green"
+	    android:layout_height="2dp"
+	    android:layout_width="fill_parent"/>
+	    
 	<ListView 
 		android:id="@+id/Parallels_List" 
 		android:layout_width="fill_parent"

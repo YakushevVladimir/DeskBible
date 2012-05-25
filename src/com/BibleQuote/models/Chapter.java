@@ -1,17 +1,13 @@
 package com.BibleQuote.models;
 
 import java.util.ArrayList;
+import java.util.TreeMap;
 
 public class Chapter {
 	
 	private Integer number;
-	
 	private String text;
-	
-	private ArrayList<Integer> verseNumbers = new ArrayList<Integer>();
-	
-	private ArrayList<Verse> verseList = new ArrayList<Verse>();	// to lazy loading on demand
-	
+	private TreeMap <Integer, Verse> verses = new TreeMap<Integer, Verse>();
 	private Book book;
 	
 	
@@ -20,29 +16,51 @@ public class Chapter {
 	}
 	
 	public String getText() {
-		if (text == null && verseList.size() > 0) {
+		if (text == null && verses.size() > 0) {
 			StringBuilder buffer = new StringBuilder();
-			for (Verse verse : verseList) {
-				buffer.append(verse.getText());
+			for (Integer verseNumber : verses.keySet()) {
+				buffer.append(verses.get(verseNumber).getText());
 			}
 			text = buffer.toString();
 		}
 		return text;
 	}
 	
+	public String getText(int fromVerse, int toVerse) {
+		StringBuilder buffer = new StringBuilder();
+		for (int verseNumber = fromVerse; verseNumber <= toVerse; verseNumber++) {
+			Verse ver = verses.get(verseNumber);
+			if (ver != null) {
+				buffer.append(ver.getText());
+			}
+		}
+		return buffer.toString();
+	}
+	
 	public ArrayList<Integer> getVerseNumbers() {
+		ArrayList<Integer> verseNumbers = new ArrayList<Integer>();
+		for (Integer verse : verses.keySet()) {
+			verseNumbers.add(verse);
+		}
 		return verseNumbers;
 	}
 
 	public ArrayList<Verse> getVerseList() {
+		ArrayList<Verse> verseList = new ArrayList<Verse>();
+		for (Integer verse : verses.keySet()) {
+			verseList.add(verses.get(verse));
+		}
 		return verseList;
 	}
 	
-	public Chapter(Book book, Integer number, ArrayList<Integer> verseNumbers, ArrayList<Verse> verseList) {
+	public Chapter(Book book, Integer number, ArrayList<Verse> verseList) {
 		this.book = book;
 		this.number = number;
-		this.verseNumbers = verseNumbers;
-		this.verseList = verseList;
+		
+		Integer verseNumber = 1;
+		for (Verse verse : verseList) {
+			verses.put(verseNumber++, verse);
+		}
 	}
 	
 	public Book getBook() {

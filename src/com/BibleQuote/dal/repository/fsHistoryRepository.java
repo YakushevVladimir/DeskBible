@@ -19,7 +19,7 @@
  *  
  */
 
-package com.BibleQuote.managers.History;
+package com.BibleQuote.dal.repository;
 
 import java.io.File;
 import java.io.FileInputStream;

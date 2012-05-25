@@ -8,7 +8,7 @@ import java.util.Collection;
 import android.util.Log;
 
 import com.BibleQuote.dal.FsLibraryContext;
-import com.BibleQuote.entity.Bible.BibleReference;
+import com.BibleQuote.entity.BibleReference;
 import com.BibleQuote.exceptions.BookNotFoundException;
 import com.BibleQuote.exceptions.FileAccessException;
 import com.BibleQuote.models.Chapter;

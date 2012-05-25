@@ -8,6 +8,12 @@ import com.BibleQuote.utils.NotifyDialog;
 
 public class ExceptionHelper {
 
+	public static void onException(Exception ex, Context context, String TAG){
+		String message = ex.getMessage();
+		Log.e(TAG, message);
+		new NotifyDialog(message, context).show();	
+	}
+	
 	public static void onOpenModuleException(OpenModuleException ex, Context context, String TAG) {
 		String moduleId = ex.getModuleId();
 		if (moduleId == null) moduleId = "";

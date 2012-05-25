@@ -9,7 +9,6 @@ public class DataConstants {
    private static final String APP_PACKAGE_NAME = "com.biblequote";
    private static final String APP_DIR_NAME = "BibleQuote";
    private static final String FS_DATA_DIR_NAME = "modules";
-   private static final String FS_OTHER_DIR_NAME = "modules";
    private static final String DB_DATA_DIR_NAME = "databases";
    
    public  static final String DB_LIBRARY_NAME = "library.db";
@@ -25,8 +24,8 @@ public class DataConstants {
    public static final String FS_EXTERNAL_DATA_PATH = Environment.getExternalStorageDirectory() + File.separator 
 		   + APP_DIR_NAME + File.separator + DataConstants.FS_DATA_DIR_NAME;
 
-   public static final String FS_EXTERNAL_OTHER_PATH = Environment.getExternalStorageDirectory() + File.separator 
-		   + APP_DIR_NAME + File.separator + DataConstants.FS_OTHER_DIR_NAME;
+   public static final String FS_APP_DIR_NAME = Environment.getExternalStorageDirectory() + File.separator 
+		   + APP_DIR_NAME;
 
    public static final String DB_EXTERNAL_DATA_PATH = Environment.getExternalStorageDirectory() + File.separator 
 		   + APP_DIR_NAME + File.separator + DataConstants.DB_DATA_DIR_NAME;

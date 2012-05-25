@@ -18,29 +18,12 @@
 -->
 <resources>
     <string name="app_name">Библия</string>
-    <!-- Dash Board -->
-    <string name="db_bibles">Библия</string>
-    <string name="db_libraries">Библиотека</string>
-    <string name="db_bookmarks">Закладки</string>
-    <string name="db_history">История</string>
-    <string name="db_notes">Заметки</string>
-    <string name="db_plans">Планы чтения</string>
-    <string name="db_settings">Настройки</string>
-    <string name="db_search">Поиск</string>
-    <string name="db_parallels">Ссылки</string>
-    <string name="db_help">Помощь</string>
-    <!-- Settings -->
-    <string name="category_reader">Окно чтения</string>
     <string name="text_size">Размер шрифта</string>
     <string name="current_text_size">Текущий размер шрифта: %1$d</string>
     <string name="text_color">Цвет текста</string>
     <string name="background">Цвет фона</string>
     <string name="text_color_summary">Выберите цвет шрифта</string>
     <string name="background_summary">Выберите цвет фона</string>
-    <string name="settings_category_other">Прочее</string>
-    <string name="split_verse">Разбивать стихи</string>
-    <string name="split_verse_summary_on">Принудительно разбивать стихи</string>
-    <string name="split_verse_summary_off">Выводить стихи как есть</string>
     <string name="disable_auto_screen_rotation">Отключить автоматический поворот экрана</string>
     <string name="may_need_to_restart">Может потребоваться перезапуск</string>
     <string name="read_mode_by_default">Режим чтения по-умолчанию</string>
@@ -49,17 +32,12 @@
     <string name="category_reader_other">Прочие</string>
     <string name="category_reader_other_history_size">Размер истории</string>
     <string name="category_reader_other_history_size_summary">Текущий размер истории: %1$s</string>
-    <!-- Menu -->
     <string name="menu_night_day_mode">Режим день \ ночь</string>
     <string name="menu_favorites">Закладки</string>
     <string name="menu_history">История</string>
     <string name="menu_search">Поиск</string>
     <string name="menu_help">Помощь</string>
     <string name="menu_settings">Настройки</string>
-    <!-- Reader -->
-    <string name="fav_add_bookmarks">Закладка</string>
-    <string name="parallels">Ссылки</string>
-    <!-- Miscellaneous -->
     <string name="find">Найти</string>
     <string name="menu">Меню</string>
     <string name="cancel">Отмена</string>
@@ -75,16 +53,12 @@
     <string name="results">результатов</string>
     <string name="share">Поделиться</string>
     <string name="copy">Копировать</string>
-    <!-- Favorities -->
-    <string name="favorites">Закладки</string>
     <string name="fav_question_add_favorities">Добавить закладку</string>
     <string name="fav_question_del_fav">Удалить эту закладку?</string>
     <string name="fav_sort_alphabetically">Сортировка</string>
     <string name="fav_delete_all">Очистить</string>
     <string name="fav_delete_all_question">Вы уверены, что хотите удалить все закладки?</string>
-    <string name="db_parallels">Parallels</string>
     <string name="about">О программе</string>
-    <string name="category_reports">Отчеты об ошибках</string>
     <string name="app_about_dev_label">Разработчики:</string>
     <string name="exception_open_module">Некорректный модуль %1$s(%2$s)</string>
     <string name="messageRefresh">Обновление...</string>
@@ -102,4 +76,21 @@
     <string name="app_about_thanks_label">Спасибо:</string>
     <string name="dialog_color_picker">Выберите цвет</string>
     <string name="press_color_to_apply">Нажмите для выбора</string>
+    <string name="settings">Настройки</string>
+    <string name="help">Помощь</string>
+    <string name="search">Поиск</string>
+    <string name="history">История</string>
+    <string name="bookmarks">Закладки</string>
+    <string name="library">Библиотека</string>
+    <string name="cross_reference">Перекрестные ссылки</string>
+    <string name="cross_references_display_context">Отображать контекст</string>
+    <string name="cross_references_display_context_summary">Отображать контекст в списке ссылок</string>
+    <string name="references">Ссылки</string>
+    <string name="preference_screen_reader_summary">Настройки отображения текста</string>
+    <string name="preference_screen_cross_references">Перекрестные ссылки</string>
+    <string name="preference_screen_reader">Окно чтения</string>
+    <string name="enabled">Включено</string>
+    <string name="volume_butons_to_scroll">Прокрутка кнопками громкости</string>
+    <string name="disabled">Отключено</string>
+    <string name="text_align_justify">Выравнивать текст по ширине</string>
 </resources>

@@ -35,8 +35,8 @@ import android.widget.SimpleAdapter;
 
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
+import com.BibleQuote.entity.BibleReference;
 import com.BibleQuote.entity.ItemList;
-import com.BibleQuote.entity.Bible.BibleReference;
 import com.BibleQuote.exceptions.BookDefinitionException;
 import com.BibleQuote.exceptions.BookNotFoundException;
 import com.BibleQuote.exceptions.BooksDefinitionException;

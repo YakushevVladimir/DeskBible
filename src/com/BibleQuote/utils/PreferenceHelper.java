@@ -108,4 +108,25 @@ public class PreferenceHelper {
 			return color;
 		}
 	}
+	
+	public static boolean crossRefViewDetails() {
+		if (preference == null) {
+			return false;
+		}
+		return preference.getBoolean("cross_reference_display_context", false);
+	}
+	
+	public static boolean volumeButtonsToScroll() {
+		if (preference == null) {
+			return false;
+		}
+		return preference.getBoolean("volume_butons_to_scroll", false);
+	}
+
+	public static boolean textAlignJustify() {
+		if (preference == null) {
+			return false;
+		}
+		return preference.getBoolean("text_align_justify", false);
+	}
 }

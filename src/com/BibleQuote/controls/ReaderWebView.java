@@ -151,6 +151,9 @@ public class ReaderWebView extends WebView
 		style.append("<style type=\"text/css\">\r\n");
 		style.append("body {\r\n");
 		style.append("padding-bottom: 50px;\r\n");
+		if (PreferenceHelper.textAlignJustify()) {
+			style.append("text-align: justify;\r\n");
+		}
 		style.append("color: " + textColor + ";\r\n");
 		style.append("font-size: " + textSize + "pt;\r\n");
 		style.append("background: " + backColor + ";\r\n");

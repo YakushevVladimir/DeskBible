@@ -29,6 +29,7 @@ import java.util.TreeSet;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -50,7 +51,7 @@ import android.widget.Toast;
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
 import com.BibleQuote.controls.ReaderWebView;
-import com.BibleQuote.entity.Bible.BibleReference;
+import com.BibleQuote.entity.BibleReference;
 import com.BibleQuote.exceptions.BookNotFoundException;
 import com.BibleQuote.exceptions.ExceptionHelper;
 import com.BibleQuote.exceptions.OpenModuleException;
@@ -58,6 +59,7 @@ import com.BibleQuote.listeners.IReaderViewListener;
 import com.BibleQuote.managers.AsyncManager;
 import com.BibleQuote.managers.AsyncOpenChapter;
 import com.BibleQuote.managers.Librarian;
+import com.BibleQuote.utils.DevicesKeyCodes;
 import com.BibleQuote.utils.OnTaskCompleteListener;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.Task;
@@ -67,7 +69,7 @@ public class ReaderActivity extends GDActivity implements OnTaskCompleteListener
 	private static final String TAG = "ReaderActivity";
 	private static final int VIEW_CHAPTER_NAV_LENGHT = 3000;
 	
-	private static final String VIEW_PARALLELS = "com.BibleQuote.intent.action.VIEW_PARALLELS";
+	private static final String VIEW_REFERENCE = "com.BibleQuote.intent.action.VIEW_REFERENCE";
 
 	private Librarian myLibrarian;
 	private AsyncManager mAsyncManager;
@@ -91,6 +93,7 @@ public class ReaderActivity extends GDActivity implements OnTaskCompleteListener
 		setActionBarContentView(R.layout.reader);
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		runtimeOrientation = getScreenOrientation();
+		setVolumeControlStream(AudioManager.STREAM_MUSIC);
 		
 		initActionBar();
 		prepareQuickActionBar();
@@ -176,10 +179,10 @@ public class ReaderActivity extends GDActivity implements OnTaskCompleteListener
 	
    private void prepareQuickActionBar() {
     	textQAction = new QuickActionBar(this);
-    	textQAction.addQuickAction(new QuickAction(this, R.drawable.ic_action_bar_bookmark, R.string.fav_add_bookmarks));
+    	textQAction.addQuickAction(new QuickAction(this, R.drawable.ic_action_bar_bookmark, R.string.bookmarks));
     	textQAction.addQuickAction(new QuickAction(this, R.drawable.ic_action_bar_share, R.string.share));
     	textQAction.addQuickAction(new QuickAction(this, R.drawable.ic_action_bar_clipboard, R.string.copy));
-    	textQAction.addQuickAction(new QuickAction(this, R.drawable.ic_action_bar_parallels, R.string.parallels));
+    	textQAction.addQuickAction(new QuickAction(this, R.drawable.ic_action_bar_parallels, R.string.references));
     	textQAction.setOnQuickActionClickListener(mActionListener);
     }
     
@@ -224,7 +227,7 @@ public class ReaderActivity extends GDActivity implements OnTaskCompleteListener
 			    
 			case 3:
 				myLibrarian.setCurrentVerseNumber(selVerses.first());
-				Intent intParallels = new Intent(VIEW_PARALLELS);
+				Intent intParallels = new Intent(VIEW_REFERENCE);
 				intParallels.putExtra("linkOSIS", myLibrarian.getCurrentOSISLink().getPath());
 				startActivityForResult(intParallels, R.id.action_bar_parallels);
 				break;
@@ -463,11 +466,13 @@ public class ReaderActivity extends GDActivity implements OnTaskCompleteListener
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+		if ((keyCode == KeyEvent.KEYCODE_VOLUME_UP && PreferenceHelper.volumeButtonsToScroll())
+				|| DevicesKeyCodes.KeyCodeUp(keyCode)) {
 			vWeb.pageUp(false);
 			viewChapterNav();
 			return true;
-		} else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+		} else if ((keyCode == KeyEvent.KEYCODE_VOLUME_DOWN && PreferenceHelper.volumeButtonsToScroll())
+				|| DevicesKeyCodes.KeyCodeDown(keyCode)) {
 			vWeb.pageDown(false);
 			viewChapterNav();
 			return true;
@@ -488,8 +493,6 @@ public class ReaderActivity extends GDActivity implements OnTaskCompleteListener
 				if (t.isSuccess()) {
 					chapterInHTML = myLibrarian.getChapterHTMLView();
 					setTextinWebView();
-					// TODO Sergey: open the next chapter in background
-					//mAsyncManager.setupTask(new AsyncOpenChapter(progressMessage, false, myLibrarian, OSISLink), this);
 				} else {
 					Exception e = t.getException();
 					if (e instanceof OpenModuleException) {

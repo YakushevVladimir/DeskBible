@@ -22,7 +22,7 @@
 	android:versionCode="38"
 	android:installLocation="auto">
 	
-	<uses-sdk android:targetSdkVersion="10" android:minSdkVersion="7" />
+	<uses-sdk android:targetSdkVersion="10" android:minSdkVersion="4" />
 	
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -44,18 +44,18 @@
             </intent-filter>
         </activity>
 
-		<activity android:name=".activity.LibraryActivity" android:label="@string/db_libraries" />
-		<activity android:name=".activity.BookmarksActivity" android:label="@string/db_bookmarks" />
-		<activity android:name=".activity.HistoryActivity" android:label="@string/db_history" />
-		<activity android:name=".activity.SearchActivity" android:label="@string/db_search" />
-		<activity android:name=".activity.SettingsActivity" android:label="@string/db_settings" />
+		<activity android:name=".activity.LibraryActivity" android:label="@string/library" />
+		<activity android:name=".activity.BookmarksActivity" android:label="@string/bookmarks" />
+		<activity android:name=".activity.HistoryActivity" android:label="@string/history" />
+		<activity android:name=".activity.SearchActivity" android:label="@string/search" />
+		<activity android:name=".activity.SettingsActivity" android:label="@string/settings" />
 		<activity android:name=".activity.AboutActivity" android:label="@string/about"  />
-		<activity android:name=".activity.HelpActivity" android:label="@string/db_help"  />
+		<activity android:name=".activity.HelpActivity" android:label="@string/help"  />
 		<activity android:name=".activity.ReaderActivity" android:configChanges="keyboardHidden|orientation" />
 		
-		<activity android:name=".activity.ParallelsActivity" android:label="@string/db_parallels" >
+		<activity android:name=".activity.CrossReferenceActivity" android:label="@string/cross_reference" >
 			<intent-filter>
-			    <action android:name="com.BibleQuote.intent.action.VIEW_PARALLELS"/>
+			    <action android:name="com.BibleQuote.intent.action.VIEW_REFERENCE"/>
 			    <category android:name="android.intent.category.DEFAULT"/>
 			</intent-filter>    
 		</activity>

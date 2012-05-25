@@ -19,35 +19,31 @@
 
 <greendroid.widget.itemview.SubtitleItemView
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	style="?attr/gdSubtitleItemViewStyle"
+	android:layout_width="fill_parent"
 	android:layout_height="wrap_content"
-	android:minHeight="?attr/gdItemViewPreferredHeight"
-	android:paddingLeft="?attr/gdItemViewPreferredPaddingLeft"
 	android:background="@android:color/white"
-	android:orientation="vertical">
+	android:orientation="vertical"
+	android:paddingBottom="2dp">
 
 	<TextView
-		style="?attr/gdSubtitleItemViewStyleText"
 		android:id="@+id/gd_text"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:layout_weight="0.5"
 		android:textColor="@android:color/black"
 		android:gravity="bottom|left"
-		android:textSize="@dimen/text_size_large"
-		android:textStyle="bold"
+		android:textSize="@dimen/text_size_medium"
 		android:singleLine="true"
 		android:ellipsize="end" />
 
 	<TextView
-		style="?attr/gdSubtitleItemViewStyleSubtitle"
 		android:id="@+id/gd_subtitle"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:layout_weight="0.5"
 		android:gravity="top|left"
 		android:textColor="#ff5d5d5d"
-		android:textSize="@dimen/text_size_medium"
+		android:textSize="@dimen/text_size_small"
 		android:ellipsize="end" />
 
 </greendroid.widget.itemview.SubtitleItemView>

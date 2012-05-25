@@ -19,14 +19,11 @@
 <resources>
     <string name="app_name">Biblia</string>
     <!-- Tab's -->
-    <string name="favorites">Marcadores</string>
     <!-- Settings -->
-    <string name="category_reader">Configuración de la ventana de lectura</string>
     <string name="text_size">El tamaño de fuente</string>
     <string name="current_text_size">Tamaño del texto actual:: %1$d</string>
     <string name="text_color">Color del texto</string>
     <string name="background">Color del fondo</string>
-    <string name="split_verse">Dividir verso por verso</string>
     <string name="text_color_summary">Seleccione el tamaño de fuente</string>
     <string name="background_summary">Seleccione el color del fondo</string>
     <!-- Miscellaneous -->
@@ -38,36 +35,23 @@
     <string name="select_module">Seleccione un módulo</string>
     <string name="added">Añadido</string>
     <string name="removed">Eliminado</string>
-    <string name="split_verse_summary_off">Mostrar el verso en un módulo</string>
     <string name="menu_night_day_mode">Nigth / día de modo de</string>
     <string name="fav_delete_all_question">¿Está seguro que desea eliminar todos los marcadores?</string>
-    <string name="db_notes">Notas</string>
     <string name="messageLoad">De carga...</string>
     <string name="share">Compartir</string>
     <string name="disable_auto_screen_rotation">Desactive la auto-rotación de pantalla</string>
-    <string name="db_parallels">Paralelas</string>
-    <string name="split_verse_summary_on">División forzada verso en el texto</string>
     <string name="results">resultados</string>
-    <string name="db_plans">Planes</string>
-    <string name="fav_add_bookmarks">Marcadores</string>
-    <string name="db_settings">Configuración</string>
-    <string name="settings_category_other">Otro</string>
     <string name="may_need_to_restart">Posible que deba reiniciar</string>
     <string name="fav_delete_all">Eliminar todos los</string>
     <string name="messageLoadCanceled">Carga cancelado</string>
     <string name="menu_favorites">Marcadores</string>
     <string name="messageSearchCanceled">Buscar cancelado</string>
-    <string name="db_bookmarks">Marcadores</string>
-    <string name="db_libraries">Biblioteca</string>
     <string name="fav_sort_alphabetically">Tipo</string>
     <string name="messageSearch">Buscar ...</string>
     <string name="menu_settings">Configuración</string>
     <string name="menu_search">Búsqueda</string>
-    <string name="db_search">Búsqueda</string>
-    <string name="db_bibles">Biblia</string>
     <string name="copy">Copia</string>
     <string name="menu_help">Ayuda</string>
-    <string name="db_help">Ayuda</string>
     <string name="app_about_design_label">Diseño:</string>
     <string name="bookmark_invalid_removed">No válido marcar eliminado</string>
     <string name="category_reader_other_history_size_summary">Tamaño de la historia actual: %1$s</string>
@@ -75,7 +59,6 @@
     <string name="category_reader_appearance">Apariencia</string>
     <string name="category_reader_other_history_size">Historia de tamaño</string>
     <string name="category_reader_other">Otro</string>
-    <string name="db_history">Historia</string>
     <string name="read_mode_by_default_summary">Utilice el modo de lectura por defecto</string>
     <string name="app_about_thanks_label">Gracias:</string>
     <string name="about">Sobre</string>
@@ -84,7 +67,11 @@
     <string name="messageLoadModules">Los módulos de carga ...</string>
     <string name="read_mode_by_default">Modo de lectura de forma predeterminada</string>
     <string name="category_reader_summary">Lector de configuración de la ventana</string>
-    <string name="category_reports">Los informes de choques</string>
     <string name="app_about_dev_label">Desarrolladores:</string>
-    <string name="parallels">Paralelas</string>
+    <string name="settings">Configuración</string>
+    <string name="help">Ayuda</string>
+    <string name="search">Búsqueda</string>
+    <string name="history">Historia</string>
+    <string name="bookmarks">Marcadores</string>
+    <string name="library">Biblioteca</string>
 </resources>

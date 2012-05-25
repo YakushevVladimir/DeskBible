@@ -1,4 +1,4 @@
-package com.BibleQuote.entity.Bible;
+package com.BibleQuote.entity;
 
 import android.util.Log;
 
@@ -33,16 +33,17 @@ public class BibleReference {
 			if (linkParam.length >= 5) {
 				// BibleLinkPath extended path format = ds:fs;id:sd-card/mnt/biblequote/modules/rst;m:RST;b:MARK;ch:1;v:1
 				try {
-					moduleDatasource = linkParam[0].split(SEP_VALUES)[1];
-					moduleDatasourceID = linkParam[1].split(SEP_VALUES)[1];
-					moduleID = linkParam[2].split(SEP_VALUES)[1];
-					bookID = linkParam[3].split(SEP_VALUES)[1];
-					chapterNumber = 1;
-					fromVerse = 1;
+					this.moduleDatasource = linkParam[0].split(SEP_VALUES)[1];
+					this.moduleDatasourceID = linkParam[1].split(SEP_VALUES)[1];
+					this.moduleID = linkParam[2].split(SEP_VALUES)[1];
+					this.bookID = linkParam[3].split(SEP_VALUES)[1];
+					this.bookName = this.bookID;
+					this.chapterNumber = 1;
+					this.fromVerse = 1;
 					try {
-						chapterNumber = Integer.parseInt(linkParam[4].split(SEP_VALUES)[1]);
-						fromVerse = Integer.parseInt(linkParam[5].split(SEP_VALUES)[1]);
-						toVerse = fromVerse;
+						this.chapterNumber = Integer.parseInt(linkParam[4].split(SEP_VALUES)[1]);
+						this.fromVerse = Integer.parseInt(linkParam[5].split(SEP_VALUES)[1]);
+						this.toVerse = fromVerse;
 					} catch (NumberFormatException  e) {}
 				} catch (Exception e) {
 					Log.e(TAG, String.format("OSISLink(%1$s)", BibleLinkPath), e);
@@ -52,14 +53,15 @@ public class BibleReference {
 				// BibleLinkPath short path format    
 				linkParam = BibleLinkPath.split(SEP_SHORT);
 				if (linkParam.length >= 2) {
-					moduleID = linkParam[0];
-					bookID = linkParam[1];
-					chapterNumber = 1;
-					fromVerse = 1;
+					this.moduleID = linkParam[0];
+					this.bookID = linkParam[1];
+					this.bookName = this.bookID;
+					this.chapterNumber = 1;
+					this.fromVerse = 1;
 					try {
-						chapterNumber = (linkParam.length >= 3 ?  Integer.parseInt(linkParam[2]) : 1);
-						fromVerse = (linkParam.length >= 4 ?  Integer.parseInt(linkParam[3]) : 1);
-						toVerse = fromVerse;
+						this.chapterNumber = (linkParam.length >= 3 ?  Integer.parseInt(linkParam[2]) : 1);
+						this.fromVerse = (linkParam.length >= 4 ?  Integer.parseInt(linkParam[3]) : 1);
+						this.toVerse = fromVerse;
 					} catch (NumberFormatException  e) {
 					}
 				}
@@ -73,6 +75,7 @@ public class BibleReference {
 		this.moduleDatasourceID = moduleDatasourceID;
 		this.moduleID = moduleID;
 		this.bookID = bookID;
+		this.bookName = bookID;
 		this.chapterNumber = chapterNumber;
 		this.fromVerse = verseNumber;
 		this.toVerse = verseNumber;
@@ -105,6 +108,7 @@ public class BibleReference {
 			int fromVerse, int toVerse) {
 		this.moduleID = moduleID;
 		this.bookID = bookID;
+		this.bookName = bookID;
 		this.chapterNumber = chapter;
 		this.fromVerse = fromVerse;
 		this.toVerse = toVerse;
@@ -176,10 +180,27 @@ public class BibleReference {
 
 	@Override
 	public String toString() {
-		return String.format("%1$s:%2$s %3$s:%4$s", moduleID, bookID, chapterNumber, fromVerse);
+		return String.format("%1$s:%2$s %3$s:%4$s", moduleID, bookName, chapterNumber, fromVerse);
 	}
 
 	public String getBookFullName() {
 		return bookName;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == this) {
+			return true;
+		} else if (obj == null) {
+			return false;
+		} else if (!(getClass() == obj.getClass())) {
+			return false;
+		} else {
+			BibleReference tmp = (BibleReference) obj;
+			if (this.getPath().equals(tmp.getPath()))
+				return true;
+			else
+				return false;
+		}
 	}
 }

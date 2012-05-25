@@ -11,7 +11,7 @@ import android.content.Context;
 import com.BibleQuote.models.Book;
 import com.BibleQuote.models.Chapter;
 import com.BibleQuote.models.Module;
-import com.BibleQuote.utils.ChapterPool;
+import com.BibleQuote.utils.CachePool;
 
 public class LibraryContext {
 
@@ -19,7 +19,7 @@ public class LibraryContext {
 	
 	public TreeMap<String, Module> moduleSet = new TreeMap<String, Module>();
 	public Map<String, Book> bookSet = Collections.synchronizedMap(new LinkedHashMap<String, Book>());
-	public Map<String, Chapter> chapterPool = Collections.synchronizedMap(new ChapterPool());
+	public Map<String, Chapter> chapterPool = Collections.synchronizedMap(new CachePool<Chapter>());
 
 	public LibraryContext(Context context) {
 		this.context = context; 

@@ -19,7 +19,7 @@ package com.BibleQuote.activity;
 import greendroid.app.GDActivity;
 import greendroid.widget.ItemAdapter;
 import greendroid.widget.item.Item;
-import greendroid.widget.item.SubtitleItem;
+import greendroid.widget.item.SubtextItem;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -92,7 +92,7 @@ public class SearchActivity extends GDActivity implements OnTaskCompleteListener
 			String humanLink;
 			try {
 				humanLink = myLibararian.getOSIStoHuman(key);
-				searchItems.add(new SubtitleItem(humanLink, searchResults.get(key)));
+				searchItems.add(new SubtextItem(humanLink, searchResults.get(key)));
 			} catch (BookNotFoundException e) {
 				Log.i(TAG, e.toString());
 			} catch (OpenModuleException e) {
@@ -102,7 +102,7 @@ public class SearchActivity extends GDActivity implements OnTaskCompleteListener
 		ItemAdapter adapter = new ItemAdapter(this, searchItems);
 		LV.setAdapter(adapter);
 
-		String title = getResources().getString(R.string.db_search);
+		String title = getResources().getString(R.string.search);
 		if (searchResults.size() > 0) {
 			title += " (" + searchResults.size() + " "
 					+ getResources().getString(R.string.results) + ")";
@@ -148,7 +148,7 @@ public class SearchActivity extends GDActivity implements OnTaskCompleteListener
 
 	private AdapterView.OnItemClickListener search_OnClick = new AdapterView.OnItemClickListener() {
 		public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-			String humanLink = ((SubtitleItem) LV.getAdapter()
+			String humanLink = ((SubtextItem) LV.getAdapter()
 					.getItem(position)).text;
 
 			Intent intent = new Intent();

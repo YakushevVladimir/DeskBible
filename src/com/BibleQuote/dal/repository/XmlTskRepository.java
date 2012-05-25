@@ -1,4 +1,19 @@
-package com.BibleQuote.utils.BibleReference;
+/*
+ * Copyright (C) 2011 Scripture Software (http://scripturesoftware.org/)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.BibleQuote.dal.repository;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -11,15 +26,16 @@ import java.io.UnsupportedEncodingException;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
+import com.BibleQuote.exceptions.TskNotFoundException;
 import com.BibleQuote.utils.DataConstants;
 
 import android.content.res.XmlResourceParser;
 import android.util.Log;
 import android.util.Xml;
 
-public class TskXmlRepository implements ITskRepository {
+public class XmlTskRepository implements ITskRepository {
 	
-	final static String TAG = "TskXmlRepository";
+	final static String TAG = "XmlTskRepository";
 	
 	final static String DOCUMENT = "tsk";
 	final static String BOOK = "book";
@@ -27,14 +43,17 @@ public class TskXmlRepository implements ITskRepository {
 	final static String VERSE = "verse";
 	
 	@Override
-	public String getReferences(String book, String chapter, String verse) {
+	public String getReferences(String book, String chapter, String verse) throws TskNotFoundException {
 		
 		String references = "";
 		
 		XmlPullParser parser;
 		try {
 			parser = getParser();
-		} catch (Exception e) {
+		} catch (UnsupportedEncodingException e) {
+			Log.e(TAG, e.toString());
+			return references;
+		} catch (XmlPullParserException e) {
 			Log.e(TAG, e.toString());
 			return references;
 		}
@@ -90,12 +109,17 @@ public class TskXmlRepository implements ITskRepository {
 		return references;
 	}
 
-	private XmlPullParser getParser() throws XmlPullParserException, FileNotFoundException, UnsupportedEncodingException {
+	private XmlPullParser getParser() throws XmlPullParserException, UnsupportedEncodingException, TskNotFoundException {
 		
-		File tskDir = new File(DataConstants.FS_EXTERNAL_OTHER_PATH);
+		File tskDir = new File(DataConstants.FS_APP_DIR_NAME);
 		File tsk = new File(tskDir, "tsk.xml");
 		
-		InputStreamReader iReader = new InputStreamReader(new FileInputStream(tsk), "UTF8");
+		InputStreamReader iReader;
+		try {
+			iReader = new InputStreamReader(new FileInputStream(tsk), "UTF8");
+		} catch (FileNotFoundException e) {
+			throw new TskNotFoundException();
+		}
 		BufferedReader buf = new BufferedReader(iReader);
 		XmlPullParser parser = Xml.newPullParser();
 		parser.setInput(buf);
