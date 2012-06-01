@@ -86,7 +86,7 @@ public class FsBookController implements IBookController {
 		
 		// Подготовим регулярное выражение для поиска
 		String regQuery = "";
-		String[] words = query.toLowerCase().split("\\s+");
+		String[] words = query.toLowerCase().replaceAll("[^\\s\\w]", "").split("\\s+");
 		for (String currWord : words) {
 			regQuery += (regQuery.equals("") ? "" : "\\s(.)*?") + currWord;
 		}

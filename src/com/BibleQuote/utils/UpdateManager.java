@@ -14,6 +14,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import com.BibleQuote.R;
+import com.BibleQuote.exceptions.BQUniversalException;
+import com.BibleQuote.exceptions.ExceptionHelper;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -58,7 +60,7 @@ public class UpdateManager {
 			}
 		}
 		
-		if (currVersionCode < 38) {
+		if (currVersionCode < 39) {
 			Log.i(TAG, "Update to version 0.05.01");
 			saveTSK(context);
 		}
@@ -67,15 +69,15 @@ public class UpdateManager {
 			int versionCode = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode;
 			Settings.edit().putInt("versionCode", versionCode).commit();
 		} catch (NameNotFoundException e) {
-			Settings.edit().putInt("versionCode", 30).commit();
+			Settings.edit().putInt("versionCode", 39).commit();
 		}
 	}
 
 	private static void saveExternalModule(Context context) {
 		try {
-			InputStream moduleStream = context.getResources().openRawResource(R.raw.rst);
+			InputStream moduleStream = context.getResources().openRawResource(R.raw.bible);
 			File moduleDir = new File(DataConstants.FS_EXTERNAL_DATA_PATH);
-			OutputStream newModule = new FileOutputStream(new File(moduleDir, "rst.zip"));
+			OutputStream newModule = new FileOutputStream(new File(moduleDir, "bible.zip"));
 			byte[] buf = new byte[1024];
 			int len;
 			while ((len = moduleStream.read(buf)) > 0) {
@@ -84,9 +86,9 @@ public class UpdateManager {
 			moduleStream.close();
 			newModule.close();
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			ExceptionHelper.onException(new BQUniversalException("Error import internal bibles module!"), context, TAG);
 		} catch (IOException e) {
-			e.printStackTrace();
+			ExceptionHelper.onException(new BQUniversalException("Error import internal bibles module!"), context, TAG);
 		}
 	}
 
@@ -110,22 +112,26 @@ public class UpdateManager {
 			if (isReader == null) {
 				return;
 			}
-			
 			BufferedReader tsk_br = new BufferedReader(isReader);
-			File tskDir = new File(DataConstants.FS_APP_DIR_NAME);
-			BufferedWriter tsk_bw = new BufferedWriter(new FileWriter(new File(tskDir, "tsk.xml")));
+			
+			File tskFile = new File(DataConstants.FS_APP_DIR_NAME, "tsk.xml");
+			if (tskFile.exists()) {
+				tskFile.delete();
+			}			
+			BufferedWriter tsk_bw = new BufferedWriter(new FileWriter(tskFile));
 			
 			char[] buf = new char[1024];
 			int len;
 			while ((len = tsk_br.read(buf)) > 0) {
 				tsk_bw.write(buf, 0, len);
 			}
+			tsk_bw.flush();
 			tsk_bw.close();
 			tsk_br.close();
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			ExceptionHelper.onException(new BQUniversalException("Error import cross-references library!"), context, TAG);
 		} catch (IOException e) {
-			e.printStackTrace();
+			ExceptionHelper.onException(new BQUniversalException("Error import cross-references library!"), context, TAG);
 		}
 	}
 }

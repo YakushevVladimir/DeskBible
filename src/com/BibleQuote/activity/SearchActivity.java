@@ -48,6 +48,7 @@ import com.BibleQuote.exceptions.OpenModuleException;
 import com.BibleQuote.managers.AsyncManager;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.utils.OnTaskCompleteListener;
+import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.Task;
 
 public class SearchActivity extends GDActivity implements OnTaskCompleteListener {
@@ -74,7 +75,11 @@ public class SearchActivity extends GDActivity implements OnTaskCompleteListener
 		mAsyncManager.handleRetainedTask(getLastNonConfigurationInstance(), this);
 		
 		progressMessage = getResources().getString(R.string.messageSearch);
-		searchResults = myLibararian.getSearchResults();
+		
+		String searchModuleID = PreferenceHelper.restoreStateString("searchModuleID");
+		if (myLibararian.getModuleID().equalsIgnoreCase(searchModuleID)) {
+			searchResults = myLibararian.getSearchResults();
+		}
 
 		LV = (ListView) findViewById(R.id.SearchLV);
 		LV.setOnItemClickListener(search_OnClick);
@@ -101,6 +106,14 @@ public class SearchActivity extends GDActivity implements OnTaskCompleteListener
 		}
 		ItemAdapter adapter = new ItemAdapter(this, searchItems);
 		LV.setAdapter(adapter);
+
+		String searchModuleID = PreferenceHelper.restoreStateString("searchModuleID");
+		if (myLibararian.getModuleID().equalsIgnoreCase(searchModuleID)) {
+			int changeSearchPosition = PreferenceHelper.restoreStateInt("changeSearchPosition");
+			if (changeSearchPosition < searchItems.size()) {
+				LV.setSelection(changeSearchPosition);
+			}
+		}
 
 		String title = getResources().getString(R.string.search);
 		if (searchResults.size() > 0) {
@@ -143,14 +156,16 @@ public class SearchActivity extends GDActivity implements OnTaskCompleteListener
 		s2 = (Spinner) findViewById(R.id.ToBookCB);
 		s2.setAdapter(AA);
 		s2.setOnItemSelectedListener(onClick_ToBook);
-		s2.setSelection(AA.getCount() - 1);
+		
+		restoreSelectedPosition();
 	}
 
 	private AdapterView.OnItemClickListener search_OnClick = new AdapterView.OnItemClickListener() {
 		public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-			String humanLink = ((SubtextItem) LV.getAdapter()
-					.getItem(position)).text;
-
+			String humanLink = ((SubtextItem) LV.getAdapter().getItem(position)).text;
+			
+			PreferenceHelper.saveStateInt("changeSearchPosition", position);
+			
 			Intent intent = new Intent();
 			intent.putExtra("linkOSIS", myLibararian.getHumanToOSIS(humanLink));
 			setResult(RESULT_OK, intent);
@@ -169,6 +184,7 @@ public class SearchActivity extends GDActivity implements OnTaskCompleteListener
 			Toast.makeText(this, R.string.messageSearchCanceled,
 					Toast.LENGTH_LONG).show();
 		}
+		PreferenceHelper.saveStateInt("changeSearchPosition", 0);
 	}
 
 	private class StartSearch extends Task {
@@ -178,7 +194,7 @@ public class SearchActivity extends GDActivity implements OnTaskCompleteListener
 
 		@Override
 		protected void onPostExecute(Boolean result) {
-			viewSearchResult();
+			setAdapter();
 			super.onPostExecute(result);
 		}
 
@@ -212,11 +228,6 @@ public class SearchActivity extends GDActivity implements OnTaskCompleteListener
 		}
 	}
 
-	public void viewSearchResult() {
-		setAdapter();
-		myLibararian.setSearchResults(searchResults);
-	}
-
 	public void onSearchClick(View v) {
 		query = ((EditText) findViewById(R.id.SearchEdit)).getText().toString()
 				.trim();
@@ -230,7 +241,9 @@ public class SearchActivity extends GDActivity implements OnTaskCompleteListener
 			int toBook = s2.getSelectedItemPosition();
 			if (fromBook > toBook) {
 				s2.setSelection(fromBook);
+				toBook = fromBook;
 			}
+			saveSelectedPosition(fromBook, toBook);
 		}
 
 		public void onNothingSelected(AdapterView<?> arg0) {
@@ -244,7 +257,9 @@ public class SearchActivity extends GDActivity implements OnTaskCompleteListener
 			int toBook = s2.getSelectedItemPosition();
 			if (fromBook > toBook) {
 				s1.setSelection(toBook);
+				fromBook = toBook;
 			}
+			saveSelectedPosition(fromBook, toBook);
 		}
 
 		public void onNothingSelected(AdapterView<?> arg0) {
@@ -255,5 +270,34 @@ public class SearchActivity extends GDActivity implements OnTaskCompleteListener
 	protected void onPostResume() {
 		super.onPostResume();
 		SpinnerInit();
+	}
+
+	private void saveSelectedPosition(int fromBook, int toBook) {
+		PreferenceHelper.saveStateString("searchModuleID", myLibararian.getModuleID());
+		PreferenceHelper.saveStateInt("fromBook", fromBook);
+		PreferenceHelper.saveStateInt("toBook", toBook);
+	}
+
+	private void restoreSelectedPosition() {
+		String searchModuleID = PreferenceHelper.restoreStateString("searchModuleID");
+		int fromBook = 0;
+		int toBook = s2.getCount() - 1;
+		
+		if (myLibararian.getModuleID().equalsIgnoreCase(searchModuleID)) {
+			fromBook = PreferenceHelper.restoreStateInt("fromBook");
+			if (s1.getCount() <= fromBook) {
+				fromBook = 0;
+			}
+			
+			toBook = PreferenceHelper.restoreStateInt("toBook");
+			if (s2.getCount() <= toBook) {
+				toBook = s2.getCount() - 1;
+			}
+		}
+		
+		s1.setSelection(fromBook);
+		s2.setSelection(toBook);
+		
+		saveSelectedPosition(fromBook, toBook);
 	}
 }

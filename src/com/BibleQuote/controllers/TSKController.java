@@ -21,6 +21,7 @@ import java.util.Map;
 
 import com.BibleQuote.dal.repository.ITskRepository;
 import com.BibleQuote.entity.BibleReference;
+import com.BibleQuote.exceptions.BQUniversalException;
 import com.BibleQuote.exceptions.TskNotFoundException;
 import com.BibleQuote.utils.BibleLinkParser;
 import com.BibleQuote.utils.CachePool;
@@ -38,7 +39,7 @@ public class TSKController {
 		this.repository = repository;
 	}
 
-	public LinkedHashSet<BibleReference> getLinks(BibleReference reference) throws TskNotFoundException {
+	public LinkedHashSet<BibleReference> getLinks(BibleReference reference) throws TskNotFoundException, BQUniversalException {
 		if (bCrossReferenceCache.containsKey(reference.getPath())) {
 			return bCrossReferenceCache.get(reference.getPath());
 		}
@@ -50,7 +51,7 @@ public class TSKController {
 		return crossReference;
 	}
 
-	private String getParallels(BibleReference link) throws TskNotFoundException {
+	private String getParallels(BibleReference link) throws TskNotFoundException, BQUniversalException {
 		String book = link.getBookID();
 		String chapter = String.valueOf(link.getChapter());
 		String verse = String.valueOf(link.getFromVerse());

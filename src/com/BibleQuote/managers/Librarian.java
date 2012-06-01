@@ -40,6 +40,7 @@ import com.BibleQuote.dal.repository.fsHistoryRepository;
 import com.BibleQuote.entity.BibleBooksID;
 import com.BibleQuote.entity.BibleReference;
 import com.BibleQuote.entity.ItemList;
+import com.BibleQuote.exceptions.BQUniversalException;
 import com.BibleQuote.exceptions.BookDefinitionException;
 import com.BibleQuote.exceptions.BookNotFoundException;
 import com.BibleQuote.exceptions.BooksDefinitionException;
@@ -416,20 +417,17 @@ public class Librarian implements IChangeBooksListener  {
 	///////////////////////////////////////////////////////////////////////////
 	// SEARCH
 	
-	public void setSearchResults(LinkedHashMap<String, String> searchResults) {
-		this.searchResults = searchResults;
-	}
-
 	public LinkedHashMap<String, String> getSearchResults() {
-		return searchResults;
+		return this.searchResults;
 	}
 	
 	public LinkedHashMap<String, String> search(String query, String fromBook, String toBook) throws OpenModuleException, BookNotFoundException{
 		if (currModule == null) {
-			return new LinkedHashMap<String, String>();
+			this.searchResults = new LinkedHashMap<String, String>();
 		} else {
-			return bookCtrl.search(currModule, query, fromBook, toBook);
+			this.searchResults = bookCtrl.search(currModule, query, fromBook, toBook);
 		}
+		return searchResults;
 	}
 
 	
@@ -441,6 +439,22 @@ public class Librarian implements IChangeBooksListener  {
 			return "";
 		}
 		return currModule.getName();
+	}
+	
+	public CharSequence getModuleName() {
+		if (currModule == null) {
+			return "";
+		} else {
+			return currModule.getName();
+		}
+	}
+
+	public String getModuleID() {
+		if (currModule == null) {
+			return "";
+		} else {
+			return currModule.getID();
+		}
 	}
 
 	public String getBookFullName(String moduleID, String bookID) throws OpenModuleException{
@@ -484,14 +498,6 @@ public class Librarian implements IChangeBooksListener  {
 	public String getCurrentLink(boolean includeModuleID){
 		return (includeModuleID ? currModule.ShortName + ": " : "") 
 			+ currBook.getShortName() + " " + currChapterNumber;
-	}
-	
-	public CharSequence getModuleName() {
-		if (currModule == null) {
-			return "";
-		} else {
-			return currModule.getName();
-		}
 	}
 	
 	public BibleReference getCurrentOSISLink(){
@@ -664,16 +670,16 @@ public class Librarian implements IChangeBooksListener  {
 	}
 
 	public LinkedHashMap<String, BibleReference> getCrossReference(BibleReference bReference) 
-			throws TskNotFoundException {
+			throws TskNotFoundException, BQUniversalException {
 		
 		if (tskCtrl == null) {
 			tskCtrl = new TSKController(new XmlTskRepository());
 		}
 		
-		LinkedHashSet<BibleReference> paraLinks = tskCtrl.getLinks(bReference);
+		LinkedHashSet<BibleReference> csLinks = tskCtrl.getLinks(bReference);
 		
 		LinkedHashMap<String, BibleReference> parallels = new LinkedHashMap<String, BibleReference>();
-		for (BibleReference reference : paraLinks) {
+		for (BibleReference reference : csLinks) {
 			Book book;
 			try {
 				book = getBookByID(currModule, reference.getBookID());

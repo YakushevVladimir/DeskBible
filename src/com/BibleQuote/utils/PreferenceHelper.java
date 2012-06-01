@@ -39,12 +39,28 @@ public class PreferenceHelper {
 		return preference.getString(key, "");
 	}
 
-	static public void saveStateString(String key, String v) {
-		Log.i(TAG, "saveStateString(" + key + ", " + v + ")");
+	static public void saveStateString(String key, String value) {
+		Log.i(TAG, "saveStateString(" + key + ", " + value + ")");
 		if (preference == null) {
 			return;
 		}
-		preference.edit().putString(key, v).commit();
+		preference.edit().putString(key, value).commit();
+	}
+	
+	static public int restoreStateInt(String key) {
+		Log.i(TAG, "restoreStateString(" + key + ")");
+		if (preference == null) {
+			return 0;
+		}
+		return preference.getInt(key, 0);
+	}
+
+	static public void saveStateInt(String key, int value) {
+		Log.i(TAG, "saveStateString(" + key + ", " + value + ")");
+		if (preference == null) {
+			return;
+		}
+		preference.edit().putInt(key, value).commit();
 	}
 	
 	static public Boolean restoreStateBoolean(String key) {

@@ -26,6 +26,7 @@ import java.io.UnsupportedEncodingException;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
+import com.BibleQuote.exceptions.BQUniversalException;
 import com.BibleQuote.exceptions.TskNotFoundException;
 import com.BibleQuote.utils.DataConstants;
 
@@ -43,7 +44,7 @@ public class XmlTskRepository implements ITskRepository {
 	final static String VERSE = "verse";
 	
 	@Override
-	public String getReferences(String book, String chapter, String verse) throws TskNotFoundException {
+	public String getReferences(String book, String chapter, String verse) throws TskNotFoundException, BQUniversalException {
 		
 		String references = "";
 		
@@ -52,10 +53,10 @@ public class XmlTskRepository implements ITskRepository {
 			parser = getParser();
 		} catch (UnsupportedEncodingException e) {
 			Log.e(TAG, e.toString());
-			return references;
+			throw new BQUniversalException("Unsupported encoding in cross-references file! " + e.getMessage());
 		} catch (XmlPullParserException e) {
 			Log.e(TAG, e.toString());
-			return references;
+			throw new BQUniversalException("Error get data in cross-references! " + e.getMessage());
 		}
 		
         try {
@@ -102,8 +103,10 @@ public class XmlTskRepository implements ITskRepository {
 	        }
 		} catch (IOException e) {
 			Log.e(TAG, e.toString());
+			throw new BQUniversalException("Error read data from cross-references! " + e.getMessage());
 		} catch (XmlPullParserException e) {
 			Log.e(TAG, e.toString());
+			throw new BQUniversalException("Error get data in cross-references! " + e.getMessage());
 		}
 		
 		return references;
@@ -116,7 +119,7 @@ public class XmlTskRepository implements ITskRepository {
 		
 		InputStreamReader iReader;
 		try {
-			iReader = new InputStreamReader(new FileInputStream(tsk), "UTF8");
+			iReader = new InputStreamReader(new FileInputStream(tsk), "UTF-8");
 		} catch (FileNotFoundException e) {
 			throw new TskNotFoundException();
 		}

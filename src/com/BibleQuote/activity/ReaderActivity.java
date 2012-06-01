@@ -224,6 +224,7 @@ public class ReaderActivity extends GDActivity implements OnTaskCompleteListener
 					String clpbdText = myLibrarian.getShareText(selVerses);
 					clpbdManager.setText(clpbdText);
 			    }
+				break;
 			    
 			case 3:
 				myLibrarian.setCurrentVerseNumber(selVerses.first());
