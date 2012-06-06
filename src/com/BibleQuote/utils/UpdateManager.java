@@ -14,8 +14,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import com.BibleQuote.R;
-import com.BibleQuote.exceptions.BQUniversalException;
-import com.BibleQuote.exceptions.ExceptionHelper;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -86,9 +84,9 @@ public class UpdateManager {
 			moduleStream.close();
 			newModule.close();
 		} catch (FileNotFoundException e) {
-			ExceptionHelper.onException(new BQUniversalException("Error import internal bibles module!"), context, TAG);
+			Log.e(TAG, e.getMessage());
 		} catch (IOException e) {
-			ExceptionHelper.onException(new BQUniversalException("Error import internal bibles module!"), context, TAG);
+			Log.e(TAG, e.getMessage());
 		}
 	}
 
@@ -129,9 +127,9 @@ public class UpdateManager {
 			tsk_bw.close();
 			tsk_br.close();
 		} catch (FileNotFoundException e) {
-			ExceptionHelper.onException(new BQUniversalException("Error import cross-references library!"), context, TAG);
+			Log.e(TAG, e.getMessage());
 		} catch (IOException e) {
-			ExceptionHelper.onException(new BQUniversalException("Error import cross-references library!"), context, TAG);
+			Log.e(TAG, e.getMessage());
 		}
 	}
 }

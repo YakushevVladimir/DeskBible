@@ -17,45 +17,56 @@ package com.BibleQuote.activity;
 
 import greendroid.app.GDActivity;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
+import com.BibleQuote.managers.AsyncCommand;
+import com.BibleQuote.managers.AsyncManager;
+import com.BibleQuote.managers.AsyncCommand.ICommand;
+import com.BibleQuote.utils.OnTaskCompleteListener;
+import com.BibleQuote.utils.Task;
+import com.BibleQuote.utils.Log;
 
-public class SplashActivity extends GDActivity {
 
-    @Override
+public class SplashActivity extends GDActivity implements OnTaskCompleteListener {
+
+	private AsyncManager mAsyncManager;
+	private static final String TAG = "SplashActivity";
+
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Log.i(TAG, "onCreate()");
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setActionBarContentView(R.layout.main);
-
 		getActionBar().setVisibility(View.GONE);
+		
+		Log.i(TAG, "Start task InitApplication()");
+		BibleQuoteApp app = (BibleQuoteApp) getGDApplication();
+		String progressMessage = getResources().getString(R.string.messageLoad);
 
-		new InitApplication().execute(true);
+		mAsyncManager = app.getAsyncManager();
+		mAsyncManager.handleRetainedTask(getLastNonConfigurationInstance(), this);
+		mAsyncManager.setupTask(new AsyncCommand(new InitApplication(), progressMessage, true), this);
 	}
     
-    public void startHomeActivity(){
-    	startActivity(new Intent(this, ReaderActivity.class));
-		finish();
-    }
-
-	private class InitApplication extends AsyncTask<Boolean, Void, Boolean> {
+	private class InitApplication implements ICommand {
 		@Override
-		protected void onPostExecute(Boolean result) {
-			startHomeActivity();
-			super.onPostExecute(result);
-		}
-
-		@Override
-		protected Boolean doInBackground(Boolean... params) {
+		public void execute() throws Exception {
+			Log.i(TAG, "InitApplication.execute()");
 			BibleQuoteApp app = (BibleQuoteApp) getGDApplication();
 			app.Init();
-			return true;
 		}
+	}
+
+	@Override
+	public void onTaskComplete(Task task) {
+		Log.i(TAG, "onTaskComplete()");
+    	startActivity(new Intent(this, ReaderActivity.class));
+		finish();
 	}
 }

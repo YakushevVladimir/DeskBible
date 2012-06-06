@@ -91,14 +91,17 @@ public class Librarian implements IChangeBooksListener  {
 
 		eventManager.addChangeBooksListener(this);
 		
+		com.BibleQuote.utils.Log.i(TAG, "Create controllers");
 		libCtrl = LibraryController.create(LibrarySource.FileSystem, eventManager, context);
 		moduleCtrl = libCtrl.getModuleCtrl();
 		bookCtrl = libCtrl.getBookCtrl();
 		chapterCtrl = libCtrl.getChapterCtrl();
 		
+		com.BibleQuote.utils.Log.i(TAG, "Create history manager and repository");
 		fsHistoryRepository repository = new fsHistoryRepository(context.getCacheDir());
 		historyManager = new SimpleHistoryManager(repository, PreferenceHelper.getHistorySize());
 		
+		com.BibleQuote.utils.Log.i(TAG, "Load modules");
 		loadModules(context.getResources().getString(R.string.exception_open_module));
 	}
 

@@ -20,6 +20,7 @@ import greendroid.app.GDApplication;
 import com.BibleQuote.activity.ReaderActivity;
 import com.BibleQuote.managers.AsyncManager;
 import com.BibleQuote.managers.Librarian;
+import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.UpdateManager;
 
@@ -31,6 +32,7 @@ public class BibleQuoteApp extends GDApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+		Log.Init(this);
     }
     
     @Override
