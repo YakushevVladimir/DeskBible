@@ -28,14 +28,6 @@ import android.preference.PreferenceActivity;
 
 public class SettingsActivity extends PreferenceActivity implements
 		OnSharedPreferenceChangeListener {
-
-	private OnPreferenceChangeListener historySizeChangeListener = new OnPreferenceChangeListener() {
-		@Override
-		public boolean onPreferenceChange(Preference preference, Object newValue) {
-			setHistorySummary(preference, (String) newValue);
-			return true;
-		}
-	};
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -45,6 +37,10 @@ public class SettingsActivity extends PreferenceActivity implements
 		Preference historySize = (Preference) findPreference("HistorySize");
 		historySize.setOnPreferenceChangeListener(historySizeChangeListener);
 		setHistorySummary(historySize, Integer.toString(PreferenceHelper.getHistorySize()));
+		
+		Preference fontFamily = (Preference) findPreference("font_family");
+		fontFamily.setOnPreferenceChangeListener(fontFamilyChangeListener);
+		setFontFamilySummary(fontFamily, PreferenceHelper.getFontFamily());
 	}
 
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
@@ -55,6 +51,14 @@ public class SettingsActivity extends PreferenceActivity implements
 		getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
 		super.onDestroy();
 	}
+
+	private OnPreferenceChangeListener historySizeChangeListener = new OnPreferenceChangeListener() {
+		@Override
+		public boolean onPreferenceChange(Preference preference, Object newValue) {
+			setHistorySummary(preference, (String) newValue);
+			return true;
+		}
+	};
 	
 	private void setHistorySummary(Preference historySize, String value) {
 		try {
@@ -65,5 +69,27 @@ public class SettingsActivity extends PreferenceActivity implements
 		} catch (NotFoundException e) {
 			return;
 		}
+	}
+
+	private OnPreferenceChangeListener fontFamilyChangeListener = new OnPreferenceChangeListener() {
+		@Override
+		public boolean onPreferenceChange(Preference preference, Object newValue) {
+			setFontFamilySummary(preference, (String) newValue);
+			return true;
+		}
+	};
+	
+
+	private void setFontFamilySummary(Preference fontFamily, String newValue) {
+		String summary;
+		if (newValue.equalsIgnoreCase("serif")) {
+			summary = "Droid Serif";
+		} else if (newValue.equalsIgnoreCase("monospace")) {
+			summary = "Droid Sans Mono";
+		} else {
+			summary = "Droid Sans";
+		}
+		
+		fontFamily.setSummary(summary);
 	}
 }

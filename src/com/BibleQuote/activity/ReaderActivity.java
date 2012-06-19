@@ -33,7 +33,6 @@ import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.text.ClipboardManager;
 import android.util.Log;
 import android.view.Display;
 import android.view.KeyEvent;
@@ -63,6 +62,7 @@ import com.BibleQuote.utils.DevicesKeyCodes;
 import com.BibleQuote.utils.OnTaskCompleteListener;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.Task;
+import com.BibleQuote.utils.Share.ShareBuilder.Destination;
 
 public class ReaderActivity extends GDActivity implements OnTaskCompleteListener, IReaderViewListener {
 
@@ -202,28 +202,17 @@ public class ReaderActivity extends GDActivity implements OnTaskCompleteListener
         	
 			switch (position) {
 			case 0:
-				final String added = getString(R.string.added);
-				
 				myLibrarian.addBookmark(selVerses.first());
-				Toast.makeText(getApplicationContext(), added, Toast.LENGTH_LONG).show();
+				Toast.makeText(ReaderActivity.this, getString(R.string.added), Toast.LENGTH_LONG).show();
 				break;
 				
 			case 1:
-				String shareText = myLibrarian.getShareText(selVerses);
-				
-				final String share = getString(R.string.share);
-				Intent send = new Intent(Intent.ACTION_SEND);
-				send.setType("text/plain");
-				send.putExtra(Intent.EXTRA_TEXT, shareText);
-				startActivity(Intent.createChooser(send, share));;
+				myLibrarian.shareText(ReaderActivity.this, selVerses, Destination.ActionSend);
 				break;
 			
 			case 2:
-				ClipboardManager clpbdManager = (ClipboardManager)getSystemService("clipboard");
-			    if (clpbdManager != null) {
-					String clpbdText = myLibrarian.getShareText(selVerses);
-					clpbdManager.setText(clpbdText);
-			    }
+				myLibrarian.shareText(ReaderActivity.this, selVerses, Destination.Clipboard);
+				Toast.makeText(ReaderActivity.this, getString(R.string.added), Toast.LENGTH_LONG).show();
 				break;
 			    
 			case 3:

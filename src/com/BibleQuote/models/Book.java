@@ -68,7 +68,7 @@ public abstract class Book implements Serializable {
 		this.ChapterQty = chapterQty;
 		this.module = module;
 		
-		String[] names = shortNames.trim().split(" ");
+		String[] names = shortNames.trim().split("\\s+");
 		if (names.length == 0) {
 			this.ShortNames.add((name.length() < 4 ? name : name.substring(0, 3)) + ".");
 		} else {

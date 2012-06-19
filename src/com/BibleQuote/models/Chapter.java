@@ -1,7 +1,11 @@
 package com.BibleQuote.models;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.TreeMap;
+import java.util.TreeSet;
+
+import com.BibleQuote.utils.StringProc;
 
 public class Chapter {
 	
@@ -43,6 +47,19 @@ public class Chapter {
 			verseNumbers.add(verse);
 		}
 		return verseNumbers;
+	}
+	
+	public LinkedHashMap<Integer, String> getVerses(TreeSet<Integer> verses) {
+		LinkedHashMap<Integer, String> result = new LinkedHashMap<Integer, String>();
+		ArrayList<Verse> versesList = getVerseList();
+		for (Integer verse : verses) {
+			if (versesList.size() < --verse) {
+				break;
+			}
+			result.put(verse, StringProc.cleanVerseText(versesList.get(verse).getText()));
+		}
+		
+		return result;
 	}
 
 	public ArrayList<Verse> getVerseList() {

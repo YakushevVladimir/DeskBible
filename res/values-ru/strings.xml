@@ -93,4 +93,15 @@
     <string name="volume_butons_to_scroll">Прокрутка кнопками громкости</string>
     <string name="disabled">Отключено</string>
     <string name="text_align_justify">Выравнивать текст по ширине</string>
+    <string name="font_family">Шрифт</string>
+    <string name="category_social">Социальные функции</string>
+    <string name="short_reference_summary">Сокращенная ссылка к отрывку</string>
+    <string name="divide_the_verses">Разбивать по стихам</string>
+    <string name="add_module_to_reference_summary">Добавлять имя модуля к ссылке на отрывок</string>
+    <string name="share_passage">Отправка текста</string>
+    <string name="put_reference_in_beginning">Помещать ссылку в начало</string>
+    <string name="short_reference">Короткая ссылка</string>
+    <string name="add_reference_summary">Добавлять ссылку к отрывку</string>
+    <string name="add_module_to_reference">Добавлять имя модуля</string>
+    <string name="add_reference">Добавлять ссылку</string>
 </resources>

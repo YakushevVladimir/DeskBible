@@ -85,4 +85,16 @@
 		<item>50</item>
 	</string-array>
 	
+	<string-array name="font_face_txt">
+	    <item>Droid Sans</item>
+	    <item>Droid Sans Mono</item>
+		<item>Droid Serif</item>
+	</string-array>
+	
+	<string-array name="font_face">
+		<item>sans-serif</item>
+	    <item>monospace</item>
+		<item>serif</item>
+	</string-array>
+	
 </resources>

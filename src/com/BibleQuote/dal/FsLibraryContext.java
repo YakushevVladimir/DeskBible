@@ -166,7 +166,9 @@ public class FsLibraryContext extends LibraryContext {
 					module.isBible = value.toLowerCase().contains("y") ? true : false;
 				} else if (key.equals("strongnumbers")) {
 					module.containsStrong = value.toLowerCase().contains("y") ? true : false;
-				} 
+				} else if (key.equalsIgnoreCase("PathName")) {
+					break;
+				}
 			}
 			
 		} catch (IOException e) {

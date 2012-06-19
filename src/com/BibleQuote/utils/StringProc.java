@@ -14,5 +14,9 @@ public class StringProc {
 		return xmlStr;
 	}
 
-
+	public static String cleanVerseText(String verse) {
+		return stripTags(verse, "", true)
+				.replaceAll("^\\d+\\s+", "")
+				.replaceAll("\\s\\d+", "");
+	}
 }

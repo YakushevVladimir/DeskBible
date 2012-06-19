@@ -53,9 +53,10 @@ import com.BibleQuote.managers.History.SimpleHistoryManager;
 import com.BibleQuote.models.Book;
 import com.BibleQuote.models.Chapter;
 import com.BibleQuote.models.Module;
-import com.BibleQuote.models.Verse;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.StringProc;
+import com.BibleQuote.utils.Share.ShareBuilder;
+import com.BibleQuote.utils.Share.ShareBuilder.Destination;
 import com.BibleQuote.utils.modules.LinkConverter;
 
 public class Librarian implements IChangeBooksListener  {
@@ -101,7 +102,6 @@ public class Librarian implements IChangeBooksListener  {
 		fsHistoryRepository repository = new fsHistoryRepository(context.getCacheDir());
 		historyManager = new SimpleHistoryManager(repository, PreferenceHelper.getHistorySize());
 		
-		com.BibleQuote.utils.Log.i(TAG, "Load modules");
 		loadModules(context.getResources().getString(R.string.exception_open_module));
 	}
 
@@ -170,7 +170,6 @@ public class Librarian implements IChangeBooksListener  {
 			try {
 				this.getModuleByID(module.getID(), module.getDataSourceID());
 			} catch (OpenModuleException e) {
-				Log.e(TAG, String.format("Error getModuleByID(%1$s, %2$s)", module.getID(), module.getDataSourceID()), e);
 				errorList
 					.append( String.format(incorrectModuleTemplate, e.getModuleId(), e.getModuleDatasourceId() ))
 					.append("\n\n");
@@ -328,19 +327,6 @@ public class Librarian implements IChangeBooksListener  {
 	
 	public String getChapterHTMLView() {
 		return chapterCtrl.getChapterHTMLView(currChapter);
-	}
-	
-	public String getVerseText(Integer verse) {
-		if (currChapter == null) {
-			return "";
-		}
-		ArrayList<Verse> verses = currChapter.getVerseList();
-		if (verses.size() < --verse) {
-			return "";
-		}
-		return StringProc.stripTags(verses.get(verse).getText(), "", true)
-			.replaceAll("^\\d+\\s+", "")
-			.replaceAll("\\s\\d+", "");
 	}
 	
 	public Boolean isBible() {
@@ -610,49 +596,14 @@ public class Librarian implements IChangeBooksListener  {
 	///////////////////////////////////////////////////////////////////////////
 	// SHARE
 
-	public String getShareText(TreeSet<Integer> selectVerses) {
-		StringBuilder verseLink = new StringBuilder();
-		StringBuilder shareText = new StringBuilder();
-		Integer fromVerse = 0;
-		Integer toVerse = 0;
-		
-		for (Integer verse : selectVerses) {
-			if (fromVerse == 0) {
-				fromVerse = verse;
-			} else if ((toVerse + 1) != verse) {
-				if (verseLink.length() != 0) {
-					verseLink.append(",");
-				}
-				if (fromVerse == toVerse) {
-					verseLink.append(fromVerse);
-				} else {
-					verseLink.append(fromVerse + "-" + toVerse);
-				}
-				fromVerse = verse;
-				
-				shareText.append(" ... ");
-			}
-			toVerse = verse;
-			
-			shareText.append(getVerseText(verse));
-		}
-		if (verseLink.length() != 0) {
-			verseLink.append(",");
-		}
-		if (fromVerse == toVerse) {
-			verseLink.append(fromVerse);
-		} else {
-			verseLink.append(fromVerse + "-" + toVerse);
+	public void shareText(Context context, TreeSet<Integer> selectVerses, Destination dest) {
+		if (currChapter == null) {
+			return;
 		}
 		
-		shareText.append(" (" + getCurrentLink(false) + ":" + verseLink + ")");
-		if (currModule != null && currBook != null) {
-			shareText.append("- http://b-bq.eu/" 
-				+ currBook.OSIS_ID + "/" + currChapterNumber + "_" + verseLink 
-				+ "/" + currModule.ShortName); 
-		}
-		
-		return shareText.toString();
+		LinkedHashMap<Integer, String> verses = currChapter.getVerses(selectVerses);
+		ShareBuilder builder = new ShareBuilder(context, currModule, currBook, currChapter, verses);
+		builder.share(dest);
 	}
 
 	public String getBaseUrl() {

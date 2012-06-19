@@ -7,12 +7,10 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import android.util.Log;
-
 import com.BibleQuote.exceptions.FileAccessException;
 
 public class CacheContext {
-	private final String TAG = "CacheContext";
+	//private final String TAG = "CacheContext";
 	
 	private File cacheDir = null;
 	private String cacheName;
@@ -39,16 +37,13 @@ public class CacheContext {
 			ObjectInputStream out = new ObjectInputStream(fStr);
 			data = (T) out.readObject();
 			out.close();
-			Log.i(TAG, String.format("Data are loaded from the cache %1$s%2$s", cacheDir, cacheName));
 		} catch (ClassNotFoundException e) {
 			String message = String.format("Unexpected data format in the cache %1$s%2$s: $3$s",
 					cacheDir, cacheName, e.getMessage());
-			Log.e(TAG, message);
 			throw new FileAccessException(message);			
 		} catch (IOException e) {
 			String message = String.format("Data isn't loaded from the cache %1$s%2$s: $3$s",
 					cacheDir, cacheName, e.getMessage());
-			Log.e(TAG, message);
 			throw new FileAccessException(message);	
 		}
 
@@ -61,11 +56,9 @@ public class CacheContext {
 			ObjectOutputStream out = new ObjectOutputStream(fStr);
 			out.writeObject(data);
 			out.close();
-			Log.i(TAG, String.format("Data is stored in the cache %1$s%2$s", cacheDir, cacheName));
 		} catch (IOException e) {
 			String message = String.format("Data isn't stored in the cache %1$s%2$s: $3$s", 
 					cacheDir, cacheName, e.getMessage());
-			Log.e(TAG, message);
 			throw new FileAccessException(message);
 		}
 	}	

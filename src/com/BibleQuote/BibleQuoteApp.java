@@ -20,19 +20,17 @@ import greendroid.app.GDApplication;
 import com.BibleQuote.activity.ReaderActivity;
 import com.BibleQuote.managers.AsyncManager;
 import com.BibleQuote.managers.Librarian;
-import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.UpdateManager;
 
 public class BibleQuoteApp extends GDApplication {
 	
-	private Librarian myLibararian;
+	private Librarian myLibrarian;
 	private AsyncManager mAsyncManager;
 	
     @Override
     public void onCreate() {
         super.onCreate();
-		Log.Init(this);
     }
     
     @Override
@@ -43,19 +41,19 @@ public class BibleQuoteApp extends GDApplication {
 	public void Init() {
 		initPrefernceHelper();
 		UpdateManager.Init(this);
-		if (myLibararian == null) {
+		if (myLibrarian == null) {
 			initLibrarian();
 		}
 	}
 
 	public Librarian getLibrarian() {
-		if (myLibararian == null) {
-			// Сборщик мусора уничтожил ссылки на myLibararian и на PreferenceHelper
+		if (myLibrarian == null) {
+			// Сборщик мусора уничтожил ссылки на myLibrarian и на PreferenceHelper
 			// Восстановим ссылки
 			initPrefernceHelper();
 			initLibrarian();
 		}
-		return myLibararian;
+		return myLibrarian;
 	}
 	
 	public AsyncManager getAsyncManager() {
@@ -70,7 +68,7 @@ public class BibleQuoteApp extends GDApplication {
 	}
 	
 	private void initLibrarian() {
-		myLibararian = new Librarian(this);
+		myLibrarian = new Librarian(this);
 	}
 
 }

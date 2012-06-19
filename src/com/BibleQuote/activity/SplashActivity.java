@@ -30,7 +30,6 @@ import com.BibleQuote.utils.OnTaskCompleteListener;
 import com.BibleQuote.utils.Task;
 import com.BibleQuote.utils.Log;
 
-
 public class SplashActivity extends GDActivity implements OnTaskCompleteListener {
 
 	private AsyncManager mAsyncManager;
@@ -39,11 +38,12 @@ public class SplashActivity extends GDActivity implements OnTaskCompleteListener
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.i(TAG, "onCreate()");
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setActionBarContentView(R.layout.main);
 		getActionBar().setVisibility(View.GONE);
+		
+		Log.Init(getApplicationContext());
 		
 		Log.i(TAG, "Start task InitApplication()");
 		BibleQuoteApp app = (BibleQuoteApp) getGDApplication();
@@ -65,7 +65,7 @@ public class SplashActivity extends GDActivity implements OnTaskCompleteListener
 
 	@Override
 	public void onTaskComplete(Task task) {
-		Log.i(TAG, "onTaskComplete()");
+		Log.i(TAG, "Start reader activity");
     	startActivity(new Intent(this, ReaderActivity.class));
 		finish();
 	}

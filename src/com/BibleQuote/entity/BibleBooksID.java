@@ -178,7 +178,7 @@ public class BibleBooksID {
 	
 	private static void addBookID(String id, String[] shortNames){
 		for (String name : shortNames) {
-			qualifier.put(name, id);
+			qualifier.put(name.toLowerCase(), id);
 		}
 	}
 	

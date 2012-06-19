@@ -16,12 +16,13 @@ import com.BibleQuote.models.Book;
 import com.BibleQuote.models.FsModule;
 import com.BibleQuote.models.Module;
 import com.BibleQuote.utils.DataConstants;
+import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.OnlyBQIni;
 import com.BibleQuote.utils.OnlyBQZipIni;
 
 public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 
-	//private final String TAG = "FsModuleRepository";
+	private final String TAG = "FsModuleRepository";
 	private FsLibraryContext context;
 	private CacheModuleController<FsModule> cache;
 	
@@ -40,6 +41,7 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 			ArrayList<String> bqZipIniFiles = context.SearchModules(new OnlyBQZipIni());
 			for (String bqZipIniFile : bqZipIniFiles) {
 				String moduleDataSourceId = bqZipIniFile + File.separator + DataConstants.DEFAULT_INI_FILE_NAME;
+				Log.i(TAG, "....Add zip-modules to library from " + moduleDataSourceId);
 				FsModule zipModule = new FsModule(moduleDataSourceId);
 				zipModule.ShortName = zipModule.getModuleFileName();
 				zipModule.setName(zipModule.ShortName);
@@ -50,6 +52,7 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 			ArrayList<String> bqIniFiles = context.SearchModules(new OnlyBQIni());
 			for (String moduleDataSourceId : bqIniFiles) {
 				FsModule fileModule = new FsModule(moduleDataSourceId);
+				Log.i(TAG, "....Add modules to library from " + moduleDataSourceId);
 				fileModule.ShortName = fileModule.getModuleFileName();
 				fileModule.setName(fileModule.ShortName);
 				moduleList.add(fileModule);
@@ -72,6 +75,7 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 		synchronized (context.moduleSet) {
 			String moduleID = "";
 			try {
+				
 				// remove an old module from the module collection
 				moduleID = removeModule(moduleDatasourceID);
 				
@@ -80,12 +84,14 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 				fsModule.defaultEncoding = context.getModuleEncoding(reader);
 				reader = context.getModuleReader(fsModule);
 				
+				Log.i(TAG, "....Load modules from " + moduleDatasourceID);
 				context.fillModule(fsModule, reader);
 				moduleID = fsModule.getID();
 				context.moduleSet.put(moduleID, fsModule);
+				Log.i(TAG, "....Add modules to library - " + moduleID);
 				
 			} catch (FileAccessException e) {
-				//Log.e(TAG, "Can't load module " + moduleDatasourceID, e);
+				Log.i(TAG, "!!!..Error open module from " + moduleDatasourceID);
 				throw new OpenModuleException(moduleID, fsModule.modulePath);
 				
 			} finally {
@@ -93,6 +99,7 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 					if (reader != null) {
 						reader.close();
 					}
+					Log.i(TAG, "...Save modules list to cache");
 					cache.saveModuleList(context.getModuleList(context.moduleSet));
 				} catch (IOException e) {
 					e.printStackTrace(); 
@@ -106,6 +113,7 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 	public Collection<FsModule> getModules() {
 		synchronized (context.moduleSet) {		
 			if ((context.moduleSet == null || context.moduleSet.size() == 0) && cache.isCacheExist()) {
+				Log.i(TAG, "....Load modules from cache");
 				loadCachedModules();
 			}
 			return context.getModuleList(context.moduleSet);

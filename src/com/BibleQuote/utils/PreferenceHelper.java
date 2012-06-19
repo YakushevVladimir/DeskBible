@@ -145,4 +145,46 @@ public class PreferenceHelper {
 		}
 		return preference.getBoolean("text_align_justify", false);
 	}
+
+	public static String getFontFamily() {
+		if (preference == null) {
+			return "sans-serif";
+		}
+		return preference.getString("font_family", "sans-serif");
+	}
+
+	public static boolean divideTheVerses() {
+		if (preference == null) {
+			return false;
+		}
+		return preference.getBoolean("divide_the_verses", false);
+	}
+
+	public static boolean addReference() {
+		if (preference == null) {
+			return true;
+		}
+		return preference.getBoolean("add_reference", true);
+	}
+
+	public static boolean putReferenceInBeginning() {
+		if (preference == null) {
+			return false;
+		}
+		return preference.getBoolean("put_reference_in_beginning", false);
+	}
+	
+	public static boolean shortReference() {
+		if (preference == null) {
+			return false;
+		}
+		return preference.getBoolean("short_reference", false);
+	}
+
+	public static boolean addModuleToBibleReference() {
+		if (preference == null) {
+			return true;
+		}
+		return preference.getBoolean("add_module_to_reference", true);
+	}
 }

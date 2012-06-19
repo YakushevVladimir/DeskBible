@@ -136,6 +136,8 @@ public class ReaderWebView extends WebView
 		String backColor;
 		String selTextColor;
 		
+		getSettings().setStandardFontFamily(PreferenceHelper.getFontFamily());
+		
 		if (!nightMode) {
 			backColor = PreferenceHelper.getTextBackground();
 			textColor = PreferenceHelper.getTextColor();
@@ -154,6 +156,7 @@ public class ReaderWebView extends WebView
 		if (PreferenceHelper.textAlignJustify()) {
 			style.append("text-align: justify;\r\n");
 		}
+		//style.append("font-family: Georgia, Tahoma, Verdana, sans-serif;\r\n");
 		style.append("color: " + textColor + ";\r\n");
 		style.append("font-size: " + textSize + "pt;\r\n");
 		style.append("background: " + backColor + ";\r\n");
@@ -308,12 +311,16 @@ public class ReaderWebView extends WebView
 				loadUrl("javascript: selectVerse('verse_" + verse + "');");
 			}
 			
-			Handler mHandler = getHandler();
-			mHandler.post(new Runnable() {
-				public void run() {
-					notifyListeners(ChangeCode.onChangeSelection);
-				}
-			});
+			try {
+				Handler mHandler = getHandler();
+				mHandler.post(new Runnable() {
+					public void run() {
+						notifyListeners(ChangeCode.onChangeSelection);
+					}
+				});
+			} catch (NullPointerException e) {
+				Log.e(TAG, e.getMessage());
+			}
 		}
 		
 		public void alert(final String message) {
