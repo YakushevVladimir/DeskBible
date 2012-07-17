@@ -15,10 +15,10 @@
  */
 package com.BibleQuote.activity;
 
-import greendroid.app.GDActivity;
-import greendroid.widget.ActionBar;
-import greendroid.widget.ActionBarItem;
-import greendroid.widget.NormalActionBarItem;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 
 import java.util.ArrayList;
 
@@ -49,7 +49,7 @@ import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.utils.OnTaskCompleteListener;
 import com.BibleQuote.utils.Task;
 
-public class LibraryActivity extends GDActivity implements OnTaskCompleteListener {
+public class LibraryActivity extends SherlockActivity implements OnTaskCompleteListener {
 	private static final String TAG = "LibraryActivity";
 	private final int MODULE_VIEW = 1, BOOK_VIEW = 2, CHAPTER_VIEW = 3;
 	private int viewMode = 1;
@@ -71,10 +71,9 @@ public class LibraryActivity extends GDActivity implements OnTaskCompleteListene
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setActionBarContentView(R.layout.books);
-		initActionBar();
+		setContentView(R.layout.books);
 
-		BibleQuoteApp app = (BibleQuoteApp) getGDApplication();
+		BibleQuoteApp app = (BibleQuoteApp) getApplication();
 		myLibrarian = app.getLibrarian();
 
 		mAsyncManager = app.getAsyncManager();
@@ -100,51 +99,35 @@ public class LibraryActivity extends GDActivity implements OnTaskCompleteListene
 			moduleID = osisLink.getModuleID();
 			bookID   = osisLink.getBookID();
 			chapter  = String.valueOf(osisLink.getChapter());
-			
-			//modulesList.setAdapter(getModuleAdapter());
-			//booksList.setAdapter(getBookAdapter());
-			//chapterList.setAdapter(getChapterAdapter());
-			
 			UpdateView(CHAPTER_VIEW);
 		} else {
 			UpdateView(MODULE_VIEW);
 		}
 		setButtonText();
-		
-		if (!mAsyncManager.isWorking()) {
-			// to continue open closed modules in background 
-			if (myLibrarian.getClosedModule() != null) {
-//				mAsyncManager.setupTask(
-//						new AsyncLoadModules(messageLoadModules, true, myLibrarian, false), this);
-			}
-		}		
 	}
 	
-	private void initActionBar() {
-		ActionBar bar = getActionBar();
-		ActionBarItem itemCont = bar.newActionBarItem(NormalActionBarItem.class);
-		itemCont.setDrawable(R.drawable.gd_action_bar_refresh);//ic_action_bar_refresh);
-		addActionBarItem(itemCont, R.id.action_bar_refresh);
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater infl = getSupportMenuInflater();
+		infl.inflate(R.menu.menu_library, menu);
+		return true;
 	}
 
 	@Override
-	public boolean onHandleActionBarItemClick(ActionBarItem item, int position) {
-		Log.i(TAG, "onHandleActionBarItemClick(" + item + ", " + position + ")");
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle item selection
 		switch (item.getItemId()) {
-		case R.id.action_bar_refresh:
-			if (this.viewMode == MODULE_VIEW) {
-				mAsyncManager.setupTask(
-						new AsyncRefreshModules(messageRefresh, false, myLibrarian, this), this);
-//						new AsyncLoadModules(messageLoad, false, myLibrarian, true), this);
-			}
-			break;
-		default:
-			return super.onHandleActionBarItemClick(item, position);
+			case R.id.action_bar_refresh:
+				if (this.viewMode == MODULE_VIEW) {
+					mAsyncManager.setupTask(
+							new AsyncRefreshModules(messageRefresh, false, myLibrarian, this), this);
+				}
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
 		}
-
-		return true;
 	}
-	
+
 	private AdapterView.OnItemClickListener modulesList_onClick = new AdapterView.OnItemClickListener() {
 		public void onItemClick(AdapterView<?> a, View v, int position, long id) {
 			modules = myLibrarian.getModulesList();
@@ -327,19 +310,19 @@ public class LibraryActivity extends GDActivity implements OnTaskCompleteListene
 	}
 
 	public void onModuleClick(View v) {
-		if (moduleID == "---")
+		if (moduleID.equals("---"))
 			return;
 		UpdateView(MODULE_VIEW);
 	}
 
 	public void onBookClick(View v) {
-		if (bookID == "---")
+		if (bookID.equals("---"))
 			return;		
 		UpdateView(BOOK_VIEW);
 	}
 
 	public void onChapterClick(View v) {
-		if (chapter == "-")
+		if (chapter.equals("-"))
 			return;		
 		UpdateView(CHAPTER_VIEW);
 	}
@@ -384,9 +367,7 @@ public class LibraryActivity extends GDActivity implements OnTaskCompleteListene
 			UpdateView(MODULE_VIEW);
 		}		
 	}
-	
 
-	
     @Override
     public Object onRetainNonConfigurationInstance() {
     	return mAsyncManager.retainTask();

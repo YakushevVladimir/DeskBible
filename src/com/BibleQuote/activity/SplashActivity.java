@@ -15,10 +15,9 @@
  */
 package com.BibleQuote.activity;
 
-import greendroid.app.GDActivity;
+import com.actionbarsherlock.app.SherlockActivity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.view.WindowManager;
 
 import com.BibleQuote.BibleQuoteApp;
@@ -30,9 +29,8 @@ import com.BibleQuote.utils.OnTaskCompleteListener;
 import com.BibleQuote.utils.Task;
 import com.BibleQuote.utils.Log;
 
-public class SplashActivity extends GDActivity implements OnTaskCompleteListener {
+public class SplashActivity extends SherlockActivity implements OnTaskCompleteListener {
 
-	private AsyncManager mAsyncManager;
 	private static final String TAG = "SplashActivity";
 
 	@Override
@@ -40,25 +38,25 @@ public class SplashActivity extends GDActivity implements OnTaskCompleteListener
 		super.onCreate(savedInstanceState);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		setActionBarContentView(R.layout.main);
-		getActionBar().setVisibility(View.GONE);
+		setContentView(R.layout.main);
+		getActionBar().hide();
 		
 		Log.Init(getApplicationContext());
 		
 		Log.i(TAG, "Start task InitApplication()");
-		BibleQuoteApp app = (BibleQuoteApp) getGDApplication();
+		BibleQuoteApp app = (BibleQuoteApp) getApplication();
 		String progressMessage = getResources().getString(R.string.messageLoad);
 
-		mAsyncManager = app.getAsyncManager();
-		mAsyncManager.handleRetainedTask(getLastNonConfigurationInstance(), this);
-		mAsyncManager.setupTask(new AsyncCommand(new InitApplication(), progressMessage, true), this);
+		AsyncManager myAsyncManager = app.getAsyncManager();
+		myAsyncManager.handleRetainedTask(getLastNonConfigurationInstance(), this);
+		myAsyncManager.setupTask(new AsyncCommand(new InitApplication(), progressMessage, true), this);
 	}
     
 	private class InitApplication implements ICommand {
 		@Override
 		public void execute() throws Exception {
 			Log.i(TAG, "InitApplication.execute()");
-			BibleQuoteApp app = (BibleQuoteApp) getGDApplication();
+			BibleQuoteApp app = (BibleQuoteApp) getApplication();
 			app.Init();
 		}
 	}

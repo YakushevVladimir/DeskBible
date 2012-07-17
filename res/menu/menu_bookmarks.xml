@@ -1,3 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
 /*
  * Copyright (C) 2011 Scripture Software (http://scripturesoftware.org/)
  *
@@ -13,18 +15,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.BibleQuote.activity;
-
-import com.BibleQuote.R;
-
-import com.actionbarsherlock.app.SherlockActivity;
-import android.os.Bundle;
-
-public class AboutActivity extends SherlockActivity {
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.about);
-    }
-}
+-->
+<menu
+	xmlns:android="http://schemas.android.com/apk/res/android">
+	<item
+			android:id="@+id/action_bar_sort"
+			android:title="@string/fav_sort_alphabetically"
+			android:orderInCategory="0"
+			android:icon="@drawable/ic_action_bar_sort"
+			android:showAsAction="ifRoom|withText"/>
+	<item
+			android:id="@+id/action_bar_delete"
+			android:title="@string/fav_delete_all"
+			android:orderInCategory="1"
+			android:icon="@drawable/ic_quick_action_bar_delete"
+			android:showAsAction="ifRoom|withText" />
+</menu>

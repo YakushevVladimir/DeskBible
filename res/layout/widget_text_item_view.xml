@@ -1,3 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
 /*
  * Copyright (C) 2011 Scripture Software (http://scripturesoftware.org/)
  *
@@ -13,18 +15,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.BibleQuote.activity;
+-->
 
-import com.BibleQuote.R;
-
-import com.actionbarsherlock.app.SherlockActivity;
-import android.os.Bundle;
-
-public class AboutActivity extends SherlockActivity {
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.about);
-    }
-}
+<com.BibleQuote.widget.itemview.TextItemView
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/bq_text"
+	android:layout_height="wrap_content"
+	android:layout_width="fill_parent"
+	android:minHeight="@dimen/bq_item_view_height"
+	android:paddingLeft="@dimen/bq_item_view_padding_left"
+	android:singleLine="true"
+	android:ellipsize="end"
+	android:textColor="@android:color/black"
+	android:textSize="@dimen/text_size_medium"
+	android:background="@android:color/white"
+	android:gravity="center_vertical" />

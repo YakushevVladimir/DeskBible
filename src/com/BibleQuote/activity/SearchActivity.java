@@ -16,10 +16,10 @@
 
 package com.BibleQuote.activity;
 
-import greendroid.app.GDActivity;
-import greendroid.widget.ItemAdapter;
-import greendroid.widget.item.Item;
-import greendroid.widget.item.SubtextItem;
+import com.actionbarsherlock.app.SherlockActivity;
+import com.BibleQuote.widget.ItemAdapter;
+import com.BibleQuote.widget.item.Item;
+import com.BibleQuote.widget.item.SubtextItem;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -51,7 +51,7 @@ import com.BibleQuote.utils.OnTaskCompleteListener;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.Task;
 
-public class SearchActivity extends GDActivity implements OnTaskCompleteListener {
+public class SearchActivity extends SherlockActivity implements OnTaskCompleteListener {
 	private static final String TAG = "SearchActivity";
 	private Spinner s1, s2;
 	private ListView LV;
@@ -66,9 +66,9 @@ public class SearchActivity extends GDActivity implements OnTaskCompleteListener
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setActionBarContentView(R.layout.search);
+		setContentView(R.layout.search);
 
-		BibleQuoteApp app = (BibleQuoteApp) getGDApplication();
+		BibleQuoteApp app = (BibleQuoteApp) getApplication();
 		myLibararian = app.getLibrarian();
 
 		mAsyncManager = app.getAsyncManager();
@@ -137,7 +137,7 @@ public class SearchActivity extends GDActivity implements OnTaskCompleteListener
 
 		SimpleAdapter AA = new SimpleAdapter(this, books,
 				android.R.layout.simple_spinner_item,
-				new String[]{ItemList.Name}, new int[]{android.R.id.text1});;
+				new String[]{ItemList.Name}, new int[]{android.R.id.text1});
 		AA.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		SimpleAdapter.ViewBinder viewBinder = new SimpleAdapter.ViewBinder() {
 			public boolean setViewValue(View view, Object data,

@@ -13,12 +13,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import greendroid.app.GDActivity;
-import greendroid.widget.ActionBar;
-import greendroid.widget.ActionBarItem;
-import greendroid.widget.NormalActionBarItem;
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.MenuInflater;
 
-public class HistoryActivity extends GDActivity {
+public class HistoryActivity extends SherlockActivity {
 
 	//private final String TAG = "HistoryActivity";
 	
@@ -28,15 +28,34 @@ public class HistoryActivity extends GDActivity {
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setActionBarContentView(R.layout.favorits);
-		initActionBar();
-        
-		BibleQuoteApp app = (BibleQuoteApp) getGDApplication();
+		setContentView(R.layout.favorits);
+
+		BibleQuoteApp app = (BibleQuoteApp) getApplication();
 		myLibrarian = app.getLibrarian();
 		
 		setListAdapter();
 		vHistoryList.setOnItemClickListener(OnItemClickListener);
     }
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater infl = getSupportMenuInflater();
+		infl.inflate(R.menu.menu_history, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle item selection
+		switch (item.getItemId()) {
+			case R.id.action_bar_history_clear:
+				myLibrarian.clearHistory();
+				setListAdapter();
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
+		}
+	}
 
 	private void setListAdapter() {
 		list = myLibrarian.getHistoryList(); 
@@ -56,26 +75,4 @@ public class HistoryActivity extends GDActivity {
 		}
 	};
 
-	private void initActionBar() {
-		ActionBar bar = getActionBar();
-		
-		ActionBarItem itemHistory = bar.newActionBarItem(NormalActionBarItem.class);
-		itemHistory.setDrawable(R.drawable.gd_action_bar_trashcan);
-		addActionBarItem(itemHistory, R.id.action_bar_history_clear);
-	}
-
-	@Override
-	public boolean onHandleActionBarItemClick(ActionBarItem item, int position) {
-		switch (item.getItemId()) {
-		case R.id.action_bar_history_clear:
-			myLibrarian.clearHistory();
-			setListAdapter();
-			break;
-		default:
-			return super.onHandleActionBarItemClick(item, position);
-		}
-
-		return true;
-	}
-	
 }

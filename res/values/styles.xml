@@ -51,20 +51,22 @@
         <item name="android:padding">5dp</item>
         <item name="android:layout_gravity">center</item>
     </style>
-    
-    <style name="SeparatorItemView" parent="GreenDroid.Widget.ItemView.SeparatorItemView">
-        <item name="android:background">@drawable/separator_bg</item>
-    </style>
-    
-    <style name="TextAppearanceLarge" parent="@style/TextAppearance.Large">
+
+	<style name="TextAppearance">
+		<item name="android:textColor">?android:attr/textColorPrimary</item>
+		<item name="android:textColorHighlight">#FFFF9200</item>
+		<item name="android:textColorHint">?android:attr/textColorHint</item>
+		<item name="android:textColorLink">#5C5CFF</item>
+		<item name="android:textSize">16sp</item>
+		<item name="android:textStyle">normal</item>
+	</style>
+
+	<style name="TextAppearance.Large">
+		<item name="android:textSize">22sp</item>
+	</style>
+
+	<style name="TextAppearanceLarge" parent="@style/TextAppearance.Large">
         <item name="android:textSize">@dimen/text_size_large</item>
     </style>
-	
-	<style name="GreenDroid.Widget.QuickAction.Item">
-		<item name="android:layout_height">fill_parent</item>
-		<item name="android:paddingRight">5dp</item>
-		<item name="android:paddingLeft">5dp</item>
-		<item name="android:textSize">@dimen/text_size_small</item>
-	</style>
-   
+
 </resources>

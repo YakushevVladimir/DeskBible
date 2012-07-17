@@ -15,22 +15,15 @@
  */
 package com.BibleQuote.activity;
 
-import greendroid.app.GDActivity;
-import greendroid.widget.ActionBarItem;
-import greendroid.widget.NormalActionBarItem;
-import greendroid.widget.QuickAction;
-import greendroid.widget.QuickActionGrid;
-import greendroid.widget.QuickActionWidget;
-import greendroid.widget.QuickActionWidget.OnQuickActionClickListener;
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.ActionMode;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.MenuInflater;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.ColorFilter;
-import android.graphics.LightingColorFilter;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -44,24 +37,19 @@ import com.BibleQuote.R;
 import com.BibleQuote.entity.BibleReference;
 import com.BibleQuote.managers.Librarian;
 
-public class BookmarksActivity extends GDActivity {
+public class BookmarksActivity extends SherlockActivity {
 
 	private final String TAG = "BookmarksActivity";
 	
-    private QuickActionWidget mGrid;
-    
     private ListView LV;
 	private Librarian myLibrarian;
 	private String currBookmark;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setActionBarContentView(R.layout.favorits);
+		setContentView(R.layout.favorits);
 		
-		initActionBar();
-		prepareQuickActionBar();
-
-		BibleQuoteApp app = (BibleQuoteApp) getGDApplication();
+		BibleQuoteApp app = (BibleQuoteApp) getApplication();
 		myLibrarian = app.getLibrarian();
 		
 		LV = (ListView) findViewById(R.id.FavoritsLV);
@@ -71,27 +59,21 @@ public class BookmarksActivity extends GDActivity {
 	}
 
 	@Override
-	protected void onPostResume() {
-		super.onPostResume();
-		setAdapter();
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater infl = getSupportMenuInflater();
+		infl.inflate(R.menu.menu_bookmarks, menu);
+		return true;
 	}
 
-    private void prepareQuickActionBar() {
-    	mGrid = new QuickActionGrid(this);
-    	mGrid.addQuickAction(new MyQuickAction(this, R.drawable.ic_action_bar_sort, R.string.fav_sort_alphabetically));
-    	mGrid.addQuickAction(new MyQuickAction(this, R.drawable.ic_quick_action_bar_delete, R.string.fav_delete_all));
-    	mGrid.setOnQuickActionClickListener(mActionListener);
-    }
-
-    private OnQuickActionClickListener mActionListener = new OnQuickActionClickListener() {
-        public void onQuickActionClicked(QuickActionWidget widget, int position) {
-        	switch (position) {
-			case 0:
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.action_bar_sort:
 				myLibrarian.sortBookmarks();
 				setAdapter();
 				break;
 
-			case 1:
+			case R.id.action_bar_delete:
 				Builder builder = new AlertDialog.Builder(BookmarksActivity.this);
 				builder.setIcon(R.drawable.icon);
 				builder.setTitle(R.string.bookmarks);
@@ -112,30 +94,14 @@ public class BookmarksActivity extends GDActivity {
 
 			default:
 				break;
-			}
-        }
-    };
-    
-	private void initActionBar() {
-		ActionBarItem itemNext = getActionBar().newActionBarItem(NormalActionBarItem.class);
-		itemNext.setDrawable(R.drawable.ic_menu_more);
-		addActionBarItem(itemNext, R.id.action_bar_more);
+		}
+		return true;
 	}
 
 	@Override
-	public boolean onHandleActionBarItemClick(ActionBarItem item, int position) {
-		switch (item.getItemId()) {
-		case R.id.action_bar_more:
-        	if (LV.getAdapter().getCount() == 0) {
-				return true;
-			}
-			mGrid.show(getActionBar().getItem(0).getItemView());
-			break;
-		default:
-			return super.onHandleActionBarItemClick(item, position);
-		}
-
-		return true;
+	protected void onPostResume() {
+		super.onPostResume();
+		setAdapter();
 	}
 
 	private AdapterView.OnItemClickListener OnItemClickListener = new AdapterView.OnItemClickListener() {
@@ -194,20 +160,4 @@ public class BookmarksActivity extends GDActivity {
 		LV.setAdapter(new ArrayAdapter<String>(BookmarksActivity.this,
 				R.layout.text_item_view, myLibrarian.getBookmarks()));
 	}
-    
-	private static class MyQuickAction extends QuickAction {
-        
-        private static final ColorFilter BLACK_CF = new LightingColorFilter(Color.BLACK, Color.BLACK);
-
-        public MyQuickAction(Context ctx, int drawableId, int titleId) {
-            super(ctx, buildDrawable(ctx, drawableId), titleId);
-        }
-        
-        private static Drawable buildDrawable(Context ctx, int drawableId) {
-            Drawable d = ctx.getResources().getDrawable(drawableId);
-            d.setColorFilter(BLACK_CF);
-            return d;
-        }
-        
-    }
 }

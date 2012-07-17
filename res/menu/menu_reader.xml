@@ -18,39 +18,51 @@
 -->
 <menu
 	xmlns:android="http://schemas.android.com/apk/res/android">
-    <item 
-    	android:title="@string/menu_night_day_mode" 
-    	android:id="@+id/NightDayMode" 
-    	android:orderInCategory="0" 
-    	android:icon="@drawable/ic_menu_view" />
-     <item 
-    	android:title="@string/menu_search" 
-    	android:id="@+id/Search" 
-    	android:orderInCategory="1" 
-    	android:icon="@drawable/ic_menu_search" />
-    <item 
-    	android:title="@string/menu_favorites" 
-    	android:id="@+id/Favorites" 
-    	android:orderInCategory="2" 
-    	android:icon="@drawable/ic_menu_bookmarks" />
-    <item 
-    	android:title="@string/menu_history" 
-    	android:id="@+id/History" 
-    	android:orderInCategory="3" 
-    	android:icon="@drawable/ic_menu_recent_history" />
-    <item 
-    	android:title="@string/menu_settings" 
-    	android:id="@+id/Settings" 
-    	android:orderInCategory="4" 
-    	android:icon="@drawable/ic_menu_preferences" />
-    <item 
-    	android:title="@string/menu_help" 
-    	android:id="@+id/Help" 
-    	android:orderInCategory="5" 
-    	android:icon="@drawable/ic_menu_help" />
-    <item 
-    	android:title="@string/about" 
-    	android:id="@+id/About" 
-    	android:orderInCategory="6" 
-    	android:icon="@drawable/ic_menu_info_details" />
+	<item
+		android:id="@id/action_bar_chooseCh"
+		android:orderInCategory="0"
+		android:icon="@drawable/ic_action_bar_content"
+		android:showAsAction="always" />
+	<item
+		android:title="@string/menu_search"
+		android:id="@id/action_bar_search"
+		android:orderInCategory="1"
+		android:icon="@drawable/ic_menu_search"
+		android:showAsAction="always|withText"/>
+	<item
+		android:title="@string/menu_history"
+		android:id="@id/action_bar_history"
+		android:orderInCategory="2"
+		android:icon="@drawable/ic_menu_recent_history"
+		android:showAsAction="withText|always"/>
+	<item
+		android:title="@string/menu_favorites"
+		android:id="@id/action_bar_bookmarks"
+		android:orderInCategory="3"
+		android:icon="@drawable/ic_menu_bookmarks"
+		android:showAsAction="ifRoom"/>
+	<item
+		android:title="@string/menu_night_day_mode"
+		android:id="@+id/NightDayMode"
+		android:orderInCategory="4"
+		android:icon="@drawable/ic_menu_view"
+		android:showAsAction="ifRoom"/>
+	<item
+		android:title="@string/menu_settings"
+		android:id="@+id/Settings"
+		android:orderInCategory="5"
+		android:icon="@drawable/ic_menu_preferences"
+		android:showAsAction="ifRoom"/>
+	<item
+		android:title="@string/menu_help"
+		android:id="@+id/Help"
+		android:orderInCategory="6"
+		android:icon="@drawable/ic_menu_help"
+		android:showAsAction="ifRoom"/>
+	<item
+		android:title="@string/about"
+		android:id="@+id/About"
+		android:orderInCategory="7"
+		android:icon="@drawable/ic_menu_info_details"
+		android:showAsAction="ifRoom"/>
 </menu>

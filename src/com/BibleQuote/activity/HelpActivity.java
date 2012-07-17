@@ -5,14 +5,14 @@ import com.BibleQuote.utils.FsUtils;
 
 import android.os.Bundle;
 import android.webkit.WebView;
-import greendroid.app.GDActivity;
+import com.actionbarsherlock.app.SherlockActivity;
 
-public class HelpActivity extends GDActivity {
+public class HelpActivity extends SherlockActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setActionBarContentView(R.layout.help);
+		setContentView(R.layout.help);
 		
 		String helpText = FsUtils.getAssetString(getApplicationContext(), "help.html");
 		WebView vWeb = (WebView)findViewById(R.id.helpView);

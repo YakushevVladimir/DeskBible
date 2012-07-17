@@ -39,13 +39,13 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
-import greendroid.app.GDActivity;
-import greendroid.widget.ItemAdapter;
-import greendroid.widget.item.Item;
-import greendroid.widget.item.SubtextItem;
-import greendroid.widget.item.TextItem;
+import com.actionbarsherlock.app.SherlockActivity;
+import com.BibleQuote.widget.ItemAdapter;
+import com.BibleQuote.widget.item.Item;
+import com.BibleQuote.widget.item.SubtextItem;
+import com.BibleQuote.widget.item.TextItem;
 
-public class CrossReferenceActivity extends GDActivity implements OnTaskCompleteListener {
+public class CrossReferenceActivity extends SherlockActivity implements OnTaskCompleteListener {
 
 	private static String TAG = "CrossReferenceActivity";
 	
@@ -61,9 +61,9 @@ public class CrossReferenceActivity extends GDActivity implements OnTaskComplete
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setActionBarContentView(R.layout.parallels_list);
+		setContentView(R.layout.parallels_list);
         
-		BibleQuoteApp app = (BibleQuoteApp) getGDApplication();
+		BibleQuoteApp app = (BibleQuoteApp) getApplication();
 		myLibrarian = app.getLibrarian();
 		
 		LV = (ListView) findViewById(R.id.Parallels_List);

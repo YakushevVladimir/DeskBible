@@ -23,10 +23,9 @@
     <dimen name="text_size_medium">14.0sp</dimen>
     <dimen name="text_size_large">18.0sp</dimen>
 	
-	<dimen name="gd_action_bar_height">48dp</dimen>
-	<dimen name="gd_item_view_height">48dp</dimen>
-	<dimen name="gd_item_view_half_height">24dp</dimen>
-	<dimen name="gd_item_view_padding_left">4dp</dimen>
+	<dimen name="bq_item_view_height">48dp</dimen>
+	<dimen name="bq_item_view_half_height">24dp</dimen>
+	<dimen name="bq_item_view_padding_left">4dp</dimen>
 
 	<dimen name="bookLink_container_height">24dp</dimen>
 	<dimen name="library_item_height">48dp</dimen>

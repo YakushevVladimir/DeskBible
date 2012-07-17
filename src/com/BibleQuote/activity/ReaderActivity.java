@@ -15,17 +15,6 @@
  */
 package com.BibleQuote.activity;
 
-import greendroid.app.GDActivity;
-import greendroid.widget.ActionBar;
-import greendroid.widget.ActionBarItem;
-import greendroid.widget.NormalActionBarItem;
-import greendroid.widget.QuickAction;
-import greendroid.widget.QuickActionBar;
-import greendroid.widget.QuickActionWidget;
-import greendroid.widget.QuickActionWidget.OnQuickActionClickListener;
-
-import java.util.TreeSet;
-
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -34,21 +23,15 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.view.Display;
-import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
+import android.view.*;
 import android.view.View.OnClickListener;
-import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
+import com.BibleQuote.activity.*;
 import com.BibleQuote.controls.ReaderWebView;
 import com.BibleQuote.entity.BibleReference;
 import com.BibleQuote.exceptions.BookNotFoundException;
@@ -61,75 +44,74 @@ import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.utils.DevicesKeyCodes;
 import com.BibleQuote.utils.OnTaskCompleteListener;
 import com.BibleQuote.utils.PreferenceHelper;
-import com.BibleQuote.utils.Task;
 import com.BibleQuote.utils.Share.ShareBuilder.Destination;
+import com.BibleQuote.utils.Task;
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.*;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 
-public class ReaderActivity extends GDActivity implements OnTaskCompleteListener, IReaderViewListener {
+
+import java.util.TreeSet;
+
+public class ReaderActivity extends SherlockActivity implements OnTaskCompleteListener, IReaderViewListener {
 
 	private static final String TAG = "ReaderActivity";
 	private static final int VIEW_CHAPTER_NAV_LENGHT = 3000;
-	
+
 	private static final String VIEW_REFERENCE = "com.BibleQuote.intent.action.VIEW_REFERENCE";
 
 	private Librarian myLibrarian;
 	private AsyncManager mAsyncManager;
-    
-	private QuickActionWidget textQAction;
 
 	private String chapterInHTML = "";
 	private boolean nightMode = false;
 	private String progressMessage = "";
 	private int runtimeOrientation;
-	
+
 	private TextView vModuleName;
 	private TextView vBookLink;
-	private ImageButton btnTextAction;
 	private LinearLayout btnChapterNav;
 	private ReaderWebView vWeb;
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setActionBarContentView(R.layout.reader);
+		setContentView(R.layout.reader);
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		runtimeOrientation = getScreenOrientation();
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
-		
-		initActionBar();
-		prepareQuickActionBar();
-		
-		BibleQuoteApp app = (BibleQuoteApp) getGDApplication();
+
+		BibleQuoteApp app = (BibleQuoteApp) getApplication();
 		myLibrarian = app.getLibrarian();
 
 		mAsyncManager = app.getAsyncManager();
 		mAsyncManager.handleRetainedTask(getLastNonConfigurationInstance(), this);
-		
+
 		btnChapterNav = (LinearLayout)findViewById(R.id.btn_chapter_nav);
-		
+
 		ImageButton btnChapterPrev = (ImageButton)findViewById(R.id.btn_reader_prev);
 		btnChapterPrev.setOnClickListener(onClickChapterPrev);
 		ImageButton btnChapterNext = (ImageButton)findViewById(R.id.btn_reader_next);
 		btnChapterNext.setOnClickListener(onClickChapterNext);
-		
+
 		ImageButton btnChapterUp = (ImageButton)findViewById(R.id.btn_reader_up);
 		btnChapterUp.setOnClickListener(onClickPageUp);
 		ImageButton btnChapterDown = (ImageButton)findViewById(R.id.btn_reader_down);
 		btnChapterDown.setOnClickListener(onClickPageDown);
-		
-		btnTextAction = (ImageButton)findViewById(R.id.btn_text_action);
-		btnTextAction.setOnClickListener(onClickBtnTextAction);
-		
+
 		vModuleName = (TextView)findViewById(R.id.moduleName);
 		vBookLink = (TextView)findViewById(R.id.linkBook);
-		
+
 		progressMessage = getResources().getString(R.string.messageLoad);
 		nightMode = PreferenceHelper.restoreStateBoolean("nightMode");
-		
+
 		vWeb = (ReaderWebView)findViewById(R.id.readerView);
 		vWeb.setOnReaderViewListener(this);
 		vWeb.setReadingMode(PreferenceHelper.isReadModeByDefault());
 		updateActivityMode();
-		
+
 		BibleReference osisLink = new BibleReference(PreferenceHelper.restoreStateString("last_read"));
 		if (!myLibrarian.isOSISLinkValid(osisLink)) {
 			onChooseChapterClick();
@@ -137,97 +119,58 @@ public class ReaderActivity extends GDActivity implements OnTaskCompleteListener
 			mAsyncManager.setupTask(new AsyncOpenChapter(progressMessage, false, myLibrarian, osisLink), this);
 		}
 	}
-	
-	private void initActionBar() {
-		ActionBar bar = getActionBar();
-		
-		ActionBarItem itemCont = bar.newActionBarItem(NormalActionBarItem.class);
-		itemCont.setDrawable(R.drawable.ic_action_bar_content);
-		addActionBarItem(itemCont, R.id.action_bar_chooseCh);
-		
-		ActionBarItem itemSearch = bar.newActionBarItem(NormalActionBarItem.class);
-		itemSearch.setDrawable(R.drawable.ic_action_bar_search);
-		addActionBarItem(itemSearch, R.id.action_bar_search);
-		
-		ActionBarItem itemHistory = bar.newActionBarItem(NormalActionBarItem.class);
-		itemHistory.setDrawable(R.drawable.ic_action_bar_recent_history);
-		addActionBarItem(itemHistory, R.id.action_bar_history);
-	}
 
-	@Override
-	public boolean onHandleActionBarItemClick(ActionBarItem item, int position) {
-		switch (item.getItemId()) {
-		case R.id.action_bar_chooseCh:
-			onChooseChapterClick();
-			break;
-		case R.id.action_bar_search:
-			Intent intentSearch = new Intent().setClass(
-					getApplicationContext(), SearchActivity.class);
-			startActivityForResult(intentSearch, R.id.action_bar_search);
-			break;
-		case R.id.action_bar_history:
-			Intent intentHistory = new Intent().setClass(
-					getApplicationContext(), HistoryActivity.class);
-			startActivityForResult(intentHistory, R.id.action_bar_history);
-			break;
-		default:
-			return super.onHandleActionBarItemClick(item, position);
-		}
+//   private void prepareQuickActionBar() {
+//    	textQAction = new QuickActionBar(this);
+//    	textQAction.addQuickAction(new QuickAction(this, R.drawable.ic_action_bar_bookmark, R.string.bookmarks));
+//    	textQAction.addQuickAction(new QuickAction(this, R.drawable.ic_action_bar_share, R.string.share));
+//    	textQAction.addQuickAction(new QuickAction(this, R.drawable.ic_action_bar_clipboard, R.string.copy));
+//    	textQAction.addQuickAction(new QuickAction(this, R.drawable.ic_action_bar_parallels, R.string.references));
+//    	textQAction.setOnQuickActionClickListener(mActionListener);
+//    }
+//
+//    OnClickListener onClickBtnTextAction = new OnClickListener() {
+//		public void onClick(View btnTextAction) {
+//	    	textQAction.show(btnTextAction);
+//		}
+//	};
 
-		return true;
-	}
-	
-   private void prepareQuickActionBar() {
-    	textQAction = new QuickActionBar(this);
-    	textQAction.addQuickAction(new QuickAction(this, R.drawable.ic_action_bar_bookmark, R.string.bookmarks));
-    	textQAction.addQuickAction(new QuickAction(this, R.drawable.ic_action_bar_share, R.string.share));
-    	textQAction.addQuickAction(new QuickAction(this, R.drawable.ic_action_bar_clipboard, R.string.copy));
-    	textQAction.addQuickAction(new QuickAction(this, R.drawable.ic_action_bar_parallels, R.string.references));
-    	textQAction.setOnQuickActionClickListener(mActionListener);
-    }
-    
-    OnClickListener onClickBtnTextAction = new OnClickListener() {
-		public void onClick(View btnTextAction) {
-	    	textQAction.show(btnTextAction);
-		}
-	};
+//   private OnQuickActionClickListener mActionListener = new OnQuickActionClickListener() {
+//        public void onQuickActionClicked(QuickActionWidget widget, int position) {
+//    		ReaderWebView wView = (ReaderWebView)findViewById(R.id.readerView);
+//			TreeSet<Integer> selVerses = wView.getSelectedVerses();
+//			if (selVerses.size() == 0) {
+//				return;
+//			}
+//
+//			switch (position) {
+//			case 0:
+//				myLibrarian.addBookmark(selVerses.first());
+//				Toast.makeText(ReaderActivity.this, getString(R.string.added), Toast.LENGTH_LONG).show();
+//				break;
+//
+//			case 1:
+//				myLibrarian.shareText(ReaderActivity.this, selVerses, Destination.ActionSend);
+//				break;
+//
+//			case 2:
+//				myLibrarian.shareText(ReaderActivity.this, selVerses, Destination.Clipboard);
+//				Toast.makeText(ReaderActivity.this, getString(R.string.added), Toast.LENGTH_LONG).show();
+//				break;
+//
+//			case 3:
+//				myLibrarian.setCurrentVerseNumber(selVerses.first());
+//				Intent intParallels = new Intent(VIEW_REFERENCE);
+//				intParallels.putExtra("linkOSIS", myLibrarian.getCurrentOSISLink().getPath());
+//				startActivityForResult(intParallels, R.id.action_bar_parallels);
+//				break;
+//
+//			default:
+//				break;
+//			}
+//        }
+//    };
 
-   private OnQuickActionClickListener mActionListener = new OnQuickActionClickListener() {
-        public void onQuickActionClicked(QuickActionWidget widget, int position) {
-    		ReaderWebView wView = (ReaderWebView)findViewById(R.id.readerView);
-			TreeSet<Integer> selVerses = wView.getSelectedVerses();
-			if (selVerses.size() == 0) {
-				return;
-			}
-        	
-			switch (position) {
-			case 0:
-				myLibrarian.addBookmark(selVerses.first());
-				Toast.makeText(ReaderActivity.this, getString(R.string.added), Toast.LENGTH_LONG).show();
-				break;
-				
-			case 1:
-				myLibrarian.shareText(ReaderActivity.this, selVerses, Destination.ActionSend);
-				break;
-			
-			case 2:
-				myLibrarian.shareText(ReaderActivity.this, selVerses, Destination.Clipboard);
-				Toast.makeText(ReaderActivity.this, getString(R.string.added), Toast.LENGTH_LONG).show();
-				break;
-			    
-			case 3:
-				myLibrarian.setCurrentVerseNumber(selVerses.first());
-				Intent intParallels = new Intent(VIEW_REFERENCE);
-				intParallels.putExtra("linkOSIS", myLibrarian.getCurrentOSISLink().getPath());
-				startActivityForResult(intParallels, R.id.action_bar_parallels);
-				break;
-
-			default:
-				break;
-			}
-        }
-    };
-    
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		if (PreferenceHelper.restoreStateBoolean("DisableAutoScreenRotation")) {
@@ -262,7 +205,7 @@ public class ReaderActivity extends GDActivity implements OnTaskCompleteListener
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater infl = getMenuInflater();
+		MenuInflater infl = getSupportMenuInflater();
 		infl.inflate(R.menu.menu_reader, menu);
 		return true;
 	}
@@ -270,42 +213,45 @@ public class ReaderActivity extends GDActivity implements OnTaskCompleteListener
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.NightDayMode:
-			nightMode = !nightMode;
-			PreferenceHelper.saveStateBoolean("nightMode", nightMode);
-			setTextinWebView();
-			break;
-		case R.id.Favorites:
-			Intent intentBookmarks = new Intent().setClass(
-					getApplicationContext(), BookmarksActivity.class);
-			startActivityForResult(intentBookmarks, R.id.action_bar_bookmarks);
-			break;
-		case R.id.History:
-			Intent intentHistory = new Intent().setClass(
-					getApplicationContext(), HistoryActivity.class);
-			startActivityForResult(intentHistory, R.id.action_bar_history);
-			break;
-		case R.id.Help:
-			Intent helpIntent = new Intent(this, HelpActivity.class);
-			startActivity(helpIntent);
-			break;
-		case R.id.Settings:
-			Intent intentSettings = new Intent().setClass(
-					getApplicationContext(), SettingsActivity.class);
-			startActivityForResult(intentSettings, R.id.action_bar_settings);
-			break;
-		case R.id.About:
-			Intent intentAbout = new Intent().setClass(
-					getApplicationContext(), AboutActivity.class);
-			startActivity(intentAbout);
-			break;
-		case R.id.Search:
-			Intent intentSearch = new Intent().setClass(
-					getApplicationContext(), SearchActivity.class);
-			startActivityForResult(intentSearch, R.id.action_bar_search);
-			break;
-		default:
-			return false;
+			case R.id.action_bar_chooseCh:
+				onChooseChapterClick();
+				break;
+			case R.id.action_bar_search:
+				Intent intentSearch = new Intent().setClass(
+						getApplicationContext(), SearchActivity.class);
+				startActivityForResult(intentSearch, R.id.action_bar_search);
+				break;
+			case R.id.action_bar_bookmarks:
+				Intent intentBookmarks = new Intent().setClass(
+						getApplicationContext(), BookmarksActivity.class);
+				startActivityForResult(intentBookmarks, R.id.action_bar_bookmarks);
+				break;
+			case R.id.NightDayMode:
+				nightMode = !nightMode;
+				PreferenceHelper.saveStateBoolean("nightMode", nightMode);
+				setTextinWebView();
+				break;
+			case R.id.action_bar_history:
+				Intent intentHistory = new Intent().setClass(
+						getApplicationContext(), HistoryActivity.class);
+				startActivityForResult(intentHistory, R.id.action_bar_history);
+				break;
+			case R.id.Help:
+				Intent helpIntent = new Intent(this, HelpActivity.class);
+				startActivity(helpIntent);
+				break;
+			case R.id.Settings:
+				Intent intentSettings = new Intent().setClass(
+						getApplicationContext(), SettingsActivity.class);
+				startActivityForResult(intentSettings, R.id.action_bar_settings);
+				break;
+			case R.id.About:
+				Intent intentAbout = new Intent().setClass(
+						getApplicationContext(), AboutActivity.class);
+				startActivity(intentAbout);
+				break;
+			default:
+				return false;
 		}
 		return true;
 	}
@@ -314,7 +260,7 @@ public class ReaderActivity extends GDActivity implements OnTaskCompleteListener
 		super.onActivityResult(requestCode, resultCode, data);
 
 		if (resultCode == RESULT_OK) {
-			if ((requestCode == R.id.action_bar_bookmarks) 
+			if ((requestCode == R.id.action_bar_bookmarks)
 					|| (requestCode == R.id.action_bar_search )
 					|| (requestCode == R.id.action_bar_chooseCh)
 					|| (requestCode == R.id.action_bar_parallels)
@@ -335,14 +281,13 @@ public class ReaderActivity extends GDActivity implements OnTaskCompleteListener
 	public void setTextinWebView() {
 		BibleReference OSISLink = myLibrarian.getCurrentOSISLink();
 		vWeb.setText(myLibrarian.getBaseUrl(), chapterInHTML, OSISLink.getFromVerse(), nightMode, myLibrarian.isBible());
-		
+
 		PreferenceHelper.saveStateString("last_read", OSISLink.getExtendedPath());
-		
+
 		vModuleName.setText(myLibrarian.getModuleName());
 		vBookLink.setText(myLibrarian.getHumanBookLink());
-		
+
 		btnChapterNav.setVisibility(View.GONE);
-		btnTextAction.setVisibility(View.GONE);
 	}
 
 	public void onChooseChapterClick() {
@@ -356,7 +301,7 @@ public class ReaderActivity extends GDActivity implements OnTaskCompleteListener
 			prevChapter();
 		}
 	};
-	
+
 	OnClickListener onClickChapterNext = new OnClickListener() {
 		public void onClick(View v) {
 			nextChapter();
@@ -399,14 +344,8 @@ public class ReaderActivity extends GDActivity implements OnTaskCompleteListener
 		mAsyncManager.setupTask(new AsyncOpenChapter(
 				progressMessage, false, myLibrarian, myLibrarian.getCurrentOSISLink()), this);
 	}
-	
+
 	public void setTextActionVisibility() {
-		if (!vWeb.isStudyMode() 
-				|| vWeb.getSelectedVerses().size() == 0) {
-			btnTextAction.setVisibility(View.GONE);
-		} else {
-			btnTextAction.setVisibility(View.VISIBLE);
-		}
 	}
 
 	public void viewChapterNav() {
@@ -424,33 +363,36 @@ public class ReaderActivity extends GDActivity implements OnTaskCompleteListener
 			}
 		}
 	}
-	
+
 	private Handler chapterNavHandler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
-			case R.id.view_chapter_nav:
-				btnChapterNav.setVisibility(View.GONE);
-				break;
+				case R.id.view_chapter_nav:
+					btnChapterNav.setVisibility(View.GONE);
+					break;
 			}
 			super.handleMessage(msg);
 		}
 	};
-	
+
 	@Override
 	public boolean onSearchRequested() {
 		Intent intentSearch = new Intent().setClass(
-		getApplicationContext(), SearchActivity.class);
+				getApplicationContext(), SearchActivity.class);
 		startActivityForResult(intentSearch, R.id.action_bar_search);
 		return false;
 	}
 
 	public void updateActivityMode() {
-		int visible = vWeb.isStudyMode() ? View.VISIBLE : View.GONE;
-		getActionBar().setVisibility(visible);
+		if (vWeb.isStudyMode()) {
+			getSupportActionBar().show();
+		} else {
+			getSupportActionBar().hide();
+		}
+
 		if (!vWeb.isStudyMode()) {
 			btnChapterNav.setVisibility(View.GONE);
-			btnTextAction.setVisibility(View.GONE);
 		}
 	}
 
@@ -470,13 +412,13 @@ public class ReaderActivity extends GDActivity implements OnTaskCompleteListener
 			return super.onKeyDown(keyCode, event);
 		}
 	}
-	
-    @Override
-    public Object onRetainNonConfigurationInstance() {
-    	return mAsyncManager.retainTask();
-    }
-    
-    public void onTaskComplete(Task task) {
+
+	@Override
+	public Object onRetainNonConfigurationInstance() {
+		return mAsyncManager.retainTask();
+	}
+
+	public void onTaskComplete(Task task) {
 		if (task != null && !task.isCancelled()) {
 			if (task instanceof AsyncOpenChapter) {
 				AsyncOpenChapter t = ((AsyncOpenChapter) task);
@@ -489,12 +431,12 @@ public class ReaderActivity extends GDActivity implements OnTaskCompleteListener
 						ExceptionHelper.onOpenModuleException((OpenModuleException) e, this, TAG);
 					} else if (e instanceof BookNotFoundException) {
 						ExceptionHelper.onBookNotFoundException((BookNotFoundException) e, this, TAG);
-					}  
+					}
 				}
 			}
 		}
-    }
-    
+	}
+
 	@Override
 	public void onReaderViewChange(ChangeCode code) {
 		if (code == ChangeCode.onChangeReaderMode) {
