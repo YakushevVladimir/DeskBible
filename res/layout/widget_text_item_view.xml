@@ -20,7 +20,7 @@
 <com.BibleQuote.widget.itemview.TextItemView
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@+id/bq_text"
-	android:layout_height="wrap_content"
+	android:layout_height="@dimen/bq_item_view_height"
 	android:layout_width="fill_parent"
 	android:minHeight="@dimen/bq_item_view_height"
 	android:paddingLeft="@dimen/bq_item_view_padding_left"

@@ -15,7 +15,7 @@
  */
 package com.BibleQuote;
 
-import greendroid.app.GDApplication;
+import android.app.Application;
 
 import com.BibleQuote.activity.ReaderActivity;
 import com.BibleQuote.managers.AsyncManager;
@@ -23,7 +23,7 @@ import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.UpdateManager;
 
-public class BibleQuoteApp extends GDApplication {
+public class BibleQuoteApp extends Application {
 	
 	private Librarian myLibrarian;
 	private AsyncManager mAsyncManager;
@@ -33,11 +33,6 @@ public class BibleQuoteApp extends GDApplication {
         super.onCreate();
     }
     
-    @Override
-	public Class<?> getHomeActivityClass() {
-		return ReaderActivity.class;
-	}
-
 	public void Init() {
 		initPrefernceHelper();
 		UpdateManager.Init(this);

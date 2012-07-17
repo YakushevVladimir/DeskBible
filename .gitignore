@@ -1,4 +1,6 @@
-
+/.idea
+/out
+/BQ_Android.iml
 /bin
 /.settings
 /gen
