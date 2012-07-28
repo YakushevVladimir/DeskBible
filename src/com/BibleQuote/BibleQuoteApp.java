@@ -20,11 +20,14 @@ import android.app.Application;
 import com.BibleQuote.activity.ReaderActivity;
 import com.BibleQuote.managers.AsyncManager;
 import com.BibleQuote.managers.Librarian;
+import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.UpdateManager;
 
 public class BibleQuoteApp extends Application {
-	
+
+	private static final String TAG = "BibleQuoteApp";
+
 	private Librarian myLibrarian;
 	private AsyncManager mAsyncManager;
 	
@@ -34,9 +37,12 @@ public class BibleQuoteApp extends Application {
     }
     
 	public void Init() {
+		Log.i(TAG, "Init application preference helper...");
 		initPrefernceHelper();
+		Log.i(TAG, "Start update manager...");
 		UpdateManager.Init(this);
 		if (myLibrarian == null) {
+			Log.i(TAG, "Init library...");
 			initLibrarian();
 		}
 	}

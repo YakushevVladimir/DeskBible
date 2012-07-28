@@ -31,7 +31,7 @@ import android.os.Environment;
 
 /**
  * Класс отвечающий за запись протокола событий приложения.
- * Записывает отладочную информация в файл jbible_log.txt,
+ * Записывает отладочную информация в файл log.txt,
  * находящийся в корне съемного диска устройства
  *  
  * @author Владимир Якушев (ru.phoenix@gmail.com)
@@ -112,14 +112,14 @@ public class Log {
 	/**
 	 * Запись в протокол событий информационного сообщения
 	 * @param Tag имя класса-инициатора события
-	 * @param text текст помещаемый в протокол событий 
+	 * @param info текст помещаемый в протокол событий
 	 */
 	public static void i(String Tag, String info){
 		Write(Tag, info);
 	}
 	
 	private static void Write(String text){
-		i(null, text);
+		Write(null, text);
 	}
 	
 	private static BufferedWriter GetWriter(){

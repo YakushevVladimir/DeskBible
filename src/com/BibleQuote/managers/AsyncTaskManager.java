@@ -20,12 +20,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 
+import android.nfc.Tag;
 import com.BibleQuote.utils.IProgressTracker;
+import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.OnTaskCompleteListener;
 import com.BibleQuote.utils.Task;
 
 public final class AsyncTaskManager implements IProgressTracker,
 		OnCancelListener {
+	private String TAG = "AsyncTaskManager";
 
 	private OnTaskCompleteListener mTaskCompleteListener;
 	private ProgressDialog mProgressDialog;
@@ -91,7 +94,11 @@ public final class AsyncTaskManager implements IProgressTracker,
 	@Override
 	public void onComplete() {
 		// Close progress dialog
-		mProgressDialog.cancel();
+		try {
+			mProgressDialog.cancel();
+		} catch (IllegalArgumentException e) {
+			Log.e(TAG, "View not attached to window manager");
+		}
 
 		Task completedTask = mAsyncTask;
 		// Reset task

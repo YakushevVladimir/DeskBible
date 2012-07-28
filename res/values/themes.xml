@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+	<style name="Theme.BibleQuote" parent="Theme.Sherlock.Light.DarkActionBar">
+		<item name="actionBarStyle">@style/Widget.Styled.ActionBar</item>
+		<item name="android:actionBarStyle">@style/Widget.Styled.ActionBar</item>
+	</style>
+	<style name="Widget.Styled.ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">
+		<item name="background">@drawable/action_bar_background</item>
+		<item name="android:background">@drawable/action_bar_background</item>
+		<item name="backgroundSplit">@drawable/action_bar_divider</item>
+		<item name="android:backgroundSplit">@drawable/action_bar_divider</item>
+		<item name="divider">@drawable/action_bar_divider</item>
+		<item name="android:divider">@drawable/action_bar_divider</item>
+	</style>
+</resources>

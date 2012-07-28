@@ -37,25 +37,28 @@ public class SplashActivity extends SherlockActivity implements OnTaskCompleteLi
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.main);
-		getActionBar().hide();
-		
+
 		Log.Init(getApplicationContext());
-		
-		Log.i(TAG, "Start task InitApplication()");
+
+		Log.i(TAG, "Get link on application...");
 		BibleQuoteApp app = (BibleQuoteApp) getApplication();
+		Log.i(TAG, "Get progress message...");
 		String progressMessage = getResources().getString(R.string.messageLoad);
 
+		Log.i(TAG, "Get AsyncTask manager...");
 		AsyncManager myAsyncManager = app.getAsyncManager();
+		Log.i(TAG, "Restore old task...");
 		myAsyncManager.handleRetainedTask(getLastNonConfigurationInstance(), this);
+		Log.i(TAG, "Start task InitApplication...");
 		myAsyncManager.setupTask(new AsyncCommand(new InitApplication(), progressMessage, true), this);
 	}
     
 	private class InitApplication implements ICommand {
 		@Override
 		public void execute() throws Exception {
-			Log.i(TAG, "InitApplication.execute()");
+			Log.i(TAG, "Task InitApplication execute...");
 			BibleQuoteApp app = (BibleQuoteApp) getApplication();
 			app.Init();
 		}

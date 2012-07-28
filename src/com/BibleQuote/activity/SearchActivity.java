@@ -120,7 +120,7 @@ public class SearchActivity extends SherlockActivity implements OnTaskCompleteLi
 			title += " (" + searchResults.size() + " "
 					+ getResources().getString(R.string.results) + ")";
 		}
-		getActionBar().setTitle(title);
+		getSupportActionBar().setTitle(title);
 	}
 
 	private void SpinnerInit() {

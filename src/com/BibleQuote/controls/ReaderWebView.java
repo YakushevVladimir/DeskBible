@@ -125,6 +125,9 @@ public class ReaderWebView extends WebView
 	}
 	
 	public void clearSelectedVerse() {
+		if (selectedVerse.size() == 0) {
+			return;
+		}
 		jsInterface.clearSelectedVerse();
 		if (isStudyMode) {
 			notifyListeners(ChangeCode.onChangeSelection);

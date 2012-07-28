@@ -2,10 +2,13 @@ package com.BibleQuote.managers;
 
 import android.content.Context;
 
+import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.OnTaskCompleteListener;
 import com.BibleQuote.utils.Task;
 
 public class AsyncManager implements OnTaskCompleteListener {
+
+	private static String TAG = "AsyncManager";
 	
 	private AsyncTaskManager mWaitTaskManager;
 	private AsyncTaskManager mAsyncTaskManager;  
@@ -13,6 +16,7 @@ public class AsyncManager implements OnTaskCompleteListener {
 	private OnTaskCompleteListener mTaskCompleteListener;
 	
 	public synchronized void setupTask(Object taskObject, OnTaskCompleteListener taskCompleteListener) {
+		Log.i(TAG, "Setup task...");
 		if (taskObject instanceof Task && taskCompleteListener instanceof Context) {
 			Task newTask = (Task) taskObject;
 			mTaskCompleteListener = taskCompleteListener;

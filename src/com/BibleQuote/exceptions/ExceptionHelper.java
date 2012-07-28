@@ -10,6 +10,9 @@ public class ExceptionHelper {
 
 	public static void onException(Exception ex, Context context, String TAG){
 		String message = ex.getMessage();
+		if (message == null) {
+			return;
+		}
 		Log.e(TAG, message);
 		new NotifyDialog(message, context).show();	
 	}

@@ -31,6 +31,7 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		setTheme(R.style.Theme_Sherlock_Light);
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.settings);
 		

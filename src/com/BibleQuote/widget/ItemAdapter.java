@@ -155,8 +155,6 @@ public class ItemAdapter extends BaseAdapter {
         if (info != null) {
             info.count--;
             if (info.count == 0) {
-                // TODO cyril: Creating a pool to keep all TypeInfo instances
-                // could be a great idea in the future.
                 mTypes.remove(klass);
             }
         }
@@ -332,13 +330,8 @@ public class ItemAdapter extends BaseAdapter {
             } else if (name.equals("subtext-item")) {
                 item = new SubtextItem();
             } else {
-                // TODO cyril: Remove that so that we can extend from
-                // ItemAdapter and creates our own items via XML?
                 throw new XmlPullParserException(parser.getPositionDescription() + ": invalid item tag " + name);
             }
-
-            // TODO cyril: Here we should call a method that children may
-            // override to be able to create our own Items
 
             if (item != null) {
                 item.inflate(r, parser, attrs);

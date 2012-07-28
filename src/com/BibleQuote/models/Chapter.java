@@ -53,7 +53,7 @@ public class Chapter {
 		LinkedHashMap<Integer, String> result = new LinkedHashMap<Integer, String>();
 		ArrayList<Verse> versesList = getVerseList();
 		for (Integer verse : verses) {
-			if (versesList.size() < --verse) {
+			if (versesList.size() < (verse - 1)) {
 				break;
 			}
 			result.put(verse, StringProc.cleanVerseText(versesList.get(verse).getText()));

@@ -31,7 +31,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
-import com.BibleQuote.activity.*;
 import com.BibleQuote.controls.ReaderWebView;
 import com.BibleQuote.entity.BibleReference;
 import com.BibleQuote.exceptions.BookNotFoundException;
@@ -47,7 +46,7 @@ import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.Share.ShareBuilder.Destination;
 import com.BibleQuote.utils.Task;
 import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.*;
+import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -64,24 +63,80 @@ public class ReaderActivity extends SherlockActivity implements OnTaskCompleteLi
 
 	private Librarian myLibrarian;
 	private AsyncManager mAsyncManager;
+	private ActionMode currActionMode;
 
 	private String chapterInHTML = "";
 	private boolean nightMode = false;
 	private String progressMessage = "";
-	private int runtimeOrientation;
 
 	private TextView vModuleName;
 	private TextView vBookLink;
 	private LinearLayout btnChapterNav;
 	private ReaderWebView vWeb;
 
+	private final class ActionSelectText implements ActionMode.Callback {
+
+		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+			MenuInflater infl = getSupportMenuInflater();
+			infl.inflate(R.menu.menu_action_text_select, menu);
+			return true;
+		}
+
+		public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+			return false;
+		}
+
+		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+			TreeSet<Integer> selVerses = vWeb.getSelectedVerses();
+			if (selVerses.size() == 0) {
+				return true;
+			}
+
+			switch (item.getItemId()) {
+			case R.id.action_bookmarks:
+				myLibrarian.addBookmark(selVerses.first());
+				Toast.makeText(ReaderActivity.this, getString(R.string.added), Toast.LENGTH_LONG).show();
+				break;
+
+			case R.id.action_share:
+				myLibrarian.shareText(ReaderActivity.this, selVerses, Destination.ActionSend);
+				break;
+
+			case R.id.action_copy:
+				myLibrarian.shareText(ReaderActivity.this, selVerses, Destination.Clipboard);
+				Toast.makeText(ReaderActivity.this, getString(R.string.added), Toast.LENGTH_LONG).show();
+				break;
+
+			case R.id.action_references:
+				myLibrarian.setCurrentVerseNumber(selVerses.first());
+				Intent intParallels = new Intent(VIEW_REFERENCE);
+				intParallels.putExtra("linkOSIS", myLibrarian.getCurrentOSISLink().getPath());
+				startActivityForResult(intParallels, R.id.action_bar_parallels);
+				break;
+
+			default:
+				return false;
+			}
+
+			mode.finish();
+			return true;
+		}
+
+		public void onDestroyActionMode(ActionMode mode) {
+			vWeb.clearSelectedVerse();
+			currActionMode = null;
+		}
+	}
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.reader);
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-		runtimeOrientation = getScreenOrientation();
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
+
+		getSupportActionBar().setIcon(R.drawable.app_logo);
+		getSupportActionBar().setDisplayShowTitleEnabled(false);
 
 		BibleQuoteApp app = (BibleQuoteApp) getApplication();
 		myLibrarian = app.getLibrarian();
@@ -120,87 +175,15 @@ public class ReaderActivity extends SherlockActivity implements OnTaskCompleteLi
 		}
 	}
 
-//   private void prepareQuickActionBar() {
-//    	textQAction = new QuickActionBar(this);
-//    	textQAction.addQuickAction(new QuickAction(this, R.drawable.ic_action_bar_bookmark, R.string.bookmarks));
-//    	textQAction.addQuickAction(new QuickAction(this, R.drawable.ic_action_bar_share, R.string.share));
-//    	textQAction.addQuickAction(new QuickAction(this, R.drawable.ic_action_bar_clipboard, R.string.copy));
-//    	textQAction.addQuickAction(new QuickAction(this, R.drawable.ic_action_bar_parallels, R.string.references));
-//    	textQAction.setOnQuickActionClickListener(mActionListener);
-//    }
-//
-//    OnClickListener onClickBtnTextAction = new OnClickListener() {
-//		public void onClick(View btnTextAction) {
-//	    	textQAction.show(btnTextAction);
-//		}
-//	};
-
-//   private OnQuickActionClickListener mActionListener = new OnQuickActionClickListener() {
-//        public void onQuickActionClicked(QuickActionWidget widget, int position) {
-//    		ReaderWebView wView = (ReaderWebView)findViewById(R.id.readerView);
-//			TreeSet<Integer> selVerses = wView.getSelectedVerses();
-//			if (selVerses.size() == 0) {
-//				return;
-//			}
-//
-//			switch (position) {
-//			case 0:
-//				myLibrarian.addBookmark(selVerses.first());
-//				Toast.makeText(ReaderActivity.this, getString(R.string.added), Toast.LENGTH_LONG).show();
-//				break;
-//
-//			case 1:
-//				myLibrarian.shareText(ReaderActivity.this, selVerses, Destination.ActionSend);
-//				break;
-//
-//			case 2:
-//				myLibrarian.shareText(ReaderActivity.this, selVerses, Destination.Clipboard);
-//				Toast.makeText(ReaderActivity.this, getString(R.string.added), Toast.LENGTH_LONG).show();
-//				break;
-//
-//			case 3:
-//				myLibrarian.setCurrentVerseNumber(selVerses.first());
-//				Intent intParallels = new Intent(VIEW_REFERENCE);
-//				intParallels.putExtra("linkOSIS", myLibrarian.getCurrentOSISLink().getPath());
-//				startActivityForResult(intParallels, R.id.action_bar_parallels);
-//				break;
-//
-//			default:
-//				break;
-//			}
-//        }
-//    };
-
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		if (PreferenceHelper.restoreStateBoolean("DisableAutoScreenRotation")) {
 			super.onConfigurationChanged(newConfig);
-			this.setRequestedOrientation(runtimeOrientation);
+			this.setRequestedOrientation(Surface.ROTATION_0);
 		} else {
-			runtimeOrientation = this.getScreenOrientation();
 			this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
 			super.onConfigurationChanged(newConfig);
 		}
-	}
-
-	protected int getScreenOrientation() {
-		Display display = getWindowManager().getDefaultDisplay();
-		int orientation = display.getOrientation();
-
-		if (orientation == Configuration.ORIENTATION_UNDEFINED) {
-			orientation = getResources().getConfiguration().orientation;
-
-			if (orientation == Configuration.ORIENTATION_UNDEFINED) {
-				if (display.getWidth() == display.getHeight())
-					orientation = Configuration.ORIENTATION_SQUARE;
-				else if (display.getWidth() < display.getHeight())
-
-					orientation = Configuration.ORIENTATION_PORTRAIT;
-				else
-					orientation = Configuration.ORIENTATION_LANDSCAPE;
-			}
-		}
-		return orientation;
 	}
 
 	@Override
@@ -229,7 +212,7 @@ public class ReaderActivity extends SherlockActivity implements OnTaskCompleteLi
 			case R.id.NightDayMode:
 				nightMode = !nightMode;
 				PreferenceHelper.saveStateBoolean("nightMode", nightMode);
-				setTextinWebView();
+				setTextInWebView();
 				break;
 			case R.id.action_bar_history:
 				Intent intentHistory = new Intent().setClass(
@@ -278,7 +261,7 @@ public class ReaderActivity extends SherlockActivity implements OnTaskCompleteLi
 		}
 	}
 
-	public void setTextinWebView() {
+	public void setTextInWebView() {
 		BibleReference OSISLink = myLibrarian.getCurrentOSISLink();
 		vWeb.setText(myLibrarian.getBaseUrl(), chapterInHTML, OSISLink.getFromVerse(), nightMode, myLibrarian.isBible());
 
@@ -343,9 +326,6 @@ public class ReaderActivity extends SherlockActivity implements OnTaskCompleteLi
 	private void viewCurrentChapter() {
 		mAsyncManager.setupTask(new AsyncOpenChapter(
 				progressMessage, false, myLibrarian, myLibrarian.getCurrentOSISLink()), this);
-	}
-
-	public void setTextActionVisibility() {
 	}
 
 	public void viewChapterNav() {
@@ -424,7 +404,7 @@ public class ReaderActivity extends SherlockActivity implements OnTaskCompleteLi
 				AsyncOpenChapter t = ((AsyncOpenChapter) task);
 				if (t.isSuccess()) {
 					chapterInHTML = myLibrarian.getChapterHTMLView();
-					setTextinWebView();
+					setTextInWebView();
 				} else {
 					Exception e = t.getException();
 					if (e instanceof OpenModuleException) {
@@ -445,8 +425,15 @@ public class ReaderActivity extends SherlockActivity implements OnTaskCompleteLi
 				|| code == ChangeCode.onScroll) {
 			viewChapterNav();
 		} else if (code == ChangeCode.onChangeSelection) {
-			viewChapterNav();
-			setTextActionVisibility();
+			TreeSet<Integer> selVerses = vWeb.getSelectedVerses();
+			if (selVerses.size() == 0) {
+				if (currActionMode != null) {
+					currActionMode.finish();
+					currActionMode = null;
+				}
+			} else if (currActionMode == null) {
+				currActionMode = startActionMode(new ActionSelectText());
+			}
 		} else if (code == ChangeCode.onLongPress) {
 			if (vWeb.isStudyMode()) {
 				viewChapterNav();

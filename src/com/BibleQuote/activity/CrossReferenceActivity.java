@@ -62,7 +62,7 @@ public class CrossReferenceActivity extends SherlockActivity implements OnTaskCo
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.parallels_list);
-        
+
 		BibleQuoteApp app = (BibleQuoteApp) getApplication();
 		myLibrarian = app.getLibrarian();
 		
