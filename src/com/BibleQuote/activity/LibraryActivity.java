@@ -15,6 +15,7 @@
  */
 package com.BibleQuote.activity;
 
+import com.BibleQuote.utils.ViewUtils;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
@@ -72,6 +73,7 @@ public class LibraryActivity extends SherlockActivity implements OnTaskCompleteL
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.books);
+		ViewUtils.setActionBarBackground(this);
 
 		BibleQuoteApp app = (BibleQuoteApp) getApplication();
 		myLibrarian = app.getLibrarian();

@@ -1,16 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <resources>
-	<style name="Theme.BibleQuote" parent="Theme.Sherlock.Light.DarkActionBar">
+
+	<style name="Theme.BibleQuote" parent="Theme.Sherlock.Light">
 		<item name="actionBarStyle">@style/Widget.Styled.ActionBar</item>
 		<item name="android:actionBarStyle">@style/Widget.Styled.ActionBar</item>
 	</style>
-	<style name="Widget.Styled.ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">
-		<item name="background">@drawable/action_bar_background</item>
-		<item name="android:background">@drawable/action_bar_background</item>
-		<item name="backgroundSplit">@drawable/action_bar_divider</item>
-		<item name="android:backgroundSplit">@drawable/action_bar_divider</item>
-		<item name="divider">@drawable/action_bar_divider</item>
+
+	<style name="Widget.Styled.ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid">
+		<item name="android:background">@drawable/action_bar_bg</item>
+		<item name="background">@drawable/action_bar_bg</item>
 		<item name="android:divider">@drawable/action_bar_divider</item>
+		<item name="divider">@drawable/action_bar_divider</item>
+		<item name="android:titleTextStyle">@style/titleTextStyle</item>
+		<item name="titleTextStyle">@style/titleTextStyle</item>
 	</style>
+
+	<style name="titleTextStyle" parent="TextAppearance.Sherlock.Widget.ActionBar.Title">
+		<item name="android:textColor">#DE333333</item>
+		<item name="android:textStyle">bold</item>
+		<item name="android:shadowColor">#000000</item>
+		<item name="android:shadowDx">1</item>
+		<item name="android:shadowDy">1</item>
+		<item name="android:shadowRadius">0.5</item>
+	</style>
+
 </resources>

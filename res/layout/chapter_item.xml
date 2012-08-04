@@ -25,6 +25,6 @@
 	android:textColor="@color/black"
 	android:layout_margin="0dip"
 	android:padding="2sp"
-	android:textSize="@dimen/text_size_large"
+	android:textSize="@dimen/text_size_medium"
 	android:gravity="center"
 	android:singleLine="true" />

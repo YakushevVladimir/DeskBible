@@ -17,6 +17,7 @@ package com.BibleQuote.activity;
 
 import com.BibleQuote.R;
 
+import com.BibleQuote.utils.ViewUtils;
 import com.actionbarsherlock.app.SherlockActivity;
 import android.os.Bundle;
 
@@ -26,5 +27,6 @@ public class AboutActivity extends SherlockActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.about);
-    }
+		ViewUtils.setActionBarBackground(this);
+	}
 }

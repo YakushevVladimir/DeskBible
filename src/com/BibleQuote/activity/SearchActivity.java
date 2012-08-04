@@ -16,6 +16,7 @@
 
 package com.BibleQuote.activity;
 
+import com.BibleQuote.utils.ViewUtils;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.BibleQuote.widget.ItemAdapter;
 import com.BibleQuote.widget.item.Item;
@@ -67,6 +68,7 @@ public class SearchActivity extends SherlockActivity implements OnTaskCompleteLi
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.search);
+		ViewUtils.setActionBarBackground(this);
 
 		BibleQuoteApp app = (BibleQuoteApp) getApplication();
 		myLibararian = app.getLibrarian();

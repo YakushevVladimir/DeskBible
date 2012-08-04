@@ -32,7 +32,7 @@
 		android:layout_weight="0.5"
 		android:textColor="@android:color/black"
 		android:gravity="bottom|left"
-		android:textSize="@dimen/text_size_medium"
+		android:textSize="@dimen/text_size_large"
 		android:singleLine="true"
 		android:ellipsize="end" />
 
@@ -43,7 +43,7 @@
 		android:layout_weight="0.5"
 		android:gravity="top|left"
 		android:textColor="#ff5d5d5d"
-		android:textSize="@dimen/text_size_small"
+		android:textSize="@dimen/text_size_medium"
 		android:ellipsize="end" />
 
 </com.BibleQuote.widget.itemview.SubtitleItemView>

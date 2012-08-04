@@ -5,6 +5,6 @@
 			android:id="@id/action_bar_refresh"
 			android:title="@string/messageRefresh"
 			android:orderInCategory="0"
-			android:icon="@drawable/ic_action_bar_refresh"
+			android:icon="@drawable/ic_action_refresh"
 			android:showAsAction="always" />
 </menu>

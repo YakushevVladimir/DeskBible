@@ -21,48 +21,48 @@
 	<item
 		android:id="@id/action_bar_chooseCh"
 		android:orderInCategory="0"
-		android:icon="@drawable/ic_action_bar_content"
+		android:icon="@drawable/ic_action_select"
 		android:showAsAction="always" />
 	<item
 		android:title="@string/menu_search"
 		android:id="@id/action_bar_search"
 		android:orderInCategory="1"
-		android:icon="@drawable/ic_menu_search"
+		android:icon="@drawable/ic_action_search"
 		android:showAsAction="always|withText"/>
 	<item
 		android:title="@string/menu_history"
 		android:id="@id/action_bar_history"
 		android:orderInCategory="2"
-		android:icon="@drawable/ic_menu_recent_history"
+		android:icon="@drawable/ic_action_history"
 		android:showAsAction="withText|always"/>
 	<item
 		android:title="@string/menu_favorites"
 		android:id="@id/action_bar_bookmarks"
 		android:orderInCategory="3"
-		android:icon="@drawable/ic_menu_bookmarks"
+		android:icon="@drawable/ic_action_bookmark"
 		android:showAsAction="ifRoom"/>
 	<item
 		android:title="@string/menu_night_day_mode"
 		android:id="@+id/NightDayMode"
 		android:orderInCategory="4"
-		android:icon="@drawable/ic_menu_view"
+		android:icon="@drawable/ic_action_day_night"
 		android:showAsAction="ifRoom"/>
 	<item
 		android:title="@string/menu_settings"
 		android:id="@+id/Settings"
+		android:icon="@drawable/ic_action_preferences"
 		android:orderInCategory="5"
-		android:icon="@drawable/ic_menu_preferences"
 		android:showAsAction="ifRoom"/>
 	<item
 		android:title="@string/menu_help"
 		android:id="@+id/Help"
 		android:orderInCategory="6"
-		android:icon="@drawable/ic_menu_help"
+		android:icon="@drawable/ic_action_help"
 		android:showAsAction="ifRoom"/>
 	<item
 		android:title="@string/about"
 		android:id="@+id/About"
 		android:orderInCategory="7"
-		android:icon="@drawable/ic_menu_info_details"
+		android:icon="@drawable/ic_action_about"
 		android:showAsAction="ifRoom"/>
 </menu>

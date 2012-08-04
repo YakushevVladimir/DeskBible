@@ -24,6 +24,7 @@ import android.content.res.Resources.NotFoundException;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
+import com.BibleQuote.utils.ViewUtils;
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
 
 public class SettingsActivity extends SherlockPreferenceActivity implements

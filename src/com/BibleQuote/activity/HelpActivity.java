@@ -5,6 +5,7 @@ import com.BibleQuote.utils.FsUtils;
 
 import android.os.Bundle;
 import android.webkit.WebView;
+import com.BibleQuote.utils.ViewUtils;
 import com.actionbarsherlock.app.SherlockActivity;
 
 public class HelpActivity extends SherlockActivity {
@@ -13,6 +14,7 @@ public class HelpActivity extends SherlockActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.help);
+		ViewUtils.setActionBarBackground(this);
 
 		String helpText = FsUtils.getAssetString(getApplicationContext(), "help.html");
 		WebView vWeb = (WebView)findViewById(R.id.helpView);

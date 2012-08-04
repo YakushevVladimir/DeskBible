@@ -4,6 +4,6 @@
 	<item
 		android:id="@id/action_bar_history_clear"
 		android:orderInCategory="0"
-		android:icon="@drawable/ic_action_bar_trashcan"
+		android:icon="@drawable/ic_action_delete"
 		android:showAsAction="always" />
 </menu>

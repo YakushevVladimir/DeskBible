@@ -39,6 +39,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import com.BibleQuote.utils.ViewUtils;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.BibleQuote.widget.ItemAdapter;
 import com.BibleQuote.widget.item.Item;
@@ -62,6 +63,7 @@ public class CrossReferenceActivity extends SherlockActivity implements OnTaskCo
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.parallels_list);
+		ViewUtils.setActionBarBackground(this);
 
 		BibleQuoteApp app = (BibleQuoteApp) getApplication();
 		myLibrarian = app.getLibrarian();

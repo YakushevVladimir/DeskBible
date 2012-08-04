@@ -22,12 +22,12 @@
 			android:id="@+id/action_bar_sort"
 			android:title="@string/fav_sort_alphabetically"
 			android:orderInCategory="0"
-			android:icon="@drawable/ic_action_bar_sort"
+			android:icon="@drawable/ic_action_sort"
 			android:showAsAction="ifRoom|withText"/>
 	<item
 			android:id="@+id/action_bar_delete"
 			android:title="@string/fav_delete_all"
 			android:orderInCategory="1"
-			android:icon="@drawable/ic_quick_action_bar_delete"
+			android:icon="@drawable/ic_action_delete"
 			android:showAsAction="ifRoom|withText" />
 </menu>

@@ -22,24 +22,24 @@
 			android:id="@+id/action_bookmarks"
 			android:title="@string/bookmarks"
 			android:orderInCategory="0"
-			android:icon="@drawable/ic_action_bar_bookmark"
+			android:icon="@drawable/ic_action_bookmark"
 			android:showAsAction="always"/>
 	<item
 			android:title="@string/share"
 			android:id="@+id/action_share"
 			android:orderInCategory="1"
-			android:icon="@drawable/ic_action_bar_share"
+			android:icon="@drawable/ic_action_mode_share"
 			android:showAsAction="always|withText"/>
 	<item
 			android:title="@string/references"
 			android:id="@+id/action_references"
 			android:orderInCategory="2"
-			android:icon="@drawable/ic_action_bar_parallels"
+			android:icon="@drawable/ic_action_parallels"
 			android:showAsAction="always|withText"/>
 	<item
 			android:title="@string/copy"
 			android:id="@+id/action_copy"
 			android:orderInCategory="2"
-			android:icon="@drawable/ic_action_bar_clipboard"
-			android:showAsAction="ifRoom"/>
+			android:icon="@drawable/ic_action_mode_copy"
+			android:showAsAction="ifRoom|withText"/>
 </menu>

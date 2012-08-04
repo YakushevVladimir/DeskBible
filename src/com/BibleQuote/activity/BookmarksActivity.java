@@ -15,6 +15,7 @@
  */
 package com.BibleQuote.activity;
 
+import com.BibleQuote.utils.ViewUtils;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -47,7 +48,8 @@ public class BookmarksActivity extends SherlockActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.favorits);
-		
+		ViewUtils.setActionBarBackground(this);
+
 		BibleQuoteApp app = (BibleQuoteApp) getApplication();
 		myLibrarian = app.getLibrarian();
 		

@@ -19,6 +19,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.media.AudioManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -40,11 +41,8 @@ import com.BibleQuote.listeners.IReaderViewListener;
 import com.BibleQuote.managers.AsyncManager;
 import com.BibleQuote.managers.AsyncOpenChapter;
 import com.BibleQuote.managers.Librarian;
-import com.BibleQuote.utils.DevicesKeyCodes;
-import com.BibleQuote.utils.OnTaskCompleteListener;
-import com.BibleQuote.utils.PreferenceHelper;
+import com.BibleQuote.utils.*;
 import com.BibleQuote.utils.Share.ShareBuilder.Destination;
-import com.BibleQuote.utils.Task;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
@@ -137,6 +135,7 @@ public class ReaderActivity extends SherlockActivity implements OnTaskCompleteLi
 
 		getSupportActionBar().setIcon(R.drawable.app_logo);
 		getSupportActionBar().setDisplayShowTitleEnabled(false);
+		ViewUtils.setActionBarBackground(this);
 
 		BibleQuoteApp app = (BibleQuoteApp) getApplication();
 		myLibrarian = app.getLibrarian();
@@ -220,8 +219,10 @@ public class ReaderActivity extends SherlockActivity implements OnTaskCompleteLi
 				startActivityForResult(intentHistory, R.id.action_bar_history);
 				break;
 			case R.id.Help:
-				Intent helpIntent = new Intent(this, HelpActivity.class);
-				startActivity(helpIntent);
+				Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://scripturesoftware.org/?page_id=427"));
+				startActivity(browserIntent);
+//				Intent helpIntent = new Intent(this, HelpActivity.class);
+//				startActivity(helpIntent);
 				break;
 			case R.id.Settings:
 				Intent intentSettings = new Intent().setClass(

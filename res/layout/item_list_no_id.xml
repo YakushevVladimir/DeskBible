@@ -33,7 +33,7 @@
 		android:paddingLeft="10dp"
 		android:textStyle="bold"
 		android:textColor="#000000" 
-		android:textSize="@dimen/text_size_medium"
+		android:textSize="@dimen/text_size_small"
 		android:gravity="center_vertical"
 		android:lines="2" />
 </LinearLayout>
