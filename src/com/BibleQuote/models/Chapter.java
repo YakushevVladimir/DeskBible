@@ -52,11 +52,13 @@ public class Chapter {
 	public LinkedHashMap<Integer, String> getVerses(TreeSet<Integer> verses) {
 		LinkedHashMap<Integer, String> result = new LinkedHashMap<Integer, String>();
 		ArrayList<Verse> versesList = getVerseList();
+        int verseListSize = versesList.size();
 		for (Integer verse : verses) {
-			if (versesList.size() < (verse - 1)) {
+            int verseIndex = verse - 1;
+			if (verseIndex > verseListSize) {
 				break;
 			}
-			result.put(verse, StringProc.cleanVerseText(versesList.get(verse).getText()));
+			result.put(verse, StringProc.cleanVerseText(versesList.get(verseIndex).getText()));
 		}
 		
 		return result;
