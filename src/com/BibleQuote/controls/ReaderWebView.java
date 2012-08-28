@@ -83,12 +83,13 @@ public class ReaderWebView extends WebView
 		html.append("<meta http-equiv=Content-Type content=\"text/html; charset=UTF-8\">\r\n");
 		html.append("<script language=\"JavaScript\" src=\"file:///android_asset/reader.js\" type=\"text/javascript\"></script>\r\n");
 		html.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"file:///android_asset/reader.css\">\r\n");
-		html.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"file:///android_asset/" + modStyle + "\">\r\n");
+		html.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"file:///android_asset/").append(modStyle).append("\">\r\n");
 		html.append(getStyle(nightMode));
 		html.append("</head>\r\n");
-		html.append("<body" + (currVerse > 1 ? (" onLoad=\"document.location.href='#verse_" + currVerse + "';\"") : "")	+ ">\r\n");
+		html.append("<body").append(currVerse > 1 ? (" onLoad=\"document.location.href='#verse_" + currVerse + "';\"") : "").append(">\r\n");
 		html.append(text);
-		html.append("</body>\r\n" + "</html>");
+		html.append("</body>\r\n");
+        html.append("</html>");
 
 		loadDataWithBaseURL("file://" + baseUrl, html.toString(), "text/html", "UTF-8", "about:config");
 		jsInterface.clearSelectedVerse();
@@ -106,12 +107,8 @@ public class ReaderWebView extends WebView
 		int scrollY = getScrollY();
 	    int scrollExtent = computeVerticalScrollExtent();
 	    int scrollPos = scrollY + scrollExtent;
-	    if (scrollPos >= (computeVerticalScrollRange() - 10)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
+	    return (scrollPos >= (computeVerticalScrollRange() - 10));
+    }
 
 	public void computeScroll() {
 		super.computeScroll();
@@ -160,15 +157,16 @@ public class ReaderWebView extends WebView
 			style.append("text-align: justify;\r\n");
 		}
 		//style.append("font-family: Georgia, Tahoma, Verdana, sans-serif;\r\n");
-		style.append("color: " + textColor + ";\r\n");
-		style.append("font-size: " + textSize + "pt;\r\n");
-		style.append("background: " + backColor + ";\r\n");
+		style.append("color: ").append(textColor).append(";\r\n");
+		style.append("font-size: ").append(textSize).append("pt;\r\n");
+        style.append("line-height: 1.25;\r\n");
+        style.append("background: ").append(backColor).append(";\r\n");
 		style.append("}\r\n");
 		style.append(".verse {\r\n");
-		style.append("background: " + backColor + ";\r\n");
+		style.append("background: ").append(backColor).append(";\r\n");
 		style.append("}\r\n");
 		style.append(".selectedVerse {\r\n");
-		style.append("background: " + selTextColor + ";\r\n");
+		style.append("background: ").append(selTextColor).append(";\r\n");
 		style.append("}\r\n");
 		style.append("img {\r\n");
 		style.append("max-width: 100%;\r\n");
@@ -194,13 +192,7 @@ public class ReaderWebView extends WebView
 	}
 
 	public boolean onTouchEvent(MotionEvent event) {
-		if (mGestureScanner.onTouchEvent(event)) {
-			return true;
-		} else if (event == null) {
-			return false;
-		} else {
-			return super.onTouchEvent(event);
-		}
+        return mGestureScanner.onTouchEvent(event) || (event != null && super.onTouchEvent(event));
 	}
 
 	public boolean onSingleTapUp(MotionEvent event) {
@@ -338,9 +330,8 @@ public class ReaderWebView extends WebView
 	}
 	
 	private void notifyListeners(ChangeCode code) {
-		for (int i = 0; i < listeners.size(); i++) {
-			IReaderViewListener listener = (IReaderViewListener) listeners.get(i);
-			listener.onReaderViewChange(code);
-		}
+        for (IReaderViewListener listener : listeners) {
+            listener.onReaderViewChange(code);
+        }
 	}
 }

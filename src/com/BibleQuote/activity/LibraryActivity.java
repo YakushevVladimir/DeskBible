@@ -218,7 +218,7 @@ public class LibraryActivity extends SherlockActivity implements OnTaskCompleteL
 			
 			modulesList.setAdapter(getModuleAdapter());
 			
-			ItemList itemModule = new ItemList(moduleID, myLibrarian.getModuleFullName(moduleID));
+			ItemList itemModule = new ItemList(moduleID, myLibrarian.getModuleFullName());
 			modulePos = modules.indexOf(itemModule);
 			if (modulePos >= 0) {
 				modulesList.setSelection(modulePos);

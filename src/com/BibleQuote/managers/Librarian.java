@@ -15,37 +15,16 @@
  */
 package com.BibleQuote.managers;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.TreeMap;
-import java.util.TreeSet;
-
 import android.content.Context;
-import android.util.Log;
-
 import com.BibleQuote.R;
-import com.BibleQuote.controllers.IBookController;
-import com.BibleQuote.controllers.IChapterController;
-import com.BibleQuote.controllers.IModuleController;
-import com.BibleQuote.controllers.LibraryController;
-import com.BibleQuote.controllers.TSKController;
+import com.BibleQuote.controllers.*;
 import com.BibleQuote.controllers.LibraryController.LibrarySource;
 import com.BibleQuote.dal.repository.XmlTskRepository;
 import com.BibleQuote.dal.repository.fsHistoryRepository;
 import com.BibleQuote.entity.BibleBooksID;
 import com.BibleQuote.entity.BibleReference;
 import com.BibleQuote.entity.ItemList;
-import com.BibleQuote.exceptions.BQUniversalException;
-import com.BibleQuote.exceptions.BookDefinitionException;
-import com.BibleQuote.exceptions.BookNotFoundException;
-import com.BibleQuote.exceptions.BooksDefinitionException;
-import com.BibleQuote.exceptions.OpenModuleException;
-import com.BibleQuote.exceptions.TskNotFoundException;
+import com.BibleQuote.exceptions.*;
 import com.BibleQuote.listeners.ChangeBooksEvent;
 import com.BibleQuote.listeners.IChangeBooksListener;
 import com.BibleQuote.managers.History.IHistoryManager;
@@ -53,11 +32,14 @@ import com.BibleQuote.managers.History.SimpleHistoryManager;
 import com.BibleQuote.models.Book;
 import com.BibleQuote.models.Chapter;
 import com.BibleQuote.models.Module;
+import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.PreferenceHelper;
-import com.BibleQuote.utils.StringProc;
 import com.BibleQuote.utils.Share.ShareBuilder;
 import com.BibleQuote.utils.Share.ShareBuilder.Destination;
+import com.BibleQuote.utils.StringProc;
 import com.BibleQuote.utils.modules.LinkConverter;
+
+import java.util.*;
 
 public class Librarian implements IChangeBooksListener  {
 	
@@ -76,15 +58,11 @@ public class Librarian implements IChangeBooksListener  {
 	private IModuleController moduleCtrl;
 	private IBookController bookCtrl;
 	private IChapterController chapterCtrl;
-	private LibraryController libCtrl;
 	private TSKController tskCtrl;
 	
-	private static final Byte delimeter1 = (byte) 0xFE;
-	private static final Byte delimeter2 = (byte) 0xFF;
-
 	public EventManager eventManager = new EventManager();
-	
-	/**
+
+    /**
 	 * Инициализация контроллеров библиотеки, модулей, книг и глав.
 	 * Подписка на событие ChangeBooksEvent 
 	 */
@@ -93,7 +71,7 @@ public class Librarian implements IChangeBooksListener  {
 		eventManager.addChangeBooksListener(this);
 		
 		com.BibleQuote.utils.Log.i(TAG, "Create controllers");
-		libCtrl = LibraryController.create(LibrarySource.FileSystem, eventManager, context);
+        LibraryController libCtrl = LibraryController.create(LibrarySource.FileSystem, eventManager, context);
 		moduleCtrl = libCtrl.getModuleCtrl();
 		bookCtrl = libCtrl.getBookCtrl();
 		chapterCtrl = libCtrl.getChapterCtrl();
@@ -110,13 +88,6 @@ public class Librarian implements IChangeBooksListener  {
 	 */
 	public Module getClosedModule() {
 		return moduleCtrl.getClosedModule();
-	}
-	
-    /**
-     * @return Возвращает TreeMap коллекцию модулей с ключом по Module.ShortName
-     */
-	public TreeMap<String, Module> getModules() {
-		return moduleCtrl.getModules();
 	}
 	
 	/**
@@ -194,14 +165,14 @@ public class Librarian implements IChangeBooksListener  {
 	
 	public Chapter openChapter(BibleReference link) throws BookNotFoundException, OpenModuleException {
 		currModule = getModuleByID(link.getModuleID(), link.getModuleDatasourceID());
-		currBook = getBookByID(currModule, link.getBookID());
-		currChapter = getChapterByNumber(currBook, link.getChapter());
+		currBook = getBookByID(getCurrModule(), link.getBookID());
+		currChapter = getChapterByNumber(getCurrBook(), link.getChapter());
 		currChapterNumber = link.getChapter();
 		currVerseNumber = link.getFromVerse();
 		
-		historyManager.addLink(new BibleReference(currModule, currBook, currChapterNumber, currVerseNumber));
+		historyManager.addLink(new BibleReference(getCurrModule(), getCurrBook(), getCurrChapterNumber(), getCurrVerseNumber()));
 		
-		return currChapter;
+		return getCurrChapter();
 	}
 	
 
@@ -244,17 +215,16 @@ public class Librarian implements IChangeBooksListener  {
 	}
 
 	public ArrayList<ItemList> getCurrentModuleBooksList() throws OpenModuleException, BooksDefinitionException, BookDefinitionException {
-		if (currModule == null) {
+		if (getCurrModule() == null) {
 			return new ArrayList<ItemList>();
 		}
-		return this.getModuleBooksList(currModule.getID());
+		return this.getModuleBooksList(getCurrModule().getID());
 	}
 
 	/**
 	 * Возвращает список глав книги
 	 * @throws OpenModuleException 
 	 * @throws BookNotFoundException 
-	 * @throws LoadBooksException 
 	 */
 	public ArrayList<String> getChaptersList(String moduleID, String bookID) 
 			throws BookNotFoundException, OpenModuleException {
@@ -270,21 +240,21 @@ public class Librarian implements IChangeBooksListener  {
 	
 
 	public void nextChapter() throws OpenModuleException{
-		if (currModule == null || currBook == null) {
+		if (getCurrModule() == null || getCurrBook() == null) {
 			return;
 		}
 		
-		Integer chapterQty = currBook.ChapterQty;
-		if (chapterQty > (currChapterNumber + (currModule.ChapterZero ? 1 : 0))) {
-			currChapterNumber++;
+		Integer chapterQty = getCurrBook().ChapterQty;
+		if (chapterQty > (getCurrChapterNumber() + (getCurrModule().ChapterZero ? 1 : 0))) {
+			currChapterNumber = getCurrChapterNumber() + 1;
 			currVerseNumber = 1;
 		} else {
 			try {
-				ArrayList<Book> books = bookCtrl.getBookList(currModule);
-				int pos = books.indexOf(currBook);
+				ArrayList<Book> books = bookCtrl.getBookList(getCurrModule());
+				int pos = books.indexOf(getCurrBook());
 				if (++pos < books.size()) {
 					currBook = books.get(pos);
-					currChapterNumber = currBook.getFirstChapterNumber();
+					currChapterNumber = getCurrBook().getFirstChapterNumber();
 					currVerseNumber = 1;
 				}
 			} catch (BooksDefinitionException e) {
@@ -296,21 +266,21 @@ public class Librarian implements IChangeBooksListener  {
 	}
 
 	public void prevChapter() throws OpenModuleException{
-		if (currModule == null || currBook == null) {
+		if (getCurrModule() == null || getCurrBook() == null) {
 			return;
 		}
 		
-		if (currChapterNumber != currBook.getFirstChapterNumber()) {
-			currChapterNumber--;
+		if (!getCurrChapterNumber().equals(getCurrBook().getFirstChapterNumber())) {
+			currChapterNumber = getCurrChapterNumber() - 1;
 			currVerseNumber = 1;
 		} else {
 			try {			
-				ArrayList<Book> books = bookCtrl.getBookList(currModule);
-				int pos = books.indexOf(currBook);
+				ArrayList<Book> books = bookCtrl.getBookList(getCurrModule());
+				int pos = books.indexOf(getCurrBook());
 				if (pos > 0) {
 					currBook = books.get(--pos);
-					Integer chapterQty = currBook.ChapterQty;
-					currChapterNumber = chapterQty - (currModule.ChapterZero ? 1 : 0);
+					Integer chapterQty = getCurrBook().ChapterQty;
+					currChapterNumber = chapterQty - (getCurrModule().ChapterZero ? 1 : 0);
 					currVerseNumber = 1;
 				}
 			} catch (BooksDefinitionException e) {
@@ -326,82 +296,13 @@ public class Librarian implements IChangeBooksListener  {
 	// GET CONTENT
 	
 	public String getChapterHTMLView() {
-		return chapterCtrl.getChapterHTMLView(currChapter);
+		return chapterCtrl.getChapterHTMLView(getCurrChapter());
 	}
 	
 	public Boolean isBible() {
-		if (currModule == null) {
-			return false;
-		} else {
-			return currModule.isBible;
-		}
+		return getCurrModule() != null && getCurrModule().isBible;
 	}
 	
-	
-	///////////////////////////////////////////////////////////////////////////
-	// BOOKMARKS
-	
-	public void addBookmark(Integer verse){
-		String fav = PreferenceHelper.restoreStateString("Favorits");
-		fav = this.getCurrentLink() + ":" + verse + delimeter2
-			+ new BibleReference(currModule, currBook, currChapterNumber, currVerseNumber).getChapterPath()
-			+ "." + verse + delimeter1
-			+ fav;
-		PreferenceHelper.saveStateString("Favorits", fav);
-	}
-	
-	public void delBookmark(String bookmark){
-		String fav = PreferenceHelper.restoreStateString("Favorits");
-		fav = fav.replaceAll(bookmark + "(.)+?" + delimeter1, "");
-		PreferenceHelper.saveStateString("Favorits", fav);
-	}
-	
-	public ArrayList<String> getBookmarks() {
-		ArrayList<String> favorits = new ArrayList<String>();
-		String fav = PreferenceHelper.restoreStateString("Favorits");
-		if (!fav.equals("")) {
-			favorits.addAll(Arrays.asList(fav.split(delimeter1.toString())));
-		}
-		
-		ArrayList<String> ret = new ArrayList<String>();
-		for (String favItem : favorits) {
-			ret.add(favItem.split(delimeter2.toString())[0]);
-		}
-		return ret;
-	}
-	
-	public String getBookmark(String humanLink) {
-		ArrayList<String> favorits = new ArrayList<String>();
-		String fav = PreferenceHelper.restoreStateString("Favorits");
-		if (!fav.equals("")) {
-			favorits.addAll(Arrays.asList(fav.split(delimeter1.toString())));
-			for (String favItem : favorits) {
-				if (favItem.contains(humanLink)) {
-					return favItem.split(delimeter2.toString())[1];
-				}
-			}
-		}
-		
-		return "";
-	}
-
-	public void sortBookmarks() {
-		String fav = PreferenceHelper.restoreStateString("Favorits");
-		if (!fav.equals("")) {
-			TreeSet<String> favorits = new TreeSet<String>();
-			favorits.addAll(Arrays.asList(fav.split(delimeter1.toString())));
-			StringBuilder newFav = new StringBuilder();
-			for (String favItem : favorits) {
-				newFav.append(favItem + delimeter1);
-			}
-			PreferenceHelper.saveStateString("Favorits", newFav.toString());
-		}
-	}
-
-	public void delAllBookmarks() {
-		PreferenceHelper.saveStateString("Favorits", "");
-	}
-
 	
 	///////////////////////////////////////////////////////////////////////////
 	// SEARCH
@@ -411,10 +312,10 @@ public class Librarian implements IChangeBooksListener  {
 	}
 	
 	public LinkedHashMap<String, String> search(String query, String fromBook, String toBook) throws OpenModuleException, BookNotFoundException{
-		if (currModule == null) {
+		if (getCurrModule() == null) {
 			this.searchResults = new LinkedHashMap<String, String>();
 		} else {
-			this.searchResults = bookCtrl.search(currModule, query, fromBook, toBook);
+			this.searchResults = bookCtrl.search(getCurrModule(), query, fromBook, toBook);
 		}
 		return searchResults;
 	}
@@ -423,26 +324,26 @@ public class Librarian implements IChangeBooksListener  {
 	///////////////////////////////////////////////////////////////////////////
 	// GET LINK OF STRING
 		
-	public String getModuleFullName(String moduleID){
-		if (currModule == null) {
+	public String getModuleFullName(){
+		if (getCurrModule() == null) {
 			return "";
 		}
-		return currModule.getName();
+		return getCurrModule().getName();
 	}
 	
 	public CharSequence getModuleName() {
-		if (currModule == null) {
+		if (getCurrModule() == null) {
 			return "";
 		} else {
-			return currModule.getName();
+			return getCurrModule().getName();
 		}
 	}
 
 	public String getModuleID() {
-		if (currModule == null) {
+		if (getCurrModule() == null) {
 			return "";
 		} else {
-			return currModule.getID();
+			return getCurrModule().getID();
 		}
 	}
 
@@ -480,17 +381,8 @@ public class Librarian implements IChangeBooksListener  {
 		}
 	}
 
-	public String getCurrentLink(){
-		return getCurrentLink(true);
-	}
-	
-	public String getCurrentLink(boolean includeModuleID){
-		return (includeModuleID ? currModule.ShortName + ": " : "") 
-			+ currBook.getShortName() + " " + currChapterNumber;
-	}
-	
 	public BibleReference getCurrentOSISLink(){
-		return new BibleReference(currModule, currBook, currChapterNumber, currVerseNumber);
+		return new BibleReference(getCurrModule(), getCurrBook(), getCurrChapterNumber(), getCurrVerseNumber());
 	}
 	
 	public void setCurrentVerseNumber(int verse) {
@@ -498,10 +390,10 @@ public class Librarian implements IChangeBooksListener  {
 	}
 	
 	public CharSequence getHumanBookLink() {
-		if (currBook == null || currChapter == null) {
+		if (getCurrBook() == null || getCurrChapter() == null) {
 			return "";
 		}
-		String bookLink = currBook.getShortName() + " " + currChapter.getNumber();
+		String bookLink = getCurrBook().getShortName() + " " + getCurrChapter().getNumber();
 		if (bookLink.length() > 10) {
 			int strLenght = bookLink.length();
 			bookLink = bookLink.substring(0, 4) + "..." + bookLink.substring(strLenght - 4, strLenght);
@@ -538,14 +430,12 @@ public class Librarian implements IChangeBooksListener  {
 	}
 	
 	public String getHumanToOSIS(String humanLink) {
-		String linkOSIS = "";
-		
 		// Получим имя модуля
 		int position = humanLink.indexOf(":");
 		if (position == -1) {
 			return "";
 		}
-		linkOSIS = humanLink.substring(0, position).trim();
+		String linkOSIS = humanLink.substring(0, position).trim();
 		humanLink = humanLink.substring(position + 1).trim();
 		if (humanLink.length() == 0) {
 			return "";
@@ -597,20 +487,20 @@ public class Librarian implements IChangeBooksListener  {
 	// SHARE
 
 	public void shareText(Context context, TreeSet<Integer> selectVerses, Destination dest) {
-		if (currChapter == null) {
+		if (getCurrChapter() == null) {
 			return;
 		}
 		
-		LinkedHashMap<Integer, String> verses = currChapter.getVerses(selectVerses);
-		ShareBuilder builder = new ShareBuilder(context, currModule, currBook, currChapter, verses);
+		LinkedHashMap<Integer, String> verses = getCurrChapter().getVerses(selectVerses);
+		ShareBuilder builder = new ShareBuilder(context, getCurrModule(), getCurrBook(), getCurrChapter(), verses);
 		builder.share(dest);
 	}
 
 	public String getBaseUrl() {
-		if (currModule == null) {
+		if (getCurrModule() == null) {
 			return "file:///url_initial_load";
 		}
-		String dataSourceID = currModule.getDataSourceID();
+		String dataSourceID = getCurrModule().getDataSourceID();
 		int pos = dataSourceID.lastIndexOf("/");
 		if (++pos <= dataSourceID.length()) {
 			return dataSourceID.substring(0, pos);
@@ -636,7 +526,7 @@ public class Librarian implements IChangeBooksListener  {
 		for (BibleReference reference : csLinks) {
 			Book book;
 			try {
-				book = getBookByID(currModule, reference.getBookID());
+				book = getBookByID(getCurrModule(), reference.getBookID());
 			} catch (OpenModuleException e) {
 				Log.e(TAG, String.format("Error open module %1$s for link %2$s", 
 						reference.getModuleID(), reference.getBookID()));
@@ -646,7 +536,7 @@ public class Librarian implements IChangeBooksListener  {
 						reference.getBookID(), reference.getModuleID()));
 				continue;
 			}
-			BibleReference newReference = new BibleReference(currModule, book,
+			BibleReference newReference = new BibleReference(getCurrModule(), book,
 					reference.getChapter(), reference.getFromVerse(), reference.getToVerse());
 			parallels.put(
 					LinkConverter.getOSIStoHuman(newReference, moduleCtrl, bookCtrl), 
@@ -662,16 +552,35 @@ public class Librarian implements IChangeBooksListener  {
 			try {
 				int fromVerse = ref.getFromVerse();
 				int toVerse = ref.getToVerse();
-				Chapter chapter = getChapterByNumber(getBookByID(currModule, ref.getBookID()), ref.getChapter());
+				Chapter chapter = getChapterByNumber(getBookByID(getCurrModule(), ref.getBookID()), ref.getChapter());
 				crossReferenceContent.put(ref, 
 						StringProc.stripTags(chapter.getText(fromVerse, toVerse), "", true)
 						.replaceAll("\\s(H|G)*\\d+", "")
-						.replaceAll("\\d+\\s", ""))
-						.trim();
+						.replaceAll("\\d+\\s", ""));
 			} catch (Exception e) {
-				continue;
+				Log.e(TAG, e.getMessage());
 			}
 		}
 		return crossReferenceContent;
 	}
+
+    public Module getCurrModule() {
+        return currModule;
+    }
+
+    public Book getCurrBook() {
+        return currBook;
+    }
+
+    public Chapter getCurrChapter() {
+        return currChapter;
+    }
+
+    public Integer getCurrChapterNumber() {
+        return currChapterNumber;
+    }
+
+    public Integer getCurrVerseNumber() {
+        return currVerseNumber;
+    }
 }

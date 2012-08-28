@@ -40,6 +40,7 @@ import com.BibleQuote.exceptions.OpenModuleException;
 import com.BibleQuote.listeners.IReaderViewListener;
 import com.BibleQuote.managers.AsyncManager;
 import com.BibleQuote.managers.AsyncOpenChapter;
+import com.BibleQuote.managers.Bookmarks;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.utils.*;
 import com.BibleQuote.utils.Share.ShareBuilder.Destination;
@@ -92,7 +93,7 @@ public class ReaderActivity extends SherlockActivity implements OnTaskCompleteLi
 
 			switch (item.getItemId()) {
 			case R.id.action_bookmarks:
-				myLibrarian.addBookmark(selVerses.first());
+				Bookmarks.add(myLibrarian, selVerses.first());
 				Toast.makeText(ReaderActivity.this, getString(R.string.added), Toast.LENGTH_LONG).show();
 				break;
 

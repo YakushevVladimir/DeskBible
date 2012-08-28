@@ -15,6 +15,7 @@
  */
 package com.BibleQuote.activity;
 
+import com.BibleQuote.managers.Bookmarks;
 import com.BibleQuote.utils.ViewUtils;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
@@ -70,7 +71,7 @@ public class BookmarksActivity extends SherlockActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_bar_sort:
-				myLibrarian.sortBookmarks();
+                Bookmarks.sort();
 				setAdapter();
 				break;
 
@@ -81,7 +82,7 @@ public class BookmarksActivity extends SherlockActivity {
 				builder.setMessage(R.string.fav_delete_all_question);
 				builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
-						myLibrarian.delAllBookmarks();
+						Bookmarks.deleteAll();
 						setAdapter();
 					}
 				});
@@ -108,7 +109,7 @@ public class BookmarksActivity extends SherlockActivity {
 	private AdapterView.OnItemClickListener OnItemClickListener = new AdapterView.OnItemClickListener() {
 		public void onItemClick(AdapterView<?> a, View v, int position, long id) {
 			String currBookmark = LV.getAdapter().getItem(position).toString();
-			String linkOSIS = myLibrarian.getBookmark(currBookmark);
+			String linkOSIS = Bookmarks.get(currBookmark);
 			
 			Log.i(TAG, "Select bookmark: " + currBookmark + " (OSIS link = " + linkOSIS + ")");
 
@@ -116,8 +117,8 @@ public class BookmarksActivity extends SherlockActivity {
 			
 			if (!myLibrarian.isOSISLinkValid(osisLink)) {
 				Log.i(TAG, "Delete invalid bookmark: " + currBookmark);
-				
-				myLibrarian.delBookmark(currBookmark);
+
+                Bookmarks.delete(currBookmark);
 				setAdapter();
 				Toast.makeText(getApplicationContext(), R.string.bookmark_invalid_removed,
 						Toast.LENGTH_LONG).show();				
@@ -137,7 +138,7 @@ public class BookmarksActivity extends SherlockActivity {
 			currBookmark = LV.getAdapter().getItem(position).toString();
 			Builder b = new AlertDialog.Builder(BookmarksActivity.this);
 			b.setIcon(R.drawable.icon);
-			b.setTitle(R.string.bookmarks);
+			b.setTitle(currBookmark);
 			b.setMessage(R.string.fav_question_del_fav);
 			b.setPositiveButton("OK", positiveButton_OnClick);
 			b.setNegativeButton(R.string.cancel, null);
@@ -149,8 +150,8 @@ public class BookmarksActivity extends SherlockActivity {
 	private DialogInterface.OnClickListener positiveButton_OnClick = new DialogInterface.OnClickListener() {
 		public void onClick(DialogInterface dialog, int which) {
 			Log.i(TAG, "Delete bookmark: " + currBookmark);
-			
-			myLibrarian.delBookmark(currBookmark);
+
+            Bookmarks.delete(currBookmark);
 			setAdapter();
 			Toast.makeText(getApplicationContext(), R.string.removed,
 					Toast.LENGTH_LONG).show();
@@ -159,6 +160,6 @@ public class BookmarksActivity extends SherlockActivity {
 	
 	private void setAdapter() {
 		LV.setAdapter(new ArrayAdapter<String>(BookmarksActivity.this,
-				R.layout.text_item_view, myLibrarian.getBookmarks()));
+				R.layout.text_item_view, Bookmarks.getAll()));
 	}
 }
