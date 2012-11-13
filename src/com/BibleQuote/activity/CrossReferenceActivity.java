@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *       http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -45,6 +45,7 @@ import com.BibleQuote.widget.ItemAdapter;
 import com.BibleQuote.widget.item.Item;
 import com.BibleQuote.widget.item.SubtextItem;
 import com.BibleQuote.widget.item.TextItem;
+import com.actionbarsherlock.view.MenuItem;
 
 public class CrossReferenceActivity extends SherlockActivity implements OnTaskCompleteListener {
 
@@ -64,8 +65,9 @@ public class CrossReferenceActivity extends SherlockActivity implements OnTaskCo
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.parallels_list);
 		ViewUtils.setActionBarBackground(this);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-		BibleQuoteApp app = (BibleQuoteApp) getApplication();
+        BibleQuoteApp app = (BibleQuoteApp) getApplication();
 		myLibrarian = app.getLibrarian();
 		
 		LV = (ListView) findViewById(R.id.Parallels_List);
@@ -109,7 +111,22 @@ public class CrossReferenceActivity extends SherlockActivity implements OnTaskCo
 		}
 	};
 
-	@Override
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                Intent intent = new Intent();
+                setResult(RESULT_CANCELED, intent);
+                finish();
+                break;
+
+            default:
+                break;
+        }
+        return true;
+    }
+
+    @Override
 	public void onTaskComplete(Task task) {
 		if (task != null && !task.isCancelled()) {
 			if (task instanceof AsyncCommand) {

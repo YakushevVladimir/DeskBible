@@ -1,77 +1,111 @@
-<?xml version="1.0" encoding="utf-8" standalone="no"?>
-<!--
-/*
- * Copyright (C) 2011 Scripture Software (http://scripturesoftware.org/)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
--->
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="abs__action_bar_home_description">Головна</string>
+    <string name="abs__action_bar_up_description">Вгору</string>
+    <string name="abs__action_menu_overflow_description">Більше</string>
+    <string name="abs__action_mode_done">Зроблено</string>
+    <string name="abs__activity_chooser_view_see_all">Показати все...</string>
+    <string name="abs__activity_chooser_view_dialog_title_default">Обрати діяльність</string>
+    <string name="abs__share_action_provider_share_with">Спільний доступ з...</string>
+    <string name="abs__activitychooserview_choose_application">Обрати застосування</string>
+    <string name="abs__shareactionprovider_share_with">Спільний доступ з</string>
+    <string name="abs__shareactionprovider_share_with_application">Спільний доступ з  %s</string>
     <string name="app_name">Біблія</string>
-    <!-- Tab's -->
-    <!-- Settings -->
-    <string name="text_size">Розмір шрифту</string>
-    <string name="current_text_size">Поточний розмір тексту: %1$d</string>
-    <string name="text_color">Колір тексту</string>
-    <string name="background">Колір фону</string>
-    <string name="text_color_summary">Виберіть розмір шрифту</string>
-    <string name="background_summary">Виберіть колір фону</string>
-    <!-- Miscellaneous -->
-    <string name="find">Знайти</string>
-    <string name="menu">Меню</string>
-    <string name="cancel">Скасувати</string>
-    <string name="fav_question_add_favorities">Ви дійсно хочете додати закладку?</string>
-    <string name="fav_question_del_fav">Ви дійсно хочете видалити цю закладку?</string>
-    <string name="select_module">Виберіть модуль</string>
-    <string name="added">Додана</string>
-    <string name="removed">Видалено</string>
-    <string name="menu_night_day_mode">Nigth / денний режим</string>
-    <string name="fav_delete_all_question">Ви дійсно хочете видалити всі закладки?</string>
-    <string name="messageLoad">Завантажити...</string>
-    <string name="share">Частка</string>
-    <string name="disable_auto_screen_rotation">Відключення автоматичного повороту екрану</string>
-    <string name="results">Результати</string>
-    <string name="may_need_to_restart">Можливо, буде потрібно перезавантажити</string>
-    <string name="fav_delete_all">Видалити всі</string>
-    <string name="messageLoadCanceled">Навантаження відмінено</string>
-    <string name="menu_favorites">Дані</string>
-    <string name="messageSearchCanceled">Пошук відмінено</string>
-    <string name="fav_sort_alphabetically">Сортувати</string>
-    <string name="messageSearch">Пошук ...</string>
-    <string name="menu_settings">Установки</string>
-    <string name="menu_search">Пошук</string>
-    <string name="copy">Копія</string>
-    <string name="menu_help">Допомога</string>
-    <string name="app_about_design_label">Дизайн:</string>
-    <string name="bookmark_invalid_removed">Неприпустима закладка видалена</string>
-    <string name="category_reader_other_history_size_summary">Поточний розмір історії: %1$s</string>
-    <string name="messageRefresh">Оновлення ...</string>
-    <string name="category_reader_appearance">Зовнішній вигляд</string>
-    <string name="category_reader_other_history_size">Історія розмір</string>
-    <string name="category_reader_other">Інший</string>
-    <string name="read_mode_by_default_summary">Використовуйте режим за замовчуванням для читання</string>
-    <string name="app_about_thanks_label">Спасибі:</string>
-    <string name="about">Про</string>
-    <string name="messageLoadBooks">Завантаження книги ...</string>
-    <string name="category_reports_summary">Звіти про збої настройки</string>
-    <string name="messageLoadModules">Завантаження модулів ...</string>
-    <string name="read_mode_by_default">Режим читання за замовчуванням</string>
-    <string name="category_reader_summary">Налаштування читання вікно</string>
+    <string name="about">Про програму</string>
+    <string name="app_about_name">BibleQuote 0.06.04</string>
+    <string name="app_about_license">Apache License Version 2.0</string>
     <string name="app_about_dev_label">Розробники:</string>
-    <string name="settings">Установки</string>
+    <string name="app_about_dev">"Vladimir Yakushev
+Sergey Ursul"</string>
+    <string name="app_about_design_label">Дизайн:</string>
+    <string name="app_about_design">"Vladimir Yakovlev
+Artur Kasimov"</string>
+    <string name="app_about_thanks_label">Подяка:</string>
+    <string name="app_about_thanks">"Timothy Ha
+Volodimir Atapin
+Nikolay Shemereko
+Roman Goncharenko"</string>
+    <string name="app_about_email_label">E-mail:</string>
+    <string name="app_about_email">ru.phoenix@gmail.com</string>
+    <string name="app_about_www_label">WWW:</string>
+    <string name="app_about_www">www.scripturesoftware.org</string>
+    <string name="settings">Налаштування</string>
     <string name="help">Допомога</string>
     <string name="search">Пошук</string>
     <string name="history">Історія</string>
-    <string name="bookmarks">Дані</string>
+    <string name="bookmarks">Закладинки</string>
     <string name="library">Бібліотека</string>
+    <string name="cross_reference">Перехресні посилання</string>
+    <string name="preference_screen_reader">Вікно читання</string>
+    <string name="preference_screen_reader_summary">Налаштування вікна читання</string>
+    <string name="category_reader_appearance">Зовнішній вигляд</string>
+    <string name="text_size">Розмір шрифту</string>
+    <string name="current_text_size">Поточний розмір тексту: %1$d</string>
+    <string name="text_color">Колір тексту</string>
+    <string name="text_color_summary">Виберіть розмір шрифту</string>
+    <string name="background">Колір фону</string>
+    <string name="background_summary">Виберіть колір фону</string>
+    <string name="category_reader_other">Інше</string>
+    <string name="category_reader_other_history_size">Розмір історії</string>
+    <string name="category_reader_other_history_size_summary">Поточний розмір історії: %1$s</string>
+    <string name="disable_auto_screen_rotation">Відключення автоматичного повороту екрану</string>
+    <string name="may_need_to_restart">Можливо, буде потрібно перезавантажити</string>
+    <string name="read_mode_by_default">Режим читання за прмовчанням</string>
+    <string name="read_mode_by_default_summary">Використовуйте режим за промовчанням для читання</string>
+    <string name="preference_screen_cross_references">Перехресні посилання</string>
+    <string name="cross_references_display_context">Відображати контекст</string>
+    <string name="cross_references_display_context_summary">Відображати контекст у списку посилань</string>
+    <string name="menu_night_day_mode">Ніч / День</string>
+    <string name="menu_favorites">Закладинки</string>
+    <string name="menu_history">Історія</string>
+    <string name="menu_search">Пошук</string>
+    <string name="menu_help">Допомога</string>
+    <string name="menu_settings">Налаштування</string>
+    <string name="find">Пошук</string>
+    <string name="menu">Меню</string>
+    <string name="cancel">Скасувати</string>
+    <string name="select_module">Додати модуль</string>
+    <string name="added">Додано</string>
+    <string name="removed">Видалено</string>
+    <string name="bookmark_invalid_removed">Неприпустиму закладинку видалено</string>
+    <string name="messageLoad">Завантаження...</string>
+    <string name="messageLoadCanceled">Завантаження скасовано</string>
+    <string name="messageLoadBooks">Завантаження книг...</string>
+    <string name="messageLoadModules">Завантаження модулів...</string>
+    <string name="messageSearch">Пошук...</string>
+    <string name="messageRefresh">Оновити...</string>
+    <string name="messageSearchCanceled">Пошук скасовано</string>
+    <string name="results">результ</string>
+    <string name="share">Спільний доступ</string>
+    <string name="copy">Копіювати</string>
+    <string name="fav_question_add_favorities">Ви дійсно бажаєте додати закладку</string>
+    <string name="fav_question_del_fav">Ви дійсно бажаєте видалити закладку?</string>
+    <string name="fav_sort_alphabetically">Сортувати</string>
+    <string name="fav_delete_all">Видалити всі</string>
+    <string name="fav_delete_all_question">Ви дійсно бажаєте видалити всі закладки?</string>
+    <string name="dialog_color_picker">Обрати колір</string>
+    <string name="press_color_to_apply">Натисніть для застосування</string>
+    <string name="references">Посилання</string>
+    <string name="exception_book_definition">Невірні параметри книги #%1$s в модулі %2$s: PathName=%3$s, FullName=%4$s, ShortName=%5$s, ChapterQty=%6$s</string>
+    <string name="exception_book_not_found">Книгу %1$s не знайдено в модулі %2$s</string>
+    <string name="exception_open_module">Невірний модуль %1$s(%2$s)</string>
+    <string name="exception_open_module_short">Невірний модуль %1$s</string>
+    <string name="category_reports_summary">Налаштування звітів про збої</string>
+    <string name="category_reader_summary">Налаштування вікна читання</string>
+    <string name="exception_books_definition">Невірний опис книги в модулі %1$s: BookQty=%2$s, PathName#=%3$s, FullName#=%4$s, ShortName#=%5$s, ChapterQty#=%6$s</string>
+    <string name="enabled">Увімкнено</string>
+    <string name="volume_butons_to_scroll">Прокручувати кнопками гучності</string>
+    <string name="disabled">Вимкнено</string>
+    <string name="text_align_justify">Вирівнювати по ширині</string>
+    <string name="font_family">Шрифт</string>
+    <string name="category_social">Соціальні функції</string>
+    <string name="share_passage">Поділитися уривком</string>
+    <string name="divide_the_verses">Розбивати на вірші</string>
+    <string name="add_reference">Додати посилання</string>
+    <string name="add_reference_summary">Додати посилання до уривка</string>
+    <string name="put_reference_in_beginning">Додавати посилання на початок</string>
+    <string name="short_reference">Стисле посилання</string>
+    <string name="short_reference_summary">Стислий заголовок до уривку</string>
+    <string name="add_module_to_reference">Додавати назву модуля</string>
+    <string name="add_module_to_reference_summary">Додавати назву модуля до підпису на відправку</string>
 </resources>

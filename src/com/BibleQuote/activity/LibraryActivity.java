@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *       http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -74,8 +74,9 @@ public class LibraryActivity extends SherlockActivity implements OnTaskCompleteL
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.books);
 		ViewUtils.setActionBarBackground(this);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-		BibleQuoteApp app = (BibleQuoteApp) getApplication();
+        BibleQuoteApp app = (BibleQuoteApp) getApplication();
 		myLibrarian = app.getLibrarian();
 
 		mAsyncManager = app.getAsyncManager();
@@ -124,11 +125,18 @@ public class LibraryActivity extends SherlockActivity implements OnTaskCompleteL
 					mAsyncManager.setupTask(
 							new AsyncRefreshModules(messageRefresh, false, myLibrarian, this), this);
 				}
-				return true;
-			default:
-				return super.onOptionsItemSelected(item);
-		}
-	}
+                break;
+            case android.R.id.home:
+                Intent intent = new Intent();
+                setResult(RESULT_CANCELED, intent);
+                finish();
+                break;
+
+            default:
+                break;
+        }
+        return true;
+    }
 
 	private AdapterView.OnItemClickListener modulesList_onClick = new AdapterView.OnItemClickListener() {
 		public void onItemClick(AdapterView<?> a, View v, int position, long id) {

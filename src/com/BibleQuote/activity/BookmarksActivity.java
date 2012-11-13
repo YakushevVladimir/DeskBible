@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *       http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -50,8 +50,9 @@ public class BookmarksActivity extends SherlockActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.favorits);
 		ViewUtils.setActionBarBackground(this);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-		BibleQuoteApp app = (BibleQuoteApp) getApplication();
+        BibleQuoteApp app = (BibleQuoteApp) getApplication();
 		myLibrarian = app.getLibrarian();
 		
 		LV = (ListView) findViewById(R.id.FavoritsLV);
@@ -74,8 +75,12 @@ public class BookmarksActivity extends SherlockActivity {
                 Bookmarks.sort();
 				setAdapter();
 				break;
-
-			case R.id.action_bar_delete:
+            case android.R.id.home:
+                Intent intent = new Intent();
+                setResult(RESULT_CANCELED, intent);
+                finish();
+                break;
+            case R.id.action_bar_delete:
 				Builder builder = new AlertDialog.Builder(BookmarksActivity.this);
 				builder.setIcon(R.drawable.icon);
 				builder.setTitle(R.string.bookmarks);

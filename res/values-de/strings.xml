@@ -1,80 +1,87 @@
-<?xml version="1.0" encoding="utf-8" standalone="no"?>
-<!--
-/*
- * Copyright (C) 2011 Scripture Software (http://scripturesoftware.org/)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
--->
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Bibel</string>
-    <!-- Tab's -->
-    <!-- Settings -->
-    <string name="text_size">Schriftgroesse</string>
-    <string name="current_text_size">Aktuelle Textgroesse: %1$d</string>
-    <string name="text_color">Textfarbe</string>
-    <string name="background">Hintergrundfarbe</string>
-    <string name="text_color_summary">Wahl der Schriftgroesse</string>
-    <string name="background_summary">Wahl der Hintergrundfarbe</string>
-    <!-- Miscellaneous -->
-    <string name="find">Finden</string>
-    <string name="menu">Menü</string>
-    <string name="cancel">Kündigen</string>
-    <string name="fav_question_add_favorities">Wollen Sie wirklich ein Lesezeichen hinzufügen?</string>
-    <string name="fav_question_del_fav">Wollen Sie wirklich dieses Lesezeichen löschen?</string>
-    <string name="select_module">Wählen Sie ein Modul</string>
-    <string name="added">Hinzugefügt</string>
-    <string name="removed">Gelöscht</string>
-    <!-- Color's -->
-    <color name="white_color">#fff</color>
-    <color name="gray_color">#aaa</color>
-    <string name="menu_night_day_mode">Nigth / Day-Modus</string>
-    <string name="fav_delete_all_question">Sind Sie sicher, dass Sie alle Lesezeichen löschen?</string>
-    <string name="messageLoad">Laden...</string>
-    <string name="share">Anteil</string>
-    <string name="disable_auto_screen_rotation">Deaktivieren Sie die automatische Bildschirm-Rotation</string>
-    <string name="results">Ergebnisse</string>
-    <string name="may_need_to_restart">Möglicherweise müssen Sie neu starten</string>
-    <string name="fav_delete_all">Löschen Sie alle</string>
-    <string name="messageLoadCanceled">Laden abgesagt</string>
-    <string name="menu_favorites">Bookmarks</string>
-    <string name="messageSearchCanceled">Suche abgebrochen</string>
-    <string name="fav_sort_alphabetically">Art</string>
-    <string name="messageSearch">Suche nach ...</string>
-    <string name="menu_settings">Einstellungen</string>
-    <string name="menu_search">Suche</string>
-    <string name="copy">Kopie</string>
-    <string name="menu_help">Hilfe</string>
-    <string name="app_about_design_label">Design:</string>
-    <string name="bookmark_invalid_removed">Ungültige Lesezeichen entfernt</string>
-    <string name="category_reader_other_history_size_summary">Aktuelle Geschichte size: %1$s</string>
-    <string name="messageRefresh">Aktualisieren ...</string>
-    <string name="category_reader_appearance">Aussehen</string>
-    <string name="category_reader_other_history_size">History Größe</string>
-    <string name="category_reader_other">Andere</string>
-    <string name="read_mode_by_default_summary">Verwenden Sie den standardmäßigen Lese-Modus</string>
-    <string name="app_about_thanks_label">Dank:</string>
     <string name="about">Über</string>
-    <string name="messageLoadBooks">Load-Bücher ...</string>
-    <string name="category_reports_summary">Crash Reports Einstellungen</string>
-    <string name="messageLoadModules">Load-Module ...</string>
-    <string name="read_mode_by_default">Lesen Modus standardmäßig</string>
-    <string name="category_reader_summary">Reader-Fenster Einstellungen</string>
     <string name="app_about_dev_label">Entwickler:</string>
+    <string name="app_about_design_label">Design:</string>
+    <string name="app_about_thanks_label">Dank an:</string>
     <string name="settings">Einstellungen</string>
     <string name="help">Hilfe</string>
     <string name="search">Suche</string>
-    <string name="history">Geschichte</string>
-    <string name="bookmarks">Bookmarks</string>
-    <string name="library">Bibliothek</string>
+    <string name="history">Verlauf</string>
+    <string name="bookmarks">Lesezeichen</string>
+    <string name="library">Bücher</string>
+    <string name="cross_reference">Querverweisе</string>
+    <string name="preference_screen_reader">Lesefenster</string>
+    <string name="preference_screen_reader_summary">Lesefenster-Einstellungen</string>
+    <string name="category_reader_appearance">Aussehen</string>
+    <string name="text_size">Schriftgröße</string>
+    <string name="current_text_size">Aktuelle Textgröße: %1$d</string>
+    <string name="text_color">Textfarbe</string>
+    <string name="text_color_summary">Schriftgrößeauswahl</string>
+    <string name="background">Hintergrundfarbe</string>
+    <string name="background_summary">Hintergrundfarbeauswahl</string>
+    <string name="category_reader_other">Andere</string>
+    <string name="category_reader_other_history_size">Verlausgröße</string>
+    <string name="category_reader_other_history_size_summary">Aktuelle Verlaufsgröße: %1$s</string>
+    <string name="disable_auto_screen_rotation">Bildschirm-Autodrehung deaktivieren</string>
+    <string name="may_need_to_restart">Möglicherweise müssen Sie die Anwendung neu starten!</string>
+    <string name="read_mode_by_default">Lesemodus standardmäßig an</string>
+    <string name="read_mode_by_default_summary">Verwenden Sie den standardmäßigen Lesemodus</string>
+    <string name="preference_screen_cross_references">Querverweisе</string>
+    <string name="cross_references_display_context">Kontext darstellen</string>
+    <string name="cross_references_display_context_summary">Kontext (Zusammenhang) in der Querverweisliste darstellen</string>
+     <string name="menu_night_day_mode">Nacht/Tag</string>
+    <string name="menu_favorites">Lesezeichen</string>
+    <string name="menu_history">Verlauf</string>
+    <string name="menu_search">Suche</string>
+    <string name="menu_help">Hilfe</string>
+    <string name="menu_settings">Einstellungen</string>
+    <string name="find">Suchen</string>
+    <string name="menu">Menü</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="select_module">Wählen Sie ein Modul aus.</string>
+    <string name="added">Hinzugefügt</string>
+    <string name="removed">Gelöscht</string>
+    <string name="bookmark_invalid_removed">Ungültiges Lesezeichen wurde entfernt</string>
+    <string name="messageLoad">Lade...</string>
+    <string name="messageLoadCanceled">Geladen</string>
+    <string name="messageLoadBooks">Lade Bücher...</string>
+    <string name="messageLoadModules">Lade Module...</string>
+    <string name="messageSearch">Suche...</string>
+    <string name="messageRefresh">Aktualisierung...</string>
+    <string name="messageSearchCanceled">Suche abgebrochen</string>
+    <string name="results">Ergebnisse</string>
+    <string name="share">Teilen</string>
+    <string name="copy">Kopieren</string>
+    <string name="fav_question_add_favorities">Lesezeichen hinzufügen</string>
+    <string name="fav_question_del_fav">Möchten Sie dieses Lesezeichen löschen?</string>
+    <string name="fav_sort_alphabetically">Sortierung</string>
+    <string name="fav_delete_all">Alle löschen</string>
+    <string name="fav_delete_all_question">Sind Sie sicher, dass Sie alle Lesezeichen löschen möchten?</string>
+    <string name="dialog_color_picker">Farbe auswählen</string>
+    <string name="press_color_to_apply">Zm Auswählen draufdrücken</string>
+    <string name="references">Verweise</string>
+    <string name="exception_book_definition">Fehlerhafte Eigenschaften im Buch: #%1$s des Moduls: %2$s: PathName=%3$s, FullName=%4$s, ShortName=%5$s, ChapterQty=%6$s</string>
+    <string name="exception_book_not_found">Das Buch: %1$s wurde im Modul: %2$s nicht gefunden!</string>
+    <string name="exception_open_module">Fehlerhaftes Modul: %1$s(%2$s)</string>
+    <string name="exception_open_module_short">Fehlerhaftes Modul: %1$s</string>
+    <string name="category_reports_summary">Fehlerbericht-Einstellungen</string>
+    <string name="category_reader_summary">Lesefenster-Einstellungen</string>
+    <string name="exception_books_definition">Buchbeschreibug des %1$s stimmt nicht: BookQty=%2$s, PathName#=%3$s, FullName#=%4$s, ShortName#=%5$s, ChapterQty#=%6$s</string>
+    <string name="enabled">An</string>
+    <string name="volume_butons_to_scroll">Mit Lautstärke-Tasten blättern</string>
+    <string name="disabled">Aus</string>
+    <string name="text_align_justify">Text als Blocksatz</string>
+    <string name="font_family">Schriftart</string>
+    <string name="category_social">Социальные функции</string>
+    <string name="share_passage">Text senden</string>
+    <string name="divide_the_verses">Verse trennen</string>
+    <string name="add_reference">Verweis hinzufügen</string>
+    <string name="add_reference_summary">Verweis zum Text hinzufügen</string>
+    <string name="put_reference_in_beginning">Verweis am Теxтаnfang setzen</string>
+    <string name="short_reference">Kurzer Verweis</string>
+    <string name="short_reference_summary">Kunrzer Verweis zum Text</string>
+    <string name="add_module_to_reference">Modulname hinzufügen</string>
+    <string name="add_module_to_reference_summary">Modulname und Verweis zum Text hinzufügen</string>
 </resources>

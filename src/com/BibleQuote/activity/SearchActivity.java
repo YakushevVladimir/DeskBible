@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *       http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -51,6 +51,7 @@ import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.utils.OnTaskCompleteListener;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.Task;
+import com.actionbarsherlock.view.MenuItem;
 
 public class SearchActivity extends SherlockActivity implements OnTaskCompleteListener {
 	private static final String TAG = "SearchActivity";
@@ -69,8 +70,9 @@ public class SearchActivity extends SherlockActivity implements OnTaskCompleteLi
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.search);
 		ViewUtils.setActionBarBackground(this);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-		BibleQuoteApp app = (BibleQuoteApp) getApplication();
+        BibleQuoteApp app = (BibleQuoteApp) getApplication();
 		myLibararian = app.getLibrarian();
 
 		mAsyncManager = app.getAsyncManager();
@@ -90,7 +92,22 @@ public class SearchActivity extends SherlockActivity implements OnTaskCompleteLi
 		SpinnerInit();
 	}
 
-	/**
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                Intent intent = new Intent();
+                setResult(RESULT_CANCELED, intent);
+                finish();
+                break;
+
+            default:
+                break;
+        }
+        return true;
+    }
+
+    /**
 	 * Устанавливает список результатов поиска по последнему запросу
 	 */
 	private void setAdapter() {

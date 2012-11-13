@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2011 Scripture Software (http://scripturesoftware.org/)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.BibleQuote.utils;
 
 import java.io.BufferedReader;
@@ -57,13 +73,19 @@ public class UpdateManager {
 				currFile.delete();
 			}
 		}
-		
-		if (currVersionCode < 39) {
-			Log.i(TAG, "Update to version 0.05.01");
-			saveTSK(context);
-		}
-		
-		try {
+
+        if (currVersionCode < 39) {
+            Log.i(TAG, "Update to version 0.05.01");
+            saveTSK(context);
+        }
+        if (currVersionCode < 46) {
+            Log.i(TAG, "Update to version 0.06.05");
+            updateExternalModule(context);
+            moveHistoryFile(context);
+        }
+
+
+        try {
 			int versionCode = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode;
 			Settings.edit().putInt("versionCode", versionCode).commit();
 		} catch (NameNotFoundException e) {
@@ -71,7 +93,21 @@ public class UpdateManager {
 		}
 	}
 
-	private static void saveExternalModule(Context context) {
+    private static void moveHistoryFile(Context context) {
+        File historyFile = new File(context.getCacheDir(), "history.dat");
+        if (!historyFile.exists()) return;
+        historyFile.renameTo(new File(DataConstants.FS_HISTORY_PATH, "history.dat"));
+    }
+
+    private static void updateExternalModule(Context context) {
+        File bModule = new File(DataConstants.FS_EXTERNAL_DATA_PATH, "bible.zip");
+        if (bModule.exists()) {
+            bModule.delete();
+            saveExternalModule(context);
+        }
+    }
+
+    private static void saveExternalModule(Context context) {
 		try {
 			InputStream moduleStream = context.getResources().openRawResource(R.raw.bible);
 			File moduleDir = new File(DataConstants.FS_EXTERNAL_DATA_PATH);
