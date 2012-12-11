@@ -29,6 +29,10 @@ import com.BibleQuote.models.Chapter;
 import com.BibleQuote.models.Module;
 import com.BibleQuote.utils.CachePool;
 
+/**
+ *  Данный класс содержит коллекции для хранения списка загруженных модулей, книг
+ *  и кэш открытых глав
+ */
 public class LibraryContext {
 
 	private Context context;
@@ -37,6 +41,10 @@ public class LibraryContext {
 	public Map<String, Book> bookSet = Collections.synchronizedMap(new LinkedHashMap<String, Book>());
 	public Map<String, Chapter> chapterPool = Collections.synchronizedMap(new CachePool<Chapter>());
 
+    /**
+     *
+     * @param context контекст приложения
+     */
 	public LibraryContext(Context context) {
 		this.context = context; 
 	}

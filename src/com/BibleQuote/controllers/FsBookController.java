@@ -93,6 +93,9 @@ public class FsBookController implements IBookController {
 	
 	public LinkedHashMap<String, String> search(Module module, String query, String fromBookID, String toBookID) 
 			throws OpenModuleException, BookNotFoundException {
+
+        long start = System.nanoTime();
+
 		LinkedHashMap<String, String> searchRes = new LinkedHashMap<String, String>();
 	
 		if (query.trim().equals("")) {
@@ -127,6 +130,9 @@ public class FsBookController implements IBookController {
 		} catch (BookDefinitionException e) {
 			Log.e(TAG, e.getMessage());
 		}
+
+        long end = System.nanoTime();
+        Log.i(TAG, String.format("Trace search time: %1$s", String.valueOf(end-start)));
 
 		return searchRes;
 	}

@@ -30,9 +30,13 @@ public class StringProc {
 		return xmlStr;
 	}
 
+    public static String cleanStrong(String verse) {
+        return verse.replaceAll("^\\d+\\s+", "")
+                .replaceAll("\\s\\d+", "");
+    }
+
 	public static String cleanVerseText(String verse) {
-		return stripTags(verse, "", true)
-				.replaceAll("^\\d+\\s+", "")
-				.replaceAll("\\s\\d+", "");
+		return cleanStrong(stripTags(verse, "", true));
+
 	}
 }
