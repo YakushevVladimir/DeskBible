@@ -1,42 +1,50 @@
-/*
- * Copyright (C) 2011 Scripture Software (http://scripturesoftware.org/)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.BibleQuote.utils;
 
-public class StringProc {
-	
-	public static String stripTags(String xmlStr, String HtmlFilter, boolean all) {
-		xmlStr = xmlStr.replaceAll("<script(.)+?</script>", "")
-				.replaceAll("<style(.)+?</style>", "")
-				.replaceAll("<img src=\"http(.)+?>", "");
-		if (HtmlFilter.equals("") || all) {
-			xmlStr = xmlStr.replaceAll("<(.)+?>", "");
-		} else {
-			xmlStr = xmlStr.replaceAll("<(?!" + HtmlFilter + ")(.)*?>", "");
-		}
-		return xmlStr;
-	}
+import java.util.regex.Pattern;
 
-    public static String cleanStrong(String verse) {
-        return verse.replaceAll("^\\d+\\s+", "")
-                .replaceAll("\\s\\d+", "");
+public class StringProc {
+
+    public static String stripTags(String xmlStr) {
+        return stripTags(xmlStr, getCleanTagPattern("<(.)+?>"));
+    }
+
+    public static String stripTags(String xmlStr, String HtmlFilter) {
+        return stripTags(xmlStr, getCleanTagPattern("<(?!" + HtmlFilter + ")(.)*?>"));
+    }
+
+    public static String stripTags(String xmlStr, Pattern expression) {
+        return xmlStr.replaceAll(expression.pattern(), "");
+    }
+
+    public static String cleanStrongNumbers(String verse) {
+        return verse.replaceAll("\\s\\d+", "");
+    }
+
+    public static String cleanVerseNumbers(String verse) {
+        return verse.replaceAll("^\\d+\\s+", "");
     }
 
 	public static String cleanVerseText(String verse) {
-		return cleanStrong(stripTags(verse, "", true));
+		return cleanStrongNumbers(cleanVerseNumbers(stripTags(verse)));
 
 	}
+
+
+    private static Pattern getCleanTagPattern(String extExpression) {
+        String[] tagsExpressions = {
+                "<script(.)+?</script>",
+                "<style(.)+?</style>",
+                "<img src=\"http(.)+?>"
+        };
+
+        StringBuilder result = new StringBuilder();
+        for (String expression : tagsExpressions) {
+            result.append(( result.length() == 0 ? "" : "|") + "(" + expression + ")");
+        }
+        result.insert(0, "(");
+        result.append("|(" + extExpression + "))");
+
+        return Pattern.compile(result.toString());
+    }
+
 }

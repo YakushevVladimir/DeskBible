@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.BibleQuote.managers;
 
 import android.content.Context;
@@ -33,7 +32,6 @@ import com.BibleQuote.managers.History.SimpleHistoryManager;
 import com.BibleQuote.models.Book;
 import com.BibleQuote.models.Chapter;
 import com.BibleQuote.models.Module;
-import com.BibleQuote.utils.DataConstants;
 import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.Share.ShareBuilder;
@@ -41,7 +39,6 @@ import com.BibleQuote.utils.Share.ShareBuilder.Destination;
 import com.BibleQuote.utils.StringProc;
 import com.BibleQuote.utils.modules.LinkConverter;
 
-import java.io.File;
 import java.util.*;
 
 public class Librarian implements IChangeBooksListener  {
@@ -80,7 +77,7 @@ public class Librarian implements IChangeBooksListener  {
 		chapterCtrl = libCtrl.getChapterCtrl();
 		
 		com.BibleQuote.utils.Log.i(TAG, "Create history manager and repository");
-		fsHistoryRepository repository = new fsHistoryRepository(new File(DataConstants.FS_HISTORY_PATH));
+		fsHistoryRepository repository = new fsHistoryRepository(context.getCacheDir());
 		historyManager = new SimpleHistoryManager(repository, PreferenceHelper.getHistorySize());
 		
 		loadModules(context.getResources().getString(R.string.exception_open_module));
@@ -202,7 +199,11 @@ public class Librarian implements IChangeBooksListener  {
 		return moduleList;
 	}
 	
-
+	public LinkedList<ItemList> getHistoryList() {
+		return historyManager.getLinks();
+	}
+	
+	
 	public ArrayList<ItemList> getModuleBooksList(String moduleID) throws OpenModuleException, BooksDefinitionException, BookDefinitionException {
 		// Получим модуль по его ID
 		Module module = moduleCtrl.getModuleByID(moduleID);
@@ -512,11 +513,7 @@ public class Librarian implements IChangeBooksListener  {
 		historyManager.clearLinks();
 	}
 
-    public LinkedList<ItemList> getHistoryList() {
-        return historyManager.getLinks();
-    }
-
-    public LinkedHashMap<String, BibleReference> getCrossReference(BibleReference bReference)
+	public LinkedHashMap<String, BibleReference> getCrossReference(BibleReference bReference) 
 			throws TskNotFoundException, BQUniversalException {
 		
 		if (tskCtrl == null) {
@@ -557,7 +554,7 @@ public class Librarian implements IChangeBooksListener  {
 				int toVerse = ref.getToVerse();
 				Chapter chapter = getChapterByNumber(getBookByID(getCurrModule(), ref.getBookID()), ref.getChapter());
 				crossReferenceContent.put(ref, 
-						StringProc.stripTags(chapter.getText(fromVerse, toVerse), "", true)
+						StringProc.stripTags(chapter.getText(fromVerse, toVerse))
 						.replaceAll("\\s(H|G)*\\d+", "")
 						.replaceAll("\\d+\\s", ""));
 			} catch (Exception e) {

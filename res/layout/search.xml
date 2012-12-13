@@ -46,7 +46,7 @@
 				android:singleLine="true" />
 			
 			<ImageButton 
-				android:id="@+id/ChPrev" 
+				android:id="@+id/SearchButton"
 				style="@style/DefaultButton" 
 				android:layout_width="40.0dip" 
 				android:layout_height="40.0dip"

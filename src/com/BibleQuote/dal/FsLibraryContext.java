@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.regex.Pattern;
 
 import android.content.Context;
 import android.util.Log;
@@ -381,9 +380,9 @@ public class FsLibraryContext extends LibraryContext {
 		String str;
 		int chapterNumber = module.ChapterZero ? -1 : 0;
 		int verseNumber = 0;
-        Pattern searchPattern = Pattern.compile(regQuery, Pattern.CASE_INSENSITIVE);
 		try {
 			while ((str = bReader.readLine()) != null) {
+				str = str.replaceAll("\\s(\\d)+", "");
 				if (str.toLowerCase().contains(module.ChapterSign)) {
 					chapterNumber++;
 					verseNumber = 0;
@@ -391,9 +390,9 @@ public class FsLibraryContext extends LibraryContext {
 				if (str.toLowerCase().contains(module.VerseSign))
 					verseNumber++;
 
-                if (searchPattern.matcher(str).matches()) {
+				if (str.toLowerCase().matches(regQuery)) {
 					BibleReference osisLink = new BibleReference(BibleReference.MOD_DATASOURCE_FS, module.getDataSourceID(), module.getID(), bookID, chapterNumber, verseNumber);
-					String content = StringProc.cleanStrong(StringProc.stripTags(str, module.HtmlFilter, true));
+					String content = StringProc.cleanVerseNumbers(StringProc.stripTags(str));
 					searchRes.put(osisLink.getPath(), content);
 				}
 			}

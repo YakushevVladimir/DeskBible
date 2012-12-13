@@ -1,19 +1,3 @@
-/*
- * Copyright (C) 2011 Scripture Software (http://scripturesoftware.org/)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.BibleQuote.controllers;
 
 import java.util.ArrayList;
@@ -93,15 +77,14 @@ public class FsBookController implements IBookController {
 	
 	public LinkedHashMap<String, String> search(Module module, String query, String fromBookID, String toBookID) 
 			throws OpenModuleException, BookNotFoundException {
-
-        long start = System.nanoTime();
-
 		LinkedHashMap<String, String> searchRes = new LinkedHashMap<String, String>();
 	
 		if (query.trim().equals("")) {
 			// Передана пустая строка
 			return searchRes;
 		}
+
+        Long timeSearch = System.currentTimeMillis();
 		
 		// Подготовим регулярное выражение для поиска
 		String regQuery = "";
@@ -131,8 +114,8 @@ public class FsBookController implements IBookController {
 			Log.e(TAG, e.getMessage());
 		}
 
-        long end = System.nanoTime();
-        Log.i(TAG, String.format("Trace search time: %1$s", String.valueOf(end-start)));
+        timeSearch = System.currentTimeMillis() - timeSearch;
+        Log.i(TAG, String.format("Search \"%1$s\" in books %2$s:%3$s (time: %4$d ms)", query, fromBookID, toBookID, timeSearch));
 
 		return searchRes;
 	}
