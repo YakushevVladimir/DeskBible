@@ -313,9 +313,12 @@ public class Librarian implements IChangeBooksListener  {
 	
 	public LinkedHashMap<String, String> search(String query, String fromBook, String toBook) throws OpenModuleException, BookNotFoundException{
 		if (getCurrModule() == null) {
-			this.searchResults = new LinkedHashMap<String, String>();
+			searchResults = new LinkedHashMap<String, String>();
 		} else {
-			this.searchResults = bookCtrl.search(getCurrModule(), query, fromBook, toBook);
+//            Long timeSearch = System.currentTimeMillis();
+            searchResults = bookCtrl.search(getCurrModule(), query, fromBook, toBook);
+//            timeSearch = System.currentTimeMillis() - timeSearch;
+//            android.util.Log.i(TAG, String.format("Search \"%1$s\", time: %2$d ms, results : %3$d", query, timeSearch, searchResults.size()));
 		}
 		return searchResults;
 	}

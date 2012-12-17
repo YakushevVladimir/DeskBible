@@ -374,10 +374,16 @@ public class FsLibraryContext extends LibraryContext {
 	}	
 	
 	
-	public LinkedHashMap<String, String> searchInBook(Module module, String bookID, String regQuery, BufferedReader bReader) {
+	public LinkedHashMap<String, String> searchInBook(Module module, String bookID, String searchQuery, BufferedReader bReader) {
 		LinkedHashMap<String, String> searchRes = new LinkedHashMap<String, String>();
-		
-		String str;
+
+        // Подготовим регулярное выражение для поиска
+        searchQuery = getSearchQuery(searchQuery);
+        if (searchQuery.isEmpty()) {
+            return searchRes;
+        }
+
+        String str;
 		int chapterNumber = module.ChapterZero ? -1 : 0;
 		int verseNumber = 0;
 		try {
@@ -390,18 +396,29 @@ public class FsLibraryContext extends LibraryContext {
 				if (str.toLowerCase().contains(module.VerseSign))
 					verseNumber++;
 
-				if (str.toLowerCase().matches(regQuery)) {
-					BibleReference osisLink = new BibleReference(BibleReference.MOD_DATASOURCE_FS, module.getDataSourceID(), module.getID(), bookID, chapterNumber, verseNumber);
+				if (str.toLowerCase().matches(searchQuery)) {
+					BibleReference osisLink = new BibleReference(module.getID(), bookID, chapterNumber, verseNumber);
 					String content = StringProc.cleanVerseNumbers(StringProc.stripTags(str));
 					searchRes.put(osisLink.getPath(), content);
 				}
 			}
 		} catch (IOException e) {
-			Log.e(TAG, String.format("searchInBook(%1$s, %2$s, %3$s)", module.getID(), bookID, regQuery), e);
+			Log.e(TAG, String.format("searchInBook(%1$s, %2$s, %3$s)", module.getID(), bookID, searchQuery), e);
 			e.printStackTrace();
 		}
 		return searchRes;
 	}
-	
-	
+
+    private String getSearchQuery(String query) {
+        String result = "";
+        if (query.trim().isEmpty()) return result;
+
+        String[] words = query.toLowerCase().replaceAll("[^\\s\\w]", "").split("\\s+");
+        for (String currWord : words) {
+            result += (result.equals("") ? "" : "\\s(.)*?") + currWord;
+        }
+        result = ".*?" + result + ".*?"; // любые символы в начале и конце
+
+        return result;
+    }
 }

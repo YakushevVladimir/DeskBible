@@ -8,6 +8,7 @@ import android.util.Log;
 import com.BibleQuote.dal.FsLibraryUnitOfWork;
 import com.BibleQuote.dal.repository.IBookRepository;
 import com.BibleQuote.dal.repository.IModuleRepository;
+import com.BibleQuote.entity.search.SearchProcessor;
 import com.BibleQuote.exceptions.BookDefinitionException;
 import com.BibleQuote.exceptions.BookNotFoundException;
 import com.BibleQuote.exceptions.BooksDefinitionException;
@@ -23,7 +24,7 @@ public class FsBookController implements IBookController {
 	private IBookRepository<FsModule, FsBook> bRepository;
 	private IModuleRepository<String, FsModule> mRepository;
 
-	public FsBookController(FsLibraryUnitOfWork unit) {
+    public FsBookController(FsLibraryUnitOfWork unit) {
 		bRepository = unit.getBookRepository();
 		mRepository = unit.getModuleRepository();
     }
@@ -77,50 +78,31 @@ public class FsBookController implements IBookController {
 	
 	public LinkedHashMap<String, String> search(Module module, String query, String fromBookID, String toBookID) 
 			throws OpenModuleException, BookNotFoundException {
-		LinkedHashMap<String, String> searchRes = new LinkedHashMap<String, String>();
-	
-		if (query.trim().equals("")) {
-			// Передана пустая строка
-			return searchRes;
-		}
+        SearchProcessor searchProc = new SearchProcessor(bRepository);
+        return searchProc.search(module, query, getBookList(module, fromBookID, toBookID));
+    }
 
-        Long timeSearch = System.currentTimeMillis();
-		
-		// Подготовим регулярное выражение для поиска
-		String regQuery = "";
-		String[] words = query.toLowerCase().replaceAll("[^\\s\\w]", "").split("\\s+");
-		for (String currWord : words) {
-			regQuery += (regQuery.equals("") ? "" : "\\s(.)*?") + currWord;
-		}
-		regQuery = ".*?" + regQuery + ".*?"; // любые символы в начале и конце
-	
-		boolean startSearch = false;
-		try {
-			for (String bookID : getBooks(module).keySet()) {
-				if (!startSearch) {
-					startSearch = bookID.equals(fromBookID);
-					if (!startSearch) {
-						continue;
-					}
-				} 
-				searchRes.putAll(bRepository.searchInBook((FsModule)module, bookID, regQuery));
-				if (bookID.equals(toBookID)) {
-					break;
-				}
-			}
-		} catch (BooksDefinitionException e) {
-			Log.e(TAG, e.getMessage());
-		} catch (BookDefinitionException e) {
-			Log.e(TAG, e.getMessage());
-		}
+    public ArrayList<String> getBookList(Module module, String fromBookID, String toBookID) throws OpenModuleException {
+        ArrayList<String> result = new ArrayList<String>();
+        boolean startSearch = false;
+        try {
+            for (String bookID : getBooks(module).keySet()) {
+                if (!startSearch) {
+                    startSearch = bookID.equals(fromBookID);
+                    if (!startSearch) continue;
+                }
+                result.add(bookID);
+                if (bookID.equals(toBookID)) break;
+            }
+        } catch (BooksDefinitionException e) {
+            Log.e(TAG, e.getMessage());
+        } catch (BookDefinitionException e) {
+            Log.e(TAG, e.getMessage());
+        }
+        return result;
+    }
 
-        timeSearch = System.currentTimeMillis() - timeSearch;
-        Log.i(TAG, String.format("Search \"%1$s\" in books %2$s:%3$s (time: %4$d ms)", query, fromBookID, toBookID, timeSearch));
-
-		return searchRes;
-	}
-	
-	/**
+    /**
 	 * Проверяет является ли модуль полностью загруженным. Если модуль не
 	 * загружен, производит его загрузку и обновляет коллекцию модулей,
 	 * замещая closed-модуль на полностью загруженный. Также производится
@@ -164,5 +146,5 @@ public class FsBookController implements IBookController {
 		
 		return bookList;
 	}
-	
+
 }
