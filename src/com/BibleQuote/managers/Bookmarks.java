@@ -19,7 +19,7 @@ public class Bookmarks {
         String fav = PreferenceHelper.restoreStateString("Favorits");
         final BibleReference ref = new BibleReference(module, book, chapter, verse);
         final String currLinkPath =  ref.getChapterPath() + "." + verse;
-        final String currLink = module.ShortName + ": " + book.Name + " " + chapter + ":" + verse;
+        final String currLink = module.ShortName + ": " + book.name + " " + chapter + ":" + verse;
         fav = currLink + BOOKMARK_PATH_DELIMITER + currLinkPath + BOOKMARK_DELIMITER + fav;
         PreferenceHelper.saveStateString("Favorits", fav);
     }

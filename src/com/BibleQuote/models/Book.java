@@ -16,12 +16,12 @@ public abstract class Book implements Serializable {
 	/**
 	 * Полное имя книги
 	 */
-	public String Name;
+	public String name;
 	
 	/**
 	 * Краткое имя книги. являющееся первым в списке кратких имен
 	 */
-	public ArrayList<String> ShortNames = new ArrayList<String>();
+	public ArrayList<String> shortNames = new ArrayList<String>();
 	
 	/**
 	 * Имя книги по классификации OSIS 
@@ -31,7 +31,7 @@ public abstract class Book implements Serializable {
 	/**
 	 * Количество глав в книге
 	 */	
-	public Integer ChapterQty = 0;
+	public Integer chapterQty = 0;
 	
 	private Module module;
 	private ArrayList<String> chapterNumbers = new ArrayList<String>();
@@ -41,13 +41,13 @@ public abstract class Book implements Serializable {
 	 * @return Возвращает краткое имя книги. являющееся первым в списке кратких имен
 	 */
 	public String getShortName() {
-		return ShortNames.get(0);
+		return shortNames.get(0);
 	}
 
 	
 	public ArrayList<String> getChapterNumbers(Boolean isChapterZero) {
-		if (ChapterQty > 0 && chapterNumbers.size() == 0) {
-			for (int i = 0; i < ChapterQty; i++) {
+		if (chapterQty > 0 && chapterNumbers.size() == 0) {
+			for (int i = 0; i < chapterQty; i++) {
 				chapterNumbers.add("" + (i + (isChapterZero ? 0 : 1)));
 			}
 		}
@@ -64,35 +64,39 @@ public abstract class Book implements Serializable {
 	}	
 	
 	public Book(Module module, String name, String shortNames,  int chapterQty) {
-		this.Name = name;
-		this.ChapterQty = chapterQty;
+		this.name = name;
+		this.chapterQty = chapterQty;
 		this.module = module;
-		
-		String[] names = shortNames.trim().split("\\s+");
-		if (names.length == 0) {
-			this.ShortNames.add((name.length() < 4 ? name : name.substring(0, 3)) + ".");
-		} else {
-			for (String shortName : names) {
-				// В bibleqt.ini может содержаться одно и то же имя
-				// с точкой и без. При загрузке модуля точки удаляем,
-				// чтобы не было проблемм с ссылками OSIS. Отсюда
-				// могут быть не нужные нам дубли имен, избавляемся от них
-				if (!this.ShortNames.contains(shortName.trim())) {
-					this.ShortNames.add(shortName.trim());
-				}
-			}
-		}
-		
-		shortNames = this.ShortNames.toString()
-			.replace("[", "").replace("]", "");
-		OSIS_ID = BibleBooksID.getID(shortNames, ",");
-		if (OSIS_ID == null) {
-			OSIS_ID = this.ShortNames.get(0);
-		}
-	}
-	
-	
-	public Integer getFirstChapterNumber() {
+        setShortNames(shortNames);
+        setID();
+    }
+
+    private void setID() {
+        OSIS_ID = BibleBooksID.getID(this.shortNames);
+        if (OSIS_ID == null) {
+            OSIS_ID = this.shortNames.get(0);
+        }
+    }
+
+    private void setShortNames(String shortNames) {
+        String[] names = shortNames.trim().split("\\s+");
+        if (names.length == 0) {
+            this.shortNames.add((this.name.length() < 4 ? this.name : this.name.substring(0, 3)) + ".");
+        } else {
+            for (String shortName : names) {
+                // В bibleqt.ini может содержаться одно и то же имя
+                // с точкой и без. При загрузке модуля точки удаляем,
+                // чтобы не было проблемм с ссылками OSIS. Отсюда
+                // могут быть не нужные нам дубли имен, избавляемся от них
+                if (!this.shortNames.contains(shortName.trim())) {
+                    this.shortNames.add(shortName.trim());
+                }
+            }
+        }
+    }
+
+
+    public Integer getFirstChapterNumber() {
 		return module.ChapterZero ? 0 : 1;
 	}
 

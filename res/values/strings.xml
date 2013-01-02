@@ -20,7 +20,7 @@
     <string name="app_name">Bible</string>
     <!-- About -->
     <string name="about">About</string>
-    <string name="app_about_name">BibleQuote 0.06.06</string>
+    <string name="app_about_name">BibleQuote 0.06.08</string>
     <string name="app_about_license">Apache License Version 2.0</string>
     <string name="app_about_dev_label">Developers:</string>
     <string name="app_about_dev">Vladimir Yakushev\nSergey Ursul</string>
@@ -116,4 +116,5 @@
     <string name="short_reference_summary">Short caption to passage</string>
     <string name="add_module_to_reference">Add module name</string>
     <string name="add_module_to_reference_summary">Add the module name to the signature</string>
+	<string name="menu_speek">Speek</string>
 </resources>

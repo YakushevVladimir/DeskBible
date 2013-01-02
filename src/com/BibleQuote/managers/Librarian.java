@@ -32,6 +32,7 @@ import com.BibleQuote.managers.History.SimpleHistoryManager;
 import com.BibleQuote.models.Book;
 import com.BibleQuote.models.Chapter;
 import com.BibleQuote.models.Module;
+import com.BibleQuote.models.Verse;
 import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.Share.ShareBuilder;
@@ -209,7 +210,7 @@ public class Librarian implements IChangeBooksListener  {
 		Module module = moduleCtrl.getModuleByID(moduleID);
 		ArrayList<ItemList> booksList = new ArrayList<ItemList>();
 		for (Book book : bookCtrl.getBookList(module)) {
-			booksList.add(new ItemList(book.getID(), book.Name));
+			booksList.add(new ItemList(book.getID(), book.name));
 		}
 		return booksList;
 	}
@@ -244,7 +245,7 @@ public class Librarian implements IChangeBooksListener  {
 			return;
 		}
 		
-		Integer chapterQty = getCurrBook().ChapterQty;
+		Integer chapterQty = getCurrBook().chapterQty;
 		if (chapterQty > (getCurrChapterNumber() + (getCurrModule().ChapterZero ? 1 : 0))) {
 			currChapterNumber = getCurrChapterNumber() + 1;
 			currVerseNumber = 1;
@@ -279,7 +280,7 @@ public class Librarian implements IChangeBooksListener  {
 				int pos = books.indexOf(getCurrBook());
 				if (pos > 0) {
 					currBook = books.get(--pos);
-					Integer chapterQty = getCurrBook().ChapterQty;
+					Integer chapterQty = getCurrBook().chapterQty;
 					currChapterNumber = chapterQty - (getCurrModule().ChapterZero ? 1 : 0);
 					currVerseNumber = 1;
 				}
@@ -361,7 +362,7 @@ public class Librarian implements IChangeBooksListener  {
 
 		try {
 			Book book = bookCtrl.getBookByID(module, bookID);
-			return book.Name;
+			return book.name;
 		} catch (BookNotFoundException e) {
 			return "---";
 		}
@@ -585,5 +586,15 @@ public class Librarian implements IChangeBooksListener  {
 
     public Integer getCurrVerseNumber() {
         return currVerseNumber;
+    }
+
+    public String[] getVersesText() {
+        ArrayList<Verse> verses = currChapter.getVerseList();
+        String[] result = new String[verses.size()];
+        for (int i = 0 ; i < verses.size() ; i++) {
+            result[i] = StringProc.cleanVerseText(verses.get(i).getText());
+        }
+
+        return result;
     }
 }

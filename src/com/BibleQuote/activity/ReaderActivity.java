@@ -23,6 +23,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.*;
 import android.view.View.OnClickListener;
@@ -51,9 +52,10 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
 
+import java.util.Locale;
 import java.util.TreeSet;
 
-public class ReaderActivity extends SherlockActivity implements OnTaskCompleteListener, IReaderViewListener {
+public class ReaderActivity extends SherlockActivity implements OnTaskCompleteListener, IReaderViewListener, TextToSpeech.OnInitListener {
 
 	private static final String TAG = "ReaderActivity";
 	private static final int VIEW_CHAPTER_NAV_LENGHT = 3000;
@@ -73,7 +75,14 @@ public class ReaderActivity extends SherlockActivity implements OnTaskCompleteLi
 	private LinearLayout btnChapterNav;
 	private ReaderWebView vWeb;
 
-	private final class ActionSelectText implements ActionMode.Callback {
+    TextToSpeech talker;
+
+    @Override
+    public void onInit(int i) {
+        //ToDo: create  com.BibleQuote.activity.ReaderActivity.onInit()
+    }
+
+    private final class ActionSelectText implements ActionMode.Callback {
 
 		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
 			MenuInflater infl = getSupportMenuInflater();
@@ -134,6 +143,8 @@ public class ReaderActivity extends SherlockActivity implements OnTaskCompleteLi
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
+        talker = new TextToSpeech(this, this);
+
 		getSupportActionBar().setIcon(R.drawable.app_logo);
 		getSupportActionBar().setDisplayShowTitleEnabled(false);
 		ViewUtils.setActionBarBackground(this);
@@ -175,7 +186,16 @@ public class ReaderActivity extends SherlockActivity implements OnTaskCompleteLi
 		}
 	}
 
-	@Override
+    @Override
+    public void onDestroy() {
+        if (talker != null) {
+            talker.stop();
+            talker.shutdown();
+        }
+        super.onDestroy();
+    }
+
+    @Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		if (PreferenceHelper.restoreStateBoolean("DisableAutoScreenRotation")) {
 			super.onConfigurationChanged(newConfig);
@@ -200,13 +220,11 @@ public class ReaderActivity extends SherlockActivity implements OnTaskCompleteLi
 				onChooseChapterClick();
 				break;
 			case R.id.action_bar_search:
-				Intent intentSearch = new Intent().setClass(
-						getApplicationContext(), SearchActivity.class);
+				Intent intentSearch = new Intent().setClass(getApplicationContext(), SearchActivity.class);
 				startActivityForResult(intentSearch, R.id.action_bar_search);
 				break;
 			case R.id.action_bar_bookmarks:
-				Intent intentBookmarks = new Intent().setClass(
-						getApplicationContext(), BookmarksActivity.class);
+				Intent intentBookmarks = new Intent().setClass(getApplicationContext(), BookmarksActivity.class);
 				startActivityForResult(intentBookmarks, R.id.action_bar_bookmarks);
 				break;
 			case R.id.NightDayMode:
@@ -215,24 +233,27 @@ public class ReaderActivity extends SherlockActivity implements OnTaskCompleteLi
 				setTextInWebView();
 				break;
 			case R.id.action_bar_history:
-				Intent intentHistory = new Intent().setClass(
-						getApplicationContext(), HistoryActivity.class);
+				Intent intentHistory = new Intent().setClass(getApplicationContext(), HistoryActivity.class);
 				startActivityForResult(intentHistory, R.id.action_bar_history);
 				break;
-			case R.id.Help:
-				Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://scripturesoftware.org/?page_id=427"));
-				startActivity(browserIntent);
-//				Intent helpIntent = new Intent(this, HelpActivity.class);
-//				startActivity(helpIntent);
+            case R.id.action_speek:
+                talker.setLanguage(Locale.getDefault());
+                String[] verses = myLibrarian.getVersesText();
+                for (String verse : verses) talker.speak(verse, TextToSpeech.QUEUE_ADD, null);
+                break;
+
+            case R.id.Help:
+//				Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://scripturesoftware.org/?page_id=427"));
+//				startActivity(browserIntent);
+				Intent helpIntent = new Intent(this, HelpActivity.class);
+				startActivity(helpIntent);
 				break;
 			case R.id.Settings:
-				Intent intentSettings = new Intent().setClass(
-						getApplicationContext(), SettingsActivity.class);
+				Intent intentSettings = new Intent().setClass(getApplicationContext(), SettingsActivity.class);
 				startActivityForResult(intentSettings, R.id.action_bar_settings);
 				break;
 			case R.id.About:
-				Intent intentAbout = new Intent().setClass(
-						getApplicationContext(), AboutActivity.class);
+				Intent intentAbout = new Intent().setClass(getApplicationContext(), AboutActivity.class);
 				startActivity(intentAbout);
 				break;
 			default:

@@ -98,7 +98,7 @@ public class BibleReference {
 		this.moduleDatasourceID = module == null ? null : (String)module.getDataSourceID();
 		this.moduleID = module == null ? null : module.getID();
 		this.bookID = book == null ? null : book.getID();
-		this.bookName = book == null ? null : book.Name;
+		this.bookName = book == null ? null : book.name;
 		this.chapterNumber = chapterNumber;
 		this.fromVerse = fromVerse;
 		this.toVerse = toVerse;

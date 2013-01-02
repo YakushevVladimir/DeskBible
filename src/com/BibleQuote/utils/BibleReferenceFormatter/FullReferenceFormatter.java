@@ -18,7 +18,7 @@ public class FullReferenceFormatter extends ReferenceFormatter implements IBible
 		
 		String result = String.format(
 				"%1$s %2$s:%3$s", 
-				book.Name, chapter, getVerseLink());
+				book.name, chapter, getVerseLink());
 		if (PreferenceHelper.addModuleToBibleReference()) {
 			result = String.format("%1$s|%2$s", result, module.getID());
 		} 

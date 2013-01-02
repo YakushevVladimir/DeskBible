@@ -48,6 +48,11 @@
 		android:icon="@drawable/ic_action_day_night"
 		android:showAsAction="ifRoom"/>
 	<item
+		android:title="@string/menu_speek"
+		android:id="@+id/action_speek"
+		android:orderInCategory="5"
+		android:showAsAction="ifRoom"/>
+	<item
 		android:title="@string/menu_settings"
 		android:id="@+id/Settings"
 		android:icon="@drawable/ic_action_preferences"

@@ -1,5 +1,6 @@
 package com.BibleQuote.entity;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 //import android.util.Log;
@@ -176,41 +177,42 @@ public class BibleBooksID {
 		}
 	};
 	
-	private static void addBookID(String id, String[] shortNames){
+	private static void addBookID(String id, ArrayList<String> shortNames){
 		for (String name : shortNames) {
 			qualifier.put(name.toLowerCase(), id);
 		}
 	}
 	
 	public static String getID(String shortNames){
-		return getID(shortNames, " ");
+        ArrayList<String> moduleShortNames = new ArrayList<String>();
+        for (String shName : shortNames.split(" ")) moduleShortNames.add(shName);
+        return getID(moduleShortNames);
 	}
 	
-	public static String getID(String shortNames, String separator){
-		String bookID = null;
-		
-		String [] moduleBookNames = shortNames.split(separator);
-		if (moduleBookNames.length == 0) {
-			return bookID;
-		}
-		
+	public static String getID(ArrayList<String> shortNames){
+		String result = null;
+
+        if (shortNames.size() == 0) {
+            return result;
+        }
+
 		if (qualifier == null) {
 			qualifierInit();
 		}
 		
-		for (String moduleBookName : moduleBookNames) {
-			bookID = qualifier.get(moduleBookName.toLowerCase());
-			if (bookID != null) {
+		for (String moduleBookName : shortNames) {
+			result = qualifier.get(moduleBookName.toLowerCase());
+			if (result != null) {
 				break;
 			}
 		}
 		
-		if (bookID != null) {
-			addBookID(bookID, moduleBookNames);
+		if (result != null) {
+			addBookID(result, shortNames);
 		} else {
-			addBookID(moduleBookNames[0], moduleBookNames);
+			addBookID(shortNames.get(0), shortNames);
 		}
 		
-		return bookID;
+		return result;
 	}
 }
