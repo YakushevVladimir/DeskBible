@@ -108,4 +108,5 @@ Roman Goncharenko"</string>
     <string name="short_reference_summary">Стислий заголовок до уривку</string>
     <string name="add_module_to_reference">Додавати назву модуля</string>
     <string name="add_module_to_reference_summary">Додавати назву модуля до підпису на відправку</string>
+    <string name="stop_tts">Stop playing</string>
 </resources>

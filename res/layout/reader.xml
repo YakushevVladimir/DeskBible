@@ -16,99 +16,121 @@
  * limitations under the License.
  */
 -->
-<RelativeLayout 
-	android:id="@+id/container" 
-	android:layout_width="fill_parent" 
-	android:layout_height="fill_parent"
-	android:background="#ff000000"
-	android:orientation ="vertical" 
-	xmlns:android="http://schemas.android.com/apk/res/android">
+<FrameLayout
+    android:id="@+id/container"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-	<RelativeLayout
-		android:id="@+id/bookLink_container"
-		android:layout_width="fill_parent" 
-		android:layout_height="@dimen/bookLink_container_height"
-		android:orientation="horizontal"
-		android:layout_weight="1"
-		android:background="#ff808080"
-		android:clickable="false" >
-		
-		<TextView 
-			android:id="@+id/linkBook"
-			style="@style/BookLinkContainer"
-			android:layout_alignParentRight="true" />
-		
-		<TextView 
-			android:id="@+id/moduleName"
-			style="@style/BookLinkContainer" 
-			android:layout_toLeftOf="@id/linkBook" 
-			android:layout_alignParentLeft="true" />
-		
-		</RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/reader"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="#ff000000"
+        android:orientation="vertical"
+        xmlns:android="http://schemas.android.com/apk/res/android">
 
-	<com.BibleQuote.controls.ReaderWebView 
-		android:id="@+id/readerView"
-		android:layout_width="fill_parent" 
-		android:layout_height="fill_parent"
-		android:layout_below="@id/bookLink_container" />
-	
-	<RelativeLayout 
-		android:orientation="horizontal" 
-		android:id="@+id/button_container" 
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content" 
-		android:layout_alignParentBottom="true">
-		
-		<ImageButton 
-			android:id="@+id/btn_text_action" 
-			android:background="@drawable/btn_reader_text_action" 
-			android:layout_width="wrap_content" 
-			android:layout_height="wrap_content" 
-			android:layout_marginRight="5.0dip"
-			android:visibility="gone"
-			android:layout_alignParentRight="true" />
-	
-		<LinearLayout 
-			android:id="@+id/btn_chapter_nav" 
-			android:layout_width="wrap_content" 
-			android:layout_height="wrap_content" 
-			android:layout_marginLeft="5.0dip"
-			android:visibility="gone">
-			
-			<ImageButton 
-				android:id="@+id/btn_reader_prev" 
-				android:background="@drawable/btn_reader_prev" 
-				android:focusable="true" 
-				android:clickable="false" 
-				android:layout_width="wrap_content" 
-				android:layout_height="wrap_content" />
-			
-			<ImageButton 
-				android:id="@+id/btn_reader_up" 
-				android:background="@drawable/btn_reader_up" 
-				android:focusable="true" 
-				android:clickable="false" 
-				android:layout_width="wrap_content" 
-				android:layout_height="wrap_content" />
-			
-			<ImageButton 
-				android:id="@+id/btn_reader_down" 
-				android:background="@drawable/btn_reader_down" 
-				android:focusable="true" 
-				android:clickable="false" 
-				android:layout_width="wrap_content" 
-				android:layout_height="wrap_content" />
-			
-			<ImageButton 
-				android:id="@+id/btn_reader_next" 
-				android:background="@drawable/btn_reader_next" 
-				android:focusable="true" 
-				android:clickable="false" 
-				android:layout_width="wrap_content" 
-				android:layout_height="wrap_content" />
-		
-		</LinearLayout>
+        <RelativeLayout
+            android:id="@+id/bookLink_container"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/bookLink_container_height"
+            android:orientation="horizontal"
+            android:layout_weight="1"
+            android:background="#ff808080"
+            android:clickable="false">
 
-	</RelativeLayout>
-			
-</RelativeLayout>
+            <TextView
+                android:id="@+id/linkBook"
+                style="@style/BookLinkContainer"
+                android:layout_alignParentRight="true"/>
+
+            <TextView
+                android:id="@+id/moduleName"
+                style="@style/BookLinkContainer"
+                android:layout_toLeftOf="@id/linkBook"
+                android:layout_alignParentLeft="true"/>
+
+        </RelativeLayout>
+
+        <com.BibleQuote.controls.ReaderWebView
+            android:id="@+id/readerView"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_below="@id/bookLink_container"/>
+
+        <RelativeLayout
+            android:orientation="horizontal"
+            android:id="@+id/button_container"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true">
+
+            <ImageButton
+                android:id="@+id/btn_text_action"
+                android:background="@drawable/btn_reader_text_action"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5.0dip"
+                android:visibility="gone"
+                android:layout_alignParentRight="true"/>
+
+            <LinearLayout
+                android:id="@+id/btn_chapter_nav"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5.0dip"
+                android:visibility="gone">
+
+                <ImageButton
+                    android:id="@+id/btn_reader_prev"
+                    android:background="@drawable/btn_reader_prev"
+                    android:focusable="true"
+                    android:clickable="false"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <ImageButton
+                    android:id="@+id/btn_reader_up"
+                    android:background="@drawable/btn_reader_up"
+                    android:focusable="true"
+                    android:clickable="false"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <ImageButton
+                    android:id="@+id/btn_reader_down"
+                    android:background="@drawable/btn_reader_down"
+                    android:focusable="true"
+                    android:clickable="false"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <ImageButton
+                    android:id="@+id/btn_reader_next"
+                    android:background="@drawable/btn_reader_next"
+                    android:focusable="true"
+                    android:clickable="false"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+        </RelativeLayout>
+    </RelativeLayout>
+    <LinearLayout
+        android:id="@+id/tts"
+        android:background="@android:color/black"
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:baselineAligned="false"
+        android:layout_gravity="bottom"
+        android:gravity="center_horizontal">
+        <Button
+            android:id="@+id/tts_stop"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/stop_tts"
+            android:layout_margin="10dp"/>
+    </LinearLayout>
+</FrameLayout>

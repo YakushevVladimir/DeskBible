@@ -77,4 +77,5 @@
     <string name="history">Geschichte</string>
     <string name="bookmarks">Bookmarks</string>
     <string name="library">Bibliothek</string>
+    <string name="stop_tts">Stop playing</string>
 </resources>

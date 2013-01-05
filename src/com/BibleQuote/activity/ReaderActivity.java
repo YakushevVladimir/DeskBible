@@ -19,7 +19,6 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.media.AudioManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -27,10 +26,7 @@ import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.*;
 import android.view.View.OnClickListener;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
 import com.BibleQuote.controls.ReaderWebView;
@@ -50,7 +46,6 @@ import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-
 
 import java.util.Locale;
 import java.util.TreeSet;
@@ -75,11 +70,12 @@ public class ReaderActivity extends SherlockActivity implements OnTaskCompleteLi
 	private LinearLayout btnChapterNav;
 	private ReaderWebView vWeb;
 
-    TextToSpeech talker;
+    private TextToSpeech talker;
+    private LinearLayout layoutTTS;
+    private Button btnTTSStop;
 
     @Override
     public void onInit(int i) {
-        //ToDo: create  com.BibleQuote.activity.ReaderActivity.onInit()
     }
 
     private final class ActionSelectText implements ActionMode.Callback {
@@ -143,8 +139,6 @@ public class ReaderActivity extends SherlockActivity implements OnTaskCompleteLi
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
-        talker = new TextToSpeech(this, this);
-
 		getSupportActionBar().setIcon(R.drawable.app_logo);
 		getSupportActionBar().setDisplayShowTitleEnabled(false);
 		ViewUtils.setActionBarBackground(this);
@@ -155,27 +149,9 @@ public class ReaderActivity extends SherlockActivity implements OnTaskCompleteLi
 		mAsyncManager = app.getAsyncManager();
 		mAsyncManager.handleRetainedTask(getLastNonConfigurationInstance(), this);
 
-		btnChapterNav = (LinearLayout)findViewById(R.id.btn_chapter_nav);
+        talker = new TextToSpeech(this, this);
 
-		ImageButton btnChapterPrev = (ImageButton)findViewById(R.id.btn_reader_prev);
-		btnChapterPrev.setOnClickListener(onClickChapterPrev);
-		ImageButton btnChapterNext = (ImageButton)findViewById(R.id.btn_reader_next);
-		btnChapterNext.setOnClickListener(onClickChapterNext);
-
-		ImageButton btnChapterUp = (ImageButton)findViewById(R.id.btn_reader_up);
-		btnChapterUp.setOnClickListener(onClickPageUp);
-		ImageButton btnChapterDown = (ImageButton)findViewById(R.id.btn_reader_down);
-		btnChapterDown.setOnClickListener(onClickPageDown);
-
-		vModuleName = (TextView)findViewById(R.id.moduleName);
-		vBookLink = (TextView)findViewById(R.id.linkBook);
-
-		progressMessage = getResources().getString(R.string.messageLoad);
-		nightMode = PreferenceHelper.restoreStateBoolean("nightMode");
-
-		vWeb = (ReaderWebView)findViewById(R.id.readerView);
-		vWeb.setOnReaderViewListener(this);
-		vWeb.setReadingMode(PreferenceHelper.isReadModeByDefault());
+        initialyzeViews();
 		updateActivityMode();
 
 		BibleReference osisLink = new BibleReference(PreferenceHelper.restoreStateString("last_read"));
@@ -185,6 +161,34 @@ public class ReaderActivity extends SherlockActivity implements OnTaskCompleteLi
 			mAsyncManager.setupTask(new AsyncOpenChapter(progressMessage, false, myLibrarian, osisLink), this);
 		}
 	}
+
+    private void initialyzeViews() {
+        btnChapterNav = (LinearLayout)findViewById(R.id.btn_chapter_nav);
+
+        layoutTTS = (LinearLayout) findViewById(R.id.tts);
+        btnTTSStop = (Button) findViewById(R.id.tts_stop);
+        btnTTSStop.setOnClickListener(onClickTTSStop);
+
+        ImageButton btnChapterPrev = (ImageButton)findViewById(R.id.btn_reader_prev);
+        btnChapterPrev.setOnClickListener(onClickChapterPrev);
+        ImageButton btnChapterNext = (ImageButton)findViewById(R.id.btn_reader_next);
+        btnChapterNext.setOnClickListener(onClickChapterNext);
+
+        ImageButton btnChapterUp = (ImageButton)findViewById(R.id.btn_reader_up);
+        btnChapterUp.setOnClickListener(onClickPageUp);
+        ImageButton btnChapterDown = (ImageButton)findViewById(R.id.btn_reader_down);
+        btnChapterDown.setOnClickListener(onClickPageDown);
+
+        vModuleName = (TextView)findViewById(R.id.moduleName);
+        vBookLink = (TextView)findViewById(R.id.linkBook);
+
+        progressMessage = getResources().getString(R.string.messageLoad);
+        nightMode = PreferenceHelper.restoreStateBoolean("nightMode");
+
+        vWeb = (ReaderWebView)findViewById(R.id.readerView);
+        vWeb.setOnReaderViewListener(this);
+        vWeb.setReadingMode(PreferenceHelper.isReadModeByDefault());
+    }
 
     @Override
     public void onDestroy() {
@@ -238,6 +242,7 @@ public class ReaderActivity extends SherlockActivity implements OnTaskCompleteLi
 				break;
             case R.id.action_speek:
                 talker.setLanguage(Locale.getDefault());
+                layoutTTS.setVisibility(View.VISIBLE);
                 String[] verses = myLibrarian.getVersesText();
                 for (String verse : verses) talker.speak(verse, TextToSpeech.QUEUE_ADD, null);
                 break;
@@ -338,6 +343,13 @@ public class ReaderActivity extends SherlockActivity implements OnTaskCompleteLi
 			viewChapterNav();
 		}
 	};
+
+    OnClickListener onClickTTSStop = new OnClickListener() {
+        public void onClick(View v) {
+            talker.stop();
+            layoutTTS.setVisibility(View.GONE);
+        }
+    };
 
 	OnClickListener onClickPageDown = new OnClickListener() {
 		public void onClick(View v) {
