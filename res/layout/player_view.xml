@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ Copyright (C) 2011 Scripture Software (http://scripturesoftware.org/)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~       http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	style="@style/BibleQuotePlayer">
+
+	<ImageButton
+		android:id="@+id/replay"
+		android:background="@drawable/im_player_replay"
+		style="@style/BibleQuotePlayer.Button"/>
+
+	<ImageButton
+		android:id="@+id/previous"
+		android:background="@drawable/im_player_previous"
+		style="@style/BibleQuotePlayer.Button"/>
+
+	<ImageButton
+		android:id="@+id/play"
+		android:background="@drawable/im_player_play"
+		android:visibility="gone"
+		style="@style/BibleQuotePlayer.Button"/>
+
+	<ImageButton
+		android:id="@+id/pause"
+		android:background="@drawable/im_player_pause"
+		style="@style/BibleQuotePlayer.Button"/>
+
+	<ImageButton
+		android:id="@+id/next"
+		android:background="@drawable/im_player_next"
+		style="@style/BibleQuotePlayer.Button"/>
+
+	<ImageButton
+		android:id="@+id/stop"
+		android:background="@drawable/im_player_stop"
+		style="@style/BibleQuotePlayer.Button"/>
+
+</LinearLayout>

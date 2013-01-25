@@ -16,6 +16,7 @@
 package com.BibleQuote.activity;
 
 import com.BibleQuote.utils.ViewUtils;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
@@ -50,7 +51,7 @@ import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.utils.OnTaskCompleteListener;
 import com.BibleQuote.utils.Task;
 
-public class LibraryActivity extends SherlockActivity implements OnTaskCompleteListener {
+public class LibraryActivity extends SherlockFragmentActivity implements OnTaskCompleteListener {
 	private static final String TAG = "LibraryActivity";
 	private final int MODULE_VIEW = 1, BOOK_VIEW = 2, CHAPTER_VIEW = 3;
 	private int viewMode = 1;
@@ -369,9 +370,9 @@ public class LibraryActivity extends SherlockActivity implements OnTaskCompleteL
 			UpdateView(MODULE_VIEW);
 		}		
 	}
-
-    @Override
-    public Object onRetainNonConfigurationInstance() {
-    	return mAsyncManager.retainTask();
-    }
+//
+//    @Override
+//    public Object onRetainNonConfigurationInstance() {
+//    	return mAsyncManager.retainTask();
+//    }
 }

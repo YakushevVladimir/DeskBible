@@ -15,11 +15,12 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import com.BibleQuote.utils.ViewUtils;
 import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.MenuInflater;
 
-public class HistoryActivity extends SherlockActivity {
+public class HistoryActivity extends SherlockFragmentActivity {
 
 	//private final String TAG = "HistoryActivity";
 	

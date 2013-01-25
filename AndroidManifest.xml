@@ -22,7 +22,7 @@
 	android:versionCode="49"
 	android:installLocation="auto">
 	
-	<uses-sdk android:targetSdkVersion="15" android:minSdkVersion="4" />
+	<uses-sdk android:targetSdkVersion="15" android:minSdkVersion="7" />
 	
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 	<!--

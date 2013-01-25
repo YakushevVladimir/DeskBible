@@ -33,5 +33,5 @@
 	<dimen name="ch_chapter_width">40dp</dimen>
 	<dimen name="ch_chapter_spacing">5dp</dimen>
 	<dimen name="book_id_width">60dp</dimen>
-			
+
 </resources>

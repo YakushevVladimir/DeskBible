@@ -45,8 +45,9 @@ import com.BibleQuote.widget.ItemAdapter;
 import com.BibleQuote.widget.item.Item;
 import com.BibleQuote.widget.item.SubtextItem;
 import com.BibleQuote.widget.item.TextItem;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 
-public class CrossReferenceActivity extends SherlockActivity implements OnTaskCompleteListener {
+public class CrossReferenceActivity extends SherlockFragmentActivity implements OnTaskCompleteListener {
 
 	private static String TAG = "CrossReferenceActivity";
 	

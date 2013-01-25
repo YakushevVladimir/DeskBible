@@ -15,6 +15,7 @@
  */
 package com.BibleQuote.activity;
 
+import android.support.v4.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -22,7 +23,6 @@ import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.*;
 import android.view.View.OnClickListener;
@@ -41,16 +41,15 @@ import com.BibleQuote.managers.Bookmarks;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.utils.*;
 import com.BibleQuote.utils.Share.ShareBuilder.Destination;
-import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
-import java.util.Locale;
 import java.util.TreeSet;
 
-public class ReaderActivity extends SherlockActivity implements OnTaskCompleteListener, IReaderViewListener, TextToSpeech.OnInitListener {
+public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCompleteListener, IReaderViewListener {
 
 	private static final String TAG = "ReaderActivity";
 	private static final int VIEW_CHAPTER_NAV_LENGHT = 3000;
@@ -70,13 +69,14 @@ public class ReaderActivity extends SherlockActivity implements OnTaskCompleteLi
 	private LinearLayout btnChapterNav;
 	private ReaderWebView vWeb;
 
-    private TextToSpeech talker;
-    private LinearLayout layoutTTS;
-    private Button btnTTSStop;
+    private TTSPlayerFragment ttsPlayer;
 
-    @Override
-    public void onInit(int i) {
-    }
+    private final int ID_CHOOSE_CH = 1;
+    private final int ID_SEARCH = 2;
+    private final int ID_HISTORY = 3;
+    private final int ID_BOOKMARKS = 4;
+    private final int ID_PARALLELS = 5;
+    private final int ID_SETTINGS = 6;
 
     private final class ActionSelectText implements ActionMode.Callback {
 
@@ -115,7 +115,7 @@ public class ReaderActivity extends SherlockActivity implements OnTaskCompleteLi
 				myLibrarian.setCurrentVerseNumber(selVerses.first());
 				Intent intParallels = new Intent(VIEW_REFERENCE);
 				intParallels.putExtra("linkOSIS", myLibrarian.getCurrentOSISLink().getPath());
-				startActivityForResult(intParallels, R.id.action_bar_parallels);
+				startActivityForResult(intParallels, ID_PARALLELS);
 				break;
 
 			default:
@@ -147,9 +147,7 @@ public class ReaderActivity extends SherlockActivity implements OnTaskCompleteLi
 		myLibrarian = app.getLibrarian();
 
 		mAsyncManager = app.getAsyncManager();
-		mAsyncManager.handleRetainedTask(getLastNonConfigurationInstance(), this);
-
-        talker = new TextToSpeech(this, this);
+		//mAsyncManager.handleRetainedTask(getLastNonConfigurationInstance(), this);
 
         initialyzeViews();
 		updateActivityMode();
@@ -164,10 +162,6 @@ public class ReaderActivity extends SherlockActivity implements OnTaskCompleteLi
 
     private void initialyzeViews() {
         btnChapterNav = (LinearLayout)findViewById(R.id.btn_chapter_nav);
-
-        layoutTTS = (LinearLayout) findViewById(R.id.tts);
-        btnTTSStop = (Button) findViewById(R.id.tts_stop);
-        btnTTSStop.setOnClickListener(onClickTTSStop);
 
         ImageButton btnChapterPrev = (ImageButton)findViewById(R.id.btn_reader_prev);
         btnChapterPrev.setOnClickListener(onClickChapterPrev);
@@ -190,14 +184,14 @@ public class ReaderActivity extends SherlockActivity implements OnTaskCompleteLi
         vWeb.setReadingMode(PreferenceHelper.isReadModeByDefault());
     }
 
-    @Override
-    public void onDestroy() {
-        if (talker != null) {
-            talker.stop();
-            talker.shutdown();
-        }
-        super.onDestroy();
-    }
+//    @Override
+//    public void onDestroy() {
+//        if (talker != null) {
+//            talker.stop();
+//            talker.shutdown();
+//        }
+//        super.onDestroy();
+//    }
 
     @Override
 	public void onConfigurationChanged(Configuration newConfig) {
@@ -225,11 +219,11 @@ public class ReaderActivity extends SherlockActivity implements OnTaskCompleteLi
 				break;
 			case R.id.action_bar_search:
 				Intent intentSearch = new Intent().setClass(getApplicationContext(), SearchActivity.class);
-				startActivityForResult(intentSearch, R.id.action_bar_search);
+				startActivityForResult(intentSearch, ID_SEARCH);
 				break;
 			case R.id.action_bar_bookmarks:
 				Intent intentBookmarks = new Intent().setClass(getApplicationContext(), BookmarksActivity.class);
-				startActivityForResult(intentBookmarks, R.id.action_bar_bookmarks);
+				startActivityForResult(intentBookmarks, ID_BOOKMARKS);
 				break;
 			case R.id.NightDayMode:
 				nightMode = !nightMode;
@@ -238,14 +232,19 @@ public class ReaderActivity extends SherlockActivity implements OnTaskCompleteLi
 				break;
 			case R.id.action_bar_history:
 				Intent intentHistory = new Intent().setClass(getApplicationContext(), HistoryActivity.class);
-				startActivityForResult(intentHistory, R.id.action_bar_history);
+				startActivityForResult(intentHistory, ID_HISTORY);
 				break;
             case R.id.action_speek:
-                talker.setLanguage(Locale.getDefault());
-                layoutTTS.setVisibility(View.VISIBLE);
-                String[] verses = myLibrarian.getVersesText();
-                for (String verse : verses) talker.speak(verse, TextToSpeech.QUEUE_ADD, null);
+                ttsPlayer = new TTSPlayerFragment();
+                FragmentTransaction tran = getSupportFragmentManager().beginTransaction();
+                tran.add(R.id.tts_player_frame, ttsPlayer);
+                tran.commit();
                 break;
+//                talker.setLanguage(Locale.getDefault());
+//                layoutTTSPlayer.setVisibility(View.VISIBLE);
+//                String[] verses = myLibrarian.getVersesText();
+//                for (String verse : verses) talker.speak(verse, TextToSpeech.QUEUE_ADD, null);
+//                break;
 
             case R.id.Help:
 //				Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://scripturesoftware.org/?page_id=427"));
@@ -255,7 +254,7 @@ public class ReaderActivity extends SherlockActivity implements OnTaskCompleteLi
 				break;
 			case R.id.Settings:
 				Intent intentSettings = new Intent().setClass(getApplicationContext(), SettingsActivity.class);
-				startActivityForResult(intentSettings, R.id.action_bar_settings);
+				startActivityForResult(intentSettings, ID_SETTINGS);
 				break;
 			case R.id.About:
 				Intent intentAbout = new Intent().setClass(getApplicationContext(), AboutActivity.class);
@@ -271,18 +270,18 @@ public class ReaderActivity extends SherlockActivity implements OnTaskCompleteLi
 		super.onActivityResult(requestCode, resultCode, data);
 
 		if (resultCode == RESULT_OK) {
-			if ((requestCode == R.id.action_bar_bookmarks)
-					|| (requestCode == R.id.action_bar_search )
-					|| (requestCode == R.id.action_bar_chooseCh)
-					|| (requestCode == R.id.action_bar_parallels)
-					|| (requestCode == R.id.action_bar_history)) {
+			if ((requestCode == ID_BOOKMARKS)
+					|| (requestCode == ID_SEARCH )
+					|| (requestCode == ID_CHOOSE_CH)
+					|| (requestCode == ID_PARALLELS)
+					|| (requestCode == ID_HISTORY)) {
 				Bundle extras = data.getExtras();
 				BibleReference osisLink = new BibleReference(extras.getString("linkOSIS"));
 				if (myLibrarian.isOSISLinkValid(osisLink)) {
 					mAsyncManager.setupTask(new AsyncOpenChapter(progressMessage, false, myLibrarian, osisLink), this);
 				}
 			}
-		} else if (requestCode == R.id.action_bar_settings) {
+		} else if (requestCode == ID_SETTINGS) {
 			vWeb.setReadingMode(PreferenceHelper.isReadModeByDefault());
 			updateActivityMode();
 			mAsyncManager.setupTask(new AsyncOpenChapter(progressMessage, false, myLibrarian, myLibrarian.getCurrentOSISLink()), this);
@@ -304,7 +303,7 @@ public class ReaderActivity extends SherlockActivity implements OnTaskCompleteLi
 	public void onChooseChapterClick() {
 		Intent intent = new Intent();
 		intent.setClass(this, LibraryActivity.class);
-		startActivityForResult(intent, R.id.action_bar_chooseCh);
+		startActivityForResult(intent, ID_CHOOSE_CH);
 	}
 
 	OnClickListener onClickChapterPrev = new OnClickListener() {
@@ -344,12 +343,12 @@ public class ReaderActivity extends SherlockActivity implements OnTaskCompleteLi
 		}
 	};
 
-    OnClickListener onClickTTSStop = new OnClickListener() {
-        public void onClick(View v) {
-            talker.stop();
-            layoutTTS.setVisibility(View.GONE);
-        }
-    };
+//    OnClickListener onClickTTSStop = new OnClickListener() {
+//        public void onClick(View v) {
+//            talker.stop();
+//            layoutTTSPlayer.setVisibility(View.GONE);
+//        }
+//    };
 
 	OnClickListener onClickPageDown = new OnClickListener() {
 		public void onClick(View v) {
@@ -395,7 +394,7 @@ public class ReaderActivity extends SherlockActivity implements OnTaskCompleteLi
 	public boolean onSearchRequested() {
 		Intent intentSearch = new Intent().setClass(
 				getApplicationContext(), SearchActivity.class);
-		startActivityForResult(intentSearch, R.id.action_bar_search);
+		startActivityForResult(intentSearch, ID_SEARCH);
 		return false;
 	}
 
@@ -428,10 +427,10 @@ public class ReaderActivity extends SherlockActivity implements OnTaskCompleteLi
 		}
 	}
 
-	@Override
-	public Object onRetainNonConfigurationInstance() {
-		return mAsyncManager.retainTask();
-	}
+//	@Override
+//	public Object onRetainNonConfigurationInstance() {
+//		return mAsyncManager.retainTask();
+//	}
 
 	public void onTaskComplete(Task task) {
 		if (task != null && !task.isCancelled()) {

@@ -20,8 +20,9 @@ import com.BibleQuote.R;
 import com.BibleQuote.utils.ViewUtils;
 import com.actionbarsherlock.app.SherlockActivity;
 import android.os.Bundle;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 
-public class AboutActivity extends SherlockActivity {
+public class AboutActivity extends SherlockFragmentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -5,6 +5,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import com.BibleQuote.R;
 import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,16 +16,20 @@ import com.actionbarsherlock.app.SherlockActivity;
  */
 public class ViewUtils {
 
-	public static void setActionBarBackground(SherlockActivity context) {
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-			BitmapDrawable bg = (BitmapDrawable)context.getResources().getDrawable(R.drawable.action_bar_bg);
-			bg.setTileModeXY(TileMode.REPEAT, TileMode.REPEAT);
-			context.getSupportActionBar().setBackgroundDrawable(bg);
+    public static void setActionBarBackground(SherlockFragmentActivity context) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            BitmapDrawable bg = (BitmapDrawable)context.getResources().getDrawable(R.drawable.action_bar_bg);
+            bg.setTileModeXY(TileMode.REPEAT, TileMode.REPEAT);
+            context.getSupportActionBar().setBackgroundDrawable(bg);
+        }
+    }
 
-//			BitmapDrawable bgSplit = (BitmapDrawable)context.getResources().getDrawable(R.drawable.action_bar_divider);
-//			bgSplit.setTileModeXY(TileMode.REPEAT, TileMode.REPEAT);
-//			context.getSupportActionBar().setSplitBackgroundDrawable(bgSplit);
-		}
-	}
+    public static void setActionBarBackground(SherlockActivity context) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            BitmapDrawable bg = (BitmapDrawable)context.getResources().getDrawable(R.drawable.action_bar_bg);
+            bg.setTileModeXY(TileMode.REPEAT, TileMode.REPEAT);
+            context.getSupportActionBar().setBackgroundDrawable(bg);
+        }
+    }
 
 }

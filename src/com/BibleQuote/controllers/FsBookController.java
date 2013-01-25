@@ -78,8 +78,7 @@ public class FsBookController implements IBookController {
 	
 	public LinkedHashMap<String, String> search(Module module, String query, String fromBookID, String toBookID) 
 			throws OpenModuleException, BookNotFoundException {
-        SearchProcessor searchProc = new SearchProcessor(bRepository);
-        return searchProc.search(module, query, getBookList(module, fromBookID, toBookID));
+        return new SearchProcessor(bRepository).search(module, query, getBookList(module, fromBookID, toBookID));
     }
 
     public ArrayList<String> getBookList(Module module, String fromBookID, String toBookID) throws OpenModuleException {

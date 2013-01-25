@@ -47,8 +47,9 @@ import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.utils.OnTaskCompleteListener;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.Task;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 
-public class SearchActivity extends SherlockActivity implements OnTaskCompleteListener {
+public class SearchActivity extends SherlockFragmentActivity implements OnTaskCompleteListener {
 	private static final String TAG = "SearchActivity";
 	private Spinner spinnerFrom, spinnerTo;
 	private ListView ResultList;
@@ -164,10 +165,10 @@ public class SearchActivity extends SherlockActivity implements OnTaskCompleteLi
  		restoreSelectedPosition();
 	}
 
-	@Override
-	public Object onRetainNonConfigurationInstance() {
-		return mAsyncManager.retainTask();
-	}
+//	@Override
+//	public Object onRetainNonConfigurationInstance() {
+//		return mAsyncManager.retainTask();
+//	}
 
 	public void onTaskComplete(Task task) {
 		if (task.isCancelled()) {

@@ -379,7 +379,7 @@ public class FsLibraryContext extends LibraryContext {
 
         // Подготовим регулярное выражение для поиска
         searchQuery = getSearchQuery(searchQuery);
-        if (searchQuery.isEmpty()) {
+        if (searchQuery.equals("")) {
             return searchRes;
         }
 
@@ -411,7 +411,7 @@ public class FsLibraryContext extends LibraryContext {
 
     private String getSearchQuery(String query) {
         String result = "";
-        if (query.trim().isEmpty()) return result;
+        if (query.trim().equals("")) return result;
 
         String[] words = query.toLowerCase().replaceAll("[^\\s\\w]", "").split("\\s+");
         for (String currWord : words) {

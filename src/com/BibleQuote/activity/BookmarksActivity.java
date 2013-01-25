@@ -18,6 +18,7 @@ package com.BibleQuote.activity;
 import com.BibleQuote.managers.Bookmarks;
 import com.BibleQuote.utils.ViewUtils;
 import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.MenuInflater;
@@ -38,7 +39,7 @@ import com.BibleQuote.R;
 import com.BibleQuote.entity.BibleReference;
 import com.BibleQuote.managers.Librarian;
 
-public class BookmarksActivity extends SherlockActivity {
+public class BookmarksActivity extends SherlockFragmentActivity {
 
 	private final String TAG = "BookmarksActivity";
 	

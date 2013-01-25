@@ -7,8 +7,9 @@ import android.os.Bundle;
 import android.webkit.WebView;
 import com.BibleQuote.utils.ViewUtils;
 import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 
-public class HelpActivity extends SherlockActivity {
+public class HelpActivity extends SherlockFragmentActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

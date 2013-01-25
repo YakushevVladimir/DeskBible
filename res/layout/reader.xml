@@ -116,21 +116,9 @@
             </LinearLayout>
         </RelativeLayout>
     </RelativeLayout>
-    <LinearLayout
-        android:id="@+id/tts"
-        android:background="@android:color/black"
-        android:layout_height="wrap_content"
-        android:layout_width="fill_parent"
-        android:orientation="horizontal"
-        android:visibility="gone"
-        android:baselineAligned="false"
-        android:layout_gravity="bottom"
-        android:gravity="center_horizontal">
-        <Button
-            android:id="@+id/tts_stop"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/stop_tts"
-            android:layout_margin="10dp"/>
-    </LinearLayout>
+    <FrameLayout
+        android:id="@+id/tts_player_frame"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|bottom" />
 </FrameLayout>
