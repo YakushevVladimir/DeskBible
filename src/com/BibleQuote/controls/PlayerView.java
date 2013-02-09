@@ -33,6 +33,8 @@ import java.util.ArrayList;
  */
 public class PlayerView extends LinearLayout {
 
+    ImageButton play, pause;
+
     public PlayerView(Context context) {
         super(context);
         init();
@@ -63,7 +65,7 @@ public class PlayerView extends LinearLayout {
 
     private ArrayList<OnClickListener> listeners = new ArrayList<OnClickListener>();
 
-    private void sendMessage(Event ev) {
+    private void notify(Event ev) {
         for (OnClickListener listener : listeners) {
             listener.onClick(ev);
         }
@@ -81,7 +83,8 @@ public class PlayerView extends LinearLayout {
         replay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sendMessage(Event.ReplayClick);
+                PlayerView.this.notify(Event.ReplayClick);
+                viewPauseButton();
             }
         });
 
@@ -89,23 +92,26 @@ public class PlayerView extends LinearLayout {
         previous.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sendMessage(Event.PreviousClick);
+                PlayerView.this.notify(Event.PreviousClick);
+                viewPlayButton();
             }
         });
 
-        ImageButton play = (ImageButton) findViewById(R.id.play);
+        play = (ImageButton) findViewById(R.id.play);
         play.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sendMessage(Event.PlayClick);
+                PlayerView.this.notify(Event.PlayClick);
+                viewPauseButton();
             }
         });
 
-        ImageButton pause = (ImageButton) findViewById(R.id.pause);
+        pause = (ImageButton) findViewById(R.id.pause);
         pause.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sendMessage(Event.PauseClick);
+                viewPlayButton();
+                PlayerView.this.notify(Event.PauseClick);
             }
         });
 
@@ -113,7 +119,8 @@ public class PlayerView extends LinearLayout {
         next.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sendMessage(Event.NextClick);
+                PlayerView.this.notify(Event.NextClick);
+                viewPlayButton();
             }
         });
 
@@ -121,8 +128,19 @@ public class PlayerView extends LinearLayout {
         stop.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sendMessage(Event.StopClick);
+                PlayerView.this.notify(Event.StopClick);
+                viewPlayButton();
             }
         });
+    }
+
+    public void viewPlayButton() {
+        play.setVisibility(View.VISIBLE);
+        pause.setVisibility(View.GONE);
+    }
+
+    public void viewPauseButton() {
+        play.setVisibility(View.GONE);
+        pause.setVisibility(View.VISIBLE);
     }
 }

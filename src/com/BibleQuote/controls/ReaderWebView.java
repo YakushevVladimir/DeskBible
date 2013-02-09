@@ -42,9 +42,55 @@ public class ReaderWebView extends WebView
 	
 	private GestureDetector mGestureScanner;
 	private JavaScriptInterface jsInterface;
-	protected TreeSet<Integer> selectedVerse = new TreeSet<Integer>();
-	private boolean isStudyMode = false;
-	private ArrayList<IReaderViewListener> listeners = new ArrayList<IReaderViewListener>();
+
+    protected TreeSet<Integer> selectedVerse = new TreeSet<Integer>();
+    public TreeSet<Integer> getSelectedVerses() {
+        return this.selectedVerse;
+    }
+
+    public void setSelectedVerse(TreeSet<Integer> selectedVerse) {
+        jsInterface.clearSelectedVerse();
+        this.selectedVerse = selectedVerse;
+        for (Integer verse : selectedVerse) {
+            jsInterface.setSelectedVerse(verse);
+        }
+    }
+
+    public void gotoVerse(int verse) {
+        jsInterface.gotoVerse(verse);
+    }
+
+    public static enum Mode {
+        Read, Study, Speak
+    }
+
+    private Mode currMode = Mode.Read;
+    
+    public void setMode(Mode mode) {
+        currMode = mode;
+        if (currMode != Mode.Study) {
+            clearSelectedVerse();
+        }
+        notifyListeners(ChangeCode.onChangeReaderMode);
+    }
+
+    public Mode getMode() {
+        return currMode;
+    }
+
+    private ArrayList<IReaderViewListener> listeners = new ArrayList<IReaderViewListener>();
+
+    public void setOnReaderViewListener(IReaderViewListener listener) {
+        if (!listeners.contains(listener)) {
+            listeners.add(listener);
+        }
+    }
+
+    private void notifyListeners(ChangeCode code) {
+        for (IReaderViewListener listener : listeners) {
+            listener.onReaderViewChange(code);
+        }
+    }
 	
 	public boolean mPageLoaded = false;
 
@@ -95,14 +141,6 @@ public class ReaderWebView extends WebView
 		jsInterface.clearSelectedVerse();
 	}
 
-	public void setReadingMode(boolean readModeByDefault) {
-		isStudyMode = !readModeByDefault;
-	}
-	
-	public boolean isStudyMode() {
-		return isStudyMode;
-	}
-
 	public boolean isScrollToBottom() {
 		int scrollY = getScrollY();
 	    int scrollExtent = computeVerticalScrollExtent();
@@ -117,16 +155,12 @@ public class ReaderWebView extends WebView
 		}
 	}
 
-	public TreeSet<Integer> getSelectedVerses() {
-		return this.selectedVerse;
-	}
-	
 	public void clearSelectedVerse() {
 		if (selectedVerse.size() == 0) {
 			return;
 		}
 		jsInterface.clearSelectedVerse();
-		if (isStudyMode) {
+		if (currMode == Mode.Study) {
 			notifyListeners(ChangeCode.onChangeSelection);
 		}
 	}
@@ -202,20 +236,20 @@ public class ReaderWebView extends WebView
 	public boolean onSingleTapConfirmed(MotionEvent event) {
 		int x = (int) event.getX();
 		int y = (int) event.getY();
-		if (isStudyMode) {
+		if (currMode == Mode.Study) {
 			if (Build.VERSION.SDK_INT < 8) {
 				y += getScrollY();
 			}
 			float density = getContext().getResources().getDisplayMetrics().density;
 			x = (int) (x / density);
 			y = (int) (y / density);
-	
+
 			loadUrl("javascript:handleClick(" + x + ", " + y + ");");
 			notifyListeners(ChangeCode.onChangeSelection);
-		} else {
+		} else if (currMode == Mode.Read) {
 			int width = this.getWidth();
 			int height = this.getHeight();
-			
+
 			if (((float) y / height) <= 0.33) {
 				notifyListeners(ChangeCode.onUpNavigation);
 			} else if (((float) y / height) > 0.67) {
@@ -228,12 +262,12 @@ public class ReaderWebView extends WebView
 		}
 		return false;
 	}
-	
+
 	public boolean onDown(MotionEvent event) {
 		return false;
 	}
 
-	public boolean onFling(MotionEvent e1, MotionEvent e2, 
+	public boolean onFling(MotionEvent e1, MotionEvent e2,
 			float velocityX, float velocityY) {
 		notifyListeners(ChangeCode.onScroll);
 		return false;
@@ -243,7 +277,7 @@ public class ReaderWebView extends WebView
 		notifyListeners(ChangeCode.onLongPress);
 	}
 
-	public boolean onScroll(MotionEvent e1, MotionEvent e2, 
+	public boolean onScroll(MotionEvent e1, MotionEvent e2,
 			float distanceX, float distanceY) {
 		notifyListeners(ChangeCode.onScroll);
 		return false;
@@ -253,11 +287,9 @@ public class ReaderWebView extends WebView
 	}
 
 	public boolean onDoubleTap(MotionEvent event) {
-		isStudyMode = !isStudyMode;
-		notifyListeners(ChangeCode.onChangeReaderMode);
-		if (!isStudyMode) {
-			clearSelectedVerse();
-		}
+        if (currMode != Mode.Speak) {
+            setMode(currMode == Mode.Study ? Mode.Read : Mode.Study);
+        }
 		return false;
 	}
 
@@ -275,13 +307,13 @@ public class ReaderWebView extends WebView
 			return true;
 		}
 	}
-	
+
 	final class JavaScriptInterface {
-		
+
 		public JavaScriptInterface() {
 			clearSelectedVerse();
 		}
-		
+
 		public void clearSelectedVerse() {
 			for (Integer verse : selectedVerse) {
 				loadUrl("javascript: deselectVerse('verse_" + verse + "');");
@@ -290,7 +322,7 @@ public class ReaderWebView extends WebView
 		}
 
 		public void onClickVerse(String id) {
-			if (!isStudyMode || !id.contains("verse")) {
+			if (currMode != Mode.Study || !id.contains("verse")) {
 				return;
 			}
 			
@@ -303,8 +335,8 @@ public class ReaderWebView extends WebView
 				loadUrl("javascript: deselectVerse('verse_" + verse + "');");
 			} else {
 				selectedVerse.add(verse);
-				loadUrl("javascript: selectVerse('verse_" + verse + "');");
-			}
+                setSelectedVerse(verse);
+            }
 			
 			try {
 				Handler mHandler = getHandler();
@@ -317,21 +349,17 @@ public class ReaderWebView extends WebView
 				Log.e(TAG, e.getMessage());
 			}
 		}
-		
-		public void alert(final String message) {
+
+        private void setSelectedVerse(int verse) {
+            loadUrl("javascript: selectVerse('verse_" + verse + "');");
+        }
+
+        public void gotoVerse(int verse) {
+            loadUrl("javascript: gotoVerse(" + verse + ");");
+        }
+
+        public void alert(final String message) {
 			Log.i(TAG, "JavaScriptInterface.alert()");
 		}
-	}
-	
-	public void setOnReaderViewListener(IReaderViewListener listener) {
-		if (!listeners.contains(listener)) {
-			listeners.add(listener);
-		}
-	}
-	
-	private void notifyListeners(ChangeCode code) {
-        for (IReaderViewListener listener : listeners) {
-            listener.onReaderViewChange(code);
-        }
 	}
 }

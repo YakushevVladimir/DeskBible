@@ -20,7 +20,7 @@
     <string name="app_name">Bible</string>
     <!-- About -->
     <string name="about">About</string>
-    <string name="app_about_name">BibleQuote 0.06.08</string>
+    <string name="app_about_name">BibleQuote 0.07.01</string>
     <string name="app_about_license">Apache License Version 2.0</string>
     <string name="app_about_dev_label">Developers:</string>
     <string name="app_about_dev">Vladimir Yakushev\nSergey Ursul</string>
@@ -108,7 +108,7 @@
     <string name="font_family">Font family</string>
     <string name="category_social">Social functions</string>
     <string name="share_passage">Share passage</string>
-    <string name="divide_the_verses">Divide the verses</string>
+    <string name="divide_the_verses">Divide the textList</string>
     <string name="add_reference">Add reference</string>
     <string name="add_reference_summary">Add a reference to the passage</string>
     <string name="put_reference_in_beginning">Put reference in beginning</string>
@@ -116,6 +116,5 @@
     <string name="short_reference_summary">Short caption to passage</string>
     <string name="add_module_to_reference">Add module name</string>
     <string name="add_module_to_reference_summary">Add the module name to the signature</string>
-	<string name="menu_speek">Speek</string>
-    <string name="stop_tts">Stop playing</string>
+	<string name="menu_speek">Speek...</string>
 </resources>

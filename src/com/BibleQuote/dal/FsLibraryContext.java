@@ -41,6 +41,7 @@ import com.BibleQuote.models.Module;
 import com.BibleQuote.models.Verse;
 import com.BibleQuote.utils.FsUtils;
 import com.BibleQuote.utils.StringProc;
+import com.BibleQuote.utils.modules.LanguageConvertor;
 
 public class FsLibraryContext extends LibraryContext {
 	private final String TAG = "FsLibraryContext";
@@ -137,8 +138,13 @@ public class FsLibraryContext extends LibraryContext {
 		try { 
 			while ((str = bReader.readLine()) != null) {
 				pos = str.indexOf("//");
-				if (pos >= 0)
-					str = str.substring(0, pos);
+                if (str.toLowerCase().contains("language") && pos >= 0) {
+                    // Тег языка в старых модулях может быть закомментирован,
+                    // поэтому раскомментируем его
+                    str = str.substring(str.toLowerCase().indexOf("language"));
+                    pos = str.indexOf("//");
+                }
+				if (pos >= 0) str = str.substring(0, pos);
 
 				int delimiterPos = str.indexOf("=");
 				if (delimiterPos == -1) {
@@ -164,8 +170,10 @@ public class FsLibraryContext extends LibraryContext {
 					HTMLFilter = value;
 				} else if (key.equals("bible")) {
 					module.isBible = value.toLowerCase().contains("y") ? true : false;
-				} else if (key.equals("strongnumbers")) {
-					module.containsStrong = value.toLowerCase().contains("y") ? true : false;
+                } else if (key.equals("strongnumbers")) {
+                    module.containsStrong = value.toLowerCase().contains("y") ? true : false;
+                } else if (key.equals("language")) {
+                    module.language = LanguageConvertor.getISOLanguage(value);
 				} else if (key.equalsIgnoreCase("PathName")) {
 					break;
 				}

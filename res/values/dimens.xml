@@ -20,7 +20,7 @@
     
     <dimen name="text_size_very_small">11.0sp</dimen>
     <dimen name="text_size_small">12.0sp</dimen>
-    <dimen name="text_size_medium">14.0sp</dimen>
+    <dimen name="text_size_medium">16.0sp</dimen>
     <dimen name="text_size_large">18.0sp</dimen>
 	
 	<dimen name="bq_item_view_height">48dp</dimen>

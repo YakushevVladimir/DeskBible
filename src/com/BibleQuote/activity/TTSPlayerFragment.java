@@ -16,6 +16,7 @@
 
 package com.BibleQuote.activity;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,42 +24,102 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 import com.BibleQuote.R;
 import com.BibleQuote.controls.PlayerView;
+import com.BibleQuote.controls.ReaderWebView;
+import com.BibleQuote.managers.Librarian;
+import com.BibleQuote.tts.controllers.TTSPlayerController;
 import com.actionbarsherlock.app.SherlockFragment;
+
+import java.util.TreeSet;
 
 /**
  * User: Vladimir
  * Date: 25.01.13
  * Time: 2:40
  */
-public class TTSPlayerFragment extends SherlockFragment implements PlayerView.OnClickListener {
+public class TTSPlayerFragment extends SherlockFragment implements PlayerView.OnClickListener, TTSPlayerController.OnEventListener {
+
+    TTSPlayerController ttsController;
+    ReaderWebView webView;
+
+    onTTSStopSpeakListener listener;
+    private PlayerView player;
+
+    public interface onTTSStopSpeakListener {
+        public void onStopSpeak();
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            listener = (onTTSStopSpeakListener) getActivity();
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement onTTSStopSpeakListener");
+        }
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View result = inflater.inflate(R.layout.tts_player_layout, null);
 
-        PlayerView player = (PlayerView) result.findViewById(R.id.tts_player);
+        player = (PlayerView) result.findViewById(R.id.tts_player);
         player.setOnClickListener(this);
+
+        webView = (ReaderWebView) getActivity().findViewById(R.id.readerView);
+
+        Librarian librarian = ((ReaderActivity) getActivity()).getLibrarian();
+        ttsController = new TTSPlayerController(getActivity(), librarian.getTextLocale(), librarian.getVersesText());
+        ttsController.setOnInitListener(this);
 
         return result;
     }
 
     @Override
-    public void onClick(PlayerView.Event ev) {
-        String message;
-        if (ev == PlayerView.Event.ReplayClick) {
-            message = "Click replay";
-        } else if (ev == PlayerView.Event.PreviousClick){
-            message = "Click previous";
-        } else if (ev == PlayerView.Event.PlayClick){
-            message = "Click play";
-        } else if (ev == PlayerView.Event.PauseClick){
-            message = "Click pause";
-        } else if (ev == PlayerView.Event.NextClick){
-            message = "Click next";
-        } else if (ev == PlayerView.Event.StopClick){
-            message = "Click stop";
-        } else {
-            message = "Unknow command";
+    public void onDestroy() {
+        super.onDestroy();
+        try {
+            ttsController.destroy();
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        } finally {
+            ttsController = null;
         }
-        Toast.makeText(getSherlockActivity(), message, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onClick(PlayerView.Event ev) {
+        if (ev == PlayerView.Event.ReplayClick) {
+            ttsController.replay();
+        } else if (ev == PlayerView.Event.PreviousClick) {
+            ttsController.movePrevious();
+        } else if (ev == PlayerView.Event.PlayClick) {
+            ttsController.play();
+        } else if (ev == PlayerView.Event.PauseClick) {
+            ttsController.pause();
+        } else if (ev == PlayerView.Event.NextClick) {
+            ttsController.moveNext();
+        } else if (ev == PlayerView.Event.StopClick) {
+            ttsController.stop();
+            listener.onStopSpeak();
+        } else {
+            Toast.makeText(getActivity(), "Unknown command", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onEvent(TTSPlayerController.Event ev) {
+        if (ev == TTSPlayerController.Event.Error) {
+            Toast.makeText(getActivity(), ttsController.getError().getMessage(), Toast.LENGTH_LONG).show();
+        } else if (ev == TTSPlayerController.Event.ChangeTextIndex) {
+            int nextTextIndex = ttsController.getCurrText();
+            TreeSet<Integer> selected = new TreeSet<Integer>();
+            selected.add((Integer.valueOf(++nextTextIndex)));
+            webView.setSelectedVerse(selected);
+            webView.gotoVerse(nextTextIndex);
+        } else if (ev == TTSPlayerController.Event.PauseSpeak) {
+            TreeSet<Integer> selected = new TreeSet<Integer>();
+            webView.setSelectedVerse(selected);
+            player.viewPlayButton();
+        }
     }
 }

@@ -2,6 +2,7 @@ package com.BibleQuote.models;
 
 import java.io.Serializable;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -21,8 +22,10 @@ public abstract class Module implements Serializable {
 	public boolean containsStrong = false;
 	public boolean isBible = false;
 	public String defaultEncoding = "utf-8";
-	
-	public Map<String, Book> Books = new LinkedHashMap<String, Book>();	// to lazy loading on demand
+    public String language = "ru_RU";
+
+
+    public Map<String, Book> Books = new LinkedHashMap<String, Book>();	// to lazy loading on demand
 	
 	// private String Categories = "";
 	// private String Copyright = "";
@@ -51,5 +54,13 @@ public abstract class Module implements Serializable {
 	public void setName(String name) {
 		Name = name;
 	}
-	
+
+    public String getLanguage() {
+        int position = language.indexOf("_");
+        if (position == -1) {
+            return "ru";
+        } else {
+            return language.substring(0, position).toLowerCase();
+        }
+    }
 }

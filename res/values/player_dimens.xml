@@ -17,6 +17,7 @@
 
 <resources>
 
-	<dimen name="player_button_padding">10dp</dimen>
+	<dimen name="player_button_margin">10dp</dimen>
+	<dimen name="player_button_padding">0dp</dimen>
 
 </resources>

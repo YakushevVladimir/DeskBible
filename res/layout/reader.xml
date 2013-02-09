@@ -72,7 +72,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="5.0dip"
                 android:visibility="gone"
-                android:layout_alignParentRight="true"/>
+                android:layout_alignParentRight="true"
+				android:contentDescription="text_action" />
 
             <LinearLayout
                 android:id="@+id/btn_chapter_nav"
@@ -87,7 +88,8 @@
                     android:focusable="true"
                     android:clickable="false"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+					android:contentDescription="prev" />
 
                 <ImageButton
                     android:id="@+id/btn_reader_up"
@@ -95,7 +97,8 @@
                     android:focusable="true"
                     android:clickable="false"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+					android:contentDescription="up" />
 
                 <ImageButton
                     android:id="@+id/btn_reader_down"
@@ -103,7 +106,8 @@
                     android:focusable="true"
                     android:clickable="false"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+					android:contentDescription="down" />
 
                 <ImageButton
                     android:id="@+id/btn_reader_next"
@@ -111,14 +115,15 @@
                     android:focusable="true"
                     android:clickable="false"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+					android:contentDescription="next" />
 
             </LinearLayout>
         </RelativeLayout>
     </RelativeLayout>
     <FrameLayout
         android:id="@+id/tts_player_frame"
-		android:layout_width="wrap_content"
+		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|bottom" />
 </FrameLayout>

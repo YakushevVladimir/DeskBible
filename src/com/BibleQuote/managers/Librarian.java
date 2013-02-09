@@ -38,6 +38,7 @@ import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.Share.ShareBuilder;
 import com.BibleQuote.utils.Share.ShareBuilder.Destination;
 import com.BibleQuote.utils.StringProc;
+import com.BibleQuote.utils.modules.LanguageConvertor;
 import com.BibleQuote.utils.modules.LinkConverter;
 
 import java.util.*;
@@ -588,13 +589,16 @@ public class Librarian implements IChangeBooksListener  {
         return currVerseNumber;
     }
 
-    public String[] getVersesText() {
+    public ArrayList<String> getVersesText() {
         ArrayList<Verse> verses = currChapter.getVerseList();
-        String[] result = new String[verses.size()];
+        ArrayList<String> result = new ArrayList<String>();
         for (int i = 0 ; i < verses.size() ; i++) {
-            result[i] = StringProc.cleanVerseText(verses.get(i).getText());
+            result.add(StringProc.cleanVerseText(verses.get(i).getText()));
         }
-
         return result;
+    }
+
+    public Locale getTextLocale() {
+        return new Locale(currModule.getLanguage());
     }
 }

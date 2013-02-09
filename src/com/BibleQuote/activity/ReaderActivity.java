@@ -49,15 +49,22 @@ import com.actionbarsherlock.view.MenuItem;
 
 import java.util.TreeSet;
 
-public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCompleteListener, IReaderViewListener {
+public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCompleteListener, IReaderViewListener,
+        TTSPlayerFragment.onTTSStopSpeakListener {
 
 	private static final String TAG = "ReaderActivity";
 	private static final int VIEW_CHAPTER_NAV_LENGHT = 3000;
+    private ReaderWebView.Mode oldMode;
 
 	private static final String VIEW_REFERENCE = "com.BibleQuote.intent.action.VIEW_REFERENCE";
 
-	private Librarian myLibrarian;
+    public Librarian getLibrarian() {
+        return myLibrarian;
+    }
+
+    private Librarian myLibrarian;
 	private AsyncManager mAsyncManager;
+    private Task mTask;
 	private ActionMode currActionMode;
 
 	private String chapterInHTML = "";
@@ -77,6 +84,11 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
     private final int ID_BOOKMARKS = 4;
     private final int ID_PARALLELS = 5;
     private final int ID_SETTINGS = 6;
+
+    @Override
+    public void onStopSpeak() {
+        hideTTSPlayer();
+    }
 
     private final class ActionSelectText implements ActionMode.Callback {
 
@@ -147,7 +159,7 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 		myLibrarian = app.getLibrarian();
 
 		mAsyncManager = app.getAsyncManager();
-		//mAsyncManager.handleRetainedTask(getLastNonConfigurationInstance(), this);
+		mAsyncManager.handleRetainedTask(mTask, this);
 
         initialyzeViews();
 		updateActivityMode();
@@ -156,9 +168,14 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 		if (!myLibrarian.isOSISLinkValid(osisLink)) {
 			onChooseChapterClick();
 		} else {
-			mAsyncManager.setupTask(new AsyncOpenChapter(progressMessage, false, myLibrarian, osisLink), this);
-		}
+            openChapterFromLink(osisLink);
+        }
 	}
+
+    private void openChapterFromLink(BibleReference osisLink) {
+        mTask = new AsyncOpenChapter(progressMessage, false, myLibrarian, osisLink);
+        mAsyncManager.setupTask(mTask, this);
+    }
 
     private void initialyzeViews() {
         btnChapterNav = (LinearLayout)findViewById(R.id.btn_chapter_nav);
@@ -181,17 +198,8 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 
         vWeb = (ReaderWebView)findViewById(R.id.readerView);
         vWeb.setOnReaderViewListener(this);
-        vWeb.setReadingMode(PreferenceHelper.isReadModeByDefault());
+        vWeb.setMode(PreferenceHelper.isReadModeByDefault() ? ReaderWebView.Mode.Read : ReaderWebView.Mode.Study);
     }
-
-//    @Override
-//    public void onDestroy() {
-//        if (talker != null) {
-//            talker.stop();
-//            talker.shutdown();
-//        }
-//        super.onDestroy();
-//    }
 
     @Override
 	public void onConfigurationChanged(Configuration newConfig) {
@@ -213,6 +221,7 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+        hideTTSPlayer();
 		switch (item.getItemId()) {
 			case R.id.action_bar_chooseCh:
 				onChooseChapterClick();
@@ -235,20 +244,9 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 				startActivityForResult(intentHistory, ID_HISTORY);
 				break;
             case R.id.action_speek:
-                ttsPlayer = new TTSPlayerFragment();
-                FragmentTransaction tran = getSupportFragmentManager().beginTransaction();
-                tran.add(R.id.tts_player_frame, ttsPlayer);
-                tran.commit();
+                viewTTSPlayer();
                 break;
-//                talker.setLanguage(Locale.getDefault());
-//                layoutTTSPlayer.setVisibility(View.VISIBLE);
-//                String[] verses = myLibrarian.getVersesText();
-//                for (String verse : verses) talker.speak(verse, TextToSpeech.QUEUE_ADD, null);
-//                break;
-
             case R.id.Help:
-//				Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://scripturesoftware.org/?page_id=427"));
-//				startActivity(browserIntent);
 				Intent helpIntent = new Intent(this, HelpActivity.class);
 				startActivity(helpIntent);
 				break;
@@ -266,7 +264,26 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 		return true;
 	}
 
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    private void viewTTSPlayer() {
+        if (ttsPlayer != null) return;
+        ttsPlayer = new TTSPlayerFragment();
+        FragmentTransaction tran = getSupportFragmentManager().beginTransaction();
+        tran.add(R.id.tts_player_frame, ttsPlayer);
+        tran.commit();
+        oldMode = vWeb.getMode();
+        vWeb.setMode(ReaderWebView.Mode.Speak);
+    }
+
+    private void hideTTSPlayer() {
+        if (ttsPlayer == null) return;
+        FragmentTransaction tran = getSupportFragmentManager().beginTransaction();
+        tran.remove(ttsPlayer);
+        tran.commit();
+        ttsPlayer = null;
+        vWeb.setMode(oldMode);
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
 		if (resultCode == RESULT_OK) {
@@ -278,14 +295,14 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 				Bundle extras = data.getExtras();
 				BibleReference osisLink = new BibleReference(extras.getString("linkOSIS"));
 				if (myLibrarian.isOSISLinkValid(osisLink)) {
-					mAsyncManager.setupTask(new AsyncOpenChapter(progressMessage, false, myLibrarian, osisLink), this);
-				}
+                    openChapterFromLink(osisLink);
+                }
 			}
 		} else if (requestCode == ID_SETTINGS) {
-			vWeb.setReadingMode(PreferenceHelper.isReadModeByDefault());
+            vWeb.setMode(PreferenceHelper.isReadModeByDefault() ? ReaderWebView.Mode.Read : ReaderWebView.Mode.Study);
 			updateActivityMode();
-			mAsyncManager.setupTask(new AsyncOpenChapter(progressMessage, false, myLibrarian, myLibrarian.getCurrentOSISLink()), this);
-		}
+            openChapterFromLink(myLibrarian.getCurrentOSISLink());
+        }
 	}
 
 	public void setTextInWebView() {
@@ -343,13 +360,6 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 		}
 	};
 
-//    OnClickListener onClickTTSStop = new OnClickListener() {
-//        public void onClick(View v) {
-//            talker.stop();
-//            layoutTTSPlayer.setVisibility(View.GONE);
-//        }
-//    };
-
 	OnClickListener onClickPageDown = new OnClickListener() {
 		public void onClick(View v) {
 			vWeb.pageDown(false);
@@ -358,15 +368,15 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 	};
 
 	private void viewCurrentChapter() {
-		mAsyncManager.setupTask(new AsyncOpenChapter(
-				progressMessage, false, myLibrarian, myLibrarian.getCurrentOSISLink()), this);
-	}
+        openChapterFromLink(myLibrarian.getCurrentOSISLink());
+    }
 
 	public void viewChapterNav() {
 		if (chapterNavHandler.hasMessages(R.id.view_chapter_nav)) {
 			chapterNavHandler.removeMessages(R.id.view_chapter_nav);
 		}
-		if (!vWeb.isStudyMode()) {
+
+		if (vWeb.getMode() != ReaderWebView.Mode.Study) {
 			btnChapterNav.setVisibility(View.GONE);
 		} else {
 			btnChapterNav.setVisibility(View.VISIBLE);
@@ -399,15 +409,15 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 	}
 
 	public void updateActivityMode() {
-		if (vWeb.isStudyMode()) {
-			getSupportActionBar().show();
-		} else {
+		if (vWeb.getMode() == ReaderWebView.Mode.Read) {
 			getSupportActionBar().hide();
+		} else {
+			getSupportActionBar().show();
 		}
-
-		if (!vWeb.isStudyMode()) {
-			btnChapterNav.setVisibility(View.GONE);
-		}
+        viewChapterNav();
+//		if (!vWeb.isStudyMode()) {
+//			btnChapterNav.setVisibility(View.GONE);
+//		}
 	}
 
 	@Override
@@ -469,11 +479,8 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 				currActionMode = startActionMode(new ActionSelectText());
 			}
 		} else if (code == ChangeCode.onLongPress) {
-			if (vWeb.isStudyMode()) {
-				viewChapterNav();
-			} else {
-				onChooseChapterClick();
-			}
+            viewChapterNav();
+            if (vWeb.getMode() == ReaderWebView.Mode.Read) onChooseChapterClick();
 		} else if (code == ChangeCode.onUpNavigation) {
 			vWeb.pageUp(false);
 		} else if (code == ChangeCode.onDownNavigation) {

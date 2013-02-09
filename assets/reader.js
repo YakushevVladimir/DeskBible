@@ -38,3 +38,7 @@ function handleClick(x, y) {
 	}
 }
 
+function gotoVerse(number) {
+    document.location.href='#verse_' + number;
+}
+
