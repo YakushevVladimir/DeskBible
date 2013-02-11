@@ -341,7 +341,7 @@ public class ReaderWebView extends WebView
 					}
 				});
 			} catch (NullPointerException e) {
-				Log.e(TAG, e.getMessage());
+				Log.e(TAG, "Error when notifying clients ReaderWebView");
 			}
 		}
 
