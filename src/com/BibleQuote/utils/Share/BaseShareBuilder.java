@@ -1,14 +1,9 @@
 package com.BibleQuote.utils.Share;
 
-import java.util.LinkedHashMap;
-import java.util.TreeSet;
-
 import android.content.Context;
-
 import com.BibleQuote.models.Book;
 import com.BibleQuote.models.Chapter;
 import com.BibleQuote.models.Module;
-import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.BibleReferenceFormatter.EmptyReferenceFormatter;
 import com.BibleQuote.utils.BibleReferenceFormatter.FullReferenceFormatter;
 import com.BibleQuote.utils.BibleReferenceFormatter.IBibleReferenceFormatter;
@@ -16,6 +11,10 @@ import com.BibleQuote.utils.BibleReferenceFormatter.ShortReferenceFormatter;
 import com.BibleQuote.utils.BibleTextFormatters.BreakVerseFormatter;
 import com.BibleQuote.utils.BibleTextFormatters.IBibleTextFormatter;
 import com.BibleQuote.utils.BibleTextFormatters.SimpleFormatter;
+import com.BibleQuote.utils.PreferenceHelper;
+
+import java.util.LinkedHashMap;
+import java.util.TreeSet;
 
 public abstract class BaseShareBuilder {
 	IBibleTextFormatter textFormater;

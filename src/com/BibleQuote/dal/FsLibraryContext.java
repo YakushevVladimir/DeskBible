@@ -15,33 +15,23 @@
  */
 package com.BibleQuote.dal;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileFilter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.TreeMap;
-
 import android.content.Context;
 import android.util.Log;
-
 import com.BibleQuote.controllers.CacheModuleController;
 import com.BibleQuote.entity.BibleReference;
 import com.BibleQuote.exceptions.BookDefinitionException;
 import com.BibleQuote.exceptions.BooksDefinitionException;
 import com.BibleQuote.exceptions.FileAccessException;
-import com.BibleQuote.models.Book;
-import com.BibleQuote.models.Chapter;
-import com.BibleQuote.models.FsBook;
-import com.BibleQuote.models.FsModule;
-import com.BibleQuote.models.Module;
-import com.BibleQuote.models.Verse;
+import com.BibleQuote.models.*;
 import com.BibleQuote.utils.FsUtils;
 import com.BibleQuote.utils.StringProc;
 import com.BibleQuote.utils.modules.LanguageConvertor;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileFilter;
+import java.io.IOException;
+import java.util.*;
 
 public class FsLibraryContext extends LibraryContext {
 	private final String TAG = "FsLibraryContext";

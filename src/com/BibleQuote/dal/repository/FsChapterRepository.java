@@ -1,18 +1,17 @@
 package com.BibleQuote.dal.repository;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-
 import android.util.Log;
-
 import com.BibleQuote.dal.FsLibraryContext;
 import com.BibleQuote.entity.BibleReference;
 import com.BibleQuote.exceptions.BookNotFoundException;
 import com.BibleQuote.exceptions.FileAccessException;
 import com.BibleQuote.models.Chapter;
 import com.BibleQuote.models.FsBook;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 
 public class FsChapterRepository implements IChapterRepository<FsBook> {
 	private final String TAG = "FsChapterRepository";

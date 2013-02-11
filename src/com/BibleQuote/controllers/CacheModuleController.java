@@ -1,14 +1,13 @@
 package com.BibleQuote.controllers;
 
-import java.util.ArrayList;
-import java.util.TreeMap;
-
 import android.util.Log;
-
 import com.BibleQuote.dal.CacheContext;
 import com.BibleQuote.dal.repository.CacheRepository;
 import com.BibleQuote.exceptions.FileAccessException;
 import com.BibleQuote.models.Module;
+
+import java.util.ArrayList;
+import java.util.TreeMap;
 
 public class CacheModuleController<TModule> {
 	private final String TAG = "CacheRepository";

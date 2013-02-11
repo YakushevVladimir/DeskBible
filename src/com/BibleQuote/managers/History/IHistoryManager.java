@@ -21,10 +21,10 @@
 
 package com.BibleQuote.managers.History;
 
-import java.util.LinkedList;
-
 import com.BibleQuote.entity.BibleReference;
 import com.BibleQuote.entity.ItemList;
+
+import java.util.LinkedList;
 
 public interface IHistoryManager {
 	public void addLink(BibleReference link);

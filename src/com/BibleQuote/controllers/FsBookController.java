@@ -1,10 +1,6 @@
 package com.BibleQuote.controllers;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-
 import android.util.Log;
-
 import com.BibleQuote.dal.FsLibraryUnitOfWork;
 import com.BibleQuote.dal.repository.IBookRepository;
 import com.BibleQuote.dal.repository.IModuleRepository;
@@ -17,6 +13,9 @@ import com.BibleQuote.models.Book;
 import com.BibleQuote.models.FsBook;
 import com.BibleQuote.models.FsModule;
 import com.BibleQuote.models.Module;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 public class FsBookController implements IBookController {
 	private final String TAG = "FsBookController";

@@ -1,12 +1,10 @@
 package com.BibleQuote.activity;
 
-import com.BibleQuote.R;
-import com.BibleQuote.utils.FsUtils;
-
 import android.os.Bundle;
 import android.webkit.WebView;
+import com.BibleQuote.R;
+import com.BibleQuote.utils.FsUtils;
 import com.BibleQuote.utils.ViewUtils;
-import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 public class HelpActivity extends SherlockFragmentActivity {

@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 package com.BibleQuote.utils;
-import com.BibleQuote.utils.Task;
 
 public interface OnTaskCompleteListener {
     // Notifies about task completeness

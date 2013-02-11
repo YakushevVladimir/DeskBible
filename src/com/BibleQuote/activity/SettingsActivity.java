@@ -15,16 +15,14 @@
  */
 package com.BibleQuote.activity;
 
-import com.BibleQuote.R;
-import com.BibleQuote.utils.PreferenceHelper;
-
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.Resources.NotFoundException;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
-import com.BibleQuote.utils.ViewUtils;
+import com.BibleQuote.R;
+import com.BibleQuote.utils.PreferenceHelper;
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
 
 public class SettingsActivity extends SherlockPreferenceActivity implements

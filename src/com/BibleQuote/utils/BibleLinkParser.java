@@ -1,9 +1,9 @@
 package com.BibleQuote.utils;
 
-import java.util.LinkedHashSet;
-
 import com.BibleQuote.entity.BibleBooksID;
 import com.BibleQuote.entity.BibleReference;
+
+import java.util.LinkedHashSet;
 
 public class BibleLinkParser {
 	

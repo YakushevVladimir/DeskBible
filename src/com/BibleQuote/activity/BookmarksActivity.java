@@ -15,13 +15,6 @@
  */
 package com.BibleQuote.activity;
 
-import com.BibleQuote.managers.Bookmarks;
-import com.BibleQuote.utils.ViewUtils;
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.MenuInflater;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
@@ -33,11 +26,16 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
 import com.BibleQuote.entity.BibleReference;
+import com.BibleQuote.managers.Bookmarks;
 import com.BibleQuote.managers.Librarian;
+import com.BibleQuote.utils.ViewUtils;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 
 public class BookmarksActivity extends SherlockFragmentActivity {
 

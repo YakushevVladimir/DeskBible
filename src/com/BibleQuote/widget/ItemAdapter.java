@@ -1,22 +1,5 @@
 package com.BibleQuote.widget;
 
-import com.BibleQuote.widget.item.Item;
-import com.BibleQuote.widget.item.SubtextItem;
-import com.BibleQuote.widget.item.SubtitleItem;
-import com.BibleQuote.widget.item.TextItem;
-import com.BibleQuote.widget.itemview.ItemView;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-
 import android.content.Context;
 import android.content.res.Resources;
 import android.util.AttributeSet;
@@ -24,6 +7,16 @@ import android.util.Xml;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import com.BibleQuote.widget.item.Item;
+import com.BibleQuote.widget.item.SubtextItem;
+import com.BibleQuote.widget.item.SubtitleItem;
+import com.BibleQuote.widget.item.TextItem;
+import com.BibleQuote.widget.itemview.ItemView;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.IOException;
+import java.util.*;
 
 public class ItemAdapter extends BaseAdapter {
 

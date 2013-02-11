@@ -1,18 +1,13 @@
 package com.BibleQuote.controllers;
 
-import java.util.ArrayList;
-
 import com.BibleQuote.dal.FsLibraryUnitOfWork;
 import com.BibleQuote.dal.repository.IBookRepository;
 import com.BibleQuote.dal.repository.IChapterRepository;
 import com.BibleQuote.exceptions.BookNotFoundException;
-import com.BibleQuote.models.Book;
-import com.BibleQuote.models.Chapter;
-import com.BibleQuote.models.FsBook;
-import com.BibleQuote.models.FsModule;
-import com.BibleQuote.models.Module;
-import com.BibleQuote.models.Verse;
+import com.BibleQuote.models.*;
 import com.BibleQuote.utils.StringProc;
+
+import java.util.ArrayList;
 
 public class FsChapterController implements IChapterController {
 	//private final String TAG = "FsChapterController";

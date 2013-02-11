@@ -1,10 +1,10 @@
 package com.BibleQuote.widget.itemview;
 
-import com.BibleQuote.widget.item.Item;
-import com.BibleQuote.widget.item.TextItem;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.TextView;
+import com.BibleQuote.widget.item.Item;
+import com.BibleQuote.widget.item.TextItem;
 
 public class TextItemView extends TextView implements ItemView {
 

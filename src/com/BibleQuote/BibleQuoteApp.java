@@ -16,8 +16,8 @@
 package com.BibleQuote;
 
 import android.app.Application;
-
-import com.BibleQuote.activity.ReaderActivity;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import com.BibleQuote.managers.AsyncManager;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.utils.Log;
@@ -30,7 +30,15 @@ public class BibleQuoteApp extends Application {
 
 	private Librarian myLibrarian;
 	private AsyncManager mAsyncManager;
-	
+
+    public static String getAppVersionName(Context context) {
+        try {
+            return context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            return "0.00.01";
+        }
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();

@@ -1,12 +1,12 @@
 package com.BibleQuote.dal.repository;
 
-import java.util.Collection;
-import java.util.LinkedHashMap;
-
 import com.BibleQuote.exceptions.BookDefinitionException;
 import com.BibleQuote.exceptions.BookNotFoundException;
 import com.BibleQuote.exceptions.BooksDefinitionException;
 import com.BibleQuote.exceptions.OpenModuleException;
+
+import java.util.Collection;
+import java.util.LinkedHashMap;
 
 public interface IBookRepository<TModule, TBook> {
     

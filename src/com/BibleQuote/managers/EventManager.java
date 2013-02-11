@@ -1,17 +1,10 @@
 package com.BibleQuote.managers;
 
+import com.BibleQuote.listeners.*;
+
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-
-import com.BibleQuote.listeners.ChangeBooksEvent;
-import com.BibleQuote.listeners.ChangeChaptersEvent;
-import com.BibleQuote.listeners.ChangeModulesEvent;
-import com.BibleQuote.listeners.IChangeBooksListener;
-import com.BibleQuote.listeners.IChangeChaptersListener;
-import com.BibleQuote.listeners.IChangeModulesListener;
-import com.BibleQuote.listeners.ISearchListener;
-import com.BibleQuote.listeners.SearchInLibraryEvent;
 
 
 public class EventManager {

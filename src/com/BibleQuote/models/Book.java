@@ -1,9 +1,9 @@
 package com.BibleQuote.models;
 
+import com.BibleQuote.entity.BibleBooksID;
+
 import java.io.Serializable;
 import java.util.ArrayList;
-
-import com.BibleQuote.entity.BibleBooksID;
 
 /**
  * @author Yakushev Vladimir, Sergey Ursul

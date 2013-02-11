@@ -1,7 +1,6 @@
 package com.BibleQuote.entity;
 
 import android.util.Log;
-
 import com.BibleQuote.models.Book;
 import com.BibleQuote.models.DbModule;
 import com.BibleQuote.models.FsModule;

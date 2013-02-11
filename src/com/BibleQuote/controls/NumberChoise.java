@@ -15,16 +15,15 @@
  */
 package com.BibleQuote.controls;
 
-import com.BibleQuote.R;
-
 import android.content.Context;
+import android.preference.DialogPreference;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.preference.DialogPreference;
 import android.widget.SeekBar;
-import android.widget.TextView;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.TextView;
+import com.BibleQuote.R;
 
 public final class NumberChoise extends DialogPreference implements
 		OnSeekBarChangeListener {

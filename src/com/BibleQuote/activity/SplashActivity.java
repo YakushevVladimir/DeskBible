@@ -15,23 +15,23 @@
  */
 package com.BibleQuote.activity;
 
-import com.actionbarsherlock.app.SherlockActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.WindowManager;
-
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
 import com.BibleQuote.managers.AsyncCommand;
-import com.BibleQuote.managers.AsyncManager;
 import com.BibleQuote.managers.AsyncCommand.ICommand;
+import com.BibleQuote.managers.AsyncManager;
+import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.OnTaskCompleteListener;
 import com.BibleQuote.utils.Task;
-import com.BibleQuote.utils.Log;
+import com.actionbarsherlock.app.SherlockActivity;
 
 public class SplashActivity extends SherlockActivity implements OnTaskCompleteListener {
 
 	private static final String TAG = "SplashActivity";
+    private AsyncCommand initApp;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -45,17 +45,25 @@ public class SplashActivity extends SherlockActivity implements OnTaskCompleteLi
 		Log.i(TAG, "Get link on application...");
 		BibleQuoteApp app = (BibleQuoteApp) getApplication();
 		Log.i(TAG, "Get progress message...");
-		String progressMessage = getResources().getString(R.string.messageLoad);
 
 		Log.i(TAG, "Get AsyncTask manager...");
 		AsyncManager myAsyncManager = app.getAsyncManager();
-		Log.i(TAG, "Restore old task...");
-		myAsyncManager.handleRetainedTask(getLastNonConfigurationInstance(), this);
-		Log.i(TAG, "Start task InitApplication...");
-		myAsyncManager.setupTask(new AsyncCommand(new InitApplication(), progressMessage, true), this);
+        if (initApp != null) {
+            Log.i(TAG, "Restore old task...");
+            myAsyncManager.handleRetainedTask(initApp, this);
+        } else {
+		    Log.i(TAG, "Start task InitApplication...");
+		    myAsyncManager.setupTask(getTaskObject(), this);
+        }
 	}
-    
-	private class InitApplication implements ICommand {
+
+    private AsyncCommand getTaskObject() {
+        String progressMessage = getResources().getString(R.string.messageLoad);
+        initApp = new AsyncCommand(new InitApplication(), progressMessage, true);
+        return initApp;
+    }
+
+    private class InitApplication implements ICommand {
 		@Override
 		public void execute() throws Exception {
 			Log.i(TAG, "Task InitApplication execute...");

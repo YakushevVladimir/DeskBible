@@ -1,12 +1,5 @@
 package com.BibleQuote.widget.item;
 
-import com.BibleQuote.widget.itemview.ItemView;
-
-import java.io.IOException;
-
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
@@ -14,8 +7,12 @@ import android.util.AttributeSet;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
-
 import com.BibleQuote.R;
+import com.BibleQuote.widget.itemview.ItemView;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.IOException;
 
 public abstract class Item {
 

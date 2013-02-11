@@ -2,7 +2,6 @@ package com.BibleQuote.models;
 
 import java.io.Serializable;
 import java.util.LinkedHashMap;
-import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -56,11 +55,10 @@ public abstract class Module implements Serializable {
 	}
 
     public String getLanguage() {
-        int position = language.indexOf("_");
-        if (position == -1) {
+        if (language == null || language.indexOf("_") == -1) {
             return "ru";
         } else {
-            return language.substring(0, position).toLowerCase();
+            return language.substring(0, language.indexOf("_")).toLowerCase();
         }
     }
 }

@@ -1,9 +1,9 @@
 package com.BibleQuote.dal.repository;
 
-import java.util.Collection;
-
 import com.BibleQuote.exceptions.BookNotFoundException;
 import com.BibleQuote.models.Chapter;
+
+import java.util.Collection;
 
 public interface IChapterRepository<TBook> {
     

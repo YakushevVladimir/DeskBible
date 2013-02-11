@@ -1,10 +1,10 @@
 package com.BibleQuote.controllers;
 
-import java.util.ArrayList;
-
 import com.BibleQuote.exceptions.BookNotFoundException;
 import com.BibleQuote.models.Book;
 import com.BibleQuote.models.Chapter;
+
+import java.util.ArrayList;
 
 public interface IChapterController {
 	

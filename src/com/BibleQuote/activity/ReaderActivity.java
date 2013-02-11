@@ -15,7 +15,6 @@
  */
 package com.BibleQuote.activity;
 
-import android.support.v4.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -23,10 +22,17 @@ import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.*;
+import android.view.KeyEvent;
+import android.view.Surface;
+import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.*;
+import android.view.WindowManager;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
 import com.BibleQuote.controls.ReaderWebView;

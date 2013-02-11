@@ -1,17 +1,12 @@
 package com.BibleQuote.dal;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.TreeMap;
-
 import android.content.Context;
-
 import com.BibleQuote.models.Book;
 import com.BibleQuote.models.Chapter;
 import com.BibleQuote.models.Module;
 import com.BibleQuote.utils.CachePool;
+
+import java.util.*;
 
 public class LibraryContext {
 

@@ -15,25 +15,20 @@
  */
 package com.BibleQuote.controls;
 
-import java.util.ArrayList;
-import java.util.TreeSet;
-
-import com.BibleQuote.listeners.IReaderViewListener;
-import com.BibleQuote.listeners.IReaderViewListener.ChangeCode;
-import com.BibleQuote.utils.PreferenceHelper;
-
 import android.content.Context;
-import android.webkit.JsResult;
-import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.os.Build;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.webkit.*;
+import com.BibleQuote.listeners.IReaderViewListener;
+import com.BibleQuote.listeners.IReaderViewListener.ChangeCode;
+import com.BibleQuote.utils.PreferenceHelper;
+
+import java.util.ArrayList;
+import java.util.TreeSet;
 
 public class ReaderWebView extends WebView
 	implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener{

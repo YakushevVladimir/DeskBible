@@ -1,11 +1,11 @@
 package com.BibleQuote.controllers;
 
-import java.util.ArrayList;
-
 import com.BibleQuote.dal.DbLibraryUnitOfWork;
 import com.BibleQuote.models.Book;
 import com.BibleQuote.models.Chapter;
 import com.BibleQuote.models.Verse;
+
+import java.util.ArrayList;
 
 public class DbChapterController implements IChapterController {
 	//private final String TAG = "DbChapterController";

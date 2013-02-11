@@ -1,8 +1,8 @@
 package com.BibleQuote.listeners;
 
-import java.util.ArrayList;
-
 import com.BibleQuote.models.Book;
+
+import java.util.ArrayList;
 
 public class SearchInLibraryEvent {
 	

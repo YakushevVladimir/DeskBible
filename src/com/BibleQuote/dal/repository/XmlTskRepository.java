@@ -15,24 +15,16 @@
  */
 package com.BibleQuote.dal.repository;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-
-import com.BibleQuote.exceptions.BQUniversalException;
-import com.BibleQuote.exceptions.TskNotFoundException;
-import com.BibleQuote.utils.DataConstants;
-
 import android.content.res.XmlResourceParser;
 import android.util.Log;
 import android.util.Xml;
+import com.BibleQuote.exceptions.BQUniversalException;
+import com.BibleQuote.exceptions.TskNotFoundException;
+import com.BibleQuote.utils.DataConstants;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.*;
 
 public class XmlTskRepository implements ITskRepository {
 	

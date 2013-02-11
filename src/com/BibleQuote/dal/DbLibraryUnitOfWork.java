@@ -2,11 +2,7 @@ package com.BibleQuote.dal;
 
 
 import com.BibleQuote.controllers.CacheModuleController;
-import com.BibleQuote.dal.repository.DbBookRepository;
-import com.BibleQuote.dal.repository.DbModuleRepository;
-import com.BibleQuote.dal.repository.IBookRepository;
-import com.BibleQuote.dal.repository.IChapterRepository;
-import com.BibleQuote.dal.repository.IModuleRepository;
+import com.BibleQuote.dal.repository.*;
 import com.BibleQuote.models.DbBook;
 import com.BibleQuote.models.DbModule;
 

@@ -1,8 +1,8 @@
 package com.BibleQuote.dal.repository;
 
-import java.util.Collection;
-
 import com.BibleQuote.exceptions.OpenModuleException;
+
+import java.util.Collection;
 
 public interface IModuleRepository<TModuleId, TModule> {
     

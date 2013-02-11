@@ -1,15 +1,14 @@
 package com.BibleQuote.dal.repository;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-
 import com.BibleQuote.dal.DbLibraryContext;
 import com.BibleQuote.models.DbBook;
 import com.BibleQuote.models.DbModule;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashMap;
 
 public class DbBookRepository implements IBookRepository<DbModule, DbBook> {
 

@@ -1,9 +1,9 @@
 package com.BibleQuote.utils.BibleReferenceFormatter;
 
-import java.util.TreeSet;
-
 import com.BibleQuote.models.Book;
 import com.BibleQuote.models.Module;
+
+import java.util.TreeSet;
 
 public class EmptyReferenceFormatter extends ReferenceFormatter implements IBibleReferenceFormatter {
 

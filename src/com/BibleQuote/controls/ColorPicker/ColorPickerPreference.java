@@ -18,8 +18,8 @@ package com.BibleQuote.controls.ColorPicker;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.Bitmap.Config;
+import android.graphics.Color;
 import android.preference.Preference;
 import android.util.AttributeSet;
 import android.util.Log;

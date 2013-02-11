@@ -1,8 +1,8 @@
 package com.BibleQuote.utils;
 
-import java.io.File;
-
 import android.os.Environment;
+
+import java.io.File;
 
 public class DataConstants {
 

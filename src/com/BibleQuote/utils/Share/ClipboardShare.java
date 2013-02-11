@@ -1,13 +1,12 @@
 package com.BibleQuote.utils.Share;
 
-import java.util.LinkedHashMap;
-
 import android.content.Context;
 import android.text.ClipboardManager;
-
 import com.BibleQuote.models.Book;
 import com.BibleQuote.models.Chapter;
 import com.BibleQuote.models.Module;
+
+import java.util.LinkedHashMap;
 
 public class ClipboardShare extends BaseShareBuilder {
 

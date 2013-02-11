@@ -1,7 +1,6 @@
 package com.BibleQuote.managers;
 
 import android.util.Log;
-
 import com.BibleQuote.exceptions.OpenModuleException;
 import com.BibleQuote.models.Module;
 import com.BibleQuote.utils.Task;

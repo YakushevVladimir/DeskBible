@@ -1,12 +1,7 @@
 package com.BibleQuote.dal;
 
 import com.BibleQuote.controllers.CacheModuleController;
-import com.BibleQuote.dal.repository.FsBookRepository;
-import com.BibleQuote.dal.repository.FsChapterRepository;
-import com.BibleQuote.dal.repository.FsModuleRepository;
-import com.BibleQuote.dal.repository.IBookRepository;
-import com.BibleQuote.dal.repository.IChapterRepository;
-import com.BibleQuote.dal.repository.IModuleRepository;
+import com.BibleQuote.dal.repository.*;
 import com.BibleQuote.models.FsBook;
 import com.BibleQuote.models.FsModule;
 

@@ -15,16 +15,16 @@
  */
 package com.BibleQuote.controllers;
 
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.Map;
-
 import com.BibleQuote.dal.repository.ITskRepository;
 import com.BibleQuote.entity.BibleReference;
 import com.BibleQuote.exceptions.BQUniversalException;
 import com.BibleQuote.exceptions.TskNotFoundException;
 import com.BibleQuote.utils.BibleLinkParser;
 import com.BibleQuote.utils.CachePool;
+
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Map;
 
 public class TSKController {
 

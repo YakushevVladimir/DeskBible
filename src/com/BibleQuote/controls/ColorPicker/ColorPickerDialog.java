@@ -22,7 +22,6 @@ import android.graphics.PixelFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
-
 import com.BibleQuote.R;
 
 public class ColorPickerDialog extends Dialog 

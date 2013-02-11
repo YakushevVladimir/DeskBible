@@ -16,38 +16,30 @@
 
 package com.BibleQuote.activity;
 
-import android.widget.*;
-import com.BibleQuote.managers.AsyncCommand;
-import com.BibleQuote.utils.ViewUtils;
-import com.actionbarsherlock.app.SherlockActivity;
-import com.BibleQuote.widget.ItemAdapter;
-import com.BibleQuote.widget.item.Item;
-import com.BibleQuote.widget.item.SubtextItem;
-
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
-
+import android.widget.AdapterView.OnItemSelectedListener;
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
 import com.BibleQuote.entity.ItemList;
-import com.BibleQuote.exceptions.BookDefinitionException;
-import com.BibleQuote.exceptions.BookNotFoundException;
-import com.BibleQuote.exceptions.BooksDefinitionException;
-import com.BibleQuote.exceptions.ExceptionHelper;
-import com.BibleQuote.exceptions.OpenModuleException;
+import com.BibleQuote.exceptions.*;
+import com.BibleQuote.managers.AsyncCommand;
 import com.BibleQuote.managers.AsyncManager;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.utils.OnTaskCompleteListener;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.Task;
+import com.BibleQuote.utils.ViewUtils;
+import com.BibleQuote.widget.ItemAdapter;
+import com.BibleQuote.widget.item.Item;
+import com.BibleQuote.widget.item.SubtextItem;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 public class SearchActivity extends SherlockFragmentActivity implements OnTaskCompleteListener {
 	private static final String TAG = "SearchActivity";

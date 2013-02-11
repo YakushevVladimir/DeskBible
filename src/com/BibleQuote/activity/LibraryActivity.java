@@ -15,41 +15,29 @@
  */
 package com.BibleQuote.activity;
 
-import com.BibleQuote.utils.ViewUtils;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-
-import java.util.ArrayList;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.GridView;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
-
+import android.widget.*;
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
 import com.BibleQuote.entity.BibleReference;
 import com.BibleQuote.entity.ItemList;
-import com.BibleQuote.exceptions.BookDefinitionException;
-import com.BibleQuote.exceptions.BookNotFoundException;
-import com.BibleQuote.exceptions.BooksDefinitionException;
-import com.BibleQuote.exceptions.ExceptionHelper;
-import com.BibleQuote.exceptions.OpenModuleException;
+import com.BibleQuote.exceptions.*;
 import com.BibleQuote.managers.AsyncManager;
 import com.BibleQuote.managers.AsyncOpenModule;
 import com.BibleQuote.managers.AsyncRefreshModules;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.utils.OnTaskCompleteListener;
 import com.BibleQuote.utils.Task;
+import com.BibleQuote.utils.ViewUtils;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
+
+import java.util.ArrayList;
 
 public class LibraryActivity extends SherlockFragmentActivity implements OnTaskCompleteListener {
 	private static final String TAG = "LibraryActivity";

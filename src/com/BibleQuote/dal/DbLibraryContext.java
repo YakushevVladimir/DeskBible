@@ -1,11 +1,10 @@
 package com.BibleQuote.dal;
 
-import java.io.File;
-
-import com.BibleQuote.utils.DataConstants;
-
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import com.BibleQuote.utils.DataConstants;
+
+import java.io.File;
 
 public class DbLibraryContext extends LibraryContext {
 	

@@ -1,8 +1,5 @@
 package com.BibleQuote.controllers;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-
 import com.BibleQuote.dal.DbLibraryUnitOfWork;
 import com.BibleQuote.dal.repository.IBookRepository;
 import com.BibleQuote.managers.EventManager;
@@ -10,6 +7,9 @@ import com.BibleQuote.models.Book;
 import com.BibleQuote.models.DbBook;
 import com.BibleQuote.models.DbModule;
 import com.BibleQuote.models.Module;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 public class DbBookController implements IBookController {
 	//private final String TAG = "DbBookController";

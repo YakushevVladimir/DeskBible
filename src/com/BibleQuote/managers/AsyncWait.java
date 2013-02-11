@@ -1,7 +1,6 @@
 package com.BibleQuote.managers;
 
 import android.util.Log;
-
 import com.BibleQuote.utils.Task;
 
 public class AsyncWait extends Task {

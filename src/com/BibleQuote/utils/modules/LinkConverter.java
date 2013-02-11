@@ -1,12 +1,13 @@
 package com.BibleQuote.utils.modules;
 
+import com.BibleQuote.controllers.IBookController;
+import com.BibleQuote.controllers.IModuleController;
 import com.BibleQuote.entity.BibleBooksID;
 import com.BibleQuote.entity.BibleReference;
 import com.BibleQuote.exceptions.BookNotFoundException;
 import com.BibleQuote.exceptions.OpenModuleException;
 import com.BibleQuote.models.Book;
 import com.BibleQuote.models.Module;
-import com.BibleQuote.controllers.*;
 
 public class LinkConverter {
 

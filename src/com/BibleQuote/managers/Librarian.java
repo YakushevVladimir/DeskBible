@@ -38,7 +38,6 @@ import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.Share.ShareBuilder;
 import com.BibleQuote.utils.Share.ShareBuilder.Destination;
 import com.BibleQuote.utils.StringProc;
-import com.BibleQuote.utils.modules.LanguageConvertor;
 import com.BibleQuote.utils.modules.LinkConverter;
 
 import java.util.*;

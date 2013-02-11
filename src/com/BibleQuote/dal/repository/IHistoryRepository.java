@@ -21,10 +21,10 @@
 
 package com.BibleQuote.dal.repository;
 
-import java.util.LinkedList;
-
 import com.BibleQuote.entity.ItemList;
 import com.BibleQuote.exceptions.FileAccessException;
+
+import java.util.LinkedList;
 
 public interface IHistoryRepository {
 	public void save(LinkedList<ItemList> list);

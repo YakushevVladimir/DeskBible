@@ -15,11 +15,12 @@
  */
 package com.BibleQuote.activity;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.TextView;
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
 import com.BibleQuote.entity.BibleReference;
@@ -32,20 +33,17 @@ import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.utils.OnTaskCompleteListener;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.Task;
-
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.TextView;
 import com.BibleQuote.utils.ViewUtils;
-import com.actionbarsherlock.app.SherlockActivity;
 import com.BibleQuote.widget.ItemAdapter;
 import com.BibleQuote.widget.item.Item;
 import com.BibleQuote.widget.item.SubtextItem;
 import com.BibleQuote.widget.item.TextItem;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 public class CrossReferenceActivity extends SherlockFragmentActivity implements OnTaskCompleteListener {
 

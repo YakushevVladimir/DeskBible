@@ -1,11 +1,11 @@
 package com.BibleQuote.models;
 
+import com.BibleQuote.utils.StringProc;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.TreeMap;
 import java.util.TreeSet;
-
-import com.BibleQuote.utils.StringProc;
 
 public class Chapter {
 	

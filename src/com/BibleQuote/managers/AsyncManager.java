@@ -1,7 +1,6 @@
 package com.BibleQuote.managers;
 
 import android.content.Context;
-
 import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.OnTaskCompleteListener;
 import com.BibleQuote.utils.Task;

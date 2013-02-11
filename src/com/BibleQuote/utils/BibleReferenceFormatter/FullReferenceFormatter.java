@@ -1,10 +1,10 @@
 package com.BibleQuote.utils.BibleReferenceFormatter;
 
-import java.util.TreeSet;
-
 import com.BibleQuote.models.Book;
 import com.BibleQuote.models.Module;
 import com.BibleQuote.utils.PreferenceHelper;
+
+import java.util.TreeSet;
 
 public class FullReferenceFormatter extends ReferenceFormatter implements IBibleReferenceFormatter {
 

@@ -1,8 +1,8 @@
 package com.BibleQuote.listeners;
 
-import java.util.TreeMap;
-
 import com.BibleQuote.models.Module;
+
+import java.util.TreeMap;
 
 public class ChangeModulesEvent {
 	public static enum ChangeCode {

@@ -16,8 +16,6 @@
 
 package com.BibleQuote.tts.exceptions;
 
-import android.location.LocationListener;
-
 import java.util.Locale;
 
 /**

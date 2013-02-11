@@ -1,13 +1,12 @@
 package com.BibleQuote.dal.repository;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-
 import com.BibleQuote.dal.DbLibraryContext;
 import com.BibleQuote.models.DbModule;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 
 public class DbModuleRepository implements IModuleRepository<Long, DbModule> {

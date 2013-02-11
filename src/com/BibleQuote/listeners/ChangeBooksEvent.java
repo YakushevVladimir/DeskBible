@@ -1,10 +1,10 @@
 package com.BibleQuote.listeners;
 
-import java.util.LinkedHashMap;
-
 import com.BibleQuote.listeners.IChangeBooksListener.ChangeCode;
 import com.BibleQuote.models.Book;
 import com.BibleQuote.models.Module;
+
+import java.util.LinkedHashMap;
 
 public class ChangeBooksEvent {
 	

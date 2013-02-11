@@ -1,14 +1,14 @@
 package com.BibleQuote.controllers;
 
-import java.util.ArrayList;
-import java.util.TreeMap;
-
 import com.BibleQuote.dal.DbLibraryUnitOfWork;
 import com.BibleQuote.dal.repository.IModuleRepository;
 import com.BibleQuote.exceptions.OpenModuleException;
 import com.BibleQuote.managers.EventManager;
 import com.BibleQuote.models.DbModule;
 import com.BibleQuote.models.Module;
+
+import java.util.ArrayList;
+import java.util.TreeMap;
 
 public class DbModuleController implements IModuleController {
 	private final String TAG = "DbModuleController";

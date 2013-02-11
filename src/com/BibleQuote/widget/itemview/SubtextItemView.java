@@ -1,13 +1,12 @@
 package com.BibleQuote.widget.itemview;
 
-import com.BibleQuote.widget.item.Item;
-import com.BibleQuote.widget.item.SubtextItem;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.BibleQuote.R;
+import com.BibleQuote.widget.item.Item;
+import com.BibleQuote.widget.item.SubtextItem;
 
 public class SubtextItemView extends LinearLayout implements ItemView {
 

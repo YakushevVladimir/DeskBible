@@ -1,24 +1,22 @@
 package com.BibleQuote.activity;
 
-import java.util.LinkedList;
-
-import com.BibleQuote.BibleQuoteApp;
-import com.BibleQuote.R;
-import com.BibleQuote.entity.ItemList;
-import com.BibleQuote.managers.Librarian;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import com.BibleQuote.BibleQuoteApp;
+import com.BibleQuote.R;
+import com.BibleQuote.entity.ItemList;
+import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.utils.ViewUtils;
-import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
+
+import java.util.LinkedList;
 
 public class HistoryActivity extends SherlockFragmentActivity {
 

@@ -15,11 +15,11 @@
  */
 package com.BibleQuote.activity;
 
-import com.BibleQuote.R;
-
-import com.BibleQuote.utils.ViewUtils;
-import com.actionbarsherlock.app.SherlockActivity;
 import android.os.Bundle;
+import android.widget.TextView;
+import com.BibleQuote.BibleQuoteApp;
+import com.BibleQuote.R;
+import com.BibleQuote.utils.ViewUtils;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 public class AboutActivity extends SherlockFragmentActivity {
@@ -28,6 +28,11 @@ public class AboutActivity extends SherlockFragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.about);
-		ViewUtils.setActionBarBackground(this);
-	}
+        ViewUtils.setActionBarBackground(this);
+
+        TextView tv_app = (TextView) findViewById(R.id.about_name);
+        tv_app.setText(String.format(
+                getResources().getText(R.string.app_about_name).toString(),
+                BibleQuoteApp.getAppVersionName(getApplicationContext())));
+    }
 }

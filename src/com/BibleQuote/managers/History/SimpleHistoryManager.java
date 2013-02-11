@@ -21,12 +21,12 @@
 
 package com.BibleQuote.managers.History;
 
-import java.util.LinkedList;
-
 import com.BibleQuote.dal.repository.IHistoryRepository;
 import com.BibleQuote.entity.BibleReference;
 import com.BibleQuote.entity.ItemList;
 import com.BibleQuote.exceptions.FileAccessException;
+
+import java.util.LinkedList;
 
 public class SimpleHistoryManager implements IHistoryManager {
 	

@@ -1,7 +1,6 @@
 package com.BibleQuote.managers;
 
 import android.content.Context;
-
 import com.BibleQuote.R;
 import com.BibleQuote.utils.NotifyDialog;
 import com.BibleQuote.utils.Task;

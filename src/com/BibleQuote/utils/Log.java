@@ -15,19 +15,14 @@
  */
 package com.BibleQuote.utils;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
+import android.content.Context;
+import android.os.Environment;
+import com.BibleQuote.BibleQuoteApp;
+
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
-
-import android.content.Context;
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.os.Environment;
 
 /**
  * Класс отвечающий за запись протокола событий приложения.
@@ -53,16 +48,9 @@ public class Log {
 			if (logFile.exists()) {
 				logFile.delete();
 			}
-						
-			String myversion;
-			try {
-				myversion = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
-			} catch (NameNotFoundException e) {
-				myversion = "0.00.01";
-			}
-			
-			Write("Log " + new SimpleDateFormat("dd-MMM-yy G hh:mm aaa").format(Calendar.getInstance().getTime()));
-			Write("Current version package: " + myversion);
+
+            Write("Log " + new SimpleDateFormat("dd-MMM-yy G hh:mm aaa").format(Calendar.getInstance().getTime()));
+			Write("Current version package: " + BibleQuoteApp.getAppVersionName(context));
 			Write("Default language: " + Locale.getDefault().getDisplayLanguage());
 			Write("Device model: " + android.os.Build.BRAND + " " + android.os.Build.MODEL);
 			Write("Device display: " + android.os.Build.BRAND + " " + android.os.Build.DISPLAY);
@@ -70,8 +58,8 @@ public class Log {
 			Write("====================================");
 		}
 	}
-	
-	/**
+
+    /**
 	 * Запись в протокол события
 	 * @param Tag имя класса-инициатора события
 	 * @param text текст помещаемый в протокол событий 

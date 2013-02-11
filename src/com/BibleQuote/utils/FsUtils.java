@@ -15,28 +15,17 @@
  */
 package com.BibleQuote.utils;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UTFDataFormatException;
+import android.content.Context;
+import android.util.Log;
+import com.BibleQuote.exceptions.FileAccessException;
+import org.apache.http.util.ByteArrayBuffer;
+
+import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-
-import org.apache.http.util.ByteArrayBuffer;
-
-import android.content.Context;
-import android.util.Log;
-
-import com.BibleQuote.exceptions.FileAccessException;
 
 
 public class FsUtils {

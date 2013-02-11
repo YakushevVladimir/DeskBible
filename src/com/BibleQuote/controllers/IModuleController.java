@@ -1,9 +1,9 @@
 package com.BibleQuote.controllers;
 
-import java.util.TreeMap;
-
 import com.BibleQuote.exceptions.OpenModuleException;
 import com.BibleQuote.models.Module;
+
+import java.util.TreeMap;
 
 public interface IModuleController {
 	
