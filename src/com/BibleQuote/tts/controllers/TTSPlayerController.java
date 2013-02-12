@@ -110,7 +110,7 @@ public class TTSPlayerController implements TextToSpeech.OnInitListener, TextToS
     private void setLanguage() {
         Log.i(TAG, "setLanguage()");
         int initStatus = ttsEngine.isLanguageAvailable(locale);
-        if (initStatus != TextToSpeech.LANG_AVAILABLE) {
+        if (initStatus == TextToSpeech.LANG_MISSING_DATA || initStatus == TextToSpeech.LANG_NOT_SUPPORTED) {
             error = new LanguageNotSupportedException(locale);
             notifyListeners(Event.Error);
         } else {

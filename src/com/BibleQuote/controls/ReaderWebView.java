@@ -172,7 +172,7 @@ public class ReaderWebView extends WebView
 			textColor = PreferenceHelper.getTextColor();
 			selTextColor = "#FEF8C4";
 		} else {
-			textColor = "#FFFFFF";
+			textColor = "#EEEEEE";
 			selTextColor = "#562000";
 			backColor = "#000000";
 		}
