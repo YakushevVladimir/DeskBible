@@ -1,9 +1,9 @@
 package com.BibleQuote.utils.Share;
 
 import android.content.Context;
-import com.BibleQuote.models.Book;
-import com.BibleQuote.models.Chapter;
-import com.BibleQuote.models.Module;
+import com.BibleQuote.modules.Book;
+import com.BibleQuote.modules.Chapter;
+import com.BibleQuote.modules.Module;
 import com.BibleQuote.utils.BibleReferenceFormatter.EmptyReferenceFormatter;
 import com.BibleQuote.utils.BibleReferenceFormatter.FullReferenceFormatter;
 import com.BibleQuote.utils.BibleReferenceFormatter.IBibleReferenceFormatter;

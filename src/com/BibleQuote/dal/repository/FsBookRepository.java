@@ -3,9 +3,9 @@ package com.BibleQuote.dal.repository;
 import com.BibleQuote.controllers.CacheModuleController;
 import com.BibleQuote.dal.FsLibraryContext;
 import com.BibleQuote.exceptions.*;
-import com.BibleQuote.models.Book;
-import com.BibleQuote.models.FsBook;
-import com.BibleQuote.models.FsModule;
+import com.BibleQuote.modules.Book;
+import com.BibleQuote.modules.FsBook;
+import com.BibleQuote.modules.FsModule;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -23,7 +23,6 @@ public class FsBookRepository implements IBookRepository<FsModule, FsBook> {
     	this.cache = context.getCache();
     }
     
-    
 	public Collection<FsBook> loadBooks(FsModule module) 
 			throws OpenModuleException, BooksDefinitionException, BookDefinitionException {
 		
@@ -40,12 +39,12 @@ public class FsBookRepository implements IBookRepository<FsModule, FsBook> {
 					moduleDatasourceID = module.getDataSourceID();
 					reader = context.getModuleReader(module); 
 					context.fillBooks(module, reader);
-					
-				} catch (FileAccessException e) {
-					//Log.e(TAG, String.format("Can't load books from module (%1$s, %2$s)", moduleID, moduleDatasourceID));
-					throw new OpenModuleException(moduleID, moduleDatasourceID);
-					
-				} finally {
+
+                } catch (FileAccessException e) {
+                    //Log.e(TAG, String.format("Can't load books from module (%1$s, %2$s)", moduleID, moduleDatasourceID));
+                    throw new OpenModuleException(moduleID, moduleDatasourceID);
+
+                } finally {
 					try {
 						if (reader != null) {
 							reader.close();
@@ -54,32 +53,26 @@ public class FsBookRepository implements IBookRepository<FsModule, FsBook> {
 						e.printStackTrace(); 
 					}
 				}
-		
-				// Update cache with just added books
-				cache.saveModuleList(context.getModuleList(context.moduleSet));
 			}
 			return context.getBookList(context.bookSet); 	
 		}
 	}
-	
 	
 	public Collection<FsBook> getBooks(FsModule module) {
 		return context.getBookList( 
 				module.Books == context.bookSet
 					? context.bookSet : null); 
 	}
-
 	
 	public FsBook getBookByID(FsModule module, String bookID) {
 		return module.Books == context.bookSet
 				? (FsBook)context.bookSet.get(bookID) : null;
 	}
 
-
 	public LinkedHashMap<String, String> searchInBook(FsModule module, String bookID, String regQuery) throws BookNotFoundException {
 		LinkedHashMap<String, String> searchRes = null;
 
-        FsBook book = getBookByID((FsModule)module, bookID);
+        FsBook book = getBookByID(module, bookID);
         if (book == null) {
             throw new BookNotFoundException(module.getID(), bookID);
         }
@@ -102,6 +95,4 @@ public class FsBookRepository implements IBookRepository<FsModule, FsBook> {
 		}
 		return searchRes;
 	}
-
-
 }

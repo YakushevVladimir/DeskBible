@@ -64,7 +64,7 @@ public class EventManager {
 			}
 		}
 	}
-	
+
 
 	/////////////// ISearchListener
 	private final List<ISearchListener> mySearchListeners = Collections.synchronizedList(new LinkedList<ISearchListener>());
@@ -83,6 +83,4 @@ public class EventManager {
 			}
 		}
 	}
-	
-	
 }

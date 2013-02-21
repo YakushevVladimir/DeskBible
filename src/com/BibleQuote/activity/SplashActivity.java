@@ -20,9 +20,9 @@ import android.os.Bundle;
 import android.view.WindowManager;
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
-import com.BibleQuote.managers.AsyncCommand;
-import com.BibleQuote.managers.AsyncCommand.ICommand;
-import com.BibleQuote.managers.AsyncManager;
+import com.BibleQuote.async.AsyncCommand;
+import com.BibleQuote.async.AsyncManager;
+import com.BibleQuote.async.command.InitApplication;
 import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.OnTaskCompleteListener;
 import com.BibleQuote.utils.Task;
@@ -42,11 +42,8 @@ public class SplashActivity extends SherlockActivity implements OnTaskCompleteLi
 
 		Log.Init(getApplicationContext());
 
-		Log.i(TAG, "Get link on application...");
 		BibleQuoteApp app = (BibleQuoteApp) getApplication();
-		Log.i(TAG, "Get progress message...");
 
-		Log.i(TAG, "Get AsyncTask manager...");
 		AsyncManager myAsyncManager = app.getAsyncManager();
         if (initApp != null) {
             Log.i(TAG, "Restore old task...");
@@ -59,20 +56,11 @@ public class SplashActivity extends SherlockActivity implements OnTaskCompleteLi
 
     private AsyncCommand getTaskObject() {
         String progressMessage = getResources().getString(R.string.messageLoad);
-        initApp = new AsyncCommand(new InitApplication(), progressMessage, true);
+        initApp = new AsyncCommand(new InitApplication(this), progressMessage, true);
         return initApp;
     }
 
-    private class InitApplication implements ICommand {
-		@Override
-		public void execute() throws Exception {
-			Log.i(TAG, "Task InitApplication execute...");
-			BibleQuoteApp app = (BibleQuoteApp) getApplication();
-			app.Init();
-		}
-	}
-
-	@Override
+    @Override
 	public void onTaskComplete(Task task) {
 		Log.i(TAG, "Start reader activity");
     	startActivity(new Intent(this, ReaderActivity.class));

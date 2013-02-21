@@ -18,7 +18,7 @@ package com.BibleQuote;
 import android.app.Application;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import com.BibleQuote.managers.AsyncManager;
+import com.BibleQuote.async.AsyncManager;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.PreferenceHelper;

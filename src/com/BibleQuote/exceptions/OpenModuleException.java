@@ -20,7 +20,7 @@ public class OpenModuleException extends Exception {
 	private static final long serialVersionUID = -941193264792260938L;
 	private String moduleId;
 	private String moduleDatasourceId;
-	
+
 	public OpenModuleException(String moduleId, String moduleDatasourceId) {
 		this.moduleId = moduleId;
 		this.moduleDatasourceId = moduleDatasourceId;
@@ -33,4 +33,9 @@ public class OpenModuleException extends Exception {
 	public String getModuleDatasourceId() {
 		return moduleDatasourceId;
 	}
+
+    @Override
+    public String getMessage() {
+        return "Error opening module " + moduleId + " from " + moduleDatasourceId;
+    }
 }

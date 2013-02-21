@@ -21,9 +21,9 @@ public class ExceptionHelper {
 		if (moduleId == null) moduleId = "";
 		String moduleDatasourceId = ex.getModuleDatasourceId();
 		if (moduleDatasourceId == null) moduleDatasourceId = "";
-		
+
 		String message = String.format(
-				context.getResources().getString(R.string.exception_open_module), 
+				context.getResources().getString(R.string.exception_open_module_short),
 				moduleId, moduleDatasourceId);
 		Log.e(TAG, message);
 
@@ -33,10 +33,10 @@ public class ExceptionHelper {
 			// the message is defined above
 		} else {
 			message = String.format(
-					context.getResources().getString(R.string.exception_open_module_short), 
+					context.getResources().getString(R.string.exception_open_module_short),
 					moduleId != "" ? moduleId : moduleDatasourceId);
 		}
-		new NotifyDialog(message, context).show();			
+		new NotifyDialog(message, context).show();
 	}
 	
 	public static void onBooksDefinitionException(BooksDefinitionException ex, Context context, String TAG) {

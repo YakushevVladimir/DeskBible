@@ -5,8 +5,8 @@ import com.BibleQuote.dal.FsLibraryContext;
 import com.BibleQuote.entity.BibleReference;
 import com.BibleQuote.exceptions.BookNotFoundException;
 import com.BibleQuote.exceptions.FileAccessException;
-import com.BibleQuote.models.Chapter;
-import com.BibleQuote.models.FsBook;
+import com.BibleQuote.modules.Chapter;
+import com.BibleQuote.modules.FsBook;
 
 import java.io.BufferedReader;
 import java.io.IOException;

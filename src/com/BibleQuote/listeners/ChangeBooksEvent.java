@@ -1,8 +1,8 @@
 package com.BibleQuote.listeners;
 
 import com.BibleQuote.listeners.IChangeBooksListener.ChangeCode;
-import com.BibleQuote.models.Book;
-import com.BibleQuote.models.Module;
+import com.BibleQuote.modules.Book;
+import com.BibleQuote.modules.Module;
 
 import java.util.LinkedHashMap;
 

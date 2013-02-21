@@ -3,10 +3,9 @@ package com.BibleQuote.controllers;
 import com.BibleQuote.dal.FsLibraryUnitOfWork;
 import com.BibleQuote.dal.repository.IModuleRepository;
 import com.BibleQuote.exceptions.OpenModuleException;
-import com.BibleQuote.models.FsModule;
-import com.BibleQuote.models.Module;
+import com.BibleQuote.modules.FsModule;
+import com.BibleQuote.modules.Module;
 
-import java.util.ArrayList;
 import java.util.TreeMap;
 
 public class FsModuleController implements IModuleController {
@@ -18,99 +17,27 @@ public class FsModuleController implements IModuleController {
 		mRepository = unit.getModuleRepository();
     }
 	
-	
 	@Override
 	public TreeMap<String, Module> loadFileModules() {
-		ArrayList<FsModule> moduleList = (ArrayList<FsModule>) mRepository.loadFileModules();
-		
-		TreeMap<String, Module> result = new TreeMap<String, Module>();
-		for (Module module : moduleList) {
-			result.put(module.getID(), module);
-		}
-		
-		return result;		
+        return mRepository.loadFileModules();
 	}
-	
 	
 	@Override
 	public TreeMap<String, Module> getModules() {
-		ArrayList<FsModule> moduleList = (ArrayList<FsModule>) mRepository.getModules();
-		if (moduleList.size() == 0) {
+        TreeMap<String, Module> result = mRepository.getModules();
+		if (result.size() == 0) {
 			return loadFileModules();
 		} else {
-			TreeMap<String, Module> result = new TreeMap<String, Module>();
-			for (Module module : moduleList) {
-				result.put(module.getID(), module);
-			}			
-			return result;		
+			return result;
 		}
 	}
-	
-	
-	@Override
-	public Module getModuleByID(String moduleID, String moduleDatasourceID) throws OpenModuleException {
-		Module result = null;
-		OpenModuleException exception = null;
-		try {
-			if (moduleID == null) {
-				throw new OpenModuleException(moduleID, moduleDatasourceID);
-			}
-			result = getModuleByID(moduleID);
-		} catch(OpenModuleException e) {
-			try {
-				if (moduleDatasourceID == null) {
-					throw new OpenModuleException(moduleID, moduleDatasourceID);
-				}				
-				result = getModuleByDatasourceID(moduleDatasourceID);
-			} catch(OpenModuleException ex) {
-				exception = ex;
-			}
-		}
-		if (exception != null) {
-			throw new OpenModuleException(moduleID, moduleDatasourceID);
-		}
-		return result;
-	}
-	
 	
 	@Override
 	public Module getModuleByID(String moduleID) throws OpenModuleException {
 		FsModule fsModule = mRepository.getModuleByID(moduleID);
-		String moduleDatasourceID = "";
-		if (fsModule != null && fsModule.getIsClosed()) {
-			moduleDatasourceID = fsModule.getDataSourceID();
-			fsModule = mRepository.loadModuleById(moduleDatasourceID);
-		}
 		if (fsModule == null) {
-			throw new OpenModuleException(moduleID, moduleDatasourceID);
+			throw new OpenModuleException(moduleID, moduleID);
 		}
 		return 	fsModule;		
 	}
-	
-		
-	@Override
-	public Module getClosedModule() {
-		return mRepository.getClosedModule();
-	}
-
-	
-	/**
-	 * Возвращает полностью загруженный модуль из коллекции по его пути к данным.
-	 * Если модуль в коллекции isClosed, то производит его загрузку
-	 * <br><font color='red'>Производится полная перезапись в кэш коллекции модулей
-	 * при загрузке closed-модуля</font><br>
-	 * @param moduleDatasourceID путь к данным модуля
-	 * @return Возвращает полностью загруженный модуль
-	 * @throws OpenModuleException - произошла ошибка при попытке загрузить данные closed-модуля
-	 */	
-	private Module getModuleByDatasourceID(String moduleDatasourceID) throws OpenModuleException {
-		FsModule fsModule = mRepository.getModuleByDatasourceID(moduleDatasourceID);
-		if (fsModule != null && fsModule.getIsClosed()) {
-			fsModule = mRepository.loadModuleById(fsModule.getDataSourceID());
-		}
-		if (fsModule == null) {
-			throw new OpenModuleException("", moduleDatasourceID);
-		}
-		return 	fsModule;		
-	}	
 }

@@ -22,7 +22,7 @@ import com.BibleQuote.entity.BibleReference;
 import com.BibleQuote.exceptions.BookDefinitionException;
 import com.BibleQuote.exceptions.BooksDefinitionException;
 import com.BibleQuote.exceptions.FileAccessException;
-import com.BibleQuote.models.*;
+import com.BibleQuote.modules.*;
 import com.BibleQuote.utils.FsUtils;
 import com.BibleQuote.utils.StringProc;
 import com.BibleQuote.utils.modules.LanguageConvertor;
@@ -55,12 +55,12 @@ public class FsLibraryContext extends LibraryContext {
 		return libraryDir != null && libraryDir.exists();
 	}
 	
-	public ArrayList<FsModule> getModuleList(TreeMap<String, Module> moduleSet) {
-		ArrayList<FsModule> moduleList = new ArrayList<FsModule>();
+	public ArrayList<FsModule> getModuleList(Map<String, Module> moduleSet) {
+		ArrayList<FsModule> result = new ArrayList<FsModule>();
 		for (Module currModule : moduleSet.values()) {
-			moduleList.add((FsModule)currModule);
+			result.add((FsModule) currModule);
 		}
-		return moduleList;
+		return result;
 	}
 	
 	public ArrayList<FsBook> getBookList(Map<String, Book> bookSet) {
@@ -175,16 +175,14 @@ public class FsLibraryContext extends LibraryContext {
 			throw new FileAccessException(message);
 		}
 
-		String TagFilter[] = { "p", "b", "i", "em", "strong", "q", "big",
-				"sub", "sup", "h1", "h2", "h3", "h4" };
+		String TagFilter[] = { "p", "b", "i", "em", "strong", "q", "big", "sub", "sup", "h1", "h2", "h3", "h4" };
 		ArrayList<String> TagArray = new ArrayList<String>();
 		for (String tag : TagFilter) {
 			TagArray.add(tag);
 		}
 
 		if (!HTMLFilter.equals("")) {
-			String[] words = HTMLFilter.replaceAll("\\W", " ").trim()
-					.split("\\s+");
+			String[] words = HTMLFilter.replaceAll("\\W", " ").trim().split("\\s+");
 			for (String word : words) {
 				if (word.equals("") || TagArray.contains(word)) {
 					continue;
@@ -195,12 +193,9 @@ public class FsLibraryContext extends LibraryContext {
 
 		String separator = "";
 		for (String tag : TagArray) {
-			module.HtmlFilter += separator + "(" + tag + ")|(/" + tag + ")" + "|("
-					+ tag.toUpperCase() + ")|(/" + tag.toUpperCase() + ")";
+			module.HtmlFilter += separator + "(" + tag + ")|(/" + tag + ")" + "|(" + tag.toUpperCase() + ")|(/" + tag.toUpperCase() + ")";
 			separator = "|";
 		}
-		
-		module.setIsClosed(false);
 	}	
 	
 	public void fillBooks(FsModule module, BufferedReader bReader) throws FileAccessException, BooksDefinitionException, BookDefinitionException {
@@ -285,7 +280,7 @@ public class FsLibraryContext extends LibraryContext {
 		}
 
 		HashMap<String, String> charsets = getCharsets();
-		String str = "", key, value;
+		String str, key, value;
 		try {
 			while ((str = bReader.readLine()) != null) {
 				int pos = str.indexOf("//");
@@ -391,9 +386,9 @@ public class FsLibraryContext extends LibraryContext {
 					chapterNumber++;
 					verseNumber = 0;
 				}
-				if (str.toLowerCase().contains(module.VerseSign))
+				if (str.toLowerCase().contains(module.VerseSign)) {
 					verseNumber++;
-
+                }
 				if (str.toLowerCase().matches(searchQuery)) {
 					BibleReference osisLink = new BibleReference(module.getID(), bookID, chapterNumber, verseNumber);
 					String content = StringProc.cleanVerseNumbers(StringProc.stripTags(str));
@@ -415,8 +410,6 @@ public class FsLibraryContext extends LibraryContext {
         for (String currWord : words) {
             result += (result.equals("") ? "" : "\\s(.)*?") + currWord;
         }
-        result = ".*?" + result + ".*?"; // любые символы в начале и конце
-
-        return result;
+        return ".*?" + result + ".*?"; // любые символы в начале и конце
     }
 }

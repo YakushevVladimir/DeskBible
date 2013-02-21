@@ -27,7 +27,8 @@ import com.actionbarsherlock.app.SherlockPreferenceActivity;
 
 public class SettingsActivity extends SherlockPreferenceActivity implements
 		OnSharedPreferenceChangeListener {
-	
+
+    @SuppressWarnings("deprecation")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		setTheme(R.style.Theme_Sherlock_Light);
@@ -46,6 +47,7 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 	}
 
+    @SuppressWarnings("deprecation")
 	@Override
 	protected void onDestroy() {
 		getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);

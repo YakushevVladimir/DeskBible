@@ -1,7 +1,7 @@
 package com.BibleQuote.controllers;
 
 import com.BibleQuote.exceptions.OpenModuleException;
-import com.BibleQuote.models.Module;
+import com.BibleQuote.modules.Module;
 
 import java.util.TreeMap;
 
@@ -21,22 +21,6 @@ public interface IModuleController {
      */
 	public TreeMap<String, Module> getModules();
 	
-	
-	/**
-	 * Возвращает полностью загруженный модуль. Ищет модуль в коллекции
-	 * модулей. Если он отсутствует в коллекции производит его загрузку
-	 * из хранилища. Для closed-модуля инициируется полная загрузка данных 
-	 * модуля и обновления кэш
-	 * 
-	 * @param moduleID ShortName модуля
-	 * @param moduleDatasourceID путь к данным модуля в хранилище
-	 * @return Возвращает полностью загруженный модуль
-	 * @throws OpenModuleException произошла ошибки при попытке загрузки closed-модуля
-	 * из хранилища
-	 */
-	public Module getModuleByID(String moduleID, String moduleDatasourceID) throws OpenModuleException;
-	
-
 	/**
 	 * Возвращает полностью загруженный модуль из коллекции по его ShortName. 
 	 * Если модуль в коллекции isClosed, то производит его загрузку
@@ -51,9 +35,4 @@ public interface IModuleController {
 	 */
 	public Module getModuleByID(String moduleID) throws OpenModuleException;
 	
-
-	/**
-	 * @return Возвращает первый closed-модуль из коллекции модулей
-	 */
-	public Module getClosedModule();
 }

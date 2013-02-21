@@ -16,24 +16,20 @@
 package com.BibleQuote.managers;
 
 import android.content.Context;
-import com.BibleQuote.R;
+import com.BibleQuote.utils.Log;
 import com.BibleQuote.controllers.*;
-import com.BibleQuote.controllers.LibraryController.LibrarySource;
 import com.BibleQuote.dal.repository.XmlTskRepository;
 import com.BibleQuote.dal.repository.fsHistoryRepository;
 import com.BibleQuote.entity.BibleBooksID;
 import com.BibleQuote.entity.BibleReference;
 import com.BibleQuote.entity.ItemList;
 import com.BibleQuote.exceptions.*;
-import com.BibleQuote.listeners.ChangeBooksEvent;
-import com.BibleQuote.listeners.IChangeBooksListener;
 import com.BibleQuote.managers.History.IHistoryManager;
 import com.BibleQuote.managers.History.SimpleHistoryManager;
-import com.BibleQuote.models.Book;
-import com.BibleQuote.models.Chapter;
-import com.BibleQuote.models.Module;
-import com.BibleQuote.models.Verse;
-import com.BibleQuote.utils.Log;
+import com.BibleQuote.modules.Book;
+import com.BibleQuote.modules.Chapter;
+import com.BibleQuote.modules.Module;
+import com.BibleQuote.modules.Verse;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.Share.ShareBuilder;
 import com.BibleQuote.utils.Share.ShareBuilder.Destination;
@@ -42,7 +38,7 @@ import com.BibleQuote.utils.modules.LinkConverter;
 
 import java.util.*;
 
-public class Librarian implements IChangeBooksListener  {
+public class Librarian {
 	
 	private final String TAG = "Librarian";
 	
@@ -60,52 +56,54 @@ public class Librarian implements IChangeBooksListener  {
 	private IBookController bookCtrl;
 	private IChapterController chapterCtrl;
 	private TSKController tskCtrl;
-	
-	public EventManager eventManager = new EventManager();
+
+    private LibraryController libCtrl;
+    private boolean isLibraryUpdated = false;
 
     /**
 	 * Инициализация контроллеров библиотеки, модулей, книг и глав.
 	 * Подписка на событие ChangeBooksEvent 
 	 */
 	public Librarian(Context context) {
+        Log.i(TAG, "Create library controllers");
+        libCtrl = LibraryController.create(context);
+        moduleCtrl = libCtrl.getModuleCtrl();
+        bookCtrl = libCtrl.getBookCtrl();
+        chapterCtrl = libCtrl.getChapterCtrl();
 
-		eventManager.addChangeBooksListener(this);
-		
-		com.BibleQuote.utils.Log.i(TAG, "Create controllers");
-        LibraryController libCtrl = LibraryController.create(LibrarySource.FileSystem, eventManager, context);
-		moduleCtrl = libCtrl.getModuleCtrl();
-		bookCtrl = libCtrl.getBookCtrl();
-		chapterCtrl = libCtrl.getChapterCtrl();
-		
-		com.BibleQuote.utils.Log.i(TAG, "Create history manager and repository");
-		fsHistoryRepository repository = new fsHistoryRepository(context.getCacheDir());
-		historyManager = new SimpleHistoryManager(repository, PreferenceHelper.getHistorySize());
-		
-		loadModules(context.getResources().getString(R.string.exception_open_module));
+        com.BibleQuote.utils.Log.i(TAG, "Create history manager and repository");
+        fsHistoryRepository repository = new fsHistoryRepository(context.getCacheDir());
+        historyManager = new SimpleHistoryManager(repository, PreferenceHelper.getHistorySize());
+
+		getModules();
+        refreshLibrary();
 	}
 
-	/**
-	 * @return Возвращает первый closed-модуль из коллекции модулей
-	 */
-	public Module getClosedModule() {
-		return moduleCtrl.getClosedModule();
-	}
-	
+    public EventManager getEventManager() {
+        return libCtrl.getEventManager();
+    }
+
+    private void refreshLibrary() {
+        Thread taskRefresh = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(15000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                loadFileModules();
+            }
+        });
+        taskRefresh.start();
+    }
+
 	/**
 	 * Загружает из хранилища список модулей без загрузки их данных. Для каждого из модулей
 	 * установлен флаг isClosed = true.
 	 * @return Возвращает TreeMap, где в качестве ключа путь к модулю, а в качестве значения 
 	 * closed-модуль
 	 */
-	public TreeMap<String, Module> loadFileModules() {
-		return moduleCtrl.loadFileModules();
-	}
-	
-	public void onChangeBooks(ChangeBooksEvent event) {
-		if (event.code == IChangeBooksListener.ChangeCode.BooksLoaded) {
-		}		
-	}
-	
 	/**
 	 * Возвращает коллекцию Book для указанного модуля. Данные о книгах в первую
 	 * очередь берутся из контекста библиотеки. Если там для выбранного модуля 
@@ -124,36 +122,18 @@ public class Librarian implements IChangeBooksListener  {
 	 * Инициализирует полную загрузку модулей. Сначала проверяется наличие
 	 * модулей в коллекции. Если коллекция пуста, то производится попытка
 	 * загрузки коллекции модулей из кэш. Иначе производится загрузка модулей
-	 * из файлового хранилища. Для всех closed-модулей производится
-	 * полная загрузка данных. Производится запись загруженных модулей в кэш.
-	 * @param incorrectModuleTemplate - строковый шаблон сообщения об ошибках. Должен
-	 * содержать место для двух аргументов:
-	 * <ul>
-	 * <li>ShortName модуля
-	 * <li>Пути к данным модуля
-	 * </ul>
-	 * @return строку, содержащую список ошибок возникших при загрузке модулей
+	 * из файлового хранилища. Производится запись загруженных модулей в кэш.
 	 */
-	public String loadModules(String incorrectModuleTemplate) {
-		StringBuilder errorList = new StringBuilder();
-		moduleCtrl.getModules();
-		Module module = this.getClosedModule();
-		while (module != null) {
-			try {
-				this.getModuleByID(module.getID(), module.getDataSourceID());
-			} catch (OpenModuleException e) {
-				errorList
-					.append( String.format(incorrectModuleTemplate, e.getModuleId(), e.getModuleDatasourceId() ))
-					.append("\n\n");
-			}
-			module = this.getClosedModule();
-		}
-		return errorList.toString();
-	}
-	
+    public void loadFileModules() {
+        moduleCtrl.loadFileModules();
+    }
 
-	public Module getModuleByID(String moduleID, String moduleDatasourceID) throws OpenModuleException {
-		return moduleCtrl.getModuleByID(moduleID, moduleDatasourceID);
+    public void getModules() {
+		moduleCtrl.getModules();
+	}
+
+	public Module getModuleByID(String moduleID) throws OpenModuleException {
+		return moduleCtrl.getModuleByID(moduleID);
 	}
 	
 	public Book getBookByID(Module module, String bookID) throws BookNotFoundException, OpenModuleException {
@@ -165,7 +145,7 @@ public class Librarian implements IChangeBooksListener  {
 	}
 	
 	public Chapter openChapter(BibleReference link) throws BookNotFoundException, OpenModuleException {
-		currModule = getModuleByID(link.getModuleID(), link.getModuleDatasourceID());
+		currModule = getModuleByID(link.getModuleID());
 		currBook = getBookByID(getCurrModule(), link.getBookID());
 		currChapter = getChapterByNumber(getCurrBook(), link.getChapter());
 		currChapterNumber = link.getChapter();
@@ -316,10 +296,7 @@ public class Librarian implements IChangeBooksListener  {
 		if (getCurrModule() == null) {
 			searchResults = new LinkedHashMap<String, String>();
 		} else {
-//            Long timeSearch = System.currentTimeMillis();
             searchResults = bookCtrl.search(getCurrModule(), query, fromBook, toBook);
-//            timeSearch = System.currentTimeMillis() - timeSearch;
-//            android.util.Log.i(TAG, String.format("Search \"%1$s\", time: %2$d ms, results : %3$d", query, timeSearch, searchResults.size()));
 		}
 		return searchResults;
 	}
@@ -471,18 +448,16 @@ public class Librarian implements IChangeBooksListener  {
 		}
 	}
 
-	public Boolean isOSISLinkValid(BibleReference link)
-	{
+	public Boolean isOSISLinkValid(BibleReference link)	{
 		if (link.getPath() == null) {
 			return false;
 		}
 
 		try {
-			getModuleByID(link.getModuleID(), link.getModuleDatasourceID());
+			getModuleByID(link.getModuleID());
 		} catch (OpenModuleException e) {
 			return false;
 		}
-		
 		return true;
 	}
 	

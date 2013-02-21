@@ -25,9 +25,11 @@ import com.BibleQuote.R;
 import com.BibleQuote.entity.BibleReference;
 import com.BibleQuote.entity.ItemList;
 import com.BibleQuote.exceptions.*;
-import com.BibleQuote.managers.AsyncManager;
-import com.BibleQuote.managers.AsyncOpenModule;
-import com.BibleQuote.managers.AsyncRefreshModules;
+import com.BibleQuote.listeners.ChangeModulesEvent;
+import com.BibleQuote.listeners.IChangeModulesListener;
+import com.BibleQuote.async.AsyncManager;
+import com.BibleQuote.async.AsyncOpenModule;
+import com.BibleQuote.async.AsyncRefreshModules;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.utils.OnTaskCompleteListener;
 import com.BibleQuote.utils.Task;
@@ -39,7 +41,7 @@ import com.actionbarsherlock.view.MenuItem;
 
 import java.util.ArrayList;
 
-public class LibraryActivity extends SherlockFragmentActivity implements OnTaskCompleteListener {
+public class LibraryActivity extends SherlockFragmentActivity implements IChangeModulesListener, OnTaskCompleteListener {
 	private static final String TAG = "LibraryActivity";
 	private final int MODULE_VIEW = 1, BOOK_VIEW = 2, CHAPTER_VIEW = 3;
 	private int viewMode = 1;
@@ -57,8 +59,9 @@ public class LibraryActivity extends SherlockFragmentActivity implements OnTaskC
 	private Librarian myLibrarian;
 	private AsyncManager mAsyncManager;
 	private String messageRefresh;
-	
-	@Override
+
+    private Task mTask;
+    @Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.books);
@@ -67,14 +70,21 @@ public class LibraryActivity extends SherlockFragmentActivity implements OnTaskC
 		BibleQuoteApp app = (BibleQuoteApp) getApplication();
 		myLibrarian = app.getLibrarian();
 
+        myLibrarian.getEventManager().addChangeModulesListener(this);
+
 		mAsyncManager = app.getAsyncManager();
-		mAsyncManager.handleRetainedTask(getLastNonConfigurationInstance(), this);
+		mAsyncManager.handleRetainedTask(mTask, this);
 		
 		messageRefresh = getResources().getString(R.string.messageRefresh);
 		
-		btnModule  = (Button) findViewById(R.id.btnModule);
-		btnBook    = (Button) findViewById(R.id.btnBook);
-		btnChapter = (Button) findViewById(R.id.btnChapter);
+		btnModule = (Button) findViewById(R.id.btnModule);
+        btnModule.setOnClickListener(onBtnModuleClick);
+
+		btnBook = (Button) findViewById(R.id.btnBook);
+        btnBook.setOnClickListener(onBtnBookClick);
+
+        btnChapter = (Button) findViewById(R.id.btnChapter);
+        btnChapter.setOnClickListener(onBtnChapterClick);
 
 		modulesList = (ListView) findViewById(R.id.modules);
 		modulesList.setOnItemClickListener(modulesList_onClick);
@@ -109,10 +119,7 @@ public class LibraryActivity extends SherlockFragmentActivity implements OnTaskC
 		// Handle item selection
 		switch (item.getItemId()) {
 			case R.id.action_bar_refresh:
-				if (this.viewMode == MODULE_VIEW) {
-					mAsyncManager.setupTask(
-							new AsyncRefreshModules(messageRefresh, false, myLibrarian, this), this);
-				}
+				mAsyncManager.setupTask(new AsyncRefreshModules(messageRefresh, false, myLibrarian, this), this);
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
@@ -140,8 +147,9 @@ public class LibraryActivity extends SherlockFragmentActivity implements OnTaskC
 					currentOSISLink.getBookID(), 
 					currentOSISLink.getChapter(), 
 					currentOSISLink.getFromVerse());
-			AsyncOpenModule asyncOpenModuleTask = new AsyncOpenModule(message, false, myLibrarian, OSISLink);
-			mAsyncManager.setupTask(asyncOpenModuleTask, LibraryActivity.this);
+
+            mTask = new AsyncOpenModule(message, false, myLibrarian, OSISLink);
+			mAsyncManager.setupTask(mTask, LibraryActivity.this);
 		}
 	};
 
@@ -300,25 +308,34 @@ public class LibraryActivity extends SherlockFragmentActivity implements OnTaskC
 				R.id.chapter, chapters);
 	}
 
-	public void onModuleClick(View v) {
-		if (moduleID.equals("---"))
-			return;
-		UpdateView(MODULE_VIEW);
-	}
+    private View.OnClickListener onBtnModuleClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if (moduleID.equals("---"))
+                return;
+            UpdateView(MODULE_VIEW);
+        }
+    };
 
-	public void onBookClick(View v) {
-		if (bookID.equals("---"))
-			return;		
-		UpdateView(BOOK_VIEW);
-	}
+    private View.OnClickListener onBtnBookClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if (bookID.equals("---"))
+                return;
+            UpdateView(BOOK_VIEW);
+        }
+    };
 
-	public void onChapterClick(View v) {
-		if (chapter.equals("-"))
-			return;		
-		UpdateView(CHAPTER_VIEW);
-	}
+    private View.OnClickListener onBtnChapterClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if (chapter.equals("-"))
+                return;
+            UpdateView(CHAPTER_VIEW);
+        }
+    };
 
-	@Override
+ 	@Override
 	protected void onPostResume() {
 		super.onPostResume();
 		UpdateView(viewMode);
@@ -328,9 +345,7 @@ public class LibraryActivity extends SherlockFragmentActivity implements OnTaskC
 		Log.i(TAG, "onTaskComplete()");
 		if (task != null && !task.isCancelled()) {
 			if (task instanceof AsyncRefreshModules) {
-				if (this.viewMode == MODULE_VIEW) {
-					UpdateView(MODULE_VIEW);
-				}
+				UpdateView(MODULE_VIEW);
 			} else if (task instanceof AsyncOpenModule) {
 				onAsyncOpenModuleComplete((AsyncOpenModule) task);
 			}
@@ -358,9 +373,11 @@ public class LibraryActivity extends SherlockFragmentActivity implements OnTaskC
 			UpdateView(MODULE_VIEW);
 		}		
 	}
-//
-//    @Override
-//    public Object onRetainNonConfigurationInstance() {
-//    	return mAsyncManager.retainTask();
-//    }
+
+    @Override
+    public void onChangeModules(ChangeModulesEvent event) {
+        if (this.viewMode == MODULE_VIEW) {
+            UpdateView(MODULE_VIEW);
+        }
+    }
 }

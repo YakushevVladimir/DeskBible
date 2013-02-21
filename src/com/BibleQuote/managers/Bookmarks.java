@@ -1,8 +1,8 @@
 package com.BibleQuote.managers;
 
 import com.BibleQuote.entity.BibleReference;
-import com.BibleQuote.models.Book;
-import com.BibleQuote.models.Module;
+import com.BibleQuote.modules.Book;
+import com.BibleQuote.modules.Module;
 import com.BibleQuote.utils.PreferenceHelper;
 
 import java.util.ArrayList;

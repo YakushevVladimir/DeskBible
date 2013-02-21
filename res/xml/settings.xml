@@ -20,20 +20,20 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
 	<PreferenceCategory android:title="@string/category_reader_appearance" >
-		<com.BibleQuote.controls.ColorPicker.ColorPickerPreference
+		<com.BibleQuote.widget.ColorPicker.ColorPickerPreference
 				android:defaultValue="#000000"
 				android:key="TextColor"
 				android:persistent="true"
 				android:summary="@string/text_color_summary"
 				android:title="@string/text_color" />
-		<com.BibleQuote.controls.ColorPicker.ColorPickerPreference
+		<com.BibleQuote.widget.ColorPicker.ColorPickerPreference
 				android:defaultValue="#FFFFFF"
 				android:key="TextBG"
 				android:persistent="true"
 				android:summary="@string/background_summary"
 				android:title="@string/background" />
 
-		<com.BibleQuote.controls.NumberChoise
+		<com.BibleQuote.widget.NumberChoiseView
 				android:defaultValue="12"
 				android:dialogTitle="@string/text_size"
 				android:key="TextSize"

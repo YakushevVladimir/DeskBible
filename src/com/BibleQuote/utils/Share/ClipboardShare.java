@@ -2,9 +2,9 @@ package com.BibleQuote.utils.Share;
 
 import android.content.Context;
 import android.text.ClipboardManager;
-import com.BibleQuote.models.Book;
-import com.BibleQuote.models.Chapter;
-import com.BibleQuote.models.Module;
+import com.BibleQuote.modules.Book;
+import com.BibleQuote.modules.Chapter;
+import com.BibleQuote.modules.Module;
 
 import java.util.LinkedHashMap;
 
@@ -19,6 +19,7 @@ public class ClipboardShare extends BaseShareBuilder {
 		this.verses = verses;
 	}
 
+    @SuppressWarnings("deprecation")
 	@Override
 	public void share() {
 		InitFormatters();

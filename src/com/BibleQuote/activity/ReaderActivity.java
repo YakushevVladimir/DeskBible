@@ -23,7 +23,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Surface;
 import android.view.View;
@@ -35,14 +34,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
-import com.BibleQuote.controls.ReaderWebView;
+import com.BibleQuote.widget.ReaderWebView;
 import com.BibleQuote.entity.BibleReference;
 import com.BibleQuote.exceptions.BookNotFoundException;
 import com.BibleQuote.exceptions.ExceptionHelper;
 import com.BibleQuote.exceptions.OpenModuleException;
 import com.BibleQuote.listeners.IReaderViewListener;
-import com.BibleQuote.managers.AsyncManager;
-import com.BibleQuote.managers.AsyncOpenChapter;
+import com.BibleQuote.async.AsyncManager;
+import com.BibleQuote.async.AsyncOpenChapter;
 import com.BibleQuote.managers.Bookmarks;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.utils.*;
@@ -317,9 +316,8 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 
 		PreferenceHelper.saveStateString("last_read", OSISLink.getExtendedPath());
 
-		vModuleName.setText(myLibrarian.getModuleName());
+ 		vModuleName.setText(myLibrarian.getModuleName());
 		vBookLink.setText(myLibrarian.getHumanBookLink());
-
 		btnChapterNav.setVisibility(View.GONE);
 	}
 
@@ -421,9 +419,6 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 			getSupportActionBar().show();
 		}
         viewChapterNav();
-//		if (!vWeb.isStudyMode()) {
-//			btnChapterNav.setVisibility(View.GONE);
-//		}
 	}
 
 	@Override
@@ -442,11 +437,6 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 			return super.onKeyDown(keyCode, event);
 		}
 	}
-
-//	@Override
-//	public Object onRetainNonConfigurationInstance() {
-//		return mAsyncManager.retainTask();
-//	}
 
 	public void onTaskComplete(Task task) {
 		if (task != null && !task.isCancelled()) {
@@ -497,5 +487,4 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 			nextChapter();
 		}
 	}
-
 }

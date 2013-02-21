@@ -1,6 +1,6 @@
 package com.BibleQuote.listeners;
 
-import com.BibleQuote.models.Book;
+import com.BibleQuote.modules.Book;
 
 import java.util.ArrayList;
 

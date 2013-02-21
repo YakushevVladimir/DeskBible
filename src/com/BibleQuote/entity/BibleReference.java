@@ -1,10 +1,9 @@
 package com.BibleQuote.entity;
 
 import android.util.Log;
-import com.BibleQuote.models.Book;
-import com.BibleQuote.models.DbModule;
-import com.BibleQuote.models.FsModule;
-import com.BibleQuote.models.Module;
+import com.BibleQuote.modules.Book;
+import com.BibleQuote.modules.FsModule;
+import com.BibleQuote.modules.Module;
 
 public class BibleReference {
 	public final static String MOD_DATASOURCE_FS = "fs";
@@ -89,12 +88,10 @@ public class BibleReference {
 	{
 		if (module instanceof FsModule) {
 			this.moduleDatasource = MOD_DATASOURCE_FS;
-		} else if (module instanceof DbModule) {
-			this.moduleDatasource = MOD_DATASOURCE_DB;
 		} else  {
 			this.moduleDatasource = null;
 		}
-		this.moduleDatasourceID = module == null ? null : (String)module.getDataSourceID();
+		this.moduleDatasourceID = module == null ? null : module.getDataSourceID();
 		this.moduleID = module == null ? null : module.getID();
 		this.bookID = book == null ? null : book.getID();
 		this.bookName = book == null ? null : book.name;

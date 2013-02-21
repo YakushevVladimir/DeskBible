@@ -1,7 +1,7 @@
 package com.BibleQuote.dal.repository;
 
 import com.BibleQuote.exceptions.BookNotFoundException;
-import com.BibleQuote.models.Chapter;
+import com.BibleQuote.modules.Chapter;
 
 import java.util.Collection;
 

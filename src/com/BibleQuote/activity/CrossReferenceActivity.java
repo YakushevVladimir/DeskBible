@@ -26,18 +26,18 @@ import com.BibleQuote.R;
 import com.BibleQuote.entity.BibleReference;
 import com.BibleQuote.exceptions.ExceptionHelper;
 import com.BibleQuote.exceptions.OpenModuleException;
-import com.BibleQuote.managers.AsyncCommand;
-import com.BibleQuote.managers.AsyncCommand.ICommand;
-import com.BibleQuote.managers.AsyncManager;
+import com.BibleQuote.async.AsyncCommand;
+import com.BibleQuote.async.AsyncCommand.ICommand;
+import com.BibleQuote.async.AsyncManager;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.utils.OnTaskCompleteListener;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.Task;
 import com.BibleQuote.utils.ViewUtils;
-import com.BibleQuote.widget.ItemAdapter;
-import com.BibleQuote.widget.item.Item;
-import com.BibleQuote.widget.item.SubtextItem;
-import com.BibleQuote.widget.item.TextItem;
+import com.BibleQuote.widget.listview.ItemAdapter;
+import com.BibleQuote.widget.listview.item.Item;
+import com.BibleQuote.widget.listview.item.SubtextItem;
+import com.BibleQuote.widget.listview.item.TextItem;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 import java.util.ArrayList;
@@ -54,8 +54,8 @@ public class CrossReferenceActivity extends SherlockFragmentActivity implements 
 	private HashMap<BibleReference, String> crossReferenceContent = new HashMap<BibleReference, String>();
 	private BibleReference bReference;
 	private AsyncManager mAsyncManager;
-	private boolean crossRefViewDetails = false;
-	
+    private Task mTask;
+
 	private ListView LV;
 
 	@Override
@@ -89,11 +89,13 @@ public class CrossReferenceActivity extends SherlockFragmentActivity implements 
 		referenceSource.setText(String.format("%1$s %2$s:%3$s", bookName, bReference.getChapter(), bReference.getFromVerse()));
 		
 		String progressMessage = getResources().getString(R.string.messageLoad);
-		crossRefViewDetails = PreferenceHelper.crossRefViewDetails();
-		
+
 		mAsyncManager = app.getAsyncManager();
-		mAsyncManager.handleRetainedTask(getLastNonConfigurationInstance(), this);
-		mAsyncManager.setupTask(new AsyncCommand(new GetParallesLinks(), progressMessage, false), this);
+		mAsyncManager.handleRetainedTask(mTask, this);
+        if (mTask == null) {
+            mTask = new AsyncCommand(new GetParallesLinks(), progressMessage, false) ;
+            mAsyncManager.setupTask(mTask, this);
+        }
 	}
 
 	private AdapterView.OnItemClickListener list_OnClick = new AdapterView.OnItemClickListener() {
@@ -126,7 +128,7 @@ public class CrossReferenceActivity extends SherlockFragmentActivity implements 
 	private void setListAdapter() {
 		List<Item> items = new ArrayList<Item>();
 		for (String link : crossReference.keySet()) {
-			if (crossRefViewDetails) {
+			if (PreferenceHelper.crossRefViewDetails()) {
 				items.add(new SubtextItem(link, crossReferenceContent.get(crossReference.get(link))));
 			} else {
 				items.add(new TextItem(link));
@@ -141,7 +143,7 @@ public class CrossReferenceActivity extends SherlockFragmentActivity implements 
 		@Override
 		public void execute() throws Exception {
 			crossReference = myLibrarian.getCrossReference(bReference);
-			if (crossRefViewDetails) {
+			if (PreferenceHelper.crossRefViewDetails()) {
 				crossReferenceContent = myLibrarian.getCrossReferenceContent(crossReference.values());
 			}
 		}

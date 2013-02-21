@@ -4,77 +4,53 @@ import android.content.Context;
 import android.os.Environment;
 import com.BibleQuote.dal.*;
 import com.BibleQuote.managers.EventManager;
-import com.BibleQuote.models.FsModule;
+import com.BibleQuote.modules.FsModule;
 import com.BibleQuote.utils.DataConstants;
 
 import java.io.File;
 
 public class LibraryController {
 
-	public enum LibrarySource {
-		FileSystem,
-		LocalDb,	
-		RemoteDb		
-	}
-	
-	private IModuleController moduleCtrl;
-	private IBookController bookCtrl;
-	private IChapterController chapterCtrl;
-	
-	public static LibraryController create(LibrarySource librarySource, EventManager eventManager, Context context) {
-		String libraryPath;
-		File libraryDir;
-		switch (librarySource) {
-		
-		case FileSystem:
-			libraryPath = Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED) 
-				? DataConstants.FS_EXTERNAL_DATA_PATH
-				: DataConstants.FS_DATA_PATH;
-			libraryDir = new File(libraryPath);
-			CacheContext cacheContext = new CacheContext(context.getCacheDir(), DataConstants.LIBRARY_CACHE);
-			CacheModuleController<FsModule> cache = new CacheModuleController<FsModule>(cacheContext);
-			FsLibraryContext fsLibraryContext = new FsLibraryContext(libraryDir, context, cache);
-			return new LibraryController( new FsLibraryUnitOfWork(fsLibraryContext, cacheContext) );
+    private IModuleController moduleCtrl;
+    public IModuleController getModuleCtrl() {
+        return moduleCtrl;
+    }
 
-		case LocalDb:
-			libraryPath = Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED) 
-				? DataConstants.DB_EXTERNAL_DATA_PATH
-				: DataConstants.DB_DATA_PATH;
-			libraryDir = new File(libraryPath);
-			DbLibraryContext dbLibraryContext = new DbLibraryContext(libraryDir, context);
-			return new LibraryController(new DbLibraryUnitOfWork(dbLibraryContext), eventManager);
+    private IBookController bookCtrl;
+    public IBookController getBookCtrl() {
+        return bookCtrl;
+    }
 
-		default:
-			break;
-		}		
-		
-		return null;
-	}
-	
-	
-	public IModuleController getModuleCtrl() {
-		return moduleCtrl;
+    private IChapterController chapterCtrl;
+    public IChapterController getChapterCtrl() {
+        return chapterCtrl;
+    }
+
+    private ILibraryUnitOfWork unit;
+    public ILibraryUnitOfWork getUnit() {
+        return unit;
+    }
+
+    public static LibraryController create(Context context) {
+        String libraryPath = Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)
+            ? DataConstants.FS_EXTERNAL_DATA_PATH
+            : DataConstants.FS_DATA_PATH;
+
+        CacheContext cacheContext = new CacheContext(context.getCacheDir(), DataConstants.LIBRARY_CACHE);
+        CacheModuleController<FsModule> cache = new CacheModuleController<FsModule>(cacheContext);
+
+        LibraryContext libraryContext = new FsLibraryContext(new File(libraryPath), context, cache);
+        return new LibraryController( new FsLibraryUnitOfWork((FsLibraryContext) libraryContext, cacheContext) );
 	}
 
-	public IBookController getBookCtrl() {
-		return bookCtrl;
-	}
-
-	public IChapterController getChapterCtrl() {
-		return chapterCtrl;
-	}
-	
-	private LibraryController(FsLibraryUnitOfWork unit)
-	{
+	private LibraryController(FsLibraryUnitOfWork unit)	{
+        this.unit = unit;
 		moduleCtrl = new FsModuleController(unit);
 		bookCtrl = new FsBookController(unit);
 		chapterCtrl = new FsChapterController(unit);		
 	}
 
-	private LibraryController(DbLibraryUnitOfWork unit, EventManager eventManager)
-	{
-		moduleCtrl = new DbModuleController(unit, eventManager);
-		bookCtrl = new DbBookController(unit, eventManager);
-		chapterCtrl = new DbChapterController(unit);		
-	}
+    public EventManager getEventManager() {
+        return unit.getEventManager();
+    }
 }

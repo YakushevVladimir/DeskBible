@@ -40,8 +40,8 @@
 			android:singleLine = "true" 
 			android:text="-----" 
 			android:gravity="center"
-			android:layout_weight="1"
-			android:onClick="onBookClick" />
+			android:layout_weight="1" />
+
 		<Button 
 			android:id="@+id/btnChapter" 
 			android:layout_width="80dip" 
@@ -50,8 +50,7 @@
 			style="@style/DefaultButton"
 			android:text="0" 
 		    android:singleLine="true"
-			android:gravity="center" 
-			android:onClick="onChapterClick"/>
+			android:gravity="center"/>
 
 		<Button
 		    android:id="@+id/btnModule"
@@ -60,7 +59,6 @@
 		    android:layout_height="wrap_content"
 		    android:layout_margin="1dip"
 		    android:gravity="center"
-		    android:onClick="onModuleClick"
 		    android:singleLine="true"
 		    android:text="---" />
 

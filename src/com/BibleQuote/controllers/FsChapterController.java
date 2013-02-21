@@ -4,7 +4,7 @@ import com.BibleQuote.dal.FsLibraryUnitOfWork;
 import com.BibleQuote.dal.repository.IBookRepository;
 import com.BibleQuote.dal.repository.IChapterRepository;
 import com.BibleQuote.exceptions.BookNotFoundException;
-import com.BibleQuote.models.*;
+import com.BibleQuote.modules.*;
 import com.BibleQuote.utils.StringProc;
 
 import java.util.ArrayList;
@@ -58,7 +58,7 @@ public class FsChapterController implements IChapterController {
 		}		
 		Module currModule = chapter.getBook().getModule();
 		
-		ArrayList<Verse> verses = chapter.getVerseList(); 
+		ArrayList<Verse> verses = chapter.getVerseList();
 		StringBuilder chapterHTML = new StringBuilder();
 		for (int verse = 1; verse <= verses.size(); verse++) {
 			String verseText = verses.get(verse - 1).getText();

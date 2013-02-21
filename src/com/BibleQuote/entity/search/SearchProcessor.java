@@ -19,9 +19,9 @@ package com.BibleQuote.entity.search;
 import android.util.Log;
 import com.BibleQuote.dal.repository.IBookRepository;
 import com.BibleQuote.exceptions.BookNotFoundException;
-import com.BibleQuote.models.FsBook;
-import com.BibleQuote.models.FsModule;
-import com.BibleQuote.models.Module;
+import com.BibleQuote.modules.FsBook;
+import com.BibleQuote.modules.FsModule;
+import com.BibleQuote.modules.Module;
 
 import java.util.*;
 

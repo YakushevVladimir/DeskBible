@@ -56,6 +56,9 @@ public class FsUtils {
 			String message = String.format("Archive %1$s contains the file names not in the UTF format", zipFile.getName());
 			Log.e(TAG, message);
 			throw new FileAccessException(message);
+        } catch (FileNotFoundException e) {
+            String message = String.format("File %1$s in zip-arhive %2$s not found", textFileInArchive, archivePath);
+            throw new FileAccessException(message);
 		} catch (IOException e) {
 			Log.e(TAG, 
 					String.format("getTextFileReaderFromZipArchive(%1$s, %2$s, %3$s)", 
@@ -103,14 +106,6 @@ public class FsUtils {
 		
 	}
 	
-	public static String getFilePath(String fullFileName) {
-		return fullFileName == null ? null : fullFileName.substring(0, fullFileName.lastIndexOf("/"));
-	}
-	
-	public static String getFileName(String fullFileName) {
-		return fullFileName == null ? null : fullFileName.substring(fullFileName.lastIndexOf("/") + 1);
-	}
-
 	public static boolean loadContentFromURL(String fromURL, String toFile) {
 		try {
 			URL url = new URL("http://bible-desktop.com/xml" + fromURL);

@@ -24,18 +24,19 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
+import com.BibleQuote.async.command.StartSearch;
 import com.BibleQuote.entity.ItemList;
 import com.BibleQuote.exceptions.*;
-import com.BibleQuote.managers.AsyncCommand;
-import com.BibleQuote.managers.AsyncManager;
+import com.BibleQuote.async.AsyncCommand;
+import com.BibleQuote.async.AsyncManager;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.utils.OnTaskCompleteListener;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.Task;
 import com.BibleQuote.utils.ViewUtils;
-import com.BibleQuote.widget.ItemAdapter;
-import com.BibleQuote.widget.item.Item;
-import com.BibleQuote.widget.item.SubtextItem;
+import com.BibleQuote.widget.listview.ItemAdapter;
+import com.BibleQuote.widget.listview.item.Item;
+import com.BibleQuote.widget.listview.item.SubtextItem;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 import java.util.ArrayList;
@@ -46,6 +47,7 @@ public class SearchActivity extends SherlockFragmentActivity implements OnTaskCo
 	private Spinner spinnerFrom, spinnerTo;
 	private ListView ResultList;
 	private AsyncManager mAsyncManager;
+    private Task mTask;
 	private String progressMessage = "";
 
 	private LinkedHashMap<String, String> searchResults = new LinkedHashMap<String, String>();
@@ -61,7 +63,7 @@ public class SearchActivity extends SherlockFragmentActivity implements OnTaskCo
 		myLibararian = app.getLibrarian();
 
 		mAsyncManager = app.getAsyncManager();
-		mAsyncManager.handleRetainedTask(getLastNonConfigurationInstance(), this);
+		mAsyncManager.handleRetainedTask(mTask, this);
 		
 		progressMessage = getResources().getString(R.string.messageSearch);
 		
@@ -157,57 +159,31 @@ public class SearchActivity extends SherlockFragmentActivity implements OnTaskCo
  		restoreSelectedPosition();
 	}
 
-//	@Override
-//	public Object onRetainNonConfigurationInstance() {
-//		return mAsyncManager.retainTask();
-//	}
-
 	public void onTaskComplete(Task task) {
 		if (task.isCancelled()) {
 			Toast.makeText(this, R.string.messageSearchCanceled, Toast.LENGTH_LONG).show();
 		} else {
+            searchResults = myLibararian.getSearchResults();
             setAdapter();
         }
 		PreferenceHelper.saveStateInt("changeSearchPosition", 0);
 	}
 
-    class StartSearch implements AsyncCommand.ICommand {
-        private String query;
-
-        public StartSearch (String query) {
-            this.query = query;
-        }
-
+    private Button.OnClickListener onClick_Search = new Button.OnClickListener() {
         @Override
-        public void execute() throws Exception {
-            if (query.equals("")) {
-                return;
-            }
+        public void onClick(View view) {
+            String query = ((EditText) findViewById(R.id.SearchEdit)).getText().toString().trim();
 
             int posFrom = spinnerFrom.getSelectedItemPosition();
             int posTo = spinnerTo.getSelectedItemPosition();
             if (posFrom == AdapterView.INVALID_POSITION || posTo == AdapterView.INVALID_POSITION) {
                 return;
             }
-
             String fromBookID = ((ItemList) spinnerFrom.getItemAtPosition(posFrom)).get("ID");
             String toBookID = ((ItemList) spinnerTo.getItemAtPosition(posTo)).get("ID");
-            searchResults = new LinkedHashMap<String, String>();
-            try {
-                searchResults = myLibararian.search(query, fromBookID, toBookID);
-            } catch (BookNotFoundException e) {
-                ExceptionHelper.onBookNotFoundException(e, SearchActivity.this, TAG);
-            } catch (OpenModuleException e) {
-                ExceptionHelper.onOpenModuleException(e, SearchActivity.this, TAG);
-            }
-        }
-    }
 
-    private Button.OnClickListener onClick_Search = new Button.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            String query = ((EditText) findViewById(R.id.SearchEdit)).getText().toString().trim();
-            mAsyncManager.setupTask(new AsyncCommand(new StartSearch(query), progressMessage, false), SearchActivity.this);
+            mTask = new AsyncCommand(new StartSearch(SearchActivity.this, query, fromBookID, toBookID), progressMessage, false);
+            mAsyncManager.setupTask(mTask, SearchActivity.this);
         }
     };
 
