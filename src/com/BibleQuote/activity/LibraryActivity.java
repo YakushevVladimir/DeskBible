@@ -17,6 +17,7 @@ package com.BibleQuote.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.*;
@@ -59,6 +60,25 @@ public class LibraryActivity extends SherlockFragmentActivity implements IChange
 	private Librarian myLibrarian;
 	private AsyncManager mAsyncManager;
 	private String messageRefresh;
+
+    private Handler handler = new Handler() {
+        public void handleMessage(android.os.Message msg) {
+            Log.d(TAG, "Message processing in handler");
+            switch (msg.what) {
+                case MODULE_VIEW:
+                    UpdateView(MODULE_VIEW);
+                    break;
+                case BOOK_VIEW:
+                    UpdateView(BOOK_VIEW);
+                    break;
+                case CHAPTER_VIEW:
+                    UpdateView(CHAPTER_VIEW);
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
 
     private Task mTask;
     @Override
@@ -377,7 +397,8 @@ public class LibraryActivity extends SherlockFragmentActivity implements IChange
     @Override
     public void onChangeModules(ChangeModulesEvent event) {
         if (this.viewMode == MODULE_VIEW) {
-            UpdateView(MODULE_VIEW);
+            Log.d(TAG, "Send message to hudler for refresh modules list");
+            handler.sendEmptyMessage(MODULE_VIEW);
         }
     }
 }

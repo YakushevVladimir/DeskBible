@@ -6,7 +6,7 @@ import com.BibleQuote.exceptions.OpenModuleException;
 import com.BibleQuote.modules.FsModule;
 import com.BibleQuote.modules.Module;
 
-import java.util.TreeMap;
+import java.util.Map;
 
 public class FsModuleController implements IModuleController {
 	//private final String TAG = "FsModuleController";
@@ -18,13 +18,13 @@ public class FsModuleController implements IModuleController {
     }
 	
 	@Override
-	public TreeMap<String, Module> loadFileModules() {
+	public Map<String, Module> loadFileModules() {
         return mRepository.loadFileModules();
 	}
 	
 	@Override
-	public TreeMap<String, Module> getModules() {
-        TreeMap<String, Module> result = mRepository.getModules();
+	public Map<String, Module> getModules() {
+        Map<String, Module> result = mRepository.getModules();
 		if (result.size() == 0) {
 			return loadFileModules();
 		} else {

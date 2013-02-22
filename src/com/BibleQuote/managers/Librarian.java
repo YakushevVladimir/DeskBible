@@ -71,7 +71,7 @@ public class Librarian {
         bookCtrl = libCtrl.getBookCtrl();
         chapterCtrl = libCtrl.getChapterCtrl();
 
-        com.BibleQuote.utils.Log.i(TAG, "Create history manager and repository");
+        Log.i(TAG, "Create history manager and repository");
         fsHistoryRepository repository = new fsHistoryRepository(context.getCacheDir());
         historyManager = new SimpleHistoryManager(repository, PreferenceHelper.getHistorySize());
 
@@ -87,6 +87,7 @@ public class Librarian {
         Thread taskRefresh = new Thread(new Runnable() {
             @Override
             public void run() {
+                android.util.Log.d(TAG, "Start refresh library...");
                 try {
                     Thread.sleep(15000);
                 } catch (InterruptedException e) {

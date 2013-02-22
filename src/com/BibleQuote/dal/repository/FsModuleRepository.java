@@ -16,6 +16,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.TreeMap;
 
 public class FsModuleRepository implements IModuleRepository<String, FsModule> {
@@ -29,7 +30,9 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
     	this.cache = context.getCache();
     }
 
-	public synchronized TreeMap<String, Module> loadFileModules() {
+	public synchronized Map<String, Module> loadFileModules() {
+
+        Log.i(TAG, "Load modules from sd-card:");
 
         TreeMap<String, Module> newModuleSet = new TreeMap<String, Module>();
 
@@ -91,12 +94,12 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 		return fsModule;
 	}
 	
-	public TreeMap<String, Module> getModules() {
+	public Map<String, Module> getModules() {
         if ((context.moduleSet == null || context.moduleSet.size() == 0) && cache.isCacheExist()) {
             Log.i(TAG, "....Load modules from cache");
             loadCachedModules();
         }
-        return (TreeMap<String, Module>) context.moduleSet;
+        return context.moduleSet;
 	}
 	
 	public FsModule getModuleByID(String moduleID) {

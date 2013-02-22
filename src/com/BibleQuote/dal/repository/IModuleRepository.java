@@ -2,6 +2,7 @@ package com.BibleQuote.dal.repository;
 
 import com.BibleQuote.modules.Module;
 
+import java.util.Map;
 import java.util.TreeMap;
 
 public interface IModuleRepository<TModuleId, TModule> {
@@ -11,7 +12,7 @@ public interface IModuleRepository<TModuleId, TModule> {
 	 * Модулям устанавливается флаг isClosed=true
 	 * <br><font color='red'>Производится полная перезапись в кэш коллекции модулей.</font><br>
 	 */
-    TreeMap<String, Module> loadFileModules();
+    Map<String, Module> loadFileModules();
 	
     void insertModule(TModule module);
     
@@ -22,7 +23,7 @@ public interface IModuleRepository<TModuleId, TModule> {
 	/**
 	 *@return Возвращает коллекцию модулей. Если коллекция модулей пустая, пытается загрузить её из кэш.
 	 */
-    TreeMap<String, Module> getModules();
+    Map<String, Module> getModules();
     
 	/**
 	 * 

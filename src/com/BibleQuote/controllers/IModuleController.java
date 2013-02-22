@@ -3,7 +3,7 @@ package com.BibleQuote.controllers;
 import com.BibleQuote.exceptions.OpenModuleException;
 import com.BibleQuote.modules.Module;
 
-import java.util.TreeMap;
+import java.util.Map;
 
 public interface IModuleController {
 	
@@ -13,13 +13,13 @@ public interface IModuleController {
 	 * @return Возвращает TreeMap, где в качестве ключа путь к модулю, а в качестве значения 
 	 * closed-модуль
 	 */
-	public TreeMap<String, Module> loadFileModules();
+	public Map<String, Module> loadFileModules();
 	
 	
     /**
      * @return Возвращает TreeMap коллекцию модулей с ключом по Module.ShortName
      */
-	public TreeMap<String, Module> getModules();
+	public Map<String, Module> getModules();
 	
 	/**
 	 * Возвращает полностью загруженный модуль из коллекции по его ShortName. 
