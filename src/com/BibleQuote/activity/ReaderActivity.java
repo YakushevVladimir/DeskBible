@@ -423,7 +423,12 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if ((keyCode == KeyEvent.KEYCODE_VOLUME_UP && PreferenceHelper.volumeButtonsToScroll())
+
+        if (keyCode == 0) {
+            keyCode = event.getScanCode();
+        }
+
+        if ((keyCode == KeyEvent.KEYCODE_VOLUME_UP && PreferenceHelper.volumeButtonsToScroll())
 				|| DevicesKeyCodes.KeyCodeUp(keyCode)) {
 			vWeb.pageUp(false);
 			viewChapterNav();
@@ -476,6 +481,18 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 			}
 		} else if (code == ChangeCode.onLongPress) {
             viewChapterNav();
+
+            /* Как вариант -- показывать список книг после длинного нажатия на экран
+             * и в режиме изучения. После касания экран уже в режиме NoRefresh,
+             * быстро будет происходить выбор книг. */
+            /* Если без этого изменения, то также можно за время задержки до переключения
+             * на Refresh нажать кнопку "Библиотека", режим не переключится, а при возвращении
+             * видимости активности переключится. */
+ /*
+            if (DeviceInfo.EINK_SONY) {
+                onChooseChapterClick();
+            } else if (vWeb.getMode() == ReaderWebView.Mode.Read) onChooseChapterClick();
+*/
             if (vWeb.getMode() == ReaderWebView.Mode.Read) onChooseChapterClick();
 		} else if (code == ChangeCode.onUpNavigation) {
 			vWeb.pageUp(false);
