@@ -169,7 +169,7 @@ public class ReaderWebView extends WebView
     @Override
     public void invalidate() {
         //super.invalidate(mUpdateMode);
-        if (DeviceInfo.EINK_SONY) {
+        if (DeviceInfo.isEInkSonyPRST()) {
             try {
                 Method invalidateMethod = super.getClass().getMethod("invalidate", int.class);
                 invalidateMethod.invoke(this, mUpdateMode);
@@ -196,7 +196,7 @@ public class ReaderWebView extends WebView
     * */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (DeviceInfo.EINK_SONY) {
+        if (DeviceInfo.isEInkSonyPRST()) {
             mUpdateMode = 5;
             invalidate();
             lKeyDownTime = System.currentTimeMillis();
@@ -204,6 +204,7 @@ public class ReaderWebView extends WebView
         return false;
     }
 
+    final static int iKeyTimeDelay = 2000;
     /*
     * При отпускании кнопки возвращаем режим Refresh,
     * если только снова не нажали кнопку за время меньше задержки.
@@ -211,22 +212,18 @@ public class ReaderWebView extends WebView
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
 
-        if (DeviceInfo.EINK_SONY) {
+        if (DeviceInfo.isEInkSonyPRST()) {
 
-            final int iKeyTimeDelay = 2000;
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                public void run() {
 
-            if (isScrollToTop() || isScrollToBottom() || blScrolled) {
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    public void run() {
-
-                        if ((System.currentTimeMillis() - lKeyDownTime) > iKeyTimeDelay) {
-                            mUpdateMode = 34;
-                            invalidate();
-                        }
+                    if ((System.currentTimeMillis() - lKeyDownTime) > iKeyTimeDelay) {
+                        mUpdateMode = 34;
+                        invalidate();
                     }
-                }, iKeyTimeDelay);
-            }
+                }
+            }, iKeyTimeDelay);
         }
 
         return false;
@@ -269,12 +266,6 @@ public class ReaderWebView extends WebView
 
 		StringBuilder style = new StringBuilder();
 		style.append("<style type=\"text/css\">\r\n");
-
-        style.append("@font-face {\r\n");
-        style.append("font-family: AmasisMTW1G;\r\n");
-        style.append("src: url(\"file:///ebook/fonts/AmasisMTW1G.otf\")\r\n");
-        style.append("}\r\n");
-
 		style.append("body {\r\n");
 		style.append("padding-bottom: 50px;\r\n");
 		if (PreferenceHelper.textAlignJustify()) {
@@ -282,9 +273,6 @@ public class ReaderWebView extends WebView
 		}
 		//style.append("font-family: Georgia, Tahoma, Verdana, sans-serif;\r\n");
 		style.append("color: ").append(textColor).append(";\r\n");
-
-        style.append("font-family: AmasisMTW1G;\r\n");
-
 		style.append("font-size: ").append(textSize).append("pt;\r\n");
         style.append("line-height: 1.25;\r\n");
         style.append("background: ").append(backColor).append(";\r\n");
@@ -328,7 +316,7 @@ public class ReaderWebView extends WebView
     * Детектируем отпускание экрана
     * */
     public boolean onTouchEvent(MotionEvent event) {
-        if (DeviceInfo.EINK_SONY) {
+        if (DeviceInfo.isEInkSonyPRST()) {
             boolean detectedUp = (event.getAction() == MotionEvent.ACTION_UP);
             boolean isUp = false;
             if (!mGestureScanner.onTouchEvent(event) && detectedUp) {
@@ -381,7 +369,7 @@ public class ReaderWebView extends WebView
     * При нажатии на кнопку переключаем на NoRefresh
     * */
     public boolean onDown(MotionEvent event) {
-        if (DeviceInfo.EINK_SONY) {
+        if (DeviceInfo.isEInkSonyPRST()) {
             mUpdateMode = 5;
             invalidate();
             lDownTime = System.currentTimeMillis();
@@ -389,15 +377,15 @@ public class ReaderWebView extends WebView
 		return false;
 	}
 
+    final static int iTimeDelay = 2000;
+
     /*
     * При отпускании экрана возвращаем режим Refresh,
     * если только снова не коснулись экрана за время меньше задержки.
     * */
     public boolean onUp(MotionEvent event) {
 
-        if (DeviceInfo.EINK_SONY) {
-
-            final int iTimeDelay = 2000;
+        if (DeviceInfo.isEInkSonyPRST()) {
 
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
@@ -409,8 +397,8 @@ public class ReaderWebView extends WebView
                     }
                 }
             }, iTimeDelay);
-
         }
+
         return false;
     }
 
@@ -453,7 +441,7 @@ public class ReaderWebView extends WebView
     * и переключение по книгам/главам.)
     * */
     protected void onWindowVisibilityChanged(int visibility) {
-        if (DeviceInfo.EINK_SONY) {
+        if (DeviceInfo.isEInkSonyPRST()) {
             if (visibility == View.VISIBLE) {
 
                 Handler handler = new Handler();
