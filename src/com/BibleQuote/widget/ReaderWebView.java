@@ -21,12 +21,16 @@ import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
+import android.view.View;
 import android.webkit.*;
 import com.BibleQuote.listeners.IReaderViewListener;
 import com.BibleQuote.listeners.IReaderViewListener.ChangeCode;
+import com.BibleQuote.utils.DeviceInfo;
 import com.BibleQuote.utils.PreferenceHelper;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.TreeSet;
 
@@ -143,7 +147,89 @@ public class ReaderWebView extends WebView
 	    return (scrollPos >= (computeVerticalScrollRange() - 10));
     }
 
-	public void computeScroll() {
+    /*
+    * isScrollToTop и isScrollToBottom пригодились для восстановления режима Refresh
+    * при отпускании кнопки -- если кнопку нажали, а экран не скроллировал.
+    * */
+    public boolean isScrollToTop() {
+        return (getScrollY() == 0);
+    }
+
+    private int mUpdateMode = 34;
+    private boolean blScrolled = false;
+    private long lKeyDownTime = 0;
+
+    /*
+    *  Переключение режима отображения екрана для
+    *  Sony PRS-T2/T1
+    *  Взято из NoRefreshEnabler (http://www.mobileread.com/forums/showpost.php?p=1956700&postcount=33)
+    *  mUpdateMode = 34  -- нормальный режим, 16 оттенков серого
+    *  mUpdateMode = 5   -- чернобелый режим, 2 цвета
+    * */
+    @Override
+    public void invalidate() {
+        //super.invalidate(mUpdateMode);
+        if (DeviceInfo.isEInkSonyPRST()) {
+            try {
+                Method invalidateMethod = super.getClass().getMethod("invalidate", int.class);
+                invalidateMethod.invoke(this, mUpdateMode);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            super.invalidate();
+        }
+    }
+
+    /*
+    * Отслеживаем остановку скроллирования
+    * */
+    @Override
+    protected void onScrollChanged(int l, int t, int oldl, int oldt) {
+        super.onScrollChanged (l, t, oldl, oldt);
+        blScrolled = true;
+    }
+
+
+    /*
+    * При нажатии на кнопку переключаем на NoRefresh
+    * */
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (DeviceInfo.isEInkSonyPRST()) {
+            mUpdateMode = 5;
+            invalidate();
+            lKeyDownTime = System.currentTimeMillis();
+        }
+        return false;
+    }
+
+    final static int iKeyTimeDelay = 2000;
+    /*
+    * При отпускании кнопки возвращаем режим Refresh,
+    * если только снова не нажали кнопку за время меньше задержки.
+    * */
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+
+        if (DeviceInfo.isEInkSonyPRST()) {
+
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                public void run() {
+
+                    if ((System.currentTimeMillis() - lKeyDownTime) > iKeyTimeDelay) {
+                        mUpdateMode = 34;
+                        invalidate();
+                    }
+                }
+            }, iKeyTimeDelay);
+        }
+
+        return false;
+    }
+
+    public void computeScroll() {
 		super.computeScroll();
 		if (mPageLoaded && isScrollToBottom()) {
 			notifyListeners(ChangeCode.onScroll);
@@ -220,9 +306,27 @@ public class ReaderWebView extends WebView
 	    }
 	}
 
+/*
 	public boolean onTouchEvent(MotionEvent event) {
         return mGestureScanner.onTouchEvent(event) || (event != null && super.onTouchEvent(event));
 	}
+*/
+
+    /*
+    * Детектируем отпускание экрана
+    * */
+    public boolean onTouchEvent(MotionEvent event) {
+        if (DeviceInfo.isEInkSonyPRST()) {
+            boolean detectedUp = (event.getAction() == MotionEvent.ACTION_UP);
+            boolean isUp = false;
+            if (!mGestureScanner.onTouchEvent(event) && detectedUp) {
+                isUp = onUp(event);
+            }
+            return isUp || (event != null && super.onTouchEvent(event));
+        } else {
+            return mGestureScanner.onTouchEvent(event) || (event != null && super.onTouchEvent(event));
+        }
+    }
 
 	public boolean onSingleTapUp(MotionEvent event) {
 		return false;
@@ -258,11 +362,47 @@ public class ReaderWebView extends WebView
 		return false;
 	}
 
-	public boolean onDown(MotionEvent event) {
+    private long lDownTime = 0;
+
+
+    /*
+    * При нажатии на кнопку переключаем на NoRefresh
+    * */
+    public boolean onDown(MotionEvent event) {
+        if (DeviceInfo.isEInkSonyPRST()) {
+            mUpdateMode = 5;
+            invalidate();
+            lDownTime = System.currentTimeMillis();
+        }
 		return false;
 	}
 
-	public boolean onFling(MotionEvent e1, MotionEvent e2,
+    final static int iTimeDelay = 2000;
+
+    /*
+    * При отпускании экрана возвращаем режим Refresh,
+    * если только снова не коснулись экрана за время меньше задержки.
+    * */
+    public boolean onUp(MotionEvent event) {
+
+        if (DeviceInfo.isEInkSonyPRST()) {
+
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                public void run() {
+
+                    if ((System.currentTimeMillis() - lDownTime) > iTimeDelay) {
+                        mUpdateMode = 34;
+                        invalidate();
+                    }
+                }
+            }, iTimeDelay);
+        }
+
+        return false;
+    }
+
+    public boolean onFling(MotionEvent e1, MotionEvent e2,
 			float velocityX, float velocityY) {
 		notifyListeners(ChangeCode.onScroll);
 		return false;
@@ -292,7 +432,31 @@ public class ReaderWebView extends WebView
 		return false;
 	}
 
-	final class chromeClient extends WebChromeClient {
+    /*
+    * При касании экрана режим был переключен на NoRefresh,
+    * если после было событие onLongPress, то активность уже потеряла управление --
+    * перерисовываем экран при появлении активности.
+    * (Оказалось очень удобно в режиме чтения -- при выборе книг/глав из списка
+    * включен режим NoRefresh, соответственно быстро работает скролл
+    * и переключение по книгам/главам.)
+    * */
+    protected void onWindowVisibilityChanged(int visibility) {
+        if (DeviceInfo.isEInkSonyPRST()) {
+            if (visibility == View.VISIBLE) {
+
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        mUpdateMode = 34;
+                        invalidate();
+                    }
+                }, 1000);
+
+            }
+        }
+    }
+
+    final class chromeClient extends WebChromeClient {
 		chromeClient() {}
 
 		public boolean onJsAlert(WebView webView, String url, String message, JsResult result) {
