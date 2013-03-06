@@ -1,7 +1,6 @@
 /.idea
 /out
-/BQ_Android.iml
-/BibleQuote-for-Android.iml
+/*.iml
 /bin
 /.settings
 /gen
