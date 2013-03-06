@@ -147,17 +147,7 @@ public class ReaderWebView extends WebView
 	    return (scrollPos >= (computeVerticalScrollRange() - 10));
     }
 
-    /*
-    * isScrollToTop и isScrollToBottom пригодились для восстановления режима Refresh
-    * при отпускании кнопки -- если кнопку нажали, а экран не скроллировал.
-    * */
-    public boolean isScrollToTop() {
-        return (getScrollY() == 0);
-    }
-
     private int mUpdateMode = 34;
-    private boolean blScrolled = false;
-    private long lKeyDownTime = 0;
 
     /*
     *  Переключение режима отображения екрана для
@@ -181,15 +171,7 @@ public class ReaderWebView extends WebView
         }
     }
 
-    /*
-    * Отслеживаем остановку скроллирования
-    * */
-    @Override
-    protected void onScrollChanged(int l, int t, int oldl, int oldt) {
-        super.onScrollChanged (l, t, oldl, oldt);
-        blScrolled = true;
-    }
-
+    private long lKeyDownTime = 0;
 
     /*
     * При нажатии на кнопку переключаем на NoRefresh
@@ -363,7 +345,6 @@ public class ReaderWebView extends WebView
 	}
 
     private long lDownTime = 0;
-
 
     /*
     * При нажатии на кнопку переключаем на NoRefresh
