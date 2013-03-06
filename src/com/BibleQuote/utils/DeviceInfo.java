@@ -16,11 +16,13 @@ import android.os.Build;
 public class DeviceInfo {
     public final static String MANUFACTURER;
     public final static String MODEL;
-    public final static boolean EINK_SONY;
 
     static {
         MANUFACTURER = Build.MANUFACTURER;
         MODEL = Build.MODEL;
-        EINK_SONY = MANUFACTURER.toLowerCase().contentEquals("sony") && MODEL.startsWith("PRS-T");
+    }
+
+    public static boolean isEInkSonyPRST() {
+        return MANUFACTURER.toLowerCase().contentEquals("sony") && MODEL.startsWith("PRS-T");
     }
 }

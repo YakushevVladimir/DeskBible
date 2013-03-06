@@ -489,7 +489,7 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
              * на Refresh нажать кнопку "Библиотека", режим не переключится, а при возвращении
              * видимости активности переключится. */
  /*
-            if (DeviceInfo.EINK_SONY) {
+            if (DeviceInfo.isEInkSonyPRST()) {
                 onChooseChapterClick();
             } else if (vWeb.getMode() == ReaderWebView.Mode.Read) onChooseChapterClick();
 */
