@@ -163,6 +163,11 @@ public class ReaderWebView extends WebView
             try {
                 Method invalidateMethod = super.getClass().getMethod("invalidate", int.class);
                 invalidateMethod.invoke(this, mUpdateMode);
+
+                View vRootV = getRootView();
+                if (vRootV != this) {
+                    vRootV.invalidate();
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
