@@ -40,7 +40,7 @@
 		android:id="@id/action_bar_bookmarks"
 		android:orderInCategory="3"
 		android:icon="@drawable/ic_action_bookmark"
-		android:showAsAction="ifRoom"/>
+		android:showAsAction="withText|ifRoom"/>
 	<item
 		android:title="@string/menu_night_day_mode"
 		android:id="@+id/NightDayMode"

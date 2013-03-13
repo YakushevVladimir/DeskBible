@@ -116,5 +116,5 @@
     <string name="short_reference_summary">Short caption to passage</string>
     <string name="add_module_to_reference">Add module name</string>
     <string name="add_module_to_reference_summary">Add the module name to the signature</string>
-	<string name="menu_speek">Speek...</string>
+	<string name="menu_speek">Read...</string>
 </resources>

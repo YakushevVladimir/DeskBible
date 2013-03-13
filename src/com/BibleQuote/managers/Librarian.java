@@ -565,8 +565,9 @@ public class Librarian {
     }
 
     public ArrayList<String> getVersesText() {
-        ArrayList<Verse> verses = currChapter.getVerseList();
         ArrayList<String> result = new ArrayList<String>();
+        if (currChapter == null) return result;
+        ArrayList<Verse> verses = currChapter.getVerseList();
         for (int i = 0 ; i < verses.size() ; i++) {
             result.add(StringProc.cleanVerseText(verses.get(i).getText()));
         }
