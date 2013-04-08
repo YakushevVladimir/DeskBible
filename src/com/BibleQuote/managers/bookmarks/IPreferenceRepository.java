@@ -25,8 +25,8 @@ import java.util.ArrayList;
  */
 public interface IPreferenceRepository {
     void sort();
-    void add(String humanLink, String osisLink);
-    void delete(Bookmark humanLink);
+    void add(Bookmark bookmark);
+    void delete(Bookmark bookmark);
     void deleteAll();
     ArrayList<Bookmark> getAll();
 }

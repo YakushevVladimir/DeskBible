@@ -116,7 +116,8 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 
 			switch (item.getItemId()) {
 			case R.id.action_bookmarks:
-                new BookmarksManager(new PreferenceRepository()).add(myLibrarian, selVerses.first());
+                myLibrarian.setCurrentVerseNumber(selVerses.first());
+                new BookmarksManager(new PreferenceRepository()).add(myLibrarian.getCurrentOSISLink());
 				Toast.makeText(ReaderActivity.this, getString(R.string.added), Toast.LENGTH_LONG).show();
 				break;
 

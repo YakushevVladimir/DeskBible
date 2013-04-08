@@ -47,9 +47,9 @@ public class PreferenceRepository implements IPreferenceRepository {
     }
 
     @Override
-    public void add(String humanLink, String osisLink) {
+    public void add(Bookmark bookmark) {
         String fav = PreferenceHelper.restoreStateString("Favorits");
-        PreferenceHelper.saveStateString("Favorits", humanLink + BOOKMARK_PATH_DELIMITER + osisLink + BOOKMARK_DELIMITER + fav);
+        PreferenceHelper.saveStateString("Favorits", bookmark.humanLink + BOOKMARK_PATH_DELIMITER + bookmark.OSISLink + BOOKMARK_DELIMITER + fav);
     }
 
     @Override
