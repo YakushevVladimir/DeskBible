@@ -210,11 +210,19 @@ public class LibraryActivity extends SherlockFragmentActivity implements IChange
 		String bookShortName = "---";
 		try {
 			bookShortName = myLibrarian.getBookShortName(moduleID, bookID);
+            ArrayList<String> chList = myLibrarian.getChaptersList(moduleID, bookID);
+            if (chList.size() == 0) {
+                chapter = "-";
+            } else {
+                chapter = chList.contains(chapter) ? chapter : chList.get(0);
+            }
 		} catch (OpenModuleException e) {
 			ExceptionHelper.onOpenModuleException(e, this, TAG);
-		}
-		
-		btnModule.setText(moduleID);
+		} catch (BookNotFoundException e) {
+            chapter = "-";
+        }
+
+        btnModule.setText(moduleID);
 		btnBook.setText(bookShortName);
 		btnChapter.setText(chapter);
 	}
@@ -375,7 +383,7 @@ public class LibraryActivity extends SherlockFragmentActivity implements IChange
 	private void onAsyncOpenModuleComplete(AsyncOpenModule task) {
 		if (task.isSuccess()) {
 			moduleID = task.getModule().getID();
-			chapter = "-";
+			//chapter = "-";
 			setButtonText();
 			UpdateView(BOOK_VIEW);
 			
