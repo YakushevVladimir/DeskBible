@@ -34,6 +34,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
+import com.BibleQuote.managers.bookmarks.BookmarksManager;
+import com.BibleQuote.managers.bookmarks.PreferenceRepository;
 import com.BibleQuote.widget.ReaderWebView;
 import com.BibleQuote.entity.BibleReference;
 import com.BibleQuote.exceptions.BookNotFoundException;
@@ -42,7 +44,6 @@ import com.BibleQuote.exceptions.OpenModuleException;
 import com.BibleQuote.listeners.IReaderViewListener;
 import com.BibleQuote.async.AsyncManager;
 import com.BibleQuote.async.AsyncOpenChapter;
-import com.BibleQuote.managers.Bookmarks;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.utils.*;
 import com.BibleQuote.utils.Share.ShareBuilder.Destination;
@@ -115,7 +116,7 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 
 			switch (item.getItemId()) {
 			case R.id.action_bookmarks:
-				Bookmarks.add(myLibrarian, selVerses.first());
+                new BookmarksManager(new PreferenceRepository()).add(myLibrarian, selVerses.first());
 				Toast.makeText(ReaderActivity.this, getString(R.string.added), Toast.LENGTH_LONG).show();
 				break;
 

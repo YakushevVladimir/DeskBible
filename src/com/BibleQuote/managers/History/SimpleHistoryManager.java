@@ -21,7 +21,6 @@
 
 package com.BibleQuote.managers.History;
 
-import com.BibleQuote.dal.repository.IHistoryRepository;
 import com.BibleQuote.entity.BibleReference;
 import com.BibleQuote.entity.ItemList;
 import com.BibleQuote.exceptions.FileAccessException;
