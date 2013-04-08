@@ -76,27 +76,10 @@ public class Librarian {
         historyManager = new SimpleHistoryManager(repository, PreferenceHelper.getHistorySize());
 
 		getModules();
-        refreshLibrary();
 	}
 
     public EventManager getEventManager() {
         return libCtrl.getEventManager();
-    }
-
-    private void refreshLibrary() {
-        Thread taskRefresh = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                android.util.Log.d(TAG, "Start refresh library...");
-                try {
-                    Thread.sleep(15000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                loadFileModules();
-            }
-        });
-        taskRefresh.start();
     }
 
 	/**
