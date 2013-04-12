@@ -163,18 +163,30 @@ public class ReaderWebView extends WebView
 	private String getStyle(Boolean nightMode) {
 		String textColor;
 		String backColor;
-		String selTextColor;
+        String selTextColor;
+		String selTextBack;
 		
 		getSettings().setStandardFontFamily(PreferenceHelper.getFontFamily());
 		
 		if (!nightMode) {
 			backColor = PreferenceHelper.getTextBackground();
 			textColor = PreferenceHelper.getTextColor();
-			selTextColor = "#FEF8C4";
+//			selTextColor = "#FEF8C4";
+            selTextColor = PreferenceHelper.getTextColorSelected();
+            selTextBack = PreferenceHelper.getTextBackgroundSelected();
+/*
+            if (DeviceInfo.isEInkSonyPRST()) {
+                selTextColor = "#A0A0A0";
+            }
+            else {
+                selTextColor = "#FEF8C4";
+            }
+*/
 		} else {
 			textColor = "#EEEEEE";
-			selTextColor = "#562000";
-			backColor = "#000000";
+            backColor = "#000000";
+            selTextColor = "#EEEEEE";
+			selTextBack = "#562000";
 		}
 		String textSize = PreferenceHelper.getTextSize();
 
@@ -195,7 +207,8 @@ public class ReaderWebView extends WebView
 		style.append("background: ").append(backColor).append(";\r\n");
 		style.append("}\r\n");
 		style.append(".selectedVerse {\r\n");
-		style.append("background: ").append(selTextColor).append(";\r\n");
+        style.append("color: ").append(selTextColor).append(";\r\n");
+		style.append("background: ").append(selTextBack).append(";\r\n");
 		style.append("}\r\n");
 		style.append("img {\r\n");
 		style.append("max-width: 100%;\r\n");
