@@ -109,7 +109,23 @@ public class PreferenceHelper {
 		return getWebColor(background);
 	}
 
-	public static Integer getHistorySize() {
+    public static String getTextColorSelected() {
+        if (preference == null) {
+            return "#000000";
+        }
+        String colorSelected = preference.getString("TextColorSel", "#000000");
+        return getWebColor(colorSelected);
+    }
+
+    public static String getTextBackgroundSelected() {
+        if (preference == null) {
+            return "#FEF8C4";
+        }
+        String backgroundSelected = preference.getString("TextBGSel", "#FEF8C4");
+        return getWebColor(backgroundSelected);
+    }
+
+    public static Integer getHistorySize() {
 		if (preference == null) {
 			return 10;
 		}
