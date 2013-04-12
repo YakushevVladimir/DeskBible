@@ -24,6 +24,10 @@
     <string name="background">Цвет фона</string>
     <string name="text_color_summary">Выберите цвет шрифта</string>
     <string name="background_summary">Выберите цвет фона</string>
+    <string name="text_color_selected">Цвет выбранного текста</string>
+    <string name="text_color_selected_summary">Выберите цвет шрифта выбранного текста</string>
+    <string name="background_selected">Цвет фона выбранного текста</string>
+    <string name="background_selected_summary">Выберите цвет фона выбранного текста</string>
     <string name="disable_auto_screen_rotation">Отключить автоматический поворот экрана</string>
     <string name="may_need_to_restart">Может потребоваться перезапуск</string>
     <string name="read_mode_by_default">Режим чтения по-умолчанию</string>
