@@ -50,6 +50,10 @@
     <string name="text_color_summary">Choose font color</string>
     <string name="background">Background color</string>
     <string name="background_summary">Choose background color</string>
+    <string name="text_color_selected">Text color of selected text</string>
+    <string name="text_color_selected_summary">Choose text color of selected text</string>
+    <string name="background_selected">Background color of selected text</string>
+    <string name="background_selected_summary">Choose background color of selected text</string>
     <string name="category_reader_other">Other</string>
     <string name="category_reader_other_history_size">History size</string>
     <string name="category_reader_other_history_size_summary">Current history size: %1$s</string>
