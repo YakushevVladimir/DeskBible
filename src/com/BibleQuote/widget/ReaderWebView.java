@@ -174,14 +174,7 @@ public class ReaderWebView extends WebView
 //			selTextColor = "#FEF8C4";
             selTextColor = PreferenceHelper.getTextColorSelected();
             selTextBack = PreferenceHelper.getTextBackgroundSelected();
-/*
-            if (DeviceInfo.isEInkSonyPRST()) {
-                selTextColor = "#A0A0A0";
-            }
-            else {
-                selTextColor = "#FEF8C4";
-            }
-*/
+
 		} else {
 			textColor = "#EEEEEE";
             backColor = "#000000";
