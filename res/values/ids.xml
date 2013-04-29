@@ -33,5 +33,6 @@
 	<item type="id" name="action_bar_history" />
 	<item type="id" name="action_bar_history_clear" />
 	<item type="id" name="action_bar_parallels" />
-			
+	<item type="id" name="action_bar_partranslates" />
+
 </resources>

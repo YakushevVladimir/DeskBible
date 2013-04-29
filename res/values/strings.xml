@@ -71,7 +71,8 @@
     <string name="menu_search">Search</string>
     <string name="menu_help">Help</string>
     <string name="menu_settings">Settings</string>
-    <!-- Dialogs -->
+	<string name="menu_partranslates">Parallel Translates</string>
+	<!-- Dialogs -->
     <string name="find">Find</string>
     <string name="menu">Menu</string>
     <string name="cancel">Cancel</string>

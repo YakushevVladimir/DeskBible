@@ -85,4 +85,12 @@ public class Chapter {
 	public Book getBook() {
 		return book;
 	}
+
+	public int getChapterSize() {
+		return verses.size();
+	}
+
+	public Verse getVerse(int verseNumber) {
+		return verses.get(verseNumber);
+	}
 }

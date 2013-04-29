@@ -43,10 +43,14 @@ public class Librarian {
 	private final String TAG = "Librarian";
 
 	private LinkedHashMap<String, String> searchResults = new LinkedHashMap<String, String>();
+	
+	public BibleReference ParOsisLink;
 
 	private Module currModule;
+	private Module ParModule;
 	private Book currBook;
 	private Chapter currChapter;
+	public Chapter ParChapter;
 	private Integer currChapterNumber = -1;
 	private Integer currVerseNumber = 1;
 
@@ -138,6 +142,35 @@ public class Librarian {
 		historyManager.addLink(new BibleReference(getCurrModule(), getCurrBook(), getCurrChapterNumber(), getCurrVerseNumber()));
 
 		return getCurrChapter();
+	}
+
+	public Chapter openParChapter(BibleReference CurrLink, BibleReference linkParTr) throws BookNotFoundException, OpenModuleException {
+
+		openChapter(CurrLink);
+
+		ParModule = getModuleByID(linkParTr.getModuleID());
+		ParOsisLink = linkParTr;
+
+		Book ParBook = getBookByID(ParModule, currBook.OSIS_ID);
+
+		// сделать выборку конкретных стихов из глав с учетом весификации
+		Chapter bufParChapter = getChapterByNumber(ParBook, currChapter.getNumber());
+
+		ArrayList<Verse> verseList = new ArrayList<Verse>();
+
+		for (int i=1; i <= currChapter.getChapterSize(); i++) {
+
+			if (bufParChapter.getVerse(i) != null) {
+				verseList.add(bufParChapter.getVerse(i));
+			} else {
+				verseList.add(new Verse((i-1), "-"));
+			}
+
+		}
+
+		ParChapter = new Chapter(ParBook, currChapter.getNumber(), verseList);
+
+		return ParChapter;
 	}
 
 
@@ -264,6 +297,10 @@ public class Librarian {
 
 	public String getChapterHTMLView() {
 		return chapterCtrl.getChapterHTMLView(getCurrChapter());
+	}
+
+	public String getParChapterHTMLView() {
+		return chapterCtrl.getParChapterHTMLView(getCurrChapter(), getParChapter());
 	}
 
 	public Boolean isBible() {
@@ -541,9 +578,13 @@ public class Librarian {
 		return currChapter;
 	}
 
-	public Integer getCurrChapterNumber() {
-		return currChapterNumber;
+	public Chapter getParChapter() {
+		return ParChapter;
 	}
+
+	public Integer getCurrChapterNumber() {
+        return currChapterNumber;
+    }
 
 	public Integer getCurrVerseNumber() {
 		return currVerseNumber;

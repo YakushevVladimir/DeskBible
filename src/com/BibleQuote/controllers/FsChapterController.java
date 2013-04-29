@@ -88,6 +88,101 @@ public class FsChapterController implements IChapterController {
 	}
 
 
+	public String getParChapterHTMLView(Chapter chapter, Chapter ParChapter) {
+		if (chapter == null) {
+			return "";
+		}
+
+	// !!!!!!!!!!
+//	if (ParChapter != null) {}
+
+		Module currModule = chapter.getBook().getModule();
+		Module ParModule = ParChapter.getBook().getModule();
+
+		ArrayList<Verse> verses = chapter.getVerseList();
+		ArrayList<Verse> ParVerses = ParChapter.getVerseList();
+
+		StringBuilder chapterHTML = new StringBuilder();
+		for (int verse = 1; verse <= verses.size(); verse++) {
+			String verseText = verses.get(verse - 1).getText();
+			String ParVerseText = ParVerses.get(verse - 1).getText();
+
+			if (currModule.containsStrong) {
+				// убираем номера Стронга
+				verseText = verseText.replaceAll("\\s(\\d)+", "");
+			}
+
+			if (ParModule.containsStrong) {
+				// убираем номера Стронга
+				ParVerseText = ParVerseText.replaceAll("\\s(\\d)+", "");
+			}
+
+			verseText = StringProc.stripTags(verseText, currModule.HtmlFilter);
+			verseText = verseText.replaceAll("<a\\s+?href=\"verse\\s\\d+?\">(\\d+?)</a>", "<b>$1</b>");
+
+			ParVerseText = StringProc.stripTags(ParVerseText, ParModule.HtmlFilter);
+			ParVerseText = ParVerseText.replaceAll("<a\\s+?href=\"verse\\s\\d+?\">(\\d+?)</a>", "<b>$1</b>");
+
+			if (currModule.isBible) {
+				verseText = verseText
+						.replaceAll("^(<[^/]+?>)*?(\\d+)(</(.)+?>){0,1}?\\s+",
+								"$1<b>$2</b>$3 ").replaceAll(
+								"null", "");
+			}
+
+			if (ParModule.isBible) {
+				ParVerseText = ParVerseText
+						.replaceAll("^(<[^/]+?>)*?(\\d+)(</(.)+?>){0,1}?\\s+",
+								"$1<b>$2</b>$3 ").replaceAll(
+								"null", "");
+			}
+
+//			chapterHTML.append(
+//					"<div id=\"verse_" + verse + "\" class=\"verse\">"
+//							+ verseText.replaceAll("<(/)*div(.*?)>", "<$1p$2>")
+//							+ "</div>"
+//							+ "\r\n");
+//		}
+
+//!!!!
+/*
+// отображение таблицей (пока криво)
+			chapterHTML.append("<table cols=\"2\"><col width=\"50%\"/><tr><td align=\"left\">");
+
+			chapterHTML.append(
+					"<div id=\"verse_" + verse + "\" class=\"verse\">"
+							+ verseText.replaceAll("<(/)*div(.*?)>", "<$1p$2>")
+							+ "</div>"
+							+ "</td>\r\n");
+
+			chapterHTML.append(
+					"<td align=\"left\"><div id=\"verse_" + verse + "\" class=\"verse\">"
+							+ ParVerseText.replaceAll("<(/)*div(.*?)>", "<$1p$2>")
+							+ "</div>"
+							+ "</td></tr></table>\r\n");
+
+        //chapterHTML.append("<br>\r\n");
+*/
+
+// отображение чередующимися строками
+			chapterHTML.append(
+					"<div id=\"verse_" + verse + "\" class=\"verse\">"
+							+ verseText.replaceAll("<(/)*div(.*?)>", "<$1p$2>")
+							+ "</div>\r\n");
+
+			chapterHTML.append(
+					"<td><div id=\"verse_" + verse + "\" class=\"verse\">"
+							+ ParVerseText.replaceAll("<(/)*div(.*?)>", "<$1p$2>")
+							+ "</div><br>\r\n");
+
+
+//!!!!
+		}
+
+		return chapterHTML.toString();
+	}
+
+
 	private Book getValidBook(Book book) throws BookNotFoundException {
 		String moduleID = null;
 		String bookID = null;
