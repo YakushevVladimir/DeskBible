@@ -36,7 +36,7 @@ public class TextItem extends Item {
 
 	@Override
 	public ItemView newView(Context context, ViewGroup parent) {
-		return createCellFromXml(context, R.layout.widget_text_item_view, parent);
+		return createCellFromXml(context, R.layout.text_item_view, parent);
 	}
 
 	@Override

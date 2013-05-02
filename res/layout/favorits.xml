@@ -25,12 +25,6 @@
         android:id="@+id/FavoritsLV"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="#ffffffff"
-        android:gravity="center_vertical"
-        android:text="bookmark"
-        android:textColor="#000000"
-        android:textSize="@dimen/text_size_medium"
-        android:textStyle="bold" >
-    </ListView>
+        android:gravity="center_vertical" />
 
 </LinearLayout>

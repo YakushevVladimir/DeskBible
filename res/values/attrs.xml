@@ -17,7 +17,7 @@
  */
 -->
 <resources>
-	<declare-styleable name="com.BibleQuote.controls.NumberChoise">
+	<declare-styleable name="NumberChoiseView">
 		<attr name="minValue" format="integer"/>
 		<attr name="maxValue" format="integer"/>
 		<attr name="totalValue" format="integer"/>
@@ -35,6 +35,10 @@
 	</declare-styleable>
 	<declare-styleable name="SubtextItem">
 		<attr name="subtext" format="string" />
+	</declare-styleable>
+	<declare-styleable name="BookmarkItem">
+		<attr name="link" format="string" />
+		<attr name="date" format="string" />
 	</declare-styleable>
 
 </resources>

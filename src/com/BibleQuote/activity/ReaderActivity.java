@@ -43,7 +43,6 @@ import com.BibleQuote.exceptions.OpenModuleException;
 import com.BibleQuote.listeners.IReaderViewListener;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.managers.bookmarks.BookmarksManager;
-import com.BibleQuote.managers.bookmarks.prefBookmarksRepository;
 import com.BibleQuote.utils.*;
 import com.BibleQuote.utils.Share.ShareBuilder.Destination;
 import com.BibleQuote.widget.ReaderWebView;

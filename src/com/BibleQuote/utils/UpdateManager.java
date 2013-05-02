@@ -11,8 +11,8 @@ import com.BibleQuote.R;
 import com.BibleQuote.entity.BibleReference;
 import com.BibleQuote.managers.bookmarks.Bookmark;
 import com.BibleQuote.managers.bookmarks.BookmarksManager;
-import com.BibleQuote.managers.bookmarks.dbBookmarksRepository;
-import com.BibleQuote.managers.bookmarks.prefBookmarksRepository;
+import com.BibleQuote.managers.bookmarks.repository.dbBookmarksRepository;
+import com.BibleQuote.managers.bookmarks.repository.prefBookmarksRepository;
 
 import java.io.*;
 import java.util.ArrayList;

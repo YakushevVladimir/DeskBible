@@ -109,4 +109,5 @@
     <string name="add_module_to_reference">Добавлять имя модуля</string>
     <string name="add_reference">Добавлять ссылку</string>
     <string name="menu_speek">Читать...</string>
+	<string name="no_tags">Меток нет</string>
 </resources>

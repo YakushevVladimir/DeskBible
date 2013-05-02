@@ -16,6 +16,10 @@
 
 package com.BibleQuote.managers.bookmarks;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 /**
  * User: Vladimir Yakushev
  * Date: 09.04.13
@@ -25,15 +29,17 @@ public class Bookmark {
 	public int id;
 	public String OSISLink;
 	public String humanLink;
+	public String date;
 
 	public Bookmark(String OSISLink, String humanLink) {
-		this(0, OSISLink, humanLink);
+		this(0, OSISLink, humanLink, DateFormat.getDateInstance(DateFormat.MEDIUM).format(Calendar.getInstance().getTime()));
 	}
 
-	public Bookmark(int id, String OSISLink, String humanLink) {
+	public Bookmark(int id, String OSISLink, String humanLink, String date) {
 		this.id = id;
 		this.OSISLink = OSISLink;
 		this.humanLink = humanLink;
+		this.date = date;
 	}
 
 	@Override

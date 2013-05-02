@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-package com.BibleQuote.managers.bookmarks;
+package com.BibleQuote.managers.bookmarks.repository;
+
+import com.BibleQuote.managers.bookmarks.Bookmark;
 
 import java.util.ArrayList;
 
@@ -23,10 +25,14 @@ import java.util.ArrayList;
  * Date: 09.04.13
  * Time: 1:25
  */
-public interface IPreferenceRepository {
-    void sort();
-    void add(Bookmark bookmark);
-    void delete(Bookmark bookmark);
-    void deleteAll();
-    ArrayList<Bookmark> getAll();
+public interface IBookmarksRepository {
+	void sort();
+
+	void add(Bookmark bookmark);
+
+	void delete(Bookmark bookmark);
+
+	void deleteAll();
+
+	ArrayList<Bookmark> getAll();
 }

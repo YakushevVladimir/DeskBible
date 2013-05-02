@@ -18,7 +18,6 @@ package com.BibleQuote.dal;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
-import android.util.Log;
 import com.BibleQuote.utils.DataConstants;
 
 import java.io.File;
@@ -27,20 +26,22 @@ import java.io.File;
  * User: Vladimir Yakushev
  * Date: 02.05.13
  */
-public class LibraryDBHelper {
-	private final static String TAG = LibraryDBHelper.class.getSimpleName();
+public class dbLibraryHelper {
+	private final static String TAG = dbLibraryHelper.class.getSimpleName();
 
 	private static int version = 1;
 
 	public static final String BOOKMARKS_KEY_ID = "_id";
 	public static final String BOOKMARKS_OSIS = "osis";
 	public static final String BOOKMARKS_LINK = "link";
+	public static final String BOOKMARKS_DATE = "date";
 
 	private static final String CREATE_DATABASE =
 			"create table " + DataConstants.BOOKMARKS_TABLE + " ("
 					+ BOOKMARKS_KEY_ID + " integer primary key autoincrement, "
 					+ BOOKMARKS_OSIS + " text not null, "
-					+ BOOKMARKS_LINK + " text not null"
+					+ BOOKMARKS_LINK + " text not null, "
+					+ BOOKMARKS_DATE + " text not null"
 					+ ");";
 
 	private static final String DB_DIR_PATH = (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)
@@ -50,9 +51,7 @@ public class LibraryDBHelper {
 	public static SQLiteDatabase getLibraryDB() {
 		File dbDir = new File(DB_DIR_PATH);
 		if (!dbDir.exists()) dbDir.mkdir();
-		File dbFile = new File(dbDir, DataConstants.DB_LIBRARY_NAME);
-
-		SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbFile, null);
+		SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(new File(dbDir, DataConstants.DB_LIBRARY_NAME), null);
 
 		if (db.getVersion() != version) {
 			db.beginTransaction();
@@ -77,7 +76,7 @@ public class LibraryDBHelper {
 	}
 
 	private static void onUpgrade(SQLiteDatabase db) {
-		//TODO Create LibraryDBHelper.onUpgrade()
+		//TODO Create dbLibraryHelper.onUpgrade()
 	}
 
 }

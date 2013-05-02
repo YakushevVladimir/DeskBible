@@ -48,7 +48,7 @@ public class SubtextItem extends TextItem {
 
 	@Override
 	public ItemView newView(Context context, ViewGroup parent) {
-		return createCellFromXml(context, R.layout.widget_subtext_item_view, parent);
+		return createCellFromXml(context, R.layout.subtext_item_view, parent);
 	}
 
 	@Override

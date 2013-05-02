@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package com.BibleQuote.managers.bookmarks;
+package com.BibleQuote.managers.bookmarks.repository;
 
+import com.BibleQuote.managers.bookmarks.Bookmark;
 import com.BibleQuote.utils.PreferenceHelper;
 
 import java.util.ArrayList;

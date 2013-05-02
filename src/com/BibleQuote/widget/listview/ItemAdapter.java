@@ -7,10 +7,7 @@ import android.util.Xml;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import com.BibleQuote.widget.listview.item.Item;
-import com.BibleQuote.widget.listview.item.SubtextItem;
-import com.BibleQuote.widget.listview.item.SubtitleItem;
-import com.BibleQuote.widget.listview.item.TextItem;
+import com.BibleQuote.widget.listview.item.*;
 import com.BibleQuote.widget.listview.itemview.ItemView;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -322,14 +319,14 @@ public class ItemAdapter extends BaseAdapter {
 				item = new SubtitleItem();
 			} else if (name.equals("subtext-item")) {
 				item = new SubtextItem();
+			} else if (name.equals("bookmark-item")) {
+				item = new BookmarkItem();
 			} else {
 				throw new XmlPullParserException(parser.getPositionDescription() + ": invalid item tag " + name);
 			}
 
-			if (item != null) {
-				item.inflate(r, parser, attrs);
-				items.add(item);
-			}
+			item.inflate(r, parser, attrs);
+			items.add(item);
 		}
 
 		return new ItemAdapter(context, items);

@@ -32,12 +32,17 @@ import com.BibleQuote.entity.BibleReference;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.managers.bookmarks.Bookmark;
 import com.BibleQuote.managers.bookmarks.BookmarksManager;
-import com.BibleQuote.managers.bookmarks.prefBookmarksRepository;
 import com.BibleQuote.utils.ViewUtils;
+import com.BibleQuote.widget.listview.ItemAdapter;
+import com.BibleQuote.widget.listview.item.BookmarkItem;
+import com.BibleQuote.widget.listview.item.Item;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BookmarksActivity extends SherlockFragmentActivity {
 
@@ -112,7 +117,7 @@ public class BookmarksActivity extends SherlockFragmentActivity {
 
 	private AdapterView.OnItemClickListener OnItemClickListener = new AdapterView.OnItemClickListener() {
 		public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-			currBookmark = (Bookmark) LV.getAdapter().getItem(position);
+			currBookmark = ((BookmarkItem) LV.getAdapter().getItem(position)).bookmark;
 			Log.i(TAG, "Select bookmark: " + currBookmark.humanLink + " (OSIS link = " + currBookmark.OSISLink + ")");
 
 			BibleReference osisLink = new BibleReference(currBookmark.OSISLink);
@@ -132,7 +137,7 @@ public class BookmarksActivity extends SherlockFragmentActivity {
 
 	private AdapterView.OnItemLongClickListener OnItemLongClickListener = new AdapterView.OnItemLongClickListener() {
 		public boolean onItemLongClick(AdapterView<?> a, View v, int position, long id) {
-			currBookmark = (Bookmark) LV.getAdapter().getItem(position);
+			currBookmark = ((BookmarkItem) LV.getAdapter().getItem(position)).bookmark;
 			Builder b = new AlertDialog.Builder(BookmarksActivity.this);
 			b.setIcon(R.drawable.icon);
 			b.setTitle(currBookmark.humanLink);
@@ -154,7 +159,11 @@ public class BookmarksActivity extends SherlockFragmentActivity {
 	};
 
 	private void setAdapter() {
-		LV.setAdapter(new ArrayAdapter<Bookmark>(BookmarksActivity.this,
-				R.layout.text_item_view, bookmarksManager.getAll()));
+		List<Item> items = new ArrayList<Item>();
+		for (Bookmark curr : bookmarksManager.getAll()) {
+			items.add(new BookmarkItem(curr));
+		}
+		ItemAdapter adapter = new ItemAdapter(this, items);
+		LV.setAdapter(adapter);
 	}
 }

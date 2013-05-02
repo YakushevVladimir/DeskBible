@@ -1,6 +1,7 @@
 package com.BibleQuote.managers.bookmarks;
 
 import com.BibleQuote.entity.BibleReference;
+import com.BibleQuote.managers.bookmarks.repository.IBookmarksRepository;
 
 import java.util.ArrayList;
 

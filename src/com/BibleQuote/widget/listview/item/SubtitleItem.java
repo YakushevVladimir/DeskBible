@@ -38,7 +38,7 @@ public class SubtitleItem extends TextItem {
 
 	@Override
 	public ItemView newView(Context context, ViewGroup parent) {
-		return createCellFromXml(context, R.layout.widget_subtitle_item_view, parent);
+		return createCellFromXml(context, R.layout.subtitle_item_view, parent);
 	}
 
 	@Override
