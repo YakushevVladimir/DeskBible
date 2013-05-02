@@ -8,7 +8,7 @@ import java.util.TreeSet;
 public class EmptyReferenceFormatter extends ReferenceFormatter implements IBibleReferenceFormatter {
 
 	public EmptyReferenceFormatter(Module module, Book book, String chapter,
-			TreeSet<Integer> verses) {
+								   TreeSet<Integer> verses) {
 		super(module, book, chapter, verses);
 	}
 

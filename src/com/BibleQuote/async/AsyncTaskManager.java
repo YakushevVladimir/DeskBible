@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- package com.BibleQuote.async;
+package com.BibleQuote.async;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -39,7 +39,7 @@ public final class AsyncTaskManager implements IProgressTracker,
 		setupProgressDialog(context, taskCompleteListener);
 	}
 
-	public void setupTask(Task asyncTask, String...params) {
+	public void setupTask(Task asyncTask, String... params) {
 		// Keep task
 		mAsyncTask = asyncTask;
 		// Wire task to tracker (this)
@@ -62,7 +62,7 @@ public final class AsyncTaskManager implements IProgressTracker,
 		if (mAsyncTask.isHidden()) {
 			return;
 		}
-		
+
 		// Show dialog if it wasn't shown yet or was removed on configuration
 		// (rotation) change
 		try {
@@ -101,7 +101,7 @@ public final class AsyncTaskManager implements IProgressTracker,
 		Task completedTask = mAsyncTask;
 		// Reset task
 		mAsyncTask = null;
-		
+
 		// Notify activity about completion
 		mTaskCompleteListener.onTaskComplete(completedTask);
 	}
@@ -109,7 +109,7 @@ public final class AsyncTaskManager implements IProgressTracker,
 	public Object retainTask() {
 		// Close progress dialog
 		mProgressDialog.cancel();
-		
+
 		// Detach task from tracker (this) before retain
 		if (mAsyncTask != null) {
 			mAsyncTask.setProgressTracker(null);
@@ -124,9 +124,9 @@ public final class AsyncTaskManager implements IProgressTracker,
 			mTaskCompleteListener = taskCompleteListener;
 
 			// Setup progress dialog
-			setupProgressDialog((Context)mTaskCompleteListener, mTaskCompleteListener);
+			setupProgressDialog((Context) mTaskCompleteListener, mTaskCompleteListener);
 		}
-		
+
 		// Restore retained task and attach it to tracker (this)
 		if (instance instanceof Task) {
 			mAsyncTask = (Task) instance;
@@ -138,7 +138,7 @@ public final class AsyncTaskManager implements IProgressTracker,
 		// Track current status
 		return mAsyncTask != null;
 	}
-	
+
 	private void setupProgressDialog(Context context, OnTaskCompleteListener taskCompleteListener) {
 		// Setup progress dialog
 		mProgressDialog = new ProgressDialog(context);

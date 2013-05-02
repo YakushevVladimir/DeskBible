@@ -22,16 +22,16 @@ package com.BibleQuote.utils.modules;
  * Time: 0:35
  */
 public class LanguageConvertor {
-    public static String getISOLanguage(String language) {
-        language = language.toLowerCase();
-        if (language.equals("русский") || language.equals("russian")) {
-            return "ru_RU";
-        } else if (language.equals("английский") || language.equals("english")) {
-            return "en_US";
-        } else if (language.equals("немецкий") || language.equals("deutsch") || language.equals("germany")) {
-            return "de_DE";
-        } else {
-            return language;
-        }
-    }
+	public static String getISOLanguage(String language) {
+		language = language.toLowerCase();
+		if (language.equals("русский") || language.equals("russian")) {
+			return "ru_RU";
+		} else if (language.equals("английский") || language.equals("english")) {
+			return "en_US";
+		} else if (language.equals("немецкий") || language.equals("deutsch") || language.equals("germany")) {
+			return "de_DE";
+		} else {
+			return language;
+		}
+	}
 }

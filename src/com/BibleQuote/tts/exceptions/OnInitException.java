@@ -22,7 +22,7 @@ package com.BibleQuote.tts.exceptions;
  * Time: 0:23
  */
 public class OnInitException extends Exception {
-    public OnInitException() {
-        super("Error init TTS engine!");
-    }
+	public OnInitException() {
+		super("Error init TTS engine!");
+	}
 }

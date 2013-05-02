@@ -13,21 +13,21 @@ public class BibleReference {
 	private final String SEP_GROUPS = "\\;";
 	private final String SEP_VALUES = "\\:";
 	private final String SEP_SHORT = "\\.";
-	
+
 	private String OSISLinkPath = null;
 	private String moduleDatasource = null;
 	private String moduleDatasourceID = null;
 	private String moduleID = null;
-	
+
 	private String bookID = "Gen";
 	private String bookName = "Genesis";
 	private int chapterNumber = 1;
 	private int fromVerse = 1;
 	private int toVerse = 1;
-	
+
 	public BibleReference(String BibleLinkPath) {
 		if (BibleLinkPath != null) {
-			String[] linkParam = BibleLinkPath.split(SEP_GROUPS); 
+			String[] linkParam = BibleLinkPath.split(SEP_GROUPS);
 			if (linkParam.length >= 5) {
 				// BibleLinkPath extended path format = ds:fs;id:sd-card/mnt/biblequote/modules/rst;m:RST;b:MARK;ch:1;v:1
 				try {
@@ -42,11 +42,12 @@ public class BibleReference {
 						this.chapterNumber = Integer.parseInt(linkParam[4].split(SEP_VALUES)[1]);
 						this.fromVerse = Integer.parseInt(linkParam[5].split(SEP_VALUES)[1]);
 						this.toVerse = fromVerse;
-					} catch (NumberFormatException  e) {}
+					} catch (NumberFormatException e) {
+					}
 				} catch (Exception e) {
 					Log.e(TAG, String.format("OSISLink(%1$s)", BibleLinkPath), e);
-				}				
-				
+				}
+
 			} else {
 				// BibleLinkPath short path format    
 				linkParam = BibleLinkPath.split(SEP_SHORT);
@@ -57,18 +58,17 @@ public class BibleReference {
 					this.chapterNumber = 1;
 					this.fromVerse = 1;
 					try {
-						this.chapterNumber = (linkParam.length >= 3 ?  Integer.parseInt(linkParam[2]) : 1);
-						this.fromVerse = (linkParam.length >= 4 ?  Integer.parseInt(linkParam[3]) : 1);
+						this.chapterNumber = (linkParam.length >= 3 ? Integer.parseInt(linkParam[2]) : 1);
+						this.fromVerse = (linkParam.length >= 4 ? Integer.parseInt(linkParam[3]) : 1);
 						this.toVerse = fromVerse;
-					} catch (NumberFormatException  e) {
+					} catch (NumberFormatException e) {
 					}
 				}
 			}
 		}
 	}
 
-	public BibleReference(String moduleDatasource, String moduleDatasourceID, String moduleID, String bookID, Integer chapterNumber, Integer verseNumber)
-	{
+	public BibleReference(String moduleDatasource, String moduleDatasourceID, String moduleID, String bookID, Integer chapterNumber, Integer verseNumber) {
 		this.moduleDatasource = moduleDatasource;
 		this.moduleDatasourceID = moduleDatasourceID;
 		this.moduleID = moduleID;
@@ -78,17 +78,15 @@ public class BibleReference {
 		this.fromVerse = verseNumber;
 		this.toVerse = verseNumber;
 	}
-	
-	public BibleReference(Module module, Book book, Integer chapterNumber, Integer verseNumber)
-	{
+
+	public BibleReference(Module module, Book book, Integer chapterNumber, Integer verseNumber) {
 		this(module, book, chapterNumber, verseNumber, verseNumber);
 	}
-	
-	public BibleReference(Module module, Book book, Integer chapterNumber, Integer fromVerse, Integer toVerse)
-	{
+
+	public BibleReference(Module module, Book book, Integer chapterNumber, Integer fromVerse, Integer toVerse) {
 		if (module instanceof FsModule) {
 			this.moduleDatasource = MOD_DATASOURCE_FS;
-		} else  {
+		} else {
 			this.moduleDatasource = null;
 		}
 		this.moduleDatasourceID = module == null ? null : module.getDataSourceID();
@@ -99,12 +97,12 @@ public class BibleReference {
 		this.fromVerse = fromVerse;
 		this.toVerse = toVerse;
 	}
-	
-	public BibleReference(String moduleID, String bookID, int chapter, int verse) {
-        this(moduleID, bookID, chapter, verse, verse);
-    }
 
-    public BibleReference(String moduleID, String bookID, int chapter, int fromVerse, int toVerse) {
+	public BibleReference(String moduleID, String bookID, int chapter, int verse) {
+		this(moduleID, bookID, chapter, verse, verse);
+	}
+
+	public BibleReference(String moduleID, String bookID, int chapter, int fromVerse, int toVerse) {
 		this.moduleID = moduleID;
 		this.bookID = bookID;
 		this.bookName = bookID;
@@ -113,8 +111,7 @@ public class BibleReference {
 		this.toVerse = toVerse;
 	}
 
-	public String getPath()
-	{
+	public String getPath() {
 		if (OSISLinkPath == null) {
 			if (moduleID == null || bookID == null) {
 				OSISLinkPath = null;
@@ -124,9 +121,8 @@ public class BibleReference {
 		}
 		return OSISLinkPath;
 	}
-	
-	public String getExtendedPath()
-	{
+
+	public String getExtendedPath() {
 		if (OSISLinkPath == null) {
 			if (moduleID == null || bookID == null) {
 				OSISLinkPath = null;
@@ -136,9 +132,8 @@ public class BibleReference {
 		}
 		return OSISLinkPath;
 	}
-	
-	public String getChapterPath()
-	{
+
+	public String getChapterPath() {
 		if (OSISLinkPath == null) {
 			if (moduleID == null || bookID == null) {
 				OSISLinkPath = null;
@@ -148,7 +143,7 @@ public class BibleReference {
 		}
 		return OSISLinkPath;
 	}
-	
+
 	public String getModuleDatasource() {
 		return moduleDatasource;
 	}
@@ -156,7 +151,7 @@ public class BibleReference {
 	public String getModuleDatasourceID() {
 		return moduleDatasourceID;
 	}
-	
+
 	public String getModuleID() {
 		return moduleID;
 	}

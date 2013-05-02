@@ -31,7 +31,7 @@ import com.actionbarsherlock.app.SherlockActivity;
 public class SplashActivity extends SherlockActivity implements OnTaskCompleteListener {
 
 	private static final String TAG = "SplashActivity";
-    private AsyncCommand initApp;
+	private AsyncCommand initApp;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -45,25 +45,25 @@ public class SplashActivity extends SherlockActivity implements OnTaskCompleteLi
 		BibleQuoteApp app = (BibleQuoteApp) getApplication();
 
 		AsyncManager myAsyncManager = app.getAsyncManager();
-        if (initApp != null) {
-            Log.i(TAG, "Restore old task...");
-            myAsyncManager.handleRetainedTask(initApp, this);
-        } else {
-		    Log.i(TAG, "Start task InitApplication...");
-		    myAsyncManager.setupTask(getTaskObject(), this);
-        }
+		if (initApp != null) {
+			Log.i(TAG, "Restore old task...");
+			myAsyncManager.handleRetainedTask(initApp, this);
+		} else {
+			Log.i(TAG, "Start task InitApplication...");
+			myAsyncManager.setupTask(getTaskObject(), this);
+		}
 	}
 
-    private AsyncCommand getTaskObject() {
-        String progressMessage = getResources().getString(R.string.messageLoad);
-        initApp = new AsyncCommand(new InitApplication(this), progressMessage, true);
-        return initApp;
-    }
+	private AsyncCommand getTaskObject() {
+		String progressMessage = getResources().getString(R.string.messageLoad);
+		initApp = new AsyncCommand(new InitApplication(this), progressMessage, true);
+		return initApp;
+	}
 
-    @Override
+	@Override
 	public void onTaskComplete(Task task) {
 		Log.i(TAG, "Start reader activity");
-    	startActivity(new Intent(this, ReaderActivity.class));
+		startActivity(new Intent(this, ReaderActivity.class));
 		finish();
 	}
 }

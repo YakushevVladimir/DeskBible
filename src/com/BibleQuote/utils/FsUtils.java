@@ -30,9 +30,9 @@ import java.util.zip.ZipInputStream;
 
 public class FsUtils {
 	private static final String TAG = "FsUtils";
-	
+
 	public static BufferedReader getTextFileReaderFromZipArchive(String archivePath, String textFileInArchive,
-			String textFileEncoding) throws FileAccessException {
+																 String textFileEncoding) throws FileAccessException {
 		File zipFile = new File(archivePath);
 		try {
 			InputStream moduleStream = new FileInputStream(zipFile);
@@ -47,7 +47,8 @@ public class FsUtils {
 				if (entryName.equals(fileName)) {
 					InputStreamReader iReader = new InputStreamReader(zStream, textFileEncoding);
 					return new BufferedReader(iReader);
-				};
+				}
+				;
 			}
 			String message = String.format("File %1$s in zip-arhive %2$s not found", textFileInArchive, archivePath);
 			Log.e(TAG, message);
@@ -56,17 +57,17 @@ public class FsUtils {
 			String message = String.format("Archive %1$s contains the file names not in the UTF format", zipFile.getName());
 			Log.e(TAG, message);
 			throw new FileAccessException(message);
-        } catch (FileNotFoundException e) {
-            String message = String.format("File %1$s in zip-arhive %2$s not found", textFileInArchive, archivePath);
-            throw new FileAccessException(message);
+		} catch (FileNotFoundException e) {
+			String message = String.format("File %1$s in zip-arhive %2$s not found", textFileInArchive, archivePath);
+			throw new FileAccessException(message);
 		} catch (IOException e) {
-			Log.e(TAG, 
-					String.format("getTextFileReaderFromZipArchive(%1$s, %2$s, %3$s)", 
+			Log.e(TAG,
+					String.format("getTextFileReaderFromZipArchive(%1$s, %2$s, %3$s)",
 							archivePath, textFileInArchive, textFileEncoding), e);
 			throw new FileAccessException(e);
 		}
-	} 
-	
+	}
+
 	public static BufferedReader getTextFileReader(String dir, String textfileName, String textFileEncoding) throws FileAccessException {
 		BufferedReader bReader = null;
 		try {
@@ -75,12 +76,12 @@ public class FsUtils {
 			if (bReader == null) {
 				throw new FileAccessException(String.format("File %1$s not exists", textfileName));
 			}
-		} catch(Exception e) {
+		} catch (Exception e) {
 			throw new FileAccessException(e);
 		}
 		return bReader;
 	}
-	
+
 	public static void SearchByFilter(File currentFile, ArrayList<String> resultFiles, FileFilter filter)
 			throws IOException {
 
@@ -99,13 +100,13 @@ public class FsUtils {
 				}
 			}
 		} catch (Exception e) {
-			Log.e(TAG, 
-					String.format("SearchByFilter(%1$s, %2$s)", 
+			Log.e(TAG,
+					String.format("SearchByFilter(%1$s, %2$s)",
 							currentFile.getName(), filter.toString()), e);
 		}
-		
+
 	}
-	
+
 	public static boolean loadContentFromURL(String fromURL, String toFile) {
 		try {
 			URL url = new URL("http://bible-desktop.com/xml" + fromURL);
@@ -129,18 +130,18 @@ public class FsUtils {
 			FileOutputStream fos = new FileOutputStream(file);
 			fos.write(baf.toByteArray());
 			fos.close();
-	
+
 		} catch (IOException e) {
 			Log.e(TAG, String.format("loadContentFromURL(%1$s, %2$s)", fromURL, toFile), e);
 			return false;
 		}
-	
+
 		return true;
 	}
 
 	public static BufferedReader OpenFile(File file, String encoding) {
 		Log.i(TAG, "FileUtilities.OpenFile(" + file + ", " + encoding + ")");
-	
+
 		if (!file.exists()) {
 			return null;
 		}
@@ -153,7 +154,7 @@ public class FsUtils {
 			Log.i(TAG, e.toString());
 			return null;
 		}
-	
+
 		return bReader;
 	}
 

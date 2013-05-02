@@ -1,7 +1,7 @@
 package com.BibleQuote.listeners;
 
 public interface ISearchListener {
-	public enum SearchCode  {
+	public enum SearchCode {
 		Found,
 		NotFound
 	}

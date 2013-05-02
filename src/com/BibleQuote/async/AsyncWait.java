@@ -6,25 +6,25 @@ import com.BibleQuote.utils.Task;
 public class AsyncWait extends Task {
 	private final String TAG = "AsyncWait";
 	private AsyncTaskManager currentAsyncTaskManager;
-	
+
 
 	public AsyncWait(String message, Boolean isHidden, AsyncTaskManager currentAsyncTaskManager) {
 		super(message, isHidden);
 		this.currentAsyncTaskManager = currentAsyncTaskManager;
 	}
 
-	
+
 	@Override
 	protected Boolean doInBackground(String... arg0) {
 		try {
 			if (currentAsyncTaskManager != null) {
-				while(true) {
+				while (true) {
 					try {
 						Thread.sleep(200);
 					} catch (InterruptedException e) {
 						break;
 					}
-					if(!currentAsyncTaskManager.isWorking()) {
+					if (!currentAsyncTaskManager.isWorking()) {
 						break;
 					}
 				}
@@ -34,12 +34,12 @@ public class AsyncWait extends Task {
 		}
 		return true;
 	}
-	
-	
+
+
 	@Override
 	protected void onPostExecute(Boolean result) {
 		super.onPostExecute(result);
 	}
-	
-	
+
+
 }

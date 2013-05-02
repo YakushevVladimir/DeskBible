@@ -19,12 +19,11 @@ import java.io.File;
 
 /**
  * @author Yakushev Vladimir, Sergey Ursul
- * 
  */
 public class FsModule extends Module {
 
 	private static final long serialVersionUID = -660821372799486761L;
-	
+
 	/**
 	 * modulePath is a directory path or an archive path with a name
 	 */
@@ -34,21 +33,21 @@ public class FsModule extends Module {
 	 * Имя ini-файла (раскладка в названии файла может быть произвольной)
 	 */
 	public final String iniFileName;
-	
+
 	public final Boolean isArchive;
-	
+
 	public FsModule(String iniFilePath) {
 		modulePath = iniFilePath.substring(0, iniFilePath.lastIndexOf(File.separator));
 		iniFileName = iniFilePath.substring(iniFilePath.lastIndexOf(File.separator) + 1);
 		isArchive = modulePath.toLowerCase().endsWith(".zip");
 	}
-	
+
 	@Override
 	public String getDataSourceID() {
 		return this.modulePath + File.separator + this.iniFileName;
 	}
 
-    @Override
+	@Override
 	public String getID() {
 		return ShortName.toUpperCase();
 	}

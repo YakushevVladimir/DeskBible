@@ -21,7 +21,7 @@ public class BookNotFoundException extends Exception {
 
 	private String moduleID;
 	private String bookID;
-	
+
 	public BookNotFoundException(String moduleID, String bookID) {
 		this.moduleID = moduleID;
 		this.bookID = bookID;

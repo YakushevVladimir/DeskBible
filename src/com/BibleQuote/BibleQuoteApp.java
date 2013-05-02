@@ -20,6 +20,8 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import com.BibleQuote.async.AsyncManager;
 import com.BibleQuote.managers.Librarian;
+import com.BibleQuote.managers.bookmarks.IBookmarksRepository;
+import com.BibleQuote.managers.bookmarks.dbBookmarksRepository;
 import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.UpdateManager;
@@ -31,19 +33,19 @@ public class BibleQuoteApp extends Application {
 	private Librarian myLibrarian;
 	private AsyncManager mAsyncManager;
 
-    public static String getAppVersionName(Context context) {
-        try {
-            return context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
-        } catch (PackageManager.NameNotFoundException e) {
-            return "0.00.01";
-        }
-    }
+	public static String getAppVersionName(Context context) {
+		try {
+			return context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
+		} catch (PackageManager.NameNotFoundException e) {
+			return "0.00.01";
+		}
+	}
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-    }
-    
+	@Override
+	public void onCreate() {
+		super.onCreate();
+	}
+
 	public void Init() {
 		Log.i(TAG, "Init application preference helper...");
 		initPrefernceHelper();
@@ -64,18 +66,22 @@ public class BibleQuoteApp extends Application {
 		}
 		return myLibrarian;
 	}
-	
+
 	public AsyncManager getAsyncManager() {
 		if (mAsyncManager == null) {
 			mAsyncManager = new AsyncManager();
 		}
 		return mAsyncManager;
 	}
-	
+
+	public IBookmarksRepository getBookmarksRepository() {
+		return new dbBookmarksRepository();
+	}
+
 	private void initPrefernceHelper() {
 		PreferenceHelper.Init(this);
 	}
-	
+
 	private void initLibrarian() {
 		myLibrarian = new Librarian(this);
 	}

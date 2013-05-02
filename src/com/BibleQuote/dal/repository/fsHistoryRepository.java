@@ -33,11 +33,11 @@ public class fsHistoryRepository implements IHistoryRepository {
 	private File dirPath;
 	private final String historyFileName = "history.dat";
 	private final String TAG = "fsHistoryRepository";
-	
+
 	public fsHistoryRepository(File file) {
 		this.dirPath = file;
 	}
-	
+
 	public void save(LinkedList<ItemList> list) {
 		try {
 			FileOutputStream fStr = new FileOutputStream(new File(dirPath, historyFileName));
@@ -48,7 +48,7 @@ public class fsHistoryRepository implements IHistoryRepository {
 			Log.e(TAG, e.toString());
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public LinkedList<ItemList> load() throws FileAccessException {
 		try {
@@ -59,10 +59,10 @@ public class fsHistoryRepository implements IHistoryRepository {
 			return list;
 		} catch (ClassNotFoundException e) {
 			Log.e(TAG, e.toString());
-			throw new FileAccessException(e.getMessage());			
+			throw new FileAccessException(e.getMessage());
 		} catch (IOException e) {
 			Log.e(TAG, e.toString());
-			throw new FileAccessException(e.getMessage());	
+			throw new FileAccessException(e.getMessage());
 		}
 	}
 }

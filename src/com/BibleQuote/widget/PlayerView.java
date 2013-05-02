@@ -33,114 +33,114 @@ import java.util.ArrayList;
  */
 public class PlayerView extends LinearLayout {
 
-    ImageButton play, pause;
+	ImageButton play, pause;
 
-    public PlayerView(Context context) {
-        super(context);
-        init();
-    }
+	public PlayerView(Context context) {
+		super(context);
+		init();
+	}
 
-    public PlayerView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
-    }
+	public PlayerView(Context context, AttributeSet attrs) {
+		super(context, attrs);
+		init();
+	}
 
-    public PlayerView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-        init();
-    }
+	public PlayerView(Context context, AttributeSet attrs, int defStyle) {
+		super(context, attrs, defStyle);
+		init();
+	}
 
-    public enum Event {
-        PreviousClick,
-        StopClick,
-        PlayClick,
-        PauseClick,
-        ReplayClick,
-        NextClick
-    }
+	public enum Event {
+		PreviousClick,
+		StopClick,
+		PlayClick,
+		PauseClick,
+		ReplayClick,
+		NextClick
+	}
 
-    public interface OnClickListener {
-        public void onClick(Event ev);
-    }
+	public interface OnClickListener {
+		public void onClick(Event ev);
+	}
 
-    private ArrayList<OnClickListener> listeners = new ArrayList<OnClickListener>();
+	private ArrayList<OnClickListener> listeners = new ArrayList<OnClickListener>();
 
-    private void notify(Event ev) {
-        for (OnClickListener listener : listeners) {
-            listener.onClick(ev);
-        }
-    }
+	private void notify(Event ev) {
+		for (OnClickListener listener : listeners) {
+			listener.onClick(ev);
+		}
+	}
 
-    public void setOnClickListener (PlayerView.OnClickListener listener) {
-        listeners.add(listener);
-    }
+	public void setOnClickListener(PlayerView.OnClickListener listener) {
+		listeners.add(listener);
+	}
 
-    private void init() {
-        LayoutInflater li = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        li.inflate(R.layout.player_view, this, true);
+	private void init() {
+		LayoutInflater li = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		li.inflate(R.layout.player_view, this, true);
 
-        ImageButton replay = (ImageButton) findViewById(R.id.replay);
-        replay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PlayerView.this.notify(Event.ReplayClick);
-                viewPauseButton();
-            }
-        });
+		ImageButton replay = (ImageButton) findViewById(R.id.replay);
+		replay.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				PlayerView.this.notify(Event.ReplayClick);
+				viewPauseButton();
+			}
+		});
 
-        ImageButton previous = (ImageButton) findViewById(R.id.previous);
-        previous.setOnClickListener( new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PlayerView.this.notify(Event.PreviousClick);
-                viewPlayButton();
-            }
-        });
+		ImageButton previous = (ImageButton) findViewById(R.id.previous);
+		previous.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				PlayerView.this.notify(Event.PreviousClick);
+				viewPlayButton();
+			}
+		});
 
-        play = (ImageButton) findViewById(R.id.play);
-        play.setOnClickListener( new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PlayerView.this.notify(Event.PlayClick);
-                viewPauseButton();
-            }
-        });
+		play = (ImageButton) findViewById(R.id.play);
+		play.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				PlayerView.this.notify(Event.PlayClick);
+				viewPauseButton();
+			}
+		});
 
-        pause = (ImageButton) findViewById(R.id.pause);
-        pause.setOnClickListener( new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                viewPlayButton();
-                PlayerView.this.notify(Event.PauseClick);
-            }
-        });
+		pause = (ImageButton) findViewById(R.id.pause);
+		pause.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				viewPlayButton();
+				PlayerView.this.notify(Event.PauseClick);
+			}
+		});
 
-        ImageButton next = (ImageButton) findViewById(R.id.next);
-        next.setOnClickListener( new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PlayerView.this.notify(Event.NextClick);
-                viewPlayButton();
-            }
-        });
+		ImageButton next = (ImageButton) findViewById(R.id.next);
+		next.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				PlayerView.this.notify(Event.NextClick);
+				viewPlayButton();
+			}
+		});
 
-        ImageButton stop = (ImageButton) findViewById(R.id.stop);
-        stop.setOnClickListener( new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PlayerView.this.notify(Event.StopClick);
-                viewPlayButton();
-            }
-        });
-    }
+		ImageButton stop = (ImageButton) findViewById(R.id.stop);
+		stop.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				PlayerView.this.notify(Event.StopClick);
+				viewPlayButton();
+			}
+		});
+	}
 
-    public void viewPlayButton() {
-        play.setVisibility(View.VISIBLE);
-        pause.setVisibility(View.GONE);
-    }
+	public void viewPlayButton() {
+		play.setVisibility(View.VISIBLE);
+		pause.setVisibility(View.GONE);
+	}
 
-    public void viewPauseButton() {
-        play.setVisibility(View.GONE);
-        pause.setVisibility(View.VISIBLE);
-    }
+	public void viewPauseButton() {
+		play.setVisibility(View.GONE);
+		pause.setVisibility(View.VISIBLE);
+	}
 }

@@ -27,19 +27,19 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.*;
 
 public class XmlTskRepository implements ITskRepository {
-	
+
 	final static String TAG = "XmlTskRepository";
-	
+
 	final static String DOCUMENT = "tsk";
 	final static String BOOK = "book";
 	final static String CHAPTER = "chapter";
 	final static String VERSE = "verse";
-	
+
 	@Override
 	public String getReferences(String book, String chapter, String verse) throws TskNotFoundException, BQUniversalException {
-		
+
 		String references = "";
-		
+
 		XmlPullParser parser;
 		try {
 			parser = getParser();
@@ -50,49 +50,49 @@ public class XmlTskRepository implements ITskRepository {
 			Log.e(TAG, e.toString());
 			throw new BQUniversalException("Error get data in cross-references! " + e.getMessage());
 		}
-		
-        try {
+
+		try {
 			int eventType = parser.getEventType();
-	        boolean done = false;
-	        boolean bookFind = false;
-	        boolean chapterFind = false;
-	        while (eventType != XmlResourceParser.END_DOCUMENT && !done){
-	            String name = null;
-	            switch (eventType){
-	                case XmlResourceParser.START_TAG:
-	                    name = parser.getName();
-	                    if (name.equalsIgnoreCase(BOOK)){
-	                    	if (parser.getAttributeCount() == 0) {
-	                    		break;
-	                    	}
-	                    	String value = parser.getAttributeValue(0);
-	                    	bookFind = value.equalsIgnoreCase(book);
-	                    } else if (name.equalsIgnoreCase(CHAPTER) && bookFind) {
-	                    	if (parser.getAttributeCount() == 0) {
-	                    		break;
-	                    	}
-	                    	String value = parser.getAttributeValue(0);
-	                    	chapterFind = value.equalsIgnoreCase(chapter);
-	                    } else if (name.equalsIgnoreCase(VERSE) && chapterFind) {
-	                    	if (parser.getAttributeCount() == 0) {
-	                    		break;
-	                    	}
-	                    	String value = parser.getAttributeValue(0);
-	                    	if (value.equalsIgnoreCase(verse)) {
+			boolean done = false;
+			boolean bookFind = false;
+			boolean chapterFind = false;
+			while (eventType != XmlResourceParser.END_DOCUMENT && !done) {
+				String name = null;
+				switch (eventType) {
+					case XmlResourceParser.START_TAG:
+						name = parser.getName();
+						if (name.equalsIgnoreCase(BOOK)) {
+							if (parser.getAttributeCount() == 0) {
+								break;
+							}
+							String value = parser.getAttributeValue(0);
+							bookFind = value.equalsIgnoreCase(book);
+						} else if (name.equalsIgnoreCase(CHAPTER) && bookFind) {
+							if (parser.getAttributeCount() == 0) {
+								break;
+							}
+							String value = parser.getAttributeValue(0);
+							chapterFind = value.equalsIgnoreCase(chapter);
+						} else if (name.equalsIgnoreCase(VERSE) && chapterFind) {
+							if (parser.getAttributeCount() == 0) {
+								break;
+							}
+							String value = parser.getAttributeValue(0);
+							if (value.equalsIgnoreCase(verse)) {
 								references = parser.nextText();
 								done = true;
 							}
 						}
-	                    break;
-	                case XmlResourceParser.END_TAG:
-	                    name = parser.getName();
-	                    if (name.equalsIgnoreCase(DOCUMENT)){
-	                    	done = true;
-	                    }
-	                    break;
-	            }
-	            eventType = parser.next();
-	        }
+						break;
+					case XmlResourceParser.END_TAG:
+						name = parser.getName();
+						if (name.equalsIgnoreCase(DOCUMENT)) {
+							done = true;
+						}
+						break;
+				}
+				eventType = parser.next();
+			}
 		} catch (IOException e) {
 			Log.e(TAG, e.toString());
 			throw new BQUniversalException("Error read data from cross-references! " + e.getMessage());
@@ -100,15 +100,15 @@ public class XmlTskRepository implements ITskRepository {
 			Log.e(TAG, e.toString());
 			throw new BQUniversalException("Error get data in cross-references! " + e.getMessage());
 		}
-		
+
 		return references;
 	}
 
 	private XmlPullParser getParser() throws XmlPullParserException, UnsupportedEncodingException, TskNotFoundException {
-		
+
 		File tskDir = new File(DataConstants.FS_APP_DIR_NAME);
 		File tsk = new File(tskDir, "tsk.xml");
-		
+
 		InputStreamReader iReader;
 		try {
 			iReader = new InputStreamReader(new FileInputStream(tsk), "UTF-8");

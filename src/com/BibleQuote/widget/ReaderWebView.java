@@ -31,62 +31,63 @@ import java.util.ArrayList;
 import java.util.TreeSet;
 
 public class ReaderWebView extends WebView
-	implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener{
+		implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
 
 	final String TAG = "ReaderWebView";
-	
+
 	private GestureDetector mGestureScanner;
 	private JavaScriptInterface jsInterface;
 
-    protected TreeSet<Integer> selectedVerse = new TreeSet<Integer>();
-    public TreeSet<Integer> getSelectedVerses() {
-        return this.selectedVerse;
-    }
+	protected TreeSet<Integer> selectedVerse = new TreeSet<Integer>();
 
-    public void setSelectedVerse(TreeSet<Integer> selectedVerse) {
-        jsInterface.clearSelectedVerse();
-        this.selectedVerse = selectedVerse;
-        for (Integer verse : selectedVerse) {
-            jsInterface.setSelectedVerse(verse);
-        }
-    }
+	public TreeSet<Integer> getSelectedVerses() {
+		return this.selectedVerse;
+	}
 
-    public void gotoVerse(int verse) {
-        jsInterface.gotoVerse(verse);
-    }
+	public void setSelectedVerse(TreeSet<Integer> selectedVerse) {
+		jsInterface.clearSelectedVerse();
+		this.selectedVerse = selectedVerse;
+		for (Integer verse : selectedVerse) {
+			jsInterface.setSelectedVerse(verse);
+		}
+	}
 
-    public static enum Mode {
-        Read, Study, Speak
-    }
+	public void gotoVerse(int verse) {
+		jsInterface.gotoVerse(verse);
+	}
 
-    private Mode currMode = Mode.Read;
-    
-    public void setMode(Mode mode) {
-        currMode = mode;
-        if (currMode != Mode.Study) {
-            clearSelectedVerse();
-        }
-        notifyListeners(ChangeCode.onChangeReaderMode);
-    }
+	public static enum Mode {
+		Read, Study, Speak
+	}
 
-    public Mode getMode() {
-        return currMode;
-    }
+	private Mode currMode = Mode.Read;
 
-    private ArrayList<IReaderViewListener> listeners = new ArrayList<IReaderViewListener>();
+	public void setMode(Mode mode) {
+		currMode = mode;
+		if (currMode != Mode.Study) {
+			clearSelectedVerse();
+		}
+		notifyListeners(ChangeCode.onChangeReaderMode);
+	}
 
-    public void setOnReaderViewListener(IReaderViewListener listener) {
-        if (!listeners.contains(listener)) {
-            listeners.add(listener);
-        }
-    }
+	public Mode getMode() {
+		return currMode;
+	}
 
-    private void notifyListeners(ChangeCode code) {
-        for (IReaderViewListener listener : listeners) {
-            listener.onReaderViewChange(code);
-        }
-    }
-	
+	private ArrayList<IReaderViewListener> listeners = new ArrayList<IReaderViewListener>();
+
+	public void setOnReaderViewListener(IReaderViewListener listener) {
+		if (!listeners.contains(listener)) {
+			listeners.add(listener);
+		}
+	}
+
+	private void notifyListeners(ChangeCode code) {
+		for (IReaderViewListener listener : listeners) {
+			listener.onReaderViewChange(code);
+		}
+	}
+
 	public boolean mPageLoaded = false;
 
 	public ReaderWebView(Context mContext, AttributeSet attributeSet) {
@@ -98,25 +99,25 @@ public class ReaderWebView extends WebView
 		settings.setBuiltInZoomControls(false);
 		settings.setSupportZoom(false);
 
-	    setFocusable(true);
-	    setFocusableInTouchMode(true);
+		setFocusable(true);
+		setFocusableInTouchMode(true);
 		setWebViewClient(new webClient());
 		setWebChromeClient(new chromeClient());
-		
+
 		this.jsInterface = new JavaScriptInterface();
 		addJavascriptInterface(this.jsInterface, "reader");
-		
+
 		setVerticalScrollbarOverlay(true);
 
 		mGestureScanner = new GestureDetector(mContext, this);
 		mGestureScanner.setIsLongpressEnabled(true);
 		mGestureScanner.setOnDoubleTapListener(this);
 	}
-	
+
 	public void setText(String baseUrl, String text, int currVerse, Boolean nightMode, Boolean isBible) {
 		mPageLoaded = false;
 		String modStyle = isBible ? "bible_style.css" : "book_style.css";
-		
+
 		StringBuilder html = new StringBuilder();
 		html.append("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\r\n");
 		html.append("<html>\r\n");
@@ -130,7 +131,7 @@ public class ReaderWebView extends WebView
 		html.append("<body").append(currVerse > 1 ? (" onLoad=\"document.location.href='#verse_" + currVerse + "';\"") : "").append(">\r\n");
 		html.append(text);
 		html.append("</body>\r\n");
-        html.append("</html>");
+		html.append("</html>");
 
 		loadDataWithBaseURL("file://" + baseUrl, html.toString(), "text/html", "UTF-8", "about:config");
 		jsInterface.clearSelectedVerse();
@@ -138,10 +139,10 @@ public class ReaderWebView extends WebView
 
 	public boolean isScrollToBottom() {
 		int scrollY = getScrollY();
-	    int scrollExtent = computeVerticalScrollExtent();
-	    int scrollPos = scrollY + scrollExtent;
-	    return (scrollPos >= (computeVerticalScrollRange() - 10));
-    }
+		int scrollExtent = computeVerticalScrollExtent();
+		int scrollPos = scrollY + scrollExtent;
+		return (scrollPos >= (computeVerticalScrollRange() - 10));
+	}
 
 	public void computeScroll() {
 		super.computeScroll();
@@ -159,26 +160,26 @@ public class ReaderWebView extends WebView
 			notifyListeners(ChangeCode.onChangeSelection);
 		}
 	}
-	
+
 	private String getStyle(Boolean nightMode) {
 		String textColor;
 		String backColor;
-        String selTextColor;
+		String selTextColor;
 		String selTextBack;
-		
+
 		getSettings().setStandardFontFamily(PreferenceHelper.getFontFamily());
-		
+
 		if (!nightMode) {
 			backColor = PreferenceHelper.getTextBackground();
 			textColor = PreferenceHelper.getTextColor();
 //			selTextColor = "#FEF8C4";
-            selTextColor = PreferenceHelper.getTextColorSelected();
-            selTextBack = PreferenceHelper.getTextBackgroundSelected();
+			selTextColor = PreferenceHelper.getTextColorSelected();
+			selTextBack = PreferenceHelper.getTextBackgroundSelected();
 
 		} else {
 			textColor = "#EEEEEE";
-            backColor = "#000000";
-            selTextColor = "#EEEEEE";
+			backColor = "#000000";
+			selTextColor = "#EEEEEE";
 			selTextBack = "#562000";
 		}
 		String textSize = PreferenceHelper.getTextSize();
@@ -193,41 +194,41 @@ public class ReaderWebView extends WebView
 		//style.append("font-family: Georgia, Tahoma, Verdana, sans-serif;\r\n");
 		style.append("color: ").append(textColor).append(";\r\n");
 		style.append("font-size: ").append(textSize).append("pt;\r\n");
-        style.append("line-height: 1.25;\r\n");
-        style.append("background: ").append(backColor).append(";\r\n");
+		style.append("line-height: 1.25;\r\n");
+		style.append("background: ").append(backColor).append(";\r\n");
 		style.append("}\r\n");
 		style.append(".verse {\r\n");
 		style.append("background: ").append(backColor).append(";\r\n");
 		style.append("}\r\n");
 		style.append(".selectedVerse {\r\n");
-        style.append("color: ").append(selTextColor).append(";\r\n");
+		style.append("color: ").append(selTextColor).append(";\r\n");
 		style.append("background: ").append(selTextBack).append(";\r\n");
 		style.append("}\r\n");
 		style.append("img {\r\n");
 		style.append("max-width: 100%;\r\n");
 		style.append("}\r\n");
 		style.append("</style>\r\n");
-		
+
 		return style.toString();
 	}
 
 	final class webClient extends WebViewClient {
-		webClient() {}
-		
+		webClient() {
+		}
+
 		public boolean shouldOverrideUrlLoading(WebView view, String url) {
 			Log.i(TAG, "shouldOverrideUrlLoading(" + url + ")");
 			return true;
-		}	
+		}
 
-	    public void onPageFinished(WebView paramWebView, String paramString)
-	    {
-	      super.onPageFinished(paramWebView, paramString);
-	      mPageLoaded = true;
-	    }
+		public void onPageFinished(WebView paramWebView, String paramString) {
+			super.onPageFinished(paramWebView, paramString);
+			mPageLoaded = true;
+		}
 	}
 
 	public boolean onTouchEvent(MotionEvent event) {
-        return mGestureScanner.onTouchEvent(event) || (event != null && super.onTouchEvent(event));
+		return mGestureScanner.onTouchEvent(event) || (event != null && super.onTouchEvent(event));
 	}
 
 	public boolean onSingleTapUp(MotionEvent event) {
@@ -269,7 +270,7 @@ public class ReaderWebView extends WebView
 	}
 
 	public boolean onFling(MotionEvent e1, MotionEvent e2,
-			float velocityX, float velocityY) {
+						   float velocityX, float velocityY) {
 		notifyListeners(ChangeCode.onScroll);
 		return false;
 	}
@@ -279,7 +280,7 @@ public class ReaderWebView extends WebView
 	}
 
 	public boolean onScroll(MotionEvent e1, MotionEvent e2,
-			float distanceX, float distanceY) {
+							float distanceX, float distanceY) {
 		notifyListeners(ChangeCode.onScroll);
 		return false;
 	}
@@ -288,9 +289,9 @@ public class ReaderWebView extends WebView
 	}
 
 	public boolean onDoubleTap(MotionEvent event) {
-        if (currMode != Mode.Speak) {
-            setMode(currMode == Mode.Study ? Mode.Read : Mode.Study);
-        }
+		if (currMode != Mode.Speak) {
+			setMode(currMode == Mode.Study ? Mode.Read : Mode.Study);
+		}
 		return false;
 	}
 
@@ -299,7 +300,8 @@ public class ReaderWebView extends WebView
 	}
 
 	final class chromeClient extends WebChromeClient {
-		chromeClient() {}
+		chromeClient() {
+		}
 
 		public boolean onJsAlert(WebView webView, String url, String message, JsResult result) {
 			Log.i(TAG, message);
@@ -326,7 +328,7 @@ public class ReaderWebView extends WebView
 			if (currMode != Mode.Study || !id.contains("verse")) {
 				return;
 			}
-			
+
 			Integer verse = Integer.parseInt(id.split("_")[1]);
 			if (verse == null) {
 				return;
@@ -336,9 +338,9 @@ public class ReaderWebView extends WebView
 				loadUrl("javascript: deselectVerse('verse_" + verse + "');");
 			} else {
 				selectedVerse.add(verse);
-                setSelectedVerse(verse);
-            }
-			
+				setSelectedVerse(verse);
+			}
+
 			try {
 				Handler mHandler = getHandler();
 				mHandler.post(new Runnable() {
@@ -351,15 +353,15 @@ public class ReaderWebView extends WebView
 			}
 		}
 
-        private void setSelectedVerse(int verse) {
-            loadUrl("javascript: selectVerse('verse_" + verse + "');");
-        }
+		private void setSelectedVerse(int verse) {
+			loadUrl("javascript: selectVerse('verse_" + verse + "');");
+		}
 
-        public void gotoVerse(int verse) {
-            loadUrl("javascript: gotoVerse(" + verse + ");");
-        }
+		public void gotoVerse(int verse) {
+			loadUrl("javascript: gotoVerse(" + verse + ");");
+		}
 
-        public void alert(final String message) {
+		public void alert(final String message) {
 			Log.i(TAG, "JavaScriptInterface.alert()");
 		}
 	}

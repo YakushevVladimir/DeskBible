@@ -24,8 +24,8 @@ import android.view.View;
 import android.widget.LinearLayout;
 import com.BibleQuote.R;
 
-public class ColorPickerDialog extends Dialog 
-	implements ColorPickerView.OnColorChangedListener, View.OnClickListener {
+public class ColorPickerDialog extends Dialog
+		implements ColorPickerView.OnColorChangedListener, View.OnClickListener {
 
 	private ColorPickerView mColorPicker;
 
@@ -37,7 +37,7 @@ public class ColorPickerDialog extends Dialog
 	public interface OnColorChangedListener {
 		public void onColorChanged(int color);
 	}
-	
+
 	public ColorPickerDialog(Context context, int initialColor) {
 		super(context);
 		init(initialColor);
@@ -51,25 +51,25 @@ public class ColorPickerDialog extends Dialog
 	}
 
 	private void setUp(int color) {
-		
+
 		LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		
+
 		View layout = inflater.inflate(R.layout.dialog_color_picker, null);
 
 		setTitle(R.string.dialog_color_picker);
 		setContentView(layout);
-		
+
 		mColorPicker = (ColorPickerView) layout.findViewById(R.id.color_picker_view);
 		mOldColor = (ColorPickerPanelView) layout.findViewById(R.id.old_color_panel);
 		mNewColor = (ColorPickerPanelView) layout.findViewById(R.id.new_color_panel);
-		
+
 		((LinearLayout) mOldColor.getParent()).setPadding(
-			Math.round(mColorPicker.getDrawingOffset()), 
-			0, 
-			Math.round(mColorPicker.getDrawingOffset()), 
-			0
-		);	
-		
+				Math.round(mColorPicker.getDrawingOffset()),
+				0,
+				Math.round(mColorPicker.getDrawingOffset()),
+				0
+		);
+
 		mOldColor.setOnClickListener(this);
 		mNewColor.setOnClickListener(this);
 		mColorPicker.setOnColorChangedListener(this);
@@ -94,13 +94,14 @@ public class ColorPickerDialog extends Dialog
 	public void setAlphaSliderVisible(boolean visible) {
 		mColorPicker.setAlphaSliderVisible(visible);
 	}
-	
+
 	/**
 	 * Set a OnColorChangedListener to get notified when the color
 	 * selected by the user has changed.
+	 *
 	 * @param listener
 	 */
-	public void setOnColorChangedListener(OnColorChangedListener listener){
+	public void setOnColorChangedListener(OnColorChangedListener listener) {
 		mListener = listener;
 	}
 
@@ -117,5 +118,5 @@ public class ColorPickerDialog extends Dialog
 		}
 		dismiss();
 	}
-	
+
 }

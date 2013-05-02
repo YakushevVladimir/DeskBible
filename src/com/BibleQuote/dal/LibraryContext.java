@@ -11,21 +11,22 @@ import java.util.*;
 
 public class LibraryContext {
 
-    public Map<String, Module> moduleSet = Collections.synchronizedMap(new TreeMap<String, Module>());
-    public Map<String, Book> bookSet = Collections.synchronizedMap(new LinkedHashMap<String, Book>());
-    public Map<String, Chapter> chapterPool = Collections.synchronizedMap(new CachePool<Chapter>());
+	public Map<String, Module> moduleSet = Collections.synchronizedMap(new TreeMap<String, Module>());
+	public Map<String, Book> bookSet = Collections.synchronizedMap(new LinkedHashMap<String, Book>());
+	public Map<String, Chapter> chapterPool = Collections.synchronizedMap(new CachePool<Chapter>());
 
-    public EventManager eventManager = new EventManager();
+	public EventManager eventManager = new EventManager();
 
-    private Context context;
-    public Context getContext() {
-        return context;
-    }
+	private Context context;
+
+	public Context getContext() {
+		return context;
+	}
 
 	public LibraryContext(Context context) {
-		this.context = context; 
+		this.context = context;
 	}
-	
+
 	protected HashMap<String, String> getCharsets() {
 		HashMap<String, String> charsets = new HashMap<String, String>();
 		charsets.put("0", "ISO-8859-1"); // ANSI charset
@@ -60,7 +61,7 @@ public class LibraryContext {
 		charsets.put("238", "cp1250"); // Eastern European
 		charsets.put("254", "cp437"); // PC 437
 		charsets.put("255", "cp850"); // OEM
-		
+
 		return charsets;
 	}
 }

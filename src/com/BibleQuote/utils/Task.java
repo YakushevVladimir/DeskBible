@@ -13,38 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- package com.BibleQuote.utils;
+package com.BibleQuote.utils;
 
 import android.os.AsyncTask;
 
 public abstract class Task extends AsyncTask<String, String, Boolean> {
 
 	/**
-	 * @uml.property  name="mResult"
+	 * @uml.property name="mResult"
 	 */
 	private Boolean mResult;
 	/**
-	 * @uml.property  name="mProgressMessage"
+	 * @uml.property name="mProgressMessage"
 	 */
 	private String mProgressMessage;
 	/**
-	 * @uml.property  name="mProgressTracker"
-	 * @uml.associationEnd  
+	 * @uml.property name="mProgressTracker"
+	 * @uml.associationEnd
 	 */
 	private IProgressTracker mProgressTracker;
 
 	private Boolean mIsHidden = false;
-	
+
 	@Override
 	protected abstract Boolean doInBackground(String... arg0);
-	
+
 	@Override
 	protected void onPostExecute(Boolean result) {
 		// Update result
 		mResult = result;
 		// And send it to progress tracker
 		if (mProgressTracker != null) {
-		    mProgressTracker.onComplete();
+			mProgressTracker.onComplete();
 		}
 		// Detach from progress tracker
 		mProgressTracker = null;
@@ -82,9 +82,9 @@ public abstract class Task extends AsyncTask<String, String, Boolean> {
 			mProgressTracker.onProgress(mProgressMessage);
 		}
 	}
-	
+
 	public Boolean isHidden() {
 		return mIsHidden;
 	}
-	
+
 }

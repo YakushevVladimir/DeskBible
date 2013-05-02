@@ -18,20 +18,20 @@ package com.BibleQuote.async;
 import com.BibleQuote.utils.Task;
 
 public class AsyncCommand extends Task {
-	
+
 	private ICommand command;
 	private Exception exception;
 	private Boolean isSuccess;
-	
+
 	public interface ICommand {
 		public void execute() throws Exception;
 	}
-	
+
 	public AsyncCommand(ICommand command, String message, Boolean isHidden) {
 		super(message, isHidden);
 		this.command = command;
 	}
-	
+
 	@Override
 	protected Boolean doInBackground(String... arg0) {
 		isSuccess = false;
@@ -43,7 +43,7 @@ public class AsyncCommand extends Task {
 		}
 		return true;
 	}
-	
+
 	@Override
 	protected void onPostExecute(Boolean result) {
 		super.onPostExecute(result);

@@ -11,28 +11,28 @@ import com.BibleQuote.utils.Task;
 
 public class AsyncOpenModule extends Task {
 	private final String TAG = "AsyncOpenBooks";
-	
+
 	private Librarian librarian;
 	private BibleReference link;
 	private Exception exception;
 	private Boolean isSuccess;
 	private Module module;
-	
-	
+
+
 	public AsyncOpenModule(String message, Boolean isHidden, Librarian librarian, BibleReference link) {
 		super(message, isHidden);
 		this.librarian = librarian;
 		this.link = link;
 	}
 
-	
+
 	@Override
 	protected Boolean doInBackground(String... arg0) {
 		isSuccess = false;
 		try {
 			Log.i(TAG, String.format("Open OSIS link with moduleID=%1$s", link.getModuleID()));
 			module = librarian.getModuleByID(link.getModuleID());
-			
+
 			Log.i(TAG, String.format("Load books for module with moduleID=%1$s", module.getID()));
 			librarian.getBookList(module);
 
@@ -45,11 +45,11 @@ public class AsyncOpenModule extends Task {
 		} catch (BookDefinitionException e) {
 			exception = e;
 		}
-		
+
 		return true;
 	}
-	
-	
+
+
 	@Override
 	protected void onPostExecute(Boolean result) {
 		super.onPostExecute(result);

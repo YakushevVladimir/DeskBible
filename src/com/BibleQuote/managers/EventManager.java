@@ -8,9 +8,10 @@ import java.util.List;
 
 
 public class EventManager {
-	
+
 	///////////////// IChangeModulesListener
 	private final List<IChangeModulesListener> myChangeModuleListeners = Collections.synchronizedList(new LinkedList<IChangeModulesListener>());
+
 	public void addChangeModulesListener(IChangeModulesListener listener) {
 		myChangeModuleListeners.add(listener);
 	}
@@ -18,7 +19,7 @@ public class EventManager {
 	public void removeChangeModulesListener(IChangeModulesListener listener) {
 		myChangeModuleListeners.remove(listener);
 	}
-	
+
 	public void fireChangeModulesEvent(ChangeModulesEvent event) {
 		synchronized (myChangeModuleListeners) {
 			for (IChangeModulesListener l : myChangeModuleListeners) {
@@ -26,10 +27,11 @@ public class EventManager {
 			}
 		}
 	}
-	
+
 
 	///////////////// IChangeBooksListener
 	private final List<IChangeBooksListener> myChangeBooksListeners = Collections.synchronizedList(new LinkedList<IChangeBooksListener>());
+
 	public void addChangeBooksListener(IChangeBooksListener listener) {
 		myChangeBooksListeners.add(listener);
 	}
@@ -37,7 +39,7 @@ public class EventManager {
 	public void removeChangeBooksListener(IChangeBooksListener listener) {
 		myChangeBooksListeners.remove(listener);
 	}
-		
+
 	public void fireChangeBooksEvent(ChangeBooksEvent event) {
 		synchronized (myChangeBooksListeners) {
 			for (IChangeBooksListener l : myChangeBooksListeners) {
@@ -46,9 +48,10 @@ public class EventManager {
 		}
 	}
 
-	
+
 	///////////////// IChangeChaptersListener
 	private final List<IChangeChaptersListener> myChangeChaptersListeners = Collections.synchronizedList(new LinkedList<IChangeChaptersListener>());
+
 	public void addChangeChaptersListener(IChangeChaptersListener listener) {
 		myChangeChaptersListeners.add(listener);
 	}
@@ -56,7 +59,7 @@ public class EventManager {
 	public void removeChangeChaptersListener(IChangeChaptersListener listener) {
 		myChangeChaptersListeners.remove(listener);
 	}
-		
+
 	public void fireChangeChaptersEvent(ChangeChaptersEvent event) {
 		synchronized (myChangeChaptersListeners) {
 			for (IChangeChaptersListener l : myChangeChaptersListeners) {
@@ -68,6 +71,7 @@ public class EventManager {
 
 	/////////////// ISearchListener
 	private final List<ISearchListener> mySearchListeners = Collections.synchronizedList(new LinkedList<ISearchListener>());
+
 	public void addSearchListener(ISearchListener listener) {
 		mySearchListeners.add(listener);
 	}
@@ -75,7 +79,7 @@ public class EventManager {
 	public void removeSearchListener(ISearchListener listener) {
 		mySearchListeners.remove(listener);
 	}
-	
+
 	public void fireSearchInLibraryEvent(SearchInLibraryEvent event) {
 		synchronized (mySearchListeners) {
 			for (ISearchListener l : mySearchListeners) {

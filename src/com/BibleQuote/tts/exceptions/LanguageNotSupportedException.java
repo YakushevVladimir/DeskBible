@@ -24,13 +24,14 @@ import java.util.Locale;
  * Time: 23:40
  */
 public class LanguageNotSupportedException extends Exception {
-    Locale locale;
-    public LanguageNotSupportedException(Locale locale) {
-        super("Language " + locale.getDisplayLanguage() + " not supported!");
-        this.locale = locale;
-    }
+	Locale locale;
 
-    public String getNotSupportedLanguage() {
-        return locale.getDisplayLanguage();
-    }
+	public LanguageNotSupportedException(Locale locale) {
+		super("Language " + locale.getDisplayLanguage() + " not supported!");
+		this.locale = locale;
+	}
+
+	public String getNotSupportedLanguage() {
+		return locale.getDisplayLanguage();
+	}
 }

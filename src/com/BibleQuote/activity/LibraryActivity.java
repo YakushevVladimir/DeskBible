@@ -23,14 +23,14 @@ import android.view.View;
 import android.widget.*;
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
+import com.BibleQuote.async.AsyncManager;
+import com.BibleQuote.async.AsyncOpenModule;
+import com.BibleQuote.async.AsyncRefreshModules;
 import com.BibleQuote.entity.BibleReference;
 import com.BibleQuote.entity.ItemList;
 import com.BibleQuote.exceptions.*;
 import com.BibleQuote.listeners.ChangeModulesEvent;
 import com.BibleQuote.listeners.IChangeModulesListener;
-import com.BibleQuote.async.AsyncManager;
-import com.BibleQuote.async.AsyncOpenModule;
-import com.BibleQuote.async.AsyncRefreshModules;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.utils.OnTaskCompleteListener;
 import com.BibleQuote.utils.Task;
@@ -50,38 +50,39 @@ public class LibraryActivity extends SherlockFragmentActivity implements IChange
 	private ListView modulesList, booksList;
 	private GridView chapterList;
 	private Button btnModule, btnBook, btnChapter;
-	
+
 	private ArrayList<ItemList> modules = new ArrayList<ItemList>();
 	private ArrayList<ItemList> books = new ArrayList<ItemList>();
 	private ArrayList<String> chapters = new ArrayList<String>();
-	
+
 	private int modulePos = 0, bookPos = 0, chapterPos = 0;
 	private String moduleID = "---", bookID = "---", chapter = "-";
 	private Librarian myLibrarian;
 	private AsyncManager mAsyncManager;
 	private String messageRefresh;
 
-    private Handler handler = new Handler() {
-        public void handleMessage(android.os.Message msg) {
-            Log.d(TAG, "Message processing in handler");
-            switch (msg.what) {
-                case MODULE_VIEW:
-                    UpdateView(MODULE_VIEW);
-                    break;
-                case BOOK_VIEW:
-                    UpdateView(BOOK_VIEW);
-                    break;
-                case CHAPTER_VIEW:
-                    UpdateView(CHAPTER_VIEW);
-                    break;
-                default:
-                    break;
-            }
-        }
-    };
+	private Handler handler = new Handler() {
+		public void handleMessage(android.os.Message msg) {
+			Log.d(TAG, "Message processing in handler");
+			switch (msg.what) {
+				case MODULE_VIEW:
+					UpdateView(MODULE_VIEW);
+					break;
+				case BOOK_VIEW:
+					UpdateView(BOOK_VIEW);
+					break;
+				case CHAPTER_VIEW:
+					UpdateView(CHAPTER_VIEW);
+					break;
+				default:
+					break;
+			}
+		}
+	};
 
-    private Task mTask;
-    @Override
+	private Task mTask;
+
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.books);
@@ -90,21 +91,21 @@ public class LibraryActivity extends SherlockFragmentActivity implements IChange
 		BibleQuoteApp app = (BibleQuoteApp) getApplication();
 		myLibrarian = app.getLibrarian();
 
-        myLibrarian.getEventManager().addChangeModulesListener(this);
+		myLibrarian.getEventManager().addChangeModulesListener(this);
 
 		mAsyncManager = app.getAsyncManager();
 		mAsyncManager.handleRetainedTask(mTask, this);
-		
+
 		messageRefresh = getResources().getString(R.string.messageRefresh);
-		
+
 		btnModule = (Button) findViewById(R.id.btnModule);
-        btnModule.setOnClickListener(onBtnModuleClick);
+		btnModule.setOnClickListener(onBtnModuleClick);
 
 		btnBook = (Button) findViewById(R.id.btnBook);
-        btnBook.setOnClickListener(onBtnBookClick);
+		btnBook.setOnClickListener(onBtnBookClick);
 
-        btnChapter = (Button) findViewById(R.id.btnChapter);
-        btnChapter.setOnClickListener(onBtnChapterClick);
+		btnChapter = (Button) findViewById(R.id.btnChapter);
+		btnChapter.setOnClickListener(onBtnChapterClick);
 
 		modulesList = (ListView) findViewById(R.id.modules);
 		modulesList.setOnItemClickListener(modulesList_onClick);
@@ -118,15 +119,15 @@ public class LibraryActivity extends SherlockFragmentActivity implements IChange
 		BibleReference osisLink = myLibrarian.getCurrentOSISLink();
 		if (myLibrarian.isOSISLinkValid(osisLink)) {
 			moduleID = osisLink.getModuleID();
-			bookID   = osisLink.getBookID();
-			chapter  = String.valueOf(osisLink.getChapter());
+			bookID = osisLink.getBookID();
+			chapter = String.valueOf(osisLink.getChapter());
 			UpdateView(CHAPTER_VIEW);
 		} else {
 			UpdateView(MODULE_VIEW);
 		}
 		setButtonText();
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater infl = getSupportMenuInflater();
@@ -153,30 +154,30 @@ public class LibraryActivity extends SherlockFragmentActivity implements IChange
 				UpdateView(MODULE_VIEW);
 				return;
 			}
-			modulePos  = position;
-			moduleID   = modules.get(modulePos).get(ItemList.ID); 
-			bookPos    = 0;
+			modulePos = position;
+			moduleID = modules.get(modulePos).get(ItemList.ID);
+			bookPos = 0;
 			chapterPos = 0;
-			
+
 			String message = getResources().getString(R.string.messageLoadBooks);
 			BibleReference currentOSISLink = myLibrarian.getCurrentOSISLink();
 			BibleReference OSISLink = new BibleReference(
-					currentOSISLink.getModuleDatasource(), 
-					null, 
-					moduleID, 
-					currentOSISLink.getBookID(), 
-					currentOSISLink.getChapter(), 
+					currentOSISLink.getModuleDatasource(),
+					null,
+					moduleID,
+					currentOSISLink.getBookID(),
+					currentOSISLink.getChapter(),
 					currentOSISLink.getFromVerse());
 
-            mTask = new AsyncOpenModule(message, false, myLibrarian, OSISLink);
+			mTask = new AsyncOpenModule(message, false, myLibrarian, OSISLink);
 			mAsyncManager.setupTask(mTask, LibraryActivity.this);
 		}
 	};
 
 	private AdapterView.OnItemClickListener booksList_onClick = new AdapterView.OnItemClickListener() {
 		public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-			bookPos    = position;
-			bookID     = books.get(bookPos).get("ID");
+			bookPos = position;
+			bookID = books.get(bookPos).get("ID");
 			chapterPos = 0;
 
 			UpdateView(CHAPTER_VIEW);
@@ -188,11 +189,11 @@ public class LibraryActivity extends SherlockFragmentActivity implements IChange
 			}
 		}
 	};
-	
+
 	private AdapterView.OnItemClickListener chapterList_onClick = new AdapterView.OnItemClickListener() {
 		public void onItemClick(AdapterView<?> a, View v, int position, long id) {
 			chapterPos = position;
-			chapter    = chapters.get(position);
+			chapter = chapters.get(position);
 			setButtonText();
 			readChapter();
 		}
@@ -205,24 +206,24 @@ public class LibraryActivity extends SherlockFragmentActivity implements IChange
 		finish();
 	}
 
-	private void setButtonText(){
+	private void setButtonText() {
 
 		String bookShortName = "---";
 		try {
 			bookShortName = myLibrarian.getBookShortName(moduleID, bookID);
-            ArrayList<String> chList = myLibrarian.getChaptersList(moduleID, bookID);
-            if (chList.size() == 0) {
-                chapter = "-";
-            } else {
-                chapter = chList.contains(chapter) ? chapter : chList.get(0);
-            }
+			ArrayList<String> chList = myLibrarian.getChaptersList(moduleID, bookID);
+			if (chList.size() == 0) {
+				chapter = "-";
+			} else {
+				chapter = chList.contains(chapter) ? chapter : chList.get(0);
+			}
 		} catch (OpenModuleException e) {
 			ExceptionHelper.onOpenModuleException(e, this, TAG);
 		} catch (BookNotFoundException e) {
-            chapter = "-";
-        }
+			chapter = "-";
+		}
 
-        btnModule.setText(moduleID);
+		btnModule.setText(moduleID);
 		btnBook.setText(bookShortName);
 		btnChapter.setText(chapter);
 	}
@@ -232,67 +233,67 @@ public class LibraryActivity extends SherlockFragmentActivity implements IChange
 		this.viewMode = viewMode;
 
 		switch (viewMode) {
-		case MODULE_VIEW:
-			btnModule.setEnabled(false);
-			btnBook.setEnabled(true);
-			btnChapter.setEnabled(true);
+			case MODULE_VIEW:
+				btnModule.setEnabled(false);
+				btnBook.setEnabled(true);
+				btnChapter.setEnabled(true);
 
-			modulesList.setVisibility(View.VISIBLE);
-			booksList.setVisibility(View.GONE);
-			chapterList.setVisibility(View.GONE);
-			
-			modulesList.setAdapter(getModuleAdapter());
-			
-			ItemList itemModule = new ItemList(moduleID, myLibrarian.getModuleFullName());
-			modulePos = modules.indexOf(itemModule);
-			if (modulePos >= 0) {
-				modulesList.setSelection(modulePos);
-			}
-			break;
+				modulesList.setVisibility(View.VISIBLE);
+				booksList.setVisibility(View.GONE);
+				chapterList.setVisibility(View.GONE);
 
-		case BOOK_VIEW:
-			btnModule.setEnabled(true);
-			btnBook.setEnabled(false);
-			btnChapter.setEnabled(true);
+				modulesList.setAdapter(getModuleAdapter());
 
-			modulesList.setVisibility(View.GONE);
-			booksList.setVisibility(View.VISIBLE);
-			chapterList.setVisibility(View.GONE);
-
-			booksList.setAdapter(getBookAdapter());
-
-			ItemList itemBook;
-			try {
-				itemBook = new ItemList(bookID, myLibrarian.getBookFullName(moduleID, bookID));
-				bookPos = books.indexOf(itemBook);
-				if (bookPos >= 0) {
-					booksList.setSelection(bookPos);
+				ItemList itemModule = new ItemList(moduleID, myLibrarian.getModuleFullName());
+				modulePos = modules.indexOf(itemModule);
+				if (modulePos >= 0) {
+					modulesList.setSelection(modulePos);
 				}
-			} catch (OpenModuleException e) {
-				ExceptionHelper.onOpenModuleException(e, this, TAG);
-			}
-			break;
+				break;
 
-		case CHAPTER_VIEW:
-			btnModule.setEnabled(true);
-			btnBook.setEnabled(true);
-			btnChapter.setEnabled(false);
+			case BOOK_VIEW:
+				btnModule.setEnabled(true);
+				btnBook.setEnabled(false);
+				btnChapter.setEnabled(true);
 
-			modulesList.setVisibility(View.GONE);
-			booksList.setVisibility(View.GONE);
-			chapterList.setVisibility(View.VISIBLE);
+				modulesList.setVisibility(View.GONE);
+				booksList.setVisibility(View.VISIBLE);
+				chapterList.setVisibility(View.GONE);
 
-			chapterList.setAdapter(getChapterAdapter());
+				booksList.setAdapter(getBookAdapter());
 
-			chapterPos = chapters.indexOf(chapter);
-			if (chapterPos >= 0) {
-				chapterList.setSelection(chapterPos);
-			}
+				ItemList itemBook;
+				try {
+					itemBook = new ItemList(bookID, myLibrarian.getBookFullName(moduleID, bookID));
+					bookPos = books.indexOf(itemBook);
+					if (bookPos >= 0) {
+						booksList.setSelection(bookPos);
+					}
+				} catch (OpenModuleException e) {
+					ExceptionHelper.onOpenModuleException(e, this, TAG);
+				}
+				break;
 
-			break;
+			case CHAPTER_VIEW:
+				btnModule.setEnabled(true);
+				btnBook.setEnabled(true);
+				btnChapter.setEnabled(false);
 
-		default:
-			break;
+				modulesList.setVisibility(View.GONE);
+				booksList.setVisibility(View.GONE);
+				chapterList.setVisibility(View.VISIBLE);
+
+				chapterList.setAdapter(getChapterAdapter());
+
+				chapterPos = chapters.indexOf(chapter);
+				if (chapterPos >= 0) {
+					chapterList.setSelection(chapterPos);
+				}
+
+				break;
+
+			default:
+				break;
 		}
 	}
 
@@ -300,8 +301,8 @@ public class LibraryActivity extends SherlockFragmentActivity implements IChange
 		modules = myLibrarian.getModulesList();
 		return new SimpleAdapter(this, modules,
 				R.layout.item_list,
-				new String[] { ItemList.ID, ItemList.Name }, new int[] {
-						R.id.id, R.id.name });
+				new String[]{ItemList.ID, ItemList.Name}, new int[]{
+				R.id.id, R.id.name});
 	}
 
 	private SimpleAdapter getBookAdapter() {
@@ -319,8 +320,8 @@ public class LibraryActivity extends SherlockFragmentActivity implements IChange
 		}
 		return new SimpleAdapter(this, books,
 				R.layout.item_list,
-				new String[] { ItemList.ID, ItemList.Name }, new int[] {
-						R.id.id, R.id.name });
+				new String[]{ItemList.ID, ItemList.Name}, new int[]{
+				R.id.id, R.id.name});
 	}
 
 	private ArrayAdapter<String> getChapterAdapter() {
@@ -336,34 +337,34 @@ public class LibraryActivity extends SherlockFragmentActivity implements IChange
 				R.id.chapter, chapters);
 	}
 
-    private View.OnClickListener onBtnModuleClick = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            if (moduleID.equals("---"))
-                return;
-            UpdateView(MODULE_VIEW);
-        }
-    };
+	private View.OnClickListener onBtnModuleClick = new View.OnClickListener() {
+		@Override
+		public void onClick(View view) {
+			if (moduleID.equals("---"))
+				return;
+			UpdateView(MODULE_VIEW);
+		}
+	};
 
-    private View.OnClickListener onBtnBookClick = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            if (bookID.equals("---"))
-                return;
-            UpdateView(BOOK_VIEW);
-        }
-    };
+	private View.OnClickListener onBtnBookClick = new View.OnClickListener() {
+		@Override
+		public void onClick(View view) {
+			if (bookID.equals("---"))
+				return;
+			UpdateView(BOOK_VIEW);
+		}
+	};
 
-    private View.OnClickListener onBtnChapterClick = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            if (chapter.equals("-"))
-                return;
-            UpdateView(CHAPTER_VIEW);
-        }
-    };
+	private View.OnClickListener onBtnChapterClick = new View.OnClickListener() {
+		@Override
+		public void onClick(View view) {
+			if (chapter.equals("-"))
+				return;
+			UpdateView(CHAPTER_VIEW);
+		}
+	};
 
- 	@Override
+	@Override
 	protected void onPostResume() {
 		super.onPostResume();
 		UpdateView(viewMode);
@@ -377,36 +378,36 @@ public class LibraryActivity extends SherlockFragmentActivity implements IChange
 			} else if (task instanceof AsyncOpenModule) {
 				onAsyncOpenModuleComplete((AsyncOpenModule) task);
 			}
-		}	
+		}
 	}
-	
+
 	private void onAsyncOpenModuleComplete(AsyncOpenModule task) {
 		if (task.isSuccess()) {
 			moduleID = task.getModule().getID();
 			//chapter = "-";
 			setButtonText();
 			UpdateView(BOOK_VIEW);
-			
+
 		} else {
 			Exception e = task.getException();
 			if (e instanceof OpenModuleException) {
 				ExceptionHelper.onOpenModuleException((OpenModuleException) e, this, TAG);
-				
+
 			} else if (e instanceof BooksDefinitionException) {
 				ExceptionHelper.onBooksDefinitionException((BooksDefinitionException) e, this, TAG);
-				
+
 			} else if (e instanceof BookDefinitionException) {
 				ExceptionHelper.onBookDefinitionException((BookDefinitionException) e, this, TAG);
 			}
 			UpdateView(MODULE_VIEW);
-		}		
+		}
 	}
 
-    @Override
-    public void onChangeModules(ChangeModulesEvent event) {
-        if (this.viewMode == MODULE_VIEW) {
-            Log.d(TAG, "Send message to hudler for refresh modules list");
-            handler.sendEmptyMessage(MODULE_VIEW);
-        }
-    }
+	@Override
+	public void onChangeModules(ChangeModulesEvent event) {
+		if (this.viewMode == MODULE_VIEW) {
+			Log.d(TAG, "Send message to hudler for refresh modules list");
+			handler.sendEmptyMessage(MODULE_VIEW);
+		}
+	}
 }

@@ -8,6 +8,6 @@ public interface IChangeBooksListener {
 		BooksDeleted,
 		BooksFailed
 	}
-	
+
 	public void onChangeBooks(ChangeBooksEvent event);
 }

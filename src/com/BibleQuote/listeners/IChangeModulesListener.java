@@ -7,6 +7,6 @@ public interface IChangeModulesListener {
 		ModulesChanged,
 		ModulesDeleted
 	}
-	
+
 	public void onChangeModules(ChangeModulesEvent event);
 }

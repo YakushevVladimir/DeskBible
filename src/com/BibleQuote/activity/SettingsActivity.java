@@ -28,17 +28,17 @@ import com.actionbarsherlock.app.SherlockPreferenceActivity;
 public class SettingsActivity extends SherlockPreferenceActivity implements
 		OnSharedPreferenceChangeListener {
 
-    @SuppressWarnings("deprecation")
+	@SuppressWarnings("deprecation")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		setTheme(R.style.Theme_Sherlock_Light);
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.settings);
-		
+
 		Preference historySize = (Preference) findPreference("HistorySize");
 		historySize.setOnPreferenceChangeListener(historySizeChangeListener);
 		setHistorySummary(historySize, Integer.toString(PreferenceHelper.getHistorySize()));
-		
+
 		Preference fontFamily = (Preference) findPreference("font_family");
 		fontFamily.setOnPreferenceChangeListener(fontFamilyChangeListener);
 		setFontFamilySummary(fontFamily, PreferenceHelper.getFontFamily());
@@ -47,7 +47,7 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 	}
 
-    @SuppressWarnings("deprecation")
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void onDestroy() {
 		getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
@@ -61,7 +61,7 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 			return true;
 		}
 	};
-	
+
 	private void setHistorySummary(Preference historySize, String value) {
 		try {
 			String summary = getResources().getString(R.string.category_reader_other_history_size_summary);
@@ -80,7 +80,7 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 			return true;
 		}
 	};
-	
+
 
 	private void setFontFamilySummary(Preference fontFamily, String newValue) {
 		String summary;
@@ -91,7 +91,7 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 		} else {
 			summary = "Droid Sans";
 		}
-		
+
 		fontFamily.setSummary(summary);
 	}
 }

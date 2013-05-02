@@ -4,8 +4,8 @@ public class BQUniversalException extends Exception {
 
 	private static final long serialVersionUID = 5535751040905987997L;
 	private String errMessage;
-	
-	public BQUniversalException (String message) {
+
+	public BQUniversalException(String message) {
 		this.errMessage = message;
 	}
 

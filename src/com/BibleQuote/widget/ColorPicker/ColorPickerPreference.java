@@ -29,10 +29,11 @@ import android.widget.LinearLayout;
 
 /**
  * A preference type that allows a user to choose a time
+ *
  * @author Sergey Margaritov
  */
 public class ColorPickerPreference extends Preference
-	implements Preference.OnPreferenceClickListener, ColorPickerDialog.OnColorChangedListener {
+		implements Preference.OnPreferenceClickListener, ColorPickerDialog.OnColorChangedListener {
 
 	View mView;
 	String mDefaultValue = "#FF000000";
@@ -56,7 +57,7 @@ public class ColorPickerPreference extends Preference
 		super(context, attrs, defStyle);
 		init(context, attrs);
 	}
-	
+
 	@Override
 	protected void onSetInitialValue(boolean restoreValue, Object defaultValue) {
 		onColorChanged(restoreValue ? getValue() : convertToColorInt((String) defaultValue));
@@ -95,14 +96,14 @@ public class ColorPickerPreference extends Preference
 	private void setPreviewColor() {
 		if (mView == null) return;
 		ImageView iView = new ImageView(getContext());
-		LinearLayout widgetFrameView = ((LinearLayout)mView.findViewById(android.R.id.widget_frame));
+		LinearLayout widgetFrameView = ((LinearLayout) mView.findViewById(android.R.id.widget_frame));
 		if (widgetFrameView == null) return;
 		widgetFrameView.setVisibility(View.VISIBLE);
 		widgetFrameView.setPadding(
-			widgetFrameView.getPaddingLeft(),
-			widgetFrameView.getPaddingTop(),
-			(int)(mDensity * 8),
-			widgetFrameView.getPaddingBottom()
+				widgetFrameView.getPaddingLeft(),
+				widgetFrameView.getPaddingTop(),
+				(int) (mDensity * 8),
+				widgetFrameView.getPaddingBottom()
 		);
 		// remove already create preview image
 		int count = widgetFrameView.getChildCount();
@@ -110,7 +111,7 @@ public class ColorPickerPreference extends Preference
 			widgetFrameView.removeViews(0, count);
 		}
 		widgetFrameView.addView(iView);
-		iView.setBackgroundDrawable(new AlphaPatternDrawable((int)(5 * mDensity)));
+		iView.setBackgroundDrawable(new AlphaPatternDrawable((int) (5 * mDensity)));
 		iView.setImageBitmap(getPreviewBitmap());
 	}
 
@@ -123,7 +124,7 @@ public class ColorPickerPreference extends Preference
 		int c = color;
 		for (int i = 0; i < w; i++) {
 			for (int j = i; j < h; j++) {
-				c = (i <= 1 || j <= 1 || i >= w-2 || j >= h-2) ? Color.GRAY : color;
+				c = (i <= 1 || j <= 1 || i >= w - 2 || j >= h - 2) ? Color.GRAY : color;
 				bm.setPixel(i, j, c);
 				if (i != j) {
 					bm.setPixel(j, i, c);
@@ -174,6 +175,7 @@ public class ColorPickerPreference extends Preference
 
 	/**
 	 * Toggle Alpha Slider visibility (by default it's disabled)
+	 *
 	 * @param enable
 	 */
 	public void setAlphaSliderEnabled(boolean enable) {
@@ -182,62 +184,63 @@ public class ColorPickerPreference extends Preference
 
 	/**
 	 * For custom purposes. Not used by ColorPickerPreferrence
+	 *
 	 * @param color
 	 * @author Unknown
 	 */
-    public static String convertToARGB(int color) {
-        String alpha = Integer.toHexString(Color.alpha(color));
-        String red = Integer.toHexString(Color.red(color));
-        String green = Integer.toHexString(Color.green(color));
-        String blue = Integer.toHexString(Color.blue(color));
+	public static String convertToARGB(int color) {
+		String alpha = Integer.toHexString(Color.alpha(color));
+		String red = Integer.toHexString(Color.red(color));
+		String green = Integer.toHexString(Color.green(color));
+		String blue = Integer.toHexString(Color.blue(color));
 
-        if (alpha.length() == 1) {
-            alpha = "0" + alpha;
-        }
+		if (alpha.length() == 1) {
+			alpha = "0" + alpha;
+		}
 
-        if (red.length() == 1) {
-            red = "0" + red;
-        }
+		if (red.length() == 1) {
+			red = "0" + red;
+		}
 
-        if (green.length() == 1) {
-            green = "0" + green;
-        }
+		if (green.length() == 1) {
+			green = "0" + green;
+		}
 
-        if (blue.length() == 1) {
-            blue = "0" + blue;
-        }
-        
-        return "#" + alpha + red + green + blue;
-    }
+		if (blue.length() == 1) {
+			blue = "0" + blue;
+		}
 
-    /**
-     * For custom purposes. Not used by ColorPickerPreferrence
-     * @param argb
-     * @throws NumberFormatException
-     * @author Unknown
-     */
-    public static int convertToColorInt(String argb) throws NumberFormatException {
+		return "#" + alpha + red + green + blue;
+	}
 
-    	if (argb.startsWith("#")) {
-    		argb = argb.replace("#", "");
-    	}
+	/**
+	 * For custom purposes. Not used by ColorPickerPreferrence
+	 *
+	 * @param argb
+	 * @throws NumberFormatException
+	 * @author Unknown
+	 */
+	public static int convertToColorInt(String argb) throws NumberFormatException {
 
-        int alpha = -1, red = -1, green = -1, blue = -1;
+		if (argb.startsWith("#")) {
+			argb = argb.replace("#", "");
+		}
 
-        if (argb.length() == 8) {
-            alpha = Integer.parseInt(argb.substring(0, 2), 16);
-            red = Integer.parseInt(argb.substring(2, 4), 16);
-            green = Integer.parseInt(argb.substring(4, 6), 16);
-            blue = Integer.parseInt(argb.substring(6, 8), 16);
-        }
-        else if (argb.length() == 6) {
-            alpha = 255;
-            red = Integer.parseInt(argb.substring(0, 2), 16);
-            green = Integer.parseInt(argb.substring(2, 4), 16);
-            blue = Integer.parseInt(argb.substring(4, 6), 16);
-        }
+		int alpha = -1, red = -1, green = -1, blue = -1;
 
-        return Color.argb(alpha, red, green, blue);
-    }
+		if (argb.length() == 8) {
+			alpha = Integer.parseInt(argb.substring(0, 2), 16);
+			red = Integer.parseInt(argb.substring(2, 4), 16);
+			green = Integer.parseInt(argb.substring(4, 6), 16);
+			blue = Integer.parseInt(argb.substring(6, 8), 16);
+		} else if (argb.length() == 6) {
+			alpha = 255;
+			red = Integer.parseInt(argb.substring(0, 2), 16);
+			green = Integer.parseInt(argb.substring(2, 4), 16);
+			blue = Integer.parseInt(argb.substring(4, 6), 16);
+		}
+
+		return Color.argb(alpha, red, green, blue);
+	}
 
 }

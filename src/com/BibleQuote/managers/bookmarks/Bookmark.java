@@ -22,16 +22,22 @@ package com.BibleQuote.managers.bookmarks;
  * Time: 1:00
  */
 public class Bookmark {
-    public String OSISLink;
-    public String humanLink;
+	public int id;
+	public String OSISLink;
+	public String humanLink;
 
-    public Bookmark(String OSISLink, String humanLink) {
-        this.OSISLink = OSISLink;
-        this.humanLink = humanLink;
-    }
+	public Bookmark(String OSISLink, String humanLink) {
+		this(0, OSISLink, humanLink);
+	}
 
-    @Override
-    public String toString() {
-        return humanLink;
-    }
+	public Bookmark(int id, String OSISLink, String humanLink) {
+		this.id = id;
+		this.OSISLink = OSISLink;
+		this.humanLink = humanLink;
+	}
+
+	@Override
+	public String toString() {
+		return humanLink;
+	}
 }

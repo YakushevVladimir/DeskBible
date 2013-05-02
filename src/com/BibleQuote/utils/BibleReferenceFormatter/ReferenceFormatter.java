@@ -5,25 +5,25 @@ import com.BibleQuote.modules.Module;
 
 import java.util.TreeSet;
 
-public abstract class ReferenceFormatter implements IBibleReferenceFormatter  {
+public abstract class ReferenceFormatter implements IBibleReferenceFormatter {
 	protected Module module;
 	protected Book book;
 	protected String chapter;
 	protected TreeSet<Integer> verses;
-	
+
 	public ReferenceFormatter(Module module, Book book, String chapter,
-			TreeSet<Integer> verses) {
+							  TreeSet<Integer> verses) {
 		super();
 		this.module = module;
 		this.book = book;
 		this.chapter = chapter;
 		this.verses = verses;
 	}
-	
+
 	protected String getOnLineBibleLink() {
-		return "http://b-bq.eu/" 
-				+ book.OSIS_ID + "/" + chapter + "_" + getVerseLink() 
-				+ "/" + module.ShortName; 
+		return "http://b-bq.eu/"
+				+ book.OSIS_ID + "/" + chapter + "_" + getVerseLink()
+				+ "/" + module.ShortName;
 
 	}
 
@@ -55,7 +55,7 @@ public abstract class ReferenceFormatter implements IBibleReferenceFormatter  {
 		} else {
 			verseLink.append(fromVerse + "-" + toVerse);
 		}
-		
+
 		return verseLink.toString();
 	}
 }

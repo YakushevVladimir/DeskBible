@@ -28,5 +28,6 @@ import java.util.LinkedList;
 
 public interface IHistoryRepository {
 	public void save(LinkedList<ItemList> list);
+
 	public LinkedList<ItemList> load() throws FileAccessException;
 }

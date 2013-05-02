@@ -16,7 +16,6 @@
 package com.BibleQuote.managers;
 
 import android.content.Context;
-import com.BibleQuote.utils.Log;
 import com.BibleQuote.controllers.*;
 import com.BibleQuote.dal.repository.XmlTskRepository;
 import com.BibleQuote.dal.repository.fsHistoryRepository;
@@ -30,6 +29,7 @@ import com.BibleQuote.modules.Book;
 import com.BibleQuote.modules.Chapter;
 import com.BibleQuote.modules.Module;
 import com.BibleQuote.modules.Verse;
+import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.Share.ShareBuilder;
 import com.BibleQuote.utils.Share.ShareBuilder.Destination;
@@ -39,48 +39,47 @@ import com.BibleQuote.utils.modules.LinkConverter;
 import java.util.*;
 
 public class Librarian {
-	
+
 	private final String TAG = "Librarian";
-	
+
 	private LinkedHashMap<String, String> searchResults = new LinkedHashMap<String, String>();
-	
-	private Module currModule; 
-	private Book currBook; 
+
+	private Module currModule;
+	private Book currBook;
 	private Chapter currChapter;
 	private Integer currChapterNumber = -1;
 	private Integer currVerseNumber = 1;
-	
+
 	private IHistoryManager historyManager;
-	
+
 	private IModuleController moduleCtrl;
 	private IBookController bookCtrl;
 	private IChapterController chapterCtrl;
 	private TSKController tskCtrl;
 
-    private LibraryController libCtrl;
-    private boolean isLibraryUpdated = false;
+	private LibraryController libCtrl;
 
-    /**
+	/**
 	 * Инициализация контроллеров библиотеки, модулей, книг и глав.
-	 * Подписка на событие ChangeBooksEvent 
+	 * Подписка на событие ChangeBooksEvent
 	 */
 	public Librarian(Context context) {
-        Log.i(TAG, "Create library controllers");
-        libCtrl = LibraryController.create(context);
-        moduleCtrl = libCtrl.getModuleCtrl();
-        bookCtrl = libCtrl.getBookCtrl();
-        chapterCtrl = libCtrl.getChapterCtrl();
+		Log.i(TAG, "Create library controllers");
+		libCtrl = LibraryController.create(context);
+		moduleCtrl = libCtrl.getModuleCtrl();
+		bookCtrl = libCtrl.getBookCtrl();
+		chapterCtrl = libCtrl.getChapterCtrl();
 
-        Log.i(TAG, "Create history manager and repository");
-        fsHistoryRepository repository = new fsHistoryRepository(context.getCacheDir());
-        historyManager = new SimpleHistoryManager(repository, PreferenceHelper.getHistorySize());
+		Log.i(TAG, "Create history manager and repository");
+		fsHistoryRepository repository = new fsHistoryRepository(context.getCacheDir());
+		historyManager = new SimpleHistoryManager(repository, PreferenceHelper.getHistorySize());
 
 		getModules();
 	}
 
-    public EventManager getEventManager() {
-        return libCtrl.getEventManager();
-    }
+	public EventManager getEventManager() {
+		return libCtrl.getEventManager();
+	}
 
 	/**
 	 * Загружает из хранилища список модулей без загрузки их данных. Для каждого из модулей
@@ -90,8 +89,9 @@ public class Librarian {
 	 */
 	/**
 	 * Возвращает коллекцию Book для указанного модуля. Данные о книгах в первую
-	 * очередь берутся из контекста библиотеки. Если там для выбранного модуля 
+	 * очередь берутся из контекста библиотеки. Если там для выбранного модуля
 	 * список книг отсутсвует, то производится загрузка коллекции Book из хранилища
+	 *
 	 * @param module модуль для которого необходимо получить коллекцию Book
 	 * @return коллекцию Book для указанного модуля
 	 * @throws OpenModuleException
@@ -101,52 +101,53 @@ public class Librarian {
 	public ArrayList<Book> getBookList(Module module) throws OpenModuleException, BooksDefinitionException, BookDefinitionException {
 		return bookCtrl.getBookList(module);
 	}
-	
+
 	/**
 	 * Инициализирует полную загрузку модулей. Сначала проверяется наличие
 	 * модулей в коллекции. Если коллекция пуста, то производится попытка
 	 * загрузки коллекции модулей из кэш. Иначе производится загрузка модулей
 	 * из файлового хранилища. Производится запись загруженных модулей в кэш.
 	 */
-    public void loadFileModules() {
-        moduleCtrl.loadFileModules();
-    }
+	public void loadFileModules() {
+		moduleCtrl.loadFileModules();
+	}
 
-    public void getModules() {
+	public void getModules() {
 		moduleCtrl.getModules();
 	}
 
 	public Module getModuleByID(String moduleID) throws OpenModuleException {
 		return moduleCtrl.getModuleByID(moduleID);
 	}
-	
+
 	public Book getBookByID(Module module, String bookID) throws BookNotFoundException, OpenModuleException {
 		return bookCtrl.getBookByID(module, bookID);
 	}
-	
+
 	public Chapter getChapterByNumber(Book book, Integer chapterNumber) throws BookNotFoundException {
 		return chapterCtrl.getChapter(book, chapterNumber);
 	}
-	
+
 	public Chapter openChapter(BibleReference link) throws BookNotFoundException, OpenModuleException {
 		currModule = getModuleByID(link.getModuleID());
 		currBook = getBookByID(getCurrModule(), link.getBookID());
 		currChapter = getChapterByNumber(getCurrBook(), link.getChapter());
 		currChapterNumber = link.getChapter();
 		currVerseNumber = link.getFromVerse();
-		
+
 		historyManager.addLink(new BibleReference(getCurrModule(), getCurrBook(), getCurrChapterNumber(), getCurrVerseNumber()));
-		
+
 		return getCurrChapter();
 	}
-	
+
 
 	///////////////////////////////////////////////////////////////////////////
 	// NAVIGATION
-	
+
 	/**
 	 * Возвращает список доступных модулей с Библиями, апокрифами, книгами
-	 * @return возвращает ArrayList, содержащий модули с книгами Библии и апокрифами 
+	 *
+	 * @return возвращает ArrayList, содержащий модули с книгами Библии и апокрифами
 	 */
 	public ArrayList<ItemList> getModulesList() {
 		// Сначала отсортируем список по наименованием модулей
@@ -154,7 +155,7 @@ public class Librarian {
 		for (Module currModule : moduleCtrl.getModules().values()) {
 			tMap.put(currModule.getName(), currModule);
 		}
-		
+
 		// Теперь создадим результирующий список на основе отсортированных данных
 		ArrayList<ItemList> moduleList = new ArrayList<ItemList>();
 		for (Module currModule : tMap.values()) {
@@ -163,12 +164,12 @@ public class Librarian {
 
 		return moduleList;
 	}
-	
+
 	public LinkedList<ItemList> getHistoryList() {
 		return historyManager.getLinks();
 	}
-	
-	
+
+
 	public ArrayList<ItemList> getModuleBooksList(String moduleID) throws OpenModuleException, BooksDefinitionException, BookDefinitionException {
 		// Получим модуль по его ID
 		Module module = moduleCtrl.getModuleByID(moduleID);
@@ -188,10 +189,11 @@ public class Librarian {
 
 	/**
 	 * Возвращает список глав книги
-	 * @throws OpenModuleException 
-	 * @throws BookNotFoundException 
+	 *
+	 * @throws OpenModuleException
+	 * @throws BookNotFoundException
 	 */
-	public ArrayList<String> getChaptersList(String moduleID, String bookID) 
+	public ArrayList<String> getChaptersList(String moduleID, String bookID)
 			throws BookNotFoundException, OpenModuleException {
 		// Получим модуль по его ID
 		Module module = getModule(moduleID);
@@ -199,16 +201,16 @@ public class Librarian {
 		return book.getChapterNumbers(module.ChapterZero);
 	}
 
-	private Module getModule(String moduleID) throws OpenModuleException{
+	private Module getModule(String moduleID) throws OpenModuleException {
 		return moduleCtrl.getModuleByID(moduleID);
 	}
-	
 
-	public void nextChapter() throws OpenModuleException{
+
+	public void nextChapter() throws OpenModuleException {
 		if (getCurrModule() == null || getCurrBook() == null) {
 			return;
 		}
-		
+
 		Integer chapterQty = getCurrBook().chapterQty;
 		if (chapterQty > (getCurrChapterNumber() + (getCurrModule().ChapterZero ? 1 : 0))) {
 			currChapterNumber = getCurrChapterNumber() + 1;
@@ -230,16 +232,16 @@ public class Librarian {
 		}
 	}
 
-	public void prevChapter() throws OpenModuleException{
+	public void prevChapter() throws OpenModuleException {
 		if (getCurrModule() == null || getCurrBook() == null) {
 			return;
 		}
-		
+
 		if (!getCurrChapterNumber().equals(getCurrBook().getFirstChapterNumber())) {
 			currChapterNumber = getCurrChapterNumber() - 1;
 			currVerseNumber = 1;
 		} else {
-			try {			
+			try {
 				ArrayList<Book> books = bookCtrl.getBookList(getCurrModule());
 				int pos = books.indexOf(getCurrBook());
 				if (pos > 0) {
@@ -252,50 +254,50 @@ public class Librarian {
 				Log.e(TAG, e.getMessage());
 			} catch (BookDefinitionException e) {
 				Log.e(TAG, e.getMessage());
-			}			
+			}
 		}
 	}
-	
-	
+
+
 	///////////////////////////////////////////////////////////////////////////
 	// GET CONTENT
-	
+
 	public String getChapterHTMLView() {
 		return chapterCtrl.getChapterHTMLView(getCurrChapter());
 	}
-	
+
 	public Boolean isBible() {
 		return getCurrModule() != null && getCurrModule().isBible;
 	}
-	
-	
+
+
 	///////////////////////////////////////////////////////////////////////////
 	// SEARCH
-	
+
 	public LinkedHashMap<String, String> getSearchResults() {
 		return this.searchResults;
 	}
-	
-	public LinkedHashMap<String, String> search(String query, String fromBook, String toBook) throws OpenModuleException, BookNotFoundException{
+
+	public LinkedHashMap<String, String> search(String query, String fromBook, String toBook) throws OpenModuleException, BookNotFoundException {
 		if (getCurrModule() == null) {
 			searchResults = new LinkedHashMap<String, String>();
 		} else {
-            searchResults = bookCtrl.search(getCurrModule(), query, fromBook, toBook);
+			searchResults = bookCtrl.search(getCurrModule(), query, fromBook, toBook);
 		}
 		return searchResults;
 	}
 
-	
+
 	///////////////////////////////////////////////////////////////////////////
 	// GET LINK OF STRING
-		
-	public String getModuleFullName(){
+
+	public String getModuleFullName() {
 		if (getCurrModule() == null) {
 			return "";
 		}
 		return getCurrModule().getName();
 	}
-	
+
 	public CharSequence getModuleName() {
 		if (getCurrModule() == null) {
 			return "";
@@ -312,7 +314,7 @@ public class Librarian {
 		}
 	}
 
-	public String getBookFullName(String moduleID, String bookID) throws OpenModuleException{
+	public String getBookFullName(String moduleID, String bookID) throws OpenModuleException {
 		// Получим модуль по его ID
 		Module module;
 		try {
@@ -329,7 +331,7 @@ public class Librarian {
 		}
 	}
 
-	public String getBookShortName(String moduleID, String bookID) throws OpenModuleException{
+	public String getBookShortName(String moduleID, String bookID) throws OpenModuleException {
 		// Получим модуль по его ID
 		Module module;
 		try {
@@ -346,14 +348,14 @@ public class Librarian {
 		}
 	}
 
-	public BibleReference getCurrentOSISLink(){
+	public BibleReference getCurrentOSISLink() {
 		return new BibleReference(getCurrModule(), getCurrBook(), getCurrChapterNumber(), getCurrVerseNumber());
 	}
-	
+
 	public void setCurrentVerseNumber(int verse) {
 		this.currVerseNumber = verse;
 	}
-	
+
 	public CharSequence getHumanBookLink() {
 		if (getCurrBook() == null || getCurrChapter() == null) {
 			return "";
@@ -365,17 +367,17 @@ public class Librarian {
 		}
 		return bookLink;
 	}
-	
+
 	public String getOSIStoHuman(String linkOSIS) throws BookNotFoundException, OpenModuleException {
 		String[] param = linkOSIS.split("\\.");
 		if (param.length < 3) {
 			return "";
 		}
-		
+
 		String moduleID = param[0];
 		String bookID = param[1];
 		String chapter = param[2];
-		
+
 		Module currModule;
 		try {
 			currModule = getModule(moduleID);
@@ -390,10 +392,10 @@ public class Librarian {
 		if (param.length > 3) {
 			humanLink += ":" + param[3];
 		}
-		
+
 		return humanLink;
 	}
-	
+
 	public String getHumanToOSIS(String humanLink) {
 		// Получим имя модуля
 		int position = humanLink.indexOf(":");
@@ -405,7 +407,7 @@ public class Librarian {
 		if (humanLink.length() == 0) {
 			return "";
 		}
-		
+
 		// Получим имя книги
 		position = humanLink.indexOf(" ");
 		if (position == -1) {
@@ -416,7 +418,7 @@ public class Librarian {
 		if (humanLink.length() == 0) {
 			return linkOSIS + ".1";
 		}
-		
+
 		// Получим номер главы
 		position = humanLink.indexOf(":");
 		if (position == -1) {
@@ -432,7 +434,7 @@ public class Librarian {
 		}
 	}
 
-	public Boolean isOSISLinkValid(BibleReference link)	{
+	public Boolean isOSISLinkValid(BibleReference link) {
 		if (link.getPath() == null) {
 			return false;
 		}
@@ -444,8 +446,8 @@ public class Librarian {
 		}
 		return true;
 	}
-	
-	
+
+
 	///////////////////////////////////////////////////////////////////////////
 	// SHARE
 
@@ -453,7 +455,7 @@ public class Librarian {
 		if (getCurrChapter() == null) {
 			return;
 		}
-		
+
 		LinkedHashMap<Integer, String> verses = getCurrChapter().getVerses(selectVerses);
 		ShareBuilder builder = new ShareBuilder(context, getCurrModule(), getCurrBook(), getCurrChapter(), verses);
 		builder.share(dest);
@@ -476,33 +478,33 @@ public class Librarian {
 		historyManager.clearLinks();
 	}
 
-	public LinkedHashMap<String, BibleReference> getCrossReference(BibleReference bReference) 
+	public LinkedHashMap<String, BibleReference> getCrossReference(BibleReference bReference)
 			throws TskNotFoundException, BQUniversalException {
-		
+
 		if (tskCtrl == null) {
 			tskCtrl = new TSKController(new XmlTskRepository());
 		}
-		
+
 		LinkedHashSet<BibleReference> csLinks = tskCtrl.getLinks(bReference);
-		
+
 		LinkedHashMap<String, BibleReference> parallels = new LinkedHashMap<String, BibleReference>();
 		for (BibleReference reference : csLinks) {
 			Book book;
 			try {
 				book = getBookByID(getCurrModule(), reference.getBookID());
 			} catch (OpenModuleException e) {
-				Log.e(TAG, String.format("Error open module %1$s for link %2$s", 
+				Log.e(TAG, String.format("Error open module %1$s for link %2$s",
 						reference.getModuleID(), reference.getBookID()));
 				continue;
 			} catch (BookNotFoundException e) {
-				Log.e(TAG, String.format("Not found book %1$s in module %2$s", 
+				Log.e(TAG, String.format("Not found book %1$s in module %2$s",
 						reference.getBookID(), reference.getModuleID()));
 				continue;
 			}
 			BibleReference newReference = new BibleReference(getCurrModule(), book,
 					reference.getChapter(), reference.getFromVerse(), reference.getToVerse());
 			parallels.put(
-					LinkConverter.getOSIStoHuman(newReference, moduleCtrl, bookCtrl), 
+					LinkConverter.getOSIStoHuman(newReference, moduleCtrl, bookCtrl),
 					newReference);
 		}
 
@@ -516,10 +518,10 @@ public class Librarian {
 				int fromVerse = ref.getFromVerse();
 				int toVerse = ref.getToVerse();
 				Chapter chapter = getChapterByNumber(getBookByID(getCurrModule(), ref.getBookID()), ref.getChapter());
-				crossReferenceContent.put(ref, 
+				crossReferenceContent.put(ref,
 						StringProc.stripTags(chapter.getText(fromVerse, toVerse))
-						.replaceAll("\\s(H|G)*\\d+", "")
-						.replaceAll("\\d+\\s", ""));
+								.replaceAll("\\s(H|G)*\\d+", "")
+								.replaceAll("\\d+\\s", ""));
 			} catch (Exception e) {
 				Log.e(TAG, e.getMessage());
 			}
@@ -527,37 +529,37 @@ public class Librarian {
 		return crossReferenceContent;
 	}
 
-    public Module getCurrModule() {
-        return currModule;
-    }
+	public Module getCurrModule() {
+		return currModule;
+	}
 
-    public Book getCurrBook() {
-        return currBook;
-    }
+	public Book getCurrBook() {
+		return currBook;
+	}
 
-    public Chapter getCurrChapter() {
-        return currChapter;
-    }
+	public Chapter getCurrChapter() {
+		return currChapter;
+	}
 
-    public Integer getCurrChapterNumber() {
-        return currChapterNumber;
-    }
+	public Integer getCurrChapterNumber() {
+		return currChapterNumber;
+	}
 
-    public Integer getCurrVerseNumber() {
-        return currVerseNumber;
-    }
+	public Integer getCurrVerseNumber() {
+		return currVerseNumber;
+	}
 
-    public ArrayList<String> getVersesText() {
-        ArrayList<String> result = new ArrayList<String>();
-        if (currChapter == null) return result;
-        ArrayList<Verse> verses = currChapter.getVerseList();
-        for (int i = 0 ; i < verses.size() ; i++) {
-            result.add(StringProc.cleanVerseText(verses.get(i).getText()));
-        }
-        return result;
-    }
+	public ArrayList<String> getVersesText() {
+		ArrayList<String> result = new ArrayList<String>();
+		if (currChapter == null) return result;
+		ArrayList<Verse> verses = currChapter.getVerseList();
+		for (int i = 0; i < verses.size(); i++) {
+			result.add(StringProc.cleanVerseText(verses.get(i).getText()));
+		}
+		return result;
+	}
 
-    public Locale getTextLocale() {
-        return new Locale(currModule.getLanguage());
-    }
+	public Locale getTextLocale() {
+		return new Locale(currModule.getLanguage());
+	}
 }

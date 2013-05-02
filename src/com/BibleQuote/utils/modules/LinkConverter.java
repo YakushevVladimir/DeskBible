@@ -12,7 +12,7 @@ import com.BibleQuote.modules.Module;
 public class LinkConverter {
 
 	public static String getOSIStoHuman(String linkOSIS, IModuleController moduleCtrl,
-			IBookController bookCtrl) throws BookNotFoundException,
+										IBookController bookCtrl) throws BookNotFoundException,
 			OpenModuleException {
 		String[] param = linkOSIS.split("\\.");
 		if (param.length < 3) {
@@ -43,13 +43,13 @@ public class LinkConverter {
 	}
 
 	public static String getOSIStoHuman(BibleReference reference, IModuleController moduleCtrl,
-			IBookController bookCtrl) {
+										IBookController bookCtrl) {
 		if (reference.getFromVerse() != reference.getToVerse()) {
-			return String.format("%1$s %2$s:%3$s-%4$s", 
-					reference.getBookFullName(), reference.getChapter(), 
+			return String.format("%1$s %2$s:%3$s-%4$s",
+					reference.getBookFullName(), reference.getChapter(),
 					reference.getFromVerse(), reference.getToVerse());
 		} else {
-			return String.format("%1$s %2$s:%3$s", 
+			return String.format("%1$s %2$s:%3$s",
 					reference.getBookFullName(), reference.getChapter(), reference.getFromVerse());
 		}
 	}

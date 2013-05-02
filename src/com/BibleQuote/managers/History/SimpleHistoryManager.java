@@ -28,34 +28,34 @@ import com.BibleQuote.exceptions.FileAccessException;
 import java.util.LinkedList;
 
 public class SimpleHistoryManager implements IHistoryManager {
-	
+
 	private final int HISTORY_LENGHT;
 	private IHistoryRepository repository;
-	
+
 	public SimpleHistoryManager(IHistoryRepository repository, int lenght) {
 		this.repository = repository;
 		this.HISTORY_LENGHT = lenght;
 	}
-	
+
 	public synchronized void addLink(BibleReference link) {
-		String humanLink = String.format("%1$s: %2$s %3$s:%4$s", 
-				link.getModuleID(), link.getBookFullName(), 
+		String humanLink = String.format("%1$s: %2$s %3$s:%4$s",
+				link.getModuleID(), link.getBookFullName(),
 				link.getChapter(), link.getFromVerse());
 		ItemList newItem = new ItemList(link.getPath(), humanLink);
-		
+
 		LinkedList<ItemList> history = getLinks();
 		if (history.contains(newItem)) {
 			history.remove(newItem);
 		}
 		history.addFirst(newItem);
-		
+
 		while (history.size() > this.HISTORY_LENGHT) {
 			history.removeLast();
 		}
 
 		repository.save(history);
 	}
-	
+
 	public synchronized LinkedList<ItemList> getLinks() {
 		try {
 			return repository.load();
@@ -67,6 +67,6 @@ public class SimpleHistoryManager implements IHistoryManager {
 	@Override
 	public void clearLinks() {
 		LinkedList<ItemList> history = new LinkedList<ItemList>();
-		repository.save(history);		
+		repository.save(history);
 	}
 }

@@ -12,6 +12,6 @@ public interface IReaderViewListener {
 		onLeftNavigation,
 		onRightNavigation
 	}
-	
+
 	public void onReaderViewChange(ChangeCode code);
 }

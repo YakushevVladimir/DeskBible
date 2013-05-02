@@ -21,8 +21,8 @@ import java.util.LinkedList;
 public class HistoryActivity extends SherlockFragmentActivity {
 
 	//private final String TAG = "HistoryActivity";
-	
-    private ListView vHistoryList;
+
+	private ListView vHistoryList;
 	private Librarian myLibrarian;
 	private LinkedList<ItemList> list = new LinkedList<ItemList>();
 
@@ -33,10 +33,10 @@ public class HistoryActivity extends SherlockFragmentActivity {
 
 		BibleQuoteApp app = (BibleQuoteApp) getApplication();
 		myLibrarian = app.getLibrarian();
-		
+
 		setListAdapter();
 		vHistoryList.setOnItemClickListener(OnItemClickListener);
-    }
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -59,14 +59,14 @@ public class HistoryActivity extends SherlockFragmentActivity {
 	}
 
 	private void setListAdapter() {
-		list = myLibrarian.getHistoryList(); 
+		list = myLibrarian.getHistoryList();
 		vHistoryList = (ListView) findViewById(R.id.FavoritsLV);
 		vHistoryList.setAdapter(new SimpleAdapter(this, list,
 				R.layout.item_list_no_id,
-				new String[] { ItemList.ID, ItemList.Name }, new int[] {
-						R.id.id, R.id.name }));
+				new String[]{ItemList.ID, ItemList.Name}, new int[]{
+				R.id.id, R.id.name}));
 	}
-	
+
 	private AdapterView.OnItemClickListener OnItemClickListener = new AdapterView.OnItemClickListener() {
 		public void onItemClick(AdapterView<?> a, View v, int position, long id) {
 			Intent intent = new Intent();

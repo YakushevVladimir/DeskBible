@@ -24,15 +24,15 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 public class AboutActivity extends SherlockFragmentActivity {
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.about);
-        ViewUtils.setActionBarBackground(this);
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.about);
+		ViewUtils.setActionBarBackground(this);
 
-        TextView tv_app = (TextView) findViewById(R.id.about_name);
-        tv_app.setText(String.format(
-                getResources().getText(R.string.app_about_name).toString(),
-                BibleQuoteApp.getAppVersionName(getApplicationContext())));
-    }
+		TextView tv_app = (TextView) findViewById(R.id.about_name);
+		tv_app.setText(String.format(
+				getResources().getText(R.string.app_about_name).toString(),
+				BibleQuoteApp.getAppVersionName(getApplicationContext())));
+	}
 }

@@ -10,12 +10,12 @@ public class CachePool<T> extends LinkedHashMap<String, T> {
 	public CachePool() {
 		super(MAX_POOL_SIZE, .75f, true);
 	}
-	
+
 	public CachePool(int maxPoolSize) {
 		super(maxPoolSize, .75f, true);
 	}
-	
-    protected boolean removeEldestEntry(@SuppressWarnings("rawtypes") Map.Entry eldest) {
-        return size() > MAX_POOL_SIZE;
-    }
+
+	protected boolean removeEldestEntry(@SuppressWarnings("rawtypes") Map.Entry eldest) {
+		return size() > MAX_POOL_SIZE;
+	}
 }

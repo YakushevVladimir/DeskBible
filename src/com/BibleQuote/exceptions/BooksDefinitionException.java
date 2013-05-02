@@ -24,9 +24,9 @@ public class BooksDefinitionException extends Exception {
 	private int shortNameCount;
 	private int chapterQtyCount;
 	private int booksCount;
-	
-	public BooksDefinitionException(String message, 
-			String moduleDatasourceID, int booksCount, int pathNameCount, int fullNameCount, int shortNameCount, int chapterQtyCount) {
+
+	public BooksDefinitionException(String message,
+									String moduleDatasourceID, int booksCount, int pathNameCount, int fullNameCount, int shortNameCount, int chapterQtyCount) {
 		super(message);
 		this.moduleDatasourceID = moduleDatasourceID;
 		this.booksCount = booksCount;
@@ -39,11 +39,11 @@ public class BooksDefinitionException extends Exception {
 	public BooksDefinitionException(Exception parent) {
 		super(parent);
 	}
-	
+
 	public String getModuleDatasourceID() {
 		return moduleDatasourceID;
 	}
-	
+
 	public int getBooksCount() {
 		return booksCount;
 	}

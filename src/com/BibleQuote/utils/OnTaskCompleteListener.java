@@ -16,6 +16,6 @@
 package com.BibleQuote.utils;
 
 public interface OnTaskCompleteListener {
-    // Notifies about task completeness
-    void onTaskComplete(Task task);
+	// Notifies about task completeness
+	void onTaskComplete(Task task);
 }

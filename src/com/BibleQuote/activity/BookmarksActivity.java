@@ -29,10 +29,10 @@ import android.widget.Toast;
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
 import com.BibleQuote.entity.BibleReference;
+import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.managers.bookmarks.Bookmark;
 import com.BibleQuote.managers.bookmarks.BookmarksManager;
-import com.BibleQuote.managers.Librarian;
-import com.BibleQuote.managers.bookmarks.PreferenceRepository;
+import com.BibleQuote.managers.bookmarks.prefBookmarksRepository;
 import com.BibleQuote.utils.ViewUtils;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
@@ -42,11 +42,11 @@ import com.actionbarsherlock.view.MenuItem;
 public class BookmarksActivity extends SherlockFragmentActivity {
 
 	private final String TAG = "BookmarksActivity";
-	
-    private ListView LV;
+
+	private ListView LV;
 	private Librarian myLibrarian;
 	private Bookmark currBookmark;
-    private BookmarksManager bookmarksManager = new BookmarksManager(new PreferenceRepository());
+	private BookmarksManager bookmarksManager;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -55,7 +55,9 @@ public class BookmarksActivity extends SherlockFragmentActivity {
 
 		BibleQuoteApp app = (BibleQuoteApp) getApplication();
 		myLibrarian = app.getLibrarian();
-		
+
+		bookmarksManager = new BookmarksManager(app.getBookmarksRepository());
+
 		LV = (ListView) findViewById(R.id.FavoritsLV);
 		LV.setOnItemClickListener(OnItemClickListener);
 		LV.setOnItemLongClickListener(OnItemLongClickListener);
@@ -73,7 +75,7 @@ public class BookmarksActivity extends SherlockFragmentActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_bar_sort:
-                bookmarksManager.sort();
+				bookmarksManager.sort();
 				setAdapter();
 				break;
 
@@ -111,12 +113,12 @@ public class BookmarksActivity extends SherlockFragmentActivity {
 	private AdapterView.OnItemClickListener OnItemClickListener = new AdapterView.OnItemClickListener() {
 		public void onItemClick(AdapterView<?> a, View v, int position, long id) {
 			currBookmark = (Bookmark) LV.getAdapter().getItem(position);
-            Log.i(TAG, "Select bookmark: " + currBookmark.humanLink + " (OSIS link = " + currBookmark.OSISLink + ")");
+			Log.i(TAG, "Select bookmark: " + currBookmark.humanLink + " (OSIS link = " + currBookmark.OSISLink + ")");
 
 			BibleReference osisLink = new BibleReference(currBookmark.OSISLink);
 			if (!myLibrarian.isOSISLinkValid(osisLink)) {
 				Log.i(TAG, "Delete invalid bookmark: " + currBookmark);
-                bookmarksManager.delete(currBookmark);
+				bookmarksManager.delete(currBookmark);
 				setAdapter();
 				Toast.makeText(getApplicationContext(), R.string.bookmark_invalid_removed, Toast.LENGTH_LONG).show();
 			} else {
@@ -145,12 +147,12 @@ public class BookmarksActivity extends SherlockFragmentActivity {
 	private DialogInterface.OnClickListener positiveButton_OnClick = new DialogInterface.OnClickListener() {
 		public void onClick(DialogInterface dialog, int which) {
 			Log.i(TAG, "Delete bookmark: " + currBookmark);
-            bookmarksManager.delete(currBookmark);
+			bookmarksManager.delete(currBookmark);
 			setAdapter();
 			Toast.makeText(getApplicationContext(), R.string.removed, Toast.LENGTH_LONG).show();
 		}
 	};
-	
+
 	private void setAdapter() {
 		LV.setAdapter(new ArrayAdapter<Bookmark>(BookmarksActivity.this,
 				R.layout.text_item_view, bookmarksManager.getAll()));

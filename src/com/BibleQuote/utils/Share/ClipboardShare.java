@@ -11,7 +11,7 @@ import java.util.LinkedHashMap;
 public class ClipboardShare extends BaseShareBuilder {
 
 	public ClipboardShare(Context context, Module module, Book book,
-			Chapter chapter, LinkedHashMap<Integer, String> verses) {
+						  Chapter chapter, LinkedHashMap<Integer, String> verses) {
 		this.context = context;
 		this.module = module;
 		this.book = book;
@@ -19,7 +19,7 @@ public class ClipboardShare extends BaseShareBuilder {
 		this.verses = verses;
 	}
 
-    @SuppressWarnings("deprecation")
+	@SuppressWarnings("deprecation")
 	@Override
 	public void share() {
 		InitFormatters();
@@ -27,10 +27,10 @@ public class ClipboardShare extends BaseShareBuilder {
 			return;
 		}
 
-		ClipboardManager clpbdManager = (ClipboardManager)context.getSystemService("clipboard");
-	    if (clpbdManager != null) {
+		ClipboardManager clpbdManager = (ClipboardManager) context.getSystemService("clipboard");
+		if (clpbdManager != null) {
 			clpbdManager.setText(getShareText());
-	    }
+		}
 	}
 
 }

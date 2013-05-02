@@ -28,6 +28,8 @@ import java.util.LinkedList;
 
 public interface IHistoryManager {
 	public void addLink(BibleReference link);
+
 	public void clearLinks();
+
 	public LinkedList<ItemList> getLinks();
 }

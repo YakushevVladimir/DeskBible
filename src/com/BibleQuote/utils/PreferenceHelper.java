@@ -25,12 +25,12 @@ public class PreferenceHelper {
 	private final static String TAG = "Share";
 	private static Context mContext;
 	private static SharedPreferences preference;
-	
+
 	static public void Init(Context context) {
 		mContext = context;
 		preference = PreferenceManager.getDefaultSharedPreferences(mContext);
 	}
-	
+
 	static public String restoreStateString(String key) {
 		Log.i(TAG, "restoreStateString(" + key + ")");
 		if (preference == null) {
@@ -46,7 +46,7 @@ public class PreferenceHelper {
 		}
 		preference.edit().putString(key, value).commit();
 	}
-	
+
 	static public int restoreStateInt(String key) {
 		Log.i(TAG, "restoreStateString(" + key + ")");
 		if (preference == null) {
@@ -62,7 +62,7 @@ public class PreferenceHelper {
 		}
 		preference.edit().putInt(key, value).commit();
 	}
-	
+
 	static public Boolean restoreStateBoolean(String key) {
 		Log.i(TAG, "restoreStateBoolean(" + key + ")");
 		if (preference == null) {
@@ -70,7 +70,7 @@ public class PreferenceHelper {
 		}
 		return preference.getBoolean(key, false);
 	}
-	
+
 	static public void saveStateBoolean(String key, Boolean v) {
 		Log.i(TAG, "saveStateBoolean(" + key + ", " + v + ")");
 		if (preference == null) {
@@ -78,7 +78,7 @@ public class PreferenceHelper {
 		}
 		preference.edit().putBoolean(key, v).commit();
 	}
-	
+
 	static public boolean isReadModeByDefault() {
 		if (preference == null) {
 			return false;
@@ -109,29 +109,29 @@ public class PreferenceHelper {
 		return getWebColor(background);
 	}
 
-    public static String getTextColorSelected() {
-        if (preference == null) {
-            return "#000000";
-        }
-        String colorSelected = preference.getString("TextColorSel", "#000000");
-        return getWebColor(colorSelected);
-    }
+	public static String getTextColorSelected() {
+		if (preference == null) {
+			return "#000000";
+		}
+		String colorSelected = preference.getString("TextColorSel", "#000000");
+		return getWebColor(colorSelected);
+	}
 
-    public static String getTextBackgroundSelected() {
-        if (preference == null) {
-            return "#FEF8C4";
-        }
-        String backgroundSelected = preference.getString("TextBGSel", "#FEF8C4");
-        return getWebColor(backgroundSelected);
-    }
+	public static String getTextBackgroundSelected() {
+		if (preference == null) {
+			return "#FEF8C4";
+		}
+		String backgroundSelected = preference.getString("TextBGSel", "#FEF8C4");
+		return getWebColor(backgroundSelected);
+	}
 
-    public static Integer getHistorySize() {
+	public static Integer getHistorySize() {
 		if (preference == null) {
 			return 10;
 		}
 		return Integer.parseInt(preference.getString("HistorySize", "10"));
 	}
-	
+
 	private static String getWebColor(String color) {
 		if (color.length() > 7) {
 			int lenght = color.length();
@@ -140,14 +140,14 @@ public class PreferenceHelper {
 			return color;
 		}
 	}
-	
+
 	public static boolean crossRefViewDetails() {
 		if (preference == null) {
 			return false;
 		}
 		return preference.getBoolean("cross_reference_display_context", false);
 	}
-	
+
 	public static boolean volumeButtonsToScroll() {
 		if (preference == null) {
 			return false;
@@ -189,7 +189,7 @@ public class PreferenceHelper {
 		}
 		return preference.getBoolean("put_reference_in_beginning", false);
 	}
-	
+
 	public static boolean shortReference() {
 		if (preference == null) {
 			return false;

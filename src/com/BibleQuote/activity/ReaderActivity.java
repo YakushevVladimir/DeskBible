@@ -34,19 +34,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
-import com.BibleQuote.managers.bookmarks.BookmarksManager;
-import com.BibleQuote.managers.bookmarks.PreferenceRepository;
-import com.BibleQuote.widget.ReaderWebView;
+import com.BibleQuote.async.AsyncManager;
+import com.BibleQuote.async.AsyncOpenChapter;
 import com.BibleQuote.entity.BibleReference;
 import com.BibleQuote.exceptions.BookNotFoundException;
 import com.BibleQuote.exceptions.ExceptionHelper;
 import com.BibleQuote.exceptions.OpenModuleException;
 import com.BibleQuote.listeners.IReaderViewListener;
-import com.BibleQuote.async.AsyncManager;
-import com.BibleQuote.async.AsyncOpenChapter;
 import com.BibleQuote.managers.Librarian;
+import com.BibleQuote.managers.bookmarks.BookmarksManager;
+import com.BibleQuote.managers.bookmarks.prefBookmarksRepository;
 import com.BibleQuote.utils.*;
 import com.BibleQuote.utils.Share.ShareBuilder.Destination;
+import com.BibleQuote.widget.ReaderWebView;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
@@ -56,21 +56,21 @@ import com.actionbarsherlock.view.MenuItem;
 import java.util.TreeSet;
 
 public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCompleteListener, IReaderViewListener,
-        TTSPlayerFragment.onTTSStopSpeakListener {
+		TTSPlayerFragment.onTTSStopSpeakListener {
 
 	private static final String TAG = "ReaderActivity";
 	private static final int VIEW_CHAPTER_NAV_LENGHT = 3000;
-    private ReaderWebView.Mode oldMode;
+	private ReaderWebView.Mode oldMode;
 
 	private static final String VIEW_REFERENCE = "com.BibleQuote.intent.action.VIEW_REFERENCE";
 
-    public Librarian getLibrarian() {
-        return myLibrarian;
-    }
+	public Librarian getLibrarian() {
+		return myLibrarian;
+	}
 
-    private Librarian myLibrarian;
+	private Librarian myLibrarian;
 	private AsyncManager mAsyncManager;
-    private Task mTask;
+	private Task mTask;
 	private ActionMode currActionMode;
 
 	private String chapterInHTML = "";
@@ -82,21 +82,21 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 	private LinearLayout btnChapterNav;
 	private ReaderWebView vWeb;
 
-    private TTSPlayerFragment ttsPlayer;
+	private TTSPlayerFragment ttsPlayer;
 
-    private final int ID_CHOOSE_CH = 1;
-    private final int ID_SEARCH = 2;
-    private final int ID_HISTORY = 3;
-    private final int ID_BOOKMARKS = 4;
-    private final int ID_PARALLELS = 5;
-    private final int ID_SETTINGS = 6;
+	private final int ID_CHOOSE_CH = 1;
+	private final int ID_SEARCH = 2;
+	private final int ID_HISTORY = 3;
+	private final int ID_BOOKMARKS = 4;
+	private final int ID_PARALLELS = 5;
+	private final int ID_SETTINGS = 6;
 
-    @Override
-    public void onStopSpeak() {
-        hideTTSPlayer();
-    }
+	@Override
+	public void onStopSpeak() {
+		hideTTSPlayer();
+	}
 
-    private final class ActionSelectText implements ActionMode.Callback {
+	private final class ActionSelectText implements ActionMode.Callback {
 
 		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
 			MenuInflater infl = getSupportMenuInflater();
@@ -115,30 +115,31 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 			}
 
 			switch (item.getItemId()) {
-			case R.id.action_bookmarks:
-                myLibrarian.setCurrentVerseNumber(selVerses.first());
-                new BookmarksManager(new PreferenceRepository()).add(myLibrarian.getCurrentOSISLink());
-				Toast.makeText(ReaderActivity.this, getString(R.string.added), Toast.LENGTH_LONG).show();
-				break;
+				case R.id.action_bookmarks:
+					myLibrarian.setCurrentVerseNumber(selVerses.first());
+					new BookmarksManager(((BibleQuoteApp) getApplication()).getBookmarksRepository())
+							.add(myLibrarian.getCurrentOSISLink());
+					Toast.makeText(ReaderActivity.this, getString(R.string.added), Toast.LENGTH_LONG).show();
+					break;
 
-			case R.id.action_share:
-				myLibrarian.shareText(ReaderActivity.this, selVerses, Destination.ActionSend);
-				break;
+				case R.id.action_share:
+					myLibrarian.shareText(ReaderActivity.this, selVerses, Destination.ActionSend);
+					break;
 
-			case R.id.action_copy:
-				myLibrarian.shareText(ReaderActivity.this, selVerses, Destination.Clipboard);
-				Toast.makeText(ReaderActivity.this, getString(R.string.added), Toast.LENGTH_LONG).show();
-				break;
+				case R.id.action_copy:
+					myLibrarian.shareText(ReaderActivity.this, selVerses, Destination.Clipboard);
+					Toast.makeText(ReaderActivity.this, getString(R.string.added), Toast.LENGTH_LONG).show();
+					break;
 
-			case R.id.action_references:
-				myLibrarian.setCurrentVerseNumber(selVerses.first());
-				Intent intParallels = new Intent(VIEW_REFERENCE);
-				intParallels.putExtra("linkOSIS", myLibrarian.getCurrentOSISLink().getPath());
-				startActivityForResult(intParallels, ID_PARALLELS);
-				break;
+				case R.id.action_references:
+					myLibrarian.setCurrentVerseNumber(selVerses.first());
+					Intent intParallels = new Intent(VIEW_REFERENCE);
+					intParallels.putExtra("linkOSIS", myLibrarian.getCurrentOSISLink().getPath());
+					startActivityForResult(intParallels, ID_PARALLELS);
+					break;
 
-			default:
-				return false;
+				default:
+					return false;
 			}
 
 			mode.finish();
@@ -168,47 +169,47 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 		mAsyncManager = app.getAsyncManager();
 		mAsyncManager.handleRetainedTask(mTask, this);
 
-        initialyzeViews();
+		initialyzeViews();
 		updateActivityMode();
 
 		BibleReference osisLink = new BibleReference(PreferenceHelper.restoreStateString("last_read"));
 		if (!myLibrarian.isOSISLinkValid(osisLink)) {
 			onChooseChapterClick();
 		} else {
-            openChapterFromLink(osisLink);
-        }
+			openChapterFromLink(osisLink);
+		}
 	}
 
-    private void openChapterFromLink(BibleReference osisLink) {
-        mTask = new AsyncOpenChapter(progressMessage, false, myLibrarian, osisLink);
-        mAsyncManager.setupTask(mTask, this);
-    }
+	private void openChapterFromLink(BibleReference osisLink) {
+		mTask = new AsyncOpenChapter(progressMessage, false, myLibrarian, osisLink);
+		mAsyncManager.setupTask(mTask, this);
+	}
 
-    private void initialyzeViews() {
-        btnChapterNav = (LinearLayout)findViewById(R.id.btn_chapter_nav);
+	private void initialyzeViews() {
+		btnChapterNav = (LinearLayout) findViewById(R.id.btn_chapter_nav);
 
-        ImageButton btnChapterPrev = (ImageButton)findViewById(R.id.btn_reader_prev);
-        btnChapterPrev.setOnClickListener(onClickChapterPrev);
-        ImageButton btnChapterNext = (ImageButton)findViewById(R.id.btn_reader_next);
-        btnChapterNext.setOnClickListener(onClickChapterNext);
+		ImageButton btnChapterPrev = (ImageButton) findViewById(R.id.btn_reader_prev);
+		btnChapterPrev.setOnClickListener(onClickChapterPrev);
+		ImageButton btnChapterNext = (ImageButton) findViewById(R.id.btn_reader_next);
+		btnChapterNext.setOnClickListener(onClickChapterNext);
 
-        ImageButton btnChapterUp = (ImageButton)findViewById(R.id.btn_reader_up);
-        btnChapterUp.setOnClickListener(onClickPageUp);
-        ImageButton btnChapterDown = (ImageButton)findViewById(R.id.btn_reader_down);
-        btnChapterDown.setOnClickListener(onClickPageDown);
+		ImageButton btnChapterUp = (ImageButton) findViewById(R.id.btn_reader_up);
+		btnChapterUp.setOnClickListener(onClickPageUp);
+		ImageButton btnChapterDown = (ImageButton) findViewById(R.id.btn_reader_down);
+		btnChapterDown.setOnClickListener(onClickPageDown);
 
-        vModuleName = (TextView)findViewById(R.id.moduleName);
-        vBookLink = (TextView)findViewById(R.id.linkBook);
+		vModuleName = (TextView) findViewById(R.id.moduleName);
+		vBookLink = (TextView) findViewById(R.id.linkBook);
 
-        progressMessage = getResources().getString(R.string.messageLoad);
-        nightMode = PreferenceHelper.restoreStateBoolean("nightMode");
+		progressMessage = getResources().getString(R.string.messageLoad);
+		nightMode = PreferenceHelper.restoreStateBoolean("nightMode");
 
-        vWeb = (ReaderWebView)findViewById(R.id.readerView);
-        vWeb.setOnReaderViewListener(this);
-        vWeb.setMode(PreferenceHelper.isReadModeByDefault() ? ReaderWebView.Mode.Read : ReaderWebView.Mode.Study);
-    }
+		vWeb = (ReaderWebView) findViewById(R.id.readerView);
+		vWeb.setOnReaderViewListener(this);
+		vWeb.setMode(PreferenceHelper.isReadModeByDefault() ? ReaderWebView.Mode.Read : ReaderWebView.Mode.Study);
+	}
 
-    @Override
+	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		if (PreferenceHelper.restoreStateBoolean("DisableAutoScreenRotation")) {
 			super.onConfigurationChanged(newConfig);
@@ -228,7 +229,7 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-        hideTTSPlayer();
+		hideTTSPlayer();
 		switch (item.getItemId()) {
 			case R.id.action_bar_chooseCh:
 				onChooseChapterClick();
@@ -250,10 +251,10 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 				Intent intentHistory = new Intent().setClass(getApplicationContext(), HistoryActivity.class);
 				startActivityForResult(intentHistory, ID_HISTORY);
 				break;
-            case R.id.action_speek:
-                viewTTSPlayer();
-                break;
-            case R.id.Help:
+			case R.id.action_speek:
+				viewTTSPlayer();
+				break;
+			case R.id.Help:
 				Intent helpIntent = new Intent(this, HelpActivity.class);
 				startActivity(helpIntent);
 				break;
@@ -271,45 +272,45 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 		return true;
 	}
 
-    private void viewTTSPlayer() {
-        if (ttsPlayer != null) return;
-        ttsPlayer = new TTSPlayerFragment();
-        FragmentTransaction tran = getSupportFragmentManager().beginTransaction();
-        tran.add(R.id.tts_player_frame, ttsPlayer);
-        tran.commit();
-        oldMode = vWeb.getMode();
-        vWeb.setMode(ReaderWebView.Mode.Speak);
-    }
+	private void viewTTSPlayer() {
+		if (ttsPlayer != null) return;
+		ttsPlayer = new TTSPlayerFragment();
+		FragmentTransaction tran = getSupportFragmentManager().beginTransaction();
+		tran.add(R.id.tts_player_frame, ttsPlayer);
+		tran.commit();
+		oldMode = vWeb.getMode();
+		vWeb.setMode(ReaderWebView.Mode.Speak);
+	}
 
-    private void hideTTSPlayer() {
-        if (ttsPlayer == null) return;
-        FragmentTransaction tran = getSupportFragmentManager().beginTransaction();
-        tran.remove(ttsPlayer);
-        tran.commit();
-        ttsPlayer = null;
-        vWeb.setMode(oldMode);
-    }
+	private void hideTTSPlayer() {
+		if (ttsPlayer == null) return;
+		FragmentTransaction tran = getSupportFragmentManager().beginTransaction();
+		tran.remove(ttsPlayer);
+		tran.commit();
+		ttsPlayer = null;
+		vWeb.setMode(oldMode);
+	}
 
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
 		if (resultCode == RESULT_OK) {
 			if ((requestCode == ID_BOOKMARKS)
-					|| (requestCode == ID_SEARCH )
+					|| (requestCode == ID_SEARCH)
 					|| (requestCode == ID_CHOOSE_CH)
 					|| (requestCode == ID_PARALLELS)
 					|| (requestCode == ID_HISTORY)) {
 				Bundle extras = data.getExtras();
 				BibleReference osisLink = new BibleReference(extras.getString("linkOSIS"));
 				if (myLibrarian.isOSISLinkValid(osisLink)) {
-                    openChapterFromLink(osisLink);
-                }
+					openChapterFromLink(osisLink);
+				}
 			}
 		} else if (requestCode == ID_SETTINGS) {
-            vWeb.setMode(PreferenceHelper.isReadModeByDefault() ? ReaderWebView.Mode.Read : ReaderWebView.Mode.Study);
+			vWeb.setMode(PreferenceHelper.isReadModeByDefault() ? ReaderWebView.Mode.Read : ReaderWebView.Mode.Study);
 			updateActivityMode();
-            openChapterFromLink(myLibrarian.getCurrentOSISLink());
-        }
+			openChapterFromLink(myLibrarian.getCurrentOSISLink());
+		}
 	}
 
 	public void setTextInWebView() {
@@ -318,7 +319,7 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 
 		PreferenceHelper.saveStateString("last_read", OSISLink.getExtendedPath());
 
- 		vModuleName.setText(myLibrarian.getModuleName());
+		vModuleName.setText(myLibrarian.getModuleName());
 		vBookLink.setText(myLibrarian.getHumanBookLink());
 		btnChapterNav.setVisibility(View.GONE);
 	}
@@ -374,8 +375,8 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 	};
 
 	private void viewCurrentChapter() {
-        openChapterFromLink(myLibrarian.getCurrentOSISLink());
-    }
+		openChapterFromLink(myLibrarian.getCurrentOSISLink());
+	}
 
 	public void viewChapterNav() {
 		if (chapterNavHandler.hasMessages(R.id.view_chapter_nav)) {
@@ -420,7 +421,7 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 		} else {
 			getSupportActionBar().show();
 		}
-        viewChapterNav();
+		viewChapterNav();
 	}
 
 	@Override
@@ -477,8 +478,8 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 				currActionMode = startActionMode(new ActionSelectText());
 			}
 		} else if (code == ChangeCode.onLongPress) {
-            viewChapterNav();
-            if (vWeb.getMode() == ReaderWebView.Mode.Read) onChooseChapterClick();
+			viewChapterNav();
+			if (vWeb.getMode() == ReaderWebView.Mode.Read) onChooseChapterClick();
 		} else if (code == ChangeCode.onUpNavigation) {
 			vWeb.pageUp(false);
 		} else if (code == ChangeCode.onDownNavigation) {

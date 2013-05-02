@@ -10,16 +10,16 @@ public class ChangeModulesEvent {
 		ModulesChanged,
 		ModulesDeleted
 	}
-	
+
 	public ChangeCode code;
 	public TreeMap<String, Module> modules = new TreeMap<String, Module>();
 
-    public ChangeModulesEvent(ChangeCode code, TreeMap<String, Module> modules) {
-        this.code = code;
-        this.modules = modules;
-    }
+	public ChangeModulesEvent(ChangeCode code, TreeMap<String, Module> modules) {
+		this.code = code;
+		this.modules = modules;
+	}
 
-    public ChangeModulesEvent(ChangeCode code) {
-        this.code = code;
-    }
+	public ChangeModulesEvent(ChangeCode code) {
+		this.code = code;
+	}
 }

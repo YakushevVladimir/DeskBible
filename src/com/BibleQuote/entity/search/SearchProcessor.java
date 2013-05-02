@@ -26,60 +26,60 @@ import com.BibleQuote.modules.Module;
 import java.util.*;
 
 public class SearchProcessor {
-    private final IBookRepository repository;
-    private static final String TAG = "SearchProcessor";
-    private Map<String, LinkedHashMap<String,String>> results = Collections.synchronizedMap(new HashMap<String, LinkedHashMap<String,String>>());
+	private final IBookRepository repository;
+	private static final String TAG = "SearchProcessor";
+	private Map<String, LinkedHashMap<String, String>> results = Collections.synchronizedMap(new HashMap<String, LinkedHashMap<String, String>>());
 
-    public SearchProcessor(IBookRepository<FsModule,FsBook> repository) {
-        this.repository = repository;
-    }
+	public SearchProcessor(IBookRepository<FsModule, FsBook> repository) {
+		this.repository = repository;
+	}
 
-    public LinkedHashMap<String, String> search(Module module, String searchQuery, ArrayList<String> bookList) {
-        LinkedHashMap<String,String> searchRes = new LinkedHashMap<String, String>();
+	public LinkedHashMap<String, String> search(Module module, String searchQuery, ArrayList<String> bookList) {
+		LinkedHashMap<String, String> searchRes = new LinkedHashMap<String, String>();
 
-        ArrayList<SearchThread> threads = new ArrayList<SearchThread>(bookList.size());
-        for (String bookID : bookList) {
-            SearchThread thread = new SearchThread(module, bookID, searchQuery);
-            threads.add(thread);
-            thread.start();
-        }
+		ArrayList<SearchThread> threads = new ArrayList<SearchThread>(bookList.size());
+		for (String bookID : bookList) {
+			SearchThread thread = new SearchThread(module, bookID, searchQuery);
+			threads.add(thread);
+			thread.start();
+		}
 
-        for (SearchThread thread : threads) {
-            try {
-                thread.join();
-                LinkedHashMap<String, String> searches = results.get(thread.getBookID());
-                searchRes.putAll(searches);
-            } catch (InterruptedException e) {
-                Log.e(TAG, e.getMessage());
-            }
-        }
+		for (SearchThread thread : threads) {
+			try {
+				thread.join();
+				LinkedHashMap<String, String> searches = results.get(thread.getBookID());
+				searchRes.putAll(searches);
+			} catch (InterruptedException e) {
+				Log.e(TAG, e.getMessage());
+			}
+		}
 
-        return searchRes;
-    }
+		return searchRes;
+	}
 
-    private class SearchThread extends Thread {
-        Module module;
-        String bookID;
-        String query;
+	private class SearchThread extends Thread {
+		Module module;
+		String bookID;
+		String query;
 
-        public String getBookID() {
-            return bookID;
-        }
+		public String getBookID() {
+			return bookID;
+		}
 
-        private SearchThread(Module module, String bookID, String query) {
-            this.module = module;
-            this.bookID = bookID;
-            this.query = query;
-        }
+		private SearchThread(Module module, String bookID, String query) {
+			this.module = module;
+			this.bookID = bookID;
+			this.query = query;
+		}
 
-        @Override
-        public void run() {
-            try {
-                results.put(bookID, repository.searchInBook(module, bookID, query));
-            } catch (BookNotFoundException e) {
-                Log.e(TAG, e.getMessage());
-                results.put(bookID, new LinkedHashMap<String, String>());
-            }
-        }
-    }
+		@Override
+		public void run() {
+			try {
+				results.put(bookID, repository.searchInBook(module, bookID, query));
+			} catch (BookNotFoundException e) {
+				Log.e(TAG, e.getMessage());
+				results.put(bookID, new LinkedHashMap<String, String>());
+			}
+		}
+	}
 }

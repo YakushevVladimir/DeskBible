@@ -23,17 +23,17 @@ import com.BibleQuote.async.AsyncCommand;
 import com.BibleQuote.utils.Log;
 
 public class InitApplication implements AsyncCommand.ICommand {
-    private final String TAG = "InitApplication";
-    private Context context;
+	private final String TAG = "InitApplication";
+	private Context context;
 
-    public InitApplication(Context context) {
-        this.context = context;
-    }
+	public InitApplication(Context context) {
+		this.context = context;
+	}
 
-    @Override
-    public void execute() throws Exception {
-        Log.i(TAG, "Task InitApplication execute...");
-        BibleQuoteApp app = (BibleQuoteApp) ((Activity) context).getApplication();
-        app.Init();
-    }
+	@Override
+	public void execute() throws Exception {
+		Log.i(TAG, "Task InitApplication execute...");
+		BibleQuoteApp app = (BibleQuoteApp) ((Activity) context).getApplication();
+		app.Init();
+	}
 }

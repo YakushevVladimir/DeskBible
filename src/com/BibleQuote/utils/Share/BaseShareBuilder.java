@@ -19,13 +19,13 @@ import java.util.TreeSet;
 public abstract class BaseShareBuilder {
 	IBibleTextFormatter textFormater;
 	IBibleReferenceFormatter referenceFormatter;
-	
+
 	Context context;
 	Module module;
 	Book book;
 	Chapter chapter;
 	LinkedHashMap<Integer, String> verses;
-	
+
 	protected void InitFormatters() {
 		boolean breakVerse = PreferenceHelper.divideTheVerses();
 		if (breakVerse) {
@@ -33,14 +33,14 @@ public abstract class BaseShareBuilder {
 		} else {
 			textFormater = new SimpleFormatter(verses);
 		}
-		
+
 		TreeSet<Integer> verseNumbers = new TreeSet<Integer>();
 		for (Integer numb : verses.keySet()) {
 			verseNumbers.add(numb);
 		}
-		
+
 		String chapterNumber = String.valueOf(chapter.getNumber());
-		
+
 		boolean addLink = PreferenceHelper.addReference();
 		boolean shortLink = PreferenceHelper.shortReference();
 		if (!addLink) {
@@ -51,13 +51,13 @@ public abstract class BaseShareBuilder {
 			referenceFormatter = new FullReferenceFormatter(module, book, chapterNumber, verseNumbers);
 		}
 	}
-	
+
 	protected String getShareText() {
 		String text = textFormater.format();
 		if (!PreferenceHelper.addReference()) {
 			return text;
 		}
-		
+
 		String reference = referenceFormatter.getLink();
 		if (PreferenceHelper.putReferenceInBeginning()) {
 			return String.format("%1$s - %2$s", reference, text);
@@ -65,6 +65,6 @@ public abstract class BaseShareBuilder {
 			return String.format("%1$s (%2$s)", text, reference);
 		}
 	}
-	
+
 	public abstract void share();
 }

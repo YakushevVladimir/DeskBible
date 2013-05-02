@@ -22,8 +22,8 @@ public class ItemList extends HashMap<String, String> implements Serializable {
 	private static final long serialVersionUID = 1L;
 	public static final String ID = "ID";
 	public static final String Name = "Name";
-	
-	public ItemList(String id, String name){
+
+	public ItemList(String id, String name) {
 		super();
 		super.put(ID, id);
 		super.put(Name, name);

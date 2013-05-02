@@ -7,20 +7,21 @@ import com.BibleQuote.utils.Log;
 public class CacheRepository<T> {
 	private final String TAG = "CacheRepository";
 
-    private CacheContext cacheContext;
-    public CacheContext getCacheContext() {
-        return cacheContext;
-    }
+	private CacheContext cacheContext;
 
-    public CacheRepository(CacheContext cacheContext) {
+	public CacheContext getCacheContext() {
+		return cacheContext;
+	}
+
+	public CacheRepository(CacheContext cacheContext) {
 		this.cacheContext = cacheContext;
-    }
+	}
 
 	public T getData() throws FileAccessException {
 		Log.i(TAG, "Loading data from a file system cache.");
 		return cacheContext.loadData();
 	}
-	
+
 	public void saveData(T data) throws FileAccessException {
 		Log.i(TAG, "Save modules to a file system cache.");
 		cacheContext.saveData(data);

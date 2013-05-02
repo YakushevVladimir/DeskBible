@@ -34,8 +34,8 @@ public class OpenModuleException extends Exception {
 		return moduleDatasourceId;
 	}
 
-    @Override
-    public String getMessage() {
-        return "Error opening module " + moduleId + " from " + moduleDatasourceId;
-    }
+	@Override
+	public String getMessage() {
+		return "Error opening module " + moduleId + " from " + moduleDatasourceId;
+	}
 }

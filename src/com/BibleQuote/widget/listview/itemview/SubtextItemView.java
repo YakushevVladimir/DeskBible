@@ -10,26 +10,26 @@ import com.BibleQuote.widget.listview.item.SubtextItem;
 
 public class SubtextItemView extends LinearLayout implements ItemView {
 
-    private TextView mTextView;
-    private TextView mSubtextView;
+	private TextView mTextView;
+	private TextView mSubtextView;
 
-    public SubtextItemView(Context context) {
-        this(context, null);
-    }
+	public SubtextItemView(Context context) {
+		this(context, null);
+	}
 
-    public SubtextItemView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
+	public SubtextItemView(Context context, AttributeSet attrs) {
+		super(context, attrs);
+	}
 
-    public void prepareItemView() {
-        mTextView = (TextView) findViewById(R.id.bq_text);
-        mSubtextView = (TextView) findViewById(R.id.bq_subtext);
-    }
+	public void prepareItemView() {
+		mTextView = (TextView) findViewById(R.id.bq_text);
+		mSubtextView = (TextView) findViewById(R.id.bq_subtext);
+	}
 
-    public void setObject(Item object) {
-        final SubtextItem item = (SubtextItem) object;
-        mTextView.setText(item.text);
-        mSubtextView.setText(item.subtext);
-    }
+	public void setObject(Item object) {
+		final SubtextItem item = (SubtextItem) object;
+		mTextView.setText(item.text);
+		mSubtextView.setText(item.subtext);
+	}
 
 }

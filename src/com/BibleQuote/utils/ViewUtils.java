@@ -16,20 +16,20 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
  */
 public class ViewUtils {
 
-    public static void setActionBarBackground(SherlockFragmentActivity context) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            BitmapDrawable bg = (BitmapDrawable)context.getResources().getDrawable(R.drawable.action_bar_bg);
-            bg.setTileModeXY(TileMode.REPEAT, TileMode.REPEAT);
-            context.getSupportActionBar().setBackgroundDrawable(bg);
-        }
-    }
+	public static void setActionBarBackground(SherlockFragmentActivity context) {
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+			BitmapDrawable bg = (BitmapDrawable) context.getResources().getDrawable(R.drawable.action_bar_bg);
+			bg.setTileModeXY(TileMode.REPEAT, TileMode.REPEAT);
+			context.getSupportActionBar().setBackgroundDrawable(bg);
+		}
+	}
 
-    public static void setActionBarBackground(SherlockActivity context) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            BitmapDrawable bg = (BitmapDrawable)context.getResources().getDrawable(R.drawable.action_bar_bg);
-            bg.setTileModeXY(TileMode.REPEAT, TileMode.REPEAT);
-            context.getSupportActionBar().setBackgroundDrawable(bg);
-        }
-    }
+	public static void setActionBarBackground(SherlockActivity context) {
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+			BitmapDrawable bg = (BitmapDrawable) context.getResources().getDrawable(R.drawable.action_bar_bg);
+			bg.setTileModeXY(TileMode.REPEAT, TileMode.REPEAT);
+			context.getSupportActionBar().setBackgroundDrawable(bg);
+		}
+	}
 
 }

@@ -27,9 +27,8 @@ import android.view.View;
  * This class draws a panel which which will be filled with a color which can be
  * set. It can be used to show the currently selected color which you will get
  * from the {@link ColorPickerView}.
- * 
+ *
  * @author Daniel Nilsson
- * 
  */
 public class ColorPickerPanelView extends View {
 
@@ -60,7 +59,7 @@ public class ColorPickerPanelView extends View {
 	}
 
 	public ColorPickerPanelView(Context context, AttributeSet attrs,
-			int defStyle) {
+								int defStyle) {
 		super(context, attrs, defStyle);
 		init();
 	}
@@ -133,7 +132,7 @@ public class ColorPickerPanelView extends View {
 
 	/**
 	 * Set the color that should be shown by this view.
-	 * 
+	 *
 	 * @param color
 	 */
 	public void setColor(int color) {
@@ -143,7 +142,7 @@ public class ColorPickerPanelView extends View {
 
 	/**
 	 * Get the color currently show by this view.
-	 * 
+	 *
 	 * @return
 	 */
 	public int getColor() {
@@ -152,7 +151,7 @@ public class ColorPickerPanelView extends View {
 
 	/**
 	 * Set the color of the border surrounding the panel.
-	 * 
+	 *
 	 * @param color
 	 */
 	public void setBorderColor(int color) {

@@ -14,38 +14,38 @@ import java.io.IOException;
 
 public class TextItem extends Item {
 
-    /**
-     * The item's text.
-     */
-    public String text;
+	/**
+	 * The item's text.
+	 */
+	public String text;
 
-    /**
-     * @hide
-     */
-    public TextItem() {
-    }
+	/**
+	 * @hide
+	 */
+	public TextItem() {
+	}
 
-    /**
-     * Create a new TextItem with the specified text.
-     * 
-     * @param text The text used to create this item.
-     */
-    public TextItem(String text) {
-        this.text = text;
-    }
+	/**
+	 * Create a new TextItem with the specified text.
+	 *
+	 * @param text The text used to create this item.
+	 */
+	public TextItem(String text) {
+		this.text = text;
+	}
 
-    @Override
-    public ItemView newView(Context context, ViewGroup parent) {
-        return createCellFromXml(context, R.layout.widget_text_item_view, parent);
-    }
+	@Override
+	public ItemView newView(Context context, ViewGroup parent) {
+		return createCellFromXml(context, R.layout.widget_text_item_view, parent);
+	}
 
-    @Override
-    public void inflate(Resources r, XmlPullParser parser, AttributeSet attrs) throws XmlPullParserException, IOException {
-        super.inflate(r, parser, attrs);
+	@Override
+	public void inflate(Resources r, XmlPullParser parser, AttributeSet attrs) throws XmlPullParserException, IOException {
+		super.inflate(r, parser, attrs);
 
-        TypedArray a = r.obtainAttributes(attrs, R.styleable.TextItem);
-        text = a.getString(R.styleable.TextItem_text);
-        a.recycle();
-    }
+		TypedArray a = r.obtainAttributes(attrs, R.styleable.TextItem);
+		text = a.getString(R.styleable.TextItem_text);
+		a.recycle();
+	}
 
 }

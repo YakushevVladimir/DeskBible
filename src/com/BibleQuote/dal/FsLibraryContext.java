@@ -31,7 +31,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class FsLibraryContext extends LibraryContext {
 	private final String TAG = "FsLibraryContext";
@@ -44,17 +47,17 @@ public class FsLibraryContext extends LibraryContext {
 		this.libraryDir = libraryDir;
 		if (libraryDir != null && !libraryDir.exists()) {
 			libraryDir.mkdir();
-		}		
+		}
 	}
-		
+
 	public CacheModuleController<FsModule> getCache() {
 		return cache;
 	}
-	
+
 	private boolean isLibraryExist() {
 		return libraryDir != null && libraryDir.exists();
 	}
-	
+
 	public ArrayList<FsModule> getModuleList(Map<String, Module> moduleSet) {
 		ArrayList<FsModule> result = new ArrayList<FsModule>();
 		for (Module currModule : moduleSet.values()) {
@@ -62,42 +65,43 @@ public class FsLibraryContext extends LibraryContext {
 		}
 		return result;
 	}
-	
+
 	public ArrayList<FsBook> getBookList(Map<String, Book> bookSet) {
 		ArrayList<FsBook> bookList = new ArrayList<FsBook>();
 		if (bookSet != null) {
 			for (Book currBook : bookSet.values()) {
-				bookList.add((FsBook)currBook);
+				bookList.add((FsBook) currBook);
 			}
 		}
 		return bookList;
 	}
-	
+
 	public ArrayList<Chapter> getChapterList(Map<String, Chapter> chapterSet) {
 		ArrayList<Chapter> chapterList = new ArrayList<Chapter>();
 		for (Chapter currChapter : chapterSet.values()) {
 			chapterList.add(currChapter);
 		}
 		return chapterList;
-	}	
-	
+	}
+
 	public BufferedReader getModuleReader(FsModule fsModule) throws FileAccessException {
-		return fsModule.isArchive 
+		return fsModule.isArchive
 				? FsUtils.getTextFileReaderFromZipArchive(fsModule.modulePath, fsModule.iniFileName, fsModule.defaultEncoding)
 				: FsUtils.getTextFileReader(fsModule.modulePath, fsModule.iniFileName, fsModule.defaultEncoding);
 	}
-	
-	
+
+
 	public BufferedReader getBookReader(FsBook book) throws FileAccessException {
 		FsModule fsModule = (FsModule) book.getModule();
-		BufferedReader reader = fsModule.isArchive 
+		BufferedReader reader = fsModule.isArchive
 				? FsUtils.getTextFileReaderFromZipArchive(fsModule.modulePath, book.getDataSourceID(), fsModule.defaultEncoding)
 				: FsUtils.getTextFileReader(fsModule.modulePath, book.getDataSourceID(), fsModule.defaultEncoding);
 		return reader;
 	}
-	
+
 	/**
 	 * Выполняет поиск папок с модулями Цитаты на внешнем носителе устройства
+	 *
 	 * @return Возвращает ArrayList со списком ini-файлов модулей
 	 */
 	public ArrayList<String> SearchModules(FileFilter filter) {
@@ -120,20 +124,20 @@ public class FsLibraryContext extends LibraryContext {
 
 		return iniFiles;
 	}
-	
+
 	public void fillModule(FsModule module, BufferedReader bReader) throws FileAccessException {
 		String str, HTMLFilter = "", key, value;
 
 		int pos;
-		try { 
+		try {
 			while ((str = bReader.readLine()) != null) {
 				pos = str.indexOf("//");
-                if (str.toLowerCase().contains("language") && pos >= 0) {
-                    // Тег языка в старых модулях может быть закомментирован,
-                    // поэтому раскомментируем его
-                    str = str.substring(str.toLowerCase().indexOf("language"));
-                    pos = str.indexOf("//");
-                }
+				if (str.toLowerCase().contains("language") && pos >= 0) {
+					// Тег языка в старых модулях может быть закомментирован,
+					// поэтому раскомментируем его
+					str = str.substring(str.toLowerCase().indexOf("language"));
+					pos = str.indexOf("//");
+				}
 				if (pos >= 0) str = str.substring(0, pos);
 
 				int delimiterPos = str.indexOf("=");
@@ -160,22 +164,22 @@ public class FsLibraryContext extends LibraryContext {
 					HTMLFilter = value;
 				} else if (key.equals("bible")) {
 					module.isBible = value.toLowerCase().contains("y") ? true : false;
-                } else if (key.equals("strongnumbers")) {
-                    module.containsStrong = value.toLowerCase().contains("y") ? true : false;
-                } else if (key.equals("language")) {
-                    module.language = LanguageConvertor.getISOLanguage(value);
+				} else if (key.equals("strongnumbers")) {
+					module.containsStrong = value.toLowerCase().contains("y") ? true : false;
+				} else if (key.equals("language")) {
+					module.language = LanguageConvertor.getISOLanguage(value);
 				} else if (key.equalsIgnoreCase("PathName")) {
 					break;
 				}
 			}
-			
+
 		} catch (IOException e) {
 			String message = String.format("fillModule(%1$s)", module.getDataSourceID());
 			Log.e(TAG, message, e);
 			throw new FileAccessException(message);
 		}
 
-		String TagFilter[] = { "p", "b", "i", "em", "strong", "q", "big", "sub", "sup", "h1", "h2", "h3", "h4" };
+		String TagFilter[] = {"p", "b", "i", "em", "strong", "q", "big", "sub", "sup", "h1", "h2", "h3", "h4"};
 		ArrayList<String> TagArray = new ArrayList<String>();
 		for (String tag : TagFilter) {
 			TagArray.add(tag);
@@ -196,17 +200,17 @@ public class FsLibraryContext extends LibraryContext {
 			module.HtmlFilter += separator + "(" + tag + ")|(/" + tag + ")" + "|(" + tag.toUpperCase() + ")|(/" + tag.toUpperCase() + ")";
 			separator = "|";
 		}
-	}	
-	
+	}
+
 	public void fillBooks(FsModule module, BufferedReader bReader) throws FileAccessException, BooksDefinitionException, BookDefinitionException {
 		String str, key, value;
-		
+
 		ArrayList<String> fullNames = new ArrayList<String>();
 		ArrayList<String> pathNames = new ArrayList<String>();
 		ArrayList<String> shortNames = new ArrayList<String>();
 		ArrayList<Integer> chapterQty = new ArrayList<Integer>();
 		int booksCount = 0;
-		
+
 		int pos;
 		try {
 			while ((str = bReader.readLine()) != null) {
@@ -221,8 +225,8 @@ public class FsLibraryContext extends LibraryContext {
 
 				key = str.substring(0, delimiterPos).trim().toLowerCase();
 				delimiterPos++;
-				value = delimiterPos >= str.length() 
-						? "" 
+				value = delimiterPos >= str.length()
+						? ""
 						: str.substring(delimiterPos, str.length()).trim();
 
 				if (key.equals("pathname")) {
@@ -240,41 +244,42 @@ public class FsLibraryContext extends LibraryContext {
 				} else if (key.equals("bookqty")) {
 					try {
 						booksCount = Integer.valueOf(value);
-					} catch (NumberFormatException e) {}				
+					} catch (NumberFormatException e) {
+					}
 				}
 			}
-			
+
 		} catch (IOException e) {
 			String message = String.format("fillBooks(%1$s)", module.getDataSourceID(), e);
 			Log.e(TAG, message, e);
-			throw new FileAccessException(message);			
+			throw new FileAccessException(message);
 		}
 
 		if (booksCount == 0 || pathNames.size() < booksCount || fullNames.size() < booksCount || shortNames.size() < booksCount || chapterQty.size() < booksCount) {
 			String message = String.format(
-					"Incorrect books definition in module %1$s: BookQty=%2$s, PathNameCount=%3$s, FullNameCount=%4$s, ShortNameCount=%5$s, ChapterQtyCount=%6$s", 
+					"Incorrect books definition in module %1$s: BookQty=%2$s, PathNameCount=%3$s, FullNameCount=%4$s, ShortNameCount=%5$s, ChapterQtyCount=%6$s",
 					module.getDataSourceID(), booksCount, pathNames.size(), fullNames.size(), shortNames.size(), chapterQty.size());
-			throw new BooksDefinitionException(message, module.getDataSourceID(), booksCount, pathNames.size(), fullNames.size(), shortNames.size(), chapterQty.size());	
+			throw new BooksDefinitionException(message, module.getDataSourceID(), booksCount, pathNames.size(), fullNames.size(), shortNames.size(), chapterQty.size());
 		}
-		
+
 		for (int i = 0; i < booksCount; i++) {
 			if (pathNames.get(i).equals("") || fullNames.get(i).equals("") || shortNames.get(i).equals("") || chapterQty.get(i) == 0) {
 				// Имя книги, путь к книге и кол-во глав должны быть обязательно указаны
 				String message = String.format(
-						"Incorrect attributes of book #%1$s in module %2$s: PathName=%3$s, FullName=%4$s, ShortName=%5$s, ChapterQty=%6$s", 
+						"Incorrect attributes of book #%1$s in module %2$s: PathName=%3$s, FullName=%4$s, ShortName=%5$s, ChapterQty=%6$s",
 						i, module.getDataSourceID(), pathNames.get(i), fullNames.get(i), shortNames.get(i), chapterQty.get(i));
-				throw new BookDefinitionException(message, module.getDataSourceID(), i, pathNames.get(i), fullNames.get(i), shortNames.get(i), chapterQty.get(i));					
+				throw new BookDefinitionException(message, module.getDataSourceID(), i, pathNames.get(i), fullNames.get(i), shortNames.get(i), chapterQty.get(i));
 			}
-			FsBook book = new FsBook(module, fullNames.get(i), pathNames.get(i), 
-					(shortNames.size() > i ? shortNames.get(i) : ""), 
+			FsBook book = new FsBook(module, fullNames.get(i), pathNames.get(i),
+					(shortNames.size() > i ? shortNames.get(i) : ""),
 					chapterQty.get(i));
 			module.Books.put(book.getID(), book);
 		}
-	}		
-	
+	}
+
 	public String getModuleEncoding(BufferedReader bReader) {
 		String encoding = "cp1251";
-		
+
 		if (bReader == null) {
 			return encoding;
 		}
@@ -294,8 +299,8 @@ public class FsLibraryContext extends LibraryContext {
 
 				key = str.substring(0, delimiterPos).trim().toLowerCase();
 				delimiterPos++;
-				value = delimiterPos >= str.length() 
-						? "" 
+				value = delimiterPos >= str.length()
+						? ""
 						: str.substring(delimiterPos, str.length()).trim();
 				if (key.equals("desiredfontcharset")) {
 					return charsets.containsKey(value) ? charsets.get(value) : encoding;
@@ -311,10 +316,10 @@ public class FsLibraryContext extends LibraryContext {
 
 		return encoding;
 	}
-	
-	
-	public Chapter loadChapter(Book book, Integer chapterNumber, BufferedReader bReader)  {
-		
+
+
+	public Chapter loadChapter(Book book, Integer chapterNumber, BufferedReader bReader) {
+
 		ArrayList<String> lines = new ArrayList<String>();
 		try {
 			String str;
@@ -340,10 +345,10 @@ public class FsLibraryContext extends LibraryContext {
 						str = str.substring(str.toLowerCase().indexOf(chapterSign));
 					}
 				}
-				if (!chapterFind){
+				if (!chapterFind) {
 					continue;
 				}
-				
+
 				lines.add(str);
 			}
 		} catch (IOException e) {
@@ -364,19 +369,19 @@ public class FsLibraryContext extends LibraryContext {
 		}
 
 		return new Chapter(book, chapterNumber, verseList);
-	}	
-	
-	
+	}
+
+
 	public LinkedHashMap<String, String> searchInBook(Module module, String bookID, String searchQuery, BufferedReader bReader) {
 		LinkedHashMap<String, String> searchRes = new LinkedHashMap<String, String>();
 
-        // Подготовим регулярное выражение для поиска
-        searchQuery = getSearchQuery(searchQuery);
-        if (searchQuery.equals("")) {
-            return searchRes;
-        }
+		// Подготовим регулярное выражение для поиска
+		searchQuery = getSearchQuery(searchQuery);
+		if (searchQuery.equals("")) {
+			return searchRes;
+		}
 
-        String str;
+		String str;
 		int chapterNumber = module.ChapterZero ? -1 : 0;
 		int verseNumber = 0;
 		try {
@@ -388,7 +393,7 @@ public class FsLibraryContext extends LibraryContext {
 				}
 				if (str.toLowerCase().contains(module.VerseSign)) {
 					verseNumber++;
-                }
+				}
 				if (str.toLowerCase().matches(searchQuery)) {
 					BibleReference osisLink = new BibleReference(module.getID(), bookID, chapterNumber, verseNumber);
 					String content = StringProc.cleanVerseNumbers(StringProc.stripTags(str));
@@ -402,14 +407,14 @@ public class FsLibraryContext extends LibraryContext {
 		return searchRes;
 	}
 
-    private String getSearchQuery(String query) {
-        String result = "";
-        if (query.trim().equals("")) return result;
+	private String getSearchQuery(String query) {
+		String result = "";
+		if (query.trim().equals("")) return result;
 
-        String[] words = query.toLowerCase().replaceAll("[^\\s\\w]", "").split("\\s+");
-        for (String currWord : words) {
-            result += (result.equals("") ? "" : "\\s(.)*?") + currWord;
-        }
-        return ".*?" + result + ".*?"; // любые символы в начале и конце
-    }
+		String[] words = query.toLowerCase().replaceAll("[^\\s\\w]", "").split("\\s+");
+		for (String currWord : words) {
+			result += (result.equals("") ? "" : "\\s(.)*?") + currWord;
+		}
+		return ".*?" + result + ".*?"; // любые символы в начале и конце
+	}
 }
