@@ -22,6 +22,7 @@ import com.BibleQuote.async.AsyncManager;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.managers.bookmarks.IBookmarksRepository;
 import com.BibleQuote.managers.bookmarks.dbBookmarksRepository;
+import com.BibleQuote.managers.bookmarks.prefBookmarksRepository;
 import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.UpdateManager;
@@ -75,6 +76,7 @@ public class BibleQuoteApp extends Application {
 	}
 
 	public IBookmarksRepository getBookmarksRepository() {
+		//return new prefBookmarksRepository();
 		return new dbBookmarksRepository();
 	}
 

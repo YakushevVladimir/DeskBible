@@ -72,6 +72,7 @@ public class UpdateManager {
 	}
 
 	private static void convertBookmarks_59() {
+		Log.d(TAG, "Convert bookmarks");
 		BookmarksManager newBM = new BookmarksManager(new dbBookmarksRepository());
 		ArrayList<Bookmark> bookmarks = new BookmarksManager(new prefBookmarksRepository()).getAll();
 		for (Bookmark curr : bookmarks) {
