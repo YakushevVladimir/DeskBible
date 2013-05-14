@@ -110,4 +110,6 @@
     <string name="add_reference">Добавлять ссылку</string>
     <string name="menu_speek">Читать...</string>
 	<string name="no_tags">Меток нет</string>
+	<string name="empty">Нет данных</string>
+	<string name="tags">Метки</string>
 </resources>

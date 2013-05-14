@@ -21,12 +21,12 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content"
-	android:background="@android:color/white"
+	android:background="@android:drawable/list_selector_background"
 	android:orientation="vertical"
-	android:paddingBottom="2dp">
+	android:padding="6dp">
 
 	<TextView
-		android:id="@+id/bq_text"
+		android:id="@+id/text"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:layout_weight="0.5"
@@ -37,7 +37,7 @@
 		android:ellipsize="end" />
 
 	<TextView
-		android:id="@+id/bq_subtitle"
+		android:id="@+id/subtitletext"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:layout_weight="0.5"

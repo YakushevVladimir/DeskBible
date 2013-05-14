@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.BibleQuote.activity;
+package com.BibleQuote.fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import com.BibleQuote.R;
+import com.BibleQuote.activity.ReaderActivity;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.tts.controllers.TTSPlayerController;
 import com.BibleQuote.widget.PlayerView;

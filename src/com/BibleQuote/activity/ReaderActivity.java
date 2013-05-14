@@ -40,6 +40,7 @@ import com.BibleQuote.entity.BibleReference;
 import com.BibleQuote.exceptions.BookNotFoundException;
 import com.BibleQuote.exceptions.ExceptionHelper;
 import com.BibleQuote.exceptions.OpenModuleException;
+import com.BibleQuote.fragments.TTSPlayerFragment;
 import com.BibleQuote.listeners.IReaderViewListener;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.managers.bookmarks.BookmarksManager;

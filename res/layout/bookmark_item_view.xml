@@ -20,7 +20,7 @@
 	android:layout_width="fill_parent"
 	android:layout_height="@dimen/bq_item_view_height"
 	android:orientation="vertical"
-	android:background="@android:color/white"
+	android:background="@android:drawable/list_selector_background"
 	android:paddingBottom="2dp"
 	android:paddingLeft="10dp"
 	android:paddingRight="10dp"

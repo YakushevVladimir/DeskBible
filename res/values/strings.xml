@@ -122,4 +122,6 @@
     <string name="add_module_to_reference_summary">Add the module name to the signature</string>
 	<string name="menu_speek">Read...</string>
 	<string name="no_tags">No tags</string>
+	<string name="empty">Empty</string>
+	<string name="tags">Tags</string>
 </resources>

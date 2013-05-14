@@ -22,8 +22,8 @@ public class SubtextItemView extends LinearLayout implements ItemView {
 	}
 
 	public void prepareItemView() {
-		mTextView = (TextView) findViewById(R.id.bq_text);
-		mSubtextView = (TextView) findViewById(R.id.bq_subtext);
+		mTextView = (TextView) findViewById(R.id.text);
+		mSubtextView = (TextView) findViewById(R.id.subtext);
 	}
 
 	public void setObject(Item object) {
