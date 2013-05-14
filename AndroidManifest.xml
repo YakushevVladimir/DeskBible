@@ -18,8 +18,8 @@
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	package="com.BibleQuote"
-	android:versionName="0.07.10"
-	android:versionCode="59"
+	android:versionName="0.07.12"
+	android:versionCode="60"
 	android:installLocation="auto">
 
 	<uses-sdk android:targetSdkVersion="15" android:minSdkVersion="7"/>

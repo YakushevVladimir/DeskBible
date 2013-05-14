@@ -35,14 +35,31 @@ public class dbLibraryHelper {
 	public static final String BOOKMARKS_OSIS = "osis";
 	public static final String BOOKMARKS_LINK = "link";
 	public static final String BOOKMARKS_DATE = "date";
+	
+	public static final String BOOKMARKS_TAGS_KEY_ID = "_id";
+	public static final String BOOKMARKS_TAGS_BM_ID = "bm_id";
+	public static final String BOOKMARKS_TAGS_TAG_ID = "tag_id";
 
-	private static final String CREATE_DATABASE =
+	public static final String TAGS_KEY_ID = "_id";
+	public static final String TAGS_NAME = "name";
+
+	private static final String[] CREATE_DATABASE = new String[] {
 			"create table " + DataConstants.BOOKMARKS_TABLE + " ("
 					+ BOOKMARKS_KEY_ID + " integer primary key autoincrement, "
-					+ BOOKMARKS_OSIS + " text not null, "
+					+ BOOKMARKS_OSIS + " text unique not null, "
 					+ BOOKMARKS_LINK + " text not null, "
 					+ BOOKMARKS_DATE + " text not null"
-					+ ");";
+				+ ");",
+			"create table " + DataConstants.BOOKMARKS_TAGS_TABLE + " ("
+					+ BOOKMARKS_TAGS_KEY_ID + " integer primary key autoincrement, "
+					+ BOOKMARKS_TAGS_BM_ID + " integer not null, "
+					+ BOOKMARKS_TAGS_TAG_ID + " integer not null"
+				+ ");",
+			"create table " + DataConstants.TAGS_TABLE + " ("
+					+ TAGS_KEY_ID + " integer primary key autoincrement, "
+					+ TAGS_NAME + " text unique not null"
+				+ ");"
+	};
 
 	private static final String DB_DIR_PATH = (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)
 			? DataConstants.DB_EXTERNAL_DATA_PATH
@@ -56,11 +73,11 @@ public class dbLibraryHelper {
 		if (db.getVersion() != version) {
 			db.beginTransaction();
 			try {
-				if (db.getVersion() == 0) {
+				int currVersion = db.getVersion();
+				if (currVersion == 0) {
 					onCreate(db);
-				} else {
-					onUpgrade(db);
-				}
+				};
+				onUpgrade(db, currVersion);
 				db.setVersion(version);
 				db.setTransactionSuccessful();
 			} finally {
@@ -71,13 +88,26 @@ public class dbLibraryHelper {
 		return db;
 	}
 
-	private static void onCreate(SQLiteDatabase db) {
-		db.execSQL(CREATE_DATABASE);
+	public static SQLiteDatabase openDB() {
+		SQLiteDatabase db = getLibraryDB();
+		db.beginTransaction();
+		return db;
 	}
 
-	private static void onUpgrade(SQLiteDatabase db) {
+	public static void closeDB(SQLiteDatabase db) {
+		db.setTransactionSuccessful();
+		db.endTransaction();
+		db.close();
+	}
+
+	private static void onCreate(SQLiteDatabase db) {
+		for (String command : CREATE_DATABASE) {
+			db.execSQL(command);
+		}
+	}
+
+	private static void onUpgrade(SQLiteDatabase db, int currVersion) {
 		//TODO Create dbLibraryHelper.onUpgrade()
 	}
-
 }
 

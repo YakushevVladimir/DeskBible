@@ -22,8 +22,8 @@
 	android:orientation="vertical"
 	android:background="@android:color/white"
 	android:paddingBottom="2dp"
-	android:paddingLeft="5dp"
-	android:paddingRight="5dp"
+	android:paddingLeft="10dp"
+	android:paddingRight="10dp"
 	android:paddingTop="2dp">
 
 	<RelativeLayout
@@ -36,14 +36,11 @@
 			android:layout_height="fill_parent"
 			android:layout_alignParentRight="true"
 			android:gravity="center_vertical|right"
-			android:textColor="#a9a9a9"
+			android:textColor="#6e6e6e"
 			android:textSize="@dimen/text_size_very_small"
 			android:ellipsize="end"
 			android:singleLine="true"
-			android:shadowColor="#000000"
-			android:text="2 May, 2013"
-			android:shadowDx="0.5"
-			android:shadowDy="0.5"/>
+			android:text="2 May, 2013"/>
 
 		<TextView
 			android:id="@+id/link"
@@ -69,6 +66,7 @@
 		android:text="@string/no_tags"
 		android:singleLine="true"
 		android:layout_gravity="center_vertical|left"
-		android:textColor="#a9a9a9"/>
+		android:textColor="#6e6e6e"
+		android:gravity="center_vertical|left"/>
 
 </com.BibleQuote.widget.listview.itemview.BookmarkItemView>

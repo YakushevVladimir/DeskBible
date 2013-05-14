@@ -76,7 +76,7 @@ public class UpdateManager {
 		BookmarksManager newBM = new BookmarksManager(new dbBookmarksRepository());
 		ArrayList<Bookmark> bookmarks = new BookmarksManager(new prefBookmarksRepository()).getAll();
 		for (Bookmark curr : bookmarks) {
-			newBM.add(new BibleReference(curr.OSISLink));
+			newBM.add(curr.OSISLink, curr.humanLink);
 		}
 	}
 

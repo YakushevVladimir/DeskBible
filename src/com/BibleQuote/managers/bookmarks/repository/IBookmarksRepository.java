@@ -17,6 +17,7 @@
 package com.BibleQuote.managers.bookmarks.repository;
 
 import com.BibleQuote.managers.bookmarks.Bookmark;
+import com.BibleQuote.managers.tags.Tag;
 
 import java.util.ArrayList;
 
@@ -27,12 +28,9 @@ import java.util.ArrayList;
  */
 public interface IBookmarksRepository {
 	void sort();
-
-	void add(Bookmark bookmark);
-
+	long add(Bookmark bookmark);
 	void delete(Bookmark bookmark);
-
 	void deleteAll();
-
 	ArrayList<Bookmark> getAll();
+	ArrayList<Bookmark> getAll(Tag tag);
 }

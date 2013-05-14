@@ -26,7 +26,7 @@ import java.util.Calendar;
  * Time: 1:00
  */
 public class Bookmark {
-	public int id;
+	public long id;
 	public String OSISLink;
 	public String humanLink;
 	public String date;

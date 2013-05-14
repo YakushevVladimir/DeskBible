@@ -17,6 +17,7 @@
 package com.BibleQuote.managers.bookmarks.repository;
 
 import com.BibleQuote.managers.bookmarks.Bookmark;
+import com.BibleQuote.managers.tags.Tag;
 import com.BibleQuote.utils.PreferenceHelper;
 
 import java.util.ArrayList;
@@ -48,9 +49,10 @@ public class prefBookmarksRepository implements IBookmarksRepository {
 	}
 
 	@Override
-	public void add(Bookmark bookmark) {
+	public long add(Bookmark bookmark) {
 		String fav = PreferenceHelper.restoreStateString("Favorits");
 		PreferenceHelper.saveStateString("Favorits", bookmark.humanLink + BOOKMARK_PATH_DELIMITER + bookmark.OSISLink + BOOKMARK_DELIMITER + fav);
+		return 0;
 	}
 
 	@Override
@@ -80,5 +82,10 @@ public class prefBookmarksRepository implements IBookmarksRepository {
 			if (parts.length == 2) result.add(new Bookmark(parts[1], parts[0]));
 		}
 		return result;
+	}
+
+	@Override
+	public ArrayList<Bookmark> getAll(Tag tag) {
+		return new ArrayList<Bookmark>();
 	}
 }
