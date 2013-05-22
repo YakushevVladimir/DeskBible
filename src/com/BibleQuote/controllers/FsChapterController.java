@@ -132,7 +132,7 @@ public class FsChapterController implements IChapterController {
 
 			if (ParModule.isBible) {
 				ParVerseText = ParVerseText
-						.replaceAll("^(<[^/]+?>)*?(\\d+)(</(.)+?>){0,1}?\\s+",
+						.replaceAll("^(<[^/]+?>)*?(\\d+:\\d+)(</(.)+?>){0,1}?\\s+",
 								"$1<b>$2</b>$3 ").replaceAll(
 								"null", "");
 			}

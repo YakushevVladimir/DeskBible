@@ -34,16 +34,26 @@ import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.Share.ShareBuilder;
 import com.BibleQuote.utils.Share.ShareBuilder.Destination;
 import com.BibleQuote.utils.StringProc;
+import com.BibleQuote.utils.XmlUtil;
 import com.BibleQuote.utils.modules.LinkConverter;
 
+import org.w3c.dom.*;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.*;
+import java.io.*;
+
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Librarian {
 
 	private final String TAG = "Librarian";
 
 	private LinkedHashMap<String, String> searchResults = new LinkedHashMap<String, String>();
-	
+
 	public BibleReference ParOsisLink;
 
 	private Module currModule;
@@ -144,31 +154,229 @@ public class Librarian {
 		return getCurrChapter();
 	}
 
-	public Chapter openParChapter(BibleReference CurrLink, BibleReference linkParTr) throws BookNotFoundException, OpenModuleException {
+	public Chapter openParChapter(BibleReference CurrLink, BibleReference linkParTr) throws BookNotFoundException, OpenModuleException, IOException, SAXException, ParserConfigurationException, XPathExpressionException {
 
 		openChapter(CurrLink);
 
 		ParModule = getModuleByID(linkParTr.getModuleID());
 		ParOsisLink = linkParTr;
+		ArrayList<Verse> alParVerseList = new ArrayList<Verse>();
 
-		Book ParBook = getBookByID(ParModule, currBook.OSIS_ID);
 
-		// сделать выборку конкретных стихов из глав с учетом весификации
-		Chapter bufParChapter = getChapterByNumber(ParBook, currChapter.getNumber());
+		int iChapNumber1 = currChapter.getNumber();
+		String sChapNumber1 = Integer.toString(iChapNumber1);
+        int iChapSize1 = currChapter.getChapterSize();
 
-		ArrayList<Verse> verseList = new ArrayList<Verse>();
+		String sBookOsisID1 = currBook.OSIS_ID;
+		String sChapterOsisID1 = sBookOsisID1 + "." + sChapNumber1;
+		Book bkParBook = getBookByID(ParModule, sBookOsisID1);
 
-		for (int i=1; i <= currChapter.getChapterSize(); i++) {
 
-			if (bufParChapter.getVerse(i) != null) {
-				verseList.add(bufParChapter.getVerse(i));
-			} else {
-				verseList.add(new Verse((i-1), "-"));
+		Document docVersificationMap = XmlUtil.fromXMLfile("/mnt/sdcard/BibleQuote/modules/SCH2000NEU-RST66_new.xml");
+		XPath xpSelector = XPathFactory.newInstance().newXPath();
+
+		String sXPExpr = "/refSys/refMap/map[@forBook='" + sBookOsisID1 + "']/map/@startChapter";
+		NodeList ndlMapChapters = (NodeList) xpSelector.evaluate(sXPExpr, docVersificationMap, XPathConstants.NODESET);
+
+		int iMapChapSize = ndlMapChapters.getLength();
+
+		boolean isMapForBook = (iMapChapSize == 0) ? false : true;
+		boolean isMapForChapter = false;
+
+		String sStartChapter = "";
+		int iStartChapter = 0;
+		String sEndChapter = "";
+		int iEndChapter = 0;
+
+		if (isMapForBook) {
+
+			int iMpCh = 0;
+
+			while ((iMpCh < iMapChapSize) && (!isMapForChapter)) {
+
+				sStartChapter = ndlMapChapters.item(iMpCh).getTextContent();
+				iStartChapter = Integer.parseInt(sStartChapter);
+
+				sXPExpr = "/refSys/refMap/map[@forBook='" + sBookOsisID1
+						+ "']/map[@startChapter='" + sStartChapter + "']/@endChapter";
+
+				sEndChapter = xpSelector.evaluate(sXPExpr, docVersificationMap);
+				iEndChapter = Integer.parseInt(sEndChapter);
+
+				if ((iStartChapter <= iChapNumber1) && (iChapNumber1 <= iEndChapter)) {
+					isMapForChapter = true;
+				}
+
+				iMpCh++;
+
 			}
 
 		}
 
-		ParChapter = new Chapter(ParBook, currChapter.getNumber(), verseList);
+
+
+		for (int iVsNumber1 = 1; iVsNumber1 <= iChapSize1; iVsNumber1++) {
+
+			String sVsNumber1 = Integer.toString(iVsNumber1);
+			String sVerseOsisID1 = sChapterOsisID1 + "." + sVsNumber1;
+
+			String sChapNumber2 = sChapNumber1;
+			int iChapNumber2 = iChapNumber1;
+			String sVsNumber2 = sVsNumber1;
+			int iVsNumber2 = iVsNumber1;
+
+			String sBookOsisID2 = sBookOsisID1;
+			String sChapterOsisID2 = sChapterOsisID1;
+			String sVerseOsisID2 = sVerseOsisID1;
+
+			String sStartVerse = "";
+			int iStartVerse = 0;
+			String sEndVerse = "";
+			int iEndVerse = 0;
+
+			String sIntoBook = "";
+			String sDifCh = "";
+			int iDifCh = 0;
+			String sDifVs = "";
+			int iDifVs = 0;
+
+			boolean isMapForVerse = false;
+			boolean isVerse2 = true;
+
+			if (isMapForChapter) {
+
+				sXPExpr = "/refSys/refMap/map[@forBook='" + sBookOsisID1
+						+ "']/map[@startChapter='" + sStartChapter
+						+ "'][@endChapter='" + sEndChapter + "']/map/@startVerse";
+				NodeList ndlMapVerses = (NodeList) xpSelector.evaluate(sXPExpr, docVersificationMap, XPathConstants.NODESET);
+
+
+				int iMapVsSize = ndlMapVerses.getLength();
+				int iMpVs = 0;
+
+				while ((iMpVs < iMapVsSize) && (!isMapForVerse)) {
+
+					sStartVerse = ndlMapVerses.item(iMpVs).getTextContent();
+					iStartVerse = Integer.parseInt(sStartVerse);
+
+					sXPExpr = "/refSys/refMap/map[@forBook='" + sBookOsisID1
+							+ "']/map[@startChapter='" + sStartChapter
+							+ "'][@endChapter='" + sEndChapter
+							+ "']/map[@startVerse='" + sStartVerse + "']/@endVerse";
+
+					sEndVerse = xpSelector.evaluate(sXPExpr, docVersificationMap);
+					iEndVerse = Integer.parseInt(sEndVerse);
+
+					if ((iStartVerse <= iVsNumber1) && (iVsNumber1 <= iEndVerse)) {
+						isMapForVerse = true;
+					}
+
+					iMpVs++;
+				}
+			}
+
+			if (isMapForVerse) {
+				sXPExpr = "/refSys/refMap/map[@forBook='" + sBookOsisID1
+						+ "']/map[@startChapter='" + sStartChapter
+						+ "'][@endChapter='" + sEndChapter
+						+ "']/map[@startVerse='" + sStartVerse
+						+ "'][@endVerse='" + sEndVerse
+						+ "']/map/@intoBook";
+
+				sIntoBook = xpSelector.evaluate(sXPExpr, docVersificationMap);
+
+				sXPExpr = "/refSys/refMap/map[@forBook='" + sBookOsisID1
+						+ "']/map[@startChapter='" + sStartChapter
+						+ "'][@endChapter='" + sEndChapter
+						+ "']/map[@startVerse='" + sStartVerse
+						+ "'][@endVerse='" + sEndVerse
+						+ "']/map/@difCh";
+
+				sDifCh = xpSelector.evaluate(sXPExpr, docVersificationMap);
+
+				sXPExpr = "/refSys/refMap/map[@forBook='" + sBookOsisID1
+						+ "']/map[@startChapter='" + sStartChapter
+						+ "'][@endChapter='" + sEndChapter
+						+ "']/map[@startVerse='" + sStartVerse
+						+ "'][@endVerse='" + sEndVerse
+						+ "']/map/@difVs";
+
+				sDifVs = xpSelector.evaluate(sXPExpr, docVersificationMap);
+
+				if (sIntoBook.compareTo("-") == 0
+						&& sDifCh.compareTo("-") == 0
+						&& sDifVs.compareTo("-") == 0) {
+					isVerse2 = false;
+				} else {
+
+					iDifCh = Integer.parseInt(sDifCh);
+					iDifVs = Integer.parseInt(sDifVs);
+
+					iChapNumber2 = iChapNumber1 + iDifCh;
+					sChapNumber2 = Integer.toString(iChapNumber2);
+
+					iVsNumber2 = iVsNumber1 + iDifVs;
+					sVsNumber2 = Integer.toString(iVsNumber2);
+
+					sBookOsisID2 = sIntoBook;
+					sChapterOsisID2 = sBookOsisID2 + "." + sChapNumber2;
+					sVerseOsisID2 = sChapterOsisID2 + "." + sVsNumber2;
+				}
+			}
+
+
+			/*
+			sVerseText1 = sChapNumber1 + ":" + sVsNumber1 + " " + sVerseText1;
+
+			if (sVerseOsisID2.compareTo("-") != 0) {
+				sVerseText2 = sChapNumber2 + ":" + sVsNumber2 + " " + sVerseText2;;
+			} else {
+				sVerseText2 = "---";
+			}
+			*/
+
+
+			if (isVerse2) {
+
+				Book bkBook2 = getBookByID(ParModule, sBookOsisID2);
+				Verse vsVerse2 = getChapterByNumber(bkBook2, iChapNumber2).getVerse(iVsNumber2);
+
+				String sVerseText2 = vsVerse2.getText();
+				Matcher mMatcher = Pattern.compile("\\d").matcher(sVerseText2);
+
+				if ( mMatcher.find() ) {
+					sVerseText2 = sVerseText2.substring(0, mMatcher.start())
+							+ sChapNumber2 + ":" + sVerseText2.substring(mMatcher.start());
+				}
+
+
+				//alParVerseList.add(vsVerse2);
+				//alParVerseList.add( new Verse((iVsNumber2 - 1), sChapNumber2 + ":" + sVerseText2) );
+				alParVerseList.add( new Verse((iVsNumber2 - 1), sVerseText2) );
+			} else {
+				alParVerseList.add( new Verse((iVsNumber2 - 1), "---") );
+			}
+		}
+
+
+
+
+/*
+		// сделать выборку конкретных стихов из глав с учетом весификации
+		Chapter bufParChapter = getChapterByNumber(bkParBook, iChapNumber1);
+
+		for (int i = 1; i <= currChapter.getChapterSize(); i++) {
+
+			if (bufParChapter.getVerse(i) != null) {
+				alParVerseList.add(bufParChapter.getVerse(i));
+			} else {
+				alParVerseList.add(new Verse((i - 1), "---"));
+			}
+
+		}
+*/
+
+		ParChapter = new Chapter(bkParBook, iChapNumber1, alParVerseList);
 
 		return ParChapter;
 	}

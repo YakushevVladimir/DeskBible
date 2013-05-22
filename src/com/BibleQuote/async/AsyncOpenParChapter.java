@@ -6,6 +6,11 @@ import com.BibleQuote.exceptions.BookNotFoundException;
 import com.BibleQuote.exceptions.OpenModuleException;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.utils.Task;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPathExpressionException;
+import java.io.IOException;
 
 public class AsyncOpenParChapter extends Task {
 	private final String TAG = "AsyncOpenParChapter";
@@ -36,6 +41,14 @@ public class AsyncOpenParChapter extends Task {
 		} catch (OpenModuleException e) {
 			exception = e;
 		} catch (BookNotFoundException e) {
+			exception = e;
+		} catch (SAXException e) {
+			exception = e;
+		} catch (ParserConfigurationException e) {
+			exception = e;
+		} catch (XPathExpressionException e) {
+			exception = e;
+		} catch (IOException e) {
 			exception = e;
 		}
 		return true;
