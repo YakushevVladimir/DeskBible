@@ -17,7 +17,7 @@
  */
 -->
 
-<com.BibleQuote.widget.listview.itemview.TextItemView
+<com.BibleQuote.ui.widget.listview.itemview.TextItemView
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@+id/bq_text"
 	android:layout_height="@dimen/bq_item_view_height"

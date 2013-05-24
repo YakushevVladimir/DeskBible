@@ -52,7 +52,7 @@
 
         </RelativeLayout>
 
-        <com.BibleQuote.widget.ReaderWebView
+        <com.BibleQuote.ui.widget.ReaderWebView
             android:id="@+id/readerView"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"

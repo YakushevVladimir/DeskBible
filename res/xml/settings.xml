@@ -20,32 +20,32 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
 	<PreferenceCategory android:title="@string/category_reader_appearance" >
-		<com.BibleQuote.widget.ColorPicker.ColorPickerPreference
+		<com.BibleQuote.ui.widget.ColorPicker.ColorPickerPreference
 				android:defaultValue="#000000"
 				android:key="TextColor"
 				android:persistent="true"
 				android:summary="@string/text_color_summary"
 				android:title="@string/text_color" />
-		<com.BibleQuote.widget.ColorPicker.ColorPickerPreference
+		<com.BibleQuote.ui.widget.ColorPicker.ColorPickerPreference
 				android:defaultValue="#FFFFFF"
 				android:key="TextBG"
 				android:persistent="true"
 				android:summary="@string/background_summary"
 				android:title="@string/background" />
-        <com.BibleQuote.widget.ColorPicker.ColorPickerPreference
+        <com.BibleQuote.ui.widget.ColorPicker.ColorPickerPreference
                 android:defaultValue="#000000"
                 android:key="TextColorSel"
                 android:persistent="true"
                 android:summary="@string/text_color_selected_summary"
                 android:title="@string/text_color_selected" />
-        <com.BibleQuote.widget.ColorPicker.ColorPickerPreference
+        <com.BibleQuote.ui.widget.ColorPicker.ColorPickerPreference
                 android:defaultValue="#FEF8C4"
                 android:key="TextBGSel"
                 android:persistent="true"
                 android:summary="@string/background_selected_summary"
                 android:title="@string/background_selected" />
 
-		<com.BibleQuote.widget.NumberChoiseView
+		<com.BibleQuote.ui.widget.NumberChoiseView
 				android:defaultValue="12"
 				android:dialogTitle="@string/text_size"
 				android:key="TextSize"

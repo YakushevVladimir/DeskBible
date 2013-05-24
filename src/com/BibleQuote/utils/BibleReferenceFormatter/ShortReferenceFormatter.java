@@ -17,7 +17,7 @@ public class ShortReferenceFormatter extends ReferenceFormatter implements IBibl
 	public String getLink() {
 
 		String result = String.format(
-				"%1$s %2$s:%3$s",
+				"%1$s.%2$s:%3$s",
 				book.getShortName(), chapter, getVerseLink());
 		if (PreferenceHelper.addModuleToBibleReference()) {
 			result = String.format("%1$s | %2$s", result, module.getID());

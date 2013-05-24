@@ -15,7 +15,7 @@
   ~ limitations under the License.
   -->
 
-<com.BibleQuote.widget.listview.itemview.BookmarkItemView
+<com.BibleQuote.ui.widget.listview.itemview.BookmarkItemView
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent"
 	android:layout_height="@dimen/bq_item_view_height"
@@ -28,7 +28,7 @@
 
 	<RelativeLayout
 		android:layout_width="fill_parent"
-		android:layout_height="32dp">
+		android:layout_height="30dp">
 
 		<TextView
 			android:id="@+id/date"
@@ -59,7 +59,7 @@
 	<TextView
 		android:id="@+id/tags"
 		android:layout_width="fill_parent"
-		android:layout_height="12dp"
+		android:layout_height="16dp"
 		android:drawableLeft="@drawable/abs__list_pressed_holo_light"
 		android:drawablePadding="4dip"
 		android:textSize="@dimen/text_size_very_small"
@@ -67,6 +67,7 @@
 		android:singleLine="true"
 		android:layout_gravity="center_vertical|left"
 		android:textColor="#6e6e6e"
+		android:paddingBottom="2dp"
 		android:gravity="center_vertical|left"/>
 
-</com.BibleQuote.widget.listview.itemview.BookmarkItemView>
+</com.BibleQuote.ui.widget.listview.itemview.BookmarkItemView>
