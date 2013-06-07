@@ -64,6 +64,8 @@ public class Librarian {
 	private Integer currChapterNumber = -1;
 	private Integer currVerseNumber = 1;
 
+	public boolean isParTranslates = false;
+
 	private IHistoryManager historyManager;
 
 	private IModuleController moduleCtrl;
@@ -377,6 +379,8 @@ public class Librarian {
 */
 
 		ParChapter = new Chapter(bkParBook, iChapNumber1, alParVerseList);
+
+		isParTranslates = (ParChapter != null);
 
 		return ParChapter;
 	}

@@ -192,6 +192,11 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 		mAsyncManager.setupTask(mTask, this);
 	}
 
+	private void SelectParModule() {
+		Intent intentParTranslates = new Intent().setClass(getApplicationContext(), LibraryActivity.class);
+		startActivityForResult(intentParTranslates, ID_PARTRANSLATES);
+	}
+
 	private void initialyzeViews() {
         btnChapterNav = (LinearLayout)findViewById(R.id.btn_chapter_nav);
 
@@ -261,6 +266,16 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 			case R.id.action_speek:
 				viewTTSPlayer();
 				break;
+			case R.id.action_bar_partranslates:
+				SelectParModule();
+				break;
+			case R.id.action_bar_partranslates_switch:
+				if (myLibrarian.ParChapter == null) {
+					SelectParModule();
+				}
+				myLibrarian.isParTranslates = (myLibrarian.ParChapter != null) && !myLibrarian.isParTranslates;
+				viewCurrentChapter();
+				break;
 			case R.id.Help:
 				Intent helpIntent = new Intent(this, HelpActivity.class);
 				startActivity(helpIntent);
@@ -272,10 +287,6 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 			case R.id.About:
 				Intent intentAbout = new Intent().setClass(getApplicationContext(), AboutActivity.class);
 				startActivity(intentAbout);
-				break;
-			case R.id.action_bar_partranslates:
-				Intent intentParTranslates = new Intent().setClass(getApplicationContext(), LibraryActivity.class);
-				startActivityForResult(intentParTranslates, ID_PARTRANSLATES);
 				break;
 			default:
 				return false;
@@ -315,10 +326,10 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 				BibleReference osisLink = new BibleReference(extras.getString("linkOSIS"));
 				if (myLibrarian.isOSISLinkValid(osisLink)) {
 
-					if (myLibrarian.ParChapter == null) {
-						openChapterFromLink(osisLink);
-					} else {
+					if (myLibrarian.isParTranslates) {
 						openParChapterFromLink(osisLink, myLibrarian.ParOsisLink);
+					} else {
+						openChapterFromLink(osisLink);
 					}
 
                 }
@@ -333,10 +344,10 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 			vWeb.setMode(PreferenceHelper.isReadModeByDefault() ? ReaderWebView.Mode.Read : ReaderWebView.Mode.Study);
 			updateActivityMode();
 
-			if (myLibrarian.ParChapter == null) {
-				openChapterFromLink(myLibrarian.getCurrentOSISLink());
-			} else {
+			if (myLibrarian.isParTranslates) {
 				openParChapterFromLink(myLibrarian.getCurrentOSISLink(), myLibrarian.ParOsisLink);
+			} else {
+				openChapterFromLink(myLibrarian.getCurrentOSISLink());
 			}
 
 		}
@@ -405,10 +416,10 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 
 	private void viewCurrentChapter() {
 
-		if (myLibrarian.ParChapter == null) {
-			openChapterFromLink(myLibrarian.getCurrentOSISLink());
-		} else {
+		if (myLibrarian.isParTranslates) {
 			openParChapterFromLink(myLibrarian.getCurrentOSISLink(), myLibrarian.ParOsisLink);
+		} else {
+			openChapterFromLink(myLibrarian.getCurrentOSISLink());
 		}
 	}
 

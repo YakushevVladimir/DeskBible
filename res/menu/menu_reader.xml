@@ -53,27 +53,33 @@
 		android:orderInCategory="5"
 		android:showAsAction="ifRoom"/>
 	<item
+		android:title="@string/menu_partranslates"
+		android:id="@id/action_bar_partranslates"
+		android:orderInCategory="6"
+		android:icon="@drawable/ic_action_partrans"
+		android:showAsAction="ifRoom" />
+	<item
+		android:title="@string/menu_partranslates_switch"
+		android:id="@id/action_bar_partranslates_switch"
+		android:orderInCategory="7"
+		android:icon="@drawable/ic_action_partrans_switch"
+		android:showAsAction="ifRoom" />
+	<item
 		android:title="@string/menu_settings"
 		android:id="@+id/Settings"
 		android:icon="@drawable/ic_action_preferences"
-		android:orderInCategory="5"
+		android:orderInCategory="8"
 		android:showAsAction="ifRoom"/>
 	<item
 		android:title="@string/menu_help"
 		android:id="@+id/Help"
-		android:orderInCategory="6"
+		android:orderInCategory="9"
 		android:icon="@drawable/ic_action_help"
 		android:showAsAction="ifRoom"/>
 	<item
 		android:title="@string/about"
 		android:id="@+id/About"
-		android:orderInCategory="7"
+		android:orderInCategory="10"
 		android:icon="@drawable/ic_action_about"
-		android:showAsAction="ifRoom"/>
-	<item
-		android:title="@string/menu_partranslates"
-		android:id="@id/action_bar_partranslates"
-		android:orderInCategory="8"
-		android:icon="@drawable/ic_action_select"
 		android:showAsAction="ifRoom" />
 </menu>
