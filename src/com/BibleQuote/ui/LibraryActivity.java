@@ -61,6 +61,8 @@ public class LibraryActivity extends SherlockFragmentActivity implements IChange
 	private AsyncManager mAsyncManager;
 	private String messageRefresh;
 
+	private boolean isForParModule = false;
+
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			Log.d(TAG, "Message processing in handler");
@@ -86,6 +88,12 @@ public class LibraryActivity extends SherlockFragmentActivity implements IChange
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.books);
+
+		Bundle extras = getIntent().getExtras();
+		if (extras != null) {
+			this.isForParModule = extras.getBoolean("isForParModule", false);
+		}
+
 		ViewUtils.setActionBarBackground(this);
 
 		BibleQuoteApp app = (BibleQuoteApp) getApplication();
@@ -121,7 +129,11 @@ public class LibraryActivity extends SherlockFragmentActivity implements IChange
 			moduleID = osisLink.getModuleID();
 			bookID = osisLink.getBookID();
 			chapter = String.valueOf(osisLink.getChapter());
-			UpdateView(CHAPTER_VIEW);
+			if (isForParModule) {
+				UpdateView(MODULE_VIEW);
+			} else {
+				UpdateView(CHAPTER_VIEW);
+			}
 		} else {
 			UpdateView(MODULE_VIEW);
 		}
@@ -159,18 +171,22 @@ public class LibraryActivity extends SherlockFragmentActivity implements IChange
 			bookPos = 0;
 			chapterPos = 0;
 
-			String message = getResources().getString(R.string.messageLoadBooks);
-			BibleReference currentOSISLink = myLibrarian.getCurrentOSISLink();
-			BibleReference OSISLink = new BibleReference(
-					currentOSISLink.getModuleDatasource(),
-					null,
-					moduleID,
-					currentOSISLink.getBookID(),
-					currentOSISLink.getChapter(),
-					currentOSISLink.getFromVerse());
+			if (isForParModule) {
+				readChapter();
+			} else {
+				String message = getResources().getString(R.string.messageLoadBooks);
+				BibleReference currentOSISLink = myLibrarian.getCurrentOSISLink();
+				BibleReference OSISLink = new BibleReference(
+						currentOSISLink.getModuleDatasource(),
+						null,
+						moduleID,
+						currentOSISLink.getBookID(),
+						currentOSISLink.getChapter(),
+						currentOSISLink.getFromVerse());
 
-			mTask = new AsyncOpenModule(message, false, myLibrarian, OSISLink);
-			mAsyncManager.setupTask(mTask, LibraryActivity.this);
+				mTask = new AsyncOpenModule(message, false, myLibrarian, OSISLink);
+				mAsyncManager.setupTask(mTask, LibraryActivity.this);
+			}
 		}
 	};
 
@@ -234,9 +250,15 @@ public class LibraryActivity extends SherlockFragmentActivity implements IChange
 
 		switch (viewMode) {
 			case MODULE_VIEW:
-				btnModule.setEnabled(false);
-				btnBook.setEnabled(true);
-				btnChapter.setEnabled(true);
+				if (isForParModule) {
+					btnModule.setEnabled(false);
+					btnBook.setEnabled(false);
+					btnChapter.setEnabled(false);
+				} else {
+					btnModule.setEnabled(false);
+					btnBook.setEnabled(true);
+					btnChapter.setEnabled(true);
+				}
 
 				modulesList.setVisibility(View.VISIBLE);
 				booksList.setVisibility(View.GONE);

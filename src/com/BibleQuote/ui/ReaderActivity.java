@@ -194,6 +194,7 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 
 	private void SelectParModule() {
 		Intent intentParTranslates = new Intent().setClass(getApplicationContext(), LibraryActivity.class);
+		intentParTranslates.putExtra("isForParModule", true);
 		startActivityForResult(intentParTranslates, ID_PARTRANSLATES);
 	}
 
