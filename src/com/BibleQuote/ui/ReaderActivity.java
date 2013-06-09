@@ -177,6 +177,8 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 		BibleReference osisLink = new BibleReference(PreferenceHelper.restoreStateString("last_read"));
 		if (!myLibrarian.isOSISLinkValid(osisLink)) {
 			onChooseChapterClick();
+		} else if (myLibrarian.ParOsisLink != null) {
+			openParChapterFromLink(osisLink, myLibrarian.ParOsisLink);
 		} else {
 			openChapterFromLink(osisLink);
 		}
@@ -275,6 +277,7 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 					SelectParModule();
 				}
 				myLibrarian.isParTranslates = (myLibrarian.ParChapter != null) && !myLibrarian.isParTranslates;
+				PreferenceHelper.saveStateBoolean("isParTranslates", myLibrarian.isParTranslates);
 				viewCurrentChapter();
 				break;
 			case R.id.Help:
@@ -339,6 +342,9 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 				BibleReference linkParTr = new BibleReference(extras.getString("linkOSIS"));
 				if (myLibrarian.isOSISLinkValid(linkParTr)) {
 					openParChapterFromLink(myLibrarian.getCurrentOSISLink(), linkParTr);
+					myLibrarian.isParTranslates = (myLibrarian.ParChapter != null);
+					PreferenceHelper.saveStateBoolean("isParTranslates", myLibrarian.isParTranslates);
+
 				}
 			}
 		} else if (requestCode == ID_SETTINGS) {
@@ -508,8 +514,10 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 				AsyncOpenParChapter t = ((AsyncOpenParChapter) task);
 				if (t.isSuccess()) {
 
-					if (myLibrarian.ParChapter != null) {
+					if (myLibrarian.isParTranslates && myLibrarian.ParChapter != null) {
 						chapterInHTML = myLibrarian.getParChapterHTMLView();
+					} else {
+						chapterInHTML = myLibrarian.getChapterHTMLView();
 					}
 
 					setTextInWebView();

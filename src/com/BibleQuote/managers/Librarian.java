@@ -90,6 +90,13 @@ public class Librarian {
 		fsHistoryRepository repository = new fsHistoryRepository(context.getCacheDir());
 		historyManager = new SimpleHistoryManager(repository, PreferenceHelper.getHistorySize());
 
+		isParTranslates = PreferenceHelper.restoreStateBoolean("isParTranslates");
+
+		String sOSISLink = PreferenceHelper.restoreStateString("ParOsisLink");
+		if (sOSISLink.length() != 0) {
+			ParOsisLink = new BibleReference(sOSISLink);
+		}
+
 		getModules();
 	}
 
@@ -162,6 +169,7 @@ public class Librarian {
 
 		ParModule = getModuleByID(linkParTr.getModuleID());
 		ParOsisLink = linkParTr;
+		PreferenceHelper.saveStateString("ParOsisLink", ParOsisLink.getExtendedPath());
 		ArrayList<Verse> alParVerseList = new ArrayList<Verse>();
 
 
@@ -379,8 +387,6 @@ public class Librarian {
 */
 
 		ParChapter = new Chapter(bkParBook, iChapNumber1, alParVerseList);
-
-		isParTranslates = (ParChapter != null);
 
 		return ParChapter;
 	}
