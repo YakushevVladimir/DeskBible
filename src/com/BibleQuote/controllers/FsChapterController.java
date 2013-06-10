@@ -88,61 +88,65 @@ public class FsChapterController implements IChapterController {
 	}
 
 
-	public String getParChapterHTMLView(Chapter chapter, Chapter ParChapter) {
+	public String getParChapterHTMLView(ArrayList<Chapter> chapterArrayList) {
+
+		Chapter chapter = chapterArrayList.get(0);
+
 		if (chapter == null) {
 			return "";
 		}
 
-	// !!!!!!!!!!
-//	if (ParChapter != null) {}
-
-		Module currModule = chapter.getBook().getModule();
-		Module ParModule = ParChapter.getBook().getModule();
-
-		ArrayList<Verse> verses = chapter.getVerseList();
-		ArrayList<Verse> ParVerses = ParChapter.getVerseList();
+		Module currModule;
 
 		StringBuilder chapterHTML = new StringBuilder();
-		for (int verse = 1; verse <= verses.size(); verse++) {
-			String verseText = verses.get(verse - 1).getText();
-			String ParVerseText = ParVerses.get(verse - 1).getText();
 
-			if (currModule.containsStrong) {
-				// убираем номера Стронга
-				verseText = verseText.replaceAll("\\s(\\d)+", "");
+		int iVerseNumber = chapter.getVerseNumber();
+		int iChapterNumber = chapterArrayList.size();
+
+		for (int iVerse = 1; iVerse <= iVerseNumber; iVerse++) {
+			for (int iChapter = 0; iChapter < iChapterNumber; iChapter++) {
+
+				chapter = chapterArrayList.get(iChapter);
+
+				String verseText = chapter.getVerse(iVerse).getText();
+
+				currModule = chapter.getBook().getModule();
+
+				if (currModule.containsStrong) {
+					// убираем номера Стронга
+					verseText = verseText.replaceAll("\\s(\\d)+", "");
+				}
+
+				verseText = StringProc.stripTags(verseText, currModule.HtmlFilter);
+				verseText = verseText.replaceAll("<a\\s+?href=\"verse\\s\\d+?\">(\\d+?)</a>", "<b>$1</b>");
+				if (currModule.isBible) {
+					if (iChapter == 0) {
+						verseText = verseText
+								.replaceAll("^(<[^/]+?>)*?(\\d+)(</(.)+?>){0,1}?\\s+",
+										"$1<b>$2</b>$3 ").replaceAll(
+										"null", "");
+					} else {
+						verseText = verseText
+								.replaceAll("^(<[^/]+?>)*?(\\d+:\\d+)(</(.)+?>){0,1}?\\s+",
+										"$1<b>$2</b>$3 ").replaceAll(
+										"null", "");
+
+					}
+				}
+
+				// отображение чередующимися строками
+				chapterHTML.append(
+						"<div id=\"verse_" + iVerse + "\" class=\"verse\">"
+								+ verseText.replaceAll("<(/)*div(.*?)>", "<$1p$2>")
+								+ "</div>"
+								+ "\r\n");
+
+				if (iChapter > 0 && iChapter == (iChapterNumber - 1)) {
+					chapterHTML.append("<br>\r\n");
+				}
 			}
+		}
 
-			if (ParModule.containsStrong) {
-				// убираем номера Стронга
-				ParVerseText = ParVerseText.replaceAll("\\s(\\d)+", "");
-			}
-
-			verseText = StringProc.stripTags(verseText, currModule.HtmlFilter);
-			verseText = verseText.replaceAll("<a\\s+?href=\"verse\\s\\d+?\">(\\d+?)</a>", "<b>$1</b>");
-
-			ParVerseText = StringProc.stripTags(ParVerseText, ParModule.HtmlFilter);
-			ParVerseText = ParVerseText.replaceAll("<a\\s+?href=\"verse\\s\\d+?\">(\\d+?)</a>", "<b>$1</b>");
-
-			if (currModule.isBible) {
-				verseText = verseText
-						.replaceAll("^(<[^/]+?>)*?(\\d+)(</(.)+?>){0,1}?\\s+",
-								"$1<b>$2</b>$3 ").replaceAll(
-								"null", "");
-			}
-
-			if (ParModule.isBible) {
-				ParVerseText = ParVerseText
-						.replaceAll("^(<[^/]+?>)*?(\\d+:\\d+)(</(.)+?>){0,1}?\\s+",
-								"$1<b>$2</b>$3 ").replaceAll(
-								"null", "");
-			}
-
-//			chapterHTML.append(
-//					"<div id=\"verse_" + verse + "\" class=\"verse\">"
-//							+ verseText.replaceAll("<(/)*div(.*?)>", "<$1p$2>")
-//							+ "</div>"
-//							+ "\r\n");
-//		}
 
 //!!!!
 /*
@@ -164,20 +168,6 @@ public class FsChapterController implements IChapterController {
         //chapterHTML.append("<br>\r\n");
 */
 
-// отображение чередующимися строками
-			chapterHTML.append(
-					"<div id=\"verse_" + verse + "\" class=\"verse\">"
-							+ verseText.replaceAll("<(/)*div(.*?)>", "<$1p$2>")
-							+ "</div>\r\n");
-
-			chapterHTML.append(
-					"<td><div id=\"verse_" + verse + "\" class=\"verse\">"
-							+ ParVerseText.replaceAll("<(/)*div(.*?)>", "<$1p$2>")
-							+ "</div><br>\r\n");
-
-
-//!!!!
-		}
 
 		return chapterHTML.toString();
 	}

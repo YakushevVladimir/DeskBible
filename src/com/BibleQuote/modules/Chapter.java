@@ -13,6 +13,7 @@ public class Chapter {
 	private String text;
 	private TreeMap<Integer, Verse> verses = new TreeMap<Integer, Verse>();
 	private Book book;
+	private Integer VerseNumber;
 
 
 	public Integer getNumber() {
@@ -75,11 +76,16 @@ public class Chapter {
 	public Chapter(Book book, Integer number, ArrayList<Verse> verseList) {
 		this.book = book;
 		this.number = number;
+		this.VerseNumber = verseList.size();
 
 		Integer verseNumber = 1;
 		for (Verse verse : verseList) {
 			verses.put(verseNumber++, verse);
 		}
+	}
+
+	public Integer getVerseNumber() {
+		return VerseNumber;
 	}
 
 	public Book getBook() {

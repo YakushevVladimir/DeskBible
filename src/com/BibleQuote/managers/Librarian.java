@@ -54,17 +54,17 @@ public class Librarian {
 
 	private LinkedHashMap<String, String> searchResults = new LinkedHashMap<String, String>();
 
-	public BibleReference ParOsisLink;
-
 	private Module currModule;
-	private Module ParModule;
 	private Book currBook;
 	private Chapter currChapter;
-	public Chapter ParChapter;
 	private Integer currChapterNumber = -1;
 	private Integer currVerseNumber = 1;
 
-	public boolean isParTranslates = false;
+	public boolean isShowParTranslates = false;
+
+	public String ParModuleID = "";
+	private Module ParModule;
+	public Chapter ParChapter;
 
 	private IHistoryManager historyManager;
 
@@ -90,12 +90,9 @@ public class Librarian {
 		fsHistoryRepository repository = new fsHistoryRepository(context.getCacheDir());
 		historyManager = new SimpleHistoryManager(repository, PreferenceHelper.getHistorySize());
 
-		isParTranslates = PreferenceHelper.restoreStateBoolean("isParTranslates");
-
-		String sOSISLink = PreferenceHelper.restoreStateString("ParOsisLink");
-		if (sOSISLink.length() != 0) {
-			ParOsisLink = new BibleReference(sOSISLink);
-		}
+		ParModuleID = PreferenceHelper.restoreStateString("ParModuleID");
+		isShowParTranslates = (ParModuleID.length() != 0) && PreferenceHelper.restoreStateBoolean("isShowParTranslates");
+		PreferenceHelper.saveStateBoolean("isShowParTranslates", isShowParTranslates);
 
 		getModules();
 	}
@@ -160,179 +157,182 @@ public class Librarian {
 
 		historyManager.addLink(new BibleReference(getCurrModule(), getCurrBook(), getCurrChapterNumber(), getCurrVerseNumber()));
 
+		if (isShowParTranslates) {
+			openParChapter(ParModuleID);
+		}
+
 		return getCurrChapter();
 	}
 
-	public Chapter openParChapter(BibleReference CurrLink, BibleReference linkParTr) throws BookNotFoundException, OpenModuleException, IOException, SAXException, ParserConfigurationException, XPathExpressionException {
+	public Chapter openParChapter(String moduleID) throws BookNotFoundException, OpenModuleException {
 
-		openChapter(CurrLink);
+		try {
+			ParModuleID = moduleID;
+			PreferenceHelper.saveStateString("ParModuleID", ParModuleID);
 
-		ParModule = getModuleByID(linkParTr.getModuleID());
-		ParOsisLink = linkParTr;
-		PreferenceHelper.saveStateString("ParOsisLink", ParOsisLink.getExtendedPath());
-		ArrayList<Verse> alParVerseList = new ArrayList<Verse>();
+			ParModule = getModuleByID(ParModuleID);
+
+			ArrayList<Verse> alParVerseList = new ArrayList<Verse>();
+
+			int iChapNumber1 = currChapter.getNumber();
+			String sChapNumber1 = Integer.toString(iChapNumber1);
+			int iChapSize1 = currChapter.getChapterSize();
+
+			String sBookOsisID1 = currBook.OSIS_ID;
+			String sChapterOsisID1 = sBookOsisID1 + "." + sChapNumber1;
+			Book bkParBook = getBookByID(ParModule, sBookOsisID1);
 
 
-		int iChapNumber1 = currChapter.getNumber();
-		String sChapNumber1 = Integer.toString(iChapNumber1);
-        int iChapSize1 = currChapter.getChapterSize();
+			Document docVersificationMap = XmlUtil.fromXMLfile("/mnt/sdcard/BibleQuote/modules/SCH2000NEU-RST66_new.xml");
+			XPath xpSelector = XPathFactory.newInstance().newXPath();
 
-		String sBookOsisID1 = currBook.OSIS_ID;
-		String sChapterOsisID1 = sBookOsisID1 + "." + sChapNumber1;
-		Book bkParBook = getBookByID(ParModule, sBookOsisID1);
+			String sXPExpr = "/refSys/refMap/map[@forBook='" + sBookOsisID1 + "']/map/@startChapter";
+			NodeList ndlMapChapters = (NodeList) xpSelector.evaluate(sXPExpr, docVersificationMap, XPathConstants.NODESET);
 
+			int iMapChapSize = ndlMapChapters.getLength();
 
-		Document docVersificationMap = XmlUtil.fromXMLfile("/mnt/sdcard/BibleQuote/modules/SCH2000NEU-RST66_new.xml");
-		XPath xpSelector = XPathFactory.newInstance().newXPath();
+			boolean isMapForBook = (iMapChapSize == 0) ? false : true;
+			boolean isMapForChapter = false;
 
-		String sXPExpr = "/refSys/refMap/map[@forBook='" + sBookOsisID1 + "']/map/@startChapter";
-		NodeList ndlMapChapters = (NodeList) xpSelector.evaluate(sXPExpr, docVersificationMap, XPathConstants.NODESET);
+			String sStartChapter = "";
+			int iStartChapter = 0;
+			String sEndChapter = "";
+			int iEndChapter = 0;
 
-		int iMapChapSize = ndlMapChapters.getLength();
+			if (isMapForBook) {
 
-		boolean isMapForBook = (iMapChapSize == 0) ? false : true;
-		boolean isMapForChapter = false;
+				int iMpCh = 0;
 
-		String sStartChapter = "";
-		int iStartChapter = 0;
-		String sEndChapter = "";
-		int iEndChapter = 0;
+				while ((iMpCh < iMapChapSize) && (!isMapForChapter)) {
 
-		if (isMapForBook) {
+					sStartChapter = ndlMapChapters.item(iMpCh).getTextContent();
+					iStartChapter = Integer.parseInt(sStartChapter);
 
-			int iMpCh = 0;
+					sXPExpr = "/refSys/refMap/map[@forBook='" + sBookOsisID1
+							+ "']/map[@startChapter='" + sStartChapter + "']/@endChapter";
 
-			while ((iMpCh < iMapChapSize) && (!isMapForChapter)) {
+					sEndChapter = xpSelector.evaluate(sXPExpr, docVersificationMap);
+					iEndChapter = Integer.parseInt(sEndChapter);
 
-				sStartChapter = ndlMapChapters.item(iMpCh).getTextContent();
-				iStartChapter = Integer.parseInt(sStartChapter);
+					if ((iStartChapter <= iChapNumber1) && (iChapNumber1 <= iEndChapter)) {
+						isMapForChapter = true;
+					}
 
-				sXPExpr = "/refSys/refMap/map[@forBook='" + sBookOsisID1
-						+ "']/map[@startChapter='" + sStartChapter + "']/@endChapter";
+					iMpCh++;
 
-				sEndChapter = xpSelector.evaluate(sXPExpr, docVersificationMap);
-				iEndChapter = Integer.parseInt(sEndChapter);
-
-				if ((iStartChapter <= iChapNumber1) && (iChapNumber1 <= iEndChapter)) {
-					isMapForChapter = true;
 				}
-
-				iMpCh++;
 
 			}
 
-		}
+
+			for (int iVsNumber1 = 1; iVsNumber1 <= iChapSize1; iVsNumber1++) {
+
+				String sVsNumber1 = Integer.toString(iVsNumber1);
+				String sVerseOsisID1 = sChapterOsisID1 + "." + sVsNumber1;
+
+				String sChapNumber2 = sChapNumber1;
+				int iChapNumber2 = iChapNumber1;
+				String sVsNumber2 = sVsNumber1;
+				int iVsNumber2 = iVsNumber1;
+
+				String sBookOsisID2 = sBookOsisID1;
+				String sChapterOsisID2 = sChapterOsisID1;
+				String sVerseOsisID2 = sVerseOsisID1;
+
+				String sStartVerse = "";
+				int iStartVerse = 0;
+				String sEndVerse = "";
+				int iEndVerse = 0;
+
+				String sIntoBook = "";
+				String sDifCh = "";
+				int iDifCh = 0;
+				String sDifVs = "";
+				int iDifVs = 0;
+
+				boolean isMapForVerse = false;
+				boolean isVerse2 = true;
+
+				if (isMapForChapter) {
+
+					sXPExpr = "/refSys/refMap/map[@forBook='" + sBookOsisID1
+							+ "']/map[@startChapter='" + sStartChapter
+							+ "'][@endChapter='" + sEndChapter + "']/map/@startVerse";
+					NodeList ndlMapVerses = (NodeList) xpSelector.evaluate(sXPExpr, docVersificationMap, XPathConstants.NODESET);
 
 
+					int iMapVsSize = ndlMapVerses.getLength();
+					int iMpVs = 0;
 
-		for (int iVsNumber1 = 1; iVsNumber1 <= iChapSize1; iVsNumber1++) {
+					while ((iMpVs < iMapVsSize) && (!isMapForVerse)) {
 
-			String sVsNumber1 = Integer.toString(iVsNumber1);
-			String sVerseOsisID1 = sChapterOsisID1 + "." + sVsNumber1;
+						sStartVerse = ndlMapVerses.item(iMpVs).getTextContent();
+						iStartVerse = Integer.parseInt(sStartVerse);
 
-			String sChapNumber2 = sChapNumber1;
-			int iChapNumber2 = iChapNumber1;
-			String sVsNumber2 = sVsNumber1;
-			int iVsNumber2 = iVsNumber1;
+						sXPExpr = "/refSys/refMap/map[@forBook='" + sBookOsisID1
+								+ "']/map[@startChapter='" + sStartChapter
+								+ "'][@endChapter='" + sEndChapter
+								+ "']/map[@startVerse='" + sStartVerse + "']/@endVerse";
 
-			String sBookOsisID2 = sBookOsisID1;
-			String sChapterOsisID2 = sChapterOsisID1;
-			String sVerseOsisID2 = sVerseOsisID1;
+						sEndVerse = xpSelector.evaluate(sXPExpr, docVersificationMap);
+						iEndVerse = Integer.parseInt(sEndVerse);
 
-			String sStartVerse = "";
-			int iStartVerse = 0;
-			String sEndVerse = "";
-			int iEndVerse = 0;
+						if ((iStartVerse <= iVsNumber1) && (iVsNumber1 <= iEndVerse)) {
+							isMapForVerse = true;
+						}
 
-			String sIntoBook = "";
-			String sDifCh = "";
-			int iDifCh = 0;
-			String sDifVs = "";
-			int iDifVs = 0;
+						iMpVs++;
+					}
+				}
 
-			boolean isMapForVerse = false;
-			boolean isVerse2 = true;
+				if (isMapForVerse) {
+					sXPExpr = "/refSys/refMap/map[@forBook='" + sBookOsisID1
+							+ "']/map[@startChapter='" + sStartChapter
+							+ "'][@endChapter='" + sEndChapter
+							+ "']/map[@startVerse='" + sStartVerse
+							+ "'][@endVerse='" + sEndVerse
+							+ "']/map/@intoBook";
 
-			if (isMapForChapter) {
-
-				sXPExpr = "/refSys/refMap/map[@forBook='" + sBookOsisID1
-						+ "']/map[@startChapter='" + sStartChapter
-						+ "'][@endChapter='" + sEndChapter + "']/map/@startVerse";
-				NodeList ndlMapVerses = (NodeList) xpSelector.evaluate(sXPExpr, docVersificationMap, XPathConstants.NODESET);
-
-
-				int iMapVsSize = ndlMapVerses.getLength();
-				int iMpVs = 0;
-
-				while ((iMpVs < iMapVsSize) && (!isMapForVerse)) {
-
-					sStartVerse = ndlMapVerses.item(iMpVs).getTextContent();
-					iStartVerse = Integer.parseInt(sStartVerse);
+					sIntoBook = xpSelector.evaluate(sXPExpr, docVersificationMap);
 
 					sXPExpr = "/refSys/refMap/map[@forBook='" + sBookOsisID1
 							+ "']/map[@startChapter='" + sStartChapter
 							+ "'][@endChapter='" + sEndChapter
-							+ "']/map[@startVerse='" + sStartVerse + "']/@endVerse";
+							+ "']/map[@startVerse='" + sStartVerse
+							+ "'][@endVerse='" + sEndVerse
+							+ "']/map/@difCh";
 
-					sEndVerse = xpSelector.evaluate(sXPExpr, docVersificationMap);
-					iEndVerse = Integer.parseInt(sEndVerse);
+					sDifCh = xpSelector.evaluate(sXPExpr, docVersificationMap);
 
-					if ((iStartVerse <= iVsNumber1) && (iVsNumber1 <= iEndVerse)) {
-						isMapForVerse = true;
+					sXPExpr = "/refSys/refMap/map[@forBook='" + sBookOsisID1
+							+ "']/map[@startChapter='" + sStartChapter
+							+ "'][@endChapter='" + sEndChapter
+							+ "']/map[@startVerse='" + sStartVerse
+							+ "'][@endVerse='" + sEndVerse
+							+ "']/map/@difVs";
+
+					sDifVs = xpSelector.evaluate(sXPExpr, docVersificationMap);
+
+					if (sIntoBook.compareTo("-") == 0
+							&& sDifCh.compareTo("-") == 0
+							&& sDifVs.compareTo("-") == 0) {
+						isVerse2 = false;
+					} else {
+
+						iDifCh = Integer.parseInt(sDifCh);
+						iDifVs = Integer.parseInt(sDifVs);
+
+						iChapNumber2 = iChapNumber1 + iDifCh;
+						sChapNumber2 = Integer.toString(iChapNumber2);
+
+						iVsNumber2 = iVsNumber1 + iDifVs;
+						sVsNumber2 = Integer.toString(iVsNumber2);
+
+						sBookOsisID2 = sIntoBook;
+						sChapterOsisID2 = sBookOsisID2 + "." + sChapNumber2;
+						sVerseOsisID2 = sChapterOsisID2 + "." + sVsNumber2;
 					}
-
-					iMpVs++;
 				}
-			}
-
-			if (isMapForVerse) {
-				sXPExpr = "/refSys/refMap/map[@forBook='" + sBookOsisID1
-						+ "']/map[@startChapter='" + sStartChapter
-						+ "'][@endChapter='" + sEndChapter
-						+ "']/map[@startVerse='" + sStartVerse
-						+ "'][@endVerse='" + sEndVerse
-						+ "']/map/@intoBook";
-
-				sIntoBook = xpSelector.evaluate(sXPExpr, docVersificationMap);
-
-				sXPExpr = "/refSys/refMap/map[@forBook='" + sBookOsisID1
-						+ "']/map[@startChapter='" + sStartChapter
-						+ "'][@endChapter='" + sEndChapter
-						+ "']/map[@startVerse='" + sStartVerse
-						+ "'][@endVerse='" + sEndVerse
-						+ "']/map/@difCh";
-
-				sDifCh = xpSelector.evaluate(sXPExpr, docVersificationMap);
-
-				sXPExpr = "/refSys/refMap/map[@forBook='" + sBookOsisID1
-						+ "']/map[@startChapter='" + sStartChapter
-						+ "'][@endChapter='" + sEndChapter
-						+ "']/map[@startVerse='" + sStartVerse
-						+ "'][@endVerse='" + sEndVerse
-						+ "']/map/@difVs";
-
-				sDifVs = xpSelector.evaluate(sXPExpr, docVersificationMap);
-
-				if (sIntoBook.compareTo("-") == 0
-						&& sDifCh.compareTo("-") == 0
-						&& sDifVs.compareTo("-") == 0) {
-					isVerse2 = false;
-				} else {
-
-					iDifCh = Integer.parseInt(sDifCh);
-					iDifVs = Integer.parseInt(sDifVs);
-
-					iChapNumber2 = iChapNumber1 + iDifCh;
-					sChapNumber2 = Integer.toString(iChapNumber2);
-
-					iVsNumber2 = iVsNumber1 + iDifVs;
-					sVsNumber2 = Integer.toString(iVsNumber2);
-
-					sBookOsisID2 = sIntoBook;
-					sChapterOsisID2 = sBookOsisID2 + "." + sChapNumber2;
-					sVerseOsisID2 = sChapterOsisID2 + "." + sVsNumber2;
-				}
-			}
 
 
 			/*
@@ -346,49 +346,71 @@ public class Librarian {
 			*/
 
 
-			if (isVerse2) {
+				String sVerseText2 = "---";
 
-				Book bkBook2 = getBookByID(ParModule, sBookOsisID2);
-				Verse vsVerse2 = getChapterByNumber(bkBook2, iChapNumber2).getVerse(iVsNumber2);
+				if (isVerse2) {
 
-				String sVerseText2 = vsVerse2.getText();
-				Matcher mMatcher = Pattern.compile("\\d").matcher(sVerseText2);
+					Book bkBook2 = getBookByID(ParModule, sBookOsisID2);
+					if (bkBook2 != null) {
 
-				if ( mMatcher.find() ) {
-					sVerseText2 = sVerseText2.substring(0, mMatcher.start())
-							+ sChapNumber2 + ":" + sVerseText2.substring(mMatcher.start());
+						Verse vsVerse2 = getChapterByNumber(bkBook2, iChapNumber2).getVerse(iVsNumber2);
+						if (vsVerse2 != null) {
+
+
+							sVerseText2 = vsVerse2.getText();
+							Matcher mMatcher = Pattern.compile("\\d").matcher(sVerseText2);
+
+							if (mMatcher.find()) {
+								sVerseText2 = sVerseText2.substring(0, mMatcher.start())
+										+ sChapNumber2 + ":" + sVerseText2.substring(mMatcher.start());
+							}
+						}
+					}
 				}
 
-
-				//alParVerseList.add(vsVerse2);
-				//alParVerseList.add( new Verse((iVsNumber2 - 1), sChapNumber2 + ":" + sVerseText2) );
-				alParVerseList.add( new Verse((iVsNumber2 - 1), sVerseText2) );
-			} else {
-				alParVerseList.add( new Verse((iVsNumber2 - 1), "---") );
-			}
-		}
-
-
-
-
-/*
-		// сделать выборку конкретных стихов из глав с учетом весификации
-		Chapter bufParChapter = getChapterByNumber(bkParBook, iChapNumber1);
-
-		for (int i = 1; i <= currChapter.getChapterSize(); i++) {
-
-			if (bufParChapter.getVerse(i) != null) {
-				alParVerseList.add(bufParChapter.getVerse(i));
-			} else {
-				alParVerseList.add(new Verse((i - 1), "---"));
+				alParVerseList.add(new Verse((iVsNumber2 - 1), sVerseText2));
 			}
 
+
+			ParChapter = new Chapter(bkParBook, iChapNumber1, alParVerseList);
+
+			isShowParTranslates = (ParChapter != null);
+			PreferenceHelper.saveStateBoolean("isShowParTranslates", isShowParTranslates);
+
+			return ParChapter;
+
+		} catch (ParserConfigurationException e) {
+			//e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+
+			isShowParTranslates = false;
+			PreferenceHelper.saveStateBoolean("isShowParTranslates", isShowParTranslates);
+
+			return null;
+		} catch (IOException e) {
+
+			// Переделать обработку ВСЕХ исключений (если нет таблицы, то открыть без нее)
+
+			//e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+
+			isShowParTranslates = false;
+			PreferenceHelper.saveStateBoolean("isShowParTranslates", isShowParTranslates);
+
+			return null;
+		} catch (SAXException e) {
+			//e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+
+			isShowParTranslates = false;
+			PreferenceHelper.saveStateBoolean("isShowParTranslates", isShowParTranslates);
+
+			return null;
+		} catch (XPathExpressionException e) {
+			//e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+
+			isShowParTranslates = false;
+			PreferenceHelper.saveStateBoolean("isShowParTranslates", isShowParTranslates);
+
+			return null;
 		}
-*/
-
-		ParChapter = new Chapter(bkParBook, iChapNumber1, alParVerseList);
-
-		return ParChapter;
 	}
 
 
@@ -518,7 +540,17 @@ public class Librarian {
 	}
 
 	public String getParChapterHTMLView() {
-		return chapterCtrl.getParChapterHTMLView(getCurrChapter(), getParChapter());
+
+		// TODO изменить на свойство в Librarian
+		ArrayList<Chapter> alChapters = new ArrayList<Chapter>();
+
+		alChapters.add(getCurrChapter());
+
+		if (isShowParTranslates) {
+			alChapters.add(getParChapter());
+		}
+
+		return chapterCtrl.getParChapterHTMLView(alChapters);
 	}
 
 	public Boolean isBible() {
@@ -798,6 +830,15 @@ public class Librarian {
 
 	public Chapter getParChapter() {
 		return ParChapter;
+	}
+
+	public boolean isParChapter() {
+		return (ParModuleID.length() != 0);
+	}
+
+	public void switchShowParTranslates() {
+		isShowParTranslates = isParChapter() && !isShowParTranslates;
+		PreferenceHelper.saveStateBoolean("isShowParTranslates", isShowParTranslates);
 	}
 
 	public Integer getCurrChapterNumber() {

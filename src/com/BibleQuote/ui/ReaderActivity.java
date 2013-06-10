@@ -36,7 +36,6 @@ import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
 import com.BibleQuote.async.AsyncManager;
 import com.BibleQuote.async.AsyncOpenChapter;
-import com.BibleQuote.async.AsyncOpenParChapter;
 import com.BibleQuote.entity.BibleReference;
 import com.BibleQuote.exceptions.BookNotFoundException;
 import com.BibleQuote.exceptions.ExceptionHelper;
@@ -177,20 +176,18 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 		BibleReference osisLink = new BibleReference(PreferenceHelper.restoreStateString("last_read"));
 		if (!myLibrarian.isOSISLinkValid(osisLink)) {
 			onChooseChapterClick();
-		} else if (myLibrarian.ParOsisLink != null) {
-			openParChapterFromLink(osisLink, myLibrarian.ParOsisLink);
 		} else {
 			openChapterFromLink(osisLink);
 		}
 	}
 
 	private void openChapterFromLink(BibleReference osisLink) {
-		mTask = new AsyncOpenChapter(progressMessage, false, myLibrarian, osisLink);
+		mTask = new AsyncOpenChapter(progressMessage, false, myLibrarian, osisLink, null);
 		mAsyncManager.setupTask(mTask, this);
 	}
 
-	private void openParChapterFromLink(BibleReference CurrOsisLink, BibleReference osisLinkParTr) {
-		mTask = new AsyncOpenParChapter(progressMessage, false, myLibrarian, CurrOsisLink, osisLinkParTr);
+	private void openParChapterByModuleID(String ParModuleID) {
+		mTask = new AsyncOpenChapter(progressMessage, false, myLibrarian, null, ParModuleID);
 		mAsyncManager.setupTask(mTask, this);
 	}
 
@@ -273,11 +270,10 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 				SelectParModule();
 				break;
 			case R.id.action_bar_partranslates_switch:
-				if (myLibrarian.ParChapter == null) {
+				if (!myLibrarian.isParChapter()) {
 					SelectParModule();
 				}
-				myLibrarian.isParTranslates = (myLibrarian.ParChapter != null) && !myLibrarian.isParTranslates;
-				PreferenceHelper.saveStateBoolean("isParTranslates", myLibrarian.isParTranslates);
+				myLibrarian.switchShowParTranslates();
 				viewCurrentChapter();
 				break;
 			case R.id.Help:
@@ -329,34 +325,19 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 				Bundle extras = data.getExtras();
 				BibleReference osisLink = new BibleReference(extras.getString("linkOSIS"));
 				if (myLibrarian.isOSISLinkValid(osisLink)) {
-
-					if (myLibrarian.isParTranslates) {
-						openParChapterFromLink(osisLink, myLibrarian.ParOsisLink);
-					} else {
-						openChapterFromLink(osisLink);
-					}
-
+					openChapterFromLink(osisLink);
                 }
 			} else if (requestCode == ID_PARTRANSLATES) {
 				Bundle extras = data.getExtras();
-				BibleReference linkParTr = new BibleReference(extras.getString("linkOSIS"));
-				if (myLibrarian.isOSISLinkValid(linkParTr)) {
-					openParChapterFromLink(myLibrarian.getCurrentOSISLink(), linkParTr);
-					myLibrarian.isParTranslates = (myLibrarian.ParChapter != null);
-					PreferenceHelper.saveStateBoolean("isParTranslates", myLibrarian.isParTranslates);
-
+				BibleReference osisParLink = new BibleReference(extras.getString("linkOSIS"));
+				if (myLibrarian.isOSISLinkValid(osisParLink)) {
+					openParChapterByModuleID(osisParLink.getModuleID());
 				}
 			}
 		} else if (requestCode == ID_SETTINGS) {
 			vWeb.setMode(PreferenceHelper.isReadModeByDefault() ? ReaderWebView.Mode.Read : ReaderWebView.Mode.Study);
 			updateActivityMode();
-
-			if (myLibrarian.isParTranslates) {
-				openParChapterFromLink(myLibrarian.getCurrentOSISLink(), myLibrarian.ParOsisLink);
-			} else {
-				openChapterFromLink(myLibrarian.getCurrentOSISLink());
-			}
-
+			openChapterFromLink(myLibrarian.getCurrentOSISLink());
 		}
 	}
 
@@ -422,12 +403,7 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 	};
 
 	private void viewCurrentChapter() {
-
-		if (myLibrarian.isParTranslates) {
-			openParChapterFromLink(myLibrarian.getCurrentOSISLink(), myLibrarian.ParOsisLink);
-		} else {
-			openChapterFromLink(myLibrarian.getCurrentOSISLink());
-		}
+		openChapterFromLink(myLibrarian.getCurrentOSISLink());
 	}
 
 	public void viewChapterNav() {
@@ -498,7 +474,8 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 			if (task instanceof AsyncOpenChapter) {
 				AsyncOpenChapter t = ((AsyncOpenChapter) task);
 				if (t.isSuccess()) {
-					chapterInHTML = myLibrarian.getChapterHTMLView();
+					//chapterInHTML = myLibrarian.getChapterHTMLView();
+					chapterInHTML = myLibrarian.getParChapterHTMLView();
 					setTextInWebView();
 				} else {
 					Exception e = t.getException();
@@ -509,28 +486,6 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 					}
 				}
 			}
-
-			if (task instanceof AsyncOpenParChapter) {
-				AsyncOpenParChapter t = ((AsyncOpenParChapter) task);
-				if (t.isSuccess()) {
-
-					if (myLibrarian.isParTranslates && myLibrarian.ParChapter != null) {
-						chapterInHTML = myLibrarian.getParChapterHTMLView();
-					} else {
-						chapterInHTML = myLibrarian.getChapterHTMLView();
-					}
-
-					setTextInWebView();
-				} else {
-					Exception e = t.getException();
-					if (e instanceof OpenModuleException) {
-						ExceptionHelper.onOpenModuleException((OpenModuleException) e, this, TAG);
-					} else if (e instanceof BookNotFoundException) {
-						ExceptionHelper.onBookNotFoundException((BookNotFoundException) e, this, TAG);
-					}
-				}
-			}
-
 		}
 	}
 

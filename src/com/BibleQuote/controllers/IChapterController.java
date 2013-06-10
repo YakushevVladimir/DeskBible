@@ -16,6 +16,6 @@ public interface IChapterController {
 
 	public String getChapterHTMLView(Chapter chapter);
 
-	public String getParChapterHTMLView(Chapter chapter, Chapter ParChapter);
+	public String getParChapterHTMLView(ArrayList<Chapter> chapterArrayList);
 
 }
