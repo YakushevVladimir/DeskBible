@@ -84,6 +84,12 @@ public class Chapter {
 		}
 	}
 
+	public Chapter(Book book, Integer number) {
+		this.book = book;
+		this.number = number;
+		this.VerseNumber = 0;
+	}
+
 	public Integer getVerseNumber() {
 		return VerseNumber;
 	}
@@ -98,5 +104,10 @@ public class Chapter {
 
 	public Verse getVerse(int verseNumber) {
 		return verses.get(verseNumber);
+	}
+
+	public void putVerse(Verse verse, int verseNumber) {
+		verses.put(verseNumber, verse);
+		VerseNumber++;
 	}
 }
