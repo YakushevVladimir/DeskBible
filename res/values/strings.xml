@@ -73,6 +73,7 @@
     <string name="menu_settings">Settings</string>
 	<string name="menu_partranslates">Parallel Translates</string>
 	<string name="menu_partranslates_switch">Translates On/Off</string>
+	<string name="menu_partranslates_checkversmap">Check of Versification Map</string>
 	<!-- Dialogs -->
     <string name="find">Find</string>
     <string name="menu">Menu</string>

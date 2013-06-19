@@ -160,53 +160,43 @@ public class Librarian {
 		return getCurrChapter();
 	}
 
-	public Chapter openParChapter(String moduleID) throws BookNotFoundException, OpenModuleException {
 
-		// Таблица версификации должна быть в корне модуля с именем файла "versmap.xml"
-		// Пока только обычне модули, не zip.
-		final String VersificationFileName = "versmap.xml";
+	/*
+	// Функция с учетом атрибута IntoBook, отсавлена для архива
+	public Chapter ChapterVersification_IntoBook(Chapter fromChapter, Module toModule, Document docVersificationMap,
+										FileOutputStream fosLogErr)
+			throws BookNotFoundException, OpenModuleException {
 
-		ParModuleID = moduleID;
-		PreferenceHelper.saveStateString("ParModuleID", ParModuleID);
 
-		int iChapNumber1 = currChapter.getNumber();
+		int iChapNumber1 = fromChapter.getNumber();
 		String sChapNumber1 = Integer.toString(iChapNumber1);
-		int iChapSize1 = currChapter.getChapterSize();
+		int iChapSize1 = fromChapter.getChapterSize();
 
-		String sBookOsisID1 = currBook.OSIS_ID;
-		//String sChapterOsisID1 = sBookOsisID1 + "." + sChapNumber1;
+		String sBookOsisID1 = fromChapter.getBook().OSIS_ID;
+		String sChapterOsisID1 = sBookOsisID1 + "." + sChapNumber1;
 
-		Module mdModule2 = getModuleByID(ParModuleID);
-		Book bkBook2 = getBookByID(mdModule2, sBookOsisID1);
+
+		Book Book2 = null;
+		if (toModule != null) {
+
+			// TODO new context
+			Book2 = getBookByID(toModule, sBookOsisID1);
+		}
+
 		int iChapNumber2 = iChapNumber1;
 
-		Chapter chChapter2 = null;
-		if (bkBook2 != null) {
-			chChapter2 = getChapterByNumber(bkBook2, iChapNumber2);
+		Chapter Chapter2 = null;
+		if (Book2 != null) {
+
+			// TODO new context
+			Chapter2 = getChapterByNumber(Book2, iChapNumber2);
 		}
 
-		ParChapter = new Chapter(bkBook2, iChapNumber2);
+		// if (Book2 == null) -- то не важно
+		Chapter returnChapter = new Chapter(Book2, iChapNumber2);
 
-		FsModule fsParModule = (FsModule) mdModule2;
-		String ParVersificationFilePath = fsParModule.modulePath + File.separator + VersificationFileName;
-
-		Document docVersificationMap = null;
-		boolean isVersificationMap = true;
-		try {
-			docVersificationMap = XmlUtil.fromXMLfile(ParVersificationFilePath);
-		} catch (ParserConfigurationException e) {
-			// TODO заменить e.printStackTrace()
-			e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-			isVersificationMap = false;
-		} catch (IOException e) {
-			// TODO заменить e.printStackTrace()
-			e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-			isVersificationMap = false;
-		} catch (SAXException e) {
-			// TODO заменить e.printStackTrace()
-			e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-			isVersificationMap = false;
-		}
+		boolean isVersificationMap = (docVersificationMap != null);
+		boolean isLogErr = (fosLogErr != null);
 
 		XPath xpSelector = null;
 		String sXPExpr = null;
@@ -277,6 +267,8 @@ public class Librarian {
 
 			int iDifVs = 0;
 
+			boolean isChapterWithErr = false;
+
 			for (int iVsNumber1 = 1; iVsNumber1 <= iChapSize1; iVsNumber1++) {
 
 				//String sVsNumber1 = Integer.toString(iVsNumber1);
@@ -330,13 +322,15 @@ public class Librarian {
 
 						if (iEndVerse < iVsNumber1) {
 
-							bkBook2 = getBookByID(mdModule2, sBookOsisID1);
+							Book2 = getBookByID(toModule, sBookOsisID1);
 
 							iChapNumber2 = iChapNumber1;
 							sChapNumber2 = sChapNumber1;
 
-							if (bkBook2 != null) {
-								chChapter2 = getChapterByNumber(bkBook2, iChapNumber2);
+							if (Book2 != null) {
+
+								// TODO new context
+								Chapter2 = getChapterByNumber(Book2, iChapNumber2);
 							}
 
 							iDifVs = 0;
@@ -366,14 +360,17 @@ public class Librarian {
 
 							// speedup (редко выполняется, чтобы это делать)
 
-							bkBook2 = getBookByID(mdModule2, sIntoBook);
+							// TODO new context
+							Book2 = getBookByID(toModule, sIntoBook);
 
 							int iDifCh = Integer.parseInt(sDifCh);
 							iChapNumber2 = iChapNumber1 + iDifCh;
 							sChapNumber2 = Integer.toString(iChapNumber2);
 
-							if (bkBook2 != null) {
-								chChapter2 = getChapterByNumber(bkBook2, iChapNumber2);
+							if (Book2 != null) {
+
+								// TODO new context
+								Chapter2 = getChapterByNumber(Book2, iChapNumber2);
 							}
 
 							iDifVs = Integer.parseInt(sDifVs);
@@ -392,38 +389,58 @@ public class Librarian {
 				String sVerseText2 = "---";
 
 				if (isVerse2) {
-					if (chChapter2 != null) {
+					if (Chapter2 != null) {
 
-						// speedup (введение chChapter2 прироста скорости не дал)
-						Verse vsVerse2 = chChapter2.getVerse(iVsNumber2);
+						// speedup (введение Chapter2 прироста скорости не дал)
+						Verse vsVerse2 = Chapter2.getVerse(iVsNumber2);
 
 						if (vsVerse2 != null) {
 
-							sVerseText2 = vsVerse2.getText();
+							if (!isLogErr) {
+								sVerseText2 = vsVerse2.getText();
 
-							// speedup (вынос Pattern.compile("\\d") за цикл прироста не дал)
-							Matcher mMatcher = Pattern.compile("\\d").matcher(sVerseText2);
+								// speedup (вынос Pattern.compile("\\d") за цикл прироста не дал)
+								Matcher mMatcher = Pattern.compile("\\d").matcher(sVerseText2);
 
-							if (mMatcher.find()) {
+								if (mMatcher.find()) {
 
-								// speedup (StringBuilder вместо "+" прироста скорости не дал)
-								sVerseText2 = sVerseText2.substring(0, mMatcher.start())
-										+ sChapNumber2 + ":" + sVerseText2.substring(mMatcher.start());
+									// speedup (StringBuilder вместо "+" прироста скорости не дал)
+									sVerseText2 = sVerseText2.substring(0, mMatcher.start())
+											+ sChapNumber2 + ":" + sVerseText2.substring(mMatcher.start());
+								}
 							}
-						}
-					}
+						} else isVerse2 = false;
+					} else isVerse2 = false;
 				}
 
-				// TODO speedup (введение ParChapter.putVerse прироста скорости не дало. Но пока на 2-х переводах!)
-				ParChapter.putVerse(new Verse((iVsNumber2 - 1), sVerseText2), iVsNumber1);
+				if (isLogErr && !isVerse2) {
+					String sVsNumber1 = Integer.toString(iVsNumber1);
+					String sVerseOsisID1 = sChapterOsisID1 + "." + sVsNumber1;
+
+					fosLogErr.write(sVerseOsisID1.getBytes("UTF-8"));
+					fosLogErr.write(0x0A);
+
+					isChapterWithErr = true;
+
+				}
+
+				if (!isLogErr) {
+					// TODO speedup (введение ParChapter.putVerse прироста скорости не дало. Но пока на 2-х переводах!)
+					returnChapter.putVerse(new Verse((iVsNumber2 - 1), sVerseText2), iVsNumber1);
+				}
 
 			}
 
+			if (!isLogErr) {
+				isShowParTranslates = (returnChapter.getVerseNumber().equals(fromChapter.getVerseNumber()));
+				PreferenceHelper.saveStateBoolean("isShowParTranslates", isShowParTranslates);
+			}
 
-			isShowParTranslates = (ParChapter.getVerseNumber().equals(currChapter.getVerseNumber()));
-			PreferenceHelper.saveStateBoolean("isShowParTranslates", isShowParTranslates);
+			if (isLogErr && isChapterWithErr) {
+				fosLogErr.write(0x0A);
+			}
 
-			return ParChapter;
+			return returnChapter;
 
 		} catch (XPathExpressionException e) {
 
@@ -435,6 +452,436 @@ public class Librarian {
 			PreferenceHelper.saveStateBoolean("isShowParTranslates", isShowParTranslates);
 
 			return null;
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+			return null;
+		} catch (IOException e) {
+			e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+			return null;
+		}
+	}
+	*/
+
+	// Функция без учета атрибута IntoBook, пока нет примеров надобности этого атрибута
+	public Chapter ChapterVersification(Chapter fromChapter, Book toBook,
+										Document docVersificationMap, FileOutputStream fosLogErr)
+			throws BookNotFoundException, OpenModuleException {
+
+
+		int iChapNumber1 = fromChapter.getNumber();
+		String sChapNumber1 = Integer.toString(iChapNumber1);
+		int iChapSize1 = fromChapter.getChapterSize();
+
+		String sBookOsisID1 = fromChapter.getBook().OSIS_ID;
+		String sChapterOsisID1 = sBookOsisID1 + "." + sChapNumber1;
+
+
+		Book Book2 = toBook;
+
+		int iChapNumber2 = iChapNumber1;
+
+		Chapter Chapter2 = null;
+		if (Book2 != null) {
+			Chapter2 = getChapterByNumber(Book2, iChapNumber2);
+		}
+
+		// if (Book2 == null) -- то не важно
+		Chapter returnChapter = new Chapter(Book2, iChapNumber2);
+
+		boolean isVersificationMap = (docVersificationMap != null);
+		boolean isLogErr = (fosLogErr != null);
+
+		XPath xpSelector = null;
+		String sXPExpr = null;
+		Node ndMapBook = null;
+		NodeList ndlMapChapters = null;
+		int iMapChapSize = 0;
+
+		try {
+			if (isVersificationMap) {
+				xpSelector = XPathFactory.newInstance().newXPath();
+
+				sXPExpr = "/refSys/refMap/map[@forBook='" + sBookOsisID1 + "']";
+				ndMapBook = (Node) xpSelector.evaluate(sXPExpr, docVersificationMap, XPathConstants.NODE);
+
+				sXPExpr = "map";
+				ndlMapChapters = (NodeList) xpSelector.evaluate(sXPExpr, ndMapBook, XPathConstants.NODESET);
+				iMapChapSize = ndlMapChapters.getLength();
+			}
+
+			boolean isMapForBook = isVersificationMap && (iMapChapSize != 0);
+			boolean isMapForChapter = false;
+
+			NodeList ndlMapVerses = null;
+			int iMapVsSize = 0;
+
+			Node ndMapChapter = null;
+			Node ndMapVerse = null;
+
+			String sStartChapter = "";
+			String sEndChapter = "";
+			int iStartChapter = 0;
+			int iEndChapter = 0;
+
+			if (isMapForBook) {
+
+				int iMpCh = 0;
+
+				while ((iMpCh < iMapChapSize) && (!isMapForChapter)) {
+
+					ndMapChapter = ndlMapChapters.item(iMpCh);
+
+					sXPExpr = "@startChapter";
+					sStartChapter = xpSelector.evaluate(sXPExpr, ndMapChapter);
+					iStartChapter = Integer.parseInt(sStartChapter);
+
+					sXPExpr = "@endChapter";
+					sEndChapter = xpSelector.evaluate(sXPExpr, ndMapChapter);
+					iEndChapter = Integer.parseInt(sEndChapter);
+
+					if ((iStartChapter <= iChapNumber1) && (iChapNumber1 <= iEndChapter)) {
+						isMapForChapter = true;
+					}
+
+					iMpCh++;
+
+				}
+
+				sXPExpr = "map";
+				ndlMapVerses = (NodeList) xpSelector.evaluate(sXPExpr, ndMapChapter, XPathConstants.NODESET);
+				iMapVsSize = ndlMapVerses.getLength();
+			}
+
+
+			String sChapNumber2 = sChapNumber1;
+
+			int iStartVerse = 0;
+			int iEndVerse = 0;
+
+			int iDifVs = 0;
+
+			boolean isChapterWithErr = false;
+
+			for (int iVsNumber1 = 1; iVsNumber1 <= iChapSize1; iVsNumber1++) {
+
+				//String sVsNumber1 = Integer.toString(iVsNumber1);
+				//String sVsNumber2 = sVsNumber1;
+				//String sVerseOsisID1 = sChapterOsisID1 + "." + sVsNumber1;
+				//String sBookOsisID2 = sBookOsisID1;
+				//String sChapterOsisID2 = sChapterOsisID1;
+				//String sVerseOsisID2 = sVerseOsisID1;
+
+				boolean isVerse2 = true;
+				boolean isMapForVerse = false;
+
+				if (isMapForChapter) {
+					if ( (iEndVerse == 0) || (iEndVerse < iVsNumber1) ) {
+
+						// speedup (вынос выделения памяти под переменные прироста скорости не дал)
+
+						iStartVerse = 0;
+						iEndVerse = 0;
+
+						String sStartVerse = "";
+						String sEndVerse = "";
+
+						int iMpVs = 0;
+
+						while (iMpVs < iMapVsSize) {
+
+							ndMapVerse = ndlMapVerses.item(iMpVs);
+
+							// speedup (оптимизация запроса XPath дала выигрыш 4 секунды на Псалме 119(118))
+
+							sXPExpr = "@startVerse";
+							sStartVerse = xpSelector.evaluate(sXPExpr, ndMapVerse);
+							iStartVerse = Integer.parseInt(sStartVerse);
+
+							sXPExpr = "@endVerse";
+							sEndVerse = xpSelector.evaluate(sXPExpr, ndMapVerse);
+							iEndVerse = Integer.parseInt(sEndVerse);
+
+							if (iVsNumber1 < iStartVerse) {
+								break;
+							}
+
+							if ((iStartVerse <= iVsNumber1) && (iVsNumber1 <= iEndVerse)) {
+								isMapForVerse = true;
+								break;
+							}
+
+							iMpVs++;
+						}
+
+						if (iEndVerse < iVsNumber1) {
+
+							iChapNumber2 = iChapNumber1;
+							sChapNumber2 = sChapNumber1;
+
+							if (Book2 != null) {
+								Chapter2 = getChapterByNumber(Book2, iChapNumber2);
+							}
+
+							iDifVs = 0;
+							iEndVerse = 999; // to end of chapter
+						}
+					}
+
+
+					if (isMapForVerse || (iVsNumber1 == iStartVerse)) {
+
+						isMapForVerse = false;
+
+						sXPExpr = "@intoBook";
+						String sIntoBook = xpSelector.evaluate(sXPExpr, ndMapVerse);
+
+						sXPExpr = "@difCh";
+						String sDifCh = xpSelector.evaluate(sXPExpr, ndMapVerse);
+
+						sXPExpr = "@difVs";
+						String sDifVs = xpSelector.evaluate(sXPExpr, ndMapVerse);
+
+						if (sIntoBook.compareTo("-") == 0
+								&& sDifCh.compareTo("-") == 0
+								&& sDifVs.compareTo("-") == 0) {
+							isVerse2 = false;
+						} else {
+
+							// speedup (редко выполняется, чтобы это делать)
+
+							int iDifCh = Integer.parseInt(sDifCh);
+							iChapNumber2 = iChapNumber1 + iDifCh;
+							sChapNumber2 = Integer.toString(iChapNumber2);
+
+							if (Book2 != null) {
+								Chapter2 = getChapterByNumber(Book2, iChapNumber2);
+							}
+
+							iDifVs = Integer.parseInt(sDifVs);
+
+							//sBookOsisID2 = sIntoBook;
+							//sChapterOsisID2 = sBookOsisID2 + "." + sChapNumber2;
+						}
+					}
+				}
+
+
+				int iVsNumber2 = iVsNumber1 + iDifVs;
+				//sVsNumber2 = Integer.toString(iVsNumber2);
+				//sVerseOsisID2 = sChapterOsisID2 + "." + sVsNumber2;
+
+				String sVerseText2 = "---";
+
+				if (isVerse2) {
+					if (Chapter2 != null) {
+
+						// speedup (введение Chapter2 прироста скорости не дал)
+						Verse vsVerse2 = Chapter2.getVerse(iVsNumber2);
+
+						if (vsVerse2 != null) {
+
+							if (!isLogErr) {
+								sVerseText2 = vsVerse2.getText();
+
+								// speedup (вынос Pattern.compile("\\d") за цикл прироста не дал)
+								Matcher mMatcher = Pattern.compile("\\d").matcher(sVerseText2);
+
+								if (mMatcher.find()) {
+
+									// speedup (StringBuilder вместо "+" прироста скорости не дал)
+									sVerseText2 = sVerseText2.substring(0, mMatcher.start())
+											+ sChapNumber2 + ":" + sVerseText2.substring(mMatcher.start());
+								}
+							}
+						} else isVerse2 = false;
+					} else isVerse2 = false;
+				}
+
+				if (isLogErr && !isVerse2) {
+					String sVsNumber1 = Integer.toString(iVsNumber1);
+					String sVerseOsisID1 = sChapterOsisID1 + "." + sVsNumber1;
+
+					fosLogErr.write(sVerseOsisID1.getBytes("UTF-8"));
+					fosLogErr.write(0x0A);
+
+					isChapterWithErr = true;
+
+				}
+
+				if (!isLogErr) {
+					// TODO speedup (введение ParChapter.putVerse прироста скорости не дало. Но пока на 2-х переводах!)
+					returnChapter.putVerse(new Verse((iVsNumber2 - 1), sVerseText2), iVsNumber1);
+				}
+
+			}
+
+			if (isLogErr && isChapterWithErr) {
+				fosLogErr.write(0x0A);
+			}
+
+			return returnChapter;
+
+		} catch (XPathExpressionException e) {
+
+			// TODO заменить e.printStackTrace()
+
+			e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+			return null;
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+			return null;
+		} catch (IOException e) {
+			e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+			return null;
+		}
+	}
+
+
+	public Chapter openParChapter(String toModuleID) throws BookNotFoundException, OpenModuleException {
+
+		// Таблица версификации должна быть в корне модуля с именем файла "versmap.xml"
+		// TODO Пока только обычне модули, не zip.
+		final String VersificationFileName = "versmap.xml";
+
+		FsModule fsModule1 = (FsModule) currModule;
+		String VersificationFilePath = fsModule1.modulePath + File.separator + VersificationFileName;
+
+		Document docVersificationMap = null;
+		try {
+			docVersificationMap = XmlUtil.fromXMLfile(VersificationFilePath);
+		} catch (ParserConfigurationException e) {
+			// TODO заменить e.printStackTrace()
+			e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+		} catch (IOException e) {
+			// TODO заменить e.printStackTrace()
+			e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+		} catch (SAXException e) {
+			// TODO заменить e.printStackTrace()
+			e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+		}
+
+		ParModuleID = toModuleID;
+		PreferenceHelper.saveStateString("ParModuleID", ParModuleID);
+
+		Module ParModule = getModuleByID(ParModuleID);
+		Book ParBook = getBookByID(ParModule, currBook.getID());
+
+		ParChapter = ChapterVersification(currChapter, ParBook, docVersificationMap, null);
+
+		if (ParChapter == null) {
+			isShowParTranslates = false;
+		} else {
+			isShowParTranslates = (ParChapter.getVerseNumber().equals(currChapter.getVerseNumber()));
+		}
+
+		PreferenceHelper.saveStateBoolean("isShowParTranslates", isShowParTranslates);
+
+		return ParChapter;
+	}
+
+
+	public void CheckVersificationMap(String toModuleID) throws BookNotFoundException, OpenModuleException {
+
+		// Таблица версификации должна быть в корне модуля с именем файла "versmap.xml"
+		// TODO Пока только обычне модули, не zip.
+		final String VersificationFileName = "versmap.xml";
+		final String LogErrFileName = "versmapErrors-utf8.txt";
+
+		FsModule fsModule1 = (FsModule) currModule;
+		String VersificationFilePath = fsModule1.modulePath + File.separator + VersificationFileName;
+		String LogErrFilePath = fsModule1.modulePath + File.separator + LogErrFileName;
+
+		Document docVersificationMap = null;
+		try {
+			docVersificationMap = XmlUtil.fromXMLfile(VersificationFilePath);
+		} catch (ParserConfigurationException e) {
+			// TODO заменить e.printStackTrace()
+			e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+		} catch (IOException e) {
+			// TODO заменить e.printStackTrace()
+			e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+		} catch (SAXException e) {
+			// TODO заменить e.printStackTrace()
+			e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+		}
+
+		Module Module2 = getModuleByID(toModuleID);
+
+		try {
+			FileOutputStream fosLogErr = new FileOutputStream(LogErrFilePath);
+
+			fosLogErr.write(0x0A);
+			fosLogErr.write("=================================".getBytes("UTF-8"));
+			fosLogErr.write(0x0A);
+			//fosLogErr.write("From Current Module to KJV Module".getBytes("UTF-8"));
+			fosLogErr.write("From Current Module to Selected Module".getBytes("UTF-8"));
+			fosLogErr.write(0x0A);
+			fosLogErr.write(0x0A);
+
+			for (Book Book1 : getBookList(currModule)) {
+
+				Book1 = getBookByID(currModule, Book1.getID());
+
+				ArrayList<Chapter> arlChapters1 = new ArrayList<Chapter>();
+
+				for (int iCh = 1; iCh <= Book1.chapterQty; iCh++) {
+					arlChapters1.add(getChapterByNumber(Book1, iCh));
+				}
+
+				Book Book2 = getBookByID(Module2, Book1.getID());
+
+				for (int iCh = 0; iCh < Book1.chapterQty; iCh++) {
+					ChapterVersification(arlChapters1.get(iCh), Book2, docVersificationMap, fosLogErr);
+				}
+			}
+
+			fosLogErr.write(0x0A);
+			fosLogErr.write(0x0A);
+			fosLogErr.write("=================================".getBytes("UTF-8"));
+			fosLogErr.write(0x0A);
+			//fosLogErr.write("From KJV Module to Current Module".getBytes("UTF-8"));
+			fosLogErr.write("From Selected Module to Current Module".getBytes("UTF-8"));
+			fosLogErr.write(0x0A);
+			fosLogErr.write(0x0A);
+
+			for (Book Book2 : getBookList(Module2)) {
+
+				Book2 = getBookByID(Module2, Book2.getID());
+
+				ArrayList<Chapter> arlChapters2 = new ArrayList<Chapter>();
+
+				for (int iCh = 1; iCh <= Book2.chapterQty; iCh++) {
+					arlChapters2.add(getChapterByNumber(Book2, iCh));
+				}
+
+				Book Book1 = getBookByID(currModule, Book2.getID());
+
+				for (int iCh = 0; iCh < Book2.chapterQty; iCh++) {
+					ChapterVersification(arlChapters2.get(iCh), Book1, docVersificationMap, fosLogErr);
+				}
+			}
+
+			fosLogErr.write(0x0A);
+			fosLogErr.write(0x0A);
+			fosLogErr.write("=================================".getBytes("UTF-8"));
+			fosLogErr.write(0x0A);
+			fosLogErr.write("The End".getBytes("UTF-8"));
+			fosLogErr.write(0x0A);
+
+			fosLogErr.close();
+
+		} catch (FileNotFoundException e) {
+			// TODO заменить e.printStackTrace()
+			e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+		} catch (IOException e) {
+			// TODO заменить e.printStackTrace()
+			e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+		} catch (BookDefinitionException e) {
+			// TODO заменить e.printStackTrace()
+			e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+		} catch (BooksDefinitionException e) {
+			// TODO заменить e.printStackTrace()
+			e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
 		}
 	}
 

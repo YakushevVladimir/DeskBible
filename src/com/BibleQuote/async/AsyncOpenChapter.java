@@ -16,7 +16,8 @@ public class AsyncOpenChapter extends Task {
 	private Exception exception;
 	private Boolean isSuccess;
 
-	public AsyncOpenChapter(String message, Boolean isHidden, Librarian librarian, BibleReference link, String ParModuleID) {
+	public AsyncOpenChapter(String message, Boolean isHidden, Librarian librarian, BibleReference link,
+							String ParModuleID) {
 		super(message, isHidden);
 		this.librarian = librarian;
 		this.link = link;

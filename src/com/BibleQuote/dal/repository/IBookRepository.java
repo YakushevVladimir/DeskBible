@@ -19,7 +19,7 @@ public interface IBookRepository<TModule, TBook> {
 	Collection<TBook> loadBooks(TModule module) throws OpenModuleException, BooksDefinitionException, BookDefinitionException;
 
 	/**
-	 * Читает из контекта биьблиотеки текущую кллекцию книг для указанного модуля
+	 * Читает из контекта библиотеки текущую кллекцию книг для указанного модуля
 	 *
 	 * @param module модуль для которого необходимо получить список книг
 	 * @return полученную колекцию книг из контекста библиотеки

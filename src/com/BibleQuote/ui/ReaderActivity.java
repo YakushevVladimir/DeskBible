@@ -34,6 +34,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
+import com.BibleQuote.async.AsyncCheckVersificationMap;
 import com.BibleQuote.async.AsyncManager;
 import com.BibleQuote.async.AsyncOpenChapter;
 import com.BibleQuote.entity.BibleReference;
@@ -91,7 +92,7 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
     private final int ID_PARALLELS = 5;
     private final int ID_SETTINGS = 6;
 	private final int ID_PARTRANSLATES = 7;
-
+	private final int ID_CHECKVERSMAP = 8;
 	@Override
 	public void onStopSpeak() {
 		hideTTSPlayer();
@@ -191,10 +192,21 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 		mAsyncManager.setupTask(mTask, this);
 	}
 
+	private void CheckVersMapByModuleID(String toModuleID) {
+		mTask = new AsyncCheckVersificationMap(progressMessage, false, myLibrarian, toModuleID);
+		mAsyncManager.setupTask(mTask, this);
+	}
+
 	private void SelectParModule() {
 		Intent intentParTranslates = new Intent().setClass(getApplicationContext(), LibraryActivity.class);
 		intentParTranslates.putExtra("isForParModule", true);
 		startActivityForResult(intentParTranslates, ID_PARTRANSLATES);
+	}
+
+	private void SelectModuleForCheckVersMap() {
+		Intent intentParTranslates = new Intent().setClass(getApplicationContext(), LibraryActivity.class);
+		intentParTranslates.putExtra("isForParModule", true);
+		startActivityForResult(intentParTranslates, ID_CHECKVERSMAP);
 	}
 
 	private void initialyzeViews() {
@@ -276,6 +288,9 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 				myLibrarian.switchShowParTranslates();
 				viewCurrentChapter();
 				break;
+			case R.id.action_bar_partranslates_checkversmap:
+				SelectModuleForCheckVersMap();
+				break;
 			case R.id.Help:
 				Intent helpIntent = new Intent(this, HelpActivity.class);
 				startActivity(helpIntent);
@@ -332,6 +347,12 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 				BibleReference osisParLink = new BibleReference(extras.getString("linkOSIS"));
 				if (myLibrarian.isOSISLinkValid(osisParLink)) {
 					openParChapterByModuleID(osisParLink.getModuleID());
+				}
+			} else if (requestCode == ID_CHECKVERSMAP) {
+				Bundle extras = data.getExtras();
+				BibleReference osisParLink = new BibleReference(extras.getString("linkOSIS"));
+				if (myLibrarian.isOSISLinkValid(osisParLink)) {
+					CheckVersMapByModuleID(osisParLink.getModuleID());
 				}
 			}
 		} else if (requestCode == ID_SETTINGS) {
