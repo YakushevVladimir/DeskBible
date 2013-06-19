@@ -632,18 +632,14 @@ public class Librarian {
 
 						isMapForVerse = false;
 
-						sXPExpr = "@intoBook";
-						String sIntoBook = xpSelector.evaluate(sXPExpr, ndMapVerse);
-
 						sXPExpr = "@difCh";
 						String sDifCh = xpSelector.evaluate(sXPExpr, ndMapVerse);
 
 						sXPExpr = "@difVs";
 						String sDifVs = xpSelector.evaluate(sXPExpr, ndMapVerse);
 
-						if (sIntoBook.compareTo("-") == 0
-								&& sDifCh.compareTo("-") == 0
-								&& sDifVs.compareTo("-") == 0) {
+
+						if (sDifCh.compareTo("-") == 0  &&  sDifVs.compareTo("-") == 0) {
 							isVerse2 = false;
 						} else {
 
