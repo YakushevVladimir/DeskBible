@@ -38,7 +38,6 @@ import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.*;
 import java.io.*;
 
 import java.util.*;
@@ -60,7 +59,7 @@ public class Librarian {
 	public boolean isShowParTranslates = false;
 
 	public String ParModuleID = "";
-	public Chapter ParChapter;
+	public ChapterQueueList chapterQueueList;
 
 	private IHistoryManager historyManager;
 
@@ -161,115 +160,102 @@ public class Librarian {
 	}
 
 
-	/*
-	// Функция с учетом атрибута IntoBook, отсавлена для архива
-	public Chapter ChapterVersification_IntoBook(Chapter fromChapter, Module toModule, Document docVersificationMap,
-										FileOutputStream fosLogErr)
-			throws BookNotFoundException, OpenModuleException {
+	public EtalonChapter getEtalonChapter(Chapter chapter, VersificationMap versificationMap) {
 
+		int iChapNumber1 = chapter.getNumber();
+		//String sChapNumber1 = Integer.toString(iChapNumber1);
 
-		int iChapNumber1 = fromChapter.getNumber();
-		String sChapNumber1 = Integer.toString(iChapNumber1);
-		int iChapSize1 = fromChapter.getChapterSize();
-
-		String sBookOsisID1 = fromChapter.getBook().OSIS_ID;
-		String sChapterOsisID1 = sBookOsisID1 + "." + sChapNumber1;
-
-
-		Book Book2 = null;
-		if (toModule != null) {
-
-			// TODO new context
-			Book2 = getBookByID(toModule, sBookOsisID1);
-		}
+		String sBookOsisID1 = chapter.getBook().OSIS_ID;
+		//String sChapterOsisID1 = sBookOsisID1 + "." + sChapNumber1;
 
 		int iChapNumber2 = iChapNumber1;
+		//String sChapNumber2 = sChapNumber1;
 
-		Chapter Chapter2 = null;
-		if (Book2 != null) {
 
-			// TODO new context
-			Chapter2 = getChapterByNumber(Book2, iChapNumber2);
+		EtalonChapter etalonChapter = new EtalonChapter();
+		etalonChapter.Book_OSIS_ID = sBookOsisID1;
+
+
+		for (int iVsNumber1 = 1; iVsNumber1 <= chapter.size(); iVsNumber1++) {
+
+			//String sVsNumber1 = Integer.toString(iVsNumber1);
+			//String sVsNumber2 = sVsNumber1;
+			//String sVerseOsisID1 = sChapterOsisID1 + "." + sVsNumber1;
+			//String sBookOsisID2 = sBookOsisID1;
+			//String sChapterOsisID2 = sChapterOsisID1;
+			//String sVerseOsisID2 = sVerseOsisID1;
+
+
+			VersificationMap.VerseDifferences verseDiffs =
+					versificationMap.getMapForVerse(true, sBookOsisID1, iChapNumber1, iVsNumber1);
+
+
+			iChapNumber2 = iChapNumber1 + verseDiffs.iDifCh;
+
+			int iVsNumber2 = iVsNumber1 + verseDiffs.iDifVs;
+			//sVsNumber2 = Integer.toString(iVsNumber2);
+			//sVerseOsisID2 = sChapterOsisID2 + "." + sVsNumber2;
+
+
+			int iVsSeqEnd = iVsNumber2;
+
+			if (verseDiffs.iVsRepeated != 0) {
+				iVsNumber2++;
+			}
+
+			if (verseDiffs.iCountSequence != 0) {
+				iVsSeqEnd = iVsSeqEnd + verseDiffs.iCountSequence;
+			}
+
+			while (iVsNumber2 <= iVsSeqEnd) {
+				etalonChapter.put(iChapNumber2, iVsNumber2);
+				iVsNumber2++;
+			}
 		}
 
-		// if (Book2 == null) -- то не важно
-		Chapter returnChapter = new Chapter(Book2, iChapNumber2);
 
-		boolean isVersificationMap = (docVersificationMap != null);
-		boolean isLogErr = (fosLogErr != null);
+		return etalonChapter;
+	}
 
-		XPath xpSelector = null;
-		String sXPExpr = null;
-		Node ndMapBook = null;
-		NodeList ndlMapChapters = null;
-		int iMapChapSize = 0;
+
+	public ChapterQueue getChapterQueueFromEtalon(EtalonChapter etalonChapter, Book toBook,
+												  VersificationMap versificationMap, FileOutputStream fosVersMapLogErr)
+			throws BookNotFoundException {
+
 
 		try {
-			if (isVersificationMap) {
-				xpSelector = XPathFactory.newInstance().newXPath();
 
-				sXPExpr = "/refSys/refMap/map[@forBook='" + sBookOsisID1 + "']";
-				ndMapBook = (Node) xpSelector.evaluate(sXPExpr, docVersificationMap, XPathConstants.NODE);
-
-				sXPExpr = "map";
-				ndlMapChapters = (NodeList) xpSelector.evaluate(sXPExpr, ndMapBook, XPathConstants.NODESET);
-				iMapChapSize = ndlMapChapters.getLength();
-			}
-
-			boolean isMapForBook = isVersificationMap && (iMapChapSize != 0);
-			boolean isMapForChapter = false;
-
-			NodeList ndlMapVerses = null;
-			int iMapVsSize = 0;
-
-			Node ndMapChapter = null;
-			Node ndMapVerse = null;
-
-			String sStartChapter = "";
-			String sEndChapter = "";
-			int iStartChapter = 0;
-			int iEndChapter = 0;
-
-			if (isMapForBook) {
-
-				int iMpCh = 0;
-
-				while ((iMpCh < iMapChapSize) && (!isMapForChapter)) {
-
-					ndMapChapter = ndlMapChapters.item(iMpCh);
-
-					sXPExpr = "@startChapter";
-					sStartChapter = xpSelector.evaluate(sXPExpr, ndMapChapter);
-					iStartChapter = Integer.parseInt(sStartChapter);
-
-					sXPExpr = "@endChapter";
-					sEndChapter = xpSelector.evaluate(sXPExpr, ndMapChapter);
-					iEndChapter = Integer.parseInt(sEndChapter);
-
-					if ((iStartChapter <= iChapNumber1) && (iChapNumber1 <= iEndChapter)) {
-						isMapForChapter = true;
-					}
-
-					iMpCh++;
-
-				}
-
-				sXPExpr = "map";
-				ndlMapVerses = (NodeList) xpSelector.evaluate(sXPExpr, ndMapChapter, XPathConstants.NODESET);
-				iMapVsSize = ndlMapVerses.getLength();
-			}
-
-
-			String sChapNumber2 = sChapNumber1;
-
-			int iStartVerse = 0;
-			int iEndVerse = 0;
-
-			int iDifVs = 0;
-
+			String sBookOsisID1 = etalonChapter.Book_OSIS_ID;
+			Book Book2 = toBook;
+			ChapterQueue chapterQueue = new ChapterQueue(Book2);
 			boolean isChapterWithErr = false;
 
-			for (int iVsNumber1 = 1; iVsNumber1 <= iChapSize1; iVsNumber1++) {
+			boolean isCheckingVersMap = (fosVersMapLogErr != null);
+
+			int iChapNumber1_old = 0;
+			int iChapNumber2_old = 0;
+
+			String sChapNumber1 = "";
+			//String sChapterOsisID1 = "";
+
+			int iChapNumber2 = 0;
+			String sChapNumber2 = "";
+			Chapter Chapter2 = null;
+
+
+			for (int iEtVerse = 0; iEtVerse < etalonChapter.size(); iEtVerse++) {
+
+				EtalonVerse etalonVerse = etalonChapter.get(iEtVerse);
+
+				int iChapNumber1 = etalonVerse.iChapterNumber;
+				int iVsNumber1 = etalonVerse.iVerseNumber;
+				boolean isNewChapter1 = (iChapNumber1_old != iChapNumber1);
+
+				if (isNewChapter1) {
+					sChapNumber1 = Integer.toString(iChapNumber1);
+					//sChapterOsisID1 = sBookOsisID1 + "." + sChapNumber1;
+				}
+
 
 				//String sVsNumber1 = Integer.toString(iVsNumber1);
 				//String sVsNumber2 = sVsNumber1;
@@ -278,117 +264,56 @@ public class Librarian {
 				//String sChapterOsisID2 = sChapterOsisID1;
 				//String sVerseOsisID2 = sVerseOsisID1;
 
-				boolean isVerse2 = true;
-				boolean isMapForVerse = false;
 
-				if (isMapForChapter) {
-					if ( (iEndVerse == 0) || (iEndVerse < iVsNumber1) ) {
-
-						// speedup (вынос выделения памяти под переменные прироста скорости не дал)
-
-						iStartVerse = 0;
-						iEndVerse = 0;
-
-						String sStartVerse = "";
-						String sEndVerse = "";
-
-						int iMpVs = 0;
-
-						while (iMpVs < iMapVsSize) {
-
-							ndMapVerse = ndlMapVerses.item(iMpVs);
-
-							// speedup (оптимизация запроса XPath дала выигрыш 4 секунды на Псалме 119(118))
-
-							sXPExpr = "@startVerse";
-							sStartVerse = xpSelector.evaluate(sXPExpr, ndMapVerse);
-							iStartVerse = Integer.parseInt(sStartVerse);
-
-							sXPExpr = "@endVerse";
-							sEndVerse = xpSelector.evaluate(sXPExpr, ndMapVerse);
-							iEndVerse = Integer.parseInt(sEndVerse);
-
-							if (iVsNumber1 < iStartVerse) {
-								break;
-							}
-
-							if ((iStartVerse <= iVsNumber1) && (iVsNumber1 <= iEndVerse)) {
-								isMapForVerse = true;
-								break;
-							}
-
-							iMpVs++;
-						}
-
-						if (iEndVerse < iVsNumber1) {
-
-							Book2 = getBookByID(toModule, sBookOsisID1);
-
-							iChapNumber2 = iChapNumber1;
-							sChapNumber2 = sChapNumber1;
-
-							if (Book2 != null) {
-
-								// TODO new context
-								Chapter2 = getChapterByNumber(Book2, iChapNumber2);
-							}
-
-							iDifVs = 0;
-							iEndVerse = 999; // to end of chapter
-						}
-					}
+				VersificationMap.VerseDifferences verseDiffs =
+						versificationMap.getMapForVerse(false, sBookOsisID1, iChapNumber1, iVsNumber1);
 
 
-					if (isMapForVerse || (iVsNumber1 == iStartVerse)) {
+				iChapNumber2 = iChapNumber1 + verseDiffs.iDifCh;
 
-						isMapForVerse = false;
+				boolean isNewChapter2 = (iChapNumber2_old != iChapNumber2);
 
-						sXPExpr = "@intoBook";
-						String sIntoBook = xpSelector.evaluate(sXPExpr, ndMapVerse);
+				if (isNewChapter2) {
+					sChapNumber2 = Integer.toString(iChapNumber2);
 
-						sXPExpr = "@difCh";
-						String sDifCh = xpSelector.evaluate(sXPExpr, ndMapVerse);
-
-						sXPExpr = "@difVs";
-						String sDifVs = xpSelector.evaluate(sXPExpr, ndMapVerse);
-
-						if (sIntoBook.compareTo("-") == 0
-								&& sDifCh.compareTo("-") == 0
-								&& sDifVs.compareTo("-") == 0) {
-							isVerse2 = false;
-						} else {
-
-							// speedup (редко выполняется, чтобы это делать)
-
-							// TODO new context
-							Book2 = getBookByID(toModule, sIntoBook);
-
-							int iDifCh = Integer.parseInt(sDifCh);
-							iChapNumber2 = iChapNumber1 + iDifCh;
-							sChapNumber2 = Integer.toString(iChapNumber2);
-
-							if (Book2 != null) {
-
-								// TODO new context
-								Chapter2 = getChapterByNumber(Book2, iChapNumber2);
-							}
-
-							iDifVs = Integer.parseInt(sDifVs);
-
-							//sBookOsisID2 = sIntoBook;
-							//sChapterOsisID2 = sBookOsisID2 + "." + sChapNumber2;
-						}
+					if (Book2 != null) {
+						Chapter2 = getChapterByNumber(Book2, iChapNumber2);
 					}
 				}
 
 
-				int iVsNumber2 = iVsNumber1 + iDifVs;
+				//sBookOsisID2 = sIntoBook;
+				//sChapterOsisID2 = sBookOsisID2 + "." + sChapNumber2;
+
+
+				int iVsNumber2 = iVsNumber1 + verseDiffs.iDifVs;
 				//sVsNumber2 = Integer.toString(iVsNumber2);
 				//sVerseOsisID2 = sChapterOsisID2 + "." + sVsNumber2;
 
-				String sVerseText2 = "---";
 
-				if (isVerse2) {
+				int iVsSeqEnd = iVsNumber2;
+				int iSequenceFlags = 0;
+
+				if (verseDiffs.iVsRepeated != 0) {
+				//	iVsNumber2++;  -- при отображении повтор стиха иногда нужен (по строкам)
+					iSequenceFlags = iSequenceFlags | VerseQueue.SEQ_REPEATED;
+				}
+
+				if (verseDiffs.iCountSequence != 0) {
+					iVsSeqEnd = iVsSeqEnd + verseDiffs.iCountSequence;
+					iSequenceFlags = iSequenceFlags | VerseQueue.SEQ_SEQUENCED;
+				}
+
+				if (iSequenceFlags == 0) {
+					iSequenceFlags = VerseQueue.SEQ_NORMAL;
+				}
+
+				while (iVsNumber2 <= iVsSeqEnd) {
+
+					String sVerseText2 = "---";
+					boolean isVerse2 = true;
+
+
 					if (Chapter2 != null) {
 
 						// speedup (введение Chapter2 прироста скорости не дал)
@@ -396,7 +321,7 @@ public class Librarian {
 
 						if (vsVerse2 != null) {
 
-							if (!isLogErr) {
+							if (!isCheckingVersMap) {
 								sVerseText2 = vsVerse2.getText();
 
 								// speedup (вынос Pattern.compile("\\d") за цикл прироста не дал)
@@ -411,319 +336,62 @@ public class Librarian {
 							}
 						} else isVerse2 = false;
 					} else isVerse2 = false;
+
+
+					if (!isCheckingVersMap) {
+						VerseQueue verseQueue =
+								new VerseQueue(iChapNumber2, (iVsNumber2 - 1), sVerseText2, iSequenceFlags);
+
+						chapterQueue.offer(verseQueue);
+					}
+
+
+					if (isCheckingVersMap && !isVerse2) {
+						String sVsNumber1 = Integer.toString(iVsNumber1);
+						String sVsNumber2 = Integer.toString(iVsNumber2);
+
+						String sErrVerse = "Etalon." + Book2.OSIS_ID + "." + sChapNumber1 + "." + sVsNumber1 + " -- " +
+								Book2.getModule().ShortName + "." + Book2.OSIS_ID
+								+ "." + sChapNumber2 + "." + sVsNumber2;
+
+						fosVersMapLogErr.write(sErrVerse.getBytes("UTF-8"));
+						fosVersMapLogErr.write(0x0A);
+
+						isChapterWithErr = true;
+
+					}
+
+
+					iSequenceFlags = 0;
+					if (verseDiffs.iCountSequence != 0) {
+						iSequenceFlags = iSequenceFlags | VerseQueue.SEQ_SEQUENCED;
+					}
+
+					if (iSequenceFlags == 0) {
+						iSequenceFlags = VerseQueue.SEQ_NORMAL;
+					}
+
+
+					iVsNumber2++;
 				}
 
-				if (isLogErr && !isVerse2) {
-					String sVsNumber1 = Integer.toString(iVsNumber1);
-					String sVerseOsisID1 = sChapterOsisID1 + "." + sVsNumber1;
-
-					fosLogErr.write(sVerseOsisID1.getBytes("UTF-8"));
-					fosLogErr.write(0x0A);
-
-					isChapterWithErr = true;
-
-				}
-
-				if (!isLogErr) {
-					// TODO speedup (введение ParChapter.putVerse прироста скорости не дало. Но пока на 2-х переводах!)
-					returnChapter.putVerse(new Verse((iVsNumber2 - 1), sVerseText2), iVsNumber1);
-				}
-
+				iChapNumber1_old = iChapNumber1;
+				iChapNumber2_old = iChapNumber2;
 			}
 
-			if (!isLogErr) {
-				isShowParTranslates = (returnChapter.getVerseNumber().equals(fromChapter.getVerseNumber()));
-				PreferenceHelper.saveStateBoolean("isShowParTranslates", isShowParTranslates);
+
+			if (isCheckingVersMap && isChapterWithErr) {
+				fosVersMapLogErr.write(0x0A);
 			}
 
-			if (isLogErr && isChapterWithErr) {
-				fosLogErr.write(0x0A);
-			}
 
-			return returnChapter;
+			return chapterQueue;
 
-		} catch (XPathExpressionException e) {
+
+		} catch (UnsupportedEncodingException e) {
 
 			// TODO заменить e.printStackTrace()
 
-			e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-
-			isShowParTranslates = false;
-			PreferenceHelper.saveStateBoolean("isShowParTranslates", isShowParTranslates);
-
-			return null;
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-			return null;
-		} catch (IOException e) {
-			e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-			return null;
-		}
-	}
-	*/
-
-	// Функция без учета атрибута IntoBook, пока нет примеров надобности этого атрибута
-	public Chapter ChapterVersification(Chapter fromChapter, Book toBook,
-										Document docVersificationMap, FileOutputStream fosLogErr)
-			throws BookNotFoundException, OpenModuleException {
-
-
-		int iChapNumber1 = fromChapter.getNumber();
-		String sChapNumber1 = Integer.toString(iChapNumber1);
-		int iChapSize1 = fromChapter.getChapterSize();
-
-		String sBookOsisID1 = fromChapter.getBook().OSIS_ID;
-		String sChapterOsisID1 = sBookOsisID1 + "." + sChapNumber1;
-
-
-		Book Book2 = toBook;
-
-		int iChapNumber2 = iChapNumber1;
-
-		Chapter Chapter2 = null;
-		if (Book2 != null) {
-			Chapter2 = getChapterByNumber(Book2, iChapNumber2);
-		}
-
-		// if (Book2 == null) -- то не важно
-		Chapter returnChapter = new Chapter(Book2, iChapNumber2);
-
-		boolean isVersificationMap = (docVersificationMap != null);
-		boolean isLogErr = (fosLogErr != null);
-
-		XPath xpSelector = null;
-		String sXPExpr = null;
-		Node ndMapBook = null;
-		NodeList ndlMapChapters = null;
-		int iMapChapSize = 0;
-
-		try {
-			if (isVersificationMap) {
-				xpSelector = XPathFactory.newInstance().newXPath();
-
-				sXPExpr = "/refSys/refMap/map[@forBook='" + sBookOsisID1 + "']";
-				ndMapBook = (Node) xpSelector.evaluate(sXPExpr, docVersificationMap, XPathConstants.NODE);
-
-				sXPExpr = "map";
-				ndlMapChapters = (NodeList) xpSelector.evaluate(sXPExpr, ndMapBook, XPathConstants.NODESET);
-				iMapChapSize = ndlMapChapters.getLength();
-			}
-
-			boolean isMapForBook = isVersificationMap && (iMapChapSize != 0);
-			boolean isMapForChapter = false;
-
-			NodeList ndlMapVerses = null;
-			int iMapVsSize = 0;
-
-			Node ndMapChapter = null;
-			Node ndMapVerse = null;
-
-			String sStartChapter = "";
-			String sEndChapter = "";
-			int iStartChapter = 0;
-			int iEndChapter = 0;
-
-			if (isMapForBook) {
-
-				int iMpCh = 0;
-
-				while ((iMpCh < iMapChapSize) && (!isMapForChapter)) {
-
-					ndMapChapter = ndlMapChapters.item(iMpCh);
-
-					sXPExpr = "@startChapter";
-					sStartChapter = xpSelector.evaluate(sXPExpr, ndMapChapter);
-					iStartChapter = Integer.parseInt(sStartChapter);
-
-					sXPExpr = "@endChapter";
-					sEndChapter = xpSelector.evaluate(sXPExpr, ndMapChapter);
-					iEndChapter = Integer.parseInt(sEndChapter);
-
-					if ((iStartChapter <= iChapNumber1) && (iChapNumber1 <= iEndChapter)) {
-						isMapForChapter = true;
-					}
-
-					iMpCh++;
-
-				}
-
-				sXPExpr = "map";
-				ndlMapVerses = (NodeList) xpSelector.evaluate(sXPExpr, ndMapChapter, XPathConstants.NODESET);
-				iMapVsSize = ndlMapVerses.getLength();
-			}
-
-
-			String sChapNumber2 = sChapNumber1;
-
-			int iStartVerse = 0;
-			int iEndVerse = 0;
-
-			int iDifVs = 0;
-
-			boolean isChapterWithErr = false;
-
-			for (int iVsNumber1 = 1; iVsNumber1 <= iChapSize1; iVsNumber1++) {
-
-				//String sVsNumber1 = Integer.toString(iVsNumber1);
-				//String sVsNumber2 = sVsNumber1;
-				//String sVerseOsisID1 = sChapterOsisID1 + "." + sVsNumber1;
-				//String sBookOsisID2 = sBookOsisID1;
-				//String sChapterOsisID2 = sChapterOsisID1;
-				//String sVerseOsisID2 = sVerseOsisID1;
-
-				boolean isVerse2 = true;
-				boolean isMapForVerse = false;
-
-				if (isMapForChapter) {
-					if ( (iEndVerse == 0) || (iEndVerse < iVsNumber1) ) {
-
-						// speedup (вынос выделения памяти под переменные прироста скорости не дал)
-
-						iStartVerse = 0;
-						iEndVerse = 0;
-
-						String sStartVerse = "";
-						String sEndVerse = "";
-
-						int iMpVs = 0;
-
-						while (iMpVs < iMapVsSize) {
-
-							ndMapVerse = ndlMapVerses.item(iMpVs);
-
-							// speedup (оптимизация запроса XPath дала выигрыш 4 секунды на Псалме 119(118))
-
-							sXPExpr = "@startVerse";
-							sStartVerse = xpSelector.evaluate(sXPExpr, ndMapVerse);
-							iStartVerse = Integer.parseInt(sStartVerse);
-
-							sXPExpr = "@endVerse";
-							sEndVerse = xpSelector.evaluate(sXPExpr, ndMapVerse);
-							iEndVerse = Integer.parseInt(sEndVerse);
-
-							if (iVsNumber1 < iStartVerse) {
-								break;
-							}
-
-							if ((iStartVerse <= iVsNumber1) && (iVsNumber1 <= iEndVerse)) {
-								isMapForVerse = true;
-								break;
-							}
-
-							iMpVs++;
-						}
-
-						if (iEndVerse < iVsNumber1) {
-
-							iChapNumber2 = iChapNumber1;
-							sChapNumber2 = sChapNumber1;
-
-							if (Book2 != null) {
-								Chapter2 = getChapterByNumber(Book2, iChapNumber2);
-							}
-
-							iDifVs = 0;
-							iEndVerse = 999; // to end of chapter
-						}
-					}
-
-
-					if (isMapForVerse || (iVsNumber1 == iStartVerse)) {
-
-						isMapForVerse = false;
-
-						sXPExpr = "@difCh";
-						String sDifCh = xpSelector.evaluate(sXPExpr, ndMapVerse);
-
-						sXPExpr = "@difVs";
-						String sDifVs = xpSelector.evaluate(sXPExpr, ndMapVerse);
-
-
-						if (sDifCh.compareTo("-") == 0  &&  sDifVs.compareTo("-") == 0) {
-							isVerse2 = false;
-						} else {
-
-							// speedup (редко выполняется, чтобы это делать)
-
-							int iDifCh = Integer.parseInt(sDifCh);
-							iChapNumber2 = iChapNumber1 + iDifCh;
-							sChapNumber2 = Integer.toString(iChapNumber2);
-
-							if (Book2 != null) {
-								Chapter2 = getChapterByNumber(Book2, iChapNumber2);
-							}
-
-							iDifVs = Integer.parseInt(sDifVs);
-
-							//sBookOsisID2 = sIntoBook;
-							//sChapterOsisID2 = sBookOsisID2 + "." + sChapNumber2;
-						}
-					}
-				}
-
-
-				int iVsNumber2 = iVsNumber1 + iDifVs;
-				//sVsNumber2 = Integer.toString(iVsNumber2);
-				//sVerseOsisID2 = sChapterOsisID2 + "." + sVsNumber2;
-
-				String sVerseText2 = "---";
-
-				if (isVerse2) {
-					if (Chapter2 != null) {
-
-						// speedup (введение Chapter2 прироста скорости не дал)
-						Verse vsVerse2 = Chapter2.getVerse(iVsNumber2);
-
-						if (vsVerse2 != null) {
-
-							if (!isLogErr) {
-								sVerseText2 = vsVerse2.getText();
-
-								// speedup (вынос Pattern.compile("\\d") за цикл прироста не дал)
-								Matcher mMatcher = Pattern.compile("\\d").matcher(sVerseText2);
-
-								if (mMatcher.find()) {
-
-									// speedup (StringBuilder вместо "+" прироста скорости не дал)
-									sVerseText2 = sVerseText2.substring(0, mMatcher.start())
-											+ sChapNumber2 + ":" + sVerseText2.substring(mMatcher.start());
-								}
-							}
-						} else isVerse2 = false;
-					} else isVerse2 = false;
-				}
-
-				if (isLogErr && !isVerse2) {
-					String sVsNumber1 = Integer.toString(iVsNumber1);
-					String sVerseOsisID1 = sChapterOsisID1 + "." + sVsNumber1;
-
-					fosLogErr.write(sVerseOsisID1.getBytes("UTF-8"));
-					fosLogErr.write(0x0A);
-
-					isChapterWithErr = true;
-
-				}
-
-				if (!isLogErr) {
-					// TODO speedup (введение ParChapter.putVerse прироста скорости не дало. Но пока на 2-х переводах!)
-					returnChapter.putVerse(new Verse((iVsNumber2 - 1), sVerseText2), iVsNumber1);
-				}
-
-			}
-
-			if (isLogErr && isChapterWithErr) {
-				fosLogErr.write(0x0A);
-			}
-
-			return returnChapter;
-
-		} catch (XPathExpressionException e) {
-
-			// TODO заменить e.printStackTrace()
-
-			e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-			return null;
-		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
 			return null;
 		} catch (IOException e) {
@@ -733,129 +401,202 @@ public class Librarian {
 	}
 
 
-	public Chapter openParChapter(String toModuleID) throws BookNotFoundException, OpenModuleException {
+	private Document getVersificationMap(Module module) {
 
-		// Таблица версификации должна быть в корне модуля с именем файла "versmap.xml"
-		// TODO Пока только обычне модули, не zip.
-		final String VersificationFileName = "versmap.xml";
+		// Таблица версификации должна быть в корне модуля с именем файла "versmap*.xml",
+		// такой файл должен быть только один.
+		// TODO Пока только обычные модули, не zip.
+		// TODO Перенести открытие файла таблицы в инициализацию работы с параллельными модулями,
+		// TODO чтобы файл не читался вновь с носителя на каждой главе.
 
-		FsModule fsModule1 = (FsModule) currModule;
-		String VersificationFilePath = fsModule1.modulePath + File.separator + VersificationFileName;
+		FilenameFilter fnfVersMap = new FilenameFilter() {
+			@Override
+			public boolean accept(File dir, String name) {
+				return name.startsWith("versmap") && name.endsWith(".xml");
+			}
+		};
+
+		FsModule fsModule = (FsModule) module;
+		File dirModule = new File(fsModule.modulePath);
+		String [] saModuleFileNames = dirModule.list(fnfVersMap);
+
+		String sVersificationFilePath = null;
+		if (saModuleFileNames.length == 1) {
+			sVersificationFilePath = fsModule.modulePath + File.separator + saModuleFileNames[0];
+		}
 
 		Document docVersificationMap = null;
-		try {
-			docVersificationMap = XmlUtil.fromXMLfile(VersificationFilePath);
-		} catch (ParserConfigurationException e) {
-			// TODO заменить e.printStackTrace()
-			e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-		} catch (IOException e) {
-			// TODO заменить e.printStackTrace()
-			e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-		} catch (SAXException e) {
-			// TODO заменить e.printStackTrace()
-			e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+
+		if (sVersificationFilePath != null) {
+			try {
+				docVersificationMap = XmlUtil.fromXMLfile(sVersificationFilePath);
+			} catch (ParserConfigurationException e) {
+				// TODO заменить e.printStackTrace()
+				e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+			} catch (IOException e) {
+				// TODO заменить e.printStackTrace()
+				e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+			} catch (SAXException e) {
+				// TODO заменить e.printStackTrace()
+				e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+			}
 		}
+
+		return docVersificationMap;
+	}
+
+
+	public ChapterQueueList openParChapter(String toModuleID) throws BookNotFoundException, OpenModuleException {
 
 		ParModuleID = toModuleID;
 		PreferenceHelper.saveStateString("ParModuleID", ParModuleID);
 
+
+		VersificationMap versMap1 = new VersificationMap(getVersificationMap(currModule));
+
+		EtalonChapter etalonChapter = getEtalonChapter(currChapter, versMap1);
+
+		ChapterQueue chapterQueue_1 = getChapterQueueFromEtalon(etalonChapter, currBook, versMap1, null);
+
+
 		Module ParModule = getModuleByID(ParModuleID);
 		Book ParBook = getBookByID(ParModule, currBook.getID());
 
-		ParChapter = ChapterVersification(currChapter, ParBook, docVersificationMap, null);
+		VersificationMap versMap2 = new VersificationMap(getVersificationMap(ParModule));
 
-		if (ParChapter == null) {
+		ChapterQueue chapterQueue_2 = getChapterQueueFromEtalon(etalonChapter, ParBook, versMap2, null);
+
+
+		chapterQueueList = new ChapterQueueList();
+
+		if (chapterQueue_1 != null) {
+			chapterQueueList.add(chapterQueue_1);
+		}
+
+		if (chapterQueue_2 != null) {
+			chapterQueueList.add(chapterQueue_2);
+		}
+
+
+		if (chapterQueueList.isEmpty()) {
 			isShowParTranslates = false;
 		} else {
-			isShowParTranslates = (ParChapter.getVerseNumber().equals(currChapter.getVerseNumber()));
+			isShowParTranslates = true;
 		}
 
 		PreferenceHelper.saveStateBoolean("isShowParTranslates", isShowParTranslates);
 
-		return ParChapter;
+
+		// Восстанавливаем контекст LibraryController (FsBookRepository.context.bookSet) относительно currModule
+		// и делаем currBook соответствующей этому контексту
+		currBook = getBookByID(currModule, currBook.getID());
+
+
+		return chapterQueueList;
 	}
+
 
 
 	public void CheckVersificationMap(String toModuleID) throws BookNotFoundException, OpenModuleException {
 
-		// Таблица версификации должна быть в корне модуля с именем файла "versmap.xml"
-		// TODO Пока только обычне модули, не zip.
-		final String VersificationFileName = "versmap.xml";
-		final String LogErrFileName = "versmapErrors-utf8.txt";
-
-		FsModule fsModule1 = (FsModule) currModule;
-		String VersificationFilePath = fsModule1.modulePath + File.separator + VersificationFileName;
-		String LogErrFilePath = fsModule1.modulePath + File.separator + LogErrFileName;
-
-		Document docVersificationMap = null;
-		try {
-			docVersificationMap = XmlUtil.fromXMLfile(VersificationFilePath);
-		} catch (ParserConfigurationException e) {
-			// TODO заменить e.printStackTrace()
-			e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-		} catch (IOException e) {
-			// TODO заменить e.printStackTrace()
-			e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-		} catch (SAXException e) {
-			// TODO заменить e.printStackTrace()
-			e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-		}
-
-		Module Module2 = getModuleByID(toModuleID);
+		// TODO Пока только обычные модули, не zip.
 
 		try {
+
+			Module Module2 = getModuleByID(toModuleID);
+
+			String LogErrFileName = "versmapErrors_" + currModule.ShortName + "_" + Module2.ShortName + ".txt";
+
+			FsModule fsModule1 = (FsModule) currModule;
+			String LogErrFilePath = fsModule1.modulePath + File.separator + LogErrFileName;
+
+			VersificationMap versMap1 = new VersificationMap(getVersificationMap(currModule));
+			VersificationMap versMap2 = new VersificationMap(getVersificationMap(Module2));
+			//VersificationMap versMap1 = new VersificationMap(null);
+			//VersificationMap versMap2 = new VersificationMap(null);
+
 			FileOutputStream fosLogErr = new FileOutputStream(LogErrFilePath);
 
 			fosLogErr.write(0x0A);
 			fosLogErr.write("=================================".getBytes("UTF-8"));
 			fosLogErr.write(0x0A);
-			//fosLogErr.write("From Current Module to KJV Module".getBytes("UTF-8"));
-			fosLogErr.write("From Current Module to Selected Module".getBytes("UTF-8"));
+
+			String sHeader = "From " + currModule.ShortName + " Module to " + Module2.ShortName + " Module";
+
+			fosLogErr.write(sHeader.getBytes("UTF-8"));
 			fosLogErr.write(0x0A);
 			fosLogErr.write(0x0A);
+
 
 			for (Book Book1 : getBookList(currModule)) {
 
+				// перед getChapterByNumber() должно быть getBookByID(),
+				// т.к. после вызова getBookByID() для второго модуля меняется контекст LibraryController
+				// (FsBookRepository.context.bookSet)
 				Book1 = getBookByID(currModule, Book1.getID());
 
-				ArrayList<Chapter> arlChapters1 = new ArrayList<Chapter>();
+
+				ArrayList<EtalonChapter> arlEtalonChapters = new ArrayList<EtalonChapter>(70);
 
 				for (int iCh = 1; iCh <= Book1.chapterQty; iCh++) {
-					arlChapters1.add(getChapterByNumber(Book1, iCh));
+					arlEtalonChapters.add(getEtalonChapter(getChapterByNumber(Book1, iCh), versMap1));
 				}
+
+
+				// for Book1 from Etalon
+				for (int iCh = 0; iCh < arlEtalonChapters.size(); iCh++) {
+					getChapterQueueFromEtalon(arlEtalonChapters.get(iCh), Book1, versMap1, fosLogErr);
+				}
+
 
 				Book Book2 = getBookByID(Module2, Book1.getID());
-
-				for (int iCh = 0; iCh < Book1.chapterQty; iCh++) {
-					ChapterVersification(arlChapters1.get(iCh), Book2, docVersificationMap, fosLogErr);
+				// for Book2 from Etalon
+				for (int iCh = 0; iCh < arlEtalonChapters.size(); iCh++) {
+					getChapterQueueFromEtalon(arlEtalonChapters.get(iCh), Book2, versMap2, fosLogErr);
 				}
 			}
+
 
 			fosLogErr.write(0x0A);
 			fosLogErr.write(0x0A);
 			fosLogErr.write("=================================".getBytes("UTF-8"));
 			fosLogErr.write(0x0A);
-			//fosLogErr.write("From KJV Module to Current Module".getBytes("UTF-8"));
-			fosLogErr.write("From Selected Module to Current Module".getBytes("UTF-8"));
+
+			sHeader = "From " + Module2.ShortName + " Module to " + currModule.ShortName + " Module";
+
+			fosLogErr.write(sHeader.getBytes("UTF-8"));
 			fosLogErr.write(0x0A);
 			fosLogErr.write(0x0A);
+
 
 			for (Book Book2 : getBookList(Module2)) {
 
+				// перед getChapterByNumber() должно быть getBookByID(),
+				// т.к. после вызова getBookByID() для второго модуля меняется контекст LibraryController
+				// (FsBookRepository.context.bookSet)
 				Book2 = getBookByID(Module2, Book2.getID());
 
-				ArrayList<Chapter> arlChapters2 = new ArrayList<Chapter>();
+
+				ArrayList<EtalonChapter> arlEtalonChapters = new ArrayList<EtalonChapter>(70);
 
 				for (int iCh = 1; iCh <= Book2.chapterQty; iCh++) {
-					arlChapters2.add(getChapterByNumber(Book2, iCh));
+					arlEtalonChapters.add(getEtalonChapter(getChapterByNumber(Book2, iCh), versMap2));
 				}
+
+
+				// for Book2 from Etalon
+				for (int iCh = 0; iCh < arlEtalonChapters.size(); iCh++) {
+					getChapterQueueFromEtalon(arlEtalonChapters.get(iCh), Book2, versMap2, fosLogErr);
+				}
+
 
 				Book Book1 = getBookByID(currModule, Book2.getID());
-
-				for (int iCh = 0; iCh < Book2.chapterQty; iCh++) {
-					ChapterVersification(arlChapters2.get(iCh), Book1, docVersificationMap, fosLogErr);
+				// for Book1 from Etalon
+				for (int iCh = 0; iCh < arlEtalonChapters.size(); iCh++) {
+					getChapterQueueFromEtalon(arlEtalonChapters.get(iCh), Book1, versMap1, fosLogErr);
 				}
 			}
+
 
 			fosLogErr.write(0x0A);
 			fosLogErr.write(0x0A);
@@ -879,6 +620,11 @@ public class Librarian {
 			// TODO заменить e.printStackTrace()
 			e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
 		}
+
+		// Восстанавливаем контекст LibraryController (FsBookRepository.context.bookSet) относительно currModule
+		// и делаем currBook соответствующей этому контексту
+		currBook = getBookByID(currModule, currBook.getID());
+
 	}
 
 
@@ -1007,19 +753,15 @@ public class Librarian {
 		return chapterCtrl.getChapterHTMLView(getCurrChapter());
 	}
 
+
 	public String getParChapterHTMLView() {
-
-		// TODO изменить на свойство в Librarian
-		ArrayList<Chapter> alChapters = new ArrayList<Chapter>();
-
-		alChapters.add(getCurrChapter());
-
 		if (isShowParTranslates) {
-			alChapters.add(getParChapter());
+			return chapterCtrl.getParChapterHTMLView(null, chapterQueueList);
+		} else {
+			return chapterCtrl.getParChapterHTMLView(getCurrChapter(), null);
 		}
-
-		return chapterCtrl.getParChapterHTMLView(alChapters);
 	}
+
 
 	public Boolean isBible() {
 		return getCurrModule() != null && getCurrModule().isBible;
@@ -1294,10 +1036,6 @@ public class Librarian {
 
 	public Chapter getCurrChapter() {
 		return currChapter;
-	}
-
-	public Chapter getParChapter() {
-		return ParChapter;
 	}
 
 	public boolean isParChapter() {

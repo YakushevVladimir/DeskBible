@@ -88,69 +88,138 @@ public class FsChapterController implements IChapterController {
 	}
 
 
-	public String getParChapterHTMLView(ArrayList<Chapter> chapterArrayList) {
+	public String getParChapterHTMLView(Chapter chapter, ChapterQueueList chapterQueueList) {
 
-		Chapter chapter = chapterArrayList.get(0);
+		if (chapterQueueList == null && chapter !=null) {
+			return getChapterHTMLView(chapter);
 
-		if (chapter == null) {
+		} else if (chapterQueueList == null || chapterQueueList.isEmpty()) {
 			return "";
-		}
 
-		Module currModule;
+		} else {
 
-		StringBuilder chapterHTML = new StringBuilder();
+			ChapterQueue chapterQueue = chapterQueueList.get(0);
 
-		int iVerseNumber = chapter.getVerseNumber();
-		int iChapterNumber = chapterArrayList.size();
+			if (chapterQueue == null || chapterQueue.isEmpty()) {
+				return "";
+			}
 
-		for (int iVerse = 1; iVerse <= iVerseNumber; iVerse++) {
-			for (int iChapter = 0; iChapter < iChapterNumber; iChapter++) {
 
-				chapter = chapterArrayList.get(iChapter);
+			Module module;
 
-				String verseText = chapter.getVerse(iVerse).getText();
+			VerseQueue verseQueue;
+			VerseQueue verseQueueNext;
 
-				currModule = chapter.getBook().getModule();
+			boolean isNormal;
+			boolean isRepeated;
+			boolean isSequenced;
 
-				if (currModule.containsStrong) {
-					// убираем номера Стронга
-					verseText = verseText.replaceAll("\\s(\\d)+", "");
-				}
+			boolean isNormalNext;
+			boolean isRepeatedNext;
+			boolean isSequencedNext;
 
-				verseText = StringProc.stripTags(verseText, currModule.HtmlFilter);
-				verseText = verseText.replaceAll("<a\\s+?href=\"verse\\s\\d+?\">(\\d+?)</a>", "<b>$1</b>");
-				if (currModule.isBible) {
-					if (iChapter == 0) {
-						verseText = verseText
-								.replaceAll("^(<[^/]+?>)*?(\\d+)(</(.)+?>){0,1}?\\s+",
-										"$1<b>$2</b>$3 ").replaceAll(
-										"null", "");
-					} else {
-						verseText = verseText
-								.replaceAll("^(<[^/]+?>)*?(\\d+:\\d+)(</(.)+?>){0,1}?\\s+",
-										"$1<b>$2</b>$3 ").replaceAll(
-										"null", "");
+			StringBuilder chapterHTML = new StringBuilder();
 
+
+			boolean isEmptyChapQueueList = chapterQueueList.isEmpty();
+			int iChapterListSize = chapterQueueList.size();
+
+			while (!isEmptyChapQueueList) {
+
+				for (int iChQ = 0; iChQ < iChapterListSize; iChQ++) {
+
+					chapterQueue = chapterQueueList.get(iChQ);
+
+					if (chapterQueue != null) {
+
+						module = chapterQueue.getBook().getModule();
+
+						do {
+							verseQueue = chapterQueue.poll();
+							verseQueueNext = chapterQueue.peek();
+
+							isNormal = false;
+							isRepeated = false;
+							isSequenced = false;
+
+							isNormalNext = false;
+							isRepeatedNext = false;
+							isSequencedNext = false;
+
+
+							if (verseQueueNext != null) {
+								isNormalNext = ((verseQueueNext.getSequenceFlags() & VerseQueue.SEQ_NORMAL) == VerseQueue.SEQ_NORMAL);
+								isRepeatedNext = ((verseQueueNext.getSequenceFlags() & VerseQueue.SEQ_REPEATED) == VerseQueue.SEQ_REPEATED);
+								isSequencedNext = ((verseQueueNext.getSequenceFlags() & VerseQueue.SEQ_SEQUENCED) == VerseQueue.SEQ_SEQUENCED);
+							}
+
+
+							if (verseQueue != null) {
+								isNormal = ((verseQueue.getSequenceFlags() & VerseQueue.SEQ_NORMAL) == VerseQueue.SEQ_NORMAL);
+								isRepeated = ((verseQueue.getSequenceFlags() & VerseQueue.SEQ_REPEATED) == VerseQueue.SEQ_REPEATED);
+								isSequenced = ((verseQueue.getSequenceFlags() & VerseQueue.SEQ_SEQUENCED) == VerseQueue.SEQ_SEQUENCED);
+
+
+								int iChapterNumber = verseQueue.getChapter();
+								int iVerseNumber = verseQueue.getNumber();
+
+								String verseText = verseQueue.getText();
+
+								if (module.containsStrong) {
+									// убираем номера Стронга
+									verseText = verseText.replaceAll("\\s(\\d)+", "");
+								}
+
+								verseText = StringProc.stripTags(verseText, module.HtmlFilter);
+								verseText = verseText.replaceAll("<a\\s+?href=\"verse\\s\\d+?\">(\\d+?)</a>", "<b>$1</b>");
+
+								if (module.isBible) {
+									/*
+									if (iChQ == 0) {
+										verseText = verseText
+												.replaceAll("^(<[^/]+?>)*?(\\d+)(</(.)+?>){0,1}?\\s+",
+														"$1<b>$2</b>$3 ").replaceAll(
+														"null", "");
+									} else {
+										verseText = verseText
+												.replaceAll("^(<[^/]+?>)*?(\\d+:\\d+)(</(.)+?>){0,1}?\\s+",
+														"$1<b>$2</b>$3 ").replaceAll(
+														"null", "");
+
+									}
+									*/
+
+									verseText = verseText
+											.replaceAll("^(<[^/]+?>)*?(\\d+:\\d+)(</(.)+?>){0,1}?\\s+",
+													"$1<b>$2</b>$3 ").replaceAll(
+													"null", "");
+
+								}
+
+
+								// отображение чередующимися строками
+								chapterHTML.append(
+										"<div id=\"verse_" + iVerseNumber + "\" class=\"verse\">"
+												+ verseText.replaceAll("<(/)*div(.*?)>", "<$1p$2>")
+												+ "</div>"
+												+ "\r\n");
+							}
+						} while (isSequenced && isSequencedNext);
+
+
+						if (iChQ > 0 && iChQ == (iChapterListSize - 1)) {
+							chapterHTML.append("<br>\r\n");
+						}
 					}
 				}
 
-				// отображение чередующимися строками
-				chapterHTML.append(
-						"<div id=\"verse_" + iVerse + "\" class=\"verse\">"
-								+ verseText.replaceAll("<(/)*div(.*?)>", "<$1p$2>")
-								+ "</div>"
-								+ "\r\n");
-
-				if (iChapter > 0 && iChapter == (iChapterNumber - 1)) {
-					chapterHTML.append("<br>\r\n");
-				}
+				isEmptyChapQueueList = chapterQueueList.isEmpty();
 			}
-		}
 
 
-//!!!!
-/*
-// отображение таблицей (пока криво)
+			//!!!!
+			/*
+			// отображение таблицей (пока криво)
 			chapterHTML.append("<table cols=\"2\"><col width=\"50%\"/><tr><td align=\"left\">");
 
 			chapterHTML.append(
@@ -165,11 +234,12 @@ public class FsChapterController implements IChapterController {
 							+ "</div>"
 							+ "</td></tr></table>\r\n");
 
-        //chapterHTML.append("<br>\r\n");
-*/
+        	//chapterHTML.append("<br>\r\n");
+			*/
 
 
-		return chapterHTML.toString();
+			return chapterHTML.toString();
+		}
 	}
 
 

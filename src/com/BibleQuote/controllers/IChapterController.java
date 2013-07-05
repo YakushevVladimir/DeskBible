@@ -3,6 +3,7 @@ package com.BibleQuote.controllers;
 import com.BibleQuote.exceptions.BookNotFoundException;
 import com.BibleQuote.modules.Book;
 import com.BibleQuote.modules.Chapter;
+import com.BibleQuote.modules.ChapterQueueList;
 
 import java.util.ArrayList;
 
@@ -16,6 +17,6 @@ public interface IChapterController {
 
 	public String getChapterHTMLView(Chapter chapter);
 
-	public String getParChapterHTMLView(ArrayList<Chapter> chapterArrayList);
+	public String getParChapterHTMLView(Chapter chapter, ChapterQueueList chapterQueueList);
 
 }

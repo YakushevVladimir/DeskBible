@@ -1,0 +1,298 @@
+<!--============================================================
+    versmap.xml is the reference system for the RST+ to KJV.
+ 
+    =============================================================-->
+
+<refSys code="Bible.RST+-KJV" name="RST+-KJV Bible">
+	<refMap from="Bible.RST+" to="Bible.KJV">
+		<!-- for debug
+		<map forBook="Gen">
+			<map startChapter="1" endChapter="1">
+				<map startVerse="1" endVerse="5" intoBook="-" difCh="-" difVs="-"/>
+				<map startVerse="6" endVerse="999" intoBook="Gen" difCh="1" difVs="-2"/>
+		  	</map>
+		</map>
+		-->
+
+		<map forBook="Num">
+			<map startChapter="13" endChapter="13">
+				<map startVerse="1" endVerse="1" difCh="-1" difVs="15"/>
+				<map startVerse="2" endVerse="999" difCh="0" difVs="-1"/>
+			</map>
+			<map startChapter="30" endChapter="30">
+				<map startVerse="1" endVerse="1" difCh="-1" difVs="39"/>
+				<map startVerse="2" endVerse="999" difCh="0" difVs="-1"/>
+			</map>
+		</map>
+
+		<map forBook="Josh">
+			<map startChapter="5" endChapter="5">
+				<map startVerse="16" endVerse="999" difCh="1" difVs="-15"/>
+			</map>
+			<map startChapter="6" endChapter="6">
+				<map startVerse="1" endVerse="999" difCh="0" difVs="1"/>
+			</map>
+		</map>
+
+		<map forBook="1Sam">
+			<map startChapter="20" endChapter="20">
+				<map startVerse="43" endVerse="43" difCh="0" difVs="-1" vsRepeated="1"/>
+			</map>
+			<map startChapter="24" endChapter="24">
+				<map startVerse="1" endVerse="1" difCh="-1" difVs="28"/>
+				<map startVerse="2" endVerse="999" difCh="0" difVs="-1"/>
+			</map>
+		</map>
+
+		<map forBook="Job">
+			<map startChapter="39" endChapter="39">
+				<map startVerse="31" endVerse="999" difCh="1" difVs="-30"/>
+			</map>
+			<map startChapter="40" endChapter="40">
+				<map startVerse="1" endVerse="999" difCh="0" difVs="5"/>
+			</map>
+		</map>
+
+		<map forBook="Ps">
+			<map startChapter="3" endChapter="8">
+				<map startVerse="2" endVerse="2" difCh="0" difVs="-1" vsRepeated="1"/>
+				<map startVerse="3" endVerse="999" difCh="0" difVs="-1"/>
+			</map>
+			<map startChapter="9" endChapter="9">
+				<map startVerse="2" endVerse="2" difCh="0" difVs="-1" vsRepeated="1"/>
+				<map startVerse="3" endVerse="21" difCh="0" difVs="-1"/>
+				<map startVerse="22" endVerse="999" difCh="1" difVs="-21"/>
+			</map>
+			<map startChapter="10" endChapter="10">
+				<map startVerse="1" endVerse="999" difCh="1" difVs="0"/>
+			</map>
+			<map startChapter="11" endChapter="11">
+				<map startVerse="2" endVerse="2" difCh="1" difVs="-1" vsRepeated="1"/>
+				<map startVerse="3" endVerse="999" difCh="1" difVs="-1"/>
+			</map>
+			<map startChapter="12" endChapter="12">
+				<map startVerse="2" endVerse="2" difCh="1" difVs="-1" vsRepeated="1"/>
+				<map startVerse="3" endVerse="5" difCh="1" difVs="-1"/>
+				<map startVerse="6" endVerse="6" difCh="1" difVs="-1" countSequence="1"/>
+			</map>
+			<map startChapter="13" endChapter="112">
+				<map startVerse="1" endVerse="999" difCh="1" difVs="0"/>
+			</map>
+			<map startChapter="113" endChapter="113">
+				<map startVerse="1" endVerse="8" difCh="1" difVs="0"/>
+				<map startVerse="9" endVerse="999" difCh="2" difVs="-8"/>
+			</map>
+			<map startChapter="114" endChapter="114">
+				<map startVerse="1" endVerse="999" difCh="2" difVs="0"/>
+			</map>
+			<map startChapter="115" endChapter="115">
+				<map startVerse="1" endVerse="999" difCh="1" difVs="9"/>
+			</map>
+			<map startChapter="116" endChapter="146">
+				<map startVerse="1" endVerse="999" difCh="1" difVs="0"/>
+			</map>
+			<map startChapter="147" endChapter="147">
+				<map startVerse="1" endVerse="999" difCh="0" difVs="11"/>
+			</map>
+		</map>
+
+		<map forBook="Eccl">
+			<map startChapter="4" endChapter="4">
+				<map startVerse="17" endVerse="999" difCh="1" difVs="-16"/>
+			</map>
+			<map startChapter="5" endChapter="5">
+				<map startVerse="1" endVerse="999" difCh="0" difVs="1"/>
+			</map>
+		</map>
+
+		<map forBook="Song">
+			<map startChapter="7" endChapter="7">
+				<map startVerse="1" endVerse="1" difCh="-1" difVs="12"/>
+				<map startVerse="2" endVerse="999" difCh="0" difVs="-1"/>
+			</map>
+		</map>
+
+		<map forBook="Dan">
+			<map startChapter="3" endChapter="3">
+				<map startVerse="30" endVerse="999" difCh="1" difVs="-29"/>
+			</map>
+			<map startChapter="4" endChapter="4">
+				<map startVerse="1" endVerse="999" difCh="0" difVs="3"/>
+			</map>
+		</map>
+
+		<map forBook="Hos">
+			<map startChapter="14" endChapter="14">
+				<map startVerse="1" endVerse="1" difCh="-1" difVs="15"/>
+				<map startVerse="2" endVerse="999" difCh="0" difVs="-1"/>
+			</map>
+		</map>
+
+		<map forBook="Jonah">
+			<map startChapter="2" endChapter="2">
+				<map startVerse="1" endVerse="1" difCh="-1" difVs="16"/>
+				<map startVerse="2" endVerse="999" difCh="0" difVs="-1"/>
+			</map>
+		</map>
+
+		<map forBook="3John">
+			<map startChapter="1" endChapter="1">
+				<map startVerse="15" endVerse="15" difCh="0" difVs="-1" vsRepeated="1"/>
+			</map>
+		</map>
+
+		<map forBook="Rom">
+			<map startChapter="14" endChapter="14">
+				<map startVerse="24" endVerse="999" difCh="2" difVs="1"/>
+			</map>
+		</map>
+
+	</refMap>
+
+
+
+	<!--  -->
+
+
+
+	<refMap from="Bible.KJV" to="Bible.RST+">
+
+		<map forBook="Num">
+			<map startChapter="12" endChapter="12">
+				<map startVerse="16" endVerse="999" difCh="1" difVs="-15"/>
+			</map>
+			<map startChapter="13" endChapter="13">
+				<map startVerse="1" endVerse="1" difCh="-1" difVs="15"/>
+				<map startVerse="1" endVerse="999" difCh="0" difVs="1"/>
+			</map>
+			<map startChapter="29" endChapter="29">
+				<map startVerse="40" endVerse="999" difCh="1" difVs="-39"/>
+			</map>
+			<map startChapter="30" endChapter="30">
+				<map startVerse="1" endVerse="999" difCh="0" difVs="1"/>
+			</map>
+		</map>
+
+		<map forBook="Josh">
+			<map startChapter="5" endChapter="5">
+				<map startVerse="16" endVerse="999" difCh="1" difVs="-15"/>
+			</map>
+			<map startChapter="6" endChapter="6">
+				<map startVerse="1" endVerse="1" difCh="-1" difVs="15"/>
+				<map startVerse="2" endVerse="999" difCh="0" difVs="-1"/>
+			</map>
+		</map>
+
+		<map forBook="1Sam">
+			<map startChapter="20" endChapter="20">
+				<map startVerse="42" endVerse="42" difCh="0" difVs="0" countSequence="1"/>
+			</map>
+			<map startChapter="23" endChapter="23">
+				<map startVerse="29" endVerse="999" difCh="1" difVs="-28"/>
+			</map>
+			<map startChapter="24" endChapter="24">
+				<map startVerse="1" endVerse="999" difCh="0" difVs="1"/>
+			</map>
+		</map>
+
+		<map forBook="Job">
+			<map startChapter="40" endChapter="40">
+				<map startVerse="1" endVerse="5" difCh="-1" difVs="30"/>
+				<map startVerse="6" endVerse="999" difCh="0" difVs="-5"/>
+			</map>
+		</map>
+
+		<map forBook="Ps">
+			<map startChapter="3" endChapter="8">
+				<map startVerse="1" endVerse="1" difCh="0" difVs="0" countSequence="1"/>
+				<map startVerse="2" endVerse="999" difCh="0" difVs="1"/>
+			</map>
+			<map startChapter="10" endChapter="10">
+				<map startVerse="1" endVerse="999" difCh="-1" difVs="21"/>
+			</map>
+			<map startChapter="11" endChapter="11">
+				<map startVerse="1" endVerse="999" difCh="-1" difVs="0"/>
+			</map>
+			<map startChapter="12" endChapter="12">
+				<map startVerse="1" endVerse="1" difCh="-1" difVs="0" countSequence="1"/>
+				<map startVerse="2" endVerse="999" difCh="-1" difVs="1"/>
+			</map>
+			<map startChapter="13" endChapter="13">
+				<map startVerse="1" endVerse="1" difCh="-1" difVs="0" countSequence="1"/>
+				<map startVerse="2" endVerse="5" difCh="-1" difVs="1"/>
+				<map startVerse="6" endVerse="6" difCh="-1" difVs="0" vsRepeated="1"/>
+			</map>
+			<map startChapter="14" endChapter="114">
+				<map startVerse="1" endVerse="999" difCh="-1" difVs="0"/>
+			</map>
+			<map startChapter="115" endChapter="115">
+				<map startVerse="1" endVerse="999" difCh="-2" difVs="8"/>
+			</map>
+			<map startChapter="116" endChapter="116">
+				<map startVerse="1" endVerse="9" difCh="-2" difVs="0"/>
+				<map startVerse="10" endVerse="999" difCh="-1" difVs="-9"/>
+			</map>
+			<map startChapter="117" endChapter="146">
+				<map startVerse="1" endVerse="999" difCh="-1" difVs="0"/>
+			</map>
+			<map startChapter="147" endChapter="147">
+				<map startVerse="1" endVerse="11" difCh="-1" difVs="0"/>
+				<map startVerse="12" endVerse="999" difCh="0" difVs="-11"/>
+			</map>
+		</map>
+
+		<map forBook="Eccl">
+			<map startChapter="5" endChapter="5">
+				<map startVerse="1" endVerse="1" difCh="-1" difVs="16"/>
+				<map startVerse="2" endVerse="999" difCh="0" difVs="-1"/>
+			</map>
+		</map>
+
+		<map forBook="Song">
+			<map startChapter="6" endChapter="6">
+				<map startVerse="13" endVerse="999" difCh="1" difVs="-12"/>
+			</map>
+			<map startChapter="7" endChapter="7">
+				<map startVerse="1" endVerse="999" difCh="0" difVs="1"/>
+			</map>
+		</map>
+
+		<map forBook="Dan">
+			<map startChapter="4" endChapter="4">
+				<map startVerse="1" endVerse="3" difCh="-1" difVs="29"/>
+				<map startVerse="4" endVerse="999" difCh="0" difVs="-3"/>
+			</map>
+		</map>
+
+		<map forBook="Hos">
+			<map startChapter="13" endChapter="13">
+				<map startVerse="16" endVerse="999" difCh="1" difVs="-15"/>
+			</map>
+			<map startChapter="14" endChapter="14">
+				<map startVerse="1" endVerse="999" difCh="0" difVs="1"/>
+			</map>
+		</map>
+
+		<map forBook="Jonah">
+			<map startChapter="1" endChapter="1">
+				<map startVerse="17" endVerse="999" difCh="1" difVs="-16"/>
+			</map>
+			<map startChapter="2" endChapter="2">
+				<map startVerse="1" endVerse="999" difCh="0" difVs="1"/>
+			</map>
+		</map>
+
+		<map forBook="3John">
+			<map startChapter="1" endChapter="1">
+				<map startVerse="14" endVerse="14" difCh="0" difVs="0" countSequence="1"/>
+			</map>
+		</map>
+
+		<map forBook="Rom">
+			<map startChapter="16" endChapter="16">
+				<map startVerse="25" endVerse="999" difCh="-2" difVs="-1"/>
+			</map>
+		</map>
+
+	</refMap>
+</refSys>
