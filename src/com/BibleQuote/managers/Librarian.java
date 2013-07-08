@@ -31,13 +31,8 @@ import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.Share.ShareBuilder;
 import com.BibleQuote.utils.Share.ShareBuilder.Destination;
 import com.BibleQuote.utils.StringProc;
-import com.BibleQuote.utils.XmlUtil;
 import com.BibleQuote.utils.modules.LinkConverter;
 
-import org.w3c.dom.*;
-import org.xml.sax.SAXException;
-
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 
 import java.util.*;

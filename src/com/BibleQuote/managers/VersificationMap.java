@@ -22,7 +22,7 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 public class VersificationMap {
 
-	private String sEtalonName = "Bible.KJV";
+	private final static String sEtalonName = "Bible.KJV";
 
 	private MapBooks toEtalonMap;
 	private MapBooks fromEtalonMap;
@@ -182,7 +182,7 @@ public class VersificationMap {
 
 										for (int i = 0; i < xppVersMap.getAttributeCount(); i++) {
 
-											if (xppVersMap.getAttributeValue(i).equals("Bible.KJV")) {
+											if (xppVersMap.getAttributeValue(i).equals(sEtalonName)) {
 												if (xppVersMap.getAttributeName(i).equals("to")) {
 													isToEtalon = true;
 													mapBooks = new MapBooks();
