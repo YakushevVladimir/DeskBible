@@ -3,16 +3,14 @@ package com.BibleQuote.managers;
 //import java.util.TreeMap;  // поддержка с Android API 9 (Android 2.3.1)
 import edu.emory.mathcs.backport.java.util.TreeMap;  // поддержка с Android API 5 (Android 2.0)
 
+import java.io.IOException;
+import java.io.Reader;
 import java.util.Map;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
 
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
 
 /**
  * Created with IntelliJ IDEA.
@@ -105,194 +103,360 @@ public class VersificationMap {
 	}
 
 
-	public VersificationMap(Document docVersMap) {
+	public VersificationMap(Reader rdVersificationFile) {
 
-		if (docVersMap != null) {
+		// получаем фабрику
+		//XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+		// включаем поддержку namespace (по умолчанию выключена)
+		//factory.setNamespaceAware(true);
+
+
+		// создаем парсер
+		XmlPullParser xppVersMap = null;
+
+		if (rdVersificationFile != null) {
+
+			try {
+				xppVersMap = XmlPullParserFactory.newInstance().newPullParser();
+
+				// даем парсеру на вход Reader
+				xppVersMap.setInput(rdVersificationFile);
+
+			} catch (XmlPullParserException e) {
+
+				xppVersMap = null;
+
+				// TODO заменить e.printStackTrace()
+				e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+			}
+		}
+
+
+		if (xppVersMap != null) {
+
 			try {
 
-				XPath xpSelector = XPathFactory.newInstance().newXPath();
+				MapBooks mapBooks = null;
+				MapChapters mapChapters = null;
+				MapVerses mapVerses = null;
+				VerseDifferences verseDifferences = null;
 
 				boolean isToEtalon = true;
-				do {
 
-					MapBooks mapBooks = new MapBooks();
+				String sForBook = "";
 
-					String sXPExpr = null;
-					if (isToEtalon) {
-						sXPExpr = "/refSys/refMap[@to='" + sEtalonName + "']/map";
-					} else {
-						sXPExpr = "/refSys/refMap[@from='" + sEtalonName + "']/map";
-					}
+				int iStartChapter = 0;
+				int iEndChapter = 0;
 
-					NodeList ndlMapBooks = (NodeList) xpSelector.evaluate(sXPExpr, docVersMap, XPathConstants.NODESET);
+				int iStartVerse = 0;
+				int iEndVerse = 0;
+				int iDifCh = 0;
+				int iDifVs = 0;
+				int iVsRepeated = 0;
+				int iCountSequence = 0;
 
-
-					for (int iMpBk = 0; iMpBk < ndlMapBooks.getLength(); iMpBk++) {
-						Node ndMapBook = ndlMapBooks.item(iMpBk);
+				int iDepth = 0;
 
 
-						if (ndMapBook != null) {
+				while (xppVersMap.getEventType() != XmlPullParser.END_DOCUMENT) {
+					switch (xppVersMap.getEventType()) {
 
-							sXPExpr = "@forBook";
-							String sForBook = xpSelector.evaluate(sXPExpr, ndMapBook);
+						// начало документа
+						//case XmlPullParser.START_DOCUMENT:
+						//	Log.d(LOG_TAG, "START_DOCUMENT");
+						//	break;
 
-							if (sForBook.length() != 0) {
+						// начало тэга
+						case XmlPullParser.START_TAG:
+							switch (xppVersMap.getDepth()) {
+								case 1:
+									if (xppVersMap.getName().equals("refSys")) {
+										iDepth++;
+									}
+									break;
+								case 2:
+									if (xppVersMap.getName().equals("refMap")) {
+										iDepth++;
 
-								MapChapters mapChapters = new MapChapters();
+										mapBooks = null;
 
+										for (int i = 0; i < xppVersMap.getAttributeCount(); i++) {
 
-								sXPExpr = "map";
-								NodeList ndlMapChapters = (NodeList) xpSelector.evaluate(sXPExpr, ndMapBook, XPathConstants.NODESET);
+											if (xppVersMap.getAttributeValue(i).equals("Bible.KJV")) {
+												if (xppVersMap.getAttributeName(i).equals("to")) {
+													isToEtalon = true;
+													mapBooks = new MapBooks();
+												}
 
+												if (xppVersMap.getAttributeName(i).equals("from")) {
+													isToEtalon = false;
+													mapBooks = new MapBooks();
+												}
+											}
+										}
+									}
+									break;
+								case 3:
+									if (xppVersMap.getName().equals("mapBk")) {
+										iDepth++;
 
-								for (int iMpCh = 0; iMpCh < ndlMapChapters.getLength(); iMpCh++) {
-									Node ndMapChapter = ndlMapChapters.item(iMpCh);
+										mapChapters = null;
+										sForBook = "";
 
-									if (ndMapChapter != null) {
+										for (int i = 0; i < xppVersMap.getAttributeCount(); i++) {
 
-										sXPExpr = "@startChapter";
-										String sStartChapter = xpSelector.evaluate(sXPExpr, ndMapChapter);
+											if (xppVersMap.getAttributeName(i).equals("forBook")) {
 
-										sXPExpr = "@endChapter";
-										String sEndChapter = xpSelector.evaluate(sXPExpr, ndMapChapter);
-
-
-										int iStartChapter = 0;
-										try {
-											iStartChapter = Integer.parseInt(sStartChapter);
-										} catch (NumberFormatException e) {
-											iStartChapter = 0;
+												sForBook = xppVersMap.getAttributeValue(i);
+											}
 										}
 
-										int iEndChapter = 0;
-										try {
-											iEndChapter = Integer.parseInt(sEndChapter);
-										} catch (NumberFormatException e) {
-											iEndChapter = 0;
+
+										if (sForBook.length() != 0) {
+
+											mapChapters = new MapChapters();
 										}
+									}
+									break;
+								case 4:
+									if (xppVersMap.getName().equals("mapCh")) {
+										iDepth++;
+
+										mapVerses = null;
+										iStartChapter = 0;
+										iEndChapter = 0;
 
 
-										if (iStartChapter != 0 && iEndChapter != 0) {
+										for (int i = 0; i < xppVersMap.getAttributeCount(); i++) {
 
-											MapVerses mapVerses = new MapVerses();
+											if (xppVersMap.getAttributeName(i).equals("startChapter")) {
 
-
-											sXPExpr = "map";
-											NodeList ndlMapVerses = (NodeList) xpSelector.evaluate(sXPExpr, ndMapChapter, XPathConstants.NODESET);
-
-
-											for (int iMpVs = 0; iMpVs < ndlMapVerses.getLength(); iMpVs++) {
-												Node ndMapVerse = ndlMapVerses.item(iMpVs);
-
-												if (ndMapVerse != null) {
-
-													sXPExpr = "@startVerse";
-													String sStartVerse = xpSelector.evaluate(sXPExpr, ndMapVerse);
-
-													sXPExpr = "@endVerse";
-													String sEndVerse = xpSelector.evaluate(sXPExpr, ndMapVerse);
-
-
-													int iStartVerse = 0;
-													try {
-														iStartVerse = Integer.parseInt(sStartVerse);
-													} catch (NumberFormatException e) {
-														iStartVerse = 0;
-													}
-
-													int iEndVerse = 0;
-													try {
-														iEndVerse = Integer.parseInt(sEndVerse);
-													} catch (NumberFormatException e) {
-														iEndVerse = 0;
-													}
-
-
-													if (iStartVerse != 0 && iEndVerse != 0) {
-
-														sXPExpr = "@difCh";
-														String sDifCh = xpSelector.evaluate(sXPExpr, ndMapVerse);
-
-														sXPExpr = "@difVs";
-														String sDifVs = xpSelector.evaluate(sXPExpr, ndMapVerse);
-
-
-														int iDifCh = 0;
-														try {
-															iDifCh = Integer.parseInt(sDifCh);
-														} catch (NumberFormatException e) {
-															iDifCh = 0;
-														}
-
-														int iDifVs = 0;
-														try {
-															iDifVs = Integer.parseInt(sDifVs);
-														} catch (NumberFormatException e) {
-															iDifVs = 0;
-														}
-
-
-														int iVsRepeated = 0;
-														int iCountSequence = 0;
-
-
-														// атрибуты "@countSequence" и "@vsRepeated" должны быть только для одного стиха
-														if (iStartVerse == iEndVerse) {
-
-															sXPExpr = "@vsRepeated";
-															String sVsRepeated = xpSelector.evaluate(sXPExpr, ndMapVerse);
-
-															sXPExpr = "@countSequence";
-															String sCountSequence = xpSelector.evaluate(sXPExpr, ndMapVerse);
-
-
-															try {
-																iVsRepeated = Integer.parseInt(sVsRepeated);
-															} catch (NumberFormatException e) {
-																iVsRepeated = 0;
-															}
-
-															try {
-																iCountSequence = Integer.parseInt(sCountSequence);
-															} catch (NumberFormatException e) {
-																iCountSequence = 0;
-															}
-														}
-
-
-														VerseDifferences verseDifferences =
-																new VerseDifferences(iDifCh, iDifVs, iVsRepeated, iCountSequence);
-
-														mapVerses.putValueToRangeOfKeys(iStartVerse, iEndVerse, verseDifferences);
-													}
+												try {
+													iStartChapter = Integer.parseInt(xppVersMap.getAttributeValue(i));
+												} catch (NumberFormatException e) {
+													iStartChapter = 0;
 												}
 											}
 
-											mapChapters.putValueToRangeOfKeys(iStartChapter, iEndChapter, mapVerses);
+											if (xppVersMap.getAttributeName(i).equals("endChapter")) {
+
+												try {
+													iEndChapter = Integer.parseInt(xppVersMap.getAttributeValue(i));
+												} catch (NumberFormatException e) {
+													iEndChapter = 0;
+												}
+											}
+
+										}
+
+
+										if (iStartChapter > 0 && iEndChapter > 0) {
+
+											mapVerses = new MapVerses();
 										}
 									}
-								}
+									break;
+								case 5:
+									if (xppVersMap.getName().equals("mapVs")) {
+										iDepth++;
 
-								mapBooks.put(sForBook, mapChapters);
+										verseDifferences = null;
+
+										iStartVerse = 0;
+										iEndVerse = 0;
+										iDifCh = 0;
+										iDifVs = 0;
+										iVsRepeated = 0;
+										iCountSequence = 0;
+
+
+										for (int i = 0; i < xppVersMap.getAttributeCount(); i++) {
+
+											if (xppVersMap.getAttributeName(i).equals("startVerse")) {
+
+												try {
+													iStartVerse = Integer.parseInt(xppVersMap.getAttributeValue(i));
+												} catch (NumberFormatException e) {
+													iStartVerse = 0;
+												}
+											}
+
+											if (xppVersMap.getAttributeName(i).equals("endVerse")) {
+
+												try {
+													iEndVerse = Integer.parseInt(xppVersMap.getAttributeValue(i));
+												} catch (NumberFormatException e) {
+													iEndVerse = 0;
+												}
+											}
+
+											if (xppVersMap.getAttributeName(i).equals("difCh")) {
+
+												try {
+													iDifCh = Integer.parseInt(xppVersMap.getAttributeValue(i));
+												} catch (NumberFormatException e) {
+													iDifCh = 0;
+												}
+											}
+
+											if (xppVersMap.getAttributeName(i).equals("difVs")) {
+
+												try {
+													iDifVs = Integer.parseInt(xppVersMap.getAttributeValue(i));
+												} catch (NumberFormatException e) {
+													iDifVs = 0;
+												}
+											}
+
+											if (xppVersMap.getAttributeName(i).equals("vsRepeated")) {
+
+												try {
+													iVsRepeated = Integer.parseInt(xppVersMap.getAttributeValue(i));
+												} catch (NumberFormatException e) {
+													iVsRepeated = 0;
+												}
+											}
+
+											if (xppVersMap.getAttributeName(i).equals("countSequence")) {
+
+												try {
+													iCountSequence = Integer.parseInt(xppVersMap.getAttributeValue(i));
+												} catch (NumberFormatException e) {
+													iCountSequence = 0;
+												}
+											}
+										}
+
+
+										if (iStartVerse > 0 && iEndVerse > 0) {
+
+											// атрибуты "@countSequence" и "@vsRepeated" должны быть только для одного стиха
+											if (iStartVerse != iEndVerse) {
+												iVsRepeated = 0;
+												iCountSequence = 0;
+											}
+
+											if (iVsRepeated < 0) {
+												iVsRepeated = 0;
+											}
+
+											if (iCountSequence < 0) {
+												iCountSequence = 0;
+											}
+
+											if (iDifCh != 0 || iDifVs != 0 || iVsRepeated > 0 || iCountSequence > 0) {
+
+												verseDifferences =
+														new VerseDifferences(iDifCh, iDifVs, iVsRepeated, iCountSequence);
+											}
+										}
+									}
+									break;
+								default:
+									break;
 							}
-						}
+
+							break;
+
+						// конец тэга
+						case XmlPullParser.END_TAG:
+							switch (xppVersMap.getDepth()) {
+								case 1:
+									if (xppVersMap.getName().equals("refSys")) {
+
+										iDepth--;
+									}
+									break;
+								case 2:
+									if (xppVersMap.getName().equals("refMap")) {
+
+										if (iDepth == 2) {
+											if (isToEtalon) {
+												toEtalonMap = mapBooks;
+											} else {
+												fromEtalonMap = mapBooks;
+											}
+										}
+
+										iDepth--;
+									}
+									break;
+								case 3:
+									if (xppVersMap.getName().equals("mapBk")) {
+
+										if (iDepth == 3 && mapBooks != null && mapChapters != null) {
+
+											mapBooks.put(sForBook, mapChapters);
+										}
+
+										iDepth--;
+									}
+								case 4:
+									if (xppVersMap.getName().equals("mapCh")) {
+
+										if (iDepth == 4 && mapChapters != null && mapVerses != null) {
+
+											mapChapters.putValueToRangeOfKeys(iStartChapter, iEndChapter, mapVerses);
+										}
+
+										iDepth--;
+									}
+									break;
+								case 5:
+									if (xppVersMap.getName().equals("mapVs")) {
+
+										if (iDepth == 5 && mapVerses != null && verseDifferences != null) {
+
+											mapVerses.putValueToRangeOfKeys(iStartVerse, iEndVerse, verseDifferences);
+										}
+
+										iDepth--;
+									}
+									break;
+								default:
+									break;
+							}
+							break;
+
+						// содержимое тэга
+						//case XmlPullParser.TEXT:
+						//	Log.d(LOG_TAG, "text = " + xppVersMap.getText());
+						//	break;
+
+						default:
+							break;
 					}
 
+					// следующий элемент
+					xppVersMap.next();
+				}
 
-					if (isToEtalon) {
-						toEtalonMap = mapBooks;
-					} else {
-						fromEtalonMap = mapBooks;
-					}
 
-					isToEtalon = !isToEtalon;
-				} while (!isToEtalon);
+				//Llog.d(LOG_TAG, "END_DOCUMENT");
 
-			} catch (XPathExpressionException e) {
 
-				// TODO заменить e.printStackTrace()
+				if (iDepth != 0) {
+					toEtalonMap = null;
+					fromEtalonMap = null;
+				}
 
-				e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+
+			} catch (XmlPullParserException e) {
+
+				// TODO заменить e.printStackTrace();
+				e.printStackTrace();
+
+				toEtalonMap = null;
+				fromEtalonMap = null;
+
+			} catch (IOException e) {
+
+				// TODO заменить e.printStackTrace();
+				e.printStackTrace();
+
+				toEtalonMap = null;
+				fromEtalonMap = null;
+
 			}
 
 
@@ -329,8 +493,6 @@ public class VersificationMap {
 
 
 	public VerseDifferences getMapForVerse(boolean isEtalon, String sForBook, Integer iChapter, Integer iVerse) {
-
-		// TODO speedup
 
 		VerseDifferences verseDifferences = null;
 

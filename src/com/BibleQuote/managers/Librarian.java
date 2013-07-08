@@ -401,7 +401,7 @@ public class Librarian {
 	}
 
 
-	private Document getVersificationMap(Module module) {
+	private BufferedReader getVersificationMapFile(Module module) {
 
 		// Таблица версификации должна быть в корне модуля с именем файла "versmap*.xml",
 		// такой файл должен быть только один.
@@ -416,33 +416,34 @@ public class Librarian {
 			}
 		};
 
+
 		FsModule fsModule = (FsModule) module;
 		File dirModule = new File(fsModule.modulePath);
 		String [] saModuleFileNames = dirModule.list(fnfVersMap);
+
 
 		String sVersificationFilePath = null;
 		if (saModuleFileNames.length == 1) {
 			sVersificationFilePath = fsModule.modulePath + File.separator + saModuleFileNames[0];
 		}
 
-		Document docVersificationMap = null;
+
+		BufferedReader brVersificationFile = null;
 
 		if (sVersificationFilePath != null) {
+
 			try {
-				docVersificationMap = XmlUtil.fromXMLfile(sVersificationFilePath);
-			} catch (ParserConfigurationException e) {
-				// TODO заменить e.printStackTrace()
-				e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-			} catch (IOException e) {
-				// TODO заменить e.printStackTrace()
-				e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-			} catch (SAXException e) {
+				brVersificationFile = new BufferedReader(new FileReader(sVersificationFilePath));
+			} catch (FileNotFoundException e) {
+
+				brVersificationFile = null;
 				// TODO заменить e.printStackTrace()
 				e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
 			}
 		}
 
-		return docVersificationMap;
+
+		return brVersificationFile;
 	}
 
 
@@ -452,7 +453,7 @@ public class Librarian {
 		PreferenceHelper.saveStateString("ParModuleID", ParModuleID);
 
 
-		VersificationMap versMap1 = new VersificationMap(getVersificationMap(currModule));
+		VersificationMap versMap1 = new VersificationMap(getVersificationMapFile(currModule));
 
 		EtalonChapter etalonChapter = getEtalonChapter(currChapter, versMap1);
 
@@ -462,7 +463,7 @@ public class Librarian {
 		Module ParModule = getModuleByID(ParModuleID);
 		Book ParBook = getBookByID(ParModule, currBook.getID());
 
-		VersificationMap versMap2 = new VersificationMap(getVersificationMap(ParModule));
+		VersificationMap versMap2 = new VersificationMap(getVersificationMapFile(ParModule));
 
 		ChapterQueue chapterQueue_2 = getChapterQueueFromEtalon(etalonChapter, ParBook, versMap2, null);
 
@@ -503,6 +504,9 @@ public class Librarian {
 
 		try {
 
+			long lTime_start = System.currentTimeMillis();
+
+
 			Module Module2 = getModuleByID(toModuleID);
 
 			String LogErrFileName = "versmapErrors_" + currModule.ShortName + "_" + Module2.ShortName + ".txt";
@@ -510,9 +514,10 @@ public class Librarian {
 			FsModule fsModule1 = (FsModule) currModule;
 			String LogErrFilePath = fsModule1.modulePath + File.separator + LogErrFileName;
 
-			VersificationMap versMap1 = new VersificationMap(getVersificationMap(currModule));
-			VersificationMap versMap2 = new VersificationMap(getVersificationMap(Module2));
+			VersificationMap versMap1 = new VersificationMap(getVersificationMapFile(currModule));
 			//VersificationMap versMap1 = new VersificationMap(null);
+
+			VersificationMap versMap2 = new VersificationMap(getVersificationMapFile(Module2));
 			//VersificationMap versMap2 = new VersificationMap(null);
 
 			FileOutputStream fosLogErr = new FileOutputStream(LogErrFilePath);
@@ -550,6 +555,7 @@ public class Librarian {
 
 
 				Book Book2 = getBookByID(Module2, Book1.getID());
+
 				// for Book2 from Etalon
 				for (int iCh = 0; iCh < arlEtalonChapters.size(); iCh++) {
 					getChapterQueueFromEtalon(arlEtalonChapters.get(iCh), Book2, versMap2, fosLogErr);
@@ -591,6 +597,7 @@ public class Librarian {
 
 
 				Book Book1 = getBookByID(currModule, Book2.getID());
+
 				// for Book1 from Etalon
 				for (int iCh = 0; iCh < arlEtalonChapters.size(); iCh++) {
 					getChapterQueueFromEtalon(arlEtalonChapters.get(iCh), Book1, versMap1, fosLogErr);
@@ -598,8 +605,15 @@ public class Librarian {
 			}
 
 
+			long lTimeDelta = System.currentTimeMillis() - lTime_start;
+			String sTime = "TimeDelta from start = " + lTimeDelta + " milliseconds";
+
 			fosLogErr.write(0x0A);
 			fosLogErr.write(0x0A);
+			fosLogErr.write(sTime.getBytes("UTF-8"));
+			fosLogErr.write(0x0A);
+
+
 			fosLogErr.write("=================================".getBytes("UTF-8"));
 			fosLogErr.write(0x0A);
 			fosLogErr.write("The End".getBytes("UTF-8"));
