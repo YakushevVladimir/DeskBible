@@ -464,7 +464,7 @@
 
 		<mapBk forBook="1Sam">
 			<mapCh startChapter="20" endChapter="20">
-				<mapVs startVerse="42" endVerse="42" difCh="0" difVs="0" countSequence="1"/>
+				<mapVs startVerse="42" endVerse="42" difCh="0" difVs="0" countSequence="1" nextChapter="1"/>
 			</mapCh>
 			<mapCh startChapter="21" endChapter="21">
 				<mapVs startVerse="1" endVerse="999" difCh="0" difVs="1"/>

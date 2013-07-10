@@ -1,7 +1,9 @@
-package com.BibleQuote.managers;
+package com.BibleQuote.modules;
+
+import android.os.Build;
 
 //import java.util.TreeMap;  // поддержка с Android API 9 (Android 2.3.1)
-import edu.emory.mathcs.backport.java.util.TreeMap;  // поддержка с Android API 5 (Android 2.0)
+//import edu.emory.mathcs.backport.java.util.TreeMap;  // поддержка с Android API 5 (Android 2.0)
 
 import java.io.IOException;
 import java.io.Reader;
@@ -33,12 +35,14 @@ public class VersificationMap {
 		public int iDifVs;
 		public int iVsRepeated;
 		public int iCountSequence;
+		public int iNextChapter;
 
-		public VerseDifferences(int iDifCh, int iDifVs, int iVsRepeated, int iCountSequence) {
+		public VerseDifferences(int iDifCh, int iDifVs, int iVsRepeated, int iCountSequence, int iNextChapter) {
 			this.iDifCh = iDifCh;
 			this.iDifVs = iDifVs;
 			this.iVsRepeated = iVsRepeated;
 			this.iCountSequence = iCountSequence;
+			this.iNextChapter = iNextChapter;
 		}
 
 		public VerseDifferences() {
@@ -46,14 +50,12 @@ public class VersificationMap {
 			this.iDifVs = 0;
 			this.iVsRepeated = 0;
 			this.iCountSequence = 0;
+			this.iNextChapter = 0;
 		}
 	}
 
 
-	/*private class MapBooks extends TreeMap<String, MapChapters> {
-	}*/
-
-	private class MapBooks extends TreeMap {
+	private class MapBooks extends TreeMapBackport {
 	}
 
 	private class MapChapters extends RangeTreeMap {
@@ -63,27 +65,55 @@ public class VersificationMap {
 	}
 
 
-	/*private class RangeTreeMap<V> extends TreeMap<Integer, V> {
+	private class TreeMapBackport {
 
-		public V getValueFromRangeOfKeys(Integer key) {
-			Entry<Integer, V> e = floorEntry(key);
+		private java.util.AbstractMap treeMap = null;
 
-			// Если необходимо включить и верхнюю границу диапазона -- раскомментировать
-			//if (e != null && e.getValue() == null) {
-			//	e = lowerEntry(key);
-			//}
 
-			return e == null ? null : e.getValue();
+		public TreeMapBackport() {
+
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {  // API >= 9
+				treeMap = new java.util.TreeMap();
+			} else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR) {  // API >= 5
+				treeMap = new edu.emory.mathcs.backport.java.util.TreeMap();
+			} else {  // API < 5
+				treeMap = null;
+			}
 		}
 
-		public void putValueToRangeOfKeys(Integer keyFrom, Integer keyTo, V value) {
-			put(keyFrom, value);
-			put(++keyTo, null);
+
+		public Object get(Object key) {
+			return treeMap == null ? null : treeMap.get(key);
 		}
-	}*/
 
 
-	private class RangeTreeMap extends TreeMap {
+		public Object put(Object key, Object value) {
+			return treeMap == null ? null : treeMap.put(key, value);
+		}
+
+
+		public Map.Entry floorEntry(Object key) {
+
+			if (treeMap != null) {
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {  // API >= 9
+					java.util.TreeMap tm = (java.util.TreeMap) treeMap;
+					return tm.floorEntry(key);
+
+				} else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR) {  // API >= 5
+					edu.emory.mathcs.backport.java.util.TreeMap tm = (edu.emory.mathcs.backport.java.util.TreeMap) treeMap;
+					return tm.floorEntry(key);
+
+				} else {  // API < 5
+					return null;
+				}
+			} else {
+				return null;
+			}
+		}
+	}
+
+
+	private class RangeTreeMap extends TreeMapBackport {
 
 		public Object getValueFromRangeOfKeys(Integer key) {
 			Map.Entry e = floorEntry(key);
@@ -127,7 +157,7 @@ public class VersificationMap {
 				xppVersMap = null;
 
 				// TODO заменить e.printStackTrace()
-				e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+				//e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
 			}
 		}
 
@@ -154,6 +184,7 @@ public class VersificationMap {
 				int iDifVs = 0;
 				int iVsRepeated = 0;
 				int iCountSequence = 0;
+				int iNextChapter = 0;
 
 				int iDepth = 0;
 
@@ -325,15 +356,26 @@ public class VersificationMap {
 													iCountSequence = 0;
 												}
 											}
+
+											if (xppVersMap.getAttributeName(i).equals("nextChapter")) {
+
+												try {
+													iNextChapter = Integer.parseInt(xppVersMap.getAttributeValue(i));
+												} catch (NumberFormatException e) {
+													iNextChapter = 0;
+												}
+											}
 										}
 
 
 										if (iStartVerse > 0 && iEndVerse > 0) {
 
-											// атрибуты "@countSequence" и "@vsRepeated" должны быть только для одного стиха
+											// атрибуты "@countSequence", "@vsRepeated" и "@nextChapter"
+											// должны быть только для одного стиха
 											if (iStartVerse != iEndVerse) {
 												iVsRepeated = 0;
 												iCountSequence = 0;
+												iNextChapter = 0;
 											}
 
 											if (iVsRepeated < 0) {
@@ -344,10 +386,15 @@ public class VersificationMap {
 												iCountSequence = 0;
 											}
 
-											if (iDifCh != 0 || iDifVs != 0 || iVsRepeated > 0 || iCountSequence > 0) {
+											if (iNextChapter < 0) {
+												iNextChapter = 0;
+											}
+
+											if (iDifCh != 0 || iDifVs != 0
+													|| iVsRepeated > 0 || iCountSequence > 0 || iNextChapter > 0) {
 
 												verseDifferences =
-														new VerseDifferences(iDifCh, iDifVs, iVsRepeated, iCountSequence);
+														new VerseDifferences(iDifCh, iDifVs, iVsRepeated, iCountSequence, iNextChapter);
 											}
 										}
 									}
@@ -444,7 +491,7 @@ public class VersificationMap {
 			} catch (XmlPullParserException e) {
 
 				// TODO заменить e.printStackTrace();
-				e.printStackTrace();
+				//e.printStackTrace();
 
 				toEtalonMap = null;
 				fromEtalonMap = null;
@@ -452,7 +499,7 @@ public class VersificationMap {
 			} catch (IOException e) {
 
 				// TODO заменить e.printStackTrace();
-				e.printStackTrace();
+				//e.printStackTrace();
 
 				toEtalonMap = null;
 				fromEtalonMap = null;
@@ -465,31 +512,6 @@ public class VersificationMap {
 			fromEtalonMap = null;
 		}
 	}
-
-
-	/*public VerseDifferences getMapForVerse(boolean isEtalon, String sForBook, Integer iChapter, Integer iVerse) {
-
-		// TODO speedup
-
-		VerseDifferences verseDifferences = null;
-
-		MapBooks mapBooks = isEtalon ? toEtalonMap : fromEtalonMap;
-
-		if (mapBooks != null) {
-			MapChapters mapChapters = mapBooks.get(sForBook);
-
-			if (mapChapters != null) {
-				MapVerses mapVerses = mapChapters.getValueFromRangeOfKeys(iChapter);
-
-				if (mapVerses != null) {
-					verseDifferences = mapVerses.getValueFromRangeOfKeys(iVerse);
-				}
-			}
-		}
-
-
-		return verseDifferences != null ? verseDifferences : new VerseDifferences();
-	}*/
 
 
 	public VerseDifferences getMapForVerse(boolean isEtalon, String sForBook, Integer iChapter, Integer iVerse) {

@@ -96,6 +96,11 @@
 				android:summaryOff="@string/disabled"
 				android:summaryOn="@string/enabled"
 				android:title="@string/text_align_justify" />
+		<CheckBoxPreference
+				android:defaultValue="true"
+				android:key="show_short_name_partrans"
+				android:summary="@string/show_short_name_partrans_summary"
+				android:title="@string/show_short_name_partrans" />
 	</PreferenceCategory>
 
 	<PreferenceCategory android:title="@string/share_passage" >

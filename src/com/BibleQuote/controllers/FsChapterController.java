@@ -190,8 +190,8 @@ public class FsChapterController implements IChapterController {
 									*/
 
 									verseText = verseText
-											.replaceAll("^(<[^/]+?>)*?(\\d+:\\d+)(</(.)+?>){0,1}?\\s+",
-													"$1<b>$2</b>$3 ").replaceAll(
+											.replaceAll("^(<[^/]+?>)*?([\\w\\-\\+]+?[.])*?(\\d+.\\d+)(</(.)+?>){0,1}?\\s+",
+													"$1<b>$2$3</b>$4 ").replaceAll(
 													"null", "");
 
 								}

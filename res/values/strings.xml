@@ -112,6 +112,8 @@
     <string name="volume_butons_to_scroll">Volume buttons to scroll</string>
     <string name="disabled">Disabled</string>
     <string name="text_align_justify">Align text to the width</string>
+	<string name="show_short_name_partrans">Short name of parallel module</string>
+	<string name="show_short_name_partrans_summary">Show in verse short name of module in \"Parallel Translates\" mode</string>
     <string name="font_family">Font family</string>
     <string name="category_social">Social functions</string>
     <string name="share_passage">Share passage</string>

@@ -22,6 +22,8 @@ public abstract class Module implements Serializable {
 	public String defaultEncoding = "utf-8";
 	public String language = "ru_RU";
 
+	protected VersificationMap versificationMap = null;
+
 
 	public Map<String, Book> Books = new LinkedHashMap<String, Book>();    // to lazy loading on demand
 
@@ -54,4 +56,6 @@ public abstract class Module implements Serializable {
 			return language.substring(0, language.indexOf("-")).toLowerCase();
 		}
 	}
+
+	public abstract VersificationMap getVersificationMap();
 }
