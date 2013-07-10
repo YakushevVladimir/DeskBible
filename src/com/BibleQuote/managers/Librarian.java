@@ -186,7 +186,7 @@ public class Librarian {
 
 
 			iChapNumber2 = iChapNumber1 + verseDiffs.iDifCh;
-			int iSeqVerse = (verseDiffs.iVsRepeated != 0 && verseDiffs.iDifCh >= 0) ? 1 : 0;
+			int iSeqVerse = (verseDiffs.iVsRepeated != 0 && iVsNumber1 != 1) ? 1 : 0;
 			int iVsNumber2 = iVsNumber1 + verseDiffs.iDifVs + iSeqVerse;
 			//sVsNumber2 = Integer.toString(iVsNumber2);
 			//sVerseOsisID2 = sChapterOsisID2 + "." + sVsNumber2;
@@ -626,6 +626,176 @@ public class Librarian {
 		currBook = getBookByID(currModule, currBook.getID());
 
 	}
+
+
+	/*public void CheckVersificationMap_OneBook(String toModuleID) throws BookNotFoundException, OpenModuleException {
+
+		try {
+
+			long lTime_start = System.currentTimeMillis();
+
+			String sForBookID = "Ps";
+
+			Module Module1 = currModule;
+			Module Module2 = getModuleByID(toModuleID);
+
+			String LogErrFileName = "versmapErrors_" + Module1.ShortName + "_" + Module2.ShortName + ".txt";
+
+			FsModule fsModule1 = (FsModule) Module1;
+
+			String sDirOfModules = fsModule1.modulePath.substring(0, fsModule1.modulePath.lastIndexOf(File.separator));
+			String LogErrFilePath = sDirOfModules + File.separator + LogErrFileName;
+
+
+			FileOutputStream fosLogErr = new FileOutputStream(LogErrFilePath);
+
+			fosLogErr.write(0x0A);
+			fosLogErr.write("=================================".getBytes("UTF-8"));
+			fosLogErr.write(0x0A);
+
+			String sHeader = "From " + Module1.ShortName + " Module to " + Module2.ShortName + " Module";
+
+			fosLogErr.write(sHeader.getBytes("UTF-8"));
+			fosLogErr.write(0x0A);
+			fosLogErr.write(0x0A);
+
+
+			//for (Book book : getBookList(Module1)) {
+			if (true) {
+
+				ArrayList<EtalonChapter> arlEtalonChapters = new ArrayList<EtalonChapter>(70);
+
+				Book Book1 = null;
+				try {
+					// перед getChapterByNumber() должно быть getBookByID(),
+					// т.к. после вызова getBookByID() для второго модуля меняется контекст LibraryController
+					// (FsBookRepository.context.bookSet)
+					Book1 = getBookByID(Module1, sForBookID);
+
+					for (int iCh = 1; iCh <= Book1.chapterQty; iCh++) {
+						arlEtalonChapters.add(getEtalonChapter(getChapterByNumber(Book1, iCh), Module1.getVersificationMap()));
+					}
+
+
+					// for Book1 from Etalon
+					for (int iCh = 0; iCh < arlEtalonChapters.size(); iCh++) {
+						getChapterQueueFromEtalon(arlEtalonChapters.get(iCh), Book1, Module1.getVersificationMap(), fosLogErr);
+					}
+
+				} catch (BookNotFoundException e) {
+					String sMessage = "Book " + sForBookID + " in module " + Module1.getID() + " not found";
+					fosLogErr.write(sMessage.getBytes("UTF-8"));
+					fosLogErr.write(0x0A);
+					//e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+				}
+
+
+				Book Book2 = null;
+				try {
+					Book2 = getBookByID(Module2, sForBookID);
+
+					// for Book2 from Etalon
+					for (int iCh = 0; iCh < arlEtalonChapters.size(); iCh++) {
+						getChapterQueueFromEtalon(arlEtalonChapters.get(iCh), Book2, Module2.getVersificationMap(), fosLogErr);
+					}
+				} catch (BookNotFoundException e) {
+					String sMessage = "Book " + sForBookID + " in module " + Module2.getID() + " not found";
+					fosLogErr.write(sMessage.getBytes("UTF-8"));
+					fosLogErr.write(0x0A);
+					//e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+				}
+			}
+
+
+			fosLogErr.write(0x0A);
+			fosLogErr.write(0x0A);
+			fosLogErr.write("=================================".getBytes("UTF-8"));
+			fosLogErr.write(0x0A);
+
+			sHeader = "From " + Module2.ShortName + " Module to " + Module1.ShortName + " Module";
+
+			fosLogErr.write(sHeader.getBytes("UTF-8"));
+			fosLogErr.write(0x0A);
+			fosLogErr.write(0x0A);
+
+
+			//for (Book book : getBookList(Module1)) {
+			if (true) {
+
+				ArrayList<EtalonChapter> arlEtalonChapters = new ArrayList<EtalonChapter>(70);
+
+				Book Book2 = null;
+				try {
+					// перед getChapterByNumber() должно быть getBookByID(),
+					// т.к. после вызова getBookByID() для второго модуля меняется контекст LibraryController
+					// (FsBookRepository.context.bookSet)
+					Book2 = getBookByID(Module2, sForBookID);
+
+					for (int iCh = 1; iCh <= Book2.chapterQty; iCh++) {
+						arlEtalonChapters.add(getEtalonChapter(getChapterByNumber(Book2, iCh), Module2.getVersificationMap()));
+					}
+
+
+					// for Book2 from Etalon
+					for (int iCh = 0; iCh < arlEtalonChapters.size(); iCh++) {
+						getChapterQueueFromEtalon(arlEtalonChapters.get(iCh), Book2, Module2.getVersificationMap(), fosLogErr);
+					}
+
+				} catch (BookNotFoundException e) {
+					String sMessage = "Book " + sForBookID + " in module " + Module2.getID() + " not found";
+					fosLogErr.write(sMessage.getBytes("UTF-8"));
+					fosLogErr.write(0x0A);
+					//e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+				}
+
+
+				Book Book1 = null;
+				try {
+					Book1 = getBookByID(Module1, sForBookID);
+
+					// for Book1 from Etalon
+					for (int iCh = 0; iCh < arlEtalonChapters.size(); iCh++) {
+						getChapterQueueFromEtalon(arlEtalonChapters.get(iCh), Book1, Module1.getVersificationMap(), fosLogErr);
+					}
+
+				} catch (BookNotFoundException e) {
+					String sMessage = "Book " + sForBookID + " in module " + Module1.getID() + " not found";
+					fosLogErr.write(sMessage.getBytes("UTF-8"));
+					fosLogErr.write(0x0A);
+					//e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+				}
+			}
+
+
+			long lTimeDelta = System.currentTimeMillis() - lTime_start;
+			String sTime = "TimeDelta from start = " + lTimeDelta + " milliseconds";
+
+			fosLogErr.write(0x0A);
+			fosLogErr.write(0x0A);
+			fosLogErr.write(sTime.getBytes("UTF-8"));
+			fosLogErr.write(0x0A);
+
+
+			fosLogErr.write("=================================".getBytes("UTF-8"));
+			fosLogErr.write(0x0A);
+			fosLogErr.write("The End".getBytes("UTF-8"));
+			fosLogErr.write(0x0A);
+
+			fosLogErr.close();
+
+		} catch (FileNotFoundException e) {
+			// TODO заменить e.printStackTrace()
+			//e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+		} catch (IOException e) {
+			// TODO заменить e.printStackTrace()
+			//e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+		}
+
+		// Восстанавливаем контекст LibraryController (FsBookRepository.context.bookSet) относительно currModule
+		// и делаем currBook соответствующей этому контексту
+		currBook = getBookByID(currModule, currBook.getID());
+
+	}*/
 
 
 	///////////////////////////////////////////////////////////////////////////

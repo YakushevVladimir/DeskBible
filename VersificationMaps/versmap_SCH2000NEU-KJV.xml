@@ -288,6 +288,10 @@
 			<mapCh startChapter="9" endChapter="9">
 				<mapVs startVerse="1" endVerse="999" difCh="0" difVs="1"/>
 			</mapCh>
+			<mapCh startChapter="64" endChapter="64">
+				<mapVs startVerse="1" endVerse="1" difCh="0" difVs="0" countSequence="1"/>
+				<mapVs startVerse="2" endVerse="999" difCh="0" difVs="1"/>
+			</mapCh>
 		</mapBk>
 
 		<mapBk forBook="Jer">
@@ -379,6 +383,13 @@
 			</mapCh>
 		</mapBk>
 
+		<mapBk forBook="2Cor">
+			<mapCh startChapter="13" endChapter="13">
+				<mapVs startVerse="12" endVerse="12" difCh="0" difVs="0" countSequence="1"/>
+				<mapVs startVerse="13" endVerse="13" difCh="0" difVs="1"/>
+			</mapCh>
+		</mapBk>
+
 		<mapBk forBook="3John">
 			<mapCh startChapter="1" endChapter="1">
 				<mapVs startVerse="15" endVerse="15" difCh="0" difVs="-1" vsRepeated="1"/>
@@ -388,6 +399,9 @@
 		<mapBk forBook="Rev">
 			<mapCh startChapter="12" endChapter="12">
 				<mapVs startVerse="18" endVerse="18" difCh="1" difVs="-17"/>
+			</mapCh>
+			<mapCh startChapter="13" endChapter="13">
+				<mapVs startVerse="1" endVerse="1" difCh="0" difVs="0" vsRepeated="1"/>
 			</mapCh>
 		</mapBk>
 
@@ -589,7 +603,7 @@
 			</mapCh>
 			<mapCh startChapter="51" endChapter="52">
 				<mapVs startVerse="1" endVerse="1" difCh="0" difVs="0" countSequence="2"/>
-				<mapVs startVerse="2" endVerse="999" difCh="0" difVs="1"/>
+				<mapVs startVerse="2" endVerse="999" difCh="0" difVs="2"/>
 			</mapCh>
 			<mapCh startChapter="53" endChapter="53">
 				<mapVs startVerse="1" endVerse="1" difCh="0" difVs="0" countSequence="1"/>
@@ -597,7 +611,7 @@
 			</mapCh>
 			<mapCh startChapter="54" endChapter="54">
 				<mapVs startVerse="1" endVerse="1" difCh="0" difVs="0" countSequence="2"/>
-				<mapVs startVerse="2" endVerse="999" difCh="0" difVs="1"/>
+				<mapVs startVerse="2" endVerse="999" difCh="0" difVs="2"/>
 			</mapCh>
 			<mapCh startChapter="55" endChapter="59">
 				<mapVs startVerse="1" endVerse="1" difCh="0" difVs="0" countSequence="1"/>
@@ -605,7 +619,7 @@
 			</mapCh>
 			<mapCh startChapter="60" endChapter="60">
 				<mapVs startVerse="1" endVerse="1" difCh="0" difVs="0" countSequence="2"/>
-				<mapVs startVerse="2" endVerse="999" difCh="0" difVs="1"/>
+				<mapVs startVerse="2" endVerse="999" difCh="0" difVs="2"/>
 			</mapCh>
 			<mapCh startChapter="61" endChapter="65">
 				<mapVs startVerse="1" endVerse="1" difCh="0" difVs="0" countSequence="1"/>
@@ -675,6 +689,10 @@
 				<mapVs startVerse="1" endVerse="1" difCh="-1" difVs="22"/>
 				<mapVs startVerse="2" endVerse="999" difCh="0" difVs="-1"/>
 			</mapCh>
+			<mapCh startChapter="64" endChapter="64">
+				<mapVs startVerse="2" endVerse="2" difCh="0" difVs="-1" vsRepeated="1"/>
+				<mapVs startVerse="3" endVerse="999" difCh="0" difVs="-1"/>
+			</mapCh>
 		</mapBk>
 
 		<mapBk forBook="Jer">
@@ -695,8 +713,8 @@
 
 		<mapBk forBook="Dan">
 			<mapCh startChapter="4" endChapter="4">
-				<mapVs startVerse="1" endVerse="3" difCh="0" difVs="30"/>
-				<mapVs startVerse="3" endVerse="999" difCh="0" difVs="-2"/>
+				<mapVs startVerse="1" endVerse="3" difCh="-1" difVs="30"/>
+				<mapVs startVerse="4" endVerse="999" difCh="0" difVs="-3"/>
 			</mapCh>
 			<mapCh startChapter="5" endChapter="5">
 				<mapVs startVerse="31" endVerse="999" difCh="1" difVs="-30"/>
@@ -777,6 +795,13 @@
 			</mapCh>
 		</mapBk>
 
+		<mapBk forBook="2Cor">
+			<mapCh startChapter="13" endChapter="13">
+				<mapVs startVerse="13" endVerse="13" difCh="0" difVs="-1" vsRepeated="1"/>
+				<mapVs startVerse="14" endVerse="14" difCh="0" difVs="-1"/>
+			</mapCh>
+		</mapBk>
+
 		<mapBk forBook="3John">
 			<mapCh startChapter="1" endChapter="1">
 				<mapVs startVerse="14" endVerse="14" difCh="0" difVs="0" countSequence="1"/>
@@ -788,8 +813,7 @@
 				<mapVs startVerse="18" endVerse="18" difCh="1" difVs="-17"/>
 			</mapCh>
 			<mapCh startChapter="13" endChapter="13">
-				<mapVs startVerse="1" endVerse="1" difCh="-1" difVs="17" countSequence="1"/>
-				<mapVs startVerse="1" endVerse="1" difCh="0" difVs="0"/>
+				<mapVs startVerse="1" endVerse="1" difCh="-1" difVs="17" countSequence="1" nextChapter="1"/>
 			</mapCh>
 		</mapBk>
 
