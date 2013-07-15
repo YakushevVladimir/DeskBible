@@ -129,4 +129,14 @@
 	<string name="no_tags">No tags</string>
 	<string name="empty">Empty</string>
 	<string name="tags">Tags</string>
+	<!-- Service -->
+	<string name="service">Control of Service</string>
+	<string name="service_title">Checking of\nVersification Map</string>
+	<string name="service_passnum">Pass: %1$s/2</string>
+	<string name="service_fromto">From %1$s to %2$s</string>
+	<string name="service_currbook">Book: %1$s (%2$s/%3$s)</string>
+	<string name="service_willupd">Info will be updated\non the next book</string>
+	<string name="service_btn_stop">Stop Checking</string>
+	<string name="service_notif_title">Checking of Versificaton Map</string>
+	<string name="service_notif_text">For %1$s and %2$s</string>
 </resources>

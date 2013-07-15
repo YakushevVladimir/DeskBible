@@ -15,6 +15,7 @@
  */
 package com.BibleQuote;
 
+import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -57,6 +58,13 @@ public class BibleQuoteApp extends Application {
 		}
 	}
 
+	public void RestartInit() {
+		Log.i(TAG, "Init application preference helper...");
+		initPrefernceHelper();
+		Log.i(TAG, "Init library...");
+		initLibrarian();
+	}
+
 	public Librarian getLibrarian() {
 		if (myLibrarian == null) {
 			// Сборщик мусора уничтожил ссылки на myLibrarian и на PreferenceHelper
@@ -87,4 +95,13 @@ public class BibleQuoteApp extends Application {
 		myLibrarian = new Librarian(this);
 	}
 
+	public boolean isServiceRunning() {
+		ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+		for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+			if (BibleQuoteService.class.getName().equals(service.service.getClassName())) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

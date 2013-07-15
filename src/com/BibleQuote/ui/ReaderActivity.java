@@ -34,7 +34,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
-import com.BibleQuote.async.AsyncCheckVersificationMap;
 import com.BibleQuote.async.AsyncManager;
 import com.BibleQuote.async.AsyncOpenChapter;
 import com.BibleQuote.entity.BibleReference;
@@ -157,30 +156,37 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.reader);
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-		setVolumeControlStream(AudioManager.STREAM_MUSIC);
-
-		getSupportActionBar().setIcon(R.drawable.app_logo);
-		getSupportActionBar().setDisplayShowTitleEnabled(false);
-		ViewUtils.setActionBarBackground(this);
-
 		BibleQuoteApp app = (BibleQuoteApp) getApplication();
-		myLibrarian = app.getLibrarian();
 
-		mAsyncManager = app.getAsyncManager();
-		mAsyncManager.handleRetainedTask(mTask, this);
-
-		initialyzeViews();
-		updateActivityMode();
-
-		BibleReference osisLink = new BibleReference(PreferenceHelper.restoreStateString("last_read"));
-		if (!myLibrarian.isOSISLinkValid(osisLink)) {
-			onChooseChapterClick();
+		if (app.isServiceRunning()) {
+			finish();
 		} else {
-			openChapterFromLink(osisLink);
+
+			setContentView(R.layout.reader);
+			getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+			setVolumeControlStream(AudioManager.STREAM_MUSIC);
+
+			getSupportActionBar().setIcon(R.drawable.app_logo);
+			getSupportActionBar().setDisplayShowTitleEnabled(false);
+			ViewUtils.setActionBarBackground(this);
+
+			myLibrarian = app.getLibrarian();
+
+			mAsyncManager = app.getAsyncManager();
+			mAsyncManager.handleRetainedTask(mTask, this);
+
+			initialyzeViews();
+			updateActivityMode();
+
+			BibleReference osisLink = new BibleReference(PreferenceHelper.restoreStateString("last_read"));
+			if (!myLibrarian.isOSISLinkValid(osisLink)) {
+				onChooseChapterClick();
+			} else {
+				openChapterFromLink(osisLink);
+			}
 		}
 	}
+
 
 	private void openChapterFromLink(BibleReference osisLink) {
 		mTask = new AsyncOpenChapter(progressMessage, false, myLibrarian, osisLink, null);
@@ -192,9 +198,17 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 		mAsyncManager.setupTask(mTask, this);
 	}
 
+
 	private void CheckVersMapByModuleID(String toModuleID) {
-		mTask = new AsyncCheckVersificationMap(progressMessage, false, myLibrarian, toModuleID);
-		mAsyncManager.setupTask(mTask, this);
+
+		// Всё приложение блокируется ServiceActivity на время выполнения CheckVersificationMap,
+		// чтобы контекст приложения (выбранные модули и прочее) не мог поменяться.
+
+
+		startActivity(new Intent(this, ServiceActivity.class)
+				  .putExtra(ServiceActivity.TO_MODULE_ID, toModuleID));
+
+		finish();
 	}
 
 	private void SelectParModule() {
