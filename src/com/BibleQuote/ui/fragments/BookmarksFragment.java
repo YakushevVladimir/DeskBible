@@ -171,12 +171,6 @@ public class BookmarksFragment extends SherlockListFragment implements AdapterVi
 		void onBookmarksSelect(Bookmark OSISLink);
 	}
 
-//	private IBookmarksListener listener;
-//
-//	public void setBookmarksListener(IBookmarksListener listener) {
-//		Log.i(TAG, "Set listener");
-//		this.listener = listener;
-//	}
 
 	private void alertListener(Bookmark OSISLink) {
 		//if (listener == null) return;
