@@ -84,12 +84,12 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 
 	private TTSPlayerFragment ttsPlayer;
 
-    private final int ID_CHOOSE_CH = 1;
-    private final int ID_SEARCH = 2;
-    private final int ID_HISTORY = 3;
-    private final int ID_BOOKMARKS = 4;
-    private final int ID_PARALLELS = 5;
-    private final int ID_SETTINGS = 6;
+	private final int ID_CHOOSE_CH = 1;
+	private final int ID_SEARCH = 2;
+	private final int ID_HISTORY = 3;
+	private final int ID_BOOKMARKS = 4;
+	private final int ID_PARALLELS = 5;
+	private final int ID_SETTINGS = 6;
 	private final int ID_PARTRANSLATES = 7;
 	private final int ID_CHECKVERSMAP = 8;
 	@Override
@@ -224,7 +224,7 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 	}
 
 	private void initialyzeViews() {
-        btnChapterNav = (LinearLayout)findViewById(R.id.btn_chapter_nav);
+		btnChapterNav = (LinearLayout) findViewById(R.id.btn_chapter_nav);
 
 		ImageButton btnChapterPrev = (ImageButton) findViewById(R.id.btn_reader_prev);
 		btnChapterPrev.setOnClickListener(onClickChapterPrev);

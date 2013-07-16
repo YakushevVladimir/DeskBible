@@ -1085,8 +1085,8 @@ public class Librarian {
 	}
 
 	public Integer getCurrChapterNumber() {
-        return currChapterNumber;
-    }
+		return currChapterNumber;
+	}
 
 	public Integer getCurrVerseNumber() {
 		return currVerseNumber;
