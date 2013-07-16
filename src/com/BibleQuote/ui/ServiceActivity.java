@@ -1,4 +1,4 @@
-package com.BibleQuote.activity;
+package com.BibleQuote.ui;
 
 import android.content.*;
 import android.os.Bundle;
@@ -24,7 +24,7 @@ public class ServiceActivity extends SherlockFragmentActivity {
 
 	private String toModuleID = "";
 
-	public final static String BROADCAST_ACTION = "com.BibleQuote.activity.ServiceActivity";
+	public final static String BROADCAST_ACTION = "com.BibleQuote.ui.ServiceActivity";
 
 	public final static String STATUS_MSG = "StatusMsg";
 

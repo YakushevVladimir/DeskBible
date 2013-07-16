@@ -17,7 +17,7 @@ package com.BibleQuote.managers;
 
 import android.content.Context;
 import android.content.Intent;
-import com.BibleQuote.activity.ServiceActivity;
+import com.BibleQuote.ui.ServiceActivity;
 import com.BibleQuote.controllers.*;
 import com.BibleQuote.dal.repository.XmlTskRepository;
 import com.BibleQuote.dal.repository.fsHistoryRepository;

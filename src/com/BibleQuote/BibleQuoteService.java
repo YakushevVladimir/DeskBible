@@ -6,7 +6,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
-import com.BibleQuote.activity.ServiceActivity;
+import com.BibleQuote.ui.ServiceActivity;
 import com.BibleQuote.exceptions.BookNotFoundException;
 import com.BibleQuote.exceptions.OpenModuleException;
 import com.BibleQuote.managers.Librarian;

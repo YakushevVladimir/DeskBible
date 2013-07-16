@@ -61,7 +61,7 @@
 		<activity android:name=".ui.AboutActivity" android:label="@string/about"/>
 		<activity android:name=".ui.HelpActivity" android:label="@string/help"/>
 		<activity android:name=".ui.ReaderActivity" android:configChanges="keyboardHidden|orientation" android:launchMode="singleTask"/>
-		<activity android:name=".activity.ServiceActivity" android:label="@string/service" android:launchMode="singleTask"/>
+		<activity android:name=".ui.ServiceActivity" android:label="@string/service" android:launchMode="singleTask"/>
 
 		<activity android:name=".ui.CrossReferenceActivity" android:label="@string/cross_reference">
 			<intent-filter>
