@@ -536,4 +536,9 @@ public class VersificationMap {
 		return verseDifferences != null ? verseDifferences : new VerseDifferences();
 	}
 
+
+	public boolean isEmpty() {
+		return (toEtalonMap == null && fromEtalonMap == null);
+	}
+
 }

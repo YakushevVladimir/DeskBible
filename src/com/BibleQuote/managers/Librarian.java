@@ -520,10 +520,13 @@ public class Librarian {
 					}
 
 
-					// for Book1 from Etalon
-					for (int iCh = 0; iCh < arlEtalonChapters.size(); iCh++) {
-						if (Thread.interrupted()) return;
-						getChapterQueueFromEtalon(arlEtalonChapters.get(iCh), Book1, Module1.getVersificationMap(), fosLogErr);
+					if (!Module1.getVersificationMap().isEmpty()) {
+
+						// for Book1 from Etalon
+						for (int iCh = 0; iCh < arlEtalonChapters.size(); iCh++) {
+							if (Thread.interrupted()) return;
+							getChapterQueueFromEtalon(arlEtalonChapters.get(iCh), Book1, Module1.getVersificationMap(), fosLogErr);
+						}
 					}
 
 				} catch (BookNotFoundException e) {
@@ -595,10 +598,13 @@ public class Librarian {
 					}
 
 
-					// for Book2 from Etalon
-					for (int iCh = 0; iCh < arlEtalonChapters.size(); iCh++) {
-						if (Thread.interrupted()) return;
-						getChapterQueueFromEtalon(arlEtalonChapters.get(iCh), Book2, Module2.getVersificationMap(), fosLogErr);
+					if (!Module2.getVersificationMap().isEmpty()) {
+
+						// for Book2 from Etalon
+						for (int iCh = 0; iCh < arlEtalonChapters.size(); iCh++) {
+							if (Thread.interrupted()) return;
+							getChapterQueueFromEtalon(arlEtalonChapters.get(iCh), Book2, Module2.getVersificationMap(), fosLogErr);
+						}
 					}
 
 				} catch (BookNotFoundException e) {
