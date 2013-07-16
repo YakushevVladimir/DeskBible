@@ -30,7 +30,6 @@ import com.BibleQuote.entity.BibleReference;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.managers.bookmarks.Bookmark;
 import com.BibleQuote.managers.bookmarks.BookmarksManager;
-import com.BibleQuote.ui.BookmarksActivity;
 import com.BibleQuote.ui.widget.listview.ItemAdapter;
 import com.BibleQuote.ui.widget.listview.item.BookmarkItem;
 import com.BibleQuote.ui.widget.listview.item.Item;
@@ -172,12 +171,12 @@ public class BookmarksFragment extends SherlockListFragment implements AdapterVi
 		void onBookmarksSelect(Bookmark OSISLink);
 	}
 
-	private IBookmarksListener listener;
-
-	public void setBookmarksListener(IBookmarksListener listener) {
-		Log.i(TAG, "Set listener");
-		this.listener = listener;
-	}
+//	private IBookmarksListener listener;
+//
+//	public void setBookmarksListener(IBookmarksListener listener) {
+//		Log.i(TAG, "Set listener");
+//		this.listener = listener;
+//	}
 
 	private void alertListener(Bookmark OSISLink) {
 		//if (listener == null) return;

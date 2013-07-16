@@ -19,6 +19,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent" 
 	android:layout_height="@dimen/library_item_height"
+	android:background="@android:drawable/list_selector_background"
 	android:orientation="horizontal" >
 	<TextView 
 		android:id="@+id/id"
