@@ -188,18 +188,19 @@ public class Librarian {
 
 
 			iChapNumber2 = iChapNumber1 + verseDiffs.iDifCh;
+
+			// исходящий стих в эталоне не повторяем, если только это не первый стих в главе
 			int iSeqVerse = (verseDiffs.iVsRepeated != 0 && iVsNumber1 != 1) ? 1 : 0;
+			int iSeqEnd = (verseDiffs.iCountSequence == 0 || verseDiffs.iCountSequence == 1) ? 1 : verseDiffs.iCountSequence;
 			int iVsNumber2 = iVsNumber1 + verseDiffs.iDifVs + iSeqVerse;
 			//sVsNumber2 = Integer.toString(iVsNumber2);
 			//sVerseOsisID2 = sChapterOsisID2 + "." + sVsNumber2;
 
-			while (iSeqVerse <= verseDiffs.iCountSequence) {
+			while (iSeqVerse < iSeqEnd) {
 
-				if (verseDiffs.iNextChapter != 0) {
-					if (iSeqVerse == verseDiffs.iNextChapter) {
-						iChapNumber2++;
-						iVsNumber2 = 1;
-					}
+				if (verseDiffs.iNextChapter > 1 && iSeqVerse == verseDiffs.iNextChapter - 1) {
+					iChapNumber2++;
+					iVsNumber2 = 1;
 				}
 
 				etalonChapter.put(iChapNumber2, iVsNumber2);
@@ -299,25 +300,24 @@ public class Librarian {
 				}
 
 
-				//int iSeqVerse = (verseDiffs.iVsRepeated == 0) ? 0 : 1;  -- при отображении повтор стиха иногда нужен (по строкам)
+				//int iSeqVerse = (verseDiffs.iVsRepeated != 0 && iVsNumber1 != 1) ? 1 : 0;  -- при отображении повтор стиха иногда нужен (по строкам)
 				int iSeqVerse = 0;
+				int iSeqEnd = (verseDiffs.iCountSequence == 0 || verseDiffs.iCountSequence == 1) ? 1 : verseDiffs.iCountSequence;
 				int iVsNumber2 = iVsNumber1 + verseDiffs.iDifVs;  // + iSeqVerse;  -- iSeqVerse == 0
 				//sVsNumber2 = Integer.toString(iVsNumber2);
 				//sVerseOsisID2 = sChapterOsisID2 + "." + sVsNumber2;
 
 
-				while (iSeqVerse <= verseDiffs.iCountSequence) {
+				while (iSeqVerse < iSeqEnd) {
 
-					if (verseDiffs.iNextChapter != 0) {
-						if (iSeqVerse == verseDiffs.iNextChapter) {
-							iChapNumber2++;
-							iVsNumber2 = 1;
+					if (verseDiffs.iNextChapter > 1 && iSeqVerse == verseDiffs.iNextChapter - 1) {
+						iChapNumber2++;
+						iVsNumber2 = 1;
 
-							sChapNumber2 = Integer.toString(iChapNumber2);
+						sChapNumber2 = Integer.toString(iChapNumber2);
 
-							if (Book2 != null) {
-								Chapter2 = getChapterByNumber(Book2, iChapNumber2);
-							}
+						if (Book2 != null) {
+							Chapter2 = getChapterByNumber(Book2, iChapNumber2);
 						}
 					}
 
