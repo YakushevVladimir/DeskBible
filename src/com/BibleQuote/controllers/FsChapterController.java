@@ -198,11 +198,19 @@ public class FsChapterController implements IChapterController {
 
 
 								// отображение чередующимися строками
-								chapterHTML.append(
-										"<div id=\"verse_" + iVerseNumber + "\" class=\"verse\">"
-												+ verseText.replaceAll("<(/)*div(.*?)>", "<$1p$2>")
-												+ "</div>"
-												+ "\r\n");
+								if (iChQ == 0) {
+									chapterHTML.append(
+											  "<div id=\"verse_" + iVerseNumber + "\" class=\"verse\">"
+														 + verseText.replaceAll("<(/)*div(.*?)>", "<$1p$2>")
+														 + "</div>"
+														 + "\r\n");
+								} else {
+									chapterHTML.append(
+											  "<div>"
+														 + verseText.replaceAll("<(/)*div(.*?)>", "<$1p$2>")
+														 + "</div>"
+														 + "\r\n");
+								}
 							}
 						} while (isSequenced && isSequencedNext);
 
