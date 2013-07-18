@@ -175,7 +175,7 @@ public class BookmarksFragment extends SherlockListFragment implements AdapterVi
 	private IBookmarksListener listener;
 
 	public void setBookmarksListener(IBookmarksListener listener) {
-		Log.i(TAG, "Set listener");
+		Log.i(TAG, "Set bookmarks listener");
 		this.listener = listener;
 	}
 
