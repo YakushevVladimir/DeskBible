@@ -161,7 +161,7 @@ public class FsChapterController implements IChapterController {
 
 
 								int iChapterNumber = verseQueue.getChapter();
-								int iVerseNumber = verseQueue.getNumber();
+								int iVerseNumber = verseQueue.getNumber() + 1;
 
 								String verseText = verseQueue.getText();
 

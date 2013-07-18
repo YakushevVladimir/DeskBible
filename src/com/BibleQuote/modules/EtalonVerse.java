@@ -9,8 +9,8 @@ package com.BibleQuote.modules;
  */
 
 public class EtalonVerse {
-	public int iChapterNumber;
-	public int iVerseNumber;
+	public final int iChapterNumber;
+	public final int iVerseNumber;
 
 	public EtalonVerse(int iCh, int iVs) {
 		this.iChapterNumber = iCh;
