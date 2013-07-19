@@ -35,13 +35,11 @@
 			android:layout_width="wrap_content"
 			android:layout_height="fill_parent"
 			android:layout_alignParentRight="true"
-			android:layout_alignParentTop="true"
 			android:gravity="center_vertical|right"
-			android:paddingLeft="5dp"
 			android:textColor="#6e6e6e"
 			android:textSize="@dimen/text_size_very_small"
-			android:singleLine="true"
 			android:ellipsize="end"
+			android:singleLine="true"
 			android:text="2 May, 2013"/>
 
 		<TextView
@@ -49,14 +47,12 @@
 			android:layout_width="fill_parent"
 			android:layout_height="fill_parent"
 			android:layout_alignParentLeft="true"
-			android:layout_alignParentTop="true"
-			android:layout_toLeftOf="@+id/date"
-			android:gravity="center_vertical|left"
 			android:textColor="@android:color/black"
+			android:gravity="center_vertical|left"
 			android:textSize="@dimen/text_size_medium"
 			android:singleLine="true"
 			android:ellipsize="end"
-			android:text="KJV:1Samuel 3:1"/>
+			android:text="KJV:1Samuel 3:1" />
 
 	</RelativeLayout>
 
@@ -64,14 +60,14 @@
 		android:id="@+id/tags"
 		android:layout_width="fill_parent"
 		android:layout_height="16dp"
-		android:layout_gravity="center_vertical|left"
-		android:gravity="center_vertical|left"
-		android:paddingBottom="2dp"
-		android:drawableLeft="@drawable/ic_list_tag"
+		android:drawableLeft="@drawable/abs__list_pressed_holo_light"
 		android:drawablePadding="4dip"
-		android:textColor="#6e6e6e"
 		android:textSize="@dimen/text_size_very_small"
+		android:text="@string/no_tags"
 		android:singleLine="true"
-		android:text="@string/no_tags"/>
+		android:layout_gravity="center_vertical|left"
+		android:textColor="#6e6e6e"
+		android:paddingBottom="2dp"
+		android:gravity="center_vertical|left"/>
 
 </com.BibleQuote.ui.widget.listview.itemview.BookmarkItemView>

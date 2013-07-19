@@ -28,5 +28,5 @@
 	android:ellipsize="end"
 	android:textColor="@android:color/black"
 	android:textSize="@dimen/text_size_medium"
-	android:background="@android:drawable/list_selector_background"
+	android:background="@android:color/white"
 	android:gravity="center_vertical" />
