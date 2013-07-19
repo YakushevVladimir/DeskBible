@@ -97,7 +97,7 @@
 				android:summaryOn="@string/enabled"
 				android:title="@string/text_align_justify" />
 		<CheckBoxPreference
-				android:defaultValue="true"
+				android:defaultValue="false"
 				android:key="show_short_name_partrans"
 				android:summary="@string/show_short_name_partrans_summary"
 				android:title="@string/show_short_name_partrans" />
