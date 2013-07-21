@@ -63,7 +63,15 @@ public class SplashActivity extends SherlockActivity implements OnTaskCompleteLi
 	@Override
 	public void onTaskComplete(Task task) {
 		Log.i(TAG, "Start reader activity");
-		startActivity(new Intent(this, ReaderActivity.class));
+
+		BibleQuoteApp app = (BibleQuoteApp) getApplication();
+
+		if (app.isServiceRunning()) {
+			startActivity(new Intent(this, ServiceActivity.class));
+		} else {
+			startActivity(new Intent(this, ReaderActivity.class));
+		}
+
 		finish();
 	}
 }

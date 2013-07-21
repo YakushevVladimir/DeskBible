@@ -60,7 +60,8 @@
 		<activity android:name=".ui.SettingsActivity" android:label="@string/settings"/>
 		<activity android:name=".ui.AboutActivity" android:label="@string/about"/>
 		<activity android:name=".ui.HelpActivity" android:label="@string/help"/>
-		<activity android:name=".ui.ReaderActivity" android:configChanges="keyboardHidden|orientation"/>
+		<activity android:name=".ui.ReaderActivity" android:configChanges="keyboardHidden|orientation" android:launchMode="singleTask"/>
+		<activity android:name=".ui.ServiceActivity" android:label="@string/service" android:launchMode="singleTask"/>
 
 		<activity android:name=".ui.CrossReferenceActivity" android:label="@string/cross_reference">
 			<intent-filter>
@@ -68,6 +69,12 @@
 				<category android:name="android.intent.category.DEFAULT"/>
 			</intent-filter>
 		</activity>
+
+		<service
+				android:name="com.BibleQuote.BibleQuoteService"
+				android:icon="@drawable/icon"
+				android:enabled="true"
+				android:exported="false" />
 
 	</application>
 

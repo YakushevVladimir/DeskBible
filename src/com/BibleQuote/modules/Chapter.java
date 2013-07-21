@@ -76,13 +76,23 @@ public class Chapter {
 		this.book = book;
 		this.number = number;
 
-		Integer verseNumber = 1;
-		for (Verse verse : verseList) {
-			verses.put(verseNumber++, verse);
+		if (verseList != null) {
+			Integer verseNumber = 1;
+			for (Verse verse : verseList) {
+				verses.put(verseNumber++, verse);
+			}
 		}
 	}
 
 	public Book getBook() {
 		return book;
+	}
+
+	public int size() {
+		return verses.size();
+	}
+
+	public Verse getVerse(int verseNumber) {
+		return verses.get(verseNumber);
 	}
 }
