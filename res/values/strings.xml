@@ -71,7 +71,10 @@
     <string name="menu_search">Search</string>
     <string name="menu_help">Help</string>
     <string name="menu_settings">Settings</string>
-    <!-- Dialogs -->
+	<string name="menu_partranslates">Parallel Translates</string>
+	<string name="menu_partranslates_switch">Translates On/Off</string>
+	<string name="menu_partranslates_checkversmap">Check of Versification Map</string>
+	<!-- Dialogs -->
     <string name="find">Find</string>
     <string name="menu">Menu</string>
     <string name="cancel">Cancel</string>
@@ -109,6 +112,8 @@
     <string name="volume_butons_to_scroll">Volume buttons to scroll</string>
     <string name="disabled">Disabled</string>
     <string name="text_align_justify">Align text to the width</string>
+	<string name="show_short_name_partrans">Short name of parallel module</string>
+	<string name="show_short_name_partrans_summary">Show in verse short name of module in \"Parallel Translates\" mode</string>
     <string name="font_family">Font family</string>
     <string name="category_social">Social functions</string>
     <string name="share_passage">Share passage</string>
@@ -124,4 +129,14 @@
 	<string name="no_tags">No tags</string>
 	<string name="empty">Empty</string>
 	<string name="tags">Tags</string>
+	<!-- Service -->
+	<string name="service">Control of Service</string>
+	<string name="service_title">Checking of\nVersification Map</string>
+	<string name="service_passnum">Pass: %1$s/2</string>
+	<string name="service_fromto">From %1$s to %2$s</string>
+	<string name="service_currbook">Book: %1$s (%2$s/%3$s)</string>
+	<string name="service_willupd">Info will be updated\non the next book</string>
+	<string name="service_btn_stop">Stop Checking</string>
+	<string name="service_notif_title">Checking of Versificaton Map</string>
+	<string name="service_notif_text">For %1$s and %2$s</string>
 </resources>

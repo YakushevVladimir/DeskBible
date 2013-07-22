@@ -70,7 +70,7 @@
 		BookQty=%2$s, PathName#=%3$s, FullName#=%4$s, ShortName#=%5$s,
 		ChapterQty#=%6$s</string>
     <string name="exception_open_module_short">Некорректный модуль %1$s</string>
-    <string name="exception_book_not_found">Книга %1$s не найден а в модуле %2$s</string>
+    <string name="exception_book_not_found">Книга %1$s не найдена в модуле %2$s</string>
     <string name="exception_book_definition">Некорректные параметры книги #%1$s в модуле %2$s:
 		PathName=%3$s, FullName=%4$s, ShortName=%5$s, ChapterQty=%6$s</string>
     <string name="category_reports_summary">Настройки параметров отправки</string>

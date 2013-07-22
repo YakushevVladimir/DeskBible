@@ -90,7 +90,8 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 	private final int ID_BOOKMARKS = 4;
 	private final int ID_PARALLELS = 5;
 	private final int ID_SETTINGS = 6;
-
+	private final int ID_PARTRANSLATES = 7;
+	private final int ID_CHECKVERSMAP = 8;
 	@Override
 	public void onStopSpeak() {
 		hideTTSPlayer();
@@ -155,34 +156,71 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.reader);
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-		setVolumeControlStream(AudioManager.STREAM_MUSIC);
-
-		getSupportActionBar().setIcon(R.drawable.app_logo);
-		getSupportActionBar().setDisplayShowTitleEnabled(false);
-		ViewUtils.setActionBarBackground(this);
-
 		BibleQuoteApp app = (BibleQuoteApp) getApplication();
-		myLibrarian = app.getLibrarian();
 
-		mAsyncManager = app.getAsyncManager();
-		mAsyncManager.handleRetainedTask(mTask, this);
-
-		initialyzeViews();
-		updateActivityMode();
-
-		BibleReference osisLink = new BibleReference(PreferenceHelper.restoreStateString("last_read"));
-		if (!myLibrarian.isOSISLinkValid(osisLink)) {
-			onChooseChapterClick();
+		if (app.isServiceRunning()) {
+			finish();
 		} else {
-			openChapterFromLink(osisLink);
+
+			setContentView(R.layout.reader);
+			getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+			setVolumeControlStream(AudioManager.STREAM_MUSIC);
+
+			getSupportActionBar().setIcon(R.drawable.app_logo);
+			getSupportActionBar().setDisplayShowTitleEnabled(false);
+			ViewUtils.setActionBarBackground(this);
+
+			myLibrarian = app.getLibrarian();
+
+			mAsyncManager = app.getAsyncManager();
+			mAsyncManager.handleRetainedTask(mTask, this);
+
+			initialyzeViews();
+			updateActivityMode();
+
+			BibleReference osisLink = new BibleReference(PreferenceHelper.restoreStateString("last_read"));
+			if (!myLibrarian.isOSISLinkValid(osisLink)) {
+				onChooseChapterClick();
+			} else {
+				openChapterFromLink(osisLink);
+			}
 		}
 	}
 
+
 	private void openChapterFromLink(BibleReference osisLink) {
-		mTask = new AsyncOpenChapter(progressMessage, false, myLibrarian, osisLink);
+		mTask = new AsyncOpenChapter(progressMessage, false, myLibrarian, osisLink, null);
 		mAsyncManager.setupTask(mTask, this);
+	}
+
+	private void openParChapterByModuleID(String ParModuleID) {
+		mTask = new AsyncOpenChapter(progressMessage, false, myLibrarian, null, ParModuleID);
+		mAsyncManager.setupTask(mTask, this);
+	}
+
+
+	private void CheckVersMapByModuleID(String toModuleID) {
+
+		// Всё приложение блокируется ServiceActivity на время выполнения CheckVersificationMap,
+		// чтобы контекст приложения (выбранные модули и прочее) не мог поменяться.
+
+
+		startActivity(new Intent(this, ServiceActivity.class)
+				  .putExtra(ServiceActivity.TO_MODULE_ID, toModuleID));
+
+		finish();
+	}
+
+	private void SelectParModule() {
+		Intent intentParTranslates = new Intent().setClass(getApplicationContext(), LibraryActivity.class);
+		intentParTranslates.putExtra("isForParModule", true);
+		startActivityForResult(intentParTranslates, ID_PARTRANSLATES);
+	}
+
+	private void SelectModuleForCheckVersMap() {
+		Intent intentParTranslates = new Intent().setClass(getApplicationContext(), LibraryActivity.class);
+		intentParTranslates.putExtra("isForParModule", true);
+		startActivityForResult(intentParTranslates, ID_CHECKVERSMAP);
 	}
 
 	private void initialyzeViews() {
@@ -254,6 +292,19 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 			case R.id.action_speek:
 				viewTTSPlayer();
 				break;
+			case R.id.action_bar_partranslates:
+				SelectParModule();
+				break;
+			case R.id.action_bar_partranslates_switch:
+				if (!myLibrarian.isParChapter()) {
+					SelectParModule();
+				}
+				myLibrarian.switchShowParTranslates();
+				viewCurrentChapter();
+				break;
+			case R.id.action_bar_partranslates_checkversmap:
+				SelectModuleForCheckVersMap();
+				break;
 			case R.id.Help:
 				Intent helpIntent = new Intent(this, HelpActivity.class);
 				startActivity(helpIntent);
@@ -304,6 +355,18 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 				BibleReference osisLink = new BibleReference(extras.getString("linkOSIS"));
 				if (myLibrarian.isOSISLinkValid(osisLink)) {
 					openChapterFromLink(osisLink);
+                }
+			} else if (requestCode == ID_PARTRANSLATES) {
+				Bundle extras = data.getExtras();
+				BibleReference osisParLink = new BibleReference(extras.getString("linkOSIS"));
+				if (myLibrarian.isOSISLinkValid(osisParLink)) {
+					openParChapterByModuleID(osisParLink.getModuleID());
+				}
+			} else if (requestCode == ID_CHECKVERSMAP) {
+				Bundle extras = data.getExtras();
+				BibleReference osisParLink = new BibleReference(extras.getString("linkOSIS"));
+				if (myLibrarian.isOSISLinkValid(osisParLink)) {
+					CheckVersMapByModuleID(osisParLink.getModuleID());
 				}
 			}
 		} else if (requestCode == ID_SETTINGS) {
@@ -446,7 +509,8 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 			if (task instanceof AsyncOpenChapter) {
 				AsyncOpenChapter t = ((AsyncOpenChapter) task);
 				if (t.isSuccess()) {
-					chapterInHTML = myLibrarian.getChapterHTMLView();
+					//chapterInHTML = myLibrarian.getChapterHTMLView();
+					chapterInHTML = myLibrarian.getParChapterHTMLView();
 					setTextInWebView();
 				} else {
 					Exception e = t.getException();

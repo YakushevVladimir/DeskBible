@@ -16,6 +16,7 @@
 
 package com.BibleQuote.test.modules;
 
+import com.BibleQuote.modules.VersificationMap;
 import com.BibleQuote.modules.Module;
 import junit.framework.Assert;
 import org.junit.Test;
@@ -38,7 +39,12 @@ public class ModuleTest {
             public String getDataSourceID() {
                 return null;
             }
-        };
+
+            @Override
+            public VersificationMap getVersificationMap() {
+                return null;
+            }
+		  };
         mod.language = null;
         Assert.assertEquals(mod.getLanguage(), "ru");
         mod.language = "ru-RU";

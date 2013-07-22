@@ -12,23 +12,33 @@ public class AsyncOpenChapter extends Task {
 
 	private Librarian librarian;
 	private BibleReference link;
+	private String ParModuleID;
 	private Exception exception;
 	private Boolean isSuccess;
 
-	public AsyncOpenChapter(String message, Boolean isHidden, Librarian librarian, BibleReference link) {
+	public AsyncOpenChapter(String message, Boolean isHidden, Librarian librarian, BibleReference link,
+							String ParModuleID) {
 		super(message, isHidden);
 		this.librarian = librarian;
 		this.link = link;
+		this.ParModuleID = ParModuleID;
 	}
 
 	@Override
 	protected Boolean doInBackground(String... arg0) {
 		isSuccess = false;
 		try {
-			Log.i(TAG, String.format("Open OSIS link with moduleID=%1$s, bookID=%2$s, chapterNumber=%3$s, verseNumber=%4$s",
-					link.getModuleID(), link.getBookID(), link.getChapter(), link.getFromVerse()));
+			if (link != null) {
+				Log.i(TAG, String.format("Open OSIS link with moduleID=%1$s, bookID=%2$s, chapterNumber=%3$s, verseNumber=%4$s",
+						link.getModuleID(), link.getBookID(), link.getChapter(), link.getFromVerse()));
 
-			librarian.openChapter(link);
+				librarian.openChapter(link);
+			} else if (ParModuleID != null) {
+				Log.i(TAG, String.format("Open ParChapter by moduleID=%1$s", ParModuleID));
+
+				librarian.openParChapter(ParModuleID);
+			}
+
 			isSuccess = true;
 
 		} catch (OpenModuleException e) {

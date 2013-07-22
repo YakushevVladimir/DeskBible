@@ -162,6 +162,13 @@ public class PreferenceHelper {
 		return preference.getBoolean("text_align_justify", false);
 	}
 
+	public static boolean showShortNameInParTrans() {
+		if (preference == null) {
+			return false;
+		}
+		return preference.getBoolean("show_short_name_partrans", false);
+	}
+
 	public static String getFontFamily() {
 		if (preference == null) {
 			return "sans-serif";
