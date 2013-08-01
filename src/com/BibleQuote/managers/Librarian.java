@@ -280,7 +280,11 @@ public class Librarian {
 					if (ChapterList == null) {
 						Chapter2 = getChapterByNumber(Book2, iChapNumber2);
 					} else {
-						Chapter2 = ChapterList.get(iChapNumber2);
+						if (iChapNumber2 < ChapterList.size()) {
+							Chapter2 = ChapterList.get(iChapNumber2);
+						} else {
+							Chapter2 = null;
+						}
 					}
 				}
 			}
@@ -325,7 +329,11 @@ public class Librarian {
 						if (ChapterList == null) {
 							Chapter2 = getChapterByNumber(Book2, iChapNumber2);
 						} else {
-							Chapter2 = ChapterList.get(iChapNumber2);
+							if (iChapNumber2 < ChapterList.size()) {
+								Chapter2 = ChapterList.get(iChapNumber2);
+							} else {
+								Chapter2 = null;
+							}
 						}
 					}
 				}
@@ -507,8 +515,9 @@ public class Librarian {
 					Book1 = getBookByID(Module1, book.getID());
 
 					ArrayList<Chapter> ChapterList1 = getAllChapters(Book1);
+					int iLastChapter = (Book1.getModule().ChapterZero) ? Book1.chapterQty - 1 : Book1.chapterQty;
 
-					for (int iCh = 1; iCh <= Book1.chapterQty; iCh++) {
+					for (int iCh = 1; iCh <= iLastChapter; iCh++) {
 						if (Thread.interrupted()) return;
 						arlEtalonChapters.add(getEtalonChapter(ChapterList1.get(iCh), Module1.getVersificationMap()));
 					}
@@ -580,8 +589,9 @@ public class Librarian {
 					Book2 = getBookByID(Module2, book.getID());
 
 					ArrayList<Chapter> ChapterList2 = getAllChapters(Book2);
+					int iLastChapter = (Book2.getModule().ChapterZero) ? Book2.chapterQty - 1 : Book2.chapterQty;
 
-					for (int iCh = 1; iCh <= Book2.chapterQty; iCh++) {
+					for (int iCh = 1; iCh <= iLastChapter; iCh++) {
 						if (Thread.interrupted()) return;
 						arlEtalonChapters.add(getEtalonChapter(ChapterList2.get(iCh), Module2.getVersificationMap()));
 					}
