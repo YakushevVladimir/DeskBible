@@ -372,6 +372,94 @@ public class FsLibraryContext extends LibraryContext {
 	}
 
 
+	public ArrayList<Chapter> loadAllChapters(Book book, BufferedReader bReader) {
+
+		ArrayList<Chapter> ChapterList;
+		int iCurrChapterNumber = book.getModule().ChapterZero ? 0 : 1;
+
+		if (iCurrChapterNumber == 1) {
+			ChapterList = new ArrayList<Chapter>(book.chapterQty + 1);
+			ChapterList.add(null);
+		} else {
+			ChapterList = new ArrayList<Chapter>(book.chapterQty);
+		}
+
+		String chapterSign = book.getModule().ChapterSign;
+		String str = null;
+
+		boolean isEndOfFile = false;
+
+		while (!isEndOfFile) {
+
+			ArrayList<String> lines = new ArrayList<String>();
+			try {
+
+				boolean chapterFind = false;
+
+				if (str != null) {
+					if (str.toLowerCase().contains(chapterSign)) {
+						chapterFind = true;
+						// Тег начала главы может быть не вначале строки.
+						// И остался от предыдущей главы.
+						// Обрежем все, что есть до теги начала главы и добавим
+						// к найденным строкам
+						str = str.substring(str.toLowerCase().indexOf(chapterSign));
+						lines.add(str);
+					}
+				}
+
+				while ((str = bReader.readLine()) != null) {
+					if (str.toLowerCase().contains(chapterSign)) {
+						if (chapterFind) {
+							// Тег начала главы может быть не вначале строки.
+							// Возьмем то, что есть до теги начала главы и добавим
+							// к найденным строкам
+							String str2 = str.substring(0, str.toLowerCase().indexOf(chapterSign));
+							if (str2.trim().length() > 0) {
+								lines.add(str2);
+							}
+							break;
+						} else {
+							chapterFind = true;
+							// Тег начала главы может быть не вначале строки.
+							// Обрежем все, что есть до теги начала главы и добавим
+							// к найденным строкам
+							str = str.substring(str.toLowerCase().indexOf(chapterSign));
+						}
+					}
+					if (!chapterFind) {
+						continue;
+					}
+
+					lines.add(str);
+				}
+
+				isEndOfFile = (str == null);
+
+			} catch (IOException e) {
+				Log.e(TAG, String.format("loadAllChapter(%1$s, %2$s)", book.getID(), iCurrChapterNumber), e);
+				return null;
+			}
+
+			ArrayList<Verse> verseList = new ArrayList<Verse>();
+			String verseSign = book.getModule().VerseSign;
+			int i = -1;
+			for (String currLine : lines) {
+				if (currLine.toLowerCase().contains(verseSign)) {
+					i++;
+					verseList.add(new Verse(i, currLine));
+				} else if (verseList.size() > 0) {
+					verseList.set(i, new Verse(i, verseList.get(i).getText() + " " + currLine));
+				}
+			}
+
+			ChapterList.add(new Chapter(book, iCurrChapterNumber++, verseList));
+		}
+
+		return ChapterList;
+	}
+
+
 	public LinkedHashMap<String, String> searchInBook(Module module, String bookID, String searchQuery, BufferedReader bReader) {
 		LinkedHashMap<String, String> searchRes = new LinkedHashMap<String, String>();
 

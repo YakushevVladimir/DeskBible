@@ -13,6 +13,8 @@ public interface IChapterController {
 
 	public Chapter getChapter(Book book, Integer chapterNumber) throws BookNotFoundException;
 
+	public ArrayList<Chapter> getAllChapters(Book book) throws BookNotFoundException;
+
 	public ArrayList<Integer> getVerseNumbers(Book book, Integer chapterNumber) throws BookNotFoundException;
 
 	public String getChapterHTMLView(Chapter chapter);

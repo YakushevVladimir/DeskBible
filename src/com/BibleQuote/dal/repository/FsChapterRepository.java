@@ -85,6 +85,34 @@ public class FsChapterRepository implements IChapterRepository<FsBook> {
 	}
 
 
+	public ArrayList<Chapter> loadAllChapters(FsBook book) throws BookNotFoundException {
+		ArrayList<Chapter> ChapterList = null;
+		BufferedReader reader = null;
+		String bookID = "";
+		String moduleID = "";
+		try {
+			bookID = book.getID();
+			moduleID = book.getModule().getID();
+			reader = context.getBookReader(book);
+
+			ChapterList = context.loadAllChapters(book, reader);
+		} catch (FileAccessException e) {
+			Log.e(TAG, "Can't load all chapters of book with ID=" + bookID, e);
+			throw new BookNotFoundException(moduleID, bookID);
+
+		} finally {
+			try {
+				if (reader != null) {
+					reader.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return ChapterList;
+	}
+
+
 	public void insertChapter(Chapter chapter) {
 	}
 
