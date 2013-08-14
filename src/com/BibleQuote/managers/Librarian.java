@@ -351,17 +351,12 @@ public class Librarian {
 					if (vsVerse2 != null) {
 
 						if (!isCheckingVersMap) {
-							sVerseText2 = vsVerse2.getText();
-
 							// speedup (вынос Pattern.compile("\\d") за цикл прироста не дал)
-							Matcher mMatcher = Pattern.compile("\\d").matcher(sVerseText2);
-
-							if (mMatcher.find()) {
-
-								// speedup (StringBuilder вместо "+" прироста скорости не дал)
-								sVerseText2 = sVerseText2.substring(0, mMatcher.start())
-										  + sModuleShortNameWithDot + sChapNumber2 + "." + sVerseText2.substring(mMatcher.start());
-							}
+							// speedup (StringBuilder вместо "+" прироста скорости не дал)
+							sVerseText2 = vsVerse2.getText()
+									  .replaceAll("((^|\\n)(<[^/]+?>)*?)(\\d+)(</(.)+?>){0,1}?\\s+",
+												 "$1" + sModuleShortNameWithDot + sChapNumber2 + "." + "$4$5 ")
+									  .replaceAll("null", "");
 						}
 					} else isVerse2 = false;
 				} else isVerse2 = false;
