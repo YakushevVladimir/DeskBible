@@ -36,6 +36,8 @@ public class ServiceActivity extends SherlockFragmentActivity {
 	public final static String BOOK_NUMBER = "BookNumber";
 	public final static String BOOKS_QTY = "BooksQty";
 
+	public final static String SERVICE_FINISH = "ServiceFinish";
+
 	public final static int STATUS_FINISH = 200;
 
 	private BroadcastReceiver broadcastReceiver;
@@ -114,7 +116,7 @@ public class ServiceActivity extends SherlockFragmentActivity {
 							unbindService(serviceConnection);
 							isBound = false;
 						}
-						startActivity(new Intent(ServiceActivity.this, ReaderActivity.class));
+						startActivity(new Intent(ServiceActivity.this, ReaderActivity.class).putExtra(SERVICE_FINISH, true));
 						finish();
 						break;
 

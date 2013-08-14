@@ -140,6 +140,10 @@ public class Librarian {
 		return chapterCtrl.getChapter(book, chapterNumber);
 	}
 
+	public ArrayList<Chapter> getAllChapters(Book book) throws BookNotFoundException {
+		return chapterCtrl.getAllChapters(book);
+	}
+
 	public Chapter openChapter(BibleReference link) throws BookNotFoundException, OpenModuleException {
 		currModule = getModuleByID(link.getModuleID());
 		currBook = getBookByID(getCurrModule(), link.getBookID());
@@ -215,82 +219,173 @@ public class Librarian {
 	}
 
 
-	public ChapterQueue getChapterQueueFromEtalon(EtalonChapter etalonChapter, Book toBook,
-												  VersificationMap versificationMap, FileOutputStream fosVersMapLogErr)
-			throws BookNotFoundException {
+	public ChapterQueue getChapterQueueFromEtalon(EtalonChapter etalonChapter, Book toBook, ArrayList<Chapter> ChapterList,
+																 VersificationMap versificationMap, PrintWriter pwVersMapLogErr)
+			  throws BookNotFoundException {
+
+		String sBookOsisID1 = etalonChapter.Book_OSIS_ID;
+		Book Book2 = toBook;
+
+		String sModuleShortNameWithDot = (PreferenceHelper.showShortNameInParTrans()) ? Book2.getModule().ShortName + "." : "";
+		ChapterQueue chapterQueue = new ChapterQueue(Book2);
+		boolean isChapterWithErr = false;
+
+		boolean isCheckingVersMap = (pwVersMapLogErr != null);
+
+		int iChapNumber1_old = 0;
+		int iChapNumber2_old = 0;
+
+		String sChapNumber1 = "";
+		//String sChapterOsisID1 = "";
+
+		int iChapNumber2 = 0;
+		String sChapNumber2 = "";
+		Chapter Chapter2 = null;
 
 
-		try {
+		for (int iEtVerse = 0; iEtVerse < etalonChapter.size(); iEtVerse++) {
 
-			String sBookOsisID1 = etalonChapter.Book_OSIS_ID;
-			Book Book2 = toBook;
+			EtalonVerse etalonVerse = etalonChapter.get(iEtVerse);
 
-			String sModuleShortNameWithDot = (PreferenceHelper.showShortNameInParTrans()) ? Book2.getModule().ShortName + "." : "";
-			ChapterQueue chapterQueue = new ChapterQueue(Book2);
-			boolean isChapterWithErr = false;
+			int iChapNumber1 = etalonVerse.iChapterNumber;
+			int iVsNumber1 = etalonVerse.iVerseNumber;
+			boolean isNewChapter1 = (iChapNumber1_old != iChapNumber1);
 
-			boolean isCheckingVersMap = (fosVersMapLogErr != null);
-
-			int iChapNumber1_old = 0;
-			int iChapNumber2_old = 0;
-
-			String sChapNumber1 = "";
-			//String sChapterOsisID1 = "";
-
-			int iChapNumber2 = 0;
-			String sChapNumber2 = "";
-			Chapter Chapter2 = null;
+			if (isNewChapter1) {
+				sChapNumber1 = Integer.toString(iChapNumber1);
+				//sChapterOsisID1 = sBookOsisID1 + "." + sChapNumber1;
+			}
 
 
-			for (int iEtVerse = 0; iEtVerse < etalonChapter.size(); iEtVerse++) {
+			//String sVsNumber1 = Integer.toString(iVsNumber1);
+			//String sVsNumber2 = sVsNumber1;
+			//String sVerseOsisID1 = sChapterOsisID1 + "." + sVsNumber1;
+			//String sBookOsisID2 = sBookOsisID1;
+			//String sChapterOsisID2 = sChapterOsisID1;
+			//String sVerseOsisID2 = sVerseOsisID1;
 
-				EtalonVerse etalonVerse = etalonChapter.get(iEtVerse);
 
-				int iChapNumber1 = etalonVerse.iChapterNumber;
-				int iVsNumber1 = etalonVerse.iVerseNumber;
-				boolean isNewChapter1 = (iChapNumber1_old != iChapNumber1);
+			VersificationMap.VerseDifferences verseDiffs =
+					  versificationMap.getMapForVerse(false, sBookOsisID1, iChapNumber1, iVsNumber1);
 
-				if (isNewChapter1) {
-					sChapNumber1 = Integer.toString(iChapNumber1);
-					//sChapterOsisID1 = sBookOsisID1 + "." + sChapNumber1;
+
+			iChapNumber2 = iChapNumber1 + verseDiffs.iDifCh;
+
+			boolean isNewChapter2 = (iChapNumber2_old != iChapNumber2);
+
+			if (isNewChapter2) {
+				sChapNumber2 = Integer.toString(iChapNumber2);
+
+				if (Book2 != null) {
+					if (ChapterList == null) {
+						Chapter2 = getChapterByNumber(Book2, iChapNumber2);
+					} else {
+						if (iChapNumber2 < ChapterList.size()) {
+							Chapter2 = ChapterList.get(iChapNumber2);
+						} else {
+							Chapter2 = null;
+						}
+					}
 				}
+			}
 
 
-				//String sVsNumber1 = Integer.toString(iVsNumber1);
-				//String sVsNumber2 = sVsNumber1;
-				//String sVerseOsisID1 = sChapterOsisID1 + "." + sVsNumber1;
-				//String sBookOsisID2 = sBookOsisID1;
-				//String sChapterOsisID2 = sChapterOsisID1;
-				//String sVerseOsisID2 = sVerseOsisID1;
+			//sBookOsisID2 = sIntoBook;
+			//sChapterOsisID2 = sBookOsisID2 + "." + sChapNumber2;
 
 
-				VersificationMap.VerseDifferences verseDiffs =
-						versificationMap.getMapForVerse(false, sBookOsisID1, iChapNumber1, iVsNumber1);
+			int iSequenceFlags = 0;
+
+			if (verseDiffs.iVsRepeated != 0) {
+				iSequenceFlags = iSequenceFlags | VerseQueue.SEQ_REPEATED;
+			}
+
+			if (verseDiffs.iCountSequence != 0) {
+				iSequenceFlags = iSequenceFlags | VerseQueue.SEQ_SEQUENCED;
+			}
+
+			if (iSequenceFlags == 0) {
+				iSequenceFlags = VerseQueue.SEQ_NORMAL;
+			}
 
 
-				iChapNumber2 = iChapNumber1 + verseDiffs.iDifCh;
+			//int iSeqVerse = (verseDiffs.iVsRepeated != 0 && iVsNumber1 != 1) ? 1 : 0;  -- при отображении повтор стиха иногда нужен (по строкам)
+			int iSeqVerse = 0;
+			int iSeqEnd = (verseDiffs.iCountSequence == 0 || verseDiffs.iCountSequence == 1) ? 1 : verseDiffs.iCountSequence;
+			int iVsNumber2 = iVsNumber1 + verseDiffs.iDifVs;  // + iSeqVerse;  -- iSeqVerse == 0
+			//sVsNumber2 = Integer.toString(iVsNumber2);
+			//sVerseOsisID2 = sChapterOsisID2 + "." + sVsNumber2;
 
-				boolean isNewChapter2 = (iChapNumber2_old != iChapNumber2);
 
-				if (isNewChapter2) {
+			while (iSeqVerse < iSeqEnd) {
+
+				if (verseDiffs.iNextChapter > 1 && iSeqVerse == verseDiffs.iNextChapter - 1) {
+					iChapNumber2++;
+					iVsNumber2 = 1;
+
 					sChapNumber2 = Integer.toString(iChapNumber2);
 
 					if (Book2 != null) {
-						Chapter2 = getChapterByNumber(Book2, iChapNumber2);
+						if (ChapterList == null) {
+							Chapter2 = getChapterByNumber(Book2, iChapNumber2);
+						} else {
+							if (iChapNumber2 < ChapterList.size()) {
+								Chapter2 = ChapterList.get(iChapNumber2);
+							} else {
+								Chapter2 = null;
+							}
+						}
 					}
 				}
 
 
-				//sBookOsisID2 = sIntoBook;
-				//sChapterOsisID2 = sBookOsisID2 + "." + sChapNumber2;
+				String sVerseText2 = "---";
+				boolean isVerse2 = true;
 
 
-				int iSequenceFlags = 0;
+				if (Chapter2 != null) {
 
-				if (verseDiffs.iVsRepeated != 0) {
-					iSequenceFlags = iSequenceFlags | VerseQueue.SEQ_REPEATED;
+					// speedup (введение Chapter2 прироста скорости не дал)
+					Verse vsVerse2 = Chapter2.getVerse(iVsNumber2);
+
+					if (vsVerse2 != null) {
+
+						if (!isCheckingVersMap) {
+							// speedup (вынос Pattern.compile("\\d") за цикл прироста не дал)
+							// speedup (StringBuilder вместо "+" прироста скорости не дал)
+							sVerseText2 = vsVerse2.getText()
+									  .replaceAll("((^|\\n)(<[^/]+?>)*?)(\\d+)(</(.)+?>){0,1}?\\s+",
+												 "$1" + sModuleShortNameWithDot + sChapNumber2 + "." + "$4$5 ")
+									  .replaceAll("null", "");
+						}
+					} else isVerse2 = false;
+				} else isVerse2 = false;
+
+
+				if (!isCheckingVersMap) {
+					VerseQueue verseQueue =
+							  new VerseQueue(iChapNumber2, (iVsNumber2 - 1), sVerseText2, iSequenceFlags);
+
+					chapterQueue.offer(verseQueue);
 				}
 
+
+				if (isCheckingVersMap && !isVerse2) {
+					String sVsNumber1 = Integer.toString(iVsNumber1);
+					String sVsNumber2 = Integer.toString(iVsNumber2);
+
+					String sErrVerse = "Etalon." + Book2.OSIS_ID + "." + sChapNumber1 + "." + sVsNumber1 + " -- " +
+							  Book2.getModule().ShortName + "." + Book2.OSIS_ID
+							  + "." + sChapNumber2 + "." + sVsNumber2;
+
+					pwVersMapLogErr.println(sErrVerse);
+
+					isChapterWithErr = true;
+
+				}
+
+
+				iSequenceFlags = 0;
 				if (verseDiffs.iCountSequence != 0) {
 					iSequenceFlags = iSequenceFlags | VerseQueue.SEQ_SEQUENCED;
 				}
@@ -300,116 +395,21 @@ public class Librarian {
 				}
 
 
-				//int iSeqVerse = (verseDiffs.iVsRepeated != 0 && iVsNumber1 != 1) ? 1 : 0;  -- при отображении повтор стиха иногда нужен (по строкам)
-				int iSeqVerse = 0;
-				int iSeqEnd = (verseDiffs.iCountSequence == 0 || verseDiffs.iCountSequence == 1) ? 1 : verseDiffs.iCountSequence;
-				int iVsNumber2 = iVsNumber1 + verseDiffs.iDifVs;  // + iSeqVerse;  -- iSeqVerse == 0
-				//sVsNumber2 = Integer.toString(iVsNumber2);
-				//sVerseOsisID2 = sChapterOsisID2 + "." + sVsNumber2;
-
-
-				while (iSeqVerse < iSeqEnd) {
-
-					if (verseDiffs.iNextChapter > 1 && iSeqVerse == verseDiffs.iNextChapter - 1) {
-						iChapNumber2++;
-						iVsNumber2 = 1;
-
-						sChapNumber2 = Integer.toString(iChapNumber2);
-
-						if (Book2 != null) {
-							Chapter2 = getChapterByNumber(Book2, iChapNumber2);
-						}
-					}
-
-
-					String sVerseText2 = "---";
-					boolean isVerse2 = true;
-
-
-					if (Chapter2 != null) {
-
-						// speedup (введение Chapter2 прироста скорости не дал)
-						Verse vsVerse2 = Chapter2.getVerse(iVsNumber2);
-
-						if (vsVerse2 != null) {
-
-							if (!isCheckingVersMap) {
-								sVerseText2 = vsVerse2.getText();
-
-								// speedup (вынос Pattern.compile("\\d") за цикл прироста не дал)
-								Matcher mMatcher = Pattern.compile("\\d").matcher(sVerseText2);
-
-								if (mMatcher.find()) {
-
-									// speedup (StringBuilder вместо "+" прироста скорости не дал)
-									sVerseText2 = sVerseText2.substring(0, mMatcher.start())
-											+ sModuleShortNameWithDot + sChapNumber2 + "." + sVerseText2.substring(mMatcher.start());
-								}
-							}
-						} else isVerse2 = false;
-					} else isVerse2 = false;
-
-
-					if (!isCheckingVersMap) {
-						VerseQueue verseQueue =
-								new VerseQueue(iChapNumber2, (iVsNumber2 - 1), sVerseText2, iSequenceFlags);
-
-						chapterQueue.offer(verseQueue);
-					}
-
-
-					if (isCheckingVersMap && !isVerse2) {
-						String sVsNumber1 = Integer.toString(iVsNumber1);
-						String sVsNumber2 = Integer.toString(iVsNumber2);
-
-						String sErrVerse = "Etalon." + Book2.OSIS_ID + "." + sChapNumber1 + "." + sVsNumber1 + " -- " +
-								Book2.getModule().ShortName + "." + Book2.OSIS_ID
-								+ "." + sChapNumber2 + "." + sVsNumber2;
-
-						fosVersMapLogErr.write(sErrVerse.getBytes("UTF-8"));
-						fosVersMapLogErr.write(0x0A);
-
-						isChapterWithErr = true;
-
-					}
-
-
-					iSequenceFlags = 0;
-					if (verseDiffs.iCountSequence != 0) {
-						iSequenceFlags = iSequenceFlags | VerseQueue.SEQ_SEQUENCED;
-					}
-
-					if (iSequenceFlags == 0) {
-						iSequenceFlags = VerseQueue.SEQ_NORMAL;
-					}
-
-
-					iVsNumber2++;
-					iSeqVerse++;
-				}
-
-				iChapNumber1_old = iChapNumber1;
-				iChapNumber2_old = iChapNumber2;
+				iVsNumber2++;
+				iSeqVerse++;
 			}
 
-
-			if (isCheckingVersMap && isChapterWithErr) {
-				fosVersMapLogErr.write(0x0A);
-			}
-
-
-			return chapterQueue;
-
-
-		} catch (UnsupportedEncodingException e) {
-			// TODO заменить e.printStackTrace()
-			//e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-			return null;
-		} catch (IOException e) {
-			// TODO заменить e.printStackTrace()
-			//e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-			return null;
+			iChapNumber1_old = iChapNumber1;
+			iChapNumber2_old = iChapNumber2;
 		}
+
+
+		if (isCheckingVersMap && isChapterWithErr) {
+			pwVersMapLogErr.println();
+		}
+
+
+		return chapterQueue;
 	}
 
 
@@ -420,14 +420,14 @@ public class Librarian {
 
 		EtalonChapter etalonChapter = getEtalonChapter(currChapter, currModule.getVersificationMap());
 
-		ChapterQueue chapterQueue_1 = getChapterQueueFromEtalon(etalonChapter, currBook,
+		ChapterQueue chapterQueue_1 = getChapterQueueFromEtalon(etalonChapter, currBook, null,
 				  currModule.getVersificationMap(), null);
 
 
 		Module ParModule = getModuleByID(ParModuleID);
 		Book ParBook = getBookByID(ParModule, currBook.getID());
 
-		ChapterQueue chapterQueue_2 = getChapterQueueFromEtalon(etalonChapter, ParBook,
+		ChapterQueue chapterQueue_2 = getChapterQueueFromEtalon(etalonChapter, ParBook, null,
 				  ParModule.getVersificationMap(), null);
 
 
@@ -474,17 +474,12 @@ public class Librarian {
 			String LogErrFilePath = sDirOfModules + File.separator + LogErrFileName;
 
 
-			FileOutputStream fosLogErr = new FileOutputStream(LogErrFilePath);
+			PrintWriter pwLogErr = new PrintWriter(LogErrFilePath, "utf-8");
 
-			fosLogErr.write(0x0A);
-			fosLogErr.write("=================================".getBytes("UTF-8"));
-			fosLogErr.write(0x0A);
-
-			String sHeader = "From " + Module1.ShortName + " Module to " + Module2.ShortName + " Module";
-
-			fosLogErr.write(sHeader.getBytes("UTF-8"));
-			fosLogErr.write(0x0A);
-			fosLogErr.write(0x0A);
+			pwLogErr.println();
+			pwLogErr.println("=================================");
+			pwLogErr.println("From " + Module1.ShortName + " Module to " + Module2.ShortName + " Module");
+			pwLogErr.println();
 
 
 			ArrayList<Book> bookList = getBookList(Module1);
@@ -514,9 +509,12 @@ public class Librarian {
 					// (FsBookRepository.context.bookSet)
 					Book1 = getBookByID(Module1, book.getID());
 
-					for (int iCh = 1; iCh <= Book1.chapterQty; iCh++) {
+					ArrayList<Chapter> ChapterList1 = getAllChapters(Book1);
+					int iLastChapter = (Book1.getModule().ChapterZero) ? Book1.chapterQty - 1 : Book1.chapterQty;
+
+					for (int iCh = 1; iCh <= iLastChapter; iCh++) {
 						if (Thread.interrupted()) return;
-						arlEtalonChapters.add(getEtalonChapter(getChapterByNumber(Book1, iCh), Module1.getVersificationMap()));
+						arlEtalonChapters.add(getEtalonChapter(ChapterList1.get(iCh), Module1.getVersificationMap()));
 					}
 
 
@@ -525,14 +523,12 @@ public class Librarian {
 						// for Book1 from Etalon
 						for (int iCh = 0; iCh < arlEtalonChapters.size(); iCh++) {
 							if (Thread.interrupted()) return;
-							getChapterQueueFromEtalon(arlEtalonChapters.get(iCh), Book1, Module1.getVersificationMap(), fosLogErr);
+							getChapterQueueFromEtalon(arlEtalonChapters.get(iCh), Book1, ChapterList1, Module1.getVersificationMap(), pwLogErr);
 						}
 					}
 
 				} catch (BookNotFoundException e) {
-					String sMessage = "Book " + book.getID() + " in module " + Module1.getID() + " not found";
-					fosLogErr.write(sMessage.getBytes("UTF-8"));
-					fosLogErr.write(0x0A);
+					pwLogErr.println("Book " + book.getID() + " in module " + Module1.getID() + " not found");
 					//e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
 				}
 
@@ -541,30 +537,25 @@ public class Librarian {
 				try {
 					Book2 = getBookByID(Module2, book.getID());
 
+					ArrayList<Chapter> ChapterList2 = getAllChapters(Book2);
+
 					// for Book2 from Etalon
 					for (int iCh = 0; iCh < arlEtalonChapters.size(); iCh++) {
 						if (Thread.interrupted()) return;
-						getChapterQueueFromEtalon(arlEtalonChapters.get(iCh), Book2, Module2.getVersificationMap(), fosLogErr);
+						getChapterQueueFromEtalon(arlEtalonChapters.get(iCh), Book2, ChapterList2, Module2.getVersificationMap(), pwLogErr);
 					}
 				} catch (BookNotFoundException e) {
-					String sMessage = "Book " + book.getID() + " in module " + Module2.getID() + " not found";
-					fosLogErr.write(sMessage.getBytes("UTF-8"));
-					fosLogErr.write(0x0A);
+					pwLogErr.println("Book " + book.getID() + " in module " + Module1.getID() + " not found");
 					//e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
 				}
 			}
 
 
-			fosLogErr.write(0x0A);
-			fosLogErr.write(0x0A);
-			fosLogErr.write("=================================".getBytes("UTF-8"));
-			fosLogErr.write(0x0A);
-
-			sHeader = "From " + Module2.ShortName + " Module to " + Module1.ShortName + " Module";
-
-			fosLogErr.write(sHeader.getBytes("UTF-8"));
-			fosLogErr.write(0x0A);
-			fosLogErr.write(0x0A);
+			pwLogErr.println();
+			pwLogErr.println();
+			pwLogErr.println("=================================");
+			pwLogErr.println("From " + Module2.ShortName + " Module to " + Module1.ShortName + " Module");
+			pwLogErr.println();
 
 
 			for (int iBookNumber = 0; iBookNumber < bookList.size(); iBookNumber++) {
@@ -592,9 +583,12 @@ public class Librarian {
 					// (FsBookRepository.context.bookSet)
 					Book2 = getBookByID(Module2, book.getID());
 
-					for (int iCh = 1; iCh <= Book2.chapterQty; iCh++) {
+					ArrayList<Chapter> ChapterList2 = getAllChapters(Book2);
+					int iLastChapter = (Book2.getModule().ChapterZero) ? Book2.chapterQty - 1 : Book2.chapterQty;
+
+					for (int iCh = 1; iCh <= iLastChapter; iCh++) {
 						if (Thread.interrupted()) return;
-						arlEtalonChapters.add(getEtalonChapter(getChapterByNumber(Book2, iCh), Module2.getVersificationMap()));
+						arlEtalonChapters.add(getEtalonChapter(ChapterList2.get(iCh), Module2.getVersificationMap()));
 					}
 
 
@@ -603,14 +597,12 @@ public class Librarian {
 						// for Book2 from Etalon
 						for (int iCh = 0; iCh < arlEtalonChapters.size(); iCh++) {
 							if (Thread.interrupted()) return;
-							getChapterQueueFromEtalon(arlEtalonChapters.get(iCh), Book2, Module2.getVersificationMap(), fosLogErr);
+							getChapterQueueFromEtalon(arlEtalonChapters.get(iCh), Book2, ChapterList2, Module2.getVersificationMap(), pwLogErr);
 						}
 					}
 
 				} catch (BookNotFoundException e) {
-					String sMessage = "Book " + book.getID() + " in module " + Module2.getID() + " not found";
-					fosLogErr.write(sMessage.getBytes("UTF-8"));
-					fosLogErr.write(0x0A);
+					pwLogErr.println("Book " + book.getID() + " in module " + Module2.getID() + " not found");
 					//e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
 				}
 
@@ -619,36 +611,31 @@ public class Librarian {
 				try {
 					Book1 = getBookByID(Module1, book.getID());
 
+					ArrayList<Chapter> ChapterList1 = getAllChapters(Book1);
+
 					// for Book1 from Etalon
 					for (int iCh = 0; iCh < arlEtalonChapters.size(); iCh++) {
 						if (Thread.interrupted()) return;
-						getChapterQueueFromEtalon(arlEtalonChapters.get(iCh), Book1, Module1.getVersificationMap(), fosLogErr);
+						getChapterQueueFromEtalon(arlEtalonChapters.get(iCh), Book1, ChapterList1, Module1.getVersificationMap(), pwLogErr);
 					}
 
 				} catch (BookNotFoundException e) {
-					String sMessage = "Book " + book.getID() + " in module " + Module1.getID() + " not found";
-					fosLogErr.write(sMessage.getBytes("UTF-8"));
-					fosLogErr.write(0x0A);
+					pwLogErr.println("Book " + book.getID() + " in module " + Module2.getID() + " not found");
 					//e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
 				}
 			}
 
 
 			long lTimeDelta = System.currentTimeMillis() - lTime_start;
-			String sTime = "TimeDelta from start = " + lTimeDelta + " milliseconds";
 
-			fosLogErr.write(0x0A);
-			fosLogErr.write(0x0A);
-			fosLogErr.write(sTime.getBytes("UTF-8"));
-			fosLogErr.write(0x0A);
+			pwLogErr.println();
+			pwLogErr.println();
+			pwLogErr.println("TimeDelta from start = " + lTimeDelta + " milliseconds");
+			pwLogErr.println("=================================");
+			pwLogErr.println("The End");
 
+			pwLogErr.close();
 
-			fosLogErr.write("=================================".getBytes("UTF-8"));
-			fosLogErr.write(0x0A);
-			fosLogErr.write("The End".getBytes("UTF-8"));
-			fosLogErr.write(0x0A);
-
-			fosLogErr.close();
 
 		} catch (FileNotFoundException e) {
 			// TODO заменить e.printStackTrace()

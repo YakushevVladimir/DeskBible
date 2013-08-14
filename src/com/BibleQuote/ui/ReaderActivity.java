@@ -158,7 +158,16 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 		super.onCreate(savedInstanceState);
 		BibleQuoteApp app = (BibleQuoteApp) getApplication();
 
-		if (app.isServiceRunning()) {
+		boolean isServiceFinish = false;
+
+		Bundle extras = getIntent().getExtras();
+		if (extras != null) {
+			isServiceFinish = extras.getBoolean(ServiceActivity.SERVICE_FINISH, false);
+		}
+
+		// сервис может успешно завершить работу,
+		// но в системе еще виден, как работающий
+		if (app.isServiceRunning() && !isServiceFinish) {
 			finish();
 		} else {
 

@@ -42,6 +42,13 @@ public class FsChapterController implements IChapterController {
 	}
 
 
+	public ArrayList<Chapter> getAllChapters(Book book) throws BookNotFoundException {
+		book = getValidBook(book);
+		ArrayList<Chapter> ChapterList = chRepository.loadAllChapters((FsBook) book);
+		return ChapterList;
+	}
+
+
 	public ArrayList<Integer> getVerseNumbers(Book book, Integer chapterNumber) throws BookNotFoundException {
 		book = getValidBook(book);
 		Chapter chapter = chRepository.getChapterByNumber((FsBook) book, chapterNumber);
@@ -72,8 +79,8 @@ public class FsChapterController implements IChapterController {
 			verseText = verseText.replaceAll("<a\\s+?href=\"verse\\s\\d+?\">(\\d+?)</a>", "<b>$1</b>");
 			if (currModule.isBible) {
 				verseText = verseText
-						.replaceAll("^(<[^/]+?>)*?(\\d+)(</(.)+?>){0,1}?\\s+",
-								"$1<b>$2</b>$3 ").replaceAll(
+						.replaceAll("((^|\\n)(<[^/]+?>)*?)(\\d+)(</(.)+?>){0,1}?\\s+",
+								"$1<b>$4</b>$5 ").replaceAll(
 								"null", "");
 			}
 
@@ -190,8 +197,8 @@ public class FsChapterController implements IChapterController {
 									*/
 
 									verseText = verseText
-											.replaceAll("^(<[^/]+?>)*?([\\w\\-\\+]+?[.])*?(\\d+.\\d+)(</(.)+?>){0,1}?\\s+",
-													"$1<b>$2$3</b>$4 ").replaceAll(
+											.replaceAll("((^|\\n)(<[^/]+?>)*?)([\\w\\-\\+]+?[.])*?(\\d+.\\d+)(</(.)+?>){0,1}?\\s+",
+													"$1<b>$4$5</b>$6 ").replaceAll(
 													"null", "");
 
 								}
