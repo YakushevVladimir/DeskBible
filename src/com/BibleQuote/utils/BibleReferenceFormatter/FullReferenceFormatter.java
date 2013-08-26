@@ -1,4 +1,4 @@
-package com.BibleQuote.utils.BibleReferenceFormatter;
+package com.BibleQuote.utils.bibleReferenceFormatter;
 
 import com.BibleQuote.modules.Book;
 import com.BibleQuote.modules.Module;

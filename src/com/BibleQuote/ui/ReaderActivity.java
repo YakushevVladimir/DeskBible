@@ -45,7 +45,7 @@ import com.BibleQuote.listeners.IReaderViewListener;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.managers.bookmarks.BookmarksManager;
 import com.BibleQuote.utils.*;
-import com.BibleQuote.utils.Share.ShareBuilder.Destination;
+import com.BibleQuote.utils.share.ShareBuilder.Destination;
 import com.BibleQuote.ui.widget.ReaderWebView;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.ActionMode;
@@ -375,6 +375,7 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 	};
 
 	private void viewCurrentChapter() {
+		disableActionMode();
 		openChapterFromLink(myLibrarian.getCurrentOSISLink());
 	}
 
@@ -470,10 +471,7 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 		} else if (code == ChangeCode.onChangeSelection) {
 			TreeSet<Integer> selVerses = vWeb.getSelectedVerses();
 			if (selVerses.size() == 0) {
-				if (currActionMode != null) {
-					currActionMode.finish();
-					currActionMode = null;
-				}
+				disableActionMode();
 			} else if (currActionMode == null) {
 				currActionMode = startActionMode(new ActionSelectText());
 			}
@@ -488,6 +486,13 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 			prevChapter();
 		} else if (code == ChangeCode.onRightNavigation) {
 			nextChapter();
+		}
+	}
+
+	private void disableActionMode() {
+		if (currActionMode != null) {
+			currActionMode.finish();
+			currActionMode = null;
 		}
 	}
 }

@@ -19,7 +19,7 @@
  *  
  */
 
-package com.BibleQuote.managers.History;
+package com.BibleQuote.managers.history;
 
 import com.BibleQuote.entity.BibleReference;
 import com.BibleQuote.entity.ItemList;

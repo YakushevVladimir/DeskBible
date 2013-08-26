@@ -19,11 +19,11 @@ package com.BibleQuote.managers.bookmarks.repository;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 import com.BibleQuote.dal.dbLibraryHelper;
 import com.BibleQuote.managers.bookmarks.Bookmark;
 import com.BibleQuote.managers.tags.Tag;
 import com.BibleQuote.utils.DataConstants;
+import com.BibleQuote.utils.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,7 +35,7 @@ public class dbBookmarksRepository implements IBookmarksRepository {
 
 	@Override
 	public void sort() {
-		Log.w(TAG, "Sort all bookmarks");
+		Log.i(TAG, "Sort all bookmarks");
 		SQLiteDatabase db = dbLibraryHelper.openDB();
 
 		ArrayList<Bookmark> bookmarks = getAllRowsToArray(db);
@@ -57,7 +57,7 @@ public class dbBookmarksRepository implements IBookmarksRepository {
 
 	@Override
 	public long add(Bookmark bookmark) {
-		Log.w(TAG, String.format("Add bookmarks %S:%s", bookmark.OSISLink, bookmark.humanLink));
+		Log.i(TAG, String.format("Add bookmarks %S:%s", bookmark.OSISLink, bookmark.humanLink));
 
 		SQLiteDatabase db = dbLibraryHelper.openDB();
 		long newID = addRow(db, bookmark);
@@ -67,8 +67,8 @@ public class dbBookmarksRepository implements IBookmarksRepository {
 	}
 
 	@Override
-	public void delete(Bookmark bookmark) {
-		Log.w(TAG, String.format("Delete bookmarks %S:%s", bookmark.OSISLink, bookmark.humanLink));
+	public void delete(final Bookmark bookmark) {
+		Log.i(TAG, String.format("Delete bookmarks %S:%s", bookmark.OSISLink, bookmark.humanLink));
 		SQLiteDatabase db = dbLibraryHelper.openDB();
 		db.delete(DataConstants.BOOKMARKS_TABLE, dbLibraryHelper.BOOKMARKS_OSIS + "=\"" + bookmark.OSISLink + "\"", null);
 		bmTagRepo.deleteBookmarks(db, bookmark);
@@ -77,7 +77,7 @@ public class dbBookmarksRepository implements IBookmarksRepository {
 
 	@Override
 	public void deleteAll() {
-		Log.w(TAG, "Delete all bookmarks");
+		Log.i(TAG, "Delete all bookmarks");
 		SQLiteDatabase db = dbLibraryHelper.openDB();
 		db.delete(DataConstants.BOOKMARKS_TABLE, null, null);
 		dbLibraryHelper.closeDB(db);
@@ -86,7 +86,7 @@ public class dbBookmarksRepository implements IBookmarksRepository {
 
 	@Override
 	public ArrayList<Bookmark> getAll() {
-		Log.w(TAG, "Get all bookmarks");
+		Log.i(TAG, "Get all bookmarks");
 		SQLiteDatabase db = dbLibraryHelper.openDB();
 		ArrayList<Bookmark> result = getAllRowsToArray(db);
 		dbLibraryHelper.closeDB(db);
@@ -95,7 +95,7 @@ public class dbBookmarksRepository implements IBookmarksRepository {
 
 	@Override
 	public ArrayList<Bookmark> getAll(Tag tag) {
-		Log.w(TAG, "Get all bookmarks to tag: " + tag.name);
+		Log.i(TAG, "Get all bookmarks to tag: " + tag.name);
 		SQLiteDatabase db = dbLibraryHelper.openDB();
 		ArrayList<Bookmark> result = getAllRowsToArray(db, tag);
 		dbLibraryHelper.closeDB(db);

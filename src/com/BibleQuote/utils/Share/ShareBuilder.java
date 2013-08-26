@@ -1,4 +1,4 @@
-package com.BibleQuote.utils.Share;
+package com.BibleQuote.utils.share;
 
 import android.content.Context;
 import com.BibleQuote.modules.Book;

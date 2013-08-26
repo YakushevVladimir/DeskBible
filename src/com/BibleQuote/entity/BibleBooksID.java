@@ -182,7 +182,7 @@ public class BibleBooksID {
 
 	private static void addBookID(String id, ArrayList<String> shortNames) {
 		for (String name : shortNames) {
-			qualifier.put(name.toLowerCase(), id);
+			if (!qualifier.containsKey(name.toLowerCase())) qualifier.put(name.toLowerCase(), id);
 		}
 	}
 

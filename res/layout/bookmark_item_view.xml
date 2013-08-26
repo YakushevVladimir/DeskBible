@@ -68,6 +68,7 @@
 		android:layout_gravity="center_vertical|left"
 		android:textColor="#6e6e6e"
 		android:paddingBottom="2dp"
-		android:gravity="center_vertical|left"/>
+		android:gravity="center_vertical|left"
+		android:visibility="gone"/>
 
 </com.BibleQuote.ui.widget.listview.itemview.BookmarkItemView>

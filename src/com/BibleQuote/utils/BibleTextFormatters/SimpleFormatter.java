@@ -1,4 +1,4 @@
-package com.BibleQuote.utils.BibleTextFormatters;
+package com.BibleQuote.utils.bibleTextFormatters;
 
 import java.util.LinkedHashMap;
 

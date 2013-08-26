@@ -44,6 +44,7 @@ import java.util.ArrayList;
 
 public class LibraryActivity extends SherlockFragmentActivity implements IChangeModulesListener, OnTaskCompleteListener {
 	private static final String TAG = "LibraryActivity";
+	public static final String EMPTY_OBJECT = "---";
 	private final int MODULE_VIEW = 1, BOOK_VIEW = 2, CHAPTER_VIEW = 3;
 	private int viewMode = 1;
 
@@ -56,7 +57,7 @@ public class LibraryActivity extends SherlockFragmentActivity implements IChange
 	private ArrayList<String> chapters = new ArrayList<String>();
 
 	private int modulePos = 0, bookPos = 0, chapterPos = 0;
-	private String moduleID = "---", bookID = "---", chapter = "-";
+	private String moduleID = EMPTY_OBJECT, bookID = EMPTY_OBJECT, chapter = EMPTY_OBJECT;
 	private Librarian myLibrarian;
 	private AsyncManager mAsyncManager;
 	private String messageRefresh;
@@ -208,19 +209,27 @@ public class LibraryActivity extends SherlockFragmentActivity implements IChange
 
 	private void setButtonText() {
 
-		String bookShortName = "---";
-		try {
-			bookShortName = myLibrarian.getBookShortName(moduleID, bookID);
-			ArrayList<String> chList = myLibrarian.getChaptersList(moduleID, bookID);
-			if (chList.size() == 0) {
-				chapter = "-";
-			} else {
-				chapter = chList.contains(chapter) ? chapter : chList.get(0);
+		String bookShortName = EMPTY_OBJECT;
+
+		if (moduleID != EMPTY_OBJECT && bookID != EMPTY_OBJECT) {
+			try {
+				bookShortName = myLibrarian.getBookShortName(moduleID, bookID);
+				ArrayList<String> chList = myLibrarian.getChaptersList(moduleID, bookID);
+				if (chList.size() != 0) {
+					chapter = chList.contains(chapter) ? chapter : chList.get(0);
+				} else {
+					chapter = EMPTY_OBJECT;
+				}
+			} catch (OpenModuleException e) {
+				ExceptionHelper.onOpenModuleException(e, this, TAG);
+				moduleID = EMPTY_OBJECT;
+				bookID = EMPTY_OBJECT;
+				chapter = EMPTY_OBJECT;
+			} catch (BookNotFoundException e) {
+				ExceptionHelper.onBookNotFoundException(e, this, TAG);
+				bookID = EMPTY_OBJECT;
+				chapter = EMPTY_OBJECT;
 			}
-		} catch (OpenModuleException e) {
-			ExceptionHelper.onOpenModuleException(e, this, TAG);
-		} catch (BookNotFoundException e) {
-			chapter = "-";
 		}
 
 		btnModule.setText(moduleID);

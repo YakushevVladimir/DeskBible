@@ -53,11 +53,6 @@ public class BookmarksFragment extends SherlockListFragment implements AdapterVi
 	private Librarian myLibrarian;
 	private Bookmark currBookmark;
 
-//	@Override
-//	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-//		return inflater.inflate(R.layout.bookmarks_fragment, null);
-//	}
-
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
@@ -180,7 +175,6 @@ public class BookmarksFragment extends SherlockListFragment implements AdapterVi
 	}
 
 	private void alertListener(Bookmark OSISLink) {
-		//if (listener == null) return;
 		Log.i(TAG, "Alert listener");
 		((IBookmarksListener) getSherlockActivity()).onBookmarksSelect(OSISLink);
 	}
