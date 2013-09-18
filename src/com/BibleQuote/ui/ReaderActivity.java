@@ -40,6 +40,8 @@ import com.BibleQuote.entity.BibleReference;
 import com.BibleQuote.exceptions.BookNotFoundException;
 import com.BibleQuote.exceptions.ExceptionHelper;
 import com.BibleQuote.exceptions.OpenModuleException;
+import com.BibleQuote.managers.bookmarks.Bookmark;
+import com.BibleQuote.ui.dialogs.BookmarksDialog;
 import com.BibleQuote.ui.fragments.TTSPlayerFragment;
 import com.BibleQuote.listeners.IReaderViewListener;
 import com.BibleQuote.managers.Librarian;
@@ -47,6 +49,7 @@ import com.BibleQuote.managers.bookmarks.BookmarksManager;
 import com.BibleQuote.utils.*;
 import com.BibleQuote.utils.share.ShareBuilder.Destination;
 import com.BibleQuote.ui.widget.ReaderWebView;
+import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
@@ -117,9 +120,12 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 			switch (item.getItemId()) {
 				case R.id.action_bookmarks:
 					myLibrarian.setCurrentVerseNumber(selVerses.first());
-					new BookmarksManager(((BibleQuoteApp) getApplication()).getBookmarksRepository())
-							.add(myLibrarian.getCurrentOSISLink());
-					Toast.makeText(ReaderActivity.this, getString(R.string.added), Toast.LENGTH_LONG).show();
+					SherlockDialogFragment bmDial = BookmarksDialog.getInstance(
+							new Bookmark(myLibrarian.getCurrentOSISLink()));
+					bmDial.show(getSupportFragmentManager(), "bookmark");
+//					new BookmarksManager(((BibleQuoteApp) getApplication()).getBookmarksRepository())
+//							.add(myLibrarian.getCurrentOSISLink());
+//					Toast.makeText(ReaderActivity.this, getString(R.string.added), Toast.LENGTH_LONG).show();
 					break;
 
 				case R.id.action_share:

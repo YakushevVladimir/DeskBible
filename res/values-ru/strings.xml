@@ -112,4 +112,6 @@
 	<string name="no_tags">Меток нет</string>
 	<string name="empty">Нет данных</string>
 	<string name="tags">Метки</string>
+	<string name="bookmark_name">Bookmark name</string>
+	<string name="bookmark_tags">Tag\'s</string>
 </resources>

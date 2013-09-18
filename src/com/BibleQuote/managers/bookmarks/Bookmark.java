@@ -16,6 +16,8 @@
 
 package com.BibleQuote.managers.bookmarks;
 
+import com.BibleQuote.entity.BibleReference;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -31,15 +33,23 @@ public class Bookmark {
 	public String humanLink;
 	public String date;
 
-	public Bookmark(String OSISLink, String humanLink) {
-		this(0, OSISLink, humanLink, DateFormat.getDateInstance(DateFormat.MEDIUM).format(Calendar.getInstance().getTime()));
-	}
-
 	public Bookmark(int id, String OSISLink, String humanLink, String date) {
 		this.id = id;
 		this.OSISLink = OSISLink;
 		this.humanLink = humanLink;
 		this.date = date;
+	}
+
+	public Bookmark(String OSISLink, String humanLink) {
+		this(0, OSISLink, humanLink, DateFormat.getDateInstance(DateFormat.MEDIUM).format(Calendar.getInstance().getTime()));
+	}
+
+	public Bookmark(String OSISLink, String humanLink, String date) {
+		this(0, OSISLink, humanLink, date);
+	}
+
+	public Bookmark(BibleReference ref) {
+		this(ref.getPath(), ref.toString());
 	}
 
 	@Override

@@ -34,9 +34,9 @@ public class BookmarksActivity extends SherlockFragmentActivity implements Bookm
 
 	private final String TAG = BookmarksActivity.class.getSimpleName();
 
-	TabHost mTabHost;
-	ViewPager mViewPager;
-	TabsAdapter mTabsAdapter;
+	private TabHost mTabHost;
+	private ViewPager mViewPager;
+	private TabsAdapter mTabsAdapter;
 
 	BookmarksFragment bmFragment;
 
@@ -53,8 +53,8 @@ public class BookmarksActivity extends SherlockFragmentActivity implements Bookm
 		mTabsAdapter = new TabsAdapter(this, mTabHost, mViewPager);
 		mTabsAdapter.addTab(mTabHost.newTabSpec("bookmarks").setIndicator(getTabIndicator(R.string.bookmarks)),
 				BookmarksFragment.class, null);
-//		mTabsAdapter.addTab(mTabHost.newTabSpec("tags").setIndicator(getTabIndicator(R.string.tags)),
-//				TagsFragment.class, null);
+		mTabsAdapter.addTab(mTabHost.newTabSpec("tags").setIndicator(getTabIndicator(R.string.tags)),
+				TagsFragment.class, null);
 
 		if (savedInstanceState != null) {
 			mTabHost.setCurrentTabByTag(savedInstanceState.getString("tab"));

@@ -31,6 +31,12 @@ public class BookmarksManager {
 		add(ref.getPath(), ref.toString(), tags);
 	}
 
+	public void add(Bookmark bookmark, String tags) {
+		long bmID = bmRepo.add(bookmark);
+		ArrayList<Long> tagIDs = getTagsIDs(tags);
+		new dbBookmarksTagsRepository().add(bmID, tagIDs);;
+	}
+
 	public void add(String OSISLink, String link, String tags) {
 		long bmID = add(OSISLink, link);
 		ArrayList<Long> tagIDs = getTagsIDs(tags);

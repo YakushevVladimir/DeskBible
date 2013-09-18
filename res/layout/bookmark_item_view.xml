@@ -60,7 +60,7 @@
 		android:id="@+id/tags"
 		android:layout_width="fill_parent"
 		android:layout_height="16dp"
-		android:drawableLeft="@drawable/abs__list_pressed_holo_light"
+		android:drawableLeft="@drawable/ic_list_tag"
 		android:drawablePadding="4dip"
 		android:textSize="@dimen/text_size_very_small"
 		android:text="@string/no_tags"
@@ -68,7 +68,6 @@
 		android:layout_gravity="center_vertical|left"
 		android:textColor="#6e6e6e"
 		android:paddingBottom="2dp"
-		android:gravity="center_vertical|left"
-		android:visibility="gone"/>
+		android:gravity="center_vertical|left"/>
 
 </com.BibleQuote.ui.widget.listview.itemview.BookmarkItemView>

@@ -124,4 +124,6 @@
 	<string name="no_tags">No tags</string>
 	<string name="empty">Empty</string>
 	<string name="tags">Tags</string>
+	<string name="bookmark_name">Bookmark name</string>
+	<string name="bookmark_tags">Tag\'s</string>
 </resources>
