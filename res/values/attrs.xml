@@ -38,7 +38,9 @@
 	</declare-styleable>
 	<declare-styleable name="BookmarkItem">
 		<attr name="link" format="string" />
+		<attr name="name" format="string" />
 		<attr name="date" format="string" />
+		<attr name="tags" format="string" />
 	</declare-styleable>
 
 </resources>

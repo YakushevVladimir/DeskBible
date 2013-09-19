@@ -19,12 +19,6 @@
 <menu
 	xmlns:android="http://schemas.android.com/apk/res/android">
 	<item
-			android:id="@+id/action_bar_sort"
-			android:title="@string/fav_sort_alphabetically"
-			android:orderInCategory="0"
-			android:icon="@drawable/ic_action_sort"
-			android:showAsAction="ifRoom|withText"/>
-	<item
 			android:id="@+id/action_bar_delete"
 			android:title="@string/fav_delete_all"
 			android:orderInCategory="1"

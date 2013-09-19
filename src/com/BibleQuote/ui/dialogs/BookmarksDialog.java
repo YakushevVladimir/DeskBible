@@ -20,7 +20,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -39,14 +38,8 @@ public class BookmarksDialog extends SherlockDialogFragment {
 	private TextView tvDate, tvHumanLink;
 	private EditText tvName, tvTags;
 
-	public void setBookmark(Bookmark bookmark) {
+	public BookmarksDialog(Bookmark bookmark) {
 		this.bookmark = bookmark;
-	}
-
-	public static BookmarksDialog getInstance(Bookmark bookmark) {
-		BookmarksDialog bmDial = new BookmarksDialog();
-		bmDial.setBookmark(bookmark);
-		return bmDial;
 	}
 
 	@Override
@@ -69,10 +62,10 @@ public class BookmarksDialog extends SherlockDialogFragment {
 		View customView = inflater.inflate(R.layout.bookmarks_dialog, null);
 		builder.setView(customView);
 
-		tvDate = (TextView) customView.findViewById(R.id.date);
-		tvHumanLink = (TextView) customView.findViewById(R.id.humanLink);
-		tvName = (EditText) customView.findViewById(R.id.bookmark_name);
-		tvTags = (EditText) customView.findViewById(R.id.tags);
+		tvDate = (TextView) customView.findViewById(R.id.bm_date);
+		tvHumanLink = (TextView) customView.findViewById(R.id.bm_humanLink);
+		tvName = (EditText) customView.findViewById(R.id.bm_name);
+		tvTags = (EditText) customView.findViewById(R.id.bm_tags);
 
 		fillField();
 
@@ -88,13 +81,13 @@ public class BookmarksDialog extends SherlockDialogFragment {
 	private void fillField() {
 		tvDate.setText(bookmark.date);
 		tvHumanLink.setText(bookmark.humanLink);
-		tvName.setText(bookmark.humanLink);
+		tvName.setText(bookmark.name);
 		tvTags.setText(this.tags);
 	}
 
 	private void readField() {
 		bookmark.humanLink = tvHumanLink.getText().toString();
-		bookmark.OSISLink = tvName.getText().toString();
+		bookmark.name = tvName.getText().toString();
 		bookmark.date = tvDate.getText().toString();
 		this.tags = tvTags.getText().toString();
 	}

@@ -16,21 +16,12 @@
 
 package com.BibleQuote.ui.fragments;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.Toast;
-import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
-import com.BibleQuote.entity.BibleReference;
-import com.BibleQuote.managers.Librarian;
-import com.BibleQuote.managers.bookmarks.Bookmark;
-import com.BibleQuote.managers.bookmarks.BookmarksManager;
 import com.BibleQuote.ui.widget.listview.ItemAdapter;
-import com.BibleQuote.ui.widget.listview.item.BookmarkItem;
 import com.BibleQuote.ui.widget.listview.item.Item;
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.Menu;
@@ -47,17 +38,12 @@ import java.util.List;
 public class TagsFragment extends SherlockListFragment {
 	private final static String TAG = TagsFragment.class.getSimpleName();
 
-	private Librarian myLibrarian;
-	private Bookmark currBookmark;
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		setHasOptionsMenu(true);
 		setEmptyText(getResources().getText(R.string.empty));
-
-		BibleQuoteApp app = (BibleQuoteApp) getSherlockActivity().getApplication();
-		myLibrarian = app.getLibrarian();
 
 		ListView lw = getListView();
 		lw.setLongClickable(true);
@@ -69,7 +55,6 @@ public class TagsFragment extends SherlockListFragment {
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		Log.i(TAG, "onCreateOptionsMenu");
-		//inflater.inflate(R.menu.menu_bookmarks, menu);
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 

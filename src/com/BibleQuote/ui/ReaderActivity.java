@@ -120,12 +120,8 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 			switch (item.getItemId()) {
 				case R.id.action_bookmarks:
 					myLibrarian.setCurrentVerseNumber(selVerses.first());
-					SherlockDialogFragment bmDial = BookmarksDialog.getInstance(
-							new Bookmark(myLibrarian.getCurrentOSISLink()));
+					SherlockDialogFragment bmDial =  new BookmarksDialog(new Bookmark(myLibrarian.getCurrentOSISLink()));
 					bmDial.show(getSupportFragmentManager(), "bookmark");
-//					new BookmarksManager(((BibleQuoteApp) getApplication()).getBookmarksRepository())
-//							.add(myLibrarian.getCurrentOSISLink());
-//					Toast.makeText(ReaderActivity.this, getString(R.string.added), Toast.LENGTH_LONG).show();
 					break;
 
 				case R.id.action_share:

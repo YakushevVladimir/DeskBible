@@ -18,7 +18,7 @@
 <com.BibleQuote.ui.widget.listview.itemview.BookmarkItemView
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent"
-	android:layout_height="@dimen/bq_item_view_height"
+	android:layout_height="wrap_content"
 	android:orientation="vertical"
 	android:background="@android:drawable/list_selector_background"
 	android:paddingBottom="2dp"
@@ -28,7 +28,7 @@
 
 	<RelativeLayout
 		android:layout_width="fill_parent"
-		android:layout_height="30dp">
+		android:layout_height="24dp">
 
 		<TextView
 			android:id="@+id/date"
@@ -43,7 +43,7 @@
 			android:text="2 May, 2013"/>
 
 		<TextView
-			android:id="@+id/link"
+			android:id="@+id/name"
 			android:layout_width="fill_parent"
 			android:layout_height="fill_parent"
 			android:layout_alignParentLeft="true"
@@ -52,14 +52,24 @@
 			android:textSize="@dimen/text_size_medium"
 			android:singleLine="true"
 			android:ellipsize="end"
-			android:text="KJV:1Samuel 3:1" />
+			android:text="Bookmark name"/>
 
 	</RelativeLayout>
 
 	<TextView
+		android:id="@+id/link"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:textColor="@android:color/black"
+		android:gravity="center_vertical|left"
+		android:textSize="@dimen/text_size_small"
+		android:singleLine="true"
+		android:text="KJV:1Samuel 3:1" />
+
+	<TextView
 		android:id="@+id/tags"
 		android:layout_width="fill_parent"
-		android:layout_height="16dp"
+		android:layout_height="18dp"
 		android:drawableLeft="@drawable/ic_list_tag"
 		android:drawablePadding="4dip"
 		android:textSize="@dimen/text_size_very_small"
@@ -68,6 +78,7 @@
 		android:layout_gravity="center_vertical|left"
 		android:textColor="#6e6e6e"
 		android:paddingBottom="2dp"
+		android:paddingTop="2dp"
 		android:gravity="center_vertical|left"/>
 
 </com.BibleQuote.ui.widget.listview.itemview.BookmarkItemView>

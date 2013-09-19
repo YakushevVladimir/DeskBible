@@ -26,8 +26,9 @@ import com.BibleQuote.ui.widget.listview.item.Item;
 
 public class BookmarkItemView extends LinearLayout implements ItemView {
 
-	private TextView mLink;
+	private TextView mName;
 	private TextView mDate;
+	private TextView mLink;
 	private TextView mTags;
 
 	public BookmarkItemView(Context context) {
@@ -39,16 +40,18 @@ public class BookmarkItemView extends LinearLayout implements ItemView {
 	}
 
 	public void prepareItemView() {
-		mLink = (TextView) findViewById(R.id.link);
+		mName = (TextView) findViewById(R.id.name);
 		mDate = (TextView) findViewById(R.id.date);
+		mLink = (TextView) findViewById(R.id.link);
 		mTags = (TextView) findViewById(R.id.tags);
 	}
 
 	public void setObject(Item object) {
 		final BookmarkItem item = (BookmarkItem) object;
-		mLink.setText(item.link);
+		mName.setText(item.name);
 		mDate.setText(item.date);
-		mTags.setText(getContext().getText(R.string.no_tags));
+		mLink.setText(item.link);
+		mTags.setText(item.tags);
 	}
 
 }

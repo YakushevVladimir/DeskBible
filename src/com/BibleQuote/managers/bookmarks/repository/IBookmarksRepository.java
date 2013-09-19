@@ -27,7 +27,6 @@ import java.util.ArrayList;
  * Time: 1:25
  */
 public interface IBookmarksRepository {
-	void sort();
 	long add(Bookmark bookmark);
 	void delete(Bookmark bookmark);
 	void deleteAll();

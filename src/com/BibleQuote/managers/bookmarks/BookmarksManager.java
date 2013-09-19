@@ -55,10 +55,6 @@ public class BookmarksManager {
 		return bmRepo.getAll(tag);
 	}
 
-	public void sort() {
-		bmRepo.sort();
-	}
-
 	public void deleteAll() {
 		bmRepo.deleteAll();
 	}

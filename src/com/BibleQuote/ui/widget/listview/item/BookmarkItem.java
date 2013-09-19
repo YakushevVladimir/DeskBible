@@ -37,7 +37,9 @@ public class BookmarkItem extends Item {
 
 	public Bookmark bookmark;
 	public String link;
+	public String name;
 	public String date;
+	public String tags;
 
 	/**
 	 * @hide
@@ -48,7 +50,9 @@ public class BookmarkItem extends Item {
 	public BookmarkItem(Bookmark bookmark) {
 		this.bookmark = bookmark;
 		this.link = bookmark.humanLink;
+		this.name = bookmark.name;
 		this.date = bookmark.date;
+		this.tags = bookmark.tags;
 	}
 
 	@Override
@@ -62,7 +66,9 @@ public class BookmarkItem extends Item {
 
 		TypedArray a = r.obtainAttributes(attrs, R.styleable.BookmarkItem);
 		link = a.getString(R.styleable.BookmarkItem_link);
+		name = a.getString(R.styleable.BookmarkItem_name);
 		date = a.getString(R.styleable.BookmarkItem_date);
+		tags = a.getString(R.styleable.BookmarkItem_tags);
 		a.recycle();
 	}
 

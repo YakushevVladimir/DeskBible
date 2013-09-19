@@ -28,32 +28,32 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="12.10.2013"
-			android:id="@+id/date"
+			android:id="@+id/bm_date"
 			android:layout_gravity="center"
 			android:focusableInTouchMode="true"
 			android:layout_alignParentRight="true"
-			android:layout_alignTop="@+id/OSISLink"
+			android:layout_alignTop="@+id/bm_humanLink"
 			android:textSize="@dimen/text_size_medium"/>
 		<TextView
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
 			android:text="Math.12:5"
-			android:id="@+id/humanLink"
+			android:id="@+id/bm_humanLink"
 			android:textSize="@dimen/text_size_medium"
 			android:layout_alignParentLeft="true"/>
 	</RelativeLayout>
 	<EditText
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:id="@+id/bookmark_name"
+		android:id="@+id/bm_name"
 		android:hint="@string/bookmark_name"
 		android:soundEffectsEnabled="true"
 		android:inputType="text|textAutoComplete"/>
 	<EditText
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:id="@+id/tags"
-		android:hint="@string/bookmark_tags"
+		android:id="@+id/bm_tags"
+		android:hint="@string/tags"
 		android:drawableLeft="@drawable/ic_list_tag"
 		android:inputType="text|textAutoComplete"/>
 </LinearLayout>

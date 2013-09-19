@@ -84,11 +84,6 @@ public class BookmarksFragment extends SherlockListFragment implements AdapterVi
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case R.id.action_bar_sort:
-				bookmarksManager.sort();
-				setAdapter();
-				break;
-
 			case R.id.action_bar_delete:
 				AlertDialog.Builder builder = new AlertDialog.Builder(getSherlockActivity());
 				builder.setIcon(R.drawable.icon);

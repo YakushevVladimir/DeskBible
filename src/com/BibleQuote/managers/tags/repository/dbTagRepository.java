@@ -19,9 +19,8 @@ public class dbTagRepository implements ITagRepository {
 	public long add(String tag) {
 		Log.w(TAG, String.format("Add tag %s", tag));
 		SQLiteDatabase db = dbLibraryHelper.getLibraryDB();
-		db.delete(DataConstants.TAGS_TABLE, dbLibraryHelper.TAGS_NAME + "=\"" + tag + "\"", null);
 		long id = addRow(db, tag);
-		db.close();
+		dbLibraryHelper.closeDB();
 		return id;
 	}
 
@@ -29,30 +28,65 @@ public class dbTagRepository implements ITagRepository {
 	public int update(Tag tag) {
 		Log.w(TAG, String.format("Update tag %s", tag.name));
 		SQLiteDatabase db = dbLibraryHelper.getLibraryDB();
-		ContentValues values = new ContentValues();
-		values.put(dbLibraryHelper.TAGS_NAME, tag.name);
-		return db.update(DataConstants.TAGS_TABLE, values, dbLibraryHelper.TAGS_KEY_ID + "=\"" + tag.id + "\"", null);
+		db.beginTransaction();
+		int result = -1;
+		try {
+			ContentValues values = new ContentValues();
+			values.put(dbLibraryHelper.TAGS_NAME, tag.name);
+			result = db.update(DataConstants.TAGS_TABLE, values, dbLibraryHelper.TAGS_KEY_ID + "=\"" + tag.id + "\"", null);
+			db.setTransactionSuccessful();
+		} finally {
+			db.endTransaction();
+		}
+		dbLibraryHelper.closeDB();
+		return result;
 	}
 
 	@Override
 	public int delete(Tag tag) {
 		Log.w(TAG, String.format("Delete tag %s", tag.name));
+		int result = -1;
 		SQLiteDatabase db = dbLibraryHelper.getLibraryDB();
-		bmTagRepo.deleteTag(db, tag);
-		return db.delete(DataConstants.TAGS_TABLE, dbLibraryHelper.TAGS_KEY_ID + "=\"" + tag.id + "\"", null);
+		db.beginTransaction();
+		try {
+			bmTagRepo.deleteTag(db, tag);
+			result = db.delete(DataConstants.TAGS_TABLE, dbLibraryHelper.TAGS_KEY_ID + "=\"" + tag.id + "\"", null);
+			db.setTransactionSuccessful();
+		} finally {
+			db.endTransaction();
+		}
+		dbLibraryHelper.closeDB();
+		return result;
 	}
 
 	@Override
 	public ArrayList<Tag> getAll() {
 		SQLiteDatabase db = dbLibraryHelper.getLibraryDB();
-		ArrayList<Tag> result = getAllRowsToArray(db);
+		db.beginTransaction();
+		ArrayList<Tag> result = new ArrayList<Tag>();
+		try {
+			result = getAllRowsToArray(db);
+			db.setTransactionSuccessful();
+		} finally {
+			db.endTransaction();
+		}
+		dbLibraryHelper.closeDB();
 		return result;
 	}
 
 	@Override
 	public int deleteAll() {
 		SQLiteDatabase db = dbLibraryHelper.getLibraryDB();
-		return db.delete(DataConstants.TAGS_TABLE, null, null);
+		db.beginTransaction();
+		int result = -1;
+		try {
+			result = db.delete(DataConstants.TAGS_TABLE, null, null);
+			db.setTransactionSuccessful();
+		} finally {
+			db.endTransaction();
+		}
+		dbLibraryHelper.closeDB();
+		return result;
 	}
 
 	private ArrayList<Tag> getAllRowsToArray(SQLiteDatabase db) {
@@ -68,13 +102,28 @@ public class dbTagRepository implements ITagRepository {
 				);
 			} while (allRows.moveToNext());
 		}
+		allRows.close();
 		return result;
 	}
 
 	private long addRow(SQLiteDatabase db, String tag) {
-		ContentValues values = new ContentValues();
-		values.put(dbLibraryHelper.TAGS_NAME, tag.trim());
-		return db.insert(DataConstants.TAGS_TABLE, null, values);
+		long result;
+		db.beginTransaction();
+		try {
+			Cursor cur = db.query(DataConstants.TAGS_TABLE, null, dbLibraryHelper.TAGS_NAME + " = \"" + tag + "\";", null, null, null, null);
+			if (cur.moveToFirst()) {
+				result = cur.getInt(0);
+				cur.close();
+			} else {
+				ContentValues values = new ContentValues();
+				values.put(dbLibraryHelper.TAGS_NAME, tag.trim());
+				result = db.insert(DataConstants.TAGS_TABLE, null, values);
+			}
+			db.setTransactionSuccessful();
+		} finally {
+			db.endTransaction();
+		}
+		return result;
 	}
 
 }

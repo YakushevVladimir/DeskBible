@@ -19,6 +19,7 @@ package com.BibleQuote.dal;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
 import com.BibleQuote.utils.DataConstants;
+import com.BibleQuote.utils.Log;
 
 import java.io.File;
 
@@ -29,11 +30,13 @@ import java.io.File;
 public class dbLibraryHelper {
 	private final static String TAG = dbLibraryHelper.class.getSimpleName();
 
-	private static int version = 1;
+	private static int version = 2;
+	private static SQLiteDatabase db;
 
 	public static final String BOOKMARKS_KEY_ID = "_id";
 	public static final String BOOKMARKS_OSIS = "osis";
 	public static final String BOOKMARKS_LINK = "link";
+	public static final String BOOKMARKS_NAME = "name";
 	public static final String BOOKMARKS_DATE = "date";
 	
 	public static final String BOOKMARKS_TAGS_KEY_ID = "_id";
@@ -48,6 +51,7 @@ public class dbLibraryHelper {
 					+ BOOKMARKS_KEY_ID + " integer primary key autoincrement, "
 					+ BOOKMARKS_OSIS + " text unique not null, "
 					+ BOOKMARKS_LINK + " text not null, "
+					+ BOOKMARKS_NAME + " text not null, "
 					+ BOOKMARKS_DATE + " text not null"
 				+ ");",
 			"create table " + DataConstants.BOOKMARKS_TAGS_TABLE + " ("
@@ -65,7 +69,7 @@ public class dbLibraryHelper {
 			? DataConstants.DB_EXTERNAL_DATA_PATH
 			: DataConstants.DB_DATA_PATH);
 
-	public static SQLiteDatabase getLibraryDB() {
+	private static SQLiteDatabase getDB() {
 		File dbDir = new File(DB_DIR_PATH);
 		if (!dbDir.exists()) dbDir.mkdir();
 		SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(new File(dbDir, DataConstants.DB_LIBRARY_NAME), null);
@@ -88,16 +92,16 @@ public class dbLibraryHelper {
 		return db;
 	}
 
-	public static SQLiteDatabase openDB() {
-		SQLiteDatabase db = getLibraryDB();
-		db.beginTransaction();
+	public static SQLiteDatabase getLibraryDB() {
+		if (db == null) {
+			db = getDB();
+		}
 		return db;
 	}
 
-	public static void closeDB(SQLiteDatabase db) {
-		db.setTransactionSuccessful();
-		db.endTransaction();
+	public static void closeDB() {
 		db.close();
+		db = null;
 	}
 
 	private static void onCreate(SQLiteDatabase db) {
@@ -107,7 +111,11 @@ public class dbLibraryHelper {
 	}
 
 	private static void onUpgrade(SQLiteDatabase db, int currVersion) {
-		//TODO Create dbLibraryHelper.onUpgrade()
+		if (currVersion == 1 && version == 2) {
+			Log.i(TAG, "Upgrade DB to version 2");
+			db.execSQL("ALTER TABLE " + DataConstants.BOOKMARKS_TABLE + " ADD COLUMN " + BOOKMARKS_NAME + " TEXT;");
+			db.setVersion(version);
+		}
 	}
 }
 

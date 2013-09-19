@@ -31,21 +31,24 @@ public class Bookmark {
 	public long id;
 	public String OSISLink;
 	public String humanLink;
+	public String name;
 	public String date;
+	public String tags;
 
-	public Bookmark(int id, String OSISLink, String humanLink, String date) {
+	public Bookmark(int id, String OSISLink, String humanLink, String name, String date) {
 		this.id = id;
 		this.OSISLink = OSISLink;
 		this.humanLink = humanLink;
+		this.name = (name == null || name.equals("")) ? humanLink : name ;
 		this.date = date;
 	}
 
 	public Bookmark(String OSISLink, String humanLink) {
-		this(0, OSISLink, humanLink, DateFormat.getDateInstance(DateFormat.MEDIUM).format(Calendar.getInstance().getTime()));
+		this(0, OSISLink, humanLink, humanLink, DateFormat.getDateInstance(DateFormat.MEDIUM).format(Calendar.getInstance().getTime()));
 	}
 
 	public Bookmark(String OSISLink, String humanLink, String date) {
-		this(0, OSISLink, humanLink, date);
+		this(0, OSISLink, humanLink, humanLink, date);
 	}
 
 	public Bookmark(BibleReference ref) {

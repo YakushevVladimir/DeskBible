@@ -35,20 +35,6 @@ public class prefBookmarksRepository implements IBookmarksRepository {
 	private static final Byte BOOKMARK_PATH_DELIMITER = (byte) 0xFF;
 
 	@Override
-	public void sort() {
-		String fav = PreferenceHelper.restoreStateString("Favorits");
-		if (!fav.equals("")) {
-			TreeSet<String> favorits = new TreeSet<String>();
-			favorits.addAll(Arrays.asList(fav.split(BOOKMARK_DELIMITER.toString())));
-			StringBuilder newFav = new StringBuilder();
-			for (String favItem : favorits) {
-				newFav.append(favItem + BOOKMARK_DELIMITER);
-			}
-			PreferenceHelper.saveStateString("Favorits", newFav.toString());
-		}
-	}
-
-	@Override
 	public long add(Bookmark bookmark) {
 		String fav = PreferenceHelper.restoreStateString("Favorits");
 		PreferenceHelper.saveStateString("Favorits", bookmark.humanLink + BOOKMARK_PATH_DELIMITER + bookmark.OSISLink + BOOKMARK_DELIMITER + fav);

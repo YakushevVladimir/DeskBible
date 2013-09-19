@@ -35,27 +35,33 @@ public class dbBookmarksTagsRepository {
 	private final static String TAG = dbBookmarksTagsRepository.class.getSimpleName();
 
 	public void add(long bmID, ArrayList<Long> tagIDs){
-		SQLiteDatabase db = dbLibraryHelper.openDB();
-		for (long tagID : tagIDs) {
-			ContentValues values = new ContentValues();
-			values.put(dbLibraryHelper.BOOKMARKS_TAGS_BM_ID, bmID);
-			values.put(dbLibraryHelper.BOOKMARKS_TAGS_TAG_ID, tagID);
-			db.insert(DataConstants.BOOKMARKS_TAGS_TABLE, null, values);
+		SQLiteDatabase db = dbLibraryHelper.getLibraryDB();
+		db.beginTransaction();
+		try {
+			for (long tagID : tagIDs) {
+				ContentValues values = new ContentValues();
+				values.put(dbLibraryHelper.BOOKMARKS_TAGS_BM_ID, bmID);
+				values.put(dbLibraryHelper.BOOKMARKS_TAGS_TAG_ID, tagID);
+				db.insert(DataConstants.BOOKMARKS_TAGS_TABLE, null, values);
+			}
+			db.setTransactionSuccessful();
+		} finally {
+			db.endTransaction();
 		}
-		dbLibraryHelper.closeDB(db);
+		dbLibraryHelper.closeDB();
 	}
 
 	public void deleteAll() {
 		Log.w(TAG, "Delete all bookmarks");
-		SQLiteDatabase db = dbLibraryHelper.openDB();
-		db.delete(DataConstants.BOOKMARKS_TAGS_TABLE, null, null);
-		dbLibraryHelper.closeDB(db);
-	}
-
-	public void updateBookmarksID(SQLiteDatabase db, long oldID, long newID) {
-		ContentValues values = new ContentValues();
-		values.put(dbLibraryHelper.BOOKMARKS_TAGS_BM_ID, newID);
-		db.update(DataConstants.BOOKMARKS_TAGS_TABLE, values, dbLibraryHelper.BOOKMARKS_TAGS_BM_ID + "=" + oldID, null);
+		SQLiteDatabase db = dbLibraryHelper.getLibraryDB();
+		db.beginTransaction();
+		try {
+			db.delete(DataConstants.BOOKMARKS_TAGS_TABLE, null, null);
+			db.setTransactionSuccessful();
+		} finally {
+			db.endTransaction();
+		}
+		dbLibraryHelper.closeDB();
 	}
 
 	public void deleteBookmarks(SQLiteDatabase db, Bookmark bm) {
@@ -64,5 +70,32 @@ public class dbBookmarksTagsRepository {
 
 	public void deleteTag(SQLiteDatabase db, Tag tag) {
 		db.delete(DataConstants.BOOKMARKS_TAGS_TABLE, dbLibraryHelper.BOOKMARKS_TAGS_TAG_ID + "=" + tag.id, null);
+	}
+
+	public String getTags(long bmID) {
+		StringBuilder result = new StringBuilder();
+		SQLiteDatabase db = dbLibraryHelper.getLibraryDB();
+		db.beginTransaction();
+		try {
+			Cursor cur = db.rawQuery("select " + dbLibraryHelper.TAGS_NAME
+					+ " from " + DataConstants.TAGS_TABLE + ", " + DataConstants.BOOKMARKS_TAGS_TABLE
+					+ " where " + DataConstants.TAGS_TABLE + "." + dbLibraryHelper.TAGS_KEY_ID
+					+ " = " + DataConstants.BOOKMARKS_TAGS_TABLE + "." + dbLibraryHelper.BOOKMARKS_TAGS_TAG_ID
+					+ " AND " + DataConstants.BOOKMARKS_TAGS_TABLE + "." + dbLibraryHelper.BOOKMARKS_TAGS_BM_ID
+					+ " = \"" + bmID + "\";",
+					null);
+			if (cur.moveToFirst()) {
+				do {
+					if (result.length() != 0)
+						result.append(", ");
+					result.append(cur.getString(0));
+				} while (cur.moveToNext());
+			}
+			cur.close();
+			db.setTransactionSuccessful();
+		} finally {
+			db.endTransaction();
+		}
+		return result.toString();
 	}
 }

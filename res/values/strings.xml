@@ -18,7 +18,6 @@
 -->
 <resources>
     <string name="app_name">Bible</string>
-    <!-- About -->
     <string name="about">About</string>
     <string name="app_about_name">BibleQuote %1$s</string>
     <string name="app_about_license">Apache License Version 2.0</string>
@@ -32,7 +31,6 @@
     <string name="app_about_email">ru.phoenix@gmail.com</string>
     <string name="app_about_www_label">WWW:</string>
     <string name="app_about_www">www.scripturesoftware.org</string>
-    <!-- Activity -->
     <string name="settings">Settings</string>
     <string name="help">Help</string>
     <string name="search">Search</string>
@@ -40,7 +38,6 @@
     <string name="bookmarks">Bookmarks</string>
     <string name="library">Library</string>
     <string name="cross_reference">Cross-reference </string>
-    <!-- Settings -->
     <string name="preference_screen_reader">Reading window</string>
     <string name="preference_screen_reader_summary">Settings window of reading</string>
     <string name="category_reader_appearance">Appearance</string>
@@ -64,14 +61,12 @@
     <string name="preference_screen_cross_references">Cross references</string>
     <string name="cross_references_display_context">Display context</string>
     <string name="cross_references_display_context_summary">Display context of the list of references</string>
-    <!-- Menu -->
     <string name="menu_night_day_mode">Nigth / Day mode</string>
     <string name="menu_favorites">Bookmarks</string>
     <string name="menu_history">History</string>
     <string name="menu_search">Search</string>
     <string name="menu_help">Help</string>
     <string name="menu_settings">Settings</string>
-    <!-- Dialogs -->
     <string name="find">Find</string>
     <string name="menu">Menu</string>
     <string name="cancel">Cancel</string>
@@ -97,7 +92,6 @@
     <string name="dialog_color_picker">Choose a color</string>
     <string name="press_color_to_apply">Press to apply</string>
     <string name="references">References</string>
-    <!-- Exceptions -->
     <string name="exception_book_definition">Incorrect attributes of book #%1$s in module %2$s: PathName=%3$s, FullName=%4$s, ShortName=%5$s, ChapterQty=%6$s</string>
     <string name="exception_book_not_found">Book %1$s not found in module %2$s</string>
     <string name="exception_open_module">Incorrect module %1$s(%2$s)</string>
@@ -123,7 +117,7 @@
 	<string name="menu_speek">Read...</string>
 	<string name="no_tags">No tags</string>
 	<string name="empty">Empty</string>
-	<string name="tags">Tags</string>
+	<string name="tags">Tag\'s</string>
 	<string name="bookmark_name">Bookmark name</string>
-	<string name="bookmark_tags">Tag\'s</string>
+	<string name="add">Add</string>
 </resources>
