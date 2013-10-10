@@ -42,13 +42,13 @@ public class TabsAdapter extends FragmentPagerAdapter
 
 	static final class TabInfo {
 		private final String tag;
-		private final Class<?> clss;
+		private final Fragment fragment;
 		private final Bundle args;
 
-		TabInfo(String _tag, Class<?> _class, Bundle _args) {
-			tag = _tag;
-			clss = _class;
-			args = _args;
+		TabInfo(String tag, Fragment fragment, Bundle args) {
+			this.tag = tag;
+			this.fragment = fragment;
+			this.args = args;
 		}
 	}
 
@@ -78,11 +78,11 @@ public class TabsAdapter extends FragmentPagerAdapter
 		mViewPager.setOnPageChangeListener(this);
 	}
 
-	public void addTab(TabHost.TabSpec tabSpec, Class<?> clss, Bundle args) {
+	public void addTab(TabHost.TabSpec tabSpec, Fragment fragment, Bundle args) {
 		tabSpec.setContent(new DummyTabFactory(mContext));
 		String tag = tabSpec.getTag();
 
-		TabInfo info = new TabInfo(tag, clss, args);
+		TabInfo info = new TabInfo(tag, fragment, args);
 		mTabs.add(info);
 		mTabHost.addTab(tabSpec);
 		notifyDataSetChanged();
@@ -96,7 +96,7 @@ public class TabsAdapter extends FragmentPagerAdapter
 	@Override
 	public Fragment getItem(int position) {
 		TabInfo info = mTabs.get(position);
-		return Fragment.instantiate(mContext, info.clss.getName(), info.args);
+		return info.fragment;
 	}
 
 	@Override
@@ -111,11 +111,6 @@ public class TabsAdapter extends FragmentPagerAdapter
 
 	@Override
 	public void onPageSelected(int position) {
-		// Unfortunately when TabHost changes the current tab, it kindly
-		// also takes care of putting focus on it when not in touch mode.
-		// The jerk.
-		// This hack tries to prevent this from pulling focus out of our
-		// ViewPager.
 		TabWidget widget = mTabHost.getTabWidget();
 		int oldFocusability = widget.getDescendantFocusability();
 		widget.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);

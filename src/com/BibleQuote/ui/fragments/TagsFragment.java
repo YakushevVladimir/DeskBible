@@ -16,6 +16,7 @@
 
 package com.BibleQuote.ui.fragments;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -59,6 +60,16 @@ public class TagsFragment extends SherlockListFragment implements AdapterView.On
 		lw.setOnItemLongClickListener(this);
 
 		setAdapter();
+	}
+
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		try {
+			this.tagSelectListener = (OnTagSelectListener) activity;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity.toString() + " must implement onSomeEventListener");
+		}
 	}
 
 	@Override

@@ -16,6 +16,7 @@
 
 package com.BibleQuote.ui.fragments;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -31,7 +32,6 @@ import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.managers.bookmarks.Bookmark;
 import com.BibleQuote.managers.bookmarks.BookmarksManager;
 import com.BibleQuote.managers.tags.Tag;
-import com.BibleQuote.ui.BookmarksActivity;
 import com.BibleQuote.ui.widget.listview.ItemAdapter;
 import com.BibleQuote.ui.widget.listview.item.BookmarkItem;
 import com.BibleQuote.ui.widget.listview.item.Item;
@@ -50,7 +50,6 @@ import java.util.List;
 public class BookmarksFragment extends SherlockListFragment implements AdapterView.OnItemLongClickListener {
 	private final static String TAG = BookmarksFragment.class.getSimpleName();
 
-	private BookmarksManager bookmarksManager;
 	private Librarian myLibrarian;
 	private Bookmark currBookmark;
 
@@ -62,12 +61,26 @@ public class BookmarksFragment extends SherlockListFragment implements AdapterVi
 
 		BibleQuoteApp app = (BibleQuoteApp) getSherlockActivity().getApplication();
 		myLibrarian = app.getLibrarian();
-		bookmarksManager = new BookmarksManager(app.getBookmarksRepository());
 
 		ListView lw = getListView();
 		lw.setOnItemLongClickListener(this);
 
 		setAdapter();
+	}
+
+	private BookmarksManager getBookmarksManager() {
+		BibleQuoteApp app = (BibleQuoteApp) getSherlockActivity().getApplication();
+		return new BookmarksManager(app.getBookmarksRepository());
+	}
+
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		try {
+			this.onBookmarsSelectListener = (OnBookmarkSelectListener) activity;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity.toString() + " must implement OnBookmarkSelectListener");
+		}
 	}
 
 	@Override
@@ -92,7 +105,7 @@ public class BookmarksFragment extends SherlockListFragment implements AdapterVi
 				builder.setMessage(R.string.fav_delete_all_question);
 				builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
-						bookmarksManager.deleteAll();
+						getBookmarksManager().deleteAll();
 						setAdapter();
 					}
 				});
@@ -119,7 +132,7 @@ public class BookmarksFragment extends SherlockListFragment implements AdapterVi
 		BibleReference osisLink = new BibleReference(currBookmark.OSISLink);
 		if (!myLibrarian.isOSISLinkValid(osisLink)) {
 			Log.i(TAG, "Delete invalid bookmark: " + currBookmark);
-			bookmarksManager.delete(currBookmark);
+			getBookmarksManager().delete(currBookmark);
 			setAdapter();
 			Toast.makeText(getSherlockActivity(), R.string.bookmark_invalid_removed, Toast.LENGTH_LONG).show();
 		} else {
@@ -143,7 +156,7 @@ public class BookmarksFragment extends SherlockListFragment implements AdapterVi
 	private DialogInterface.OnClickListener positiveButton_OnClick = new DialogInterface.OnClickListener() {
 		public void onClick(DialogInterface dialog, int which) {
 			Log.i(TAG, "Delete bookmark: " + currBookmark);
-			bookmarksManager.delete(currBookmark);
+			getBookmarksManager().delete(currBookmark);
 			setAdapter();
 			Toast.makeText(getSherlockActivity(), R.string.removed, Toast.LENGTH_LONG).show();
 		}
@@ -151,7 +164,7 @@ public class BookmarksFragment extends SherlockListFragment implements AdapterVi
 
 	private void setAdapter() {
 		List<Item> items = new ArrayList<Item>();
-		for (Bookmark curr : bookmarksManager.getAll()) {
+		for (Bookmark curr : getBookmarksManager().getAll()) {
 			items.add(new BookmarkItem(curr));
 		}
 		ItemAdapter adapter = new ItemAdapter(getSherlockActivity(), items);
@@ -160,7 +173,7 @@ public class BookmarksFragment extends SherlockListFragment implements AdapterVi
 
 	private void setAdapter(Tag tag) {
 		List<Item> items = new ArrayList<Item>();
-		for (Bookmark curr : bookmarksManager.getAll(tag)) {
+		for (Bookmark curr : getBookmarksManager().getAll(tag)) {
 			items.add(new BookmarkItem(curr));
 		}
 		ItemAdapter adapter = new ItemAdapter(getSherlockActivity(), items);
@@ -171,19 +184,19 @@ public class BookmarksFragment extends SherlockListFragment implements AdapterVi
 		setAdapter(tag);
 	}
 
-	public interface IBookmarksListener {
+	public interface OnBookmarkSelectListener {
 		void onBookmarksSelect(Bookmark OSISLink);
 	}
 
-	private IBookmarksListener listener;
-
-	public void setBookmarksListener(IBookmarksListener listener) {
-		Log.i(TAG, "Set bookmarks listener");
-		this.listener = listener;
+	private OnBookmarkSelectListener onBookmarsSelectListener;
+	public void setBookmarksListener(OnBookmarkSelectListener listener) {
+		Log.i(TAG, "Set bookmarks onBookmarsSelectListener");
+		this.onBookmarsSelectListener = listener;
 	}
 
 	private void alertListener(Bookmark OSISLink) {
-		Log.i(TAG, "Alert listener");
-		((IBookmarksListener) getSherlockActivity()).onBookmarksSelect(OSISLink);
+		if (onBookmarsSelectListener != null) {
+			onBookmarsSelectListener.onBookmarksSelect(OSISLink);
+		}
 	}
 }

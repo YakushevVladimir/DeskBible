@@ -32,16 +32,13 @@ import com.BibleQuote.utils.ViewUtils;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 public class BookmarksActivity extends SherlockFragmentActivity
-		implements BookmarksFragment.IBookmarksListener, TagsFragment.OnTagSelectListener {
+		implements BookmarksFragment.OnBookmarkSelectListener, TagsFragment.OnTagSelectListener {
 
 	private final String TAG = BookmarksActivity.class.getSimpleName();
 
 	private TabHost mTabHost;
 	private ViewPager mViewPager;
 	private TabsAdapter mTabsAdapter;
-
-	private BookmarksFragment bmFragment;
-	private TagsFragment tagsFragment;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -55,19 +52,13 @@ public class BookmarksActivity extends SherlockFragmentActivity
 
 		mTabsAdapter = new TabsAdapter(this, mTabHost, mViewPager);
 		mTabsAdapter.addTab(mTabHost.newTabSpec("bookmarks").setIndicator(getTabIndicator(R.string.bookmarks)),
-				BookmarksFragment.class, null);
+				new BookmarksFragment(), null);
 		mTabsAdapter.addTab(mTabHost.newTabSpec("tags").setIndicator(getTabIndicator(R.string.tags)),
-				TagsFragment.class, null);
+				new TagsFragment(), null);
 
 		if (savedInstanceState != null) {
 			mTabHost.setCurrentTabByTag(savedInstanceState.getString("tab"));
 		}
-
-		bmFragment = ((BookmarksFragment) mTabsAdapter.getItem(0));
-		bmFragment.setBookmarksListener(this);
-
-		tagsFragment = ((TagsFragment) mTabsAdapter.getItem(1));
-		tagsFragment.setOnTagSelectListener(this);
 	}
 
 	private View getTabIndicator(int stringID) {
@@ -83,6 +74,7 @@ public class BookmarksActivity extends SherlockFragmentActivity
 		outState.putString("tab", mTabHost.getCurrentTabTag());
 	}
 
+
 	@Override
 	public void onBookmarksSelect(Bookmark bookmark) {
 		Intent intent = new Intent();
@@ -93,7 +85,7 @@ public class BookmarksActivity extends SherlockFragmentActivity
 
 	@Override
 	public void onTagSelect(Tag tag) {
-		bmFragment.setTagFilter(tag);
 		mTabHost.setCurrentTab(0);
+		((BookmarksFragment) mTabsAdapter.getItem(0)).setTagFilter(tag);
 	}
 }
