@@ -23,6 +23,7 @@ import android.view.View;
 import android.widget.TabHost;
 import android.widget.TextView;
 import com.BibleQuote.R;
+import com.BibleQuote.managers.tags.Tag;
 import com.BibleQuote.ui.adapters.TabsAdapter;
 import com.BibleQuote.ui.fragments.BookmarksFragment;
 import com.BibleQuote.ui.fragments.TagsFragment;
@@ -30,7 +31,8 @@ import com.BibleQuote.managers.bookmarks.Bookmark;
 import com.BibleQuote.utils.ViewUtils;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
-public class BookmarksActivity extends SherlockFragmentActivity implements BookmarksFragment.IBookmarksListener {
+public class BookmarksActivity extends SherlockFragmentActivity
+		implements BookmarksFragment.IBookmarksListener, TagsFragment.OnTagSelectListener {
 
 	private final String TAG = BookmarksActivity.class.getSimpleName();
 
@@ -38,7 +40,8 @@ public class BookmarksActivity extends SherlockFragmentActivity implements Bookm
 	private ViewPager mViewPager;
 	private TabsAdapter mTabsAdapter;
 
-	BookmarksFragment bmFragment;
+	private BookmarksFragment bmFragment;
+	private TagsFragment tagsFragment;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -62,6 +65,9 @@ public class BookmarksActivity extends SherlockFragmentActivity implements Bookm
 
 		bmFragment = ((BookmarksFragment) mTabsAdapter.getItem(0));
 		bmFragment.setBookmarksListener(this);
+
+		tagsFragment = ((TagsFragment) mTabsAdapter.getItem(1));
+		tagsFragment.setOnTagSelectListener(this);
 	}
 
 	private View getTabIndicator(int stringID) {
@@ -83,5 +89,11 @@ public class BookmarksActivity extends SherlockFragmentActivity implements Bookm
 		intent.putExtra("linkOSIS", bookmark.OSISLink);
 		setResult(RESULT_OK, intent);
 		finish();
+	}
+
+	@Override
+	public void onTagSelect(Tag tag) {
+		bmFragment.setTagFilter(tag);
+		mTabHost.setCurrentTab(0);
 	}
 }

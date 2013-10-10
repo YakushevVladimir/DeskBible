@@ -16,13 +16,21 @@
 
 package com.BibleQuote.ui.fragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import com.BibleQuote.R;
+import com.BibleQuote.managers.tags.Tag;
+import com.BibleQuote.managers.tags.TagsManager;
+import com.BibleQuote.managers.tags.repository.ITagRepository;
+import com.BibleQuote.managers.tags.repository.dbTagRepository;
 import com.BibleQuote.ui.widget.listview.ItemAdapter;
 import com.BibleQuote.ui.widget.listview.item.Item;
+import com.BibleQuote.ui.widget.listview.item.TagItem;
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -35,9 +43,10 @@ import java.util.List;
  * User: Vladimir Yakushev
  * Date: 14.05.13
  */
-public class TagsFragment extends SherlockListFragment {
-	private final static String TAG = TagsFragment.class.getSimpleName();
+public class TagsFragment extends SherlockListFragment implements AdapterView.OnItemLongClickListener {
 
+	private final static String TAG = TagsFragment.class.getSimpleName();
+	private final TagsManager tagManager = new TagsManager(new dbTagRepository());
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -47,7 +56,7 @@ public class TagsFragment extends SherlockListFragment {
 
 		ListView lw = getListView();
 		lw.setLongClickable(true);
-		lw.setOnLongClickListener(OnItemLongClickListener);
+		lw.setOnItemLongClickListener(this);
 
 		setAdapter();
 	}
@@ -70,18 +79,49 @@ public class TagsFragment extends SherlockListFragment {
 
 	@Override
 	public void onListItemClick(ListView LV, View v, int position, long id) {
+		final Tag currTag = ((TagItem) LV.getAdapter().getItem(position)).tag;
+		onTagSelectListenerAlert(currTag);
 	}
 
-	private View.OnLongClickListener OnItemLongClickListener = new View.OnLongClickListener() {
-		@Override
-		public boolean onLongClick(View view) {
-			return true;
-		}
-	};
+	@Override
+	public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
+		final Tag currTag = ((TagItem) adapterView.getItemAtPosition(position)).tag;
+		AlertDialog.Builder b = new AlertDialog.Builder(getSherlockActivity());
+		b.setIcon(R.drawable.icon);
+		b.setTitle(currTag.name);
+		b.setMessage(R.string.question_del_tag);
+		b.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				tagManager.delete(currTag);
+			}
+		});
+		b.setNegativeButton(R.string.cancel, null);
+		b.show();
+		return true;
+	}
 
 	private void setAdapter() {
 		List<Item> items = new ArrayList<Item>();
+		for (Tag currTag : tagManager.getAll()) {
+			items.add(new TagItem(currTag));
+		}
 		ItemAdapter adapter = new ItemAdapter(getSherlockActivity(), items);
 		setListAdapter(adapter);
+	}
+
+	public interface OnTagSelectListener {
+		void onTagSelect(Tag tag);
+	}
+
+	private OnTagSelectListener tagSelectListener;
+	public void setOnTagSelectListener(OnTagSelectListener listener) {
+		this.tagSelectListener = listener;
+	}
+
+	private void onTagSelectListenerAlert(Tag tag) {
+		if (this.tagSelectListener != null) {
+			this.tagSelectListener.onTagSelect(tag);
+		}
 	}
 }

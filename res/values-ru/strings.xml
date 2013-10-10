@@ -114,4 +114,5 @@
 	<string name="tags">Метки</string>
 	<string name="bookmark_name">Имя закладки</string>
 	<string name="add">Добавить</string>
+	<string name="question_del_tag">Delete tag?</string>
 </resources>

@@ -42,5 +42,8 @@
 		<attr name="date" format="string" />
 		<attr name="tags" format="string" />
 	</declare-styleable>
+	<declare-styleable name="TagItem">
+		<attr name="tagName" format="string" />
+	</declare-styleable>
 
 </resources>
