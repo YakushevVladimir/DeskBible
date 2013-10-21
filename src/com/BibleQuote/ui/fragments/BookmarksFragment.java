@@ -105,7 +105,12 @@ public class BookmarksFragment extends SherlockListFragment implements AdapterVi
 				builder.setMessage(R.string.fav_delete_all_question);
 				builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
-						getBookmarksManager().deleteAll();
+						ItemAdapter adapter = (ItemAdapter) getListView().getAdapter();
+						BookmarksManager bManager = getBookmarksManager();
+						for (int i = 0; i < adapter.getCount(); i++) {
+							Bookmark bookmark = ((BookmarkItem) adapter.getItem(i)).bookmark;
+							bManager.delete(bookmark);
+						}
 						setAdapter();
 					}
 				});
