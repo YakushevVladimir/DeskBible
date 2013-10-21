@@ -27,7 +27,6 @@ import android.widget.ListView;
 import com.BibleQuote.R;
 import com.BibleQuote.managers.tags.Tag;
 import com.BibleQuote.managers.tags.TagsManager;
-import com.BibleQuote.managers.tags.repository.ITagRepository;
 import com.BibleQuote.managers.tags.repository.dbTagRepository;
 import com.BibleQuote.ui.widget.listview.ItemAdapter;
 import com.BibleQuote.ui.widget.listview.item.Item;
@@ -63,10 +62,15 @@ public class TagsFragment extends SherlockListFragment implements AdapterView.On
 	}
 
 	@Override
+	public void onHiddenChanged(boolean hidden) {
+		super.onHiddenChanged(hidden);
+	}
+
+	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		try {
-			this.tagSelectListener = (OnTagSelectListener) activity;
+			setOnTagSelectListener((OnTagsChangeListener) activity);
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString() + " must implement onSomeEventListener");
 		}
@@ -75,6 +79,7 @@ public class TagsFragment extends SherlockListFragment implements AdapterView.On
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		Log.i(TAG, "onCreateOptionsMenu");
+		inflater.inflate(R.menu.menu_tags, menu);
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 
@@ -85,6 +90,15 @@ public class TagsFragment extends SherlockListFragment implements AdapterView.On
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.action_bar_refresh:
+				setAdapter();
+				break;
+
+			default:
+				break;
+		}
+
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -105,6 +119,8 @@ public class TagsFragment extends SherlockListFragment implements AdapterView.On
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				tagManager.delete(currTag);
+				setAdapter();
+				onTagsUppdateListenerAlert();
 			}
 		});
 		b.setNegativeButton(R.string.cancel, null);
@@ -121,18 +137,29 @@ public class TagsFragment extends SherlockListFragment implements AdapterView.On
 		setListAdapter(adapter);
 	}
 
-	public interface OnTagSelectListener {
-		void onTagSelect(Tag tag);
+	public void updateTags() {
+		setAdapter();
 	}
 
-	private OnTagSelectListener tagSelectListener;
-	public void setOnTagSelectListener(OnTagSelectListener listener) {
-		this.tagSelectListener = listener;
+	public interface OnTagsChangeListener {
+		void onTagSelect(Tag tag);
+		void onTagsUpdate();
+	}
+
+	private OnTagsChangeListener onTagsChangeListener;
+	public void setOnTagSelectListener(OnTagsChangeListener listener) {
+		this.onTagsChangeListener = listener;
 	}
 
 	private void onTagSelectListenerAlert(Tag tag) {
-		if (this.tagSelectListener != null) {
-			this.tagSelectListener.onTagSelect(tag);
+		if (this.onTagsChangeListener != null) {
+			this.onTagsChangeListener.onTagSelect(tag);
+		}
+	}
+
+	private void onTagsUppdateListenerAlert() {
+		if (this.onTagsChangeListener != null) {
+			this.onTagsChangeListener.onTagsUpdate();
 		}
 	}
 }

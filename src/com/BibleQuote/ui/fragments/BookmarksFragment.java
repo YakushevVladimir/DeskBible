@@ -32,10 +32,13 @@ import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.managers.bookmarks.Bookmark;
 import com.BibleQuote.managers.bookmarks.BookmarksManager;
 import com.BibleQuote.managers.tags.Tag;
+import com.BibleQuote.ui.dialogs.BookmarksDialog;
 import com.BibleQuote.ui.widget.listview.ItemAdapter;
 import com.BibleQuote.ui.widget.listview.item.BookmarkItem;
 import com.BibleQuote.ui.widget.listview.item.Item;
+import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.actionbarsherlock.app.SherlockListFragment;
+import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -77,9 +80,9 @@ public class BookmarksFragment extends SherlockListFragment implements AdapterVi
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		try {
-			this.onBookmarsSelectListener = (OnBookmarkSelectListener) activity;
+			setBookmarksListener((OnBookmarksChangeListener) activity);
 		} catch (ClassCastException e) {
-			throw new ClassCastException(activity.toString() + " must implement OnBookmarkSelectListener");
+			throw new ClassCastException(activity.toString() + " must implement OnBookmarksChangeListener");
 		}
 	}
 
@@ -112,6 +115,7 @@ public class BookmarksFragment extends SherlockListFragment implements AdapterVi
 							bManager.delete(bookmark);
 						}
 						setAdapter();
+						onBookmarksUpdateAlertListener();
 					}
 				});
 				builder.setNegativeButton(R.string.cancel,
@@ -120,6 +124,10 @@ public class BookmarksFragment extends SherlockListFragment implements AdapterVi
 							}
 						});
 				builder.show();
+				break;
+
+			case R.id.action_bar_refresh:
+				setAdapter();
 				break;
 
 			default:
@@ -148,13 +156,7 @@ public class BookmarksFragment extends SherlockListFragment implements AdapterVi
 	@Override
 	public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
 		currBookmark = ((BookmarkItem) adapterView.getItemAtPosition(position)).bookmark;
-		AlertDialog.Builder b = new AlertDialog.Builder(getSherlockActivity());
-		b.setIcon(R.drawable.icon);
-		b.setTitle(currBookmark.humanLink);
-		b.setMessage(R.string.fav_question_del_fav);
-		b.setPositiveButton("OK", positiveButton_OnClick);
-		b.setNegativeButton(R.string.cancel, null);
-		b.show();
+		currActionMode = getSherlockActivity().startActionMode(new BookmarksSelectAction());
 		return true;
 	}
 
@@ -163,6 +165,7 @@ public class BookmarksFragment extends SherlockListFragment implements AdapterVi
 			Log.i(TAG, "Delete bookmark: " + currBookmark);
 			getBookmarksManager().delete(currBookmark);
 			setAdapter();
+			onBookmarksUpdateAlertListener();
 			Toast.makeText(getSherlockActivity(), R.string.removed, Toast.LENGTH_LONG).show();
 		}
 	};
@@ -189,19 +192,82 @@ public class BookmarksFragment extends SherlockListFragment implements AdapterVi
 		setAdapter(tag);
 	}
 
-	public interface OnBookmarkSelectListener {
-		void onBookmarksSelect(Bookmark OSISLink);
+	public void updateBookmarks() {
+		if (currActionMode != null) {
+			currActionMode.finish();
+			currActionMode = null;
+		}
+		setAdapter();
+		getView().invalidate();
 	}
 
-	private OnBookmarkSelectListener onBookmarsSelectListener;
-	public void setBookmarksListener(OnBookmarkSelectListener listener) {
-		Log.i(TAG, "Set bookmarks onBookmarsSelectListener");
-		this.onBookmarsSelectListener = listener;
+	private ActionMode currActionMode;
+	private final class BookmarksSelectAction implements ActionMode.Callback {
+
+		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+			MenuInflater infl = getSherlockActivity().getSupportMenuInflater();
+			infl.inflate(R.menu.menu_action_bookmark_select, menu);
+			return true;
+		}
+
+		public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+			return false;
+		}
+
+		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+			switch (item.getItemId()) {
+				case R.id.action_edit:
+					SherlockDialogFragment bmDial = new BookmarksDialog(
+							new Bookmark(currBookmark.id, currBookmark.OSISLink, currBookmark.humanLink,
+									currBookmark.name, currBookmark.date));
+					bmDial.show(getSherlockActivity().getSupportFragmentManager(), "bookmark");
+					break;
+
+				case R.id.action_delete:
+					AlertDialog.Builder b = new AlertDialog.Builder(getSherlockActivity());
+					b.setIcon(R.drawable.icon);
+					b.setTitle(currBookmark.humanLink);
+					b.setMessage(R.string.fav_question_del_fav);
+					b.setPositiveButton("OK", positiveButton_OnClick);
+					b.setNegativeButton(R.string.cancel, null);
+					b.show();
+
+					setAdapter();
+					onBookmarksUpdateAlertListener();
+					break;
+
+				default:
+					return false;
+			}
+
+			mode.finish();
+			return true;
+		}
+
+		public void onDestroyActionMode(ActionMode mode) {
+			currActionMode = null;
+		}
+	}
+
+
+	public interface OnBookmarksChangeListener {
+		void onBookmarksSelect(Bookmark OSISLink);
+		void onBookmarksUpdate();
+	}
+
+	private OnBookmarksChangeListener onBookmarksListener;
+	public void setBookmarksListener(OnBookmarksChangeListener listener) {
+		Log.i(TAG, "Set bookmarks onBookmarksListener");
+		this.onBookmarksListener = listener;
 	}
 
 	private void alertListener(Bookmark OSISLink) {
-		if (onBookmarsSelectListener != null) {
-			onBookmarsSelectListener.onBookmarksSelect(OSISLink);
+		if (onBookmarksListener != null) {
+			onBookmarksListener.onBookmarksSelect(OSISLink);
 		}
+	}
+
+	private void onBookmarksUpdateAlertListener() {
+		if (onBookmarksListener != null) onBookmarksListener.onBookmarksUpdate();
 	}
 }

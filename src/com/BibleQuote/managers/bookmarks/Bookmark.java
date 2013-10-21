@@ -17,6 +17,7 @@
 package com.BibleQuote.managers.bookmarks;
 
 import com.BibleQuote.entity.BibleReference;
+import com.BibleQuote.managers.bookmarks.repository.dbBookmarksTagsRepository;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -35,12 +36,13 @@ public class Bookmark {
 	public String date;
 	public String tags;
 
-	public Bookmark(int id, String OSISLink, String humanLink, String name, String date) {
+	public Bookmark(long id, String OSISLink, String humanLink, String name, String date) {
 		this.id = id;
 		this.OSISLink = OSISLink;
 		this.humanLink = humanLink;
 		this.name = (name == null || name.equals("")) ? humanLink : name ;
 		this.date = date;
+		this.tags = new dbBookmarksTagsRepository().getTags(id);
 	}
 
 	public Bookmark(String OSISLink, String humanLink) {

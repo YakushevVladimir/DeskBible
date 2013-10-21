@@ -51,7 +51,9 @@ public class BookmarkItemView extends LinearLayout implements ItemView {
 		mName.setText(item.name);
 		mDate.setText(item.date);
 		mLink.setText(item.link);
-		mTags.setText(item.tags);
+		if (!item.tags.equals("")) {
+			mTags.setText(item.tags);
+		}
 	}
 
 }

@@ -19,9 +19,15 @@
 <menu
 	xmlns:android="http://schemas.android.com/apk/res/android">
 	<item
-			android:id="@+id/action_bar_delete"
-			android:title="@string/fav_delete_all"
-			android:orderInCategory="1"
-			android:icon="@drawable/ic_action_delete"
-			android:showAsAction="ifRoom|withText" />
+		android:id="@+id/action_bar_refresh"
+		android:title="@string/messageRefresh"
+		android:orderInCategory="0"
+		android:icon="@drawable/ic_action_refresh"
+		android:showAsAction="ifRoom|withText" />
+	<item
+		android:id="@+id/action_bar_delete"
+		android:title="@string/fav_delete_all"
+		android:orderInCategory="1"
+		android:icon="@drawable/ic_action_delete"
+		android:showAsAction="ifRoom|withText" />
 </menu>

@@ -39,6 +39,7 @@
 			android:textColor="#6e6e6e"
 			android:textSize="@dimen/text_size_very_small"
 			android:ellipsize="end"
+			android:paddingLeft="2dp"
 			android:singleLine="true"
 			android:text="2 May, 2013"/>
 
@@ -52,7 +53,9 @@
 			android:textSize="@dimen/text_size_medium"
 			android:singleLine="true"
 			android:ellipsize="end"
-			android:text="Bookmark name"/>
+			android:layout_toLeftOf="@id/date"
+			android:text="Bookmark name 1 2 2 3 3 4 54 5 56 6 90"
+			/>
 
 	</RelativeLayout>
 
@@ -64,7 +67,7 @@
 		android:gravity="center_vertical|left"
 		android:textSize="@dimen/text_size_small"
 		android:singleLine="true"
-		android:text="KJV:1Samuel 3:1" />
+		android:text="KJV:1Samuel 3:1"/>
 
 	<TextView
 		android:id="@+id/tags"

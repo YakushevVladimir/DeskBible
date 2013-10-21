@@ -114,14 +114,17 @@ public class dbBookmarksRepository implements IBookmarksRepository {
 	}
 
 	private long addRow(SQLiteDatabase db, Bookmark bookmark) {
-		db.delete(DataConstants.BOOKMARKS_TABLE, dbLibraryHelper.BOOKMARKS_OSIS + "=\"" + bookmark.OSISLink + "\"", null);
-
 		ContentValues values = new ContentValues();
 		values.put(dbLibraryHelper.BOOKMARKS_LINK, bookmark.humanLink);
 		values.put(dbLibraryHelper.BOOKMARKS_OSIS, bookmark.OSISLink);
 		values.put(dbLibraryHelper.BOOKMARKS_NAME, bookmark.name);
 		values.put(dbLibraryHelper.BOOKMARKS_DATE, bookmark.date);
-		return db.insert(DataConstants.BOOKMARKS_TABLE, null, values);
+		if (bookmark.id != 0) {
+			db.update(DataConstants.BOOKMARKS_TABLE, values, dbLibraryHelper.BOOKMARKS_KEY_ID + " = \"" + bookmark.id + "\"", null);
+			return bookmark.id;
+		} else {
+			return db.insert(DataConstants.BOOKMARKS_TABLE, null, values);
+		}
 	}
 
 	private ArrayList<Bookmark> getAllRowsToArray(SQLiteDatabase db) {

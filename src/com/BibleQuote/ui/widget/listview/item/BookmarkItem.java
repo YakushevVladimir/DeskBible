@@ -20,9 +20,12 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import com.BibleQuote.R;
 import com.BibleQuote.managers.bookmarks.Bookmark;
+import com.BibleQuote.ui.widget.listview.itemview.BookmarkItemView;
 import com.BibleQuote.ui.widget.listview.itemview.ItemView;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -57,7 +60,12 @@ public class BookmarkItem extends Item {
 
 	@Override
 	public ItemView newView(Context context, ViewGroup parent) {
-		return createCellFromXml(context, R.layout.bookmark_item_view, parent);
+		BookmarkItemView view = (BookmarkItemView) createCellFromXml(context, R.layout.bookmark_item_view, parent);
+		if (this.name.equals(this.link)) {
+			TextView txtLink = (TextView) view.findViewById(R.id.link);
+			txtLink.setVisibility(View.GONE);
+		}
+		return view;
 	}
 
 	@Override

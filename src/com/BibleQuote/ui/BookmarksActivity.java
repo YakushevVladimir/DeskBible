@@ -32,12 +32,9 @@ import com.BibleQuote.utils.ViewUtils;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 public class BookmarksActivity extends SherlockFragmentActivity
-		implements BookmarksFragment.OnBookmarkSelectListener, TagsFragment.OnTagSelectListener {
-
-	private final String TAG = BookmarksActivity.class.getSimpleName();
+		implements BookmarksFragment.OnBookmarksChangeListener, TagsFragment.OnTagsChangeListener {
 
 	private TabHost mTabHost;
-	private ViewPager mViewPager;
 	private TabsAdapter mTabsAdapter;
 
 	public void onCreate(Bundle savedInstanceState) {
@@ -48,7 +45,7 @@ public class BookmarksActivity extends SherlockFragmentActivity
 		mTabHost = (TabHost)findViewById(android.R.id.tabhost);
 		mTabHost.setup();
 
-		mViewPager = (ViewPager)findViewById(R.id.pager);
+		ViewPager mViewPager = (ViewPager)findViewById(R.id.pager);
 
 		mTabsAdapter = new TabsAdapter(this, mTabHost, mViewPager);
 		mTabsAdapter.addTab(mTabHost.newTabSpec("bookmarks").setIndicator(getTabIndicator(R.string.bookmarks)),
@@ -84,8 +81,18 @@ public class BookmarksActivity extends SherlockFragmentActivity
 	}
 
 	@Override
+	public void onBookmarksUpdate() {
+		((TagsFragment) mTabsAdapter.getItem(1)).updateTags();
+	}
+
+	@Override
 	public void onTagSelect(Tag tag) {
 		mTabHost.setCurrentTab(0);
 		((BookmarksFragment) mTabsAdapter.getItem(0)).setTagFilter(tag);
+	}
+
+	@Override
+	public void onTagsUpdate() {
+		((BookmarksFragment) mTabsAdapter.getItem(0)).updateBookmarks();
 	}
 }

@@ -8,4 +8,5 @@ public interface ITagRepository {
 	int delete(Tag tag);
 	ArrayList<Tag> getAll();
 	int deleteAll();
+	int deleteEmptyTags();
 }

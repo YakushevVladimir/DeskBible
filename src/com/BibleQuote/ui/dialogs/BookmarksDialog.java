@@ -29,11 +29,12 @@ import com.BibleQuote.R;
 import com.BibleQuote.managers.bookmarks.Bookmark;
 import com.BibleQuote.managers.bookmarks.BookmarksManager;
 import com.BibleQuote.managers.bookmarks.repository.dbBookmarksRepository;
+import com.BibleQuote.ui.BookmarksActivity;
 import com.actionbarsherlock.app.SherlockDialogFragment;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 
 public class BookmarksDialog extends SherlockDialogFragment {
-	private String tags = "";
 	private Bookmark bookmark;
 	private TextView tvDate, tvHumanLink;
 	private EditText tvName, tvTags;
@@ -44,7 +45,7 @@ public class BookmarksDialog extends SherlockDialogFragment {
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		LayoutInflater inflater = getActivity().getLayoutInflater();
+		LayoutInflater inflater = getSherlockActivity().getLayoutInflater();
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
 				.setTitle(R.string.bookmarks)
 				.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -74,21 +75,28 @@ public class BookmarksDialog extends SherlockDialogFragment {
 
 	private void addBookmarks() {
 		readField();
-		new BookmarksManager(new dbBookmarksRepository()).add(bookmark, tags);
+		new BookmarksManager(new dbBookmarksRepository()).add(bookmark, bookmark.tags);
+
+		if (getSherlockActivity() instanceof BookmarksActivity) {
+			((BookmarksActivity) getSherlockActivity()).onBookmarksUpdate();
+			((BookmarksActivity) getSherlockActivity()).onTagsUpdate();
+		}
+
 		Toast.makeText(getActivity(), getString(R.string.added), Toast.LENGTH_LONG).show();
+		dismiss();
 	}
 
 	private void fillField() {
 		tvDate.setText(bookmark.date);
 		tvHumanLink.setText(bookmark.humanLink);
 		tvName.setText(bookmark.name);
-		tvTags.setText(this.tags);
+		tvTags.setText(bookmark.tags);
 	}
 
 	private void readField() {
 		bookmark.humanLink = tvHumanLink.getText().toString();
 		bookmark.name = tvName.getText().toString();
 		bookmark.date = tvDate.getText().toString();
-		this.tags = tvTags.getText().toString();
+		bookmark.tags = tvTags.getText().toString();
 	}
 }

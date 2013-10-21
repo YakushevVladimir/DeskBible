@@ -121,4 +121,6 @@
 	<string name="bookmark_name">Bookmark name</string>
 	<string name="add">Add</string>
 	<string name="question_del_tag">Delete tag?</string>
+	<string name="edit">Edit</string>
+	<string name="delete">Delete</string>
 </resources>
