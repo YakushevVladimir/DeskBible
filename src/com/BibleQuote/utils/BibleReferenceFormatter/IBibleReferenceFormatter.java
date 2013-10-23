@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.BibleQuote.utils.bibleReferenceFormatter;
+package com.BibleQuote.utils.BibleReferenceFormatter;
 
 public interface IBibleReferenceFormatter {
 	String getLink();
