@@ -112,9 +112,12 @@
 	<string name="no_tags">Меток нет</string>
 	<string name="empty">Нет данных</string>
 	<string name="tags">Метки</string>
+	<string name="tags_description">Укажите метки через запятую</string>
 	<string name="bookmark_name">Имя закладки</string>
 	<string name="add">Добавить</string>
 	<string name="question_del_tag">Удалить метку?</string>
 	<string name="edit">Редактировать</string>
 	<string name="delete">Удалить</string>
+	<string name="disable_turn_screen">Не отключать экран</string>
+	<string name="disable_turn_screen_summury">Не отключать подсветку экрана при чтении (требуется перезагрузка)</string>
 </resources>

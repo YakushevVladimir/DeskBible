@@ -78,9 +78,9 @@ public class dbBookmarksTagsRepository {
 		SQLiteDatabase db = dbLibraryHelper.getLibraryDB();
 		db.beginTransaction();
 		try {
-			Cursor cur = db.rawQuery("SELECT " + dbLibraryHelper.TAGS_NAME
+			Cursor cur = db.rawQuery("SELECT " + Tag.NAME
 					+ " FROM " + dbLibraryHelper.TAGS_TABLE + ", " + dbLibraryHelper.BOOKMARKSTAGS_TABLE
-					+ " WHERE " + dbLibraryHelper.TAGS_TABLE + "." + dbLibraryHelper.TAGS_KEY_ID
+					+ " WHERE " + dbLibraryHelper.TAGS_TABLE + "." + Tag.KEY_ID
 					+ " = " + dbLibraryHelper.BOOKMARKSTAGS_TABLE + "." + BookmarksTags.BOOKMARKSTAGS_TAG_ID
 					+ " AND " + dbLibraryHelper.BOOKMARKSTAGS_TABLE + "." + BookmarksTags.BOOKMARKSTAGS_BM_ID
 					+ " = \"" + bmID + "\";",

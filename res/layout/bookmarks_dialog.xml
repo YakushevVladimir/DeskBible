@@ -53,7 +53,8 @@
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:id="@+id/bm_tags"
-		android:hint="@string/tags"
+		android:hint="@string/tags_description"
+		android:textSize="@dimen/text_size_small"
 		android:drawableLeft="@drawable/ic_list_tag"
 		android:inputType="text|textAutoComplete"/>
 </LinearLayout>

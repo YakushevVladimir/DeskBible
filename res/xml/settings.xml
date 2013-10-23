@@ -70,11 +70,17 @@
 				android:summary="@string/read_mode_by_default_summary"
 				android:title="@string/read_mode_by_default" />
 		<CheckBoxPreference
-				android:defaultValue="false"
-				android:key="DisableAutoScreenRotation"
-				android:persistent="true"
-				android:summary="@string/may_need_to_restart"
-				android:title="@string/disable_auto_screen_rotation" />
+			android:defaultValue="false"
+			android:key="DisableAutoScreenRotation"
+			android:persistent="true"
+			android:summary="@string/may_need_to_restart"
+			android:title="@string/disable_auto_screen_rotation" />
+		<CheckBoxPreference
+			android:defaultValue="true"
+			android:key="DisableTurnScreen"
+			android:persistent="true"
+			android:summary="@string/disable_turn_screen_summury"
+			android:title="@string/disable_turn_screen" />
 
 		<ListPreference
 				android:defaultValue="10"

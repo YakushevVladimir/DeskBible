@@ -30,11 +30,11 @@ import java.util.Calendar;
  */
 public class Bookmark {
 
-	public static final String BOOKMARKS_KEY_ID = "_id";
-	public static final String BOOKMARKS_OSIS = "osis";
-	public static final String BOOKMARKS_LINK = "link";
-	public static final String BOOKMARKS_NAME = "name";
-	public static final String BOOKMARKS_DATE = "date";
+	public static final String KEY_ID = "_id";
+	public static final String OSIS = "osis";
+	public static final String LINK = "link";
+	public static final String NAME = "name";
+	public static final String DATE = "date";
 
 	public long id;
 	public String OSISLink;

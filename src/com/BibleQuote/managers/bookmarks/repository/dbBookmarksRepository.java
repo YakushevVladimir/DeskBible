@@ -55,7 +55,7 @@ public class dbBookmarksRepository implements IBookmarksRepository {
 		SQLiteDatabase db = dbLibraryHelper.getLibraryDB();
 		db.beginTransaction();
 		try {
-			db.delete(dbLibraryHelper.BOOKMARKS_TABLE, Bookmark.BOOKMARKS_OSIS + "=\"" + bookmark.OSISLink + "\"", null);
+			db.delete(dbLibraryHelper.BOOKMARKS_TABLE, Bookmark.OSIS + "=\"" + bookmark.OSISLink + "\"", null);
 			bmTagRepo.deleteBookmarks(db, bookmark);
 			db.setTransactionSuccessful();
 		} finally {
@@ -113,12 +113,17 @@ public class dbBookmarksRepository implements IBookmarksRepository {
 
 	private long addRow(SQLiteDatabase db, Bookmark bookmark) {
 		ContentValues values = new ContentValues();
-		values.put(Bookmark.BOOKMARKS_LINK, bookmark.humanLink);
-		values.put(Bookmark.BOOKMARKS_OSIS, bookmark.OSISLink);
-		values.put(Bookmark.BOOKMARKS_NAME, bookmark.name);
-		values.put(Bookmark.BOOKMARKS_DATE, bookmark.date);
-		if (bookmark.id != 0) {
-			db.update(dbLibraryHelper.BOOKMARKS_TABLE, values, Bookmark.BOOKMARKS_KEY_ID + " = \"" + bookmark.id + "\"", null);
+		values.put(Bookmark.LINK, bookmark.humanLink);
+		values.put(Bookmark.OSIS, bookmark.OSISLink);
+		values.put(Bookmark.NAME, bookmark.name);
+		values.put(Bookmark.DATE, bookmark.date);
+
+		Cursor curr = db.query(true, dbLibraryHelper.BOOKMARKS_TABLE,
+				null, Bookmark.OSIS + " = \"" + bookmark.OSISLink + "\"", null, null, null, null, null);
+		if (curr.moveToFirst()) {
+			bookmark.id = curr.getInt(curr.getColumnIndex(Bookmark.KEY_ID));
+			values.put(Bookmark.KEY_ID, bookmark.id);
+			db.update(dbLibraryHelper.BOOKMARKS_TABLE, values, Bookmark.KEY_ID + " = \"" + bookmark.id + "\"", null);
 			return bookmark.id;
 		} else {
 			return db.insert(dbLibraryHelper.BOOKMARKS_TABLE, null, values);
@@ -127,28 +132,28 @@ public class dbBookmarksRepository implements IBookmarksRepository {
 
 	private ArrayList<Bookmark> getAllRowsToArray(SQLiteDatabase db) {
 		Cursor allRows = db.query(true, dbLibraryHelper.BOOKMARKS_TABLE,
-				null, null, null, null, null, Bookmark.BOOKMARKS_KEY_ID + " DESC", null);
+				null, null, null, null, null, Bookmark.KEY_ID + " DESC", null);
 		return getBookmarks(allRows);
 	}
 
 	private ArrayList<Bookmark> getAllRowsToArray(SQLiteDatabase db, Tag tag) {
 		Cursor allRows = db.rawQuery(
 				"SELECT "
-						+ dbLibraryHelper.BOOKMARKS_TABLE + "." + Bookmark.BOOKMARKS_KEY_ID + ", "
-						+ dbLibraryHelper.BOOKMARKS_TABLE + "." + Bookmark.BOOKMARKS_OSIS + ", "
-						+ dbLibraryHelper.BOOKMARKS_TABLE + "." + Bookmark.BOOKMARKS_LINK + ", "
-						+ dbLibraryHelper.BOOKMARKS_TABLE + "." + Bookmark.BOOKMARKS_NAME + ", "
-						+ dbLibraryHelper.BOOKMARKS_TABLE + "." + Bookmark.BOOKMARKS_DATE + " "
+						+ dbLibraryHelper.BOOKMARKS_TABLE + "." + Bookmark.KEY_ID + ", "
+						+ dbLibraryHelper.BOOKMARKS_TABLE + "." + Bookmark.OSIS + ", "
+						+ dbLibraryHelper.BOOKMARKS_TABLE + "." + Bookmark.LINK + ", "
+						+ dbLibraryHelper.BOOKMARKS_TABLE + "." + Bookmark.NAME + ", "
+						+ dbLibraryHelper.BOOKMARKS_TABLE + "." + Bookmark.DATE + " "
 				+ "FROM "
 						+ dbLibraryHelper.BOOKMARKS_TABLE + ", " + dbLibraryHelper.BOOKMARKSTAGS_TABLE + " "
 				+ "WHERE "
-						+ dbLibraryHelper.BOOKMARKS_TABLE + "." + Bookmark.BOOKMARKS_KEY_ID
+						+ dbLibraryHelper.BOOKMARKS_TABLE + "." + Bookmark.KEY_ID
 							+ " = " + dbLibraryHelper.BOOKMARKSTAGS_TABLE + "." + BookmarksTags.BOOKMARKSTAGS_BM_ID
 						+ " and "
 							+ dbLibraryHelper.BOOKMARKSTAGS_TABLE + "." + BookmarksTags.BOOKMARKSTAGS_TAG_ID
 							+ " = " + tag.id + " "
 				+ "ORDER BY "
-						+ dbLibraryHelper.BOOKMARKS_TABLE + "." + Bookmark.BOOKMARKS_KEY_ID + " DESC;",
+						+ dbLibraryHelper.BOOKMARKS_TABLE + "." + Bookmark.KEY_ID + " DESC;",
 				null);
 		return getBookmarks(allRows);
 	}
@@ -158,11 +163,11 @@ public class dbBookmarksRepository implements IBookmarksRepository {
 		if (allRows.moveToFirst()) {
 			do {
 				Bookmark bm = new Bookmark(
-						allRows.getInt(allRows.getColumnIndex(Bookmark.BOOKMARKS_KEY_ID)),
-						allRows.getString(allRows.getColumnIndex(Bookmark.BOOKMARKS_OSIS)),
-						allRows.getString(allRows.getColumnIndex(Bookmark.BOOKMARKS_LINK)),
-						allRows.getString(allRows.getColumnIndex(Bookmark.BOOKMARKS_NAME)),
-						allRows.getString(allRows.getColumnIndex(Bookmark.BOOKMARKS_DATE)));
+						allRows.getInt(allRows.getColumnIndex(Bookmark.KEY_ID)),
+						allRows.getString(allRows.getColumnIndex(Bookmark.OSIS)),
+						allRows.getString(allRows.getColumnIndex(Bookmark.LINK)),
+						allRows.getString(allRows.getColumnIndex(Bookmark.NAME)),
+						allRows.getString(allRows.getColumnIndex(Bookmark.DATE)));
 				bm.tags = bmTagRepo.getTags(bm.id);
 				result.add(bm);
 			} while (allRows.moveToNext());

@@ -42,11 +42,11 @@ public class dbLibraryHelper {
 
 	private static final String[] CREATE_DATABASE = new String[] {
 			"create table " + BOOKMARKS_TABLE + " ("
-					+ Bookmark.BOOKMARKS_KEY_ID + " integer primary key autoincrement, "
-					+ Bookmark.BOOKMARKS_OSIS + " text unique not null, "
-					+ Bookmark.BOOKMARKS_LINK + " text not null, "
-					+ Bookmark.BOOKMARKS_NAME + " text not null, "
-					+ Bookmark.BOOKMARKS_DATE + " text not null"
+					+ Bookmark.KEY_ID + " integer primary key autoincrement, "
+					+ Bookmark.OSIS + " text unique not null, "
+					+ Bookmark.LINK + " text not null, "
+					+ Bookmark.NAME + " text not null, "
+					+ Bookmark.DATE + " text not null"
 				+ ");",
 			"create table " + BOOKMARKSTAGS_TABLE + " ("
 					+ BookmarksTags.BOOKMARKSTAGS_KEY_ID + " integer primary key autoincrement, "
@@ -107,7 +107,7 @@ public class dbLibraryHelper {
 	private static void onUpgrade(SQLiteDatabase db, int currVersion) {
 		if (currVersion == 1 && version == 2) {
 			Log.i(TAG, "Upgrade DB to version 2");
-			db.execSQL("ALTER TABLE " + BOOKMARKS_TABLE + " ADD COLUMN " + Bookmark.BOOKMARKS_NAME + " TEXT;");
+			db.execSQL("ALTER TABLE " + BOOKMARKS_TABLE + " ADD COLUMN " + Bookmark.NAME + " TEXT;");
 			db.setVersion(version);
 		}
 	}
