@@ -60,7 +60,14 @@
 		<activity android:name=".ui.SettingsActivity" android:label="@string/settings"/>
 		<activity android:name=".ui.AboutActivity" android:label="@string/about"/>
 		<activity android:name=".ui.HelpActivity" android:label="@string/help"/>
-		<activity android:name=".ui.ReaderActivity" android:configChanges="keyboardHidden|orientation"/>
+		<activity android:name=".ui.ReaderActivity" android:configChanges="keyboardHidden|orientation">
+			<intent-filter>
+				<action android:name="com.BibleQuote.intent.action.OPEN_LINK"></action>
+				<category android:name="android.intent.category.ALTERNATIVE"></category>
+				<data android:host="www.b-bq.eu" android:scheme="http"></data>
+				<data android:host="b-bq.eu" android:scheme="http"></data>
+			</intent-filter>
+		</activity>
 
 		<activity android:name=".ui.CrossReferenceActivity" android:label="@string/cross_reference">
 			<intent-filter>

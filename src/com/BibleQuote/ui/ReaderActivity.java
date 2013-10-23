@@ -19,6 +19,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.media.AudioManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -56,6 +57,8 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.TreeSet;
 
 public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCompleteListener, IReaderViewListener,
@@ -178,8 +181,15 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 		initialyzeViews();
 		updateActivityMode();
 
-		BibleReference osisLink = new BibleReference(PreferenceHelper.restoreStateString("last_read"));
-		if (!myLibrarian.isOSISLinkValid(osisLink)) {
+		BibleReference osisLink;
+		Intent intent = getIntent();
+		if (intent == null) {
+			osisLink = new BibleReference(PreferenceHelper.restoreStateString("last_read"));
+		} else {
+			osisLink = new BibleReference(intent.getData());
+		}
+
+		if (osisLink == null || !myLibrarian.isOSISLinkValid(osisLink)) {
 			onChooseChapterClick();
 		} else {
 			openChapterFromLink(osisLink);
