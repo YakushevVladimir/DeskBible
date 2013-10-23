@@ -22,8 +22,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import com.BibleQuote.dal.dbLibraryHelper;
 import com.BibleQuote.managers.bookmarks.Bookmark;
+import com.BibleQuote.managers.bookmarks.BookmarksTags;
 import com.BibleQuote.managers.tags.Tag;
-import com.BibleQuote.utils.DataConstants;
 
 import java.util.ArrayList;
 
@@ -38,12 +38,12 @@ public class dbBookmarksTagsRepository {
 		SQLiteDatabase db = dbLibraryHelper.getLibraryDB();
 		db.beginTransaction();
 		try {
-			db.delete(DataConstants.BOOKMARKS_TAGS_TABLE, dbLibraryHelper.BOOKMARKS_TAGS_BM_ID + " = \"" + bmID + "\"", null);
+			db.delete(dbLibraryHelper.BOOKMARKSTAGS_TABLE, BookmarksTags.BOOKMARKSTAGS_BM_ID + " = \"" + bmID + "\"", null);
 			for (long tagID : tagIDs) {
 				ContentValues values = new ContentValues();
-				values.put(dbLibraryHelper.BOOKMARKS_TAGS_BM_ID, bmID);
-				values.put(dbLibraryHelper.BOOKMARKS_TAGS_TAG_ID, tagID);
-				db.insert(DataConstants.BOOKMARKS_TAGS_TABLE, null, values);
+				values.put(BookmarksTags.BOOKMARKSTAGS_BM_ID, bmID);
+				values.put(BookmarksTags.BOOKMARKSTAGS_TAG_ID, tagID);
+				db.insert(dbLibraryHelper.BOOKMARKSTAGS_TABLE, null, values);
 			}
 			db.setTransactionSuccessful();
 		} finally {
@@ -57,7 +57,7 @@ public class dbBookmarksTagsRepository {
 		SQLiteDatabase db = dbLibraryHelper.getLibraryDB();
 		db.beginTransaction();
 		try {
-			db.delete(DataConstants.BOOKMARKS_TAGS_TABLE, null, null);
+			db.delete(dbLibraryHelper.BOOKMARKSTAGS_TABLE, null, null);
 			db.setTransactionSuccessful();
 		} finally {
 			db.endTransaction();
@@ -66,11 +66,11 @@ public class dbBookmarksTagsRepository {
 	}
 
 	public void deleteBookmarks(SQLiteDatabase db, Bookmark bm) {
-		db.delete(DataConstants.BOOKMARKS_TAGS_TABLE, dbLibraryHelper.BOOKMARKS_TAGS_BM_ID + "=" + bm.id, null);
+		db.delete(dbLibraryHelper.BOOKMARKSTAGS_TABLE, BookmarksTags.BOOKMARKSTAGS_BM_ID + "=" + bm.id, null);
 	}
 
 	public void deleteTag(SQLiteDatabase db, Tag tag) {
-		db.delete(DataConstants.BOOKMARKS_TAGS_TABLE, dbLibraryHelper.BOOKMARKS_TAGS_TAG_ID + "=" + tag.id, null);
+		db.delete(dbLibraryHelper.BOOKMARKSTAGS_TABLE, BookmarksTags.BOOKMARKSTAGS_TAG_ID + "=" + tag.id, null);
 	}
 
 	public String getTags(long bmID) {
@@ -79,10 +79,10 @@ public class dbBookmarksTagsRepository {
 		db.beginTransaction();
 		try {
 			Cursor cur = db.rawQuery("SELECT " + dbLibraryHelper.TAGS_NAME
-					+ " FROM " + DataConstants.TAGS_TABLE + ", " + DataConstants.BOOKMARKS_TAGS_TABLE
-					+ " WHERE " + DataConstants.TAGS_TABLE + "." + dbLibraryHelper.TAGS_KEY_ID
-					+ " = " + DataConstants.BOOKMARKS_TAGS_TABLE + "." + dbLibraryHelper.BOOKMARKS_TAGS_TAG_ID
-					+ " AND " + DataConstants.BOOKMARKS_TAGS_TABLE + "." + dbLibraryHelper.BOOKMARKS_TAGS_BM_ID
+					+ " FROM " + dbLibraryHelper.TAGS_TABLE + ", " + dbLibraryHelper.BOOKMARKSTAGS_TABLE
+					+ " WHERE " + dbLibraryHelper.TAGS_TABLE + "." + dbLibraryHelper.TAGS_KEY_ID
+					+ " = " + dbLibraryHelper.BOOKMARKSTAGS_TABLE + "." + BookmarksTags.BOOKMARKSTAGS_TAG_ID
+					+ " AND " + dbLibraryHelper.BOOKMARKSTAGS_TABLE + "." + BookmarksTags.BOOKMARKSTAGS_BM_ID
 					+ " = \"" + bmID + "\";",
 					null);
 			if (cur.moveToFirst()) {

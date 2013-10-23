@@ -29,6 +29,13 @@ import java.util.Calendar;
  * Time: 1:00
  */
 public class Bookmark {
+
+	public static final String BOOKMARKS_KEY_ID = "_id";
+	public static final String BOOKMARKS_OSIS = "osis";
+	public static final String BOOKMARKS_LINK = "link";
+	public static final String BOOKMARKS_NAME = "name";
+	public static final String BOOKMARKS_DATE = "date";
+
 	public long id;
 	public String OSISLink;
 	public String humanLink;

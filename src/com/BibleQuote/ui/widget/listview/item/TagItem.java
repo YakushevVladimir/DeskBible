@@ -38,6 +38,7 @@ public class TagItem extends Item {
 
 	public Tag tag;
 	public String name;
+	public String count;
 
 	/**
 	 * @hide
@@ -45,9 +46,10 @@ public class TagItem extends Item {
 	public TagItem() {
 	}
 
-	public TagItem(Tag tag) {
+	public TagItem(Tag tag, String count) {
 		this.tag = tag;
 		this.name = tag.name;
+		this.count = count;
 	}
 
 	@Override
@@ -61,6 +63,7 @@ public class TagItem extends Item {
 
 		TypedArray a = r.obtainAttributes(attrs, R.styleable.TagItem);
 		name = a.getString(R.styleable.TagItem_tagName);
+		count = a.getString(R.styleable.TagItem_tagCount);
 		a.recycle();
 	}
 

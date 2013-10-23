@@ -7,6 +7,7 @@ public interface ITagRepository {
 	int update(Tag tag);
 	int delete(Tag tag);
 	ArrayList<Tag> getAll();
+	LinkedHashMap<Tag, String> getAllWithCount();
 	int deleteAll();
 	int deleteEmptyTags();
 }

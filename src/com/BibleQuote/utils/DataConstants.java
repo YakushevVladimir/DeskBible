@@ -31,12 +31,6 @@ public class DataConstants {
 			+ APP_DIR_NAME + File.separator + DataConstants.DB_DATA_DIR_NAME;
 
 
-	public static final String MODULE_TABLE = "module";
-	public static final String BOOK_TABLE = "book";
-	public static final String BOOKMARKS_TABLE = "bookmarks";
-	public static final String BOOKMARKS_TAGS_TABLE = "bookmarks_tags";
-	public static final String TAGS_TABLE = "tags";
-
 	private DataConstants() {
 	}
 }

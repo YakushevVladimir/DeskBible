@@ -157,6 +157,7 @@ public class BookmarksFragment extends SherlockListFragment implements AdapterVi
 	public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
 		currBookmark = ((BookmarkItem) adapterView.getItemAtPosition(position)).bookmark;
 		currActionMode = getSherlockActivity().startActionMode(new BookmarksSelectAction());
+		currActionMode.setTitle(currBookmark.humanLink);
 		return true;
 	}
 

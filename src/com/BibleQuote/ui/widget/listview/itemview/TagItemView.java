@@ -21,13 +21,13 @@ import android.util.AttributeSet;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.BibleQuote.R;
-import com.BibleQuote.ui.widget.listview.item.BookmarkItem;
 import com.BibleQuote.ui.widget.listview.item.Item;
 import com.BibleQuote.ui.widget.listview.item.TagItem;
 
 public class TagItemView extends LinearLayout implements ItemView {
 
 	private TextView mName;
+	private TextView mCount;
 
 	public TagItemView(Context context) {
 		this(context, null);
@@ -39,11 +39,13 @@ public class TagItemView extends LinearLayout implements ItemView {
 
 	public void prepareItemView() {
 		mName = (TextView) findViewById(R.id.tagName);
+		mCount = (TextView) findViewById(R.id.count);
 	}
 
 	public void setObject(Item object) {
 		final TagItem item = (TagItem) object;
 		mName.setText(item.name);
+		mCount.setText(item.count);
 	}
 
 }

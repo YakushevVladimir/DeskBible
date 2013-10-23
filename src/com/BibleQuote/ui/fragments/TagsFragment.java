@@ -37,6 +37,7 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -130,8 +131,9 @@ public class TagsFragment extends SherlockListFragment implements AdapterView.On
 
 	private void setAdapter() {
 		List<Item> items = new ArrayList<Item>();
-		for (Tag currTag : tagManager.getAll()) {
-			items.add(new TagItem(currTag));
+		LinkedHashMap<Tag, String> tagList = tagManager.getAllWithCount();
+		for (Tag currTag : tagList.keySet()) {
+			items.add(new TagItem(currTag, tagList.get(currTag)));
 		}
 		ItemAdapter adapter = new ItemAdapter(getSherlockActivity(), items);
 		setListAdapter(adapter);

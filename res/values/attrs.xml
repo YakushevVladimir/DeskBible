@@ -44,6 +44,7 @@
 	</declare-styleable>
 	<declare-styleable name="TagItem">
 		<attr name="tagName" format="string" />
+		<attr name="tagCount" format="string" />
 	</declare-styleable>
 
 </resources>

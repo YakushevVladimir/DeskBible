@@ -8,7 +8,6 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.util.Xml.Encoding;
 import com.BibleQuote.R;
-import com.BibleQuote.entity.BibleReference;
 import com.BibleQuote.managers.bookmarks.Bookmark;
 import com.BibleQuote.managers.bookmarks.BookmarksManager;
 import com.BibleQuote.managers.bookmarks.repository.dbBookmarksRepository;
@@ -27,7 +26,6 @@ public class UpdateManager {
 
 		SharedPreferences Settings = PreferenceManager.getDefaultSharedPreferences(context);
 
-		// Инициализация каталога программы
 		String state = Environment.getExternalStorageState();
 
 		if (Environment.MEDIA_MOUNTED.equals(state)) {
@@ -56,6 +54,8 @@ public class UpdateManager {
 
 		if (currVersionCode < 59) {
 			convertBookmarks_59();
+		} else if (currVersionCode < 62) {
+			convertBookmarks_62();
 		}
 
 		if (updateModules) {
@@ -71,8 +71,17 @@ public class UpdateManager {
 		}
 	}
 
+	private static void convertBookmarks_62() {
+		Log.d(TAG, "Convert bookmarks to DB version 2");
+		BookmarksManager bmManager = new BookmarksManager(new dbBookmarksRepository());
+		ArrayList<Bookmark> bookmarks = bmManager.getAll();
+		for (Bookmark currBM : bookmarks) {
+			bmManager.add(currBM);
+		}
+	}
+
 	private static void convertBookmarks_59() {
-		Log.d(TAG, "Convert bookmarks");
+		Log.d(TAG, "Convert bookmarks to DB version 1");
 		BookmarksManager newBM = new BookmarksManager(new dbBookmarksRepository());
 		ArrayList<Bookmark> bookmarks = new BookmarksManager(new prefBookmarksRepository()).getAll();
 		for (Bookmark curr : bookmarks) {

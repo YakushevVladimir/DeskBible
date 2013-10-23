@@ -5,11 +5,12 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import com.BibleQuote.dal.dbLibraryHelper;
+import com.BibleQuote.managers.bookmarks.BookmarksTags;
 import com.BibleQuote.managers.bookmarks.repository.dbBookmarksTagsRepository;
 import com.BibleQuote.managers.tags.Tag;
-import com.BibleQuote.utils.DataConstants;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 public class dbTagRepository implements ITagRepository {
 	private final static String TAG = dbTagRepository.class.getSimpleName();
@@ -32,8 +33,8 @@ public class dbTagRepository implements ITagRepository {
 		int result = -1;
 		try {
 			ContentValues values = new ContentValues();
-			values.put(dbLibraryHelper.TAGS_NAME, tag.name);
-			result = db.update(DataConstants.TAGS_TABLE, values, dbLibraryHelper.TAGS_KEY_ID + "=\"" + tag.id + "\"", null);
+			values.put(Tag.NAME, tag.name);
+			result = db.update(dbLibraryHelper.TAGS_TABLE, values, Tag.KEY_ID + "=\"" + tag.id + "\"", null);
 			db.setTransactionSuccessful();
 		} finally {
 			db.endTransaction();
@@ -50,7 +51,7 @@ public class dbTagRepository implements ITagRepository {
 		db.beginTransaction();
 		try {
 			bmTagRepo.deleteTag(db, tag);
-			result = db.delete(DataConstants.TAGS_TABLE, dbLibraryHelper.TAGS_KEY_ID + "=\"" + tag.id + "\"", null);
+			result = db.delete(dbLibraryHelper.TAGS_TABLE, Tag.KEY_ID + "=\"" + tag.id + "\"", null);
 			db.setTransactionSuccessful();
 		} finally {
 			db.endTransaction();
@@ -74,13 +75,42 @@ public class dbTagRepository implements ITagRepository {
 		return result;
 	}
 
+	public LinkedHashMap<Tag, String> getAllWithCount() {
+		SQLiteDatabase db = dbLibraryHelper.getLibraryDB();
+		db.beginTransaction();
+		LinkedHashMap<Tag, String> result = new LinkedHashMap<Tag, String>();
+		try {
+			Cursor allRows = db.rawQuery(
+					"SELECT " + dbLibraryHelper.TAGS_TABLE + "." + Tag.KEY_ID + ", "
+							+ dbLibraryHelper.TAGS_TABLE + "." + Tag.NAME + ", " +
+							" COUNT(" + dbLibraryHelper.BOOKMARKSTAGS_TABLE + "." + BookmarksTags.BOOKMARKSTAGS_KEY_ID + ") AS count " +
+					" FROM " + dbLibraryHelper.TAGS_TABLE + " " +
+					" LEFT OUTER JOIN " + dbLibraryHelper.BOOKMARKSTAGS_TABLE +
+							" ON " + dbLibraryHelper.TAGS_TABLE + "." + Tag.KEY_ID +
+								" = " + dbLibraryHelper.BOOKMARKSTAGS_TABLE + "." + BookmarksTags.BOOKMARKSTAGS_TAG_ID +
+					" GROUP BY " + dbLibraryHelper.TAGS_TABLE + "." +  Tag.KEY_ID +
+							" ORDER BY " + dbLibraryHelper.TAGS_TABLE + ".name", null);
+			db.setTransactionSuccessful();
+			if (allRows.moveToFirst()) {
+				do {
+					result.put(new Tag(allRows.getInt(0), allRows.getString(1)), allRows.getString(2));
+				} while (allRows.moveToNext());
+			}
+		} finally {
+			db.endTransaction();
+		}
+		dbLibraryHelper.closeDB();
+
+		return result;
+	}
+
 	@Override
 	public int deleteAll() {
 		SQLiteDatabase db = dbLibraryHelper.getLibraryDB();
 		db.beginTransaction();
 		int result = -1;
 		try {
-			result = db.delete(DataConstants.TAGS_TABLE, null, null);
+			result = db.delete(dbLibraryHelper.TAGS_TABLE, null, null);
 			db.setTransactionSuccessful();
 		} finally {
 			db.endTransaction();
@@ -95,11 +125,11 @@ public class dbTagRepository implements ITagRepository {
 		db.beginTransaction();
 		try {
 			db.execSQL(
-				"DELETE FROM " + DataConstants.TAGS_TABLE
-					+ " WHERE " + dbLibraryHelper.TAGS_KEY_ID
-					+ " IN (SELECT " + dbLibraryHelper.TAGS_KEY_ID + " FROM " + DataConstants.TAGS_TABLE
-						+ " WHERE NOT " + dbLibraryHelper.TAGS_KEY_ID
-						+ " IN (SELECT " + dbLibraryHelper.BOOKMARKS_TAGS_TAG_ID + " FROM " + DataConstants.BOOKMARKS_TAGS_TABLE + "))");
+				"DELETE FROM " + dbLibraryHelper.TAGS_TABLE
+					+ " WHERE " + Tag.KEY_ID
+					+ " IN (SELECT " + Tag.KEY_ID + " FROM " + dbLibraryHelper.TAGS_TABLE
+						+ " WHERE NOT " + Tag.KEY_ID
+						+ " IN (SELECT " + BookmarksTags.BOOKMARKSTAGS_TAG_ID + " FROM " + dbLibraryHelper.BOOKMARKSTAGS_TABLE + "))");
 			db.setTransactionSuccessful();
 		} finally {
 			db.endTransaction();
@@ -110,13 +140,13 @@ public class dbTagRepository implements ITagRepository {
 
 	private ArrayList<Tag> getAllRowsToArray(SQLiteDatabase db) {
 		ArrayList<Tag> result = new ArrayList<Tag>();
-		Cursor allRows = db.query(true, DataConstants.TAGS_TABLE,
-				null, null, null, null, null, dbLibraryHelper.TAGS_NAME, null);
+		Cursor allRows = db.query(true, dbLibraryHelper.TAGS_TABLE,
+				null, null, null, null, null, Tag.NAME, null);
 		if (allRows.moveToFirst()) {
 			do {
 				result.add(new Tag(
-						allRows.getInt(allRows.getColumnIndex(dbLibraryHelper.TAGS_KEY_ID)),
-						allRows.getString(allRows.getColumnIndex(dbLibraryHelper.TAGS_NAME))
+						allRows.getInt(allRows.getColumnIndex(Tag.KEY_ID)),
+						allRows.getString(allRows.getColumnIndex(Tag.NAME))
 				)
 				);
 			} while (allRows.moveToNext());
@@ -129,14 +159,14 @@ public class dbTagRepository implements ITagRepository {
 		long result;
 		db.beginTransaction();
 		try {
-			Cursor cur = db.query(DataConstants.TAGS_TABLE, null, dbLibraryHelper.TAGS_NAME + " = \"" + tag.trim() + "\"", null, null, null, null);
+			Cursor cur = db.query(dbLibraryHelper.TAGS_TABLE, null, Tag.NAME + " = \"" + tag + "\"", null, null, null, null);
 			if (cur.moveToFirst()) {
 				result = cur.getInt(0);
 				cur.close();
 			} else {
 				ContentValues values = new ContentValues();
-				values.put(dbLibraryHelper.TAGS_NAME, tag.trim());
-				result = db.insert(DataConstants.TAGS_TABLE, null, values);
+				values.put(Tag.NAME, tag);
+				result = db.insert(dbLibraryHelper.TAGS_TABLE, null, values);
 			}
 			db.setTransactionSuccessful();
 		} finally {

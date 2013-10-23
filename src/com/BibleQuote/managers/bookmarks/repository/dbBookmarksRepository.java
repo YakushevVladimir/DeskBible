@@ -21,13 +21,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import com.BibleQuote.dal.dbLibraryHelper;
 import com.BibleQuote.managers.bookmarks.Bookmark;
+import com.BibleQuote.managers.bookmarks.BookmarksTags;
 import com.BibleQuote.managers.tags.Tag;
-import com.BibleQuote.utils.DataConstants;
 import com.BibleQuote.utils.Log;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
 public class dbBookmarksRepository implements IBookmarksRepository {
 	private final static String TAG = dbBookmarksRepository.class.getSimpleName();
@@ -57,7 +55,7 @@ public class dbBookmarksRepository implements IBookmarksRepository {
 		SQLiteDatabase db = dbLibraryHelper.getLibraryDB();
 		db.beginTransaction();
 		try {
-			db.delete(DataConstants.BOOKMARKS_TABLE, dbLibraryHelper.BOOKMARKS_OSIS + "=\"" + bookmark.OSISLink + "\"", null);
+			db.delete(dbLibraryHelper.BOOKMARKS_TABLE, Bookmark.BOOKMARKS_OSIS + "=\"" + bookmark.OSISLink + "\"", null);
 			bmTagRepo.deleteBookmarks(db, bookmark);
 			db.setTransactionSuccessful();
 		} finally {
@@ -72,7 +70,7 @@ public class dbBookmarksRepository implements IBookmarksRepository {
 		SQLiteDatabase db = dbLibraryHelper.getLibraryDB();
 		db.beginTransaction();
 		try {
-			db.delete(DataConstants.BOOKMARKS_TABLE, null, null);
+			db.delete(dbLibraryHelper.BOOKMARKS_TABLE, null, null);
 			db.setTransactionSuccessful();
 		} finally {
 			db.endTransaction();
@@ -115,42 +113,42 @@ public class dbBookmarksRepository implements IBookmarksRepository {
 
 	private long addRow(SQLiteDatabase db, Bookmark bookmark) {
 		ContentValues values = new ContentValues();
-		values.put(dbLibraryHelper.BOOKMARKS_LINK, bookmark.humanLink);
-		values.put(dbLibraryHelper.BOOKMARKS_OSIS, bookmark.OSISLink);
-		values.put(dbLibraryHelper.BOOKMARKS_NAME, bookmark.name);
-		values.put(dbLibraryHelper.BOOKMARKS_DATE, bookmark.date);
+		values.put(Bookmark.BOOKMARKS_LINK, bookmark.humanLink);
+		values.put(Bookmark.BOOKMARKS_OSIS, bookmark.OSISLink);
+		values.put(Bookmark.BOOKMARKS_NAME, bookmark.name);
+		values.put(Bookmark.BOOKMARKS_DATE, bookmark.date);
 		if (bookmark.id != 0) {
-			db.update(DataConstants.BOOKMARKS_TABLE, values, dbLibraryHelper.BOOKMARKS_KEY_ID + " = \"" + bookmark.id + "\"", null);
+			db.update(dbLibraryHelper.BOOKMARKS_TABLE, values, Bookmark.BOOKMARKS_KEY_ID + " = \"" + bookmark.id + "\"", null);
 			return bookmark.id;
 		} else {
-			return db.insert(DataConstants.BOOKMARKS_TABLE, null, values);
+			return db.insert(dbLibraryHelper.BOOKMARKS_TABLE, null, values);
 		}
 	}
 
 	private ArrayList<Bookmark> getAllRowsToArray(SQLiteDatabase db) {
-		Cursor allRows = db.query(true, DataConstants.BOOKMARKS_TABLE,
-				null, null, null, null, null, dbLibraryHelper.BOOKMARKS_KEY_ID + " DESC", null);
+		Cursor allRows = db.query(true, dbLibraryHelper.BOOKMARKS_TABLE,
+				null, null, null, null, null, Bookmark.BOOKMARKS_KEY_ID + " DESC", null);
 		return getBookmarks(allRows);
 	}
 
 	private ArrayList<Bookmark> getAllRowsToArray(SQLiteDatabase db, Tag tag) {
 		Cursor allRows = db.rawQuery(
 				"SELECT "
-						+ DataConstants.BOOKMARKS_TABLE + "." + dbLibraryHelper.BOOKMARKS_KEY_ID + ", "
-						+ DataConstants.BOOKMARKS_TABLE + "." + dbLibraryHelper.BOOKMARKS_OSIS + ", "
-						+ DataConstants.BOOKMARKS_TABLE + "." + dbLibraryHelper.BOOKMARKS_LINK + ", "
-						+ DataConstants.BOOKMARKS_TABLE + "." + dbLibraryHelper.BOOKMARKS_NAME + ", "
-						+ DataConstants.BOOKMARKS_TABLE + "." + dbLibraryHelper.BOOKMARKS_DATE + " "
+						+ dbLibraryHelper.BOOKMARKS_TABLE + "." + Bookmark.BOOKMARKS_KEY_ID + ", "
+						+ dbLibraryHelper.BOOKMARKS_TABLE + "." + Bookmark.BOOKMARKS_OSIS + ", "
+						+ dbLibraryHelper.BOOKMARKS_TABLE + "." + Bookmark.BOOKMARKS_LINK + ", "
+						+ dbLibraryHelper.BOOKMARKS_TABLE + "." + Bookmark.BOOKMARKS_NAME + ", "
+						+ dbLibraryHelper.BOOKMARKS_TABLE + "." + Bookmark.BOOKMARKS_DATE + " "
 				+ "FROM "
-						+ DataConstants.BOOKMARKS_TABLE + ", " + DataConstants.BOOKMARKS_TAGS_TABLE + " "
+						+ dbLibraryHelper.BOOKMARKS_TABLE + ", " + dbLibraryHelper.BOOKMARKSTAGS_TABLE + " "
 				+ "WHERE "
-						+ DataConstants.BOOKMARKS_TABLE + "." + dbLibraryHelper.BOOKMARKS_KEY_ID
-							+ " = " + DataConstants.BOOKMARKS_TAGS_TABLE + "." + dbLibraryHelper.BOOKMARKS_TAGS_BM_ID
+						+ dbLibraryHelper.BOOKMARKS_TABLE + "." + Bookmark.BOOKMARKS_KEY_ID
+							+ " = " + dbLibraryHelper.BOOKMARKSTAGS_TABLE + "." + BookmarksTags.BOOKMARKSTAGS_BM_ID
 						+ " and "
-							+ DataConstants.BOOKMARKS_TAGS_TABLE + "." + dbLibraryHelper.BOOKMARKS_TAGS_TAG_ID
+							+ dbLibraryHelper.BOOKMARKSTAGS_TABLE + "." + BookmarksTags.BOOKMARKSTAGS_TAG_ID
 							+ " = " + tag.id + " "
 				+ "ORDER BY "
-						+ DataConstants.BOOKMARKS_TABLE + "." + dbLibraryHelper.BOOKMARKS_KEY_ID + " DESC;",
+						+ dbLibraryHelper.BOOKMARKS_TABLE + "." + Bookmark.BOOKMARKS_KEY_ID + " DESC;",
 				null);
 		return getBookmarks(allRows);
 	}
@@ -160,11 +158,11 @@ public class dbBookmarksRepository implements IBookmarksRepository {
 		if (allRows.moveToFirst()) {
 			do {
 				Bookmark bm = new Bookmark(
-						allRows.getInt(allRows.getColumnIndex(dbLibraryHelper.BOOKMARKS_KEY_ID)),
-						allRows.getString(allRows.getColumnIndex(dbLibraryHelper.BOOKMARKS_OSIS)),
-						allRows.getString(allRows.getColumnIndex(dbLibraryHelper.BOOKMARKS_LINK)),
-						allRows.getString(allRows.getColumnIndex(dbLibraryHelper.BOOKMARKS_NAME)),
-						allRows.getString(allRows.getColumnIndex(dbLibraryHelper.BOOKMARKS_DATE)));
+						allRows.getInt(allRows.getColumnIndex(Bookmark.BOOKMARKS_KEY_ID)),
+						allRows.getString(allRows.getColumnIndex(Bookmark.BOOKMARKS_OSIS)),
+						allRows.getString(allRows.getColumnIndex(Bookmark.BOOKMARKS_LINK)),
+						allRows.getString(allRows.getColumnIndex(Bookmark.BOOKMARKS_NAME)),
+						allRows.getString(allRows.getColumnIndex(Bookmark.BOOKMARKS_DATE)));
 				bm.tags = bmTagRepo.getTags(bm.id);
 				result.add(bm);
 			} while (allRows.moveToNext());

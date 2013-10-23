@@ -18,6 +18,9 @@ package com.BibleQuote.dal;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
+import com.BibleQuote.managers.bookmarks.Bookmark;
+import com.BibleQuote.managers.bookmarks.BookmarksTags;
+import com.BibleQuote.managers.tags.Tag;
 import com.BibleQuote.utils.DataConstants;
 import com.BibleQuote.utils.Log;
 
@@ -33,35 +36,26 @@ public class dbLibraryHelper {
 	private static int version = 2;
 	private static SQLiteDatabase db;
 
-	public static final String BOOKMARKS_KEY_ID = "_id";
-	public static final String BOOKMARKS_OSIS = "osis";
-	public static final String BOOKMARKS_LINK = "link";
-	public static final String BOOKMARKS_NAME = "name";
-	public static final String BOOKMARKS_DATE = "date";
-	
-	public static final String BOOKMARKS_TAGS_KEY_ID = "_id";
-	public static final String BOOKMARKS_TAGS_BM_ID = "bm_id";
-	public static final String BOOKMARKS_TAGS_TAG_ID = "tag_id";
-
-	public static final String TAGS_KEY_ID = "_id";
-	public static final String TAGS_NAME = "name";
+	public static final String TAGS_TABLE = "tags";
+	public static final String BOOKMARKSTAGS_TABLE = "bookmarks_tags";
+	public static final String BOOKMARKS_TABLE = "bookmarks";
 
 	private static final String[] CREATE_DATABASE = new String[] {
-			"create table " + DataConstants.BOOKMARKS_TABLE + " ("
-					+ BOOKMARKS_KEY_ID + " integer primary key autoincrement, "
-					+ BOOKMARKS_OSIS + " text unique not null, "
-					+ BOOKMARKS_LINK + " text not null, "
-					+ BOOKMARKS_NAME + " text not null, "
-					+ BOOKMARKS_DATE + " text not null"
+			"create table " + BOOKMARKS_TABLE + " ("
+					+ Bookmark.BOOKMARKS_KEY_ID + " integer primary key autoincrement, "
+					+ Bookmark.BOOKMARKS_OSIS + " text unique not null, "
+					+ Bookmark.BOOKMARKS_LINK + " text not null, "
+					+ Bookmark.BOOKMARKS_NAME + " text not null, "
+					+ Bookmark.BOOKMARKS_DATE + " text not null"
 				+ ");",
-			"create table " + DataConstants.BOOKMARKS_TAGS_TABLE + " ("
-					+ BOOKMARKS_TAGS_KEY_ID + " integer primary key autoincrement, "
-					+ BOOKMARKS_TAGS_BM_ID + " integer not null, "
-					+ BOOKMARKS_TAGS_TAG_ID + " integer not null"
+			"create table " + BOOKMARKSTAGS_TABLE + " ("
+					+ BookmarksTags.BOOKMARKSTAGS_KEY_ID + " integer primary key autoincrement, "
+					+ BookmarksTags.BOOKMARKSTAGS_BM_ID + " integer not null, "
+					+ BookmarksTags.BOOKMARKSTAGS_TAG_ID + " integer not null"
 				+ ");",
-			"create table " + DataConstants.TAGS_TABLE + " ("
-					+ TAGS_KEY_ID + " integer primary key autoincrement, "
-					+ TAGS_NAME + " text unique not null"
+			"create table " + TAGS_TABLE + " ("
+					+ Tag.KEY_ID + " integer primary key autoincrement, "
+					+ Tag.NAME + " text unique not null"
 				+ ");"
 	};
 
@@ -113,7 +107,7 @@ public class dbLibraryHelper {
 	private static void onUpgrade(SQLiteDatabase db, int currVersion) {
 		if (currVersion == 1 && version == 2) {
 			Log.i(TAG, "Upgrade DB to version 2");
-			db.execSQL("ALTER TABLE " + DataConstants.BOOKMARKS_TABLE + " ADD COLUMN " + BOOKMARKS_NAME + " TEXT;");
+			db.execSQL("ALTER TABLE " + BOOKMARKS_TABLE + " ADD COLUMN " + Bookmark.BOOKMARKS_NAME + " TEXT;");
 			db.setVersion(version);
 		}
 	}

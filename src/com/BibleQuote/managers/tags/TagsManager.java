@@ -1,9 +1,9 @@
 package com.BibleQuote.managers.tags;
 
-import com.BibleQuote.managers.bookmarks.repository.dbBookmarksTagsRepository;
 import com.BibleQuote.managers.tags.repository.ITagRepository;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 /**
  * User: Vladimir
@@ -18,7 +18,7 @@ public class TagsManager {
 	}
 
 	public long add(String tag) {
-		return tagRepo.add(tag);
+		return tagRepo.add(tag.trim().toLowerCase());
 	}
 
 	public int upadate(Tag tag) {
@@ -31,6 +31,10 @@ public class TagsManager {
 
 	public ArrayList<Tag> getAll() {
 		return tagRepo.getAll();
+	}
+
+	public LinkedHashMap<Tag, String> getAllWithCount() {
+		return tagRepo.getAllWithCount();
 	}
 
 	public int deleteAll() {
