@@ -61,7 +61,7 @@ public class BookmarkItem extends Item {
 	@Override
 	public ItemView newView(Context context, ViewGroup parent) {
 		BookmarkItemView view = (BookmarkItemView) createCellFromXml(context, R.layout.bookmark_item_view, parent);
-		if (this.name.equals(this.link)) {
+		if (this.name == null || this.name.equals(this.link)) {
 			TextView txtLink = (TextView) view.findViewById(R.id.link);
 			txtLink.setVisibility(View.GONE);
 		}

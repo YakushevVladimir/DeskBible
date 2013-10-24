@@ -27,25 +27,29 @@ public class BookmarksManager {
 		return bmRepo.add(new Bookmark(OSISLink, link));
 	}
 
-	public void add(BibleReference ref, String tags) {
-		add(ref.getPath(), ref.toString(), tags);
+	public long add(BibleReference ref, String tags) {
+		return add(ref.getPath(), ref.toString(), tags);
 	}
 
-	public void add(Bookmark bookmark, String tags) {
+	public long add(Bookmark bookmark, String tags) {
 		long bmID = add(bookmark);
 		ArrayList<Long> tagIDs = getTagsIDs(tags);
 		new dbBookmarksTagsRepository().add(bmID, tagIDs);
 		tagRepo.deleteEmptyTags();
+		return bmID;
 	}
 
 	public long add(Bookmark bookmark) {
-		return bmRepo.add(bookmark);
+		long bmID = bmRepo.add(bookmark);
+		tagRepo.deleteEmptyTags();
+		return bmID;
 	}
 
-	public void add(String OSISLink, String link, String tags) {
+	public long add(String OSISLink, String link, String tags) {
 		long bmID = add(OSISLink, link);
 		ArrayList<Long> tagIDs = getTagsIDs(tags);
 		new dbBookmarksTagsRepository().add(bmID, tagIDs);
+		return bmID;
 	}
 
 	public void delete(Bookmark bookmark) {

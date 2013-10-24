@@ -1,7 +1,7 @@
 package com.BibleQuote.entity;
 
 import android.net.Uri;
-import android.util.Log;
+import com.BibleQuote.utils.Log;
 import com.BibleQuote.modules.Book;
 import com.BibleQuote.modules.FsModule;
 import com.BibleQuote.modules.Module;
@@ -116,17 +116,22 @@ public class BibleReference {
 
 	public BibleReference(Uri data) {
 		if (data != null) {
-			String path = data.getPath();
-			String[] args = path.replace("_", "/").split("/");
-			if (args.length != 4) {
+			String[] args = data.getPath().replace("_", "/").split("/");
+			if (args.length != 5) {
 				return;
 			}
 
-			this.moduleID = args[3];
-			this.bookID = args[0];
+			this.moduleID = args[4].replaceAll("\\W", "").toUpperCase();
+			this.bookID = args[1];
 			try {
-				this.chapterNumber = Integer.parseInt(args[1]);
-				this.fromVerse = Integer.parseInt(args[2]);
+				this.chapterNumber = Integer.parseInt(args[2]);
+				if (args[3].contains("-")) {
+					String[] verses = args[3].split("-");
+					this.fromVerse = Integer.parseInt(verses[0]);
+					this.toVerse = Integer.parseInt(verses[1]);
+				} else {
+					this.fromVerse = Integer.parseInt(args[3]);
+				}
 			} catch (NumberFormatException ex) {
 				this.chapterNumber = 1;
 				this.fromVerse = 1;

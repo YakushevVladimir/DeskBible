@@ -183,13 +183,13 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 
 		BibleReference osisLink;
 		Intent intent = getIntent();
-		if (intent == null) {
-			osisLink = new BibleReference(PreferenceHelper.restoreStateString("last_read"));
-		} else {
+		if (intent != null && intent.getData() != null) {
 			osisLink = new BibleReference(intent.getData());
+		} else {
+			osisLink = new BibleReference(PreferenceHelper.restoreStateString("last_read"));
 		}
 
-		if (osisLink == null || !myLibrarian.isOSISLinkValid(osisLink)) {
+		if (!myLibrarian.isOSISLinkValid(osisLink)) {
 			onChooseChapterClick();
 		} else {
 			openChapterFromLink(osisLink);
@@ -457,7 +457,6 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 			return super.onKeyDown(keyCode, event);
 		}
 	}
-
 	public void onTaskComplete(Task task) {
 		if (task != null && !task.isCancelled()) {
 			if (task instanceof AsyncOpenChapter) {

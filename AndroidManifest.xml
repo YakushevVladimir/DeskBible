@@ -18,8 +18,8 @@
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	package="com.BibleQuote"
-	android:versionName="0.08.01"
-	android:versionCode="62"
+	android:versionName="0.08.03"
+	android:versionCode="63"
 	android:installLocation="auto">
 
 	<uses-sdk android:targetSdkVersion="15" android:minSdkVersion="7"/>
@@ -60,12 +60,15 @@
 		<activity android:name=".ui.SettingsActivity" android:label="@string/settings"/>
 		<activity android:name=".ui.AboutActivity" android:label="@string/about"/>
 		<activity android:name=".ui.HelpActivity" android:label="@string/help"/>
-		<activity android:name=".ui.ReaderActivity" android:configChanges="keyboardHidden|orientation">
+
+		<activity android:name=".ui.ReaderActivity"
+			android:configChanges="keyboardHidden|orientation">
 			<intent-filter>
-				<action android:name="com.BibleQuote.intent.action.OPEN_LINK"></action>
-				<category android:name="android.intent.category.ALTERNATIVE"></category>
-				<data android:host="www.b-bq.eu" android:scheme="http"></data>
-				<data android:host="b-bq.eu" android:scheme="http"></data>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+				<data android:host="b-bq.eu" android:scheme="http" android:pathPattern=".*" />
+				<data android:host="www.b-bq.eu" android:scheme="http" android:pathPattern=".*" />
 			</intent-filter>
 		</activity>
 

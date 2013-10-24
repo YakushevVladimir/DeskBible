@@ -54,8 +54,8 @@ public class UpdateManager {
 
 		if (currVersionCode < 59) {
 			convertBookmarks_59();
-		} else if (currVersionCode < 62) {
-			convertBookmarks_62();
+		} else if (currVersionCode < 63) {
+			convertBookmarks_63();
 		}
 
 		if (updateModules) {
@@ -71,11 +71,12 @@ public class UpdateManager {
 		}
 	}
 
-	private static void convertBookmarks_62() {
+	private static void convertBookmarks_63() {
 		Log.d(TAG, "Convert bookmarks to DB version 2");
 		BookmarksManager bmManager = new BookmarksManager(new dbBookmarksRepository());
 		ArrayList<Bookmark> bookmarks = bmManager.getAll();
 		for (Bookmark currBM : bookmarks) {
+			if (currBM.name == null) currBM.name = currBM.humanLink;
 			bmManager.add(currBM);
 		}
 	}
