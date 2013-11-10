@@ -54,8 +54,6 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 		context.moduleSet.putAll(newModuleSet);
 		cache.saveModuleList(context.getModuleList(context.moduleSet));
 
-		context.eventManager.fireChangeModulesEvent(new ChangeModulesEvent(ChangeModulesEvent.ChangeCode.ModulesChanged));
-
 		return newModuleSet;
 	}
 
@@ -131,6 +129,5 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 		for (FsModule fsModule : moduleList) {
 			insertModule(fsModule);
 		}
-		context.eventManager.fireChangeModulesEvent(new ChangeModulesEvent(ChangeModulesEvent.ChangeCode.ModulesChanged));
 	}
 }

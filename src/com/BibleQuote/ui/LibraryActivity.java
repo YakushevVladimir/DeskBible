@@ -17,7 +17,6 @@ package com.BibleQuote.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.*;
@@ -29,8 +28,6 @@ import com.BibleQuote.async.AsyncRefreshModules;
 import com.BibleQuote.entity.BibleReference;
 import com.BibleQuote.entity.ItemList;
 import com.BibleQuote.exceptions.*;
-import com.BibleQuote.listeners.ChangeModulesEvent;
-import com.BibleQuote.listeners.IChangeModulesListener;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.utils.OnTaskCompleteListener;
 import com.BibleQuote.utils.Task;
@@ -42,7 +39,7 @@ import com.actionbarsherlock.view.MenuItem;
 
 import java.util.ArrayList;
 
-public class LibraryActivity extends SherlockFragmentActivity implements IChangeModulesListener, OnTaskCompleteListener {
+public class LibraryActivity extends SherlockFragmentActivity implements OnTaskCompleteListener {
 	private static final String TAG = "LibraryActivity";
 	public static final String EMPTY_OBJECT = "---";
 	private final int MODULE_VIEW = 1, BOOK_VIEW = 2, CHAPTER_VIEW = 3;
@@ -62,25 +59,6 @@ public class LibraryActivity extends SherlockFragmentActivity implements IChange
 	private AsyncManager mAsyncManager;
 	private String messageRefresh;
 
-	private Handler handler = new Handler() {
-		public void handleMessage(android.os.Message msg) {
-			Log.d(TAG, "Message processing in handler");
-			switch (msg.what) {
-				case MODULE_VIEW:
-					UpdateView(MODULE_VIEW);
-					break;
-				case BOOK_VIEW:
-					UpdateView(BOOK_VIEW);
-					break;
-				case CHAPTER_VIEW:
-					UpdateView(CHAPTER_VIEW);
-					break;
-				default:
-					break;
-			}
-		}
-	};
-
 	private Task mTask;
 
 	@Override
@@ -91,8 +69,6 @@ public class LibraryActivity extends SherlockFragmentActivity implements IChange
 
 		BibleQuoteApp app = (BibleQuoteApp) getApplication();
 		myLibrarian = app.getLibrarian();
-
-		myLibrarian.getEventManager().addChangeModulesListener(this);
 
 		mAsyncManager = app.getAsyncManager();
 		mAsyncManager.handleRetainedTask(mTask, this);
@@ -409,14 +385,6 @@ public class LibraryActivity extends SherlockFragmentActivity implements IChange
 				ExceptionHelper.onBookDefinitionException((BookDefinitionException) e, this, TAG);
 			}
 			UpdateView(MODULE_VIEW);
-		}
-	}
-
-	@Override
-	public void onChangeModules(ChangeModulesEvent event) {
-		if (this.viewMode == MODULE_VIEW) {
-			Log.d(TAG, "Send message to hudler for refresh modules list");
-			handler.sendEmptyMessage(MODULE_VIEW);
 		}
 	}
 }

@@ -37,6 +37,7 @@ import com.BibleQuote.utils.ViewUtils;
 import com.BibleQuote.ui.widget.listview.ItemAdapter;
 import com.BibleQuote.ui.widget.listview.item.Item;
 import com.BibleQuote.ui.widget.listview.item.SubtextItem;
+import com.BibleQuote.utils.modules.LinkConverter;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 import java.util.ArrayList;
@@ -95,7 +96,7 @@ public class SearchActivity extends SherlockFragmentActivity implements OnTaskCo
 		for (String key : searchResults.keySet()) {
 			String humanLink;
 			try {
-				humanLink = myLibararian.getOSIStoHuman(key);
+				humanLink = LinkConverter.getOSIStoHuman(key, myLibararian);
 				searchItems.add(new SubtextItem(humanLink, searchResults.get(key)));
 			} catch (BookNotFoundException e) {
 				ExceptionHelper.onBookNotFoundException(e, this, TAG);
@@ -194,7 +195,7 @@ public class SearchActivity extends SherlockFragmentActivity implements OnTaskCo
 			PreferenceHelper.saveStateInt("changeSearchPosition", position);
 
 			Intent intent = new Intent();
-			intent.putExtra("linkOSIS", myLibararian.getHumanToOSIS(humanLink));
+			intent.putExtra("linkOSIS", LinkConverter.getHumanToOSIS(humanLink));
 			setResult(RESULT_OK, intent);
 
 			finish();

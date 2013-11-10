@@ -2,7 +2,6 @@ package com.BibleQuote.dal;
 
 import com.BibleQuote.controllers.CacheModuleController;
 import com.BibleQuote.dal.repository.*;
-import com.BibleQuote.managers.EventManager;
 import com.BibleQuote.modules.FsBook;
 import com.BibleQuote.modules.FsModule;
 
@@ -46,10 +45,5 @@ public class LibraryUnitOfWork implements ILibraryUnitOfWork<String, FsModule, F
 
 	public CacheModuleController<FsModule> getCacheModuleController() {
 		return this.cacheModuleController;
-	}
-
-	@Override
-	public EventManager getEventManager() {
-		return libraryContext.eventManager;
 	}
 }

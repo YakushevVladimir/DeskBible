@@ -1,7 +1,6 @@
 package com.BibleQuote.dal;
 
 import android.content.Context;
-import com.BibleQuote.managers.EventManager;
 import com.BibleQuote.modules.Book;
 import com.BibleQuote.modules.Chapter;
 import com.BibleQuote.modules.Module;
@@ -14,8 +13,6 @@ public class LibraryContext {
 	public Map<String, Module> moduleSet = Collections.synchronizedMap(new TreeMap<String, Module>());
 	public Map<String, Book> bookSet = Collections.synchronizedMap(new LinkedHashMap<String, Book>());
 	public Map<String, Chapter> chapterPool = Collections.synchronizedMap(new CachePool<Chapter>());
-
-	public EventManager eventManager = new EventManager();
 
 	private Context context;
 

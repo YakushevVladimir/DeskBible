@@ -3,7 +3,6 @@ package com.BibleQuote.controllers;
 import android.content.Context;
 import android.os.Environment;
 import com.BibleQuote.dal.*;
-import com.BibleQuote.managers.EventManager;
 import com.BibleQuote.modules.FsModule;
 import com.BibleQuote.utils.DataConstants;
 
@@ -12,29 +11,24 @@ import java.io.File;
 public class LibraryController {
 
 	private IModuleController moduleCtrl;
-
 	public IModuleController getModuleCtrl() {
 		return moduleCtrl;
 	}
 
 	private IBookController bookCtrl;
-
 	public IBookController getBookCtrl() {
 		return bookCtrl;
 	}
 
 	private IChapterController chapterCtrl;
-
 	public IChapterController getChapterCtrl() {
 		return chapterCtrl;
 	}
 
 	private ILibraryUnitOfWork unit;
-
 	public ILibraryUnitOfWork getUnit() {
 		return unit;
 	}
-
 
 	public static LibraryController create(Context context) {
 		String libraryPath = Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)
@@ -53,9 +47,5 @@ public class LibraryController {
 		moduleCtrl = new FsModuleController(unit);
 		bookCtrl = new FsBookController(unit);
 		chapterCtrl = new FsChapterController(unit);
-	}
-
-	public EventManager getEventManager() {
-		return unit.getEventManager();
 	}
 }

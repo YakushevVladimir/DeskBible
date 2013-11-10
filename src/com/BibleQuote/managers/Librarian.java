@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.BibleQuote.managers;
 
 import android.content.Context;
 import com.BibleQuote.controllers.*;
 import com.BibleQuote.dal.repository.XmlTskRepository;
 import com.BibleQuote.dal.repository.fsHistoryRepository;
-import com.BibleQuote.entity.BibleBooksID;
 import com.BibleQuote.entity.BibleReference;
 import com.BibleQuote.entity.ItemList;
 import com.BibleQuote.exceptions.*;
@@ -52,41 +52,22 @@ public class Librarian {
 
 	private IHistoryManager historyManager;
 
-	private IModuleController moduleCtrl;
-	private IBookController bookCtrl;
-	private IChapterController chapterCtrl;
 	private TSKController tskCtrl;
-
-	private LibraryController libCtrl;
+	private final LibraryController libCtrl;
 
 	/**
 	 * Инициализация контроллеров библиотеки, модулей, книг и глав.
 	 * Подписка на событие ChangeBooksEvent
 	 */
 	public Librarian(Context context) {
-		Log.i(TAG, "Create library controllers");
 		libCtrl = LibraryController.create(context);
-		moduleCtrl = libCtrl.getModuleCtrl();
-		bookCtrl = libCtrl.getBookCtrl();
-		chapterCtrl = libCtrl.getChapterCtrl();
-
-		Log.i(TAG, "Create history manager and repository");
-		fsHistoryRepository repository = new fsHistoryRepository(context.getCacheDir());
-		historyManager = new SimpleHistoryManager(repository, PreferenceHelper.getHistorySize());
+		historyManager = new SimpleHistoryManager(
+				new fsHistoryRepository(context.getCacheDir()),
+				PreferenceHelper.getHistorySize());
 
 		getModules();
 	}
 
-	public EventManager getEventManager() {
-		return libCtrl.getEventManager();
-	}
-
-	/**
-	 * Загружает из хранилища список модулей без загрузки их данных. Для каждого из модулей
-	 * установлен флаг isClosed = true.
-	 * @return Возвращает TreeMap, где в качестве ключа путь к модулю, а в качестве значения 
-	 * closed-модуль
-	 */
 	/**
 	 * Возвращает коллекцию Book для указанного модуля. Данные о книгах в первую
 	 * очередь берутся из контекста библиотеки. Если там для выбранного модуля
@@ -99,7 +80,7 @@ public class Librarian {
 	 * @throws BookDefinitionException
 	 */
 	public ArrayList<Book> getBookList(Module module) throws OpenModuleException, BooksDefinitionException, BookDefinitionException {
-		return bookCtrl.getBookList(module);
+		return libCtrl.getBookCtrl().getBookList(module);
 	}
 
 	/**
@@ -109,23 +90,23 @@ public class Librarian {
 	 * из файлового хранилища. Производится запись загруженных модулей в кэш.
 	 */
 	public void loadFileModules() {
-		moduleCtrl.loadFileModules();
+		libCtrl.getModuleCtrl().loadFileModules();
 	}
 
 	public void getModules() {
-		moduleCtrl.getModules();
+		libCtrl.getModuleCtrl().getModules();
 	}
 
 	public Module getModuleByID(String moduleID) throws OpenModuleException {
-		return moduleCtrl.getModuleByID(moduleID);
+		return libCtrl.getModuleCtrl().getModuleByID(moduleID);
 	}
 
 	public Book getBookByID(Module module, String bookID) throws BookNotFoundException, OpenModuleException {
-		return bookCtrl.getBookByID(module, bookID);
+		return libCtrl.getBookCtrl().getBookByID(module, bookID);
 	}
 
 	public Chapter getChapterByNumber(Book book, Integer chapterNumber) throws BookNotFoundException {
-		return chapterCtrl.getChapter(book, chapterNumber);
+		return libCtrl.getChapterCtrl().getChapter(book, chapterNumber);
 	}
 
 	public Chapter openChapter(BibleReference link) throws BookNotFoundException, OpenModuleException {
@@ -152,7 +133,7 @@ public class Librarian {
 	public ArrayList<ItemList> getModulesList() {
 		// Сначала отсортируем список по наименованием модулей
 		TreeMap<String, Module> tMap = new TreeMap<String, Module>();
-		for (Module currModule : moduleCtrl.getModules().values()) {
+		for (Module currModule : libCtrl.getModuleCtrl().getModules().values()) {
 			tMap.put(currModule.getName(), currModule);
 		}
 
@@ -172,9 +153,9 @@ public class Librarian {
 
 	public ArrayList<ItemList> getModuleBooksList(String moduleID) throws OpenModuleException, BooksDefinitionException, BookDefinitionException {
 		// Получим модуль по его ID
-		Module module = moduleCtrl.getModuleByID(moduleID);
+		Module module = libCtrl.getModuleCtrl().getModuleByID(moduleID);
 		ArrayList<ItemList> booksList = new ArrayList<ItemList>();
-		for (Book book : bookCtrl.getBookList(module)) {
+		for (Book book : libCtrl.getBookCtrl().getBookList(module)) {
 			booksList.add(new ItemList(book.getID(), book.name));
 		}
 		return booksList;
@@ -197,12 +178,12 @@ public class Librarian {
 			throws BookNotFoundException, OpenModuleException {
 		// Получим модуль по его ID
 		Module module = getModule(moduleID);
-		Book book = bookCtrl.getBookByID(module, bookID);
+		Book book = libCtrl.getBookCtrl().getBookByID(module, bookID);
 		return book.getChapterNumbers(module.ChapterZero);
 	}
 
 	private Module getModule(String moduleID) throws OpenModuleException {
-		return moduleCtrl.getModuleByID(moduleID);
+		return libCtrl.getModuleCtrl().getModuleByID(moduleID);
 	}
 
 
@@ -217,7 +198,7 @@ public class Librarian {
 			currVerseNumber = 1;
 		} else {
 			try {
-				ArrayList<Book> books = bookCtrl.getBookList(getCurrModule());
+				ArrayList<Book> books = libCtrl.getBookCtrl().getBookList(getCurrModule());
 				int pos = books.indexOf(getCurrBook());
 				if (++pos < books.size()) {
 					currBook = books.get(pos);
@@ -242,7 +223,7 @@ public class Librarian {
 			currVerseNumber = 1;
 		} else {
 			try {
-				ArrayList<Book> books = bookCtrl.getBookList(getCurrModule());
+				ArrayList<Book> books = libCtrl.getBookCtrl().getBookList(getCurrModule());
 				int pos = books.indexOf(getCurrBook());
 				if (pos > 0) {
 					currBook = books.get(--pos);
@@ -263,7 +244,7 @@ public class Librarian {
 	// GET CONTENT
 
 	public String getChapterHTMLView() {
-		return chapterCtrl.getChapterHTMLView(getCurrChapter());
+		return libCtrl.getChapterCtrl().getChapterHTMLView(getCurrChapter());
 	}
 
 	public Boolean isBible() {
@@ -282,7 +263,7 @@ public class Librarian {
 		if (getCurrModule() == null) {
 			searchResults = new LinkedHashMap<String, String>();
 		} else {
-			searchResults = bookCtrl.search(getCurrModule(), query, fromBook, toBook);
+			searchResults = libCtrl.getBookCtrl().search(getCurrModule(), query, fromBook, toBook);
 		}
 		return searchResults;
 	}
@@ -324,7 +305,7 @@ public class Librarian {
 		}
 
 		try {
-			Book book = bookCtrl.getBookByID(module, bookID);
+			Book book = libCtrl.getBookCtrl().getBookByID(module, bookID);
 			return book.name;
 		} catch (BookNotFoundException e) {
 			return "---";
@@ -341,7 +322,7 @@ public class Librarian {
 		}
 
 		try {
-			Book book = bookCtrl.getBookByID(module, bookID);
+			Book book = libCtrl.getBookCtrl().getBookByID(module, bookID);
 			return book.getShortName();
 		} catch (BookNotFoundException e) {
 			return "---";
@@ -366,72 +347,6 @@ public class Librarian {
 			bookLink = bookLink.substring(0, 4) + "..." + bookLink.substring(strLenght - 4, strLenght);
 		}
 		return bookLink;
-	}
-
-	public String getOSIStoHuman(String linkOSIS) throws BookNotFoundException, OpenModuleException {
-		String[] param = linkOSIS.split("\\.");
-		if (param.length < 3) {
-			return "";
-		}
-
-		String moduleID = param[0];
-		String bookID = param[1];
-		String chapter = param[2];
-
-		Module currModule;
-		try {
-			currModule = getModule(moduleID);
-		} catch (OpenModuleException e) {
-			return "";
-		}
-		Book currBook = bookCtrl.getBookByID(currModule, bookID);
-		if (currBook == null) {
-			return "";
-		}
-		String humanLink = moduleID + ": " + currBook.getShortName() + " " + chapter;
-		if (param.length > 3) {
-			humanLink += ":" + param[3];
-		}
-
-		return humanLink;
-	}
-
-	public String getHumanToOSIS(String humanLink) {
-		// Получим имя модуля
-		int position = humanLink.indexOf(":");
-		if (position == -1) {
-			return "";
-		}
-		String linkOSIS = humanLink.substring(0, position).trim();
-		humanLink = humanLink.substring(position + 1).trim();
-		if (humanLink.length() == 0) {
-			return "";
-		}
-
-		// Получим имя книги
-		position = humanLink.indexOf(" ");
-		if (position == -1) {
-			return "";
-		}
-		linkOSIS += "." + BibleBooksID.getID(humanLink.substring(0, position).trim());
-		humanLink = humanLink.substring(position).trim();
-		if (humanLink.length() == 0) {
-			return linkOSIS + ".1";
-		}
-
-		// Получим номер главы
-		position = humanLink.indexOf(":");
-		if (position == -1) {
-			return "";
-		}
-		linkOSIS += "." + humanLink.substring(0, position).trim().replaceAll("\\D", "");
-		humanLink = humanLink.substring(position).trim().replaceAll("\\D", "");
-		if (humanLink.length() == 0) {
-			return linkOSIS;
-		} else {
-			// Оставшийся кусок - номер стиха
-			return linkOSIS + "." + humanLink;
-		}
 	}
 
 	public Boolean isOSISLinkValid(BibleReference link) {
@@ -504,7 +419,7 @@ public class Librarian {
 			BibleReference newReference = new BibleReference(getCurrModule(), book,
 					reference.getChapter(), reference.getFromVerse(), reference.getToVerse());
 			parallels.put(
-					LinkConverter.getOSIStoHuman(newReference, moduleCtrl, bookCtrl),
+					LinkConverter.getOSIStoHuman(newReference),
 					newReference);
 		}
 
