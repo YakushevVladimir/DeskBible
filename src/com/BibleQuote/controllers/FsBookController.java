@@ -1,6 +1,6 @@
 package com.BibleQuote.controllers;
 
-import android.util.Log;
+import com.BibleQuote.utils.Log;
 import com.BibleQuote.dal.LibraryUnitOfWork;
 import com.BibleQuote.dal.repository.IBookRepository;
 import com.BibleQuote.dal.repository.IModuleRepository;
@@ -40,7 +40,7 @@ public class FsBookController implements IBookController {
 	public ArrayList<Book> getBookList(Module module) throws BooksDefinitionException, BookDefinitionException, OpenModuleException {
 		ArrayList<FsBook> bookList = (ArrayList<FsBook>) bRepository.getBooks((FsModule) module);
 		if (bookList.size() == 0) {
-			bookList = (ArrayList<FsBook>) loadBooks((FsModule) module);
+			bookList = loadBooks((FsModule) module);
 		}
 		return new ArrayList<Book>(bookList);
 	}
@@ -65,7 +65,13 @@ public class FsBookController implements IBookController {
 
 	public LinkedHashMap<String, String> search(Module module, String query, String fromBookID, String toBookID)
 			throws OpenModuleException, BookNotFoundException {
-		return new SearchProcessor(bRepository).search(module, query, getBookList(module, fromBookID, toBookID));
+		Log.i(TAG, String.format("Start search to word '%s' from book '%s' to book '%s'", query, fromBookID, toBookID));
+
+		long startTime = System.currentTimeMillis();
+		LinkedHashMap<String, String> result = new SearchProcessor(bRepository).search(module, query, getBookList(module, fromBookID, toBookID));
+		Log.i(TAG, String.format("Search time: %d ms", (System.currentTimeMillis() - startTime)));
+
+		return result;
 	}
 
 	public ArrayList<String> getBookList(Module module, String fromBookID, String toBookID) throws OpenModuleException {
@@ -89,9 +95,9 @@ public class FsBookController implements IBookController {
 	}
 
 	private ArrayList<FsBook> loadBooks(FsModule module) throws OpenModuleException, BooksDefinitionException, BookDefinitionException {
-		ArrayList<FsBook> bookList = null;
+		ArrayList<FsBook> bookList;
 		try {
-			bookList = (ArrayList<FsBook>) bRepository.loadBooks((FsModule) module);
+			bookList = (ArrayList<FsBook>) bRepository.loadBooks(module);
 		} catch (OpenModuleException e) {
 			// if the module is bad it will be removed from the collection
 			Log.e(TAG, e.getMessage());

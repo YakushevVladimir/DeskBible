@@ -7,7 +7,7 @@ import com.BibleQuote.utils.Task;
 
 public class AsyncManager implements OnTaskCompleteListener {
 
-	private static String TAG = "AsyncManager";
+	//private static String TAG = "AsyncManager";
 
 	private AsyncTaskManager mWaitTaskManager;
 	private AsyncTaskManager mAsyncTaskManager;
@@ -15,7 +15,6 @@ public class AsyncManager implements OnTaskCompleteListener {
 	private OnTaskCompleteListener mTaskCompleteListener;
 
 	public synchronized void setupTask(Object taskObject, OnTaskCompleteListener taskCompleteListener) {
-		Log.i(TAG, "Setup task " + taskObject.getClass().getName());
 		if (taskObject instanceof Task && taskCompleteListener instanceof Context) {
 			Task newTask = (Task) taskObject;
 			mTaskCompleteListener = taskCompleteListener;

@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public class FsLibraryContext extends LibraryContext {
 	private final String TAG = "FsLibraryContext";
@@ -382,29 +383,46 @@ public class FsLibraryContext extends LibraryContext {
 		}
 
 		String str;
-		int chapterNumber = module.ChapterZero ? -1 : 0;
-		int verseNumber = 0;
+		StringBuilder bookContent = new StringBuilder(1000);
 		try {
 			while ((str = bReader.readLine()) != null) {
-				str = str.replaceAll("\\s(\\d)+", "");
-				if (str.toLowerCase().contains(module.ChapterSign)) {
-					chapterNumber++;
-					verseNumber = 0;
-				}
-				if (str.toLowerCase().contains(module.VerseSign)) {
-					verseNumber++;
-				}
-				if (str.toLowerCase().matches(searchQuery)) {
-					BibleReference osisLink = new BibleReference(module.getID(), bookID, chapterNumber, verseNumber);
-					String content = StringProc.cleanVerseNumbers(StringProc.stripTags(str));
-					searchRes.put(osisLink.getPath(), content);
-				}
+				bookContent.append(str.replaceAll("\\s(\\d)+", ""));
 			}
 		} catch (IOException e) {
 			Log.e(TAG, String.format("searchInBook(%1$s, %2$s, %3$s)", module.getID(), bookID, searchQuery), e);
 			e.printStackTrace();
 		}
+
+		String content = bookContent.toString();
+		if (!contains(content, searchQuery)) {
+			return searchRes;
+		}
+
+		Log.i(TAG, " - Start search in book " + bookID);
+
+		int chapterDev = module.ChapterZero ? -1 : 0;
+		String[] chapters = content.split(module.ChapterSign);
+		String chapter, verse;
+		for (int chapterNumber = 0; chapterNumber < chapters.length ; chapterNumber++) {
+			chapter = chapters[chapterNumber];
+			if (!contains(chapter, searchQuery)) continue;
+			String[] verses = chapter.split(module.VerseSign);
+			for (int verseNumber = 0; verseNumber < verses.length; verseNumber++) {
+				verse = verses[verseNumber];
+				if (!contains(verse, searchQuery)) continue;
+				searchRes.put(
+					new BibleReference(module.getID(), bookID, chapterNumber - chapterDev, verseNumber).getPath(),
+					StringProc.cleanVerseNumbers(StringProc.stripTags(verse)));
+			}
+		}
+
+		Log.i(TAG, " - Cancel search in book " + bookID);
+
 		return searchRes;
+	}
+
+	private boolean contains(String text, String query) {
+		return text.toLowerCase().matches(query);
 	}
 
 	private String getSearchQuery(String query) {
