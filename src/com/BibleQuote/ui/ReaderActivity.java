@@ -168,10 +168,6 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
-		getSupportActionBar().setIcon(R.drawable.app_logo);
-		getSupportActionBar().setDisplayShowTitleEnabled(false);
-		ViewUtils.setActionBarBackground(this);
-
 		BibleQuoteApp app = (BibleQuoteApp) getApplication();
 		myLibrarian = app.getLibrarian();
 

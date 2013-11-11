@@ -36,12 +36,10 @@
     <style name="BookLinkContainer">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColor">#6f0b0b</item>
         <item name="android:textSize">@dimen/text_size_small</item>
         <item name="android:singleLine">true</item>
         <item name="android:padding">4dp</item>
-        <item name="android:shadowColor">#ff000000</item>
-        <item name="android:shadowRadius">2.75</item>
     </style>
     
     <style name="DashBoardText">

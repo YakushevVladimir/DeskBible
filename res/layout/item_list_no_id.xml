@@ -31,8 +31,7 @@
 		android:layout_height="fill_parent" 
 		android:background="#ffffffff"
 		android:paddingLeft="10dp"
-		android:textStyle="bold"
-		android:textColor="#000000" 
+		android:textColor="#000000"
 		android:textSize="@dimen/text_size_medium"
 		android:gravity="center_vertical"
 		android:lines="2" />
