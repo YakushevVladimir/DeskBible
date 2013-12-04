@@ -33,7 +33,6 @@ import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.utils.OnTaskCompleteListener;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.Task;
-import com.BibleQuote.utils.ViewUtils;
 import com.BibleQuote.ui.widget.listview.ItemAdapter;
 import com.BibleQuote.ui.widget.listview.item.Item;
 import com.BibleQuote.ui.widget.listview.item.SubtextItem;
@@ -62,7 +61,6 @@ public class CrossReferenceActivity extends SherlockFragmentActivity implements 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.parallels_list);
-		ViewUtils.setActionBarBackground(this);
 
 		BibleQuoteApp app = (BibleQuoteApp) getApplication();
 		myLibrarian = app.getLibrarian();

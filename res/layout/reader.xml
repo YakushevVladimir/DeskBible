@@ -36,7 +36,7 @@
             android:layout_height="@dimen/bookLink_container_height"
             android:orientation="horizontal"
             android:layout_weight="1"
-            android:background="#c97355"
+            android:background="#F5CC99"
             android:clickable="false">
 
             <TextView

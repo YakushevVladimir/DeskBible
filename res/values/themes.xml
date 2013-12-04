@@ -2,15 +2,15 @@
 
 <resources>
 
-	<style name="Theme.BibleQuote" parent="Theme.Sherlock.Light">
+	<style name="Theme.BibleQuote" parent="Theme.Sherlock.Light.DarkActionBar">
 		<item name="actionBarStyle">@style/Widget.Styled.ActionBar</item>
 		<item name="android:actionBarStyle">@style/Widget.Styled.ActionBar</item>
 		<item name="android:actionMenuTextColor">#F5CC99</item>
 	</style>
 
-	<style name="Widget.Styled.ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid">
-		<item name="android:background">@drawable/action_bar_bg</item>
-		<item name="background">@drawable/action_bar_bg</item>
+	<style name="Widget.Styled.ActionBar" parent="Widget.Sherlock.ActionBar.Solid">
+		<item name="android:background">@drawable/action_bar_background</item>
+		<item name="background">@drawable/action_bar_background</item>
 
 		<item name="actionBarDivider">@drawable/action_bar_divider</item>
 		<item name="android:actionBarDivider">@drawable/action_bar_divider</item>

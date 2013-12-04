@@ -28,7 +28,7 @@
 
 	<RelativeLayout
 		android:layout_width="fill_parent"
-		android:layout_height="24dp">
+		android:layout_height="28dp">
 
 		<TextView
 			android:id="@+id/date"
@@ -67,6 +67,8 @@
 		android:id="@+id/link"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
+		android:paddingTop="2dp"
+		android:paddingBottom="2dp"
 		android:textColor="@android:color/black"
 		android:gravity="center_vertical|left"
 		android:textSize="@dimen/text_size_small"

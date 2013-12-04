@@ -31,7 +31,6 @@ import com.BibleQuote.exceptions.*;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.utils.OnTaskCompleteListener;
 import com.BibleQuote.utils.Task;
-import com.BibleQuote.utils.ViewUtils;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -65,7 +64,6 @@ public class LibraryActivity extends SherlockFragmentActivity implements OnTaskC
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.books);
-		ViewUtils.setActionBarBackground(this);
 
 		BibleQuoteApp app = (BibleQuoteApp) getApplication();
 		myLibrarian = app.getLibrarian();
@@ -369,7 +367,6 @@ public class LibraryActivity extends SherlockFragmentActivity implements OnTaskC
 	private void onAsyncOpenModuleComplete(AsyncOpenModule task) {
 		if (task.isSuccess()) {
 			moduleID = task.getModule().getID();
-			//chapter = "-";
 			setButtonText();
 			UpdateView(BOOK_VIEW);
 

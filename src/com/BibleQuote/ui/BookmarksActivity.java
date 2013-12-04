@@ -28,7 +28,6 @@ import com.BibleQuote.ui.adapters.TabsAdapter;
 import com.BibleQuote.ui.fragments.BookmarksFragment;
 import com.BibleQuote.ui.fragments.TagsFragment;
 import com.BibleQuote.managers.bookmarks.Bookmark;
-import com.BibleQuote.utils.ViewUtils;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 public class BookmarksActivity extends SherlockFragmentActivity
@@ -40,7 +39,6 @@ public class BookmarksActivity extends SherlockFragmentActivity
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.bookmarks_activity);
-		ViewUtils.setActionBarBackground(this);
 
 		mTabHost = (TabHost)findViewById(android.R.id.tabhost);
 		mTabHost.setup();

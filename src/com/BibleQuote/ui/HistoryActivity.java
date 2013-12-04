@@ -10,7 +10,6 @@ import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
 import com.BibleQuote.entity.ItemList;
 import com.BibleQuote.managers.Librarian;
-import com.BibleQuote.utils.ViewUtils;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -29,7 +28,6 @@ public class HistoryActivity extends SherlockFragmentActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.favorits);
-		ViewUtils.setActionBarBackground(this);
 
 		BibleQuoteApp app = (BibleQuoteApp) getApplication();
 		myLibrarian = app.getLibrarian();

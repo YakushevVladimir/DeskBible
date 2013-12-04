@@ -33,7 +33,6 @@ import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.utils.OnTaskCompleteListener;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.Task;
-import com.BibleQuote.utils.ViewUtils;
 import com.BibleQuote.ui.widget.listview.ItemAdapter;
 import com.BibleQuote.ui.widget.listview.item.Item;
 import com.BibleQuote.ui.widget.listview.item.SubtextItem;
@@ -58,7 +57,6 @@ public class SearchActivity extends SherlockFragmentActivity implements OnTaskCo
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.search);
-		ViewUtils.setActionBarBackground(this);
 
 		BibleQuoteApp app = (BibleQuoteApp) getApplication();
 		myLibararian = app.getLibrarian();
@@ -73,7 +71,7 @@ public class SearchActivity extends SherlockFragmentActivity implements OnTaskCo
 			searchResults = myLibararian.getSearchResults();
 		}
 
-		((ImageButton) findViewById(R.id.SearchButton)).setOnClickListener(onClick_Search);
+		findViewById(R.id.SearchButton).setOnClickListener(onClick_Search);
 
 		ResultList = (ListView) findViewById(R.id.SearchLV);
 		ResultList.setOnItemClickListener(onClick_searchResult);
