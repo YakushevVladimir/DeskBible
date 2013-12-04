@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public class FsLibraryContext extends LibraryContext {
 	private final String TAG = "FsLibraryContext";
@@ -400,14 +401,15 @@ public class FsLibraryContext extends LibraryContext {
 		Log.i(TAG, " - Start search in book " + bookID);
 
 		int chapterDev = module.ChapterZero ? -1 : 0;
-		String[] chapters = content.split(module.ChapterSign);
+		int patternFlags = Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE;
+		String[] chapters = Pattern.compile(module.ChapterSign, patternFlags).split(content);
 		String chapter, verse;
 		for (int chapterNumber = 0; chapterNumber < chapters.length ; chapterNumber++) {
-			chapter = chapters[chapterNumber];
+			chapter = module.ChapterSign + chapters[chapterNumber];
 			if (!contains(chapter, searchQuery)) continue;
-			String[] verses = chapter.split(module.VerseSign);
+			String[] verses = Pattern.compile(module.VerseSign, patternFlags).split(chapter);
 			for (int verseNumber = 0; verseNumber < verses.length; verseNumber++) {
-				verse = verses[verseNumber];
+				verse = module.VerseSign + verses[verseNumber];
 				if (!contains(verse, searchQuery)) continue;
 				searchRes.put(
 					new BibleReference(module.getID(), bookID, chapterNumber - chapterDev, verseNumber).getPath(),
@@ -421,7 +423,7 @@ public class FsLibraryContext extends LibraryContext {
 	}
 
 	private boolean contains(String text, String query) {
-		return text.toLowerCase().matches(query);
+		return Pattern.matches(query, text); //text.toLowerCase().matches(query);
 	}
 
 	private String getSearchQuery(String query) {
@@ -432,6 +434,6 @@ public class FsLibraryContext extends LibraryContext {
 		for (String currWord : words) {
 			result += (result.equals("") ? "" : "\\s(.)*?") + currWord;
 		}
-		return ".*?" + result + ".*?"; // любые символы в начале и конце
+		return "(?ui).*?" + result + ".*?"; // любые символы в начале и конце
 	}
 }
