@@ -16,13 +16,11 @@
 
 package com.BibleQuote.managers.bookmarks.repository;
 
-import com.BibleQuote.managers.bookmarks.Bookmark;
 import com.BibleQuote.managers.tags.Tag;
 import com.BibleQuote.utils.PreferenceHelper;
+import com.BibleQuote.managers.bookmarks.Bookmark;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.TreeSet;
 
 /**
  * User: Vladimir Yakushev

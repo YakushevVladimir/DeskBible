@@ -4,9 +4,9 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import com.BibleQuote.ui.widget.listview.item.TextItem;
 import com.BibleQuote.R;
 import com.BibleQuote.ui.widget.listview.item.Item;
-import com.BibleQuote.ui.widget.listview.item.TextItem;
 
 public class TextItemView extends LinearLayout implements ItemView {
 

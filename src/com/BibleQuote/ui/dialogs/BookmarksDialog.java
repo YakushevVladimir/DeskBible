@@ -26,16 +26,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.BibleQuote.R;
-import com.BibleQuote.managers.bookmarks.Bookmark;
+import com.BibleQuote.managers.GoogleAnalyticsHelper;
 import com.BibleQuote.managers.bookmarks.BookmarksManager;
 import com.BibleQuote.managers.bookmarks.repository.dbBookmarksRepository;
+import com.BibleQuote.managers.bookmarks.Bookmark;
 import com.BibleQuote.ui.BookmarksActivity;
 import com.actionbarsherlock.app.SherlockDialogFragment;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-
 
 public class BookmarksDialog extends SherlockDialogFragment {
-	private Bookmark bookmark;
+    private Bookmark bookmark;
 	private TextView tvDate, tvHumanLink;
 	private EditText tvName, tvTags;
 
@@ -77,6 +76,8 @@ public class BookmarksDialog extends SherlockDialogFragment {
 		readField();
 		new BookmarksManager(new dbBookmarksRepository()).add(bookmark, bookmark.tags);
 
+        GoogleAnalyticsHelper.getInstance(getSherlockActivity()).actionSendBookmark(bookmark);
+
 		if (getSherlockActivity() instanceof BookmarksActivity) {
 			((BookmarksActivity) getSherlockActivity()).onBookmarksUpdate();
 			((BookmarksActivity) getSherlockActivity()).onTagsUpdate();
@@ -86,7 +87,7 @@ public class BookmarksDialog extends SherlockDialogFragment {
 		dismiss();
 	}
 
-	private void fillField() {
+    private void fillField() {
 		tvDate.setText(bookmark.date);
 		tvHumanLink.setText(bookmark.humanLink);
 		tvName.setText(bookmark.name);

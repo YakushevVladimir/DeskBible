@@ -23,8 +23,8 @@ package com.BibleQuote.dal.repository;
 
 import android.util.Log;
 import com.BibleQuote.entity.ItemList;
-import com.BibleQuote.exceptions.FileAccessException;
 import com.BibleQuote.managers.history.IHistoryRepository;
+import com.BibleQuote.exceptions.FileAccessException;
 
 import java.io.*;
 import java.util.LinkedList;

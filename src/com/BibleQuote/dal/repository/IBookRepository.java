@@ -41,7 +41,7 @@ public interface IBookRepository<TModule, TBook> {
 	 * @param regQuery строка с искомой фразой
 	 * @return возвращает коллекцию, содержащую ссылки на места Писания и содержание отрывков,
 	 *         в которых была найдена фраза regQuery
-	 * @throws BookNotFoundException книга с указанным ID отсутсвует в модуле
+	 * @throws com.BibleQuote.exceptions.BookNotFoundException книга с указанным ID отсутсвует в модуле
 	 */
 	LinkedHashMap<String, String> searchInBook(TModule module, String bookID, String regQuery) throws BookNotFoundException;
 

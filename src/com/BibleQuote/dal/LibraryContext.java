@@ -1,9 +1,9 @@
 package com.BibleQuote.dal;
 
 import android.content.Context;
-import com.BibleQuote.modules.Book;
 import com.BibleQuote.modules.Chapter;
 import com.BibleQuote.modules.Module;
+import com.BibleQuote.modules.Book;
 import com.BibleQuote.utils.CachePool;
 
 import java.util.*;

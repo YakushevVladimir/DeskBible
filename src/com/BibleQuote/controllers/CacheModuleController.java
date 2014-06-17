@@ -2,8 +2,8 @@ package com.BibleQuote.controllers;
 
 import com.BibleQuote.dal.CacheContext;
 import com.BibleQuote.dal.repository.CacheRepository;
-import com.BibleQuote.exceptions.FileAccessException;
 import com.BibleQuote.utils.Log;
+import com.BibleQuote.exceptions.FileAccessException;
 
 import java.util.ArrayList;
 

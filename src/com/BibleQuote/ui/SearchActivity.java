@@ -22,27 +22,28 @@ import android.view.View;
 import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
-import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
-import com.BibleQuote.async.AsyncCommand;
 import com.BibleQuote.async.AsyncManager;
 import com.BibleQuote.async.command.StartSearch;
 import com.BibleQuote.entity.ItemList;
 import com.BibleQuote.exceptions.*;
-import com.BibleQuote.managers.Librarian;
+import com.BibleQuote.managers.GoogleAnalyticsHelper;
+import com.BibleQuote.ui.base.BibleQuoteActivity;
+import com.BibleQuote.ui.widget.listview.ItemAdapter;
 import com.BibleQuote.utils.OnTaskCompleteListener;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.Task;
-import com.BibleQuote.ui.widget.listview.ItemAdapter;
+import com.BibleQuote.utils.modules.LinkConverter;
+import com.BibleQuote.BibleQuoteApp;
+import com.BibleQuote.async.AsyncCommand;
+import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.ui.widget.listview.item.Item;
 import com.BibleQuote.ui.widget.listview.item.SubtextItem;
-import com.BibleQuote.utils.modules.LinkConverter;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
-public class SearchActivity extends SherlockFragmentActivity implements OnTaskCompleteListener {
+public class SearchActivity extends BibleQuoteActivity implements OnTaskCompleteListener {
 	private static final String TAG = "SearchActivity";
 	private Spinner spinnerFrom, spinnerTo;
 	private ListView ResultList;
@@ -172,6 +173,8 @@ public class SearchActivity extends SherlockFragmentActivity implements OnTaskCo
 		@Override
 		public void onClick(View view) {
 			String query = ((EditText) findViewById(R.id.SearchEdit)).getText().toString().trim();
+
+            GoogleAnalyticsHelper.getInstance(SearchActivity.this).actionSearch(myLibararian.getModuleID(), query);
 
 			int posFrom = spinnerFrom.getSelectedItemPosition();
 			int posTo = spinnerTo.getSelectedItemPosition();

@@ -19,56 +19,51 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.media.AudioManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentTransaction;
 import android.view.KeyEvent;
-import android.view.Surface;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.BibleQuote.BibleQuoteApp;
-import com.BibleQuote.R;
 import com.BibleQuote.async.AsyncManager;
 import com.BibleQuote.async.AsyncOpenChapter;
-import com.BibleQuote.entity.BibleReference;
 import com.BibleQuote.exceptions.BookNotFoundException;
 import com.BibleQuote.exceptions.ExceptionHelper;
-import com.BibleQuote.exceptions.OpenModuleException;
-import com.BibleQuote.managers.bookmarks.Bookmark;
+import com.BibleQuote.listeners.IReaderViewListener;
+import com.BibleQuote.managers.GoogleAnalyticsHelper;
+import com.BibleQuote.ui.base.BibleQuoteActivity;
 import com.BibleQuote.ui.dialogs.BookmarksDialog;
 import com.BibleQuote.ui.fragments.TTSPlayerFragment;
-import com.BibleQuote.listeners.IReaderViewListener;
-import com.BibleQuote.managers.Librarian;
-import com.BibleQuote.managers.bookmarks.BookmarksManager;
-import com.BibleQuote.utils.*;
-import com.BibleQuote.utils.share.ShareBuilder.Destination;
 import com.BibleQuote.ui.widget.ReaderWebView;
+import com.BibleQuote.utils.*;
+import com.BibleQuote.BibleQuoteApp;
+import com.BibleQuote.R;
+import com.BibleQuote.entity.BibleReference;
+import com.BibleQuote.exceptions.OpenModuleException;
+import com.BibleQuote.managers.bookmarks.Bookmark;
+import com.BibleQuote.managers.Librarian;
+import com.BibleQuote.utils.share.ShareBuilder.Destination;
 import com.actionbarsherlock.app.SherlockDialogFragment;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.TreeSet;
 
-public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCompleteListener, IReaderViewListener,
-		TTSPlayerFragment.onTTSStopSpeakListener {
+public class ReaderActivity extends BibleQuoteActivity implements OnTaskCompleteListener, IReaderViewListener,
+        TTSPlayerFragment.onTTSStopSpeakListener {
 
 	private static final String TAG = "ReaderActivity";
 	private static final int VIEW_CHAPTER_NAV_LENGHT = 3000;
 	private ReaderWebView.Mode oldMode;
 
-	private static final String VIEW_REFERENCE = "com.BibleQuote.intent.action.VIEW_REFERENCE";
+	private static final String VIEW_REFERENCE = "org.scripturesoftware.intent.action.VIEW_REFERENCE";
 
 	public Librarian getLibrarian() {
 		return myLibrarian;
@@ -90,12 +85,12 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 
 	private TTSPlayerFragment ttsPlayer;
 
-	private final int ID_CHOOSE_CH = 1;
-	private final int ID_SEARCH = 2;
-	private final int ID_HISTORY = 3;
-	private final int ID_BOOKMARKS = 4;
-	private final int ID_PARALLELS = 5;
-	private final int ID_SETTINGS = 6;
+	public static final int ID_CHOOSE_CH = 1;
+    public static final int ID_SEARCH = 2;
+    public static final int ID_HISTORY = 3;
+    public static final int ID_BOOKMARKS = 4;
+    public static final int ID_PARALLELS = 5;
+    public static final int ID_SETTINGS = 6;
 
 	@Override
 	public void onStopSpeak() {
@@ -162,10 +157,6 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.reader);
 
-		if (PreferenceHelper.restoreStateBoolean("DisableTurnScreen")) {
-			getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-		}
-
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
 		BibleQuoteApp app = (BibleQuoteApp) getApplication();
@@ -219,13 +210,17 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 		vWeb = (ReaderWebView) findViewById(R.id.readerView);
 		vWeb.setOnReaderViewListener(this);
 		vWeb.setMode(PreferenceHelper.isReadModeByDefault() ? ReaderWebView.Mode.Read : ReaderWebView.Mode.Study);
-	}
+        if (PreferenceHelper.restoreStateBoolean("DisableTurnScreen")) {
+            vWeb.setKeepScreenOn(true);
+        }
+
+    }
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		if (PreferenceHelper.restoreStateBoolean("DisableAutoScreenRotation")) {
 			super.onConfigurationChanged(newConfig);
-			this.setRequestedOrientation(Surface.ROTATION_0);
+			this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
 		} else {
 			this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
 			super.onConfigurationChanged(newConfig);
@@ -316,6 +311,7 @@ public class ReaderActivity extends SherlockFragmentActivity implements OnTaskCo
 				BibleReference osisLink = new BibleReference(extras.getString("linkOSIS"));
 				if (myLibrarian.isOSISLinkValid(osisLink)) {
 					openChapterFromLink(osisLink);
+                    GoogleAnalyticsHelper.getInstance(this).actionOpenLink(osisLink, requestCode);
 				}
 			}
 		} else if (requestCode == ID_SETTINGS) {

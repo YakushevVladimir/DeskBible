@@ -21,8 +21,8 @@
 
 package com.BibleQuote.managers.history;
 
-import com.BibleQuote.entity.BibleReference;
 import com.BibleQuote.entity.ItemList;
+import com.BibleQuote.entity.BibleReference;
 import com.BibleQuote.exceptions.FileAccessException;
 
 import java.util.LinkedList;

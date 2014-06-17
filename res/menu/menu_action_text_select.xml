@@ -34,7 +34,7 @@
 			android:title="@string/references"
 			android:id="@+id/action_references"
 			android:orderInCategory="2"
-			android:icon="@drawable/ic_action_parallels"
+			android:icon="@drawable/ic_action_mode_parallels"
 			android:showAsAction="always|withText"/>
 	<item
 			android:title="@string/copy"

@@ -25,12 +25,12 @@ import android.widget.TextView;
 import com.BibleQuote.R;
 import com.BibleQuote.managers.tags.Tag;
 import com.BibleQuote.ui.adapters.TabsAdapter;
+import com.BibleQuote.ui.base.BibleQuoteActivity;
 import com.BibleQuote.ui.fragments.BookmarksFragment;
 import com.BibleQuote.ui.fragments.TagsFragment;
 import com.BibleQuote.managers.bookmarks.Bookmark;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 
-public class BookmarksActivity extends SherlockFragmentActivity
+public class BookmarksActivity extends BibleQuoteActivity
 		implements BookmarksFragment.OnBookmarksChangeListener, TagsFragment.OnTagsChangeListener {
 
 	private TabHost mTabHost;

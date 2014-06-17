@@ -32,7 +32,7 @@ public interface IModuleController {
 	 *
 	 * @param moduleID ShortName модуля
 	 * @return Возвращает полностью загруженный модуль
-	 * @throws OpenModuleException - указанный ShortName отсутствует в коллекции или
+	 * @throws com.BibleQuote.exceptions.OpenModuleException - указанный ShortName отсутствует в коллекции или
 	 *                             произошла ошибка при попытке загрузить данные closed-модуля
 	 */
 	public Module getModuleByID(String moduleID) throws OpenModuleException;

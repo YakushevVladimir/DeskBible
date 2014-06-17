@@ -1,9 +1,8 @@
 package com.BibleQuote.async;
 
 import android.content.Context;
-import com.BibleQuote.utils.Log;
-import com.BibleQuote.utils.OnTaskCompleteListener;
 import com.BibleQuote.utils.Task;
+import com.BibleQuote.utils.OnTaskCompleteListener;
 
 public class AsyncManager implements OnTaskCompleteListener {
 

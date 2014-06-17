@@ -22,7 +22,6 @@ import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 import com.BibleQuote.R;
-import com.BibleQuote.managers.bookmarks.Bookmark;
 import com.BibleQuote.managers.tags.Tag;
 import com.BibleQuote.ui.widget.listview.itemview.ItemView;
 import org.xmlpull.v1.XmlPullParser;

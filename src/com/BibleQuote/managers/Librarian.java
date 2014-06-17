@@ -17,7 +17,7 @@
 package com.BibleQuote.managers;
 
 import android.content.Context;
-import com.BibleQuote.controllers.*;
+import com.BibleQuote.controllers.LibraryController;
 import com.BibleQuote.dal.repository.XmlTskRepository;
 import com.BibleQuote.dal.repository.fsHistoryRepository;
 import com.BibleQuote.entity.BibleReference;
@@ -31,10 +31,11 @@ import com.BibleQuote.modules.Module;
 import com.BibleQuote.modules.Verse;
 import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.PreferenceHelper;
-import com.BibleQuote.utils.share.ShareBuilder;
-import com.BibleQuote.utils.share.ShareBuilder.Destination;
 import com.BibleQuote.utils.StringProc;
 import com.BibleQuote.utils.modules.LinkConverter;
+import com.BibleQuote.utils.share.ShareBuilder;
+import com.BibleQuote.utils.share.ShareBuilder.Destination;
+import com.BibleQuote.controllers.TSKController;
 
 import java.util.*;
 
@@ -44,7 +45,7 @@ public class Librarian {
 
 	private LinkedHashMap<String, String> searchResults = new LinkedHashMap<String, String>();
 
-	private Module currModule;
+    private Module currModule;
 	private Book currBook;
 	private Chapter currChapter;
 	private Integer currChapterNumber = -1;
@@ -75,9 +76,9 @@ public class Librarian {
 	 *
 	 * @param module модуль для которого необходимо получить коллекцию Book
 	 * @return коллекцию Book для указанного модуля
-	 * @throws OpenModuleException
-	 * @throws BooksDefinitionException
-	 * @throws BookDefinitionException
+	 * @throws com.BibleQuote.exceptions.OpenModuleException
+	 * @throws com.BibleQuote.exceptions.BooksDefinitionException
+	 * @throws com.BibleQuote.exceptions.BookDefinitionException
 	 */
 	public ArrayList<Book> getBookList(Module module) throws OpenModuleException, BooksDefinitionException, BookDefinitionException {
 		return libCtrl.getBookCtrl().getBookList(module);

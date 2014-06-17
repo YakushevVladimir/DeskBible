@@ -1,8 +1,8 @@
 package com.BibleQuote.dal;
 
+import com.BibleQuote.dal.repository.IChapterRepository;
 import com.BibleQuote.controllers.CacheModuleController;
 import com.BibleQuote.dal.repository.IBookRepository;
-import com.BibleQuote.dal.repository.IChapterRepository;
 import com.BibleQuote.dal.repository.IModuleRepository;
 
 public interface ILibraryUnitOfWork<TModuleId, TModule, TBook> {

@@ -4,14 +4,14 @@ import android.content.Context;
 import com.BibleQuote.modules.Book;
 import com.BibleQuote.modules.Chapter;
 import com.BibleQuote.modules.Module;
-import com.BibleQuote.utils.bibleReferenceFormatter.EmptyReferenceFormatter;
+import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.bibleReferenceFormatter.FullReferenceFormatter;
 import com.BibleQuote.utils.bibleReferenceFormatter.IBibleReferenceFormatter;
 import com.BibleQuote.utils.bibleReferenceFormatter.ShortReferenceFormatter;
+import com.BibleQuote.utils.bibleReferenceFormatter.EmptyReferenceFormatter;
 import com.BibleQuote.utils.bibleTextFormatters.BreakVerseFormatter;
 import com.BibleQuote.utils.bibleTextFormatters.IBibleTextFormatter;
 import com.BibleQuote.utils.bibleTextFormatters.SimpleFormatter;
-import com.BibleQuote.utils.PreferenceHelper;
 
 import java.util.LinkedHashMap;
 import java.util.TreeSet;

@@ -1,9 +1,9 @@
 package com.BibleQuote.async;
 
 import android.content.Context;
+import com.BibleQuote.utils.Task;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.utils.NotifyDialog;
-import com.BibleQuote.utils.Task;
 
 public class AsyncRefreshModules extends Task {
 	//private final String TAG = "AsyncRefreshModules";

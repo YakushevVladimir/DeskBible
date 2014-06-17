@@ -1,12 +1,10 @@
 package com.BibleQuote.entity;
 
 import android.net.Uri;
-import com.BibleQuote.utils.Log;
 import com.BibleQuote.modules.Book;
 import com.BibleQuote.modules.FsModule;
 import com.BibleQuote.modules.Module;
-
-import java.util.List;
+import com.BibleQuote.utils.Log;
 
 public class BibleReference {
 	public final static String MOD_DATASOURCE_FS = "fs";

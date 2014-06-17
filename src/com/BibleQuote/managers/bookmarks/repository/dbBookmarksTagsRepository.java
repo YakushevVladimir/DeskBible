@@ -21,9 +21,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import com.BibleQuote.dal.dbLibraryHelper;
-import com.BibleQuote.managers.bookmarks.Bookmark;
 import com.BibleQuote.managers.bookmarks.BookmarksTags;
 import com.BibleQuote.managers.tags.Tag;
+import com.BibleQuote.managers.bookmarks.Bookmark;
 
 import java.util.ArrayList;
 

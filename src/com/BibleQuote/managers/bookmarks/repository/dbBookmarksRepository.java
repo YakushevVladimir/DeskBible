@@ -20,10 +20,10 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import com.BibleQuote.dal.dbLibraryHelper;
+import com.BibleQuote.utils.Log;
 import com.BibleQuote.managers.bookmarks.Bookmark;
 import com.BibleQuote.managers.bookmarks.BookmarksTags;
 import com.BibleQuote.managers.tags.Tag;
-import com.BibleQuote.utils.Log;
 
 import java.util.ArrayList;
 

@@ -2,11 +2,11 @@ package com.BibleQuote.ui;
 
 import android.os.Bundle;
 import android.webkit.WebView;
-import com.BibleQuote.R;
+import com.BibleQuote.ui.base.BibleQuoteActivity;
 import com.BibleQuote.utils.FsUtils;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.BibleQuote.R;
 
-public class HelpActivity extends SherlockFragmentActivity {
+public class HelpActivity extends BibleQuoteActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

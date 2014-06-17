@@ -45,7 +45,7 @@ public class TSKController {
 		}
 
 		LinkedHashSet<BibleReference> crossReference = BibleLinkParser.parse(
-				reference.getModuleID(), getParallels(reference));
+                reference.getModuleID(), getParallels(reference));
 		bCrossReferenceCache.put(reference.getPath(), crossReference);
 
 		return crossReference;

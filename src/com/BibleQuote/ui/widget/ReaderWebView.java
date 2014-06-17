@@ -23,9 +23,8 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.webkit.*;
-import com.BibleQuote.listeners.IReaderViewListener;
-import com.BibleQuote.listeners.IReaderViewListener.ChangeCode;
 import com.BibleQuote.utils.PreferenceHelper;
+import com.BibleQuote.listeners.IReaderViewListener;
 
 import java.util.ArrayList;
 import java.util.TreeSet;
@@ -67,7 +66,7 @@ public class ReaderWebView extends WebView
 		if (currMode != Mode.Study) {
 			clearSelectedVerse();
 		}
-		notifyListeners(ChangeCode.onChangeReaderMode);
+		notifyListeners(IReaderViewListener.ChangeCode.onChangeReaderMode);
 	}
 
 	public Mode getMode() {
@@ -82,7 +81,7 @@ public class ReaderWebView extends WebView
 		}
 	}
 
-	private void notifyListeners(ChangeCode code) {
+	private void notifyListeners(IReaderViewListener.ChangeCode code) {
 		for (IReaderViewListener listener : listeners) {
 			listener.onReaderViewChange(code);
 		}
@@ -147,7 +146,7 @@ public class ReaderWebView extends WebView
 	public void computeScroll() {
 		super.computeScroll();
 		if (mPageLoaded && isScrollToBottom()) {
-			notifyListeners(ChangeCode.onScroll);
+			notifyListeners(IReaderViewListener.ChangeCode.onScroll);
 		}
 	}
 
@@ -157,7 +156,7 @@ public class ReaderWebView extends WebView
 		}
 		jsInterface.clearSelectedVerse();
 		if (currMode == Mode.Study) {
-			notifyListeners(ChangeCode.onChangeSelection);
+			notifyListeners(IReaderViewListener.ChangeCode.onChangeSelection);
 		}
 	}
 
@@ -247,19 +246,19 @@ public class ReaderWebView extends WebView
 			y = (int) (y / density);
 
 			loadUrl("javascript:handleClick(" + x + ", " + y + ");");
-			notifyListeners(ChangeCode.onChangeSelection);
+			notifyListeners(IReaderViewListener.ChangeCode.onChangeSelection);
 		} else if (currMode == Mode.Read) {
 			int width = this.getWidth();
 			int height = this.getHeight();
 
 			if (((float) y / height) <= 0.33) {
-				notifyListeners(ChangeCode.onUpNavigation);
+				notifyListeners(IReaderViewListener.ChangeCode.onUpNavigation);
 			} else if (((float) y / height) > 0.67) {
-				notifyListeners(ChangeCode.onDownNavigation);
+				notifyListeners(IReaderViewListener.ChangeCode.onDownNavigation);
 			} else if (((float) x / width) <= 0.33) {
-				notifyListeners(ChangeCode.onLeftNavigation);
+				notifyListeners(IReaderViewListener.ChangeCode.onLeftNavigation);
 			} else if (((float) x / width) > 0.67) {
-				notifyListeners(ChangeCode.onRightNavigation);
+				notifyListeners(IReaderViewListener.ChangeCode.onRightNavigation);
 			}
 		}
 		return false;
@@ -271,17 +270,17 @@ public class ReaderWebView extends WebView
 
 	public boolean onFling(MotionEvent e1, MotionEvent e2,
 						   float velocityX, float velocityY) {
-		notifyListeners(ChangeCode.onScroll);
+		notifyListeners(IReaderViewListener.ChangeCode.onScroll);
 		return false;
 	}
 
 	public void onLongPress(MotionEvent event) {
-		notifyListeners(ChangeCode.onLongPress);
+		notifyListeners(IReaderViewListener.ChangeCode.onLongPress);
 	}
 
 	public boolean onScroll(MotionEvent e1, MotionEvent e2,
 							float distanceX, float distanceY) {
-		notifyListeners(ChangeCode.onScroll);
+		notifyListeners(IReaderViewListener.ChangeCode.onScroll);
 		return false;
 	}
 
@@ -345,7 +344,7 @@ public class ReaderWebView extends WebView
 				Handler mHandler = getHandler();
 				mHandler.post(new Runnable() {
 					public void run() {
-						notifyListeners(ChangeCode.onChangeSelection);
+						notifyListeners(IReaderViewListener.ChangeCode.onChangeSelection);
 					}
 				});
 			} catch (NullPointerException e) {

@@ -1,6 +1,7 @@
 package com.BibleQuote.managers.tags.repository;
 import java.util.*;
-import com.BibleQuote.managers.tags.*;
+
+import com.BibleQuote.managers.tags.Tag;
 
 public interface ITagRepository {
 	long add(String tag);

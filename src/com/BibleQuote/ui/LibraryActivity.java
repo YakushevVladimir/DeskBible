@@ -20,7 +20,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.*;
-import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
 import com.BibleQuote.async.AsyncManager;
 import com.BibleQuote.async.AsyncOpenModule;
@@ -28,17 +27,18 @@ import com.BibleQuote.async.AsyncRefreshModules;
 import com.BibleQuote.entity.BibleReference;
 import com.BibleQuote.entity.ItemList;
 import com.BibleQuote.exceptions.*;
-import com.BibleQuote.managers.Librarian;
+import com.BibleQuote.ui.base.BibleQuoteActivity;
 import com.BibleQuote.utils.OnTaskCompleteListener;
 import com.BibleQuote.utils.Task;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.BibleQuote.BibleQuoteApp;
+import com.BibleQuote.managers.Librarian;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
 import java.util.ArrayList;
 
-public class LibraryActivity extends SherlockFragmentActivity implements OnTaskCompleteListener {
+public class LibraryActivity extends BibleQuoteActivity implements OnTaskCompleteListener {
 	private static final String TAG = "LibraryActivity";
 	public static final String EMPTY_OBJECT = "---";
 	private final int MODULE_VIEW = 1, BOOK_VIEW = 2, CHAPTER_VIEW = 3;

@@ -2,9 +2,9 @@ package com.BibleQuote.utils.share;
 
 import android.content.Context;
 import android.text.ClipboardManager;
-import com.BibleQuote.modules.Book;
 import com.BibleQuote.modules.Chapter;
 import com.BibleQuote.modules.Module;
+import com.BibleQuote.modules.Book;
 
 import java.util.LinkedHashMap;
 

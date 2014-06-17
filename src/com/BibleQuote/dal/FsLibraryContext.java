@@ -18,14 +18,14 @@ package com.BibleQuote.dal;
 import android.content.Context;
 import android.util.Log;
 import com.BibleQuote.controllers.CacheModuleController;
-import com.BibleQuote.entity.BibleReference;
-import com.BibleQuote.exceptions.BookDefinitionException;
 import com.BibleQuote.exceptions.BooksDefinitionException;
-import com.BibleQuote.exceptions.FileAccessException;
 import com.BibleQuote.modules.*;
 import com.BibleQuote.utils.FsUtils;
 import com.BibleQuote.utils.StringProc;
 import com.BibleQuote.utils.modules.LanguageConvertor;
+import com.BibleQuote.entity.BibleReference;
+import com.BibleQuote.exceptions.BookDefinitionException;
+import com.BibleQuote.exceptions.FileAccessException;
 
 import java.io.BufferedReader;
 import java.io.File;

@@ -1,8 +1,8 @@
 package com.BibleQuote.controllers;
 
-import com.BibleQuote.exceptions.BookNotFoundException;
 import com.BibleQuote.modules.Book;
 import com.BibleQuote.modules.Chapter;
+import com.BibleQuote.exceptions.BookNotFoundException;
 
 import java.util.ArrayList;
 

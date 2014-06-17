@@ -18,14 +18,14 @@ package com.BibleQuote.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.WindowManager;
-import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
-import com.BibleQuote.async.AsyncCommand;
 import com.BibleQuote.async.AsyncManager;
 import com.BibleQuote.async.command.InitApplication;
 import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.OnTaskCompleteListener;
 import com.BibleQuote.utils.Task;
+import com.BibleQuote.BibleQuoteApp;
+import com.BibleQuote.async.AsyncCommand;
 import com.actionbarsherlock.app.SherlockActivity;
 
 public class SplashActivity extends SherlockActivity implements OnTaskCompleteListener {

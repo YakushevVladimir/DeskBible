@@ -1,11 +1,11 @@
 package com.BibleQuote.async;
 
 import android.util.Log;
-import com.BibleQuote.entity.BibleReference;
 import com.BibleQuote.exceptions.BookNotFoundException;
+import com.BibleQuote.utils.Task;
+import com.BibleQuote.entity.BibleReference;
 import com.BibleQuote.exceptions.OpenModuleException;
 import com.BibleQuote.managers.Librarian;
-import com.BibleQuote.utils.Task;
 
 public class AsyncOpenChapter extends Task {
 	private final String TAG = "AsyncOpenChapter";

@@ -8,13 +8,13 @@ public class NotifyDialog {
 	private AlertDialog alertDialog;
 
 	public NotifyDialog(String message, Context context) {
-		alertDialog = new AlertDialog.Builder(context).create();
-		alertDialog.setTitle("Oops!");
-		alertDialog.setMessage(message);
-		alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int which) {
-			}
-		});
+		alertDialog = new AlertDialog.Builder(context)
+                .setTitle("Oops!")
+                .setMessage(message)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                }).create();
 	}
 
 	public void show() {

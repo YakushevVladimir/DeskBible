@@ -21,30 +21,30 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import com.BibleQuote.async.AsyncManager;
+import com.BibleQuote.exceptions.ExceptionHelper;
+import com.BibleQuote.ui.base.BibleQuoteActivity;
+import com.BibleQuote.ui.widget.listview.ItemAdapter;
+import com.BibleQuote.ui.widget.listview.item.TextItem;
+import com.BibleQuote.utils.OnTaskCompleteListener;
+import com.BibleQuote.utils.PreferenceHelper;
+import com.BibleQuote.utils.Task;
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
 import com.BibleQuote.async.AsyncCommand;
 import com.BibleQuote.async.AsyncCommand.ICommand;
-import com.BibleQuote.async.AsyncManager;
 import com.BibleQuote.entity.BibleReference;
-import com.BibleQuote.exceptions.ExceptionHelper;
 import com.BibleQuote.exceptions.OpenModuleException;
 import com.BibleQuote.managers.Librarian;
-import com.BibleQuote.utils.OnTaskCompleteListener;
-import com.BibleQuote.utils.PreferenceHelper;
-import com.BibleQuote.utils.Task;
-import com.BibleQuote.ui.widget.listview.ItemAdapter;
 import com.BibleQuote.ui.widget.listview.item.Item;
 import com.BibleQuote.ui.widget.listview.item.SubtextItem;
-import com.BibleQuote.ui.widget.listview.item.TextItem;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-public class CrossReferenceActivity extends SherlockFragmentActivity implements OnTaskCompleteListener {
+public class CrossReferenceActivity extends BibleQuoteActivity implements OnTaskCompleteListener {
 
 	private static String TAG = "CrossReferenceActivity";
 

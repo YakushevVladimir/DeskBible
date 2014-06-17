@@ -4,9 +4,9 @@ import android.util.Log;
 import com.BibleQuote.dal.FsLibraryContext;
 import com.BibleQuote.entity.BibleReference;
 import com.BibleQuote.exceptions.BookNotFoundException;
-import com.BibleQuote.exceptions.FileAccessException;
 import com.BibleQuote.modules.Chapter;
 import com.BibleQuote.modules.FsBook;
+import com.BibleQuote.exceptions.FileAccessException;
 
 import java.io.BufferedReader;
 import java.io.IOException;

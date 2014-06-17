@@ -58,9 +58,9 @@ public class SearchProcessor {
 	}
 
 	private class SearchThread extends Thread {
-		Module module;
-		String bookID;
-		String query;
+		private Module module;
+        private String bookID;
+        private String query;
 
 		public String getBookID() {
 			return bookID;

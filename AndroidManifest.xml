@@ -18,18 +18,17 @@
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	package="com.BibleQuote"
-	android:versionName="0.08.05"
-	android:versionCode="65"
+	android:versionName="0.08.06"
+	android:versionCode="66"
 	android:installLocation="auto">
 
-	<uses-sdk android:targetSdkVersion="15" android:minSdkVersion="7"/>
+	<uses-sdk
+        android:targetSdkVersion="19"
+        android:minSdkVersion="10"/>
 
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-	<!--
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
-	-->
 
 	<supports-screens
 		android:smallScreens="true"
@@ -74,7 +73,7 @@
 
 		<activity android:name=".ui.CrossReferenceActivity" android:label="@string/cross_reference">
 			<intent-filter>
-				<action android:name="com.BibleQuote.intent.action.VIEW_REFERENCE"/>
+				<action android:name="org.scripturesoftware.intent.action.VIEW_REFERENCE"/>
 				<category android:name="android.intent.category.DEFAULT"/>
 			</intent-filter>
 		</activity>

@@ -19,9 +19,9 @@ import android.os.Bundle;
 import android.widget.TextView;
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.BibleQuote.ui.base.BibleQuoteActivity;
 
-public class AboutActivity extends SherlockFragmentActivity {
+public class AboutActivity extends BibleQuoteActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

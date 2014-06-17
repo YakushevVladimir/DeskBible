@@ -1,8 +1,8 @@
 package com.BibleQuote.dal.repository;
 
 import com.BibleQuote.dal.CacheContext;
-import com.BibleQuote.exceptions.FileAccessException;
 import com.BibleQuote.utils.Log;
+import com.BibleQuote.exceptions.FileAccessException;
 
 public class CacheRepository<T> {
 	private final String TAG = "CacheRepository";

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2014, Nowtaxi LLC
+  ~ http://nowtaxi.ru
+  -->
+
+<resources>
+
+    <!--Replace placeholder ID with your tracking ID-->
+    <string name="ga_trackingId">UA-52016919-2</string>
+
+    <!--Enable automatic activity tracking-->
+    <bool name="ga_autoActivityTracking">true</bool>
+
+    <!-- The screen names that will appear in reports -->
+    <string name="com.BibleQuote.ui.AboutActivity">About</string>
+    <string name="com.BibleQuote.ui.BookmarksActivity">Bookmarks</string>
+    <string name="com.BibleQuote.ui.CrossReferenceActivity">CrossReference</string>
+    <string name="com.BibleQuote.ui.HelpActivity">Help Screen</string>
+    <string name="com.BibleQuote.ui.HistoryActivity">History</string>
+    <string name="com.BibleQuote.ui.LibraryActivity">Library</string>
+    <string name="com.BibleQuote.ui.ReaderActivity">Reader</string>
+    <string name="com.BibleQuote.ui.SearchActivity">Search</string>
+
+    <!--Enable automatic exception tracking-->
+    <bool name="ga_reportUncaughtExceptions">true</bool>
+
+    <!--Custom dispatch period-->
+    <integer name="ga_dispatchPeriod">30</integer>
+
+    <!-- the Local LogLevel for Analytics -->
+    <string name="ga_logLevel">verbose</string>
+
+</resources>

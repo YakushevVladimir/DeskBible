@@ -7,8 +7,8 @@ import android.util.AttributeSet;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
-import com.BibleQuote.R;
 import com.BibleQuote.ui.widget.listview.itemview.ItemView;
+import com.BibleQuote.R;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -80,7 +80,7 @@ public abstract class Item {
 	 * Return a view that is associated to the current item. The returned view
 	 * is normally capable of being a good recipient for all item's information.
 	 *
-	 * @param context The Context in which the {@link ItemView} will be used
+	 * @param context The Context in which the {@link com.BibleQuote.ui.widget.listview.itemview.ItemView} will be used
 	 * @param parent  The parent View of that new View. The parent is usually the
 	 *                parent ListView and may be used to retrieve the correct
 	 *                LayoutParams type.

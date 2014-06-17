@@ -1,10 +1,10 @@
 package com.BibleQuote.controllers;
 
+import com.BibleQuote.dal.repository.IChapterRepository;
+import com.BibleQuote.modules.*;
 import com.BibleQuote.dal.LibraryUnitOfWork;
 import com.BibleQuote.dal.repository.IBookRepository;
-import com.BibleQuote.dal.repository.IChapterRepository;
 import com.BibleQuote.exceptions.BookNotFoundException;
-import com.BibleQuote.modules.*;
 import com.BibleQuote.utils.StringProc;
 
 import java.util.ArrayList;

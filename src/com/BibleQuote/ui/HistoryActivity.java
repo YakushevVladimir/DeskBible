@@ -6,18 +6,18 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import com.BibleQuote.entity.ItemList;
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
-import com.BibleQuote.entity.ItemList;
 import com.BibleQuote.managers.Librarian;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.BibleQuote.ui.base.BibleQuoteActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
 import java.util.LinkedList;
 
-public class HistoryActivity extends SherlockFragmentActivity {
+public class HistoryActivity extends BibleQuoteActivity {
 
 	//private final String TAG = "HistoryActivity";
 

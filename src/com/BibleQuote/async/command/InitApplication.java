@@ -18,9 +18,9 @@ package com.BibleQuote.async.command;
 
 import android.app.Activity;
 import android.content.Context;
+import com.BibleQuote.utils.Log;
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.async.AsyncCommand;
-import com.BibleQuote.utils.Log;
 
 public class InitApplication implements AsyncCommand.ICommand {
 	private final String TAG = "InitApplication";

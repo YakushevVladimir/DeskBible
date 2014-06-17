@@ -8,10 +8,10 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.util.Xml.Encoding;
 import com.BibleQuote.R;
-import com.BibleQuote.managers.bookmarks.Bookmark;
 import com.BibleQuote.managers.bookmarks.BookmarksManager;
 import com.BibleQuote.managers.bookmarks.repository.dbBookmarksRepository;
 import com.BibleQuote.managers.bookmarks.repository.prefBookmarksRepository;
+import com.BibleQuote.managers.bookmarks.Bookmark;
 
 import java.io.*;
 import java.util.ArrayList;

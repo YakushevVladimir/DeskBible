@@ -1,6 +1,5 @@
 package com.BibleQuote.listeners;
 
-import com.BibleQuote.listeners.IChangeBooksListener.ChangeCode;
 import com.BibleQuote.modules.Book;
 import com.BibleQuote.modules.Module;
 
@@ -12,7 +11,7 @@ public class ChangeBooksEvent {
 	public Module module;
 	public LinkedHashMap<String, Book> books;
 
-	public ChangeBooksEvent(ChangeCode code, Module module, LinkedHashMap<String, Book> books) {
+	public ChangeBooksEvent(IChangeBooksListener.ChangeCode code, Module module, LinkedHashMap<String, Book> books) {
 		this.code = code;
 		this.books = books;
 		this.module = module;

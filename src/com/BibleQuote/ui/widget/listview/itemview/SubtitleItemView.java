@@ -5,8 +5,8 @@ import android.util.AttributeSet;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.BibleQuote.R;
-import com.BibleQuote.ui.widget.listview.item.Item;
 import com.BibleQuote.ui.widget.listview.item.SubtitleItem;
+import com.BibleQuote.ui.widget.listview.item.Item;
 
 public class SubtitleItemView extends LinearLayout implements ItemView {
 

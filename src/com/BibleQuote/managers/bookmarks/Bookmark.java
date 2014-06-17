@@ -20,7 +20,6 @@ import com.BibleQuote.entity.BibleReference;
 import com.BibleQuote.managers.bookmarks.repository.dbBookmarksTagsRepository;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 /**
