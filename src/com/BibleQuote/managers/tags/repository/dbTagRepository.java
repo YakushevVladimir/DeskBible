@@ -34,7 +34,11 @@ public class dbTagRepository implements ITagRepository {
 		try {
 			ContentValues values = new ContentValues();
 			values.put(Tag.NAME, tag.name);
-			result = db.update(dbLibraryHelper.TAGS_TABLE, values, Tag.KEY_ID + "=\"" + tag.id + "\"", null);
+
+            String[] whereArgs = new String[1];
+            whereArgs[0] = String.valueOf(tag.id);
+
+            result = db.update(dbLibraryHelper.TAGS_TABLE, values, Tag.KEY_ID + "=?", whereArgs);
 			db.setTransactionSuccessful();
 		} finally {
 			db.endTransaction();
@@ -51,7 +55,10 @@ public class dbTagRepository implements ITagRepository {
 		db.beginTransaction();
 		try {
 			bmTagRepo.deleteTag(db, tag);
-			result = db.delete(dbLibraryHelper.TAGS_TABLE, Tag.KEY_ID + "=\"" + tag.id + "\"", null);
+            String[] whereArgs = new String[1];
+            whereArgs[0] = String.valueOf(tag.id);
+
+            result = db.delete(dbLibraryHelper.TAGS_TABLE, Tag.KEY_ID + "=?", whereArgs);
 			db.setTransactionSuccessful();
 		} finally {
 			db.endTransaction();
@@ -159,7 +166,7 @@ public class dbTagRepository implements ITagRepository {
 		long result;
 		db.beginTransaction();
 		try {
-			Cursor cur = db.query(dbLibraryHelper.TAGS_TABLE, null, Tag.NAME + " = \"" + tag + "\"", null, null, null, null);
+			Cursor cur = db.query(dbLibraryHelper.TAGS_TABLE, null, Tag.NAME + "=?", new String[] {tag}, null, null, null);
 			if (cur.moveToFirst()) {
 				result = cur.getInt(0);
 				cur.close();
