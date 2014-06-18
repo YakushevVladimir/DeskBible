@@ -269,9 +269,6 @@ public class ReaderActivity extends BibleQuoteActivity implements OnTaskComplete
                 else
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         }
-
-        currentOrientation = this.getRequestedOrientation();
-        android.util.Log.d(TAG, "Current orientation: " + currentOrientation);
     }
 
 	@Override
