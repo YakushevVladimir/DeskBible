@@ -18,12 +18,16 @@ package com.BibleQuote.ui;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.graphics.Point;
 import android.media.AudioManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentTransaction;
+import android.view.Display;
 import android.view.KeyEvent;
+import android.view.Surface;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
@@ -47,6 +51,7 @@ import com.BibleQuote.entity.BibleReference;
 import com.BibleQuote.exceptions.OpenModuleException;
 import com.BibleQuote.managers.bookmarks.Bookmark;
 import com.BibleQuote.managers.Librarian;
+import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.share.ShareBuilder.Destination;
 import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.actionbarsherlock.view.ActionMode;
@@ -82,6 +87,8 @@ public class ReaderActivity extends BibleQuoteActivity implements OnTaskComplete
 	private TextView vBookLink;
 	private LinearLayout btnChapterNav;
 	private ReaderWebView vWeb;
+
+    private int currentOrientation;
 
 	private TTSPlayerFragment ttsPlayer;
 
@@ -166,6 +173,7 @@ public class ReaderActivity extends BibleQuoteActivity implements OnTaskComplete
 		mAsyncManager.handleRetainedTask(mTask, this);
 
 		initialyzeViews();
+        setCurrentOrientation();
 		updateActivityMode();
 
 		BibleReference osisLink;
@@ -216,15 +224,59 @@ public class ReaderActivity extends BibleQuoteActivity implements OnTaskComplete
 
     }
 
+    private void setCurrentOrientation() {
+        if (!PreferenceHelper.restoreStateBoolean("DisableAutoScreenRotation")) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
+            return;
+        }
+
+        Display display = getWindowManager().getDefaultDisplay();
+        int rotation = display.getRotation();
+        int height;
+        int width;
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB_MR2) {
+            height = display.getHeight();
+            width = display.getWidth();
+        } else {
+            Point size = new Point();
+            display.getSize(size);
+            height = size.y;
+            width = size.x;
+        }
+
+        switch (rotation) {
+            case Surface.ROTATION_90:
+                if (width > height)
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                else
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT);
+                break;
+            case Surface.ROTATION_180:
+                if (height > width)
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT);
+                else
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
+                break;
+            case Surface.ROTATION_270:
+                if (width > height)
+                    setRequestedOrientation(8/* reverseLandscape */);
+                else
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                break;
+            default :
+                if (height > width)
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                else
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        }
+
+        currentOrientation = this.getRequestedOrientation();
+        android.util.Log.d(TAG, "Current orientation: " + currentOrientation);
+    }
+
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
-		if (PreferenceHelper.restoreStateBoolean("DisableAutoScreenRotation")) {
-			super.onConfigurationChanged(newConfig);
-			this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
-		} else {
-			this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
-			super.onConfigurationChanged(newConfig);
-		}
+        super.onConfigurationChanged(newConfig);
 	}
 
 	@Override
@@ -317,6 +369,7 @@ public class ReaderActivity extends BibleQuoteActivity implements OnTaskComplete
 		} else if (requestCode == ID_SETTINGS) {
 			vWeb.setMode(PreferenceHelper.isReadModeByDefault() ? ReaderWebView.Mode.Read : ReaderWebView.Mode.Study);
 			updateActivityMode();
+            setCurrentOrientation();
 			openChapterFromLink(myLibrarian.getCurrentOSISLink());
 		}
 	}
@@ -449,7 +502,14 @@ public class ReaderActivity extends BibleQuoteActivity implements OnTaskComplete
 			return super.onKeyDown(keyCode, event);
 		}
 	}
-	public void onTaskComplete(Task task) {
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setCurrentOrientation();
+    }
+
+    public void onTaskComplete(Task task) {
 		if (task != null && !task.isCancelled()) {
 			if (task instanceof AsyncOpenChapter) {
 				AsyncOpenChapter t = ((AsyncOpenChapter) task);
