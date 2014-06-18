@@ -323,7 +323,8 @@ public class ReaderWebView extends WebView
 			selectedVerse.clear();
 		}
 
-		public void onClickVerse(String id) {
+        @JavascriptInterface
+        public void onClickVerse(String id) {
 			if (currMode != Mode.Study || !id.contains("verse")) {
 				return;
 			}
