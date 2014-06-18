@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class FsLibraryContext extends LibraryContext {
@@ -373,11 +374,11 @@ public class FsLibraryContext extends LibraryContext {
 	}
 
 
-	public LinkedHashMap<String, String> searchInBook(Module module, String bookID, String searchQuery, BufferedReader bReader) {
+	public LinkedHashMap<String, String> searchInBook(Module module, String bookID, String query, BufferedReader bReader) {
 		LinkedHashMap<String, String> searchRes = new LinkedHashMap<String, String>();
 
 		// Подготовим регулярное выражение для поиска
-		searchQuery = getSearchQuery(searchQuery);
+		String searchQuery = getSearchQuery(query);
 		if (searchQuery.equals("")) {
 			return searchRes;
 		}
@@ -411,9 +412,9 @@ public class FsLibraryContext extends LibraryContext {
 			for (int verseNumber = 0; verseNumber < verses.length; verseNumber++) {
 				verse = module.VerseSign + verses[verseNumber];
 				if (!contains(verse, searchQuery)) continue;
-				searchRes.put(
+                searchRes.put(
 					new BibleReference(module.getID(), bookID, chapterNumber - chapterDev, verseNumber).getPath(),
-					StringProc.cleanVerseNumbers(StringProc.stripTags(verse)));
+                        higlightWords(query, verse));
 			}
 		}
 
@@ -422,18 +423,42 @@ public class FsLibraryContext extends LibraryContext {
 		return searchRes;
 	}
 
-	private boolean contains(String text, String query) {
-		return Pattern.matches(query, text); //text.toLowerCase().matches(query);
+    private String higlightWords(String query, String verse) {
+        String resultVerse = StringProc.cleanVerseNumbers(StringProc.stripTags(verse));
+
+        String[] words = query.toLowerCase().replaceAll("[^\\s\\w]", "").split("\\s+");
+        StringBuilder pattern = new StringBuilder(query.length() + words.length);
+        for(String word : words) {
+            if (pattern.length() != 0) {
+                pattern.append("|");
+            }
+            pattern.append(word);
+        }
+
+        Pattern regex = Pattern.compile("((?ui)" + pattern.toString() + ")");
+        Matcher regexMatcher = regex.matcher(resultVerse);
+        resultVerse = regexMatcher.replaceAll("<b><font color=\"#6b0b0b\">$1</font></b>");
+        return resultVerse;
+    }
+
+    private boolean contains(String text, String query) {
+		return Pattern.matches(query, text);
 	}
 
 	private String getSearchQuery(String query) {
-		String result = "";
-		if (query.trim().equals("")) return result;
+        StringBuilder result = new StringBuilder();
+		if (query.trim().equals("")) {
+            return result.toString();
+        }
 
 		String[] words = query.toLowerCase().replaceAll("[^\\s\\w]", "").split("\\s+");
 		for (String currWord : words) {
-			result += (result.equals("") ? "" : "\\s(.)*?") + currWord;
+            if (result.length() != 0) {
+                //result.append("\\s(.)*?");
+                result.append("(.)*?");
+            }
+			result.append(currWord);
 		}
-		return "(?ui).*?" + result + ".*?"; // любые символы в начале и конце
+		return "((?ui).*?" + result.toString() + ".*?)"; // любые символы в начале и конце
 	}
 }

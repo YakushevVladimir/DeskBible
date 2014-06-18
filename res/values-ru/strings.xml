@@ -119,5 +119,6 @@
 	<string name="edit">Редактировать</string>
 	<string name="delete">Удалить</string>
 	<string name="disable_turn_screen">Не отключать экран</string>
-	<string name="disable_turn_screen_summury">Не отключать подсветку экрана при чтении (требуется перезагрузка)</string>
+	<string name="disable_turn_screen_summury">Не отключать подсветку экрана при чтении</string>
+    <string name="press_again_to_exit">Нажмите снова для выхода</string>
 </resources>

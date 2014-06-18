@@ -125,5 +125,7 @@
 	<string name="edit">Edit</string>
 	<string name="delete">Delete</string>
 	<string name="disable_turn_screen">Disable turn screen</string>
-	<string name="disable_turn_screen_summury">Do not turn off the screen while reading (need restart)</string>
+	<string name="disable_turn_screen_summury">Do not turn off the screen while reading</string>
+    <string name="stop_tts">Stop playing</string>
+    <string name="press_again_to_exit">Press again to exit</string>
 </resources>

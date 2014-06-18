@@ -26,9 +26,7 @@ public class StringProc {
 
 	public static String cleanVerseText(String verse) {
 		return cleanStrongNumbers(cleanVerseNumbers(stripTags(verse)));
-
 	}
-
 
 	private static Pattern getCleanTagPattern(String extExpression) {
 		String[] tagsExpressions = {
@@ -46,5 +44,4 @@ public class StringProc {
 
 		return Pattern.compile(result.toString());
 	}
-
 }

@@ -18,8 +18,8 @@
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	package="com.BibleQuote"
-	android:versionName="0.08.06"
-	android:versionCode="66"
+	android:versionName="0.08.07"
+	android:versionCode="67"
 	android:installLocation="auto">
 
 	<uses-sdk
@@ -49,6 +49,7 @@
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
 				<category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER"/>
 			</intent-filter>
 		</activity>
 
@@ -66,8 +67,9 @@
 				<action android:name="android.intent.action.VIEW" />
 				<category android:name="android.intent.category.DEFAULT" />
 				<category android:name="android.intent.category.BROWSABLE" />
-				<data android:host="b-bq.eu" android:scheme="http" android:pathPattern=".*" />
-				<data android:host="www.b-bq.eu" android:scheme="http" android:pathPattern=".*" />
+                <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER"/>
+                <data android:host="b-bq.eu" android:scheme="http" android:pathPattern=".*" />
+                <data android:host="www.b-bq.eu" android:scheme="http" android:pathPattern=".*" />
 			</intent-filter>
 		</activity>
 
@@ -77,6 +79,13 @@
 				<category android:name="android.intent.category.DEFAULT"/>
 			</intent-filter>
 		</activity>
+
+        <uses-library android:required="false" android:name="com.sec.android.app.multiwindow" />
+        <meta-data android:name="com.sec.android.support.multiwindow" android:value="true" />
+        <meta-data android:name="com.sec.android.multiwindow.DEFAULT_SIZE_W" android:resource="@dimen/app_defaultsize_w" />
+        <meta-data android:name="com.sec.android.multiwindow.DEFAULT_SIZE_H" android:resource="@dimen/app_defaultsize_h" />
+        <meta-data android:name="com.sec.android.multiwindow.MINIMUM_SIZE_W" android:resource="@dimen/app_minimumsize_w" />
+        <meta-data android:name="com.sec.android.multiwindow.MINIMUM_SIZE_H" android:resource="@dimen/app_minimumsize_h" />
 
 	</application>
 

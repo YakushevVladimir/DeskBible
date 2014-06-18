@@ -81,14 +81,13 @@ public class ReaderActivity extends BibleQuoteActivity implements OnTaskComplete
 
 	private String chapterInHTML = "";
 	private boolean nightMode = false;
+    private boolean exitToBackKey = false;
 	private String progressMessage = "";
 
 	private TextView vModuleName;
 	private TextView vBookLink;
 	private LinearLayout btnChapterNav;
 	private ReaderWebView vWeb;
-
-    private int currentOrientation;
 
 	private TTSPlayerFragment ttsPlayer;
 
@@ -218,10 +217,8 @@ public class ReaderActivity extends BibleQuoteActivity implements OnTaskComplete
 		vWeb = (ReaderWebView) findViewById(R.id.readerView);
 		vWeb.setOnReaderViewListener(this);
 		vWeb.setMode(PreferenceHelper.isReadModeByDefault() ? ReaderWebView.Mode.Read : ReaderWebView.Mode.Study);
-        if (PreferenceHelper.restoreStateBoolean("DisableTurnScreen")) {
-            vWeb.setKeepScreenOn(true);
-        }
 
+        setKeepScreen();
     }
 
     private void setCurrentOrientation() {
@@ -269,6 +266,10 @@ public class ReaderActivity extends BibleQuoteActivity implements OnTaskComplete
                 else
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         }
+    }
+
+    private void setKeepScreen() {
+        vWeb.setKeepScreenOn(PreferenceHelper.restoreStateBoolean("DisableTurnScreen"));
     }
 
 	@Override
@@ -367,11 +368,28 @@ public class ReaderActivity extends BibleQuoteActivity implements OnTaskComplete
 			vWeb.setMode(PreferenceHelper.isReadModeByDefault() ? ReaderWebView.Mode.Read : ReaderWebView.Mode.Study);
 			updateActivityMode();
             setCurrentOrientation();
+            setKeepScreen();
 			openChapterFromLink(myLibrarian.getCurrentOSISLink());
 		}
 	}
 
-	public void setTextInWebView() {
+    @Override
+    public void onBackPressed() {
+        if (exitToBackKey) {
+            super.onBackPressed();
+        } else {
+            exitToBackKey = true;
+            Toast.makeText(this, getString(R.string.press_again_to_exit), Toast.LENGTH_SHORT).show();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    exitToBackKey = false;
+                }
+            }, 3000);
+        }
+    }
+
+    public void setTextInWebView() {
 		BibleReference OSISLink = myLibrarian.getCurrentOSISLink();
 		vWeb.setText(myLibrarian.getBaseUrl(), chapterInHTML, OSISLink.getFromVerse(), nightMode, myLibrarian.isBible());
 
@@ -504,6 +522,7 @@ public class ReaderActivity extends BibleQuoteActivity implements OnTaskComplete
     protected void onResume() {
         super.onResume();
         setCurrentOrientation();
+        setKeepScreen();
     }
 
     public void onTaskComplete(Task task) {

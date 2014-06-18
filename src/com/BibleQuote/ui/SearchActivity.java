@@ -260,7 +260,5 @@ public class SearchActivity extends BibleQuoteActivity implements OnTaskComplete
 
 		spinnerFrom.setSelection(fromBook);
 		spinnerTo.setSelection(toBook);
-
-		saveSelectedPosition(fromBook, toBook);
 	}
 }

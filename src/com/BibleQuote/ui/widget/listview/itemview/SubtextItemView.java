@@ -1,6 +1,7 @@
 package com.BibleQuote.ui.widget.listview.itemview;
 
 import android.content.Context;
+import android.text.Html;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -29,7 +30,7 @@ public class SubtextItemView extends LinearLayout implements ItemView {
 	public void setObject(Item object) {
 		final SubtextItem item = (SubtextItem) object;
 		mTextView.setText(item.text);
-		mSubtextView.setText(item.subtext);
+		mSubtextView.setText(Html.fromHtml(item.subtext));
 	}
 
 }
