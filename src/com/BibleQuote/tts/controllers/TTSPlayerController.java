@@ -40,40 +40,30 @@ public class TTSPlayerController implements TextToSpeech.OnInitListener, TextToS
 	Context cont;
 	boolean isPaused = false;
 
-	int currText = 0;
+    private int currText = 0;
+    private Locale locale;
+    private Exception error;
+    private ArrayList<String> textList;
+    private ArrayList<OnEventListener> listeners = new ArrayList<OnEventListener>();
 
-	public int getCurrText() {
-		return currText;
-	}
+    public TTSPlayerController(Context cont, Locale locale) {
+        this.cont = cont;
+        this.locale = locale;
+        initTTS(cont);
+    }
 
-	Locale locale;
+    public TTSPlayerController(Context cont, Locale locale, ArrayList<String> textList) {
+        this(cont, locale);
+        this.textList = textList;
+    }
 
-	public void setLocale(Locale locale) {
-		this.locale = locale;
-		setLanguage();
-	}
+    public int getCurrText() {
+        return currText;
+    }
 
-	Exception error;
-
-	public Exception getError() {
-		return error;
-	}
-
-	ArrayList<String> textList;
-
-	public void setTextList(ArrayList<String> textList) {
-		this.textList = textList;
-	}
-
-	public enum Event {
-		Error, ChangeTextIndex, PauseSpeak;
-	}
-
-	public interface OnEventListener {
-		public void onEvent(Event ev);
-	}
-
-	private ArrayList<OnEventListener> listeners = new ArrayList<OnEventListener>();
+    public Exception getError() {
+        return error;
+    }
 
 	public void setOnInitListener(OnEventListener listener) {
 		if (!listeners.contains(listener)) listeners.add(listener);
@@ -108,106 +98,110 @@ public class TTSPlayerController implements TextToSpeech.OnInitListener, TextToS
 	}
 
 	private void setLanguage() {
-		Log.i(TAG, "setLanguage()");
+        if (locale == null) {
+            eventNotSupportedLanguage();
+        }
+
 		int initStatus = ttsEngine.isLanguageAvailable(locale);
 		if (initStatus == TextToSpeech.LANG_MISSING_DATA || initStatus == TextToSpeech.LANG_NOT_SUPPORTED) {
-			error = new LanguageNotSupportedException(locale);
-			notifyListeners(Event.Error);
-		} else {
-			ttsEngine.setLanguage(locale);
+            eventNotSupportedLanguage();
+        } else {
+            ttsEngine.setLanguage(locale);
 		}
 	}
 
-	private void initTTS(Context cont) {
-		if (ttsEngine == null) {
-			ttsEngine = new TextToSpeech(cont, this);
+    private void eventNotSupportedLanguage() {
+        error = new LanguageNotSupportedException(locale);
+        notifyListeners(Event.Error);
+    }
+
+    private void initTTS(Context cont) {
+        if (ttsEngine == null) {
+            ttsEngine = new TextToSpeech(cont, this);
 		}
 	}
 
-	public TTSPlayerController(Context cont, Locale locale) {
-		this.cont = cont;
-		this.locale = locale;
-		initTTS(cont);
-	}
+    @Override
+    public void onUtteranceCompleted(String s) {
+        Log.i(TAG, "onUtteranceCompleted() -> " + currText);
+        if (isPaused) {
+            return;
+        } else if (currText == textList.size() - 1) {
+            currText = 0;
+            isPaused = true;
+            notifyListeners(Event.PauseSpeak);
+            return;
+        }
+        currText++;
+        speakTTS(currText);
+    }
 
-	public TTSPlayerController(Context cont, Locale locale, ArrayList<String> textList) {
-		this(cont, locale);
-		this.textList = textList;
-	}
+    public void destroy() throws Throwable {
+        finalize();
+    }
 
-	@Override
-	public void onUtteranceCompleted(String s) {
-		Log.i(TAG, "onUtteranceCompleted() -> " + currText);
-		if (isPaused) {
-			return;
-		} else if (currText == textList.size() - 1) {
-			currText = 0;
-			isPaused = true;
-			notifyListeners(Event.PauseSpeak);
-			return;
-		}
-		currText++;
-		speakTTS(currText);
-	}
+    private void speakTTS(int verseIndex) {
+        if (error != null) {
+            return;
+        } else if (verseIndex > textList.size() - 1) {
+            return;
+        }
 
-	public void destroy() throws Throwable {
-		finalize();
-	}
+        Log.i(TAG, "speakTTS() -> " + verseIndex);
+        ttsEngine.speak(textList.get(verseIndex), TextToSpeech.QUEUE_FLUSH, ttsParams);
+        notifyListeners(Event.ChangeTextIndex);
+    }
 
-	private void speakTTS(int verseIndex) {
-		if (error != null) {
-			return;
-		} else if (verseIndex > textList.size() - 1) {
-			return;
-		}
+    private void stopTTS() {
+        Log.i(TAG, "stopTTS() -> " + currText);
+        isPaused = true;
+        if (ttsEngine.isSpeaking()) ttsEngine.stop();
+    }
 
-		Log.i(TAG, "speakTTS() -> " + verseIndex);
-		ttsEngine.speak(textList.get(verseIndex), TextToSpeech.QUEUE_FLUSH, ttsParams);
-		notifyListeners(Event.ChangeTextIndex);
-	}
+    public void play() {
+        Log.i(TAG, "play() -> " + currText);
+        isPaused = false;
+        speakTTS(currText);
+    }
 
-	private void stopTTS() {
-		Log.i(TAG, "stopTTS() -> " + currText);
-		isPaused = true;
-		if (ttsEngine.isSpeaking()) ttsEngine.stop();
-	}
+    public void replay() {
+        currText = 0;
+        Log.i(TAG, "replay() -> " + currText);
+        stopTTS();
+        play();
+    }
 
-	public void play() {
-		Log.i(TAG, "play() -> " + currText);
-		isPaused = false;
-		speakTTS(currText);
-	}
+    public void pause() {
+        Log.i(TAG, "pause() -> " + currText);
+        stopTTS();
+    }
 
-	public void replay() {
-		currText = 0;
-		Log.i(TAG, "replay() -> " + currText);
-		stopTTS();
-		play();
-	}
+    public void stop() {
+        Log.i(TAG, "stop() -> " + currText);
+        stopTTS();
+        currText = 0;
+        notifyListeners(Event.PauseSpeak);
+    }
 
-	public void pause() {
-		Log.i(TAG, "pause() -> " + currText);
-		stopTTS();
-	}
+    public void moveNext() {
+        stopTTS();
+        if (currText < textList.size() - 1) currText++;
+        Log.i(TAG, "moveNext() -> " + currText);
+        notifyListeners(Event.ChangeTextIndex);
+    }
 
-	public void stop() {
-		Log.i(TAG, "stop() -> " + currText);
-		stopTTS();
-		currText = 0;
-		notifyListeners(Event.PauseSpeak);
-	}
+    public void movePrevious() {
+        stopTTS();
+        if (currText != 0) currText--;
+        Log.i(TAG, "movePrevious() -> " + currText);
+        notifyListeners(Event.ChangeTextIndex);
+    }
 
-	public void moveNext() {
-		stopTTS();
-		if (currText < textList.size() - 1) currText++;
-		Log.i(TAG, "moveNext() -> " + currText);
-		notifyListeners(Event.ChangeTextIndex);
-	}
+    public enum Event {
+        Error, ChangeTextIndex, PauseSpeak
+    }
 
-	public void movePrevious() {
-		stopTTS();
-		if (currText != 0) currText--;
-		Log.i(TAG, "movePrevious() -> " + currText);
-		notifyListeners(Event.ChangeTextIndex);
-	}
+    public interface OnEventListener {
+        public void onEvent(Event ev);
+    }
 }
