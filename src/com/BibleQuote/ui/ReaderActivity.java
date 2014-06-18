@@ -259,7 +259,7 @@ public class ReaderActivity extends BibleQuoteActivity implements OnTaskComplete
                 break;
             case Surface.ROTATION_270:
                 if (width > height)
-                    setRequestedOrientation(8/* reverseLandscape */);
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
                 else
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
                 break;
