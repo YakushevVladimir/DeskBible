@@ -319,7 +319,7 @@ public class ColorPickerView extends View {
 
 		canvas.drawRect(rect, mAlphaPaint);
 
-		if (mAlphaSliderText != null && mAlphaSliderText != "") {
+		if (mAlphaSliderText != null && !mAlphaSliderText.equals("")) {
 			canvas.drawText(mAlphaSliderText, rect.centerX(), rect.centerY() + 4 * mDensity, mAlphaTextPaint);
 		}
 
@@ -628,8 +628,8 @@ public class ColorPickerView extends View {
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 
-		int width = 0;
-		int height = 0;
+		int width;
+		int height;
 
 		int widthMode = MeasureSpec.getMode(widthMeasureSpec);
 		int heightMode = MeasureSpec.getMode(heightMeasureSpec);
@@ -779,7 +779,7 @@ public class ColorPickerView extends View {
 	 * Set a OnColorChangedListener to get notified when the color
 	 * selected by the user has changed.
 	 *
-	 * @param listener
+	 * @param listener listener
 	 */
 	public void setOnColorChangedListener(OnColorChangedListener listener) {
 		mListener = listener;
@@ -788,7 +788,7 @@ public class ColorPickerView extends View {
 	/**
 	 * Set the color of the border surrounding all panels.
 	 *
-	 * @param color
+	 * @param color border color
 	 */
 	public void setBorderColor(int color) {
 		mBorderColor = color;
@@ -867,7 +867,7 @@ public class ColorPickerView extends View {
 	 * Set if the user is allowed to adjust the alpha panel. Default is false.
 	 * If it is set to false no alpha will be set.
 	 *
-	 * @param visible
+	 * @param visible visible alpha slider
 	 */
 	public void setAlphaSliderVisible(boolean visible) {
 

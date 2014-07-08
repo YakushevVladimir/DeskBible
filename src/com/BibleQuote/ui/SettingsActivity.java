@@ -35,11 +35,11 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.settings);
 
-		Preference historySize = (Preference) findPreference("HistorySize");
+		Preference historySize = findPreference("HistorySize");
 		historySize.setOnPreferenceChangeListener(historySizeChangeListener);
 		setHistorySummary(historySize, Integer.toString(PreferenceHelper.getHistorySize()));
 
-		Preference fontFamily = (Preference) findPreference("font_family");
+		Preference fontFamily = findPreference("font_family");
 		fontFamily.setOnPreferenceChangeListener(fontFamilyChangeListener);
 		setFontFamilySummary(fontFamily, PreferenceHelper.getFontFamily());
 	}
@@ -67,9 +67,9 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 			String summary = getResources().getString(R.string.category_reader_other_history_size_summary);
 			historySize.setSummary(String.format(summary, value));
 		} catch (NumberFormatException e) {
-			return;
+			e.printStackTrace();
 		} catch (NotFoundException e) {
-			return;
+			e.printStackTrace();
 		}
 	}
 

@@ -15,6 +15,7 @@
  */
 package com.BibleQuote.ui.widget;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
@@ -29,6 +30,7 @@ import com.BibleQuote.listeners.IReaderViewListener;
 import java.util.ArrayList;
 import java.util.TreeSet;
 
+@SuppressLint("SetJavaScriptEnabled")
 public class ReaderWebView extends WebView
 		implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
 
@@ -47,7 +49,7 @@ public class ReaderWebView extends WebView
 		jsInterface.clearSelectedVerse();
 		this.selectedVerse = selectedVerse;
 		for (Integer verse : selectedVerse) {
-			jsInterface.setSelectedVerse(verse);
+			jsInterface.selectVerse(verse);
 		}
 	}
 
@@ -316,10 +318,11 @@ public class ReaderWebView extends WebView
 			clearSelectedVerse();
 		}
 
+        @JavascriptInterface
 		public void clearSelectedVerse() {
-			for (Integer verse : selectedVerse) {
-				loadUrl("javascript: deselectVerse('verse_" + verse + "');");
-			}
+            for (Integer verse : selectedVerse) {
+                deselectVerse(verse);
+            }
 			selectedVerse.clear();
 		}
 
@@ -329,32 +332,47 @@ public class ReaderWebView extends WebView
 				return;
 			}
 
-			Integer verse = Integer.parseInt(id.split("_")[1]);
-			if (verse == null) {
-				return;
-			}
-			if (selectedVerse.contains(verse)) {
-				selectedVerse.remove(verse);
-				loadUrl("javascript: deselectVerse('verse_" + verse + "');");
-			} else {
-				selectedVerse.add(verse);
-				setSelectedVerse(verse);
-			}
-
 			try {
-				Handler mHandler = getHandler();
-				mHandler.post(new Runnable() {
-					public void run() {
-						notifyListeners(IReaderViewListener.ChangeCode.onChangeSelection);
-					}
-				});
-			} catch (NullPointerException e) {
-				Log.e(TAG, "Error when notifying clients ReaderWebView");
-			}
+                Integer verse = Integer.parseInt(id.split("_")[1]);
+                if (selectedVerse.contains(verse)) {
+                    selectedVerse.remove(verse);
+                    deselectVerse(verse);
+                } else {
+                    selectedVerse.add(verse);
+                    selectVerse(verse);
+                }
+
+                try {
+                    Handler mHandler = getHandler();
+                    mHandler.post(new Runnable() {
+                        public void run() {
+                            notifyListeners(IReaderViewListener.ChangeCode.onChangeSelection);
+                        }
+                    });
+                } catch (NullPointerException e) {
+                    Log.e(TAG, "Error when notifying clients ReaderWebView");
+                }
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
 		}
 
-		private void setSelectedVerse(int verse) {
-			loadUrl("javascript: selectVerse('verse_" + verse + "');");
+        private void deselectVerse(final Integer verse) {
+            ReaderWebView.this.post(new Runnable() {
+                @Override
+                public void run() {
+                    loadUrl("javascript: deselectVerse('verse_" + verse + "');");
+                }
+            });
+        }
+
+        private void selectVerse(final int verse) {
+            ReaderWebView.this.post(new Runnable() {
+                @Override
+                public void run() {
+                    loadUrl("javascript: selectVerse('verse_" + verse + "');");
+                }
+            });
 		}
 
 		public void gotoVerse(int verse) {

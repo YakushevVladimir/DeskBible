@@ -20,6 +20,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Color;
+import android.os.Build;
 import android.preference.Preference;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -39,7 +40,7 @@ public class ColorPickerPreference extends Preference
 	String mDefaultValue = "#FF000000";
 	private String mValue = "#FF000000";
 	private float mDensity = 0;
-	private boolean mAlphaSliderEnabled = false;
+	private boolean mAlphaSliderEnabled = true;
 
 	private static final String androidns = "http://schemas.android.com/apk/res/android";
 
@@ -111,7 +112,6 @@ public class ColorPickerPreference extends Preference
 			widgetFrameView.removeViews(0, count);
 		}
 		widgetFrameView.addView(iView);
-		iView.setBackgroundDrawable(new AlphaPatternDrawable((int) (5 * mDensity)));
 		iView.setImageBitmap(getPreviewBitmap());
 	}
 
@@ -121,7 +121,7 @@ public class ColorPickerPreference extends Preference
 		Bitmap bm = Bitmap.createBitmap(d, d, Config.ARGB_8888);
 		int w = bm.getWidth();
 		int h = bm.getHeight();
-		int c = color;
+		int c;
 		for (int i = 0; i < w; i++) {
 			for (int j = i; j < h; j++) {
 				c = (i <= 1 || j <= 1 || i >= w - 2 || j >= h - 2) ? Color.GRAY : color;
@@ -158,7 +158,7 @@ public class ColorPickerPreference extends Preference
 		try {
 			getOnPreferenceChangeListener().onPreferenceChange(this, newColor);
 		} catch (NullPointerException e) {
-
+            e.printStackTrace();
 		}
 	}
 
@@ -185,8 +185,7 @@ public class ColorPickerPreference extends Preference
 	/**
 	 * For custom purposes. Not used by ColorPickerPreferrence
 	 *
-	 * @param color
-	 * @author Unknown
+	 * @param color color with alpha chanel
 	 */
 	public static String convertToARGB(int color) {
 		String alpha = Integer.toHexString(Color.alpha(color));
@@ -216,9 +215,8 @@ public class ColorPickerPreference extends Preference
 	/**
 	 * For custom purposes. Not used by ColorPickerPreferrence
 	 *
-	 * @param argb
+	 * @param argb color with alpha chanel
 	 * @throws NumberFormatException
-	 * @author Unknown
 	 */
 	public static int convertToColorInt(String argb) throws NumberFormatException {
 
