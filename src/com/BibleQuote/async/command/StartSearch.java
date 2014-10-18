@@ -17,39 +17,39 @@
 package com.BibleQuote.async.command;
 
 import android.content.Context;
+import android.support.v4.app.FragmentActivity;
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.async.AsyncCommand;
 import com.BibleQuote.exceptions.BookNotFoundException;
 import com.BibleQuote.exceptions.ExceptionHelper;
 import com.BibleQuote.exceptions.OpenModuleException;
 import com.BibleQuote.managers.Librarian;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 public class StartSearch implements AsyncCommand.ICommand {
-	private final String TAG = "StartSearch";
-	private String query, fromBookID, toBookID;
-	private Context context;
+    private final String TAG = "StartSearch";
+    private String query, fromBookID, toBookID;
+    private Context context;
 
-	public StartSearch(Context context, String query, String fromBookID, String toBookID) {
-		this.context = context;
-		this.query = query;
-		this.fromBookID = fromBookID;
-		this.toBookID = toBookID;
-	}
+    public StartSearch(Context context, String query, String fromBookID, String toBookID) {
+        this.context = context;
+        this.query = query;
+        this.fromBookID = fromBookID;
+        this.toBookID = toBookID;
+    }
 
-	@Override
-	public void execute() throws Exception {
-		if (query.equals("") || fromBookID.equals("") || toBookID.equals("")) {
-			return;
-		}
+    @Override
+    public void execute() throws Exception {
+        if (query.equals("") || fromBookID.equals("") || toBookID.equals("")) {
+            return;
+        }
 
-		Librarian lib = ((BibleQuoteApp) ((SherlockFragmentActivity) context).getApplication()).getLibrarian();
-		try {
-			lib.search(query, fromBookID, toBookID);
-		} catch (BookNotFoundException e) {
-			ExceptionHelper.onBookNotFoundException(e, context, TAG);
-		} catch (OpenModuleException e) {
-			ExceptionHelper.onOpenModuleException(e, context, TAG);
-		}
-	}
+        Librarian lib = ((BibleQuoteApp) ((FragmentActivity) context).getApplication()).getLibrarian();
+        try {
+            lib.search(query, fromBookID, toBookID);
+        } catch (BookNotFoundException e) {
+            ExceptionHelper.onBookNotFoundException(e, context, TAG);
+        } catch (OpenModuleException e) {
+            ExceptionHelper.onOpenModuleException(e, context, TAG);
+        }
+    }
 }

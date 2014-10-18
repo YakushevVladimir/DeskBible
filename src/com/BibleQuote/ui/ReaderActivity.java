@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.BibleQuote.ui;
 
 import android.content.Intent;
@@ -24,11 +25,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentTransaction;
-import android.view.Display;
-import android.view.KeyEvent;
-import android.view.Surface;
-import android.view.View;
+import android.support.v7.view.ActionMode;
+import android.view.*;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -52,11 +52,6 @@ import com.BibleQuote.ui.fragments.TTSPlayerFragment;
 import com.BibleQuote.ui.widget.ReaderWebView;
 import com.BibleQuote.utils.*;
 import com.BibleQuote.utils.share.ShareBuilder.Destination;
-import com.actionbarsherlock.app.SherlockDialogFragment;
-import com.actionbarsherlock.view.ActionMode;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 
 import java.util.TreeSet;
 
@@ -250,7 +245,7 @@ public class ReaderActivity extends BibleQuoteActivity implements OnTaskComplete
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater infl = getSupportMenuInflater();
+        MenuInflater infl = getMenuInflater();
         infl.inflate(R.menu.menu_reader, menu);
         return true;
     }
@@ -491,7 +486,7 @@ public class ReaderActivity extends BibleQuoteActivity implements OnTaskComplete
             if (selVerses.size() == 0) {
                 disableActionMode();
             } else if (currActionMode == null) {
-                currActionMode = startActionMode(new ActionSelectText());
+                currActionMode = startSupportActionMode(new ActionSelectText());
             }
         } else if (code == ChangeCode.onLongPress) {
             viewChapterNav();
@@ -517,7 +512,7 @@ public class ReaderActivity extends BibleQuoteActivity implements OnTaskComplete
     private final class ActionSelectText implements ActionMode.Callback {
 
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            MenuInflater infl = getSupportMenuInflater();
+            MenuInflater infl = getMenuInflater();
             infl.inflate(R.menu.menu_action_text_select, menu);
             return true;
         }
@@ -535,7 +530,7 @@ public class ReaderActivity extends BibleQuoteActivity implements OnTaskComplete
             switch (item.getItemId()) {
                 case R.id.action_bookmarks:
                     myLibrarian.setCurrentVerseNumber(selVerses.first());
-                    SherlockDialogFragment bmDial = new BookmarksDialog(new Bookmark(myLibrarian.getCurrentOSISLink()));
+                    DialogFragment bmDial = new BookmarksDialog(new Bookmark(myLibrarian.getCurrentOSISLink()));
                     bmDial.show(getSupportFragmentManager(), "bookmark");
                     break;
 

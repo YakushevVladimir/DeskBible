@@ -16,14 +16,14 @@
 
 package com.BibleQuote.ui.base;
 
+import android.support.v7.app.ActionBarActivity;
 import com.BibleQuote.managers.GoogleAnalyticsHelper;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 /**
  * @author Vladimir Yakushev
  * @version 1.0
  */
-public class BibleQuoteActivity extends SherlockFragmentActivity {
+public class BibleQuoteActivity extends ActionBarActivity {
     @Override
     protected void onStart() {
         super.onStart();

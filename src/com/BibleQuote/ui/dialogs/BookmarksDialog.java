@@ -20,6 +20,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -27,77 +28,76 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.BibleQuote.R;
 import com.BibleQuote.managers.GoogleAnalyticsHelper;
+import com.BibleQuote.managers.bookmarks.Bookmark;
 import com.BibleQuote.managers.bookmarks.BookmarksManager;
 import com.BibleQuote.managers.bookmarks.repository.dbBookmarksRepository;
-import com.BibleQuote.managers.bookmarks.Bookmark;
 import com.BibleQuote.ui.BookmarksActivity;
-import com.actionbarsherlock.app.SherlockDialogFragment;
 
-public class BookmarksDialog extends SherlockDialogFragment {
+public class BookmarksDialog extends DialogFragment {
     private Bookmark bookmark;
-	private TextView tvDate, tvHumanLink;
-	private EditText tvName, tvTags;
+    private TextView tvDate, tvHumanLink;
+    private EditText tvName, tvTags;
 
-	public BookmarksDialog(Bookmark bookmark) {
-		this.bookmark = bookmark;
-	}
+    public BookmarksDialog(Bookmark bookmark) {
+        this.bookmark = bookmark;
+    }
 
-	@Override
-	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		LayoutInflater inflater = getSherlockActivity().getLayoutInflater();
-		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
-				.setTitle(R.string.bookmarks)
-				.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						addBookmarks();
-					}
-				})
-				.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						// null
-					}
-				});
-		View customView = inflater.inflate(R.layout.bookmarks_dialog, null);
-		builder.setView(customView);
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
+                .setTitle(R.string.bookmarks)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        addBookmarks();
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // null
+                    }
+                });
+        View customView = inflater.inflate(R.layout.bookmarks_dialog, null);
+        builder.setView(customView);
 
-		tvDate = (TextView) customView.findViewById(R.id.bm_date);
-		tvHumanLink = (TextView) customView.findViewById(R.id.bm_humanLink);
-		tvName = (EditText) customView.findViewById(R.id.bm_name);
-		tvTags = (EditText) customView.findViewById(R.id.bm_tags);
+        tvDate = (TextView) customView.findViewById(R.id.bm_date);
+        tvHumanLink = (TextView) customView.findViewById(R.id.bm_humanLink);
+        tvName = (EditText) customView.findViewById(R.id.bm_name);
+        tvTags = (EditText) customView.findViewById(R.id.bm_tags);
 
-		fillField();
+        fillField();
 
-		return builder.create();
-	}
+        return builder.create();
+    }
 
-	private void addBookmarks() {
-		readField();
-		new BookmarksManager(new dbBookmarksRepository()).add(bookmark, bookmark.tags);
+    private void addBookmarks() {
+        readField();
+        new BookmarksManager(new dbBookmarksRepository()).add(bookmark, bookmark.tags);
 
-        GoogleAnalyticsHelper.getInstance(getSherlockActivity()).actionSendBookmark(bookmark);
+        GoogleAnalyticsHelper.getInstance(getActivity()).actionSendBookmark(bookmark);
 
-		if (getSherlockActivity() instanceof BookmarksActivity) {
-			((BookmarksActivity) getSherlockActivity()).onBookmarksUpdate();
-			((BookmarksActivity) getSherlockActivity()).onTagsUpdate();
-		}
+        if (getActivity() instanceof BookmarksActivity) {
+            ((BookmarksActivity) getActivity()).onBookmarksUpdate();
+            ((BookmarksActivity) getActivity()).onTagsUpdate();
+        }
 
-		Toast.makeText(getActivity(), getString(R.string.added), Toast.LENGTH_LONG).show();
-		dismiss();
-	}
+        Toast.makeText(getActivity(), getString(R.string.added), Toast.LENGTH_LONG).show();
+        dismiss();
+    }
 
     private void fillField() {
-		tvDate.setText(bookmark.date);
-		tvHumanLink.setText(bookmark.humanLink);
-		tvName.setText(bookmark.name);
-		tvTags.setText(bookmark.tags);
-	}
+        tvDate.setText(bookmark.date);
+        tvHumanLink.setText(bookmark.humanLink);
+        tvName.setText(bookmark.name);
+        tvTags.setText(bookmark.tags);
+    }
 
-	private void readField() {
-		bookmark.humanLink = tvHumanLink.getText().toString();
-		bookmark.name = tvName.getText().toString();
-		bookmark.date = tvDate.getText().toString();
-		bookmark.tags = tvTags.getText().toString();
-	}
+    private void readField() {
+        bookmark.humanLink = tvHumanLink.getText().toString();
+        bookmark.name = tvName.getText().toString();
+        bookmark.date = tvDate.getText().toString();
+        bookmark.tags = tvTags.getText().toString();
+    }
 }

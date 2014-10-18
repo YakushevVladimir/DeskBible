@@ -1,114 +1,114 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <!--
-/*
- * Copyright (C) 2011 Scripture Software (http://scripturesoftware.org/)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
--->
+  ~ Copyright (C) 2011 Scripture Software (http://scripturesoftware.org/)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~       http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
 <resources>
-    <string name="app_name">Библия</string>
-    <string name="text_size">Размер шрифта</string>
-    <string name="current_text_size">Текущий размер шрифта: %1$d</string>
-    <string name="text_color">Цвет текста</string>
-    <string name="background">Цвет фона</string>
-    <string name="text_color_summary">Выберите цвет шрифта</string>
-    <string name="background_summary">Выберите цвет фона</string>
-    <string name="text_color_selected">Цвет выбранного текста</string>
-    <string name="text_color_selected_summary">Выберите цвет шрифта выбранного текста</string>
-    <string name="background_selected">Цвет фона выбранного текста</string>
-    <string name="background_selected_summary">Выберите цвет фона выбранного текста</string>
-    <string name="disable_auto_screen_rotation">Отключить автоматический поворот экрана</string>
-    <string name="may_need_to_restart">Может потребоваться перезапуск</string>
-    <string name="read_mode_by_default">Режим чтения по-умолчанию</string>
-    <string name="read_mode_by_default_summary">Использовать по-умолчанию режим чтения</string>
-    <string name="category_reader_appearance">Внешний вид</string>
-    <string name="category_reader_other">Прочие</string>
-    <string name="category_reader_other_history_size">Размер истории</string>
-    <string name="category_reader_other_history_size_summary">Текущий размер истории: %1$s</string>
-    <string name="menu_night_day_mode">Режим день \ ночь</string>
-    <string name="menu_favorites">Закладки</string>
-    <string name="menu_history">История</string>
-    <string name="menu_search">Поиск</string>
-    <string name="menu_help">Справка</string>
-    <string name="menu_settings">Настройки</string>
-    <string name="find">Найти</string>
-    <string name="menu">Меню</string>
-    <string name="cancel">Отмена</string>
-    <string name="select_module">Выберите модуль</string>
-    <string name="added">Добавлена</string>
-    <string name="removed">Удалено</string>
-    <string name="messageLoad">Загрузка...</string>
-    <string name="messageLoadBooks">Загрузка книг...</string>
-    <string name="messageLoadModules">Загрузка модулей...</string>
-    <string name="messageLoadCanceled">Загрузка завершена</string>
-    <string name="messageSearch">Поиск...</string>
-    <string name="messageSearchCanceled">Поиск завершен</string>
-    <string name="results">результатов</string>
-    <string name="share">Поделиться</string>
-    <string name="copy">Копировать</string>
-    <string name="fav_question_add_favorities">Добавить закладку</string>
-    <string name="fav_question_del_fav">Удалить эту закладку?</string>
-    <string name="fav_sort_alphabetically">Сортировка</string>
-    <string name="fav_delete_all">Очистить</string>
-    <string name="fav_delete_all_question">Вы уверены, что хотите удалить все закладки?</string>
-    <string name="about">О программе</string>
-    <string name="app_about_dev_label">Разработчики:</string>
-    <string name="exception_open_module">Некорректный модуль %1$s(%2$s)</string>
-    <string name="messageRefresh">Обновление...</string>
-    <string name="exception_books_definition">Некорректное описание книги в модуле %1$s:
+	<string name="app_name">Библия</string>
+	<string name="text_size">Размер шрифта</string>
+	<string name="current_text_size">Текущий размер шрифта: %1$d</string>
+	<string name="text_color">Цвет текста</string>
+	<string name="background">Цвет фона</string>
+	<string name="text_color_summary">Выберите цвет шрифта</string>
+	<string name="background_summary">Выберите цвет фона</string>
+	<string name="text_color_selected">Цвет выбранного текста</string>
+	<string name="text_color_selected_summary">Выберите цвет шрифта выбранного текста</string>
+	<string name="background_selected">Цвет фона выбранного текста</string>
+	<string name="background_selected_summary">Выберите цвет фона выбранного текста</string>
+	<string name="disable_auto_screen_rotation">Отключить автоматический поворот экрана</string>
+	<string name="may_need_to_restart">Может потребоваться перезапуск</string>
+	<string name="read_mode_by_default">Режим чтения по-умолчанию</string>
+	<string name="read_mode_by_default_summary">Использовать по-умолчанию режим чтения</string>
+	<string name="category_reader_appearance">Внешний вид</string>
+	<string name="category_reader_other">Прочие</string>
+	<string name="category_reader_other_history_size">Размер истории</string>
+	<string name="category_reader_other_history_size_summary">Текущий размер истории: %1$s</string>
+	<string name="menu_night_day_mode">Режим день \ ночь</string>
+	<string name="menu_favorites">Закладки</string>
+	<string name="menu_history">История</string>
+	<string name="menu_search">Поиск</string>
+	<string name="menu_help">Справка</string>
+	<string name="menu_settings">Настройки</string>
+	<string name="find">Найти</string>
+	<string name="menu">Меню</string>
+	<string name="cancel">Отмена</string>
+	<string name="select_module">Выберите модуль</string>
+	<string name="added">Добавлена</string>
+	<string name="removed">Удалено</string>
+	<string name="messageLoad">Загрузка...</string>
+	<string name="messageLoadBooks">Загрузка книг...</string>
+	<string name="messageLoadModules">Загрузка модулей...</string>
+	<string name="messageLoadCanceled">Загрузка завершена</string>
+	<string name="messageSearch">Поиск...</string>
+	<string name="messageSearchCanceled">Поиск завершен</string>
+	<string name="results">результатов</string>
+	<string name="share">Поделиться</string>
+	<string name="copy">Копировать</string>
+	<string name="fav_question_add_favorities">Добавить закладку</string>
+	<string name="fav_question_del_fav">Удалить эту закладку?</string>
+	<string name="fav_sort_alphabetically">Сортировка</string>
+	<string name="fav_delete_all">Очистить</string>
+	<string name="fav_delete_all_question">Вы уверены, что хотите удалить все закладки?</string>
+	<string name="about">О программе</string>
+	<string name="app_about_dev_label">Разработчики:</string>
+	<string name="exception_open_module">Некорректный модуль %1$s(%2$s)</string>
+	<string name="messageRefresh">Обновление...</string>
+	<string name="exception_books_definition">Некорректное описание книги в модуле %1$s:
 		BookQty=%2$s, PathName#=%3$s, FullName#=%4$s, ShortName#=%5$s,
-		ChapterQty#=%6$s</string>
-    <string name="exception_open_module_short">Некорректный модуль %1$s</string>
-    <string name="exception_book_not_found">Книга %1$s не найден а в модуле %2$s</string>
-    <string name="exception_book_definition">Некорректные параметры книги #%1$s в модуле %2$s:
-		PathName=%3$s, FullName=%4$s, ShortName=%5$s, ChapterQty=%6$s</string>
-    <string name="category_reports_summary">Настройки параметров отправки</string>
-    <string name="category_reader_summary">Настройки параметров окна чтения</string>
-    <string name="app_about_design_label">Дизайн:</string>
-    <string name="bookmark_invalid_removed">Недопустимая закладка удалена</string>
-    <string name="app_about_thanks_label">Спасибо:</string>
-    <string name="dialog_color_picker">Выберите цвет</string>
-    <string name="press_color_to_apply">Нажмите для выбора</string>
-    <string name="settings">Настройки</string>
-    <string name="help">Помощь</string>
-    <string name="search">Поиск</string>
-    <string name="history">История</string>
-    <string name="bookmarks">Закладки</string>
-    <string name="library">Библиотека</string>
-    <string name="cross_reference">Перекрестные ссылки</string>
-    <string name="cross_references_display_context">Отображать контекст</string>
-    <string name="cross_references_display_context_summary">Отображать контекст в списке ссылок</string>
-    <string name="references">Ссылки</string>
-    <string name="preference_screen_reader_summary">Настройки отображения текста</string>
-    <string name="preference_screen_cross_references">Перекрестные ссылки</string>
-    <string name="preference_screen_reader">Окно чтения</string>
-    <string name="enabled">Включено</string>
-    <string name="volume_butons_to_scroll">Прокрутка кнопками громкости</string>
-    <string name="disabled">Отключено</string>
-    <string name="text_align_justify">Выравнивать текст по ширине</string>
-    <string name="font_family">Шрифт</string>
-    <string name="category_social">Социальные функции</string>
-    <string name="short_reference_summary">Сокращенная ссылка к отрывку</string>
-    <string name="divide_the_verses">Разбивать по стихам</string>
-    <string name="add_module_to_reference_summary">Добавлять имя модуля к ссылке на отрывок</string>
-    <string name="share_passage">Отправка текста</string>
-    <string name="put_reference_in_beginning">Помещать ссылку в начало</string>
-    <string name="short_reference">Короткая ссылка</string>
-    <string name="add_reference_summary">Добавлять ссылку к отрывку</string>
-    <string name="add_module_to_reference">Добавлять имя модуля</string>
-    <string name="add_reference">Добавлять ссылку</string>
-    <string name="menu_speek">Читать...</string>
+		ChapterQty#=%6$s
+	</string>
+	<string name="exception_open_module_short">Некорректный модуль %1$s</string>
+	<string name="exception_book_not_found">Книга %1$s не найден а в модуле %2$s</string>
+	<string name="exception_book_definition">Некорректные параметры книги #%1$s в модуле %2$s:
+		PathName=%3$s, FullName=%4$s, ShortName=%5$s, ChapterQty=%6$s
+	</string>
+	<string name="category_reports_summary">Настройки параметров отправки</string>
+	<string name="category_reader_summary">Настройки параметров окна чтения</string>
+	<string name="app_about_design_label">Дизайн:</string>
+	<string name="bookmark_invalid_removed">Недопустимая закладка удалена</string>
+	<string name="app_about_thanks_label">Спасибо:</string>
+	<string name="dialog_color_picker">Выберите цвет</string>
+	<string name="press_color_to_apply">Нажмите для выбора</string>
+	<string name="settings">Настройки</string>
+	<string name="help">Помощь</string>
+	<string name="search">Поиск</string>
+	<string name="history">История</string>
+	<string name="bookmarks">Закладки</string>
+	<string name="library">Библиотека</string>
+	<string name="cross_reference">Перекрестные ссылки</string>
+	<string name="cross_references_display_context">Отображать контекст</string>
+	<string name="cross_references_display_context_summary">Отображать контекст в списке ссылок</string>
+	<string name="references">Ссылки</string>
+	<string name="preference_screen_reader_summary">Настройки отображения текста</string>
+	<string name="preference_screen_cross_references">Перекрестные ссылки</string>
+	<string name="preference_screen_reader">Окно чтения</string>
+	<string name="enabled">Включено</string>
+	<string name="volume_butons_to_scroll">Прокрутка кнопками громкости</string>
+	<string name="disabled">Отключено</string>
+	<string name="text_align_justify">Выравнивать текст по ширине</string>
+	<string name="font_family">Шрифт</string>
+	<string name="category_social">Социальные функции</string>
+	<string name="short_reference_summary">Сокращенная ссылка к отрывку</string>
+	<string name="divide_the_verses">Разбивать по стихам</string>
+	<string name="add_module_to_reference_summary">Добавлять имя модуля к ссылке на отрывок</string>
+	<string name="share_passage">Отправка текста</string>
+	<string name="put_reference_in_beginning">Помещать ссылку в начало</string>
+	<string name="short_reference">Короткая ссылка</string>
+	<string name="add_reference_summary">Добавлять ссылку к отрывку</string>
+	<string name="add_module_to_reference">Добавлять имя модуля</string>
+	<string name="add_reference">Добавлять ссылку</string>
+	<string name="menu_speek">Читать...</string>
 	<string name="no_tags">Меток нет</string>
 	<string name="empty">Нет данных</string>
 	<string name="tags">Метки</string>
@@ -120,5 +120,6 @@
 	<string name="delete">Удалить</string>
 	<string name="disable_turn_screen">Не отключать экран</string>
 	<string name="disable_turn_screen_summury">Не отключать подсветку экрана при чтении</string>
-    <string name="press_again_to_exit">Нажмите снова для выхода</string>
+	<string name="press_again_to_exit">Нажмите снова для выхода</string>
+	<string name="menu_history_clear">Очистить</string>
 </resources>

@@ -1,15 +1,20 @@
-/.idea
-/out
-/*.iml
-/bin
-/.settings
-/gen
-/project.properties
-/default.properties
-/build.properties
-/build.xml
-/proguard.cfg
-/.umlproject
-/.euml2
-/.classpath
-/lint.xml
+# generated files
+gen/
+bin/
+out/
+build/
+
+# Local configuration file (sdk path, etc)
+local.properties
+
+#Gradle
+.gradle
+
+# idea project files
+.idea
+*.iml
+
+# Eclipse project files
+.classpath
+.project
+.settings

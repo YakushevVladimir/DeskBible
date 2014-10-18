@@ -1,73 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-/*
- * Copyright (C) 2011 Scripture Software (http://scripturesoftware.org/)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
--->
+  ~ Copyright (C) 2011 Scripture Software (http://scripturesoftware.org/)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~       http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
 <menu
-	xmlns:android="http://schemas.android.com/apk/res/android">
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto">
 	<item
 		android:id="@id/action_bar_chooseCh"
 		android:orderInCategory="0"
 		android:icon="@drawable/ic_action_select"
-		android:showAsAction="always" />
+		app:showAsAction="always"/>
 	<item
 		android:title="@string/menu_search"
 		android:id="@id/action_bar_search"
 		android:orderInCategory="1"
 		android:icon="@drawable/ic_action_search"
-		android:showAsAction="always|withText"/>
+		app:showAsAction="always|withText"/>
 	<item
 		android:title="@string/menu_history"
 		android:id="@id/action_bar_history"
 		android:orderInCategory="2"
 		android:icon="@drawable/ic_action_history"
-		android:showAsAction="withText|always"/>
+		app:showAsAction="withText|always"/>
 	<item
 		android:title="@string/menu_favorites"
 		android:id="@id/action_bar_bookmarks"
 		android:orderInCategory="3"
 		android:icon="@drawable/ic_action_bookmark"
-		android:showAsAction="withText|ifRoom"/>
+		app:showAsAction="withText|ifRoom"/>
 	<item
 		android:title="@string/menu_night_day_mode"
 		android:id="@+id/NightDayMode"
 		android:orderInCategory="4"
 		android:icon="@drawable/ic_action_day_night"
-		android:showAsAction="ifRoom"/>
+		app:showAsAction="ifRoom"/>
 	<item
 		android:title="@string/menu_speek"
 		android:id="@+id/action_speek"
 		android:orderInCategory="5"
-		android:showAsAction="ifRoom"/>
+		app:showAsAction="ifRoom"/>
 	<item
 		android:title="@string/menu_settings"
 		android:id="@+id/Settings"
 		android:icon="@drawable/ic_action_preferences"
 		android:orderInCategory="5"
-		android:showAsAction="ifRoom"/>
+		app:showAsAction="ifRoom"/>
 	<item
 		android:title="@string/menu_help"
 		android:id="@+id/Help"
 		android:orderInCategory="6"
 		android:icon="@drawable/ic_action_help"
-		android:showAsAction="ifRoom"/>
+		app:showAsAction="ifRoom"/>
 	<item
 		android:title="@string/about"
 		android:id="@+id/About"
 		android:orderInCategory="7"
 		android:icon="@drawable/ic_action_about"
-		android:showAsAction="ifRoom"/>
+		app:showAsAction="ifRoom"/>
 </menu>
