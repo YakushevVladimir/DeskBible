@@ -40,7 +40,7 @@ public class SplashActivity extends Activity implements OnTaskCompleteListener {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.main);
 
-        Log.Init(getApplicationContext());
+        Log.init();
 
         BibleQuoteApp app = (BibleQuoteApp) getApplication();
 

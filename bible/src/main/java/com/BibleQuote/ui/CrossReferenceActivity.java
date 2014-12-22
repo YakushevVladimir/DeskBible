@@ -52,7 +52,6 @@ public class CrossReferenceActivity extends BibleQuoteActivity implements OnTask
 	private LinkedHashMap<String, BibleReference> crossReference = new LinkedHashMap<String, BibleReference>();
 	private HashMap<BibleReference, String> crossReferenceContent = new HashMap<BibleReference, String>();
 	private BibleReference bReference;
-	private AsyncManager mAsyncManager;
 	private Task mTask;
 
 	private ListView LV;
@@ -88,7 +87,7 @@ public class CrossReferenceActivity extends BibleQuoteActivity implements OnTask
 
 		String progressMessage = getResources().getString(R.string.messageLoad);
 
-		mAsyncManager = app.getAsyncManager();
+		AsyncManager mAsyncManager = app.getAsyncManager();
 		mAsyncManager.handleRetainedTask(mTask, this);
 		if (mTask == null) {
 			mTask = new AsyncCommand(new GetParallesLinks(), progressMessage, false);

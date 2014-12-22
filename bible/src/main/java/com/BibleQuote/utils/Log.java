@@ -15,9 +15,8 @@
  */
 package com.BibleQuote.utils;
 
-import android.content.Context;
 import android.os.Environment;
-import com.BibleQuote.BibleQuoteApp;
+import com.BibleQuote.BuildConfig;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
@@ -38,10 +37,8 @@ public class Log {
 	 * Подготовка файла-протокола событий. Создание нового файла,
 	 * запись текущей даты, версии программы, языка системы
 	 *
-	 * @param context
 	 */
-	public static void Init(Context context) {
-
+	public static void init() {
 		String state = Environment.getExternalStorageState();
 		if (Environment.MEDIA_MOUNTED.equals(state)) {
 			logFile = new File(DataConstants.FS_APP_DIR_NAME, "log.txt");
@@ -49,13 +46,13 @@ public class Log {
 				logFile.delete();
 			}
 
-			Write("Log " + new SimpleDateFormat("dd-MMM-yy G hh:mm aaa").format(Calendar.getInstance().getTime()));
-			Write("Current version package: " + BibleQuoteApp.getAppVersionName(context));
-			Write("Default language: " + Locale.getDefault().getDisplayLanguage());
-			Write("Device model: " + android.os.Build.BRAND + " " + android.os.Build.MODEL);
-			Write("Device display: " + android.os.Build.BRAND + " " + android.os.Build.DISPLAY);
-			Write("Android OS: " + android.os.Build.VERSION.RELEASE);
-			Write("====================================");
+			write("Log " + new SimpleDateFormat("dd-MMM-yy G hh:mm aaa").format(Calendar.getInstance().getTime()));
+			write("Current version package: " + BuildConfig.VERSION_NAME);
+			write("Default language: " + Locale.getDefault().getDisplayLanguage());
+			write("Device model: " + android.os.Build.BRAND + " " + android.os.Build.MODEL);
+			write("Device display: " + android.os.Build.BRAND + " " + android.os.Build.DISPLAY);
+			write("Android OS: " + android.os.Build.VERSION.RELEASE);
+			write("====================================");
 		}
 	}
 
@@ -65,12 +62,12 @@ public class Log {
 	 * @param Tag  имя класса-инициатора события
 	 * @param text текст помещаемый в протокол событий
 	 */
-	private static void Write(String Tag, String text) {
+	private static void write(String Tag, String text) {
 		if (logFile == null) {
 			return;
 		}
 
-		BufferedWriter bWriter = GetWriter();
+		BufferedWriter bWriter = getWriter();
 		if (bWriter == null) {
 			return;
 		}
@@ -80,7 +77,7 @@ public class Log {
 			bWriter.flush();
 			bWriter.close();
 		} catch (IOException e) {
-			return;
+			e.printStackTrace();
 		}
 	}
 
@@ -92,11 +89,11 @@ public class Log {
 	 * @param e    ссылка на полученный Exception
 	 */
 	public static void e(String Tag, String text, Exception e) {
-		Write(Tag, String.format("Error: $1$s\r\nMessage: %2$s", text, e.getMessage()));
+		write(Tag, String.format("Error: $1$s\r\nMessage: %2$s", text, e.getMessage()));
 	}
 
 	public static void e(String Tag, String text) {
-		Write(Tag, "Error: " + text);
+		write(Tag, "Error: " + text);
 	}
 
 	/**
@@ -106,18 +103,17 @@ public class Log {
 	 * @param info текст помещаемый в протокол событий
 	 */
 	public static void i(String Tag, String info) {
-		Write(Tag, info);
+		write(Tag, info);
 	}
 
-	private static void Write(String text) {
-		Write(null, text);
+	private static void write(String text) {
+		write(null, text);
 	}
 
-	private static BufferedWriter GetWriter() {
+	private static BufferedWriter getWriter() {
 		try {
 			OutputStreamWriter oWriter = new OutputStreamWriter(new FileOutputStream(logFile, true));
-			BufferedWriter bWriter = new BufferedWriter(oWriter);
-			return bWriter;
+			return new BufferedWriter(oWriter);
 		} catch (FileNotFoundException e) {
 			return null;
 		}

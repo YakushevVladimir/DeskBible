@@ -18,6 +18,7 @@ package com.BibleQuote.ui;
 import android.os.Bundle;
 import android.widget.TextView;
 import com.BibleQuote.BibleQuoteApp;
+import com.BibleQuote.BuildConfig;
 import com.BibleQuote.R;
 import com.BibleQuote.ui.base.BibleQuoteActivity;
 
@@ -31,6 +32,6 @@ public class AboutActivity extends BibleQuoteActivity {
 		TextView tv_app = (TextView) findViewById(R.id.about_name);
 		tv_app.setText(String.format(
 				getResources().getText(R.string.app_about_name).toString(),
-				BibleQuoteApp.getAppVersionName(getApplicationContext())));
+				BuildConfig.VERSION_NAME));
 	}
 }

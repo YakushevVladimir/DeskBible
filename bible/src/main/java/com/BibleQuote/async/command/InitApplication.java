@@ -34,6 +34,6 @@ public class InitApplication implements AsyncCommand.ICommand {
 	public void execute() throws Exception {
 		Log.i(TAG, "Task InitApplication execute...");
 		BibleQuoteApp app = (BibleQuoteApp) ((Activity) context).getApplication();
-		app.Init();
+		app.init();
 	}
 }

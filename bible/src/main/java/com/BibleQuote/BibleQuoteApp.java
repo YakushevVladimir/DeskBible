@@ -36,14 +36,6 @@ public class BibleQuoteApp extends Application {
 	private Librarian myLibrarian;
 	private AsyncManager mAsyncManager;
 
-	public static String getAppVersionName(Context context) {
-		try {
-			return context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
-		} catch (PackageManager.NameNotFoundException e) {
-			return "0.00.01";
-		}
-	}
-
 	public static BibleQuoteApp getInstance() {
 		return instance;
 	}
@@ -54,7 +46,7 @@ public class BibleQuoteApp extends Application {
 		instance = this;
 	}
 
-	public void Init() {
+	public void init() {
 		Log.i(TAG, "Init application preference helper...");
 		initPrefernceHelper();
 		Log.i(TAG, "Start update manager...");
