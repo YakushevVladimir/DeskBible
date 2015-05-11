@@ -1,18 +1,24 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <!--
-  ~ Copyright (C) 2011 Scripture Software (http://scripturesoftware.org/)
+  ~ Copyright (c) 2011-2015 Scripture Software
+  ~ http://www.scripturesoftware.org
   ~
-  ~ Licensed under the Apache License, Version 2.0 (the "License");
-  ~ you may not use this file except in compliance with the License.
-  ~ You may obtain a copy of the License at
+  ~ Licensed to the Apache Software Foundation (ASF) under one
+  ~ or more contributor license agreements.  See the NOTICE file
+  ~ distributed with this work for additional information
+  ~ regarding copyright ownership.  The ASF licenses this file
+  ~ to you under the Apache License, Version 2.0 (the
+  ~ "License"); you may not use this file except in compliance
+  ~ with the License.  You may obtain a copy of the License at
   ~
-  ~       http://www.apache.org/licenses/LICENSE-2.0
+  ~   http://www.apache.org/licenses/LICENSE-2.0
   ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied.  See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
   -->
 <resources>
 	<string name="app_name">Библия</string>
@@ -123,4 +129,11 @@
 	<string name="press_again_to_exit">Нажмите снова для выхода</string>
 	<string name="menu_history_clear">Очистить</string>
 	<string name="stop_tts">Остановить</string>
+	<string name="menu_library_add">Добавить…</string>
+	<string name="file_not_exist">Файл не найден</string>
+	<string name="file_cant_read">Файл недоступен для чтения</string>
+	<string name="file_not_supported">Файл не поддерживается</string>
+	<string name="file_not_moved">Операция не удалась</string>
+	<string name="error_open_module">Не удалось открыть модуль %1$s из %2$s</string>
+	<string name="copy_module_from_file">Копирование модуля...</string>
 </resources>

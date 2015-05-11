@@ -1,23 +1,33 @@
 /*
- * Copyright (C) 2011 Scripture Software (http://scripturesoftware.org/)
+ * Copyright (c) 2011-2015 Scripture Software
+ * http://www.scripturesoftware.org
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package com.BibleQuote.utils;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.util.Log;
+import com.BibleQuote.R;
+import com.BibleQuote.controllers.LibraryController;
 import com.BibleQuote.exceptions.FileAccessException;
+import com.BibleQuote.exceptions.OpenModuleException;
 import org.apache.http.util.ByteArrayBuffer;
 
 import java.io.*;
@@ -48,7 +58,6 @@ public class FsUtils {
 					InputStreamReader iReader = new InputStreamReader(zStream, textFileEncoding);
 					return new BufferedReader(iReader);
 				}
-				;
 			}
 			String message = String.format("File %1$s in zip-arhive %2$s not found", textFileInArchive, archivePath);
 			Log.e(TAG, message);
@@ -69,7 +78,7 @@ public class FsUtils {
 	}
 
 	public static BufferedReader getTextFileReader(String dir, String textfileName, String textFileEncoding) throws FileAccessException {
-		BufferedReader bReader = null;
+		BufferedReader bReader;
 		try {
 			File file = new File(dir, textfileName);
 			bReader = FsUtils.OpenFile(file, textFileEncoding);
@@ -91,11 +100,9 @@ public class FsUtils {
 				return;
 			}
 			for (File file : files) {
-				if (!file.canRead()) {
-					continue;
-				} else if (file.isDirectory()) {
+				if (file.isDirectory()) {
 					SearchByFilter(file, resultFiles, filter);
-				} else {
+				} else if (file.canRead()) {
 					resultFiles.add(file.getAbsolutePath());
 				}
 			}
@@ -121,7 +128,7 @@ public class FsUtils {
 	
 			/* Read bytes to the Buffer until there is nothing more to read(-1) */
 			ByteArrayBuffer baf = new ByteArrayBuffer(50);
-			int current = 0;
+			int current;
 			while ((current = bis.read()) != -1) {
 				baf.append((byte) current);
 			}
@@ -145,7 +152,7 @@ public class FsUtils {
 		if (!file.exists()) {
 			return null;
 		}
-		BufferedReader bReader = null;
+		BufferedReader bReader;
 		try {
 			InputStreamReader iReader;
 			iReader = new InputStreamReader(new FileInputStream(file), encoding);
@@ -180,5 +187,25 @@ public class FsUtils {
 		} catch (IOException e) {
 			return "";
 		}
+	}
+
+	public static void addModuleFromFile(Context context, String path) throws OpenModuleException, FileAccessException{
+		File source = new File(path);
+		Resources resources = context.getResources();
+		if (!source.exists()) {
+			throw new FileAccessException(resources.getString(R.string.file_not_exist));
+		} else if (!source.canRead()) {
+			throw new FileAccessException(resources.getString(R.string.file_cant_read));
+		} else if (!source.getName().endsWith("zip")) {
+			throw new FileAccessException(resources.getString(R.string.file_not_supported));
+		}
+
+		File libraryDir = LibraryController.getInstance(context).getContext().getLibraryDir();
+		File target = new File(libraryDir, source.getName());
+		if (!source.renameTo(target)) {
+			throw new FileAccessException(resources.getString(R.string.file_not_moved));
+		}
+
+		LibraryController.getInstance(context).getModuleCtrl().loadModule(target.getAbsolutePath());
 	}
 }

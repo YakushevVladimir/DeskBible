@@ -19,34 +19,46 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.BibleQuote.exceptions;
 
-import android.content.res.Resources;
-import com.BibleQuote.BibleQuoteApp;
-import com.BibleQuote.R;
+package com.BibleQuote.async;
 
-public class OpenModuleException extends Exception {
+import android.content.Context;
+import com.BibleQuote.utils.FsUtils;
+import com.BibleQuote.utils.NotifyDialog;
+import com.BibleQuote.utils.Task;
 
-	private static final long serialVersionUID = -941193264792260938L;
-	private String moduleId;
-	private String moduleDatasourceId;
+/**
+ * @author ru_phoenix
+ * @version 1.0
+ */
+public class LoadModuleFromFile extends Task {
 
-	public OpenModuleException(String moduleId, String moduleDatasourceId) {
-		this.moduleId = moduleId;
-		this.moduleDatasourceId = moduleDatasourceId;
-	}
+	private Context context;
+	private String errorMessage = "";
+	private String path;
 
-	public String getModuleId() {
-		return moduleId;
-	}
-
-	public String getModuleDatasourceId() {
-		return moduleDatasourceId;
+	public LoadModuleFromFile(String message, Boolean isHidden, Context context, String path) {
+		super(message, isHidden);
+		this.context = context;
+		this.path = path;
 	}
 
 	@Override
-	public String getMessage() {
-		Resources resources = BibleQuoteApp.getInstance().getApplicationContext().getResources();
-		return String.format(resources.getString(R.string.error_open_module), moduleId, moduleDatasourceId);
+	protected Boolean doInBackground(String... arg0) {
+		try {
+			FsUtils.addModuleFromFile(context, path);
+		} catch (Exception e) {
+			errorMessage = e.getMessage();
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	protected void onPostExecute(Boolean result) {
+		super.onPostExecute(result);
+		if (!result) {
+			new NotifyDialog(errorMessage, context).show();
+		}
 	}
 }

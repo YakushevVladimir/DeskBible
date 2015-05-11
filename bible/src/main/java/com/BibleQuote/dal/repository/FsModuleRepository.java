@@ -1,6 +1,27 @@
+/*
+ * Copyright (c) 2011-2015 Scripture Software
+ * http://www.scripturesoftware.org
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 package com.BibleQuote.dal.repository;
 
-import com.BibleQuote.utils.OnlyBQZipIni;
 import com.BibleQuote.controllers.CacheModuleController;
 import com.BibleQuote.dal.FsLibraryContext;
 import com.BibleQuote.exceptions.FileAccessException;
@@ -10,6 +31,7 @@ import com.BibleQuote.modules.Module;
 import com.BibleQuote.utils.DataConstants;
 import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.OnlyBQIni;
+import com.BibleQuote.utils.OnlyBQZipIni;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -38,14 +60,21 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 		// Load zip-compressed BQ-modules
 		ArrayList<String> bqZipIniFiles = context.SearchModules(new OnlyBQZipIni());
 		for (String bqZipIniFile : bqZipIniFiles) {
-			String moduleDataSourceId = bqZipIniFile + File.separator + DataConstants.DEFAULT_INI_FILE_NAME;
-			loadFileModule(moduleDataSourceId, newModuleSet);
+			try {
+				loadFileModule(getZipDataSourceId(bqZipIniFile), newModuleSet);
+			} catch (OpenModuleException e) {
+				e.printStackTrace();
+			}
 		}
 
 		// Load standard BQ-modules
 		ArrayList<String> bqIniFiles = context.SearchModules(new OnlyBQIni());
 		for (String moduleDataSourceId : bqIniFiles) {
-			loadFileModule(moduleDataSourceId, newModuleSet);
+			try {
+				loadFileModule(moduleDataSourceId, newModuleSet);
+			} catch (OpenModuleException e) {
+				e.printStackTrace();
+			}
 		}
 
 		context.bookSet.clear();
@@ -56,13 +85,21 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 		return newModuleSet;
 	}
 
-	private void loadFileModule(String moduleDataSourceId, TreeMap<String, Module> newModuleSet) {
-		try {
-			FsModule module = loadModuleById(moduleDataSourceId);
-			newModuleSet.put(module.getID(), module);
-		} catch (OpenModuleException e) {
-			Log.e(TAG, "Error load module from " + moduleDataSourceId);
+	private String getZipDataSourceId(String path) {
+		return path + File.separator + DataConstants.DEFAULT_INI_FILE_NAME;
+	}
+
+	@Override
+	public void loadModule(String path) throws OpenModuleException {
+		if (path.endsWith("zip")) {
+			path = getZipDataSourceId(path);
 		}
+		loadFileModule(path, context.moduleSet);
+	}
+
+	private void loadFileModule(String moduleDataSourceId, Map<String, Module> newModuleSet) throws OpenModuleException {
+		FsModule module = loadModuleById(moduleDataSourceId);
+		newModuleSet.put(module.getID(), module);
 	}
 
 	private FsModule loadModuleById(String moduleDatasourceID) throws OpenModuleException {

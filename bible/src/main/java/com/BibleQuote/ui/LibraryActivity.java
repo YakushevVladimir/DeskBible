@@ -1,17 +1,23 @@
 /*
- * Copyright (C) 2011 Scripture Software (http://scripturesoftware.org/)
+ * Copyright (c) 2011-2015 Scripture Software
+ * http://www.scripturesoftware.org
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package com.BibleQuote.ui;
 
@@ -28,6 +34,7 @@ import com.BibleQuote.R;
 import com.BibleQuote.async.AsyncManager;
 import com.BibleQuote.async.AsyncOpenModule;
 import com.BibleQuote.async.AsyncRefreshModules;
+import com.BibleQuote.async.LoadModuleFromFile;
 import com.BibleQuote.entity.BibleReference;
 import com.BibleQuote.entity.ItemList;
 import com.BibleQuote.exceptions.*;
@@ -40,7 +47,8 @@ import java.util.ArrayList;
 
 public class LibraryActivity extends BibleQuoteActivity implements OnTaskCompleteListener {
     public static final String EMPTY_OBJECT = "---";
-    private String moduleID = EMPTY_OBJECT, bookID = EMPTY_OBJECT, chapter = EMPTY_OBJECT;
+	private static final int ACTION_CODE_GET_FILE = 1;
+	private String moduleID = EMPTY_OBJECT, bookID = EMPTY_OBJECT, chapter = EMPTY_OBJECT;
     private static final String TAG = "LibraryActivity";
     private final int MODULE_VIEW = 1, BOOK_VIEW = 2, CHAPTER_VIEW = 3;
     private View.OnClickListener onBtnModuleClick = new View.OnClickListener() {
@@ -48,7 +56,7 @@ public class LibraryActivity extends BibleQuoteActivity implements OnTaskComplet
         public void onClick(View view) {
             if (moduleID.equals("---"))
                 return;
-            UpdateView(MODULE_VIEW);
+            updateView(MODULE_VIEW);
         }
     };
     private int viewMode = 1;
@@ -67,7 +75,7 @@ public class LibraryActivity extends BibleQuoteActivity implements OnTaskComplet
         public void onItemClick(AdapterView<?> a, View v, int position, long id) {
             modules = myLibrarian.getModulesList();
             if (modules.size() <= position) {
-                UpdateView(MODULE_VIEW);
+                updateView(MODULE_VIEW);
                 return;
             }
             modulePos = position;
@@ -95,7 +103,7 @@ public class LibraryActivity extends BibleQuoteActivity implements OnTaskComplet
             bookID = books.get(bookPos).get("ID");
             chapterPos = 0;
 
-            UpdateView(CHAPTER_VIEW);
+            updateView(CHAPTER_VIEW);
             setButtonText();
 
             if (chapters.size() == 1) {
@@ -117,7 +125,7 @@ public class LibraryActivity extends BibleQuoteActivity implements OnTaskComplet
         public void onClick(View view) {
             if (bookID.equals("---"))
                 return;
-            UpdateView(BOOK_VIEW);
+            updateView(BOOK_VIEW);
         }
     };
     private View.OnClickListener onBtnChapterClick = new View.OnClickListener() {
@@ -125,7 +133,7 @@ public class LibraryActivity extends BibleQuoteActivity implements OnTaskComplet
         public void onClick(View view) {
             if (chapter.equals("-"))
                 return;
-            UpdateView(CHAPTER_VIEW);
+            updateView(CHAPTER_VIEW);
         }
     };
 
@@ -165,9 +173,9 @@ public class LibraryActivity extends BibleQuoteActivity implements OnTaskComplet
             moduleID = osisLink.getModuleID();
             bookID = osisLink.getBookID();
             chapter = String.valueOf(osisLink.getChapter());
-            UpdateView(CHAPTER_VIEW);
+            updateView(CHAPTER_VIEW);
         } else {
-            UpdateView(MODULE_VIEW);
+            updateView(MODULE_VIEW);
         }
         setButtonText();
     }
@@ -184,8 +192,11 @@ public class LibraryActivity extends BibleQuoteActivity implements OnTaskComplet
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.action_bar_refresh:
-                mAsyncManager.setupTask(new AsyncRefreshModules(messageRefresh, false, myLibrarian, this), this);
+                mAsyncManager.setupTask(new AsyncRefreshModules(messageRefresh, false, myLibrarian), this);
                 return true;
+            case R.id.menu_library_add:
+				startActivityForResult(new Intent(Intent.ACTION_GET_CONTENT).setType("file/*"), ACTION_CODE_GET_FILE);
+				return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -228,7 +239,7 @@ public class LibraryActivity extends BibleQuoteActivity implements OnTaskComplet
         btnChapter.setText(chapter);
     }
 
-    private void UpdateView(int viewMode) {
+    private void updateView(int viewMode) {
 
         this.viewMode = viewMode;
 
@@ -340,16 +351,32 @@ public class LibraryActivity extends BibleQuoteActivity implements OnTaskComplet
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        UpdateView(viewMode);
+        updateView(viewMode);
     }
 
-    public void onTaskComplete(Task task) {
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		switch (requestCode) {
+			case ACTION_CODE_GET_FILE:
+				if (resultCode == RESULT_OK) {
+					String path = data.getData().getPath();
+					getModuleFromFile(path);
+				}
+		}
+		super.onActivityResult(requestCode, resultCode, data);
+	}
+
+	private void getModuleFromFile(String path) {
+		mAsyncManager.setupTask(new LoadModuleFromFile(getString(R.string.copy_module_from_file), false, this, path), this);
+	}
+
+	public void onTaskComplete(Task task) {
         Log.i(TAG, "onTaskComplete()");
         if (task != null && !task.isCancelled()) {
-            if (task instanceof AsyncRefreshModules) {
-                UpdateView(MODULE_VIEW);
-            } else if (task instanceof AsyncOpenModule) {
-                onAsyncOpenModuleComplete((AsyncOpenModule) task);
+			if (task instanceof AsyncOpenModule) {
+				onAsyncOpenModuleComplete((AsyncOpenModule) task);
+			} else {
+                updateView(MODULE_VIEW);
             }
         }
     }
@@ -358,8 +385,7 @@ public class LibraryActivity extends BibleQuoteActivity implements OnTaskComplet
         if (task.isSuccess()) {
             moduleID = task.getModule().getID();
             setButtonText();
-            UpdateView(BOOK_VIEW);
-
+            updateView(BOOK_VIEW);
         } else {
             Exception e = task.getException();
             if (e instanceof OpenModuleException) {
@@ -371,7 +397,7 @@ public class LibraryActivity extends BibleQuoteActivity implements OnTaskComplet
             } else if (e instanceof BookDefinitionException) {
                 ExceptionHelper.onBookDefinitionException((BookDefinitionException) e, this, TAG);
             }
-            UpdateView(MODULE_VIEW);
+            updateView(MODULE_VIEW);
         }
     }
 }
