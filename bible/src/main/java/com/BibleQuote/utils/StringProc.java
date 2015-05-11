@@ -17,7 +17,7 @@ public class StringProc {
 	}
 
 	public static String cleanStrongNumbers(String verse) {
-		return verse.replaceAll("\\s\\d+", "");
+		return verse.replaceAll("(G|H)+?\\d+", "").replaceAll("\\s\\d+", "");
 	}
 
 	public static String cleanVerseNumbers(String verse) {
@@ -40,7 +40,7 @@ public class StringProc {
 			result.append((result.length() == 0 ? "" : "|") + "(" + expression + ")");
 		}
 		result.insert(0, "(");
-		result.append("|(" + extExpression + "))");
+		result.append("|(").append(extExpression).append("))");
 
 		return Pattern.compile(result.toString());
 	}
