@@ -28,7 +28,7 @@
 		android:id="@+id/menu_library_add"
 		android:title="@string/menu_library_add"
 		android:orderInCategory="0"
-		android:icon="@android:drawable/ic_menu_add"
+		android:icon="@drawable/ic_action_get"
 		app:showAsAction="ifRoom|withText"/>
 	<item
 		android:id="@+id/action_bar_refresh"

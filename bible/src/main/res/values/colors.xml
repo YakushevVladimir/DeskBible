@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--
-  ~ Copyright (c) 2011-2015 Scripture Software
+  ~ Copyright (c) 2011-2015. Scripture Software
   ~ http://www.scripturesoftware.org
   ~
   ~ Licensed to the Apache Software Foundation (ASF) under one
@@ -20,6 +20,12 @@
   ~ KIND, either express or implied.  See the License for the
   ~ specific language governing permissions and limitations
   ~ under the License.
+  ~
+  ~ Project: BibleQuote
+  ~ File: colors.xml
+  ~
+  ~ Created by Vladimir Yakushev at 5/2015
+  ~ E-mail: ru.phoenix@gmail.com
   -->
 <resources>
 	<color name="white">#ffffff</color>
@@ -30,7 +36,7 @@
 	<color name="primary_dark">#51150F</color>
 	<color name="action_mode_background">#ff2f0d0d</color>
 	<color name="primary_light">#F8BBD0</color>
-	<color name="accent">#fff49500</color>
+	<color name="accent">#F5CC99</color>
 	<color name="primary_text">#212121</color>
 	<color name="secondary_text">#727272</color>
 	<color name="icons">#FFFFFF</color>

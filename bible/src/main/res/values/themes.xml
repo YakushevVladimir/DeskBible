@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--
-  ~ Copyright (c) 2011-2015 Scripture Software
+  ~ Copyright (c) 2011-2015. Scripture Software
   ~ http://www.scripturesoftware.org
   ~
   ~ Licensed to the Apache Software Foundation (ASF) under one
@@ -20,17 +20,26 @@
   ~ KIND, either express or implied.  See the License for the
   ~ specific language governing permissions and limitations
   ~ under the License.
+  ~
+  ~ Project: BibleQuote
+  ~ File: themes.xml
+  ~
+  ~ Created by Vladimir Yakushev at 5/2015
+  ~ E-mail: ru.phoenix@gmail.com
   -->
 
 <resources>
 
 	<style name="Theme.BibleQuote" parent="@style/Theme.AppCompat.Light.DarkActionBar">
-		<item name="actionBarStyle">@style/MyActionBar</item>
-		<item name="android:textColorPrimary">@color/primary_text</item>
 		<item name="colorPrimary">@color/primary</item>
 		<item name="colorPrimaryDark">@color/primary_dark</item>
 		<item name="colorAccent">@color/accent</item>
-		<item name="windowActionModeOverlay">true</item>
+		<item name="android:textColorPrimary">@color/primary_text</item>
+		<!-- Action bar -->
+		<item name="actionBarStyle">@style/Widget.ActionBar</item>
+		<item name="actionMenuTextColor">@color/accent</item>
+		<!-- Action mode -->
+		<item name="windowActionModeOverlay">false</item>
 		<item name="actionModeStyle">@style/Widget.ActionMode</item>
 		<item name="actionModeBackground">@color/action_mode_background</item>
 	</style>
@@ -39,16 +48,20 @@
 		<item name="android:windowNoTitle">true</item>
 	</style>
 
-	<style name="MyActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid">>
-		<item name="titleTextStyle">@style/ActionBarTitleText</item>
-	</style>
+	<!-- Action mode -->
 
 	<style name="Widget.ActionMode" parent="@style/Widget.AppCompat.ActionMode">
-		<item name="titleTextStyle">@style/ActionBarTitleText</item>
+		<item name="titleTextStyle">@style/Widget.ActionBar.TitleText</item>
 	</style>
 
-	<style name="ActionBarTitleText" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">>
-		<item name="android:textColor">#F5CC99</item>
+	<!-- Action bar -->
+
+	<style name="Widget.ActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid">>
+		<item name="titleTextStyle">@style/Widget.ActionBar.TitleText</item>
+	</style>
+
+	<style name="Widget.ActionBar.TitleText" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">>
+		<item name="android:textColor">@color/accent</item>
 	</style>
 
 </resources>
