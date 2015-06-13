@@ -28,14 +28,9 @@ import com.BibleQuote.exceptions.FileAccessException;
 import com.BibleQuote.exceptions.OpenModuleException;
 import com.BibleQuote.modules.FsModule;
 import com.BibleQuote.modules.Module;
-import com.BibleQuote.utils.DataConstants;
-import com.BibleQuote.utils.Log;
-import com.BibleQuote.utils.OnlyBQIni;
-import com.BibleQuote.utils.OnlyBQZipIni;
+import com.BibleQuote.utils.*;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
@@ -113,6 +108,10 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 
 			Log.i(TAG, "....Load modules from " + moduleDatasourceID);
 			context.fillModule(fsModule, reader);
+			if (!"".equals(fsModule.fontName)) {
+				//loadFont(fsModule);
+				Log.i(TAG, "Skip load font");
+			}
 		} catch (FileAccessException e) {
 			Log.i(TAG, "!!!..Error open module from " + moduleDatasourceID);
 			throw new OpenModuleException(moduleDatasourceID, fsModule.modulePath);
@@ -126,6 +125,29 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 			}
 		}
 		return fsModule;
+	}
+
+	private void loadFont(FsModule fsModule) {
+		try {
+			BufferedReader reader = fsModule.isArchive
+					? FsUtils.getTextFileReaderFromZipArchive(fsModule.modulePath, fsModule.fontPath, fsModule.defaultEncoding)
+					: FsUtils.getTextFileReader(fsModule.modulePath, fsModule.fontPath, fsModule.defaultEncoding);
+			File fontDir = new File(DataConstants.FONT_DIR);
+			if (!fontDir.exists() && !fontDir.mkdir()) {
+				return;
+			}
+			BufferedWriter writer = new BufferedWriter(new FileWriter(new File(fontDir, fsModule.fontPath)));
+
+			int value;
+			while ((value = reader.read()) != -1) {
+				writer.write(value);
+			}
+			reader.close();
+			writer.flush();
+			writer.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public Map<String, Module> getModules() {

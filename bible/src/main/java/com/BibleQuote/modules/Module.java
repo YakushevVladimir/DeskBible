@@ -37,6 +37,8 @@ public abstract class Module implements Serializable {
     public String language = "ru_RU";
     public Map<String, Book> Books = new LinkedHashMap<String, Book>();    // to lazy loading on demand
     private String Name = "";
+    public String fontName = "";
+    public String fontPath = "";
 
     // public String Categories = "";
     // public String Copyright = "";

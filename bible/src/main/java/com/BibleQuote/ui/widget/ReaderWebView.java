@@ -173,10 +173,8 @@ public class ReaderWebView extends WebView
 		if (!nightMode) {
 			backColor = PreferenceHelper.getTextBackground();
 			textColor = PreferenceHelper.getTextColor();
-//			selTextColor = "#FEF8C4";
 			selTextColor = PreferenceHelper.getTextColorSelected();
 			selTextBack = PreferenceHelper.getTextBackgroundSelected();
-
 		} else {
 			textColor = "#EEEEEE";
 			backColor = "#000000";
@@ -192,7 +190,6 @@ public class ReaderWebView extends WebView
 		if (PreferenceHelper.textAlignJustify()) {
 			style.append("text-align: justify;\r\n");
 		}
-		//style.append("font-family: Georgia, Tahoma, Verdana, sans-serif;\r\n");
 		style.append("color: ").append(textColor).append(";\r\n");
 		style.append("font-size: ").append(textSize).append("pt;\r\n");
 		style.append("line-height: 1.25;\r\n");

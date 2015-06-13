@@ -182,6 +182,9 @@ public class FsLibraryContext extends LibraryContext {
                     module.language = LanguageConvertor.getISOLanguage(value);
                 } else if (key.equalsIgnoreCase("PathName")) {
                     break;
+                } else if (key.equalsIgnoreCase("DesiredFontName")) {
+                    module.fontName = value;
+                    module.fontPath = value + ".ttf";
                 }
             }
 

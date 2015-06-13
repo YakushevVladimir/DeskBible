@@ -10,6 +10,7 @@ public class DataConstants {
 	private static final String APP_DIR_NAME = "BibleQuote";
 	private static final String FS_DATA_DIR_NAME = "modules";
 	private static final String DB_DATA_DIR_NAME = "data";
+	private static final String FONT_DIR_NAME = "fonts";
 
 	public static final String DB_LIBRARY_NAME = "library.db";
 	public static final String LIBRARY_CACHE = "library.cache";
@@ -29,6 +30,9 @@ public class DataConstants {
 
 	public static final String DB_EXTERNAL_DATA_PATH = Environment.getExternalStorageDirectory() + File.separator
 			+ APP_DIR_NAME + File.separator + DataConstants.DB_DATA_DIR_NAME;
+
+	public static final String FONT_DIR = Environment.getDataDirectory() + File.separator
+			+ "data" + File.separator + DataConstants.APP_PACKAGE_NAME + File.separator + FONT_DIR_NAME;
 
 
 	private DataConstants() {
