@@ -18,15 +18,12 @@
 -->
 <resources>
     <string name="app_name">Біблія</string>
-    <!-- Tab's -->
-    <!-- Settings -->
     <string name="text_size">Памер шрыфта</string>
     <string name="current_text_size">Цякучы памер тэксту: %1$d</string>
     <string name="text_color">Колер тэксту</string>
     <string name="background">Колер фону</string>
     <string name="text_color_summary">Выберыце памер шрыфта</string>
     <string name="background_summary">Выберыце колер фону</string>
-    <!-- Miscellaneous -->
     <string name="find">Знайсці</string>
     <string name="menu">Меню</string>
     <string name="cancel">Адмяніць</string>
@@ -55,16 +52,16 @@
     <string name="app_about_design_label">Дызайн:</string>
     <string name="bookmark_invalid_removed">Недапушчальная закладка выдаленая</string>
     <string name="category_reader_other_history_size_summary">Бягучы памер гісторыі: %1$s</string>
-    <string name="messageRefresh">Абнаўленне ...</string>
+    <string name="messageRefresh">Абнаўленне…</string>
     <string name="category_reader_appearance">Знешні выгляд</string>
     <string name="category_reader_other_history_size">Гісторыя памер</string>
     <string name="category_reader_other">Іншы</string>
     <string name="read_mode_by_default_summary">Выкарыстоўвайце рэжым па змаўчанні для чытання</string>
     <string name="app_about_thanks_label">Дзякуй:</string>
     <string name="about">Аб</string>
-    <string name="messageLoadBooks">Загрузка кнігі ...</string>
+    <string name="messageLoadBooks">Загрузка кнігі…</string>
     <string name="category_reports_summary">Справаздачы аб збоях налады</string>
-    <string name="messageLoadModules">Загрузка модуляў ...</string>
+    <string name="messageLoadModules">Загрузка модуляў…</string>
     <string name="read_mode_by_default">Рэжым чытання па змаўчанні</string>
     <string name="category_reader_summary">Налады чытання акно</string>
     <string name="app_about_dev_label">Распрацоўнікі:</string>
@@ -123,4 +120,11 @@
     <string name="exception_books_definition">Некорректное описание книги в модуле %1$s:\nBookQty=%2$s, PathName#=%3$s, FullName#=%4$s, ShortName#=%5$s,\nChapterQty#=%6$s</string>
     <string name="exception_open_module">Некорректный модуль %1$s(%2$s)</string>
     <string name="exception_open_module_short">Некорректный модуль %1$s</string>
+    <string name="copy_module_from_file"> Copying a module…</string>
+    <string name="error_open_module">Error opening module %1$s from %2$s</string>
+    <string name="file_cant_read">The file is not readable</string>
+    <string name="file_not_exist">File not found</string>
+    <string name="file_not_moved">Operation failed</string>
+    <string name="file_not_supported">The file is not supported</string>
+    <string name="menu_library_add">Add…</string>
 </resources>

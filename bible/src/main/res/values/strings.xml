@@ -134,10 +134,10 @@
 	<string name="press_again_to_exit">Press again to exit</string>
 	<string name="menu_history_clear">Clear</string>
 	<string name="menu_library_add">Add…</string>
-	<string name="file_not_exist">Файл не найден</string>
-	<string name="file_cant_read">Файл недоступен для чтения</string>
-	<string name="file_not_supported">Файл не поддерживается</string>
-	<string name="file_not_moved">Операция не удалась</string>
+	<string name="file_not_exist">File not found</string>
+	<string name="file_cant_read">The file is not readable</string>
+	<string name="file_not_supported">The file is not supported</string>
+	<string name="file_not_moved">Operation failed</string>
 	<string name="error_open_module">Error opening module %1$s from %2$s</string>
-	<string name="copy_module_from_file">Копирование модуля...</string>
+	<string name="copy_module_from_file"> Copying a module…</string>
 </resources>
