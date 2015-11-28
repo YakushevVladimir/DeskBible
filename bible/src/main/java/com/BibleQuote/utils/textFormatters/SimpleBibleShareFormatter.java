@@ -1,11 +1,11 @@
-package com.BibleQuote.utils.bibleTextFormatters;
+package com.BibleQuote.utils.textFormatters;
 
 import java.util.LinkedHashMap;
 
-public class SimpleFormatter implements IBibleTextFormatter {
+public class SimpleBibleShareFormatter implements IShareTextFormatter {
 	private LinkedHashMap<Integer, String> verses;
 
-	public SimpleFormatter(LinkedHashMap<Integer, String> verses) {
+	public SimpleBibleShareFormatter(LinkedHashMap<Integer, String> verses) {
 		this.verses = verses;
 	}
 

@@ -22,12 +22,13 @@
 
 package com.BibleQuote.controllers;
 
-import com.BibleQuote.dal.repository.IChapterRepository;
-import com.BibleQuote.modules.*;
 import com.BibleQuote.dal.LibraryUnitOfWork;
 import com.BibleQuote.dal.repository.IBookRepository;
+import com.BibleQuote.dal.repository.IChapterRepository;
 import com.BibleQuote.exceptions.BookNotFoundException;
-import com.BibleQuote.utils.StringProc;
+import com.BibleQuote.modules.*;
+import com.BibleQuote.utils.textFormatters.ITextFormatter;
+import com.BibleQuote.utils.textFormatters.ModuleTextFormatter;
 
 import java.util.ArrayList;
 
@@ -78,27 +79,12 @@ public class FsChapterController implements IChapterController {
 		if (chapter == null) {
 			return "";
 		}
-		Module currModule = chapter.getBook().getModule();
 
+		ITextFormatter formatter = new ModuleTextFormatter(chapter.getBook().getModule());
 		ArrayList<Verse> verses = chapter.getVerseList();
 		StringBuilder chapterHTML = new StringBuilder();
 		for (int verse = 1; verse <= verses.size(); verse++) {
-			String verseText = verses.get(verse - 1).getText();
-
-			if (currModule.containsStrong) {
-				// убираем номера Стронга
-				verseText = StringProc.cleanStrongNumbers(verseText);
-			}
-
-			verseText = StringProc.stripTags(verseText, currModule.HtmlFilter);
-			verseText = verseText.replaceAll("<a\\s+?href=\"verse\\s\\d+?\">(\\d+?)</a>", "<b>$1</b>");
-			if (currModule.isBible) {
-				verseText = verseText
-						.replaceAll("^(<[^/]+?>)*?(\\d+)(</(.)+?>){0,1}?\\s+",
-								"$1<b>$2</b>$3 ").replaceAll(
-								"null", "");
-			}
-
+			String verseText = formatter.format(verses.get(verse - 1).getText());
 			chapterHTML.append("<div id=\"verse_").append(verse).append("\" class=\"verse\">")
 					.append(verseText.replaceAll("<(/)*div(.*?)>", "<$1p$2>"))
 					.append("</div>")

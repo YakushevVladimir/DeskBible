@@ -19,8 +19,7 @@ public class ShareBuilder {
 	Chapter chapter;
 	LinkedHashMap<Integer, String> verses;
 
-	public ShareBuilder(Context context, Module module, Book book,
-						Chapter chapter, LinkedHashMap<Integer, String> verses) {
+	public ShareBuilder(Context context, Module module, Book book, Chapter chapter, LinkedHashMap<Integer, String> verses) {
 		this.context = context;
 		this.module = module;
 		this.book = book;

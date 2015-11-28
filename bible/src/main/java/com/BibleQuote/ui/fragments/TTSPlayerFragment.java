@@ -57,7 +57,7 @@ public class TTSPlayerFragment extends Fragment implements PlayerView.OnClickLis
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View result = inflater.inflate(R.layout.tts_player_layout, null);
+        View result = inflater.inflate(R.layout.tts_player_layout, container, false);
 
         player = (PlayerView) result.findViewById(R.id.tts_player);
         player.setOnClickListener(this);
@@ -65,7 +65,7 @@ public class TTSPlayerFragment extends Fragment implements PlayerView.OnClickLis
         webView = (ReaderWebView) getActivity().findViewById(R.id.readerView);
 
         Librarian librarian = ((ReaderActivity) getActivity()).getLibrarian();
-        ttsController = new TTSPlayerController(getActivity(), librarian.getTextLocale(), librarian.getVersesText());
+        ttsController = new TTSPlayerController(getActivity(), librarian.getTextLocale(), librarian.getCleanedVersesText());
         ttsController.setOnInitListener(this);
 
         return result;
@@ -121,6 +121,6 @@ public class TTSPlayerFragment extends Fragment implements PlayerView.OnClickLis
     }
 
     public interface onTTSStopSpeakListener {
-        public void onStopSpeak();
+        void onStopSpeak();
     }
 }

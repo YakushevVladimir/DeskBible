@@ -30,8 +30,8 @@ import com.BibleQuote.exceptions.BooksDefinitionException;
 import com.BibleQuote.exceptions.FileAccessException;
 import com.BibleQuote.modules.*;
 import com.BibleQuote.utils.FsUtils;
-import com.BibleQuote.utils.StringProc;
 import com.BibleQuote.utils.modules.LanguageConvertor;
+import com.BibleQuote.utils.textFormatters.ModuleTextFormatter;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -413,6 +413,9 @@ public class FsLibraryContext extends LibraryContext {
 
         Log.i(TAG, " - Start search in book " + bookID);
 
+        ModuleTextFormatter formatter = new ModuleTextFormatter(module);
+        formatter.setVisibleVerseNumbers(false);
+
         int chapterDev = module.ChapterZero ? -1 : 0;
         int patternFlags = Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE;
         String[] chapters = Pattern.compile(module.ChapterSign, patternFlags).split(content);
@@ -422,7 +425,7 @@ public class FsLibraryContext extends LibraryContext {
             if (!contains(chapter, searchQuery)) continue;
             String[] verses = Pattern.compile(module.VerseSign, patternFlags).split(chapter);
             for (int verseNumber = 0; verseNumber < verses.length; verseNumber++) {
-                verse = module.VerseSign + verses[verseNumber];
+                verse = formatter.format(verses[verseNumber]);
                 if (!contains(verse, searchQuery)) continue;
                 searchRes.put(
                         new BibleReference(module.getID(), bookID, chapterNumber - chapterDev, verseNumber).getPath(),
@@ -436,8 +439,6 @@ public class FsLibraryContext extends LibraryContext {
     }
 
     private String higlightWords(String query, String verse) {
-        String resultVerse = StringProc.cleanVerseNumbers(StringProc.stripTags(verse));
-
         String[] words = query.toLowerCase().replaceAll("[^\\s\\w]", "").split("\\s+");
         StringBuilder pattern = new StringBuilder(query.length() + words.length);
         for (String word : words) {
@@ -448,9 +449,9 @@ public class FsLibraryContext extends LibraryContext {
         }
 
         Pattern regex = Pattern.compile("((?ui)" + pattern.toString() + ")");
-        Matcher regexMatcher = regex.matcher(resultVerse);
-        resultVerse = regexMatcher.replaceAll("<b><font color=\"#6b0b0b\">$1</font></b>");
-        return resultVerse;
+        Matcher regexMatcher = regex.matcher(verse);
+        verse = regexMatcher.replaceAll("<b><font color=\"#6b0b0b\">$1</font></b>");
+        return verse;
     }
 
     private boolean contains(String text, String query) {

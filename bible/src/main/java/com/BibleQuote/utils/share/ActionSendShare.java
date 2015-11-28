@@ -22,7 +22,7 @@ public class ActionSendShare extends BaseShareBuilder {
 
 	@Override
 	public void share() {
-		InitFormatters();
+		initFormatters();
 		if (textFormater == null || referenceFormatter == null) {
 			return;
 		}

@@ -1,7 +1,5 @@
 package com.BibleQuote.modules;
 
-import com.BibleQuote.utils.StringProc;
-
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.TreeMap;
@@ -58,7 +56,7 @@ public class Chapter {
 			if (verseIndex > verseListSize) {
 				break;
 			}
-			result.put(verse, StringProc.cleanVerseText(versesList.get(verseIndex).getText()));
+			result.put(verse, versesList.get(verseIndex).getText());
 		}
 
 		return result;

@@ -1,6 +1,7 @@
 p {
     margin: 6pt 0;
-    text_indent: 1.5em;
+    text-indent: 0.8em;
+	text-align: justify;
 }
 
 a {

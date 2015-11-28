@@ -125,7 +125,6 @@ public class ReaderWebView extends WebView
 		html.append("<head>\r\n");
 		html.append("<meta http-equiv=Content-Type content=\"text/html; charset=UTF-8\">\r\n");
 		html.append("<script language=\"JavaScript\" src=\"file:///android_asset/reader.js\" type=\"text/javascript\"></script>\r\n");
-		html.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"file:///android_asset/reader.css\">\r\n");
 		html.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"file:///android_asset/").append(modStyle).append("\">\r\n");
 		html.append(getStyle(nightMode));
 		html.append("</head>\r\n");

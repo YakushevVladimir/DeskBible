@@ -38,10 +38,10 @@ import com.BibleQuote.modules.Module;
 import com.BibleQuote.modules.Verse;
 import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.PreferenceHelper;
-import com.BibleQuote.utils.StringProc;
 import com.BibleQuote.utils.modules.LinkConverter;
 import com.BibleQuote.utils.share.ShareBuilder;
 import com.BibleQuote.utils.share.ShareBuilder.Destination;
+import com.BibleQuote.utils.textFormatters.ModuleTextFormatter;
 
 import java.util.*;
 
@@ -378,7 +378,14 @@ public class Librarian {
 			return;
 		}
 
+        ModuleTextFormatter formatter = new ModuleTextFormatter(currModule);
+        formatter.setVisibleVerseNumbers(false);
+
 		LinkedHashMap<Integer, String> verses = getCurrChapter().getVerses(selectVerses);
+        for (Integer key : verses.keySet()) {
+            verses.put(key, formatter.format(verses.get(key)));
+        }
+
 		ShareBuilder builder = new ShareBuilder(context, getCurrModule(), getCurrBook(), getCurrChapter(), verses);
 		builder.share(dest);
 	}
@@ -434,16 +441,16 @@ public class Librarian {
 	}
 
 	public HashMap<BibleReference, String> getCrossReferenceContent(Collection<BibleReference> bReferences) {
-		HashMap<BibleReference, String> crossReferenceContent = new HashMap<BibleReference, String>();
-		for (BibleReference ref : bReferences) {
+        ModuleTextFormatter formatter = new ModuleTextFormatter(currModule);
+        formatter.setVisibleVerseNumbers(false);
+
+        HashMap<BibleReference, String> crossReferenceContent = new HashMap<BibleReference, String>();
+        for (BibleReference ref : bReferences) {
 			try {
 				int fromVerse = ref.getFromVerse();
 				int toVerse = ref.getToVerse();
 				Chapter chapter = getChapterByNumber(getBookByID(getCurrModule(), ref.getBookID()), ref.getChapter());
-				crossReferenceContent.put(ref,
-						StringProc.stripTags(chapter.getText(fromVerse, toVerse))
-								.replaceAll("\\s(H|G)*\\d+", "")
-								.replaceAll("\\d+\\s", ""));
+				crossReferenceContent.put(ref, formatter.format(chapter.getText(fromVerse, toVerse)));
 			} catch (Exception e) {
 				Log.e(TAG, e.getMessage());
 			}
@@ -471,12 +478,19 @@ public class Librarian {
 		return currVerseNumber;
 	}
 
-	public ArrayList<String> getVersesText() {
+	public ArrayList<String> getCleanedVersesText() {
 		ArrayList<String> result = new ArrayList<String>();
-		if (currChapter == null) return result;
+
+		if (currModule == null) {
+			return result;
+		}
+
+        ModuleTextFormatter formatter = new ModuleTextFormatter(currModule);
+        formatter.setVisibleVerseNumbers(false);
+
 		ArrayList<Verse> verses = currChapter.getVerseList();
 		for (Verse verse : verses) {
-			result.add(StringProc.cleanVerseText(verse.getText()));
+			result.add(formatter.format(verse.getText()));
 		}
 		return result;
 	}

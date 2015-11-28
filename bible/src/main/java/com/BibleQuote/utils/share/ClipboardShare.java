@@ -22,7 +22,7 @@ public class ClipboardShare extends BaseShareBuilder {
 	@SuppressWarnings("deprecation")
 	@Override
 	public void share() {
-		InitFormatters();
+		initFormatters();
 		if (textFormater == null || referenceFormatter == null) {
 			return;
 		}

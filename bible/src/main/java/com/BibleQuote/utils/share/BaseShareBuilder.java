@@ -9,15 +9,15 @@ import com.BibleQuote.utils.bibleReferenceFormatter.FullReferenceFormatter;
 import com.BibleQuote.utils.bibleReferenceFormatter.IBibleReferenceFormatter;
 import com.BibleQuote.utils.bibleReferenceFormatter.ShortReferenceFormatter;
 import com.BibleQuote.utils.bibleReferenceFormatter.EmptyReferenceFormatter;
-import com.BibleQuote.utils.bibleTextFormatters.BreakVerseFormatter;
-import com.BibleQuote.utils.bibleTextFormatters.IBibleTextFormatter;
-import com.BibleQuote.utils.bibleTextFormatters.SimpleFormatter;
+import com.BibleQuote.utils.textFormatters.BreakVerseBibleShareFormatter;
+import com.BibleQuote.utils.textFormatters.IShareTextFormatter;
+import com.BibleQuote.utils.textFormatters.SimpleBibleShareFormatter;
 
 import java.util.LinkedHashMap;
 import java.util.TreeSet;
 
 public abstract class BaseShareBuilder {
-	IBibleTextFormatter textFormater;
+	IShareTextFormatter textFormater;
 	IBibleReferenceFormatter referenceFormatter;
 
 	Context context;
@@ -26,12 +26,11 @@ public abstract class BaseShareBuilder {
 	Chapter chapter;
 	LinkedHashMap<Integer, String> verses;
 
-	protected void InitFormatters() {
-		boolean breakVerse = PreferenceHelper.divideTheVerses();
-		if (breakVerse) {
-			textFormater = new BreakVerseFormatter(verses);
+	protected void initFormatters() {
+		if (PreferenceHelper.divideTheVerses()) {
+			textFormater = new BreakVerseBibleShareFormatter(verses);
 		} else {
-			textFormater = new SimpleFormatter(verses);
+			textFormater = new SimpleBibleShareFormatter(verses);
 		}
 
 		TreeSet<Integer> verseNumbers = new TreeSet<Integer>();
@@ -40,12 +39,9 @@ public abstract class BaseShareBuilder {
 		}
 
 		String chapterNumber = String.valueOf(chapter.getNumber());
-
-		boolean addLink = PreferenceHelper.addReference();
-		boolean shortLink = PreferenceHelper.shortReference();
-		if (!addLink) {
+		if (!PreferenceHelper.addReference()) {
 			referenceFormatter = new EmptyReferenceFormatter(module, book, chapterNumber, verseNumbers);
-		} else if (shortLink) {
+		} else if (PreferenceHelper.shortReference()) {
 			referenceFormatter = new ShortReferenceFormatter(module, book, chapterNumber, verseNumbers);
 		} else {
 			referenceFormatter = new FullReferenceFormatter(module, book, chapterNumber, verseNumbers);
