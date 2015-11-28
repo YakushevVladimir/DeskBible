@@ -24,41 +24,62 @@ import com.BibleQuote.modules.FsModule;
 import com.BibleQuote.modules.Module;
 
 import java.util.*;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class SearchProcessor {
-	private final IBookRepository repository;
-	private static final String TAG = "SearchProcessor";
-	private Map<String, LinkedHashMap<String, String>> results = Collections.synchronizedMap(new HashMap<String, LinkedHashMap<String, String>>());
 
-	public SearchProcessor(IBookRepository<FsModule, FsBook> repository) {
+    private static final int CPU_COUNT = Runtime.getRuntime().availableProcessors();
+    private static final int POOL_SIZE = CPU_COUNT * 2 + 1;
+    private static final String TAG = SearchProcessor.class.getSimpleName();
+
+    private final IBookRepository repository;
+	private Map<String, LinkedHashMap<String, String>> results = Collections.synchronizedMap(new HashMap<String, LinkedHashMap<String, String>>());
+    private ExecutorService executor;
+
+    public SearchProcessor(IBookRepository<FsModule, FsBook> repository) {
 		this.repository = repository;
+        this.executor = Executors.newFixedThreadPool(POOL_SIZE);
 	}
 
-	public LinkedHashMap<String, String> search(Module module, String searchQuery, ArrayList<String> bookList) {
-		LinkedHashMap<String, String> searchRes = new LinkedHashMap<String, String>();
-
-		ArrayList<SearchThread> threads = new ArrayList<SearchThread>(bookList.size());
+    /**
+     * Выполняет поиск searchQuery, представляющей из себя регулярное выражение в списке книг bookList
+     * модуля module.
+     *
+     * @param module модуль, в котором необходимо произвести поиск
+     * @param bookList список id книг модуля
+     * @param searchQuery искомый текст в виде регулярного выражения
+     *
+     * @return возвращает словарь, в котором ключами являются ссылки на место в модуле
+     *         (см. {@linkplain com.BibleQuote.entity.BibleReference}), а значениями полный текст данного места
+     */
+    public LinkedHashMap<String, String> search(Module module, ArrayList<String> bookList, String searchQuery) {
+        CountDownLatch latch =  new CountDownLatch(bookList.size());
 		for (String bookID : bookList) {
-			SearchThread thread = new SearchThread(module, bookID, searchQuery);
-			threads.add(thread);
-			thread.start();
+			SearchThread thread = new SearchThread(latch, module, bookID, searchQuery);
+            executor.execute(thread);
 		}
+        executor.shutdown();
 
-		for (SearchThread thread : threads) {
-			try {
-				thread.join();
-				LinkedHashMap<String, String> searches = results.get(thread.getBookID());
-				searchRes.putAll(searches);
-			} catch (InterruptedException e) {
-				Log.e(TAG, e.getMessage());
-			}
-		}
+        try {
+            latch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        LinkedHashMap<String, String> searchRes = new LinkedHashMap<String, String>();
+        for (String bookID : bookList) {
+            LinkedHashMap<String, String> searches = results.get(bookID);
+            searchRes.putAll(searches);
+        }
 
 		return searchRes;
 	}
 
-	private class SearchThread extends Thread {
-		private Module module;
+	private class SearchThread implements Runnable {
+        private CountDownLatch latch;
+        private Module module;
         private String bookID;
         private String query;
 
@@ -66,7 +87,8 @@ public class SearchProcessor {
 			return bookID;
 		}
 
-		private SearchThread(Module module, String bookID, String query) {
+		private SearchThread(CountDownLatch latch, Module module, String bookID, String query) {
+            this.latch = latch;
 			this.module = module;
 			this.bookID = bookID;
 			this.query = query;
@@ -80,6 +102,7 @@ public class SearchProcessor {
 				Log.e(TAG, e.getMessage());
 				results.put(bookID, new LinkedHashMap<String, String>());
 			}
+            latch.countDown();
 		}
 	}
 }
