@@ -57,7 +57,7 @@ public class ReaderWebView extends WebView
 		jsInterface.gotoVerse(verse);
 	}
 
-	public static enum Mode {
+	public enum Mode {
 		Read, Study, Speak
 	}
 
@@ -91,6 +91,7 @@ public class ReaderWebView extends WebView
 
 	public boolean mPageLoaded = false;
 
+	@SuppressLint("AddJavascriptInterface")
 	public ReaderWebView(Context mContext, AttributeSet attributeSet) {
 		super(mContext, attributeSet);
 
