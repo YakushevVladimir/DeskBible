@@ -74,11 +74,7 @@ public class TTSPlayerFragment extends Fragment implements PlayerView.OnClickLis
     @Override
     public void onDestroy() {
         super.onDestroy();
-        try {
-            ttsController.destroy();
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
-        } finally {
+        if (ttsController != null) {
             ttsController = null;
         }
     }

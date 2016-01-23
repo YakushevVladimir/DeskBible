@@ -16,11 +16,11 @@
 
 package com.BibleQuote.ui.base;
 
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 
 /**
  * @author Vladimir Yakushev
  * @version 1.0
  */
-public class BibleQuoteActivity extends ActionBarActivity {
+public class BibleQuoteActivity extends AppCompatActivity {
 }

@@ -497,6 +497,8 @@ public class Librarian {
 	}
 
 	public Locale getTextLocale() {
-		return new Locale(currModule.getLanguage());
+		return currModule == null
+				? new Locale(Module.DEFAULT_LANGUAGE)
+				: new Locale(currModule.getLanguage());
 	}
 }

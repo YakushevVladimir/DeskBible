@@ -21,12 +21,12 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Point;
 import android.media.AudioManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.support.v7.view.ActionMode;
 import android.view.*;
 import android.view.View.OnClickListener;
@@ -46,6 +46,7 @@ import com.BibleQuote.listeners.IReaderViewListener;
 import com.BibleQuote.managers.GoogleAnalyticsHelper;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.managers.bookmarks.Bookmark;
+import com.BibleQuote.modules.Module;
 import com.BibleQuote.ui.base.BibleQuoteActivity;
 import com.BibleQuote.ui.dialogs.BookmarksDialog;
 import com.BibleQuote.ui.fragments.TTSPlayerFragment;
@@ -197,15 +198,11 @@ public class ReaderActivity extends BibleQuoteActivity implements OnTaskComplete
         int rotation = display.getRotation();
         int height;
         int width;
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB_MR2) {
-            height = display.getHeight();
-            width = display.getWidth();
-        } else {
-            Point size = new Point();
-            display.getSize(size);
-            height = size.y;
-            width = size.x;
-        }
+
+        Point size = new Point();
+        display.getSize(size);
+        height = size.y;
+        width = size.x;
 
         switch (rotation) {
             case Surface.ROTATION_90:
@@ -296,11 +293,19 @@ public class ReaderActivity extends BibleQuoteActivity implements OnTaskComplete
     }
 
     private void viewTTSPlayer() {
-        if (ttsPlayer != null) return;
+        if (ttsPlayer != null) {
+            return;
+        }
+
+        Module currModule = myLibrarian.getCurrModule();
+        if (currModule == null) {
+            onChooseChapterClick();
+            return;
+        }
+
         ttsPlayer = new TTSPlayerFragment();
-        FragmentTransaction tran = getSupportFragmentManager().beginTransaction();
-        tran.add(R.id.tts_player_frame, ttsPlayer);
-        tran.commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.tts_player_frame, ttsPlayer).commit();
+
         oldMode = vWeb.getMode();
         vWeb.setMode(ReaderWebView.Mode.Speak);
     }
@@ -421,10 +426,13 @@ public class ReaderActivity extends BibleQuoteActivity implements OnTaskComplete
     }
 
     public void updateActivityMode() {
-        if (vWeb.getMode() == ReaderWebView.Mode.Read) {
-            getSupportActionBar().hide();
-        } else {
-            getSupportActionBar().show();
+        final ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            if (vWeb.getMode() == ReaderWebView.Mode.Read) {
+                actionBar.hide();
+            } else {
+                actionBar.show();
+            }
         }
         viewChapterNav();
     }

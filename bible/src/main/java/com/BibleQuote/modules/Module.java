@@ -26,6 +26,8 @@ import java.util.Map;
 public abstract class Module implements Serializable {
 
     private static final long serialVersionUID = -499369158022814559L;
+    public static final String DEFAULT_LANGUAGE = "ru";
+
     public String ShortName = "";
     public String ChapterSign = "";
     public String VerseSign = "";
@@ -64,7 +66,7 @@ public abstract class Module implements Serializable {
 
     public String getLanguage() {
         if (language == null || !language.contains("-")) {
-            return "ru";
+            return DEFAULT_LANGUAGE;
         } else {
             return language.substring(0, language.indexOf("-")).toLowerCase();
         }

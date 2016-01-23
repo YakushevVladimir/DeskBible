@@ -18,6 +18,7 @@ package com.BibleQuote.tts.controllers;
 
 import android.content.Context;
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.UtteranceProgressListener;
 import android.util.Log;
 import com.BibleQuote.tts.exceptions.LanguageNotSupportedException;
 import com.BibleQuote.tts.exceptions.OnInitException;
@@ -31,7 +32,7 @@ import java.util.Locale;
  * Date: 08.02.13
  * Time: 23:01
  */
-public class TTSPlayerController implements TextToSpeech.OnInitListener, TextToSpeech.OnUtteranceCompletedListener {
+public class TTSPlayerController extends UtteranceProgressListener implements TextToSpeech.OnInitListener {
 
 	private static final String TAG = "TTSPlayerController";
 
@@ -57,21 +58,30 @@ public class TTSPlayerController implements TextToSpeech.OnInitListener, TextToS
         this.textList = textList;
     }
 
-    public int getCurrText() {
-        return currText;
+    @Override
+    public void onStart(String utteranceId) {
+
     }
 
-    public Exception getError() {
-        return error;
+    @Override
+    public void onDone(String utteranceId) {
+        Log.i(TAG, "onUtteranceCompleted() -> " + currText);
+        if (isPaused) {
+            return;
+        } else if (currText == textList.size() - 1) {
+            currText = 0;
+            isPaused = true;
+            notifyListeners(Event.PauseSpeak);
+            return;
+        }
+        currText++;
+        speakTTS(currText);
     }
 
-	public void setOnInitListener(OnEventListener listener) {
-		if (!listeners.contains(listener)) listeners.add(listener);
-	}
+    @Override
+    public void onError(String utteranceId) {
 
-	private void notifyListeners(Event ev) {
-		for (OnEventListener listener : listeners) listener.onEvent(ev);
-	}
+    }
 
 	@Override
 	public void onInit(int initStatus) {
@@ -80,7 +90,7 @@ public class TTSPlayerController implements TextToSpeech.OnInitListener, TextToS
 			ttsParams = new HashMap<String, String>();
 			ttsParams.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "TTSPlayerController");
 			setLanguage();
-			ttsEngine.setOnUtteranceCompletedListener(this);
+			ttsEngine.setOnUtteranceProgressListener(this);
 		} else if (initStatus == TextToSpeech.ERROR) {
 			error = new OnInitException();
 			notifyListeners(Event.Error);
@@ -97,66 +107,17 @@ public class TTSPlayerController implements TextToSpeech.OnInitListener, TextToS
 		ttsEngine = null;
 	}
 
-	private void setLanguage() {
-        if (locale == null) {
-            eventNotSupportedLanguage();
-        }
+    public int getCurrText() {
+        return currText;
+    }
 
-		int initStatus = ttsEngine.isLanguageAvailable(locale);
-		if (initStatus == TextToSpeech.LANG_MISSING_DATA || initStatus == TextToSpeech.LANG_NOT_SUPPORTED) {
-            eventNotSupportedLanguage();
-        } else {
-            ttsEngine.setLanguage(locale);
-		}
+    public Exception getError() {
+        return error;
+    }
+
+	public void setOnInitListener(OnEventListener listener) {
+		if (!listeners.contains(listener)) listeners.add(listener);
 	}
-
-    private void eventNotSupportedLanguage() {
-        error = new LanguageNotSupportedException(locale);
-        notifyListeners(Event.Error);
-    }
-
-    private void initTTS(Context cont) {
-        if (ttsEngine == null) {
-            ttsEngine = new TextToSpeech(cont, this);
-		}
-	}
-
-    @Override
-    public void onUtteranceCompleted(String s) {
-        Log.i(TAG, "onUtteranceCompleted() -> " + currText);
-        if (isPaused) {
-            return;
-        } else if (currText == textList.size() - 1) {
-            currText = 0;
-            isPaused = true;
-            notifyListeners(Event.PauseSpeak);
-            return;
-        }
-        currText++;
-        speakTTS(currText);
-    }
-
-    public void destroy() throws Throwable {
-        finalize();
-    }
-
-    private void speakTTS(int verseIndex) {
-        if (error != null) {
-            return;
-        } else if (verseIndex > textList.size() - 1) {
-            return;
-        }
-
-        Log.i(TAG, "speakTTS() -> " + verseIndex);
-        ttsEngine.speak(textList.get(verseIndex), TextToSpeech.QUEUE_FLUSH, ttsParams);
-        notifyListeners(Event.ChangeTextIndex);
-    }
-
-    private void stopTTS() {
-        Log.i(TAG, "stopTTS() -> " + currText);
-        isPaused = true;
-        if (ttsEngine.isSpeaking()) ttsEngine.stop();
-    }
 
     public void play() {
         Log.i(TAG, "play() -> " + currText);
@@ -197,11 +158,57 @@ public class TTSPlayerController implements TextToSpeech.OnInitListener, TextToS
         notifyListeners(Event.ChangeTextIndex);
     }
 
+    private void notifyListeners(Event ev) {
+		for (OnEventListener listener : listeners) listener.onEvent(ev);
+	}
+
+	private void setLanguage() {
+        if (locale == null) {
+            eventNotSupportedLanguage();
+        }
+
+		int initStatus = ttsEngine.isLanguageAvailable(locale);
+		if (initStatus == TextToSpeech.LANG_MISSING_DATA || initStatus == TextToSpeech.LANG_NOT_SUPPORTED) {
+            eventNotSupportedLanguage();
+        } else {
+            ttsEngine.setLanguage(locale);
+		}
+	}
+
+    private void eventNotSupportedLanguage() {
+        error = new LanguageNotSupportedException(locale);
+        notifyListeners(Event.Error);
+    }
+
+    private void initTTS(Context cont) {
+        if (ttsEngine == null) {
+            ttsEngine = new TextToSpeech(cont, this);
+		}
+	}
+
+    private void speakTTS(int verseIndex) {
+        if (error != null) {
+            return;
+        } else if (verseIndex > textList.size() - 1) {
+            return;
+        }
+
+        Log.i(TAG, "speakTTS() -> " + verseIndex);
+        ttsEngine.speak(textList.get(verseIndex), TextToSpeech.QUEUE_FLUSH, ttsParams);
+        notifyListeners(Event.ChangeTextIndex);
+    }
+
+    private void stopTTS() {
+        Log.i(TAG, "stopTTS() -> " + currText);
+        isPaused = true;
+        if (ttsEngine.isSpeaking()) ttsEngine.stop();
+    }
+
     public enum Event {
         Error, ChangeTextIndex, PauseSpeak
     }
 
     public interface OnEventListener {
-        public void onEvent(Event ev);
+        void onEvent(Event ev);
     }
 }
