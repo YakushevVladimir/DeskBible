@@ -10,7 +10,7 @@ import java.util.ArrayList;
  */
 public class ModuleTextFormatter implements ITextFormatter {
 
-    private static final String VERSE_NUMBER_PATTERN = "^(<[^/]+?>)*?(\\d+)(</(.)+?>){0,1}?\\s+";
+    private static final String VERSE_NUMBER_PATTERN = "(?m)^(<[^/]+?>)*?(\\d+)(</(.)+?>){0,1}?\\s+";
 
     private ArrayList<ITextFormatter> formatters = new ArrayList<ITextFormatter>();
     private boolean visibleVerseNumbers;
@@ -21,6 +21,14 @@ public class ModuleTextFormatter implements ITextFormatter {
             formatters.add(new NoStrongTextFormatter());
         }
         formatters.add(new StripTagsTextFormatter("<(?!" + module.HtmlFilter + ")(.)*?>"));
+    }
+
+    public ModuleTextFormatter(Module module, ITextFormatter formatter) {
+        this.visibleVerseNumbers = module.isBible;
+        if (module.containsStrong) {
+            formatters.add(new NoStrongTextFormatter());
+        }
+        formatters.add(formatter);
     }
 
     public void setVisibleVerseNumbers(boolean visible) {

@@ -42,6 +42,7 @@ import com.BibleQuote.utils.modules.LinkConverter;
 import com.BibleQuote.utils.share.ShareBuilder;
 import com.BibleQuote.utils.share.ShareBuilder.Destination;
 import com.BibleQuote.utils.textFormatters.ModuleTextFormatter;
+import com.BibleQuote.utils.textFormatters.StripTagsTextFormatter;
 
 import java.util.*;
 
@@ -378,7 +379,7 @@ public class Librarian {
 			return;
 		}
 
-        ModuleTextFormatter formatter = new ModuleTextFormatter(currModule);
+        ModuleTextFormatter formatter = new ModuleTextFormatter(currModule, new StripTagsTextFormatter());
         formatter.setVisibleVerseNumbers(false);
 
 		LinkedHashMap<Integer, String> verses = getCurrChapter().getVerses(selectVerses);

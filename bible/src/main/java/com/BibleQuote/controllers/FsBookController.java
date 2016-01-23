@@ -68,7 +68,8 @@ public class FsBookController implements IBookController {
 		Log.i(TAG, String.format("Start search to word '%s' from book '%s' to book '%s'", query, fromBookID, toBookID));
 
 		long startTime = System.currentTimeMillis();
-		LinkedHashMap<String, String> result = new SearchProcessor(bRepository).search(module, getBookList(module, fromBookID, toBookID), query);
+		LinkedHashMap<String, String> result = new SearchProcessor(bRepository)
+				.search(module, getBookList(module, fromBookID, toBookID), query);
 		Log.i(TAG, String.format("Search time: %d ms", (System.currentTimeMillis() - startTime)));
 
 		return result;

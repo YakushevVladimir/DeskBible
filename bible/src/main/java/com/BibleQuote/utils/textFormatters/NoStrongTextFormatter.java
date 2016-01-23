@@ -7,6 +7,6 @@ package com.BibleQuote.utils.textFormatters;
 public class NoStrongTextFormatter implements ITextFormatter {
     @Override
     public String format(String text) {
-        return text.replaceAll("(((G|H)+?\\d+)|(\\s\\d+))", "");
+        return text.replaceAll("((\\s(G|H)+?\\d+)|(\\s\\d+))", "");
     }
 }
