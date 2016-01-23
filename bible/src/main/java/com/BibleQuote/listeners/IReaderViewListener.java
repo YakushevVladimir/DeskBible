@@ -1,7 +1,7 @@
 package com.BibleQuote.listeners;
 
 public interface IReaderViewListener {
-	public static enum ChangeCode {
+	enum ChangeCode {
 		onUpdateText,
 		onChangeSelection,
 		onLongPress,
@@ -13,5 +13,5 @@ public interface IReaderViewListener {
 		onRightNavigation
 	}
 
-	public void onReaderViewChange(ChangeCode code);
+	void onReaderViewChange(ChangeCode code);
 }

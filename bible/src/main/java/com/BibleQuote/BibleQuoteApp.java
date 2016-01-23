@@ -58,7 +58,7 @@ public class BibleQuoteApp extends Application {
 
 	public void init() {
 		Log.i(TAG, "Init application preference helper...");
-		initPrefernceHelper();
+		initPreferenceHelper();
 		Log.i(TAG, "Start update manager...");
 		UpdateManager.Init(this);
 		if (myLibrarian == null) {
@@ -71,7 +71,7 @@ public class BibleQuoteApp extends Application {
 		if (myLibrarian == null) {
 			// Сборщик мусора уничтожил ссылки на myLibrarian и на PreferenceHelper
 			// Восстановим ссылки
-			initPrefernceHelper();
+			initPreferenceHelper();
 			initLibrarian();
 		}
 		return myLibrarian;
@@ -88,7 +88,7 @@ public class BibleQuoteApp extends Application {
 		return new dbBookmarksRepository();
 	}
 
-	private void initPrefernceHelper() {
+	private void initPreferenceHelper() {
 		PreferenceHelper.Init(this);
 	}
 
