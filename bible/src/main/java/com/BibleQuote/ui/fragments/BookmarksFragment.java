@@ -22,7 +22,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.ListFragment;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.util.Log;
 import android.view.Menu;
@@ -168,7 +168,7 @@ public class BookmarksFragment extends ListFragment implements AdapterView.OnIte
     @Override
     public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
         currBookmark = ((BookmarkItem) adapterView.getItemAtPosition(position)).bookmark;
-        currActionMode = ((ActionBarActivity) getActivity()).startSupportActionMode(new BookmarksSelectAction());
+        currActionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(new BookmarksSelectAction());
         currActionMode.setTitle(currBookmark.name);
         return true;
     }
