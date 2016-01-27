@@ -23,7 +23,6 @@ package com.BibleQuote.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -48,17 +47,9 @@ import java.util.ArrayList;
 public class LibraryActivity extends BibleQuoteActivity implements OnTaskCompleteListener {
     public static final String EMPTY_OBJECT = "---";
 	private static final int ACTION_CODE_GET_FILE = 1;
-	private String moduleID = EMPTY_OBJECT, bookID = EMPTY_OBJECT, chapter = EMPTY_OBJECT;
     private static final String TAG = "LibraryActivity";
     private final int MODULE_VIEW = 1, BOOK_VIEW = 2, CHAPTER_VIEW = 3;
-    private View.OnClickListener onBtnModuleClick = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            if (moduleID.equals("---"))
-                return;
-            updateView(MODULE_VIEW);
-        }
-    };
+	private String moduleID = EMPTY_OBJECT, bookID = EMPTY_OBJECT, chapter = EMPTY_OBJECT;
     private int viewMode = 1;
     private ListView modulesList, booksList;
     private GridView chapterList;
@@ -68,6 +59,14 @@ public class LibraryActivity extends BibleQuoteActivity implements OnTaskComplet
     private ArrayList<String> chapters = new ArrayList<String>();
     private int modulePos = 0, bookPos = 0, chapterPos = 0;
     private Librarian myLibrarian;
+    private View.OnClickListener onBtnModuleClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if (moduleID.equals("---"))
+                return;
+            updateView(MODULE_VIEW);
+        }
+    };
     private AsyncManager mAsyncManager;
     private String messageRefresh;
     private Task mTask;
@@ -195,10 +194,49 @@ public class LibraryActivity extends BibleQuoteActivity implements OnTaskComplet
                 mAsyncManager.setupTask(new AsyncRefreshModules(messageRefresh, false, myLibrarian), this);
                 return true;
             case R.id.menu_library_add:
-				startActivityForResult(new Intent(Intent.ACTION_GET_CONTENT).setType("file/*"), ACTION_CODE_GET_FILE);
+                choiceModuleFromFile();
 				return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        updateView(viewMode);
+    }
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		switch (requestCode) {
+			case ACTION_CODE_GET_FILE:
+				if (resultCode == RESULT_OK) {
+					String path = data.getData().getPath();
+					getModuleFromFile(path);
+				}
+		}
+		super.onActivityResult(requestCode, resultCode, data);
+	}
+
+	public void onTaskComplete(Task task) {
+        if (task != null && !task.isCancelled()) {
+			if (task instanceof AsyncOpenModule) {
+				onAsyncOpenModuleComplete((AsyncOpenModule) task);
+			} else {
+                updateView(MODULE_VIEW);
+            }
+        }
+    }
+
+    private void choiceModuleFromFile() {
+        final Intent target = new Intent(Intent.ACTION_GET_CONTENT)
+                .setType("file/*")
+                .addCategory(Intent.CATEGORY_OPENABLE);
+        if (target.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(target, ACTION_CODE_GET_FILE);
+        } else {
+            Toast.makeText(this, R.string.exception_add_module_from_file, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -255,8 +293,7 @@ public class LibraryActivity extends BibleQuoteActivity implements OnTaskComplet
 
                 modulesList.setAdapter(getModuleAdapter());
 
-                ItemList itemModule = new ItemList(moduleID, myLibrarian.getModuleFullName());
-                modulePos = modules.indexOf(itemModule);
+                modulePos = modules.indexOf(new ItemList(moduleID, myLibrarian.getModuleFullName()));
                 if (modulePos >= 0) {
                     modulesList.setSelection(modulePos);
                 }
@@ -348,38 +385,9 @@ public class LibraryActivity extends BibleQuoteActivity implements OnTaskComplet
                 R.id.chapter, chapters);
     }
 
-    @Override
-    protected void onPostResume() {
-        super.onPostResume();
-        updateView(viewMode);
-    }
-
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		switch (requestCode) {
-			case ACTION_CODE_GET_FILE:
-				if (resultCode == RESULT_OK) {
-					String path = data.getData().getPath();
-					getModuleFromFile(path);
-				}
-		}
-		super.onActivityResult(requestCode, resultCode, data);
-	}
-
 	private void getModuleFromFile(String path) {
 		mAsyncManager.setupTask(new LoadModuleFromFile(getString(R.string.copy_module_from_file), false, this, path), this);
 	}
-
-	public void onTaskComplete(Task task) {
-        Log.i(TAG, "onTaskComplete()");
-        if (task != null && !task.isCancelled()) {
-			if (task instanceof AsyncOpenModule) {
-				onAsyncOpenModuleComplete((AsyncOpenModule) task);
-			} else {
-                updateView(MODULE_VIEW);
-            }
-        }
-    }
 
     private void onAsyncOpenModuleComplete(AsyncOpenModule task) {
         if (task.isSuccess()) {

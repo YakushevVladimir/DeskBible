@@ -140,4 +140,6 @@
 	<string name="file_not_moved">Operation failed</string>
 	<string name="error_open_module">Error opening module %1$s from %2$s</string>
 	<string name="copy_module_from_file"> Copying a module…</string>
+	<string name="exception_add_module_from_file">This feature is not available! Install a file manager.</string>
+	<string name="notify_dialog_title">Error</string>
 </resources>

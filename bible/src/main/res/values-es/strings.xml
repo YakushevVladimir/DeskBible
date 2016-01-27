@@ -130,4 +130,6 @@
     <string name="file_not_moved">Operation failed</string>
     <string name="file_not_supported">The file is not supported</string>
     <string name="menu_library_add">Add…</string>
+    <string name="exception_add_module_from_file">This feature is not available! Install a file manager.</string>
+    <string name="notify_dialog_title">Error</string>
 </resources>

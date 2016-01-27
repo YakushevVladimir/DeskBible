@@ -136,4 +136,6 @@
 	<string name="file_not_moved">Операция не удалась</string>
 	<string name="error_open_module">Не удалось открыть модуль %1$s из %2$s</string>
 	<string name="copy_module_from_file">Копирование модуля...</string>
+	<string name="exception_add_module_from_file">Данная функция не доступна! Установите файловый менеджер.</string>
+	<string name="notify_dialog_title">Ошибка</string>
 </resources>
