@@ -442,7 +442,7 @@ public class Librarian {
 	}
 
 	public HashMap<BibleReference, String> getCrossReferenceContent(Collection<BibleReference> bReferences) {
-        ModuleTextFormatter formatter = new ModuleTextFormatter(currModule);
+		ModuleTextFormatter formatter = new ModuleTextFormatter(currModule, new StripTagsTextFormatter());
         formatter.setVisibleVerseNumbers(false);
 
         HashMap<BibleReference, String> crossReferenceContent = new HashMap<BibleReference, String>();
@@ -451,7 +451,7 @@ public class Librarian {
 				int fromVerse = ref.getFromVerse();
 				int toVerse = ref.getToVerse();
 				Chapter chapter = getChapterByNumber(getBookByID(getCurrModule(), ref.getBookID()), ref.getChapter());
-				crossReferenceContent.put(ref, formatter.format(chapter.getText(fromVerse, toVerse)));
+				crossReferenceContent.put(ref, chapter.getText(fromVerse, toVerse, formatter));
 			} catch (Exception e) {
 				Log.e(TAG, e.getMessage());
 			}

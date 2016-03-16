@@ -23,6 +23,9 @@ import android.util.Log;
 public class PreferenceHelper {
 
 	private final static String TAG = "Share";
+
+	public static final String KEY_VIEW_BOOK_VERSE = "always_view_verse_numbers";
+
 	private static Context mContext;
 	private static SharedPreferences preference;
 

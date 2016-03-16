@@ -102,6 +102,11 @@
 				android:summaryOff="@string/disabled"
 				android:summaryOn="@string/enabled"
 				android:title="@string/text_align_justify" />
+		<CheckBoxPreference
+				android:key="always_view_verse_numbers"
+				android:summaryOff="@string/always_view_verse_numbers_disabled"
+				android:summaryOn="@string/always_view_verse_numbers_enabled"
+				android:title="@string/always_view_verse_numbers_title" />
 	</PreferenceCategory>
 
 	<PreferenceCategory android:title="@string/share_passage" >

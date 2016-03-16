@@ -1,5 +1,7 @@
 package com.BibleQuote.modules;
 
+import com.BibleQuote.utils.textFormatters.ITextFormatter;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.TreeMap;
@@ -34,6 +36,17 @@ public class Chapter {
 			Verse ver = verses.get(verseNumber);
 			if (ver != null) {
 				buffer.append(ver.getText());
+			}
+		}
+		return buffer.toString();
+	}
+
+	public String getText(int fromVerse, int toVerse, ITextFormatter formatter) {
+		StringBuilder buffer = new StringBuilder();
+		for (int verseNumber = fromVerse; verseNumber <= toVerse; verseNumber++) {
+			Verse ver = verses.get(verseNumber);
+			if (ver != null) {
+				buffer.append(formatter.format(ver.getText()));
 			}
 		}
 		return buffer.toString();

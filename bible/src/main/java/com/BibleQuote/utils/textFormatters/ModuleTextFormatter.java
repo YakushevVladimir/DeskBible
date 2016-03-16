@@ -1,6 +1,7 @@
 package com.BibleQuote.utils.textFormatters;
 
 import com.BibleQuote.modules.Module;
+import com.BibleQuote.utils.PreferenceHelper;
 
 import java.util.ArrayList;
 
@@ -16,7 +17,7 @@ public class ModuleTextFormatter implements ITextFormatter {
     private boolean visibleVerseNumbers;
 
     public ModuleTextFormatter(Module module) {
-        this.visibleVerseNumbers = module.isBible;
+        this.visibleVerseNumbers = module.isBible || PreferenceHelper.restoreStateBoolean(PreferenceHelper.KEY_VIEW_BOOK_VERSE);
         if (module.containsStrong) {
             formatters.add(new NoStrongTextFormatter());
         }

@@ -84,7 +84,7 @@
     <string name="short_reference_summary">Стислий заголовок до уривку</string>
     <string name="add_module_to_reference">Додавати назву модуля</string>
     <string name="add_module_to_reference_summary">Додавати назву модуля до підпису на відправку</string>
-    <string name="stop_tts">Stop playing</string>
+    <string name="stop_tts">Остановить</string>
     <string name="add">Додавати</string>
     <string name="no_tags">Меток нет</string>
     <string name="press_again_to_exit">Нажмите снова для выхода</string>
@@ -103,14 +103,17 @@
     <string name="disable_turn_screen_summury">Не отключать подсветку экрана при чтении</string>
     <string name="edit">Редактировать</string>
     <string name="empty">Нет данных</string>
-    <string name="copy_module_from_file"> Copying a module ...</string>
+    <string name="copy_module_from_file">Копирование модуля...</string>
     <string name="error_open_module">Error opening module %1$s from %2$s</string>
-    <string name="file_cant_read">The file is not readable</string>
-    <string name="file_not_exist">File not found</string>
+    <string name="file_cant_read">Файл недоступен для чтения</string>
+    <string name="file_not_exist">Файл не найден</string>
     <string name="file_not_moved">Operation failed</string>
-    <string name="file_not_supported">The file is not supported</string>
+    <string name="file_not_supported">Файл не поддерживается</string>
     <string name="menu_library_add">Add…</string>
     <string name="exception_add_module_from_file">Данная функция не доступна! Установите файловый менеджер.</string>
     <string name="notify_dialog_title">Ошибка</string>
+    <string name="always_view_verse_numbers_disabled">Тільки для текстів Біблії</string>
+    <string name="always_view_verse_numbers_enabled">Для всіх текстів</string>
+    <string name="always_view_verse_numbers_title">Завжди показувати номери віршів</string>
 
 </resources>

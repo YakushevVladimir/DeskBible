@@ -21,7 +21,6 @@ import android.content.Context;
 import android.graphics.PixelFormat;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.LinearLayout;
 import com.BibleQuote.R;
 
 public class ColorPickerDialog extends Dialog
@@ -63,12 +62,12 @@ public class ColorPickerDialog extends Dialog
 		mOldColor = (ColorPickerPanelView) layout.findViewById(R.id.old_color_panel);
 		mNewColor = (ColorPickerPanelView) layout.findViewById(R.id.new_color_panel);
 
-		((LinearLayout) mOldColor.getParent()).setPadding(
-				Math.round(mColorPicker.getDrawingOffset()),
-				0,
-				Math.round(mColorPicker.getDrawingOffset()),
-				0
-		);
+		//((LinearLayout) mOldColor.getParent()).setPadding(
+		//		Math.round(mColorPicker.getDrawingOffset()),
+		//		0,
+		//		Math.round(mColorPicker.getDrawingOffset()),
+		//		0
+		//);
 
 		mOldColor.setOnClickListener(this);
 		mNewColor.setOnClickListener(this);

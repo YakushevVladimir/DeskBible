@@ -20,7 +20,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Color;
-import android.os.Build;
 import android.preference.Preference;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -219,6 +218,9 @@ public class ColorPickerPreference extends Preference
 	 * @throws NumberFormatException
 	 */
 	public static int convertToColorInt(String argb) throws NumberFormatException {
+        if (argb == null) {
+            return Color.BLACK;
+        }
 
 		if (argb.startsWith("#")) {
 			argb = argb.replace("#", "");

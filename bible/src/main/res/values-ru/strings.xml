@@ -138,4 +138,7 @@
 	<string name="copy_module_from_file">Копирование модуля...</string>
 	<string name="exception_add_module_from_file">Данная функция не доступна! Установите файловый менеджер.</string>
 	<string name="notify_dialog_title">Ошибка</string>
+	<string name="always_view_verse_numbers_enabled">Для всех текстов</string>
+	<string name="always_view_verse_numbers_disabled">Только для текстов Библии</string>
+	<string name="always_view_verse_numbers_title">Всегда показывать номера стихов</string>
 </resources>

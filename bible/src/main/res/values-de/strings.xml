@@ -136,4 +136,7 @@
     <string name="menu_library_add">Add…</string>
     <string name="exception_add_module_from_file">This feature is not available! Install a file manager.</string>
     <string name="notify_dialog_title">Error</string>
+    <string name="always_view_verse_numbers_disabled">Nur die Bibeltexte </string>
+    <string name="always_view_verse_numbers_enabled">Alle Texte</string>
+    <string name="always_view_verse_numbers_title">Immer sehen Versnummern</string>
 </resources>
