@@ -10,10 +10,10 @@ public class BibleReference {
 	public final static String MOD_DATASOURCE_FS = "fs";
 	public final static String MOD_DATASOURCE_DB = "db";
 
-	private final String TAG = "LinkOSIS";
-	private final String SEP_GROUPS = "\\;";
-	private final String SEP_VALUES = "\\:";
-	private final String SEP_SHORT = "\\.";
+	private static final String TAG = "LinkOSIS";
+	private static final String SEP_GROUPS = "\\;";
+	private static final String SEP_VALUES = "\\:";
+	private static final String SEP_SHORT = "\\.";
 
 	private String OSISLinkPath = null;
 	private String moduleDatasource = null;

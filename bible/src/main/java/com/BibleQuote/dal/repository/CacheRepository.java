@@ -5,7 +5,7 @@ import com.BibleQuote.utils.Log;
 import com.BibleQuote.exceptions.FileAccessException;
 
 public class CacheRepository<T> {
-	private final String TAG = "CacheRepository";
+	private static final String TAG = "CacheRepository";
 
 	private CacheContext cacheContext;
 

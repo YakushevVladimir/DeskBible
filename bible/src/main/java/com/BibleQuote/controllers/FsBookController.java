@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 public class FsBookController implements IBookController {
-	private final String TAG = "FsBookController";
+	private static final String TAG = "FsBookController";
 
 	private IBookRepository<FsModule, FsBook> bRepository;
 	private IModuleRepository<String, FsModule> mRepository;

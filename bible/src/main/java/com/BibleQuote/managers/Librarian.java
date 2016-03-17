@@ -48,7 +48,7 @@ import java.util.*;
 
 public class Librarian {
 
-	private final String TAG = "Librarian";
+	private static final String TAG = "Librarian";
 
 	private LinkedHashMap<String, String> searchResults = new LinkedHashMap<String, String>();
 

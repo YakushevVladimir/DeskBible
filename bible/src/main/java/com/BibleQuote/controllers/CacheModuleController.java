@@ -8,7 +8,7 @@ import com.BibleQuote.exceptions.FileAccessException;
 import java.util.ArrayList;
 
 public class CacheModuleController<TModule> {
-	private final String TAG = "CacheRepository";
+	private static final String TAG = "CacheRepository";
 
 	private CacheRepository<ArrayList<TModule>> cacheRepository;
 

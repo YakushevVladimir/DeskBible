@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class FsChapterRepository implements IChapterRepository<FsBook> {
-	private final String TAG = "FsChapterRepository";
+	private static final String TAG = "FsChapterRepository";
 	private FsLibraryContext context;
 
 	public FsChapterRepository(FsLibraryContext context) {

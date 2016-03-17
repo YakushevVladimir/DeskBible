@@ -26,7 +26,7 @@ import com.BibleQuote.exceptions.OpenModuleException;
 import com.BibleQuote.managers.Librarian;
 
 public class StartSearch implements AsyncCommand.ICommand {
-    private final String TAG = "StartSearch";
+    private static final String TAG = "StartSearch";
     private String query, fromBookID, toBookID;
     private Context context;
 
