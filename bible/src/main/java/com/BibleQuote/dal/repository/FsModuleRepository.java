@@ -37,7 +37,7 @@ import java.util.TreeMap;
 
 public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 
-	private final String TAG = "FsModuleRepository";
+	private static final String TAG = "FsModuleRepository";
 	private FsLibraryContext context;
 	private CacheModuleController<FsModule> cache;
 

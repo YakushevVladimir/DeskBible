@@ -42,7 +42,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class FsLibraryContext extends LibraryContext {
-    private final String TAG = "FsLibraryContext";
+    private static final String TAG = "FsLibraryContext";
     public CacheModuleController<FsModule> cache;
     private File libraryDir = null;
 
