@@ -24,8 +24,8 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.webkit.*;
-import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.listeners.IReaderViewListener;
+import com.BibleQuote.utils.PreferenceHelper;
 
 import java.util.ArrayList;
 import java.util.TreeSet;
@@ -121,18 +121,18 @@ public class ReaderWebView extends WebView
 		String modStyle = isBible ? "bible_style.css" : "book_style.css";
 
 		StringBuilder html = new StringBuilder();
-		html.append("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\r\n");
-		html.append("<html>\r\n");
-		html.append("<head>\r\n");
-		html.append("<meta http-equiv=Content-Type content=\"text/html; charset=UTF-8\">\r\n");
-		html.append("<script language=\"JavaScript\" src=\"file:///android_asset/reader.js\" type=\"text/javascript\"></script>\r\n");
-		html.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"file:///android_asset/").append(modStyle).append("\">\r\n");
-		html.append(getStyle(nightMode));
-		html.append("</head>\r\n");
-		html.append("<body").append(currVerse > 1 ? (" onLoad=\"document.location.href='#verse_" + currVerse + "';\"") : "").append(">\r\n");
-		html.append(text);
-		html.append("</body>\r\n");
-		html.append("</html>");
+		html.append("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\r\n")
+				.append("<html>\r\n")
+				.append("<head>\r\n")
+				.append("<meta http-equiv=Content-Type content=\"text/html; charset=UTF-8\">\r\n")
+				.append("<script language=\"JavaScript\" src=\"file:///android_asset/reader.js\" type=\"text/javascript\"></script>\r\n")
+				.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"file:///android_asset/").append(modStyle).append("\">\r\n")
+				.append(getStyle(nightMode))
+				.append("</head>\r\n")
+				.append("<body").append(currVerse > 1 ? (" onLoad=\"document.location.href='#verse_" + currVerse + "';\"") : "").append(">\r\n")
+				.append(text)
+				.append("</body>\r\n")
+				.append("</html>");
 
 		loadDataWithBaseURL("file://" + baseUrl, html.toString(), "text/html", "UTF-8", "about:config");
 		jsInterface.clearSelectedVerse();
@@ -184,28 +184,28 @@ public class ReaderWebView extends WebView
 		String textSize = PreferenceHelper.getTextSize();
 
 		StringBuilder style = new StringBuilder();
-		style.append("<style type=\"text/css\">\r\n");
-		style.append("body {\r\n");
-		style.append("padding-bottom: 50px;\r\n");
+		style.append("<style type=\"text/css\">\r\n")
+				.append("body {\r\n")
+				.append("padding-bottom: 50px;\r\n");
 		if (PreferenceHelper.textAlignJustify()) {
 			style.append("text-align: justify;\r\n");
 		}
-		style.append("color: ").append(textColor).append(";\r\n");
-		style.append("font-size: ").append(textSize).append("pt;\r\n");
-		style.append("line-height: 1.25;\r\n");
-		style.append("background: ").append(backColor).append(";\r\n");
-		style.append("}\r\n");
-		style.append(".verse {\r\n");
-		style.append("background: ").append(backColor).append(";\r\n");
-		style.append("}\r\n");
-		style.append(".selectedVerse {\r\n");
-		style.append("color: ").append(selTextColor).append(";\r\n");
-		style.append("background: ").append(selTextBack).append(";\r\n");
-		style.append("}\r\n");
-		style.append("img {\r\n");
-		style.append("max-width: 100%;\r\n");
-		style.append("}\r\n");
-		style.append("</style>\r\n");
+		style.append("color: ").append(textColor).append(";\r\n")
+				.append("font-size: ").append(textSize).append("pt;\r\n")
+				.append("line-height: 1.25;\r\n")
+				.append("background: ").append(backColor).append(";\r\n")
+				.append("}\r\n")
+				.append(".verse {\r\n")
+				.append("background: ").append(backColor).append(";\r\n")
+				.append("}\r\n")
+				.append(".selectedVerse {\r\n")
+				.append("color: ").append(selTextColor).append(";\r\n")
+				.append("background: ").append(selTextBack).append(";\r\n")
+				.append("}\r\n")
+				.append("img {\r\n")
+				.append("max-width: 100%;\r\n")
+				.append("}\r\n")
+				.append("</style>\r\n");
 
 		return style.toString();
 	}
