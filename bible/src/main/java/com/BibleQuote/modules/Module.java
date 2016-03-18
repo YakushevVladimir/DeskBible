@@ -32,9 +32,9 @@ public abstract class Module implements Serializable {
     public String ChapterSign = "";
     public String VerseSign = "";
     public String HtmlFilter = "";
-    public boolean ChapterZero = false;
-    public boolean containsStrong = false;
-    public boolean isBible = false;
+    public boolean ChapterZero;
+    public boolean containsStrong;
+    public boolean isBible;
     public String defaultEncoding = "utf-8";
     public String language = "ru_RU";
     public Map<String, Book> Books = new LinkedHashMap<String, Book>();    // to lazy loading on demand

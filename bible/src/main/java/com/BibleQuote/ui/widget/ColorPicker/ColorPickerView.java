@@ -154,10 +154,10 @@ public class ColorPickerView extends View{
 	/* Current values */
 	private int			mAlpha = 0xff;
 	private float		mHue = 360f;
-	private float 		mSat = 0f;
-	private float 		mVal = 0f;
+	private float 		mSat;
+	private float 		mVal;
 
-	private boolean		mShowAlphaPanel = false;
+	private boolean		mShowAlphaPanel;
 	private String		mAlphaSliderText = null;
 	private int 		mSliderTrackerColor = DEFAULT_SLIDER_COLOR;
 	private int 		mBorderColor = DEFAULT_BORDER_COLOR;
@@ -182,7 +182,7 @@ public class ColorPickerView extends View{
 	private Rect 	mHueRect;
 	private Rect	mAlphaRect;
 
-	private Point	mStartTouchPoint = null;
+	private Point	mStartTouchPoint;
 
 	private AlphaPatternDrawable 	mAlphaPattern;
 	private OnColorChangedListener	mListener;

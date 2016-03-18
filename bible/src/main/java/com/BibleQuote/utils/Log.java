@@ -31,7 +31,7 @@ import java.util.Locale;
  * @author Владимир Якушев (ru.phoenix@gmail.com)
  */
 public class Log {
-	static private File logFile = null;
+	static private File logFile;
 
 	/**
 	 * Подготовка файла-протокола событий. Создание нового файла,

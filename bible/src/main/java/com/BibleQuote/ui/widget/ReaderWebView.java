@@ -89,7 +89,7 @@ public class ReaderWebView extends WebView
 		}
 	}
 
-	public boolean mPageLoaded = false;
+	public boolean mPageLoaded;
 
 	@SuppressLint("AddJavascriptInterface")
 	public ReaderWebView(Context mContext, AttributeSet attributeSet) {

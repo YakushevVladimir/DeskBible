@@ -57,7 +57,7 @@ public class LibraryActivity extends BibleQuoteActivity implements OnTaskComplet
     private ArrayList<ItemList> modules = new ArrayList<ItemList>();
     private ArrayList<ItemList> books = new ArrayList<ItemList>();
     private ArrayList<String> chapters = new ArrayList<String>();
-    private int modulePos = 0, bookPos = 0, chapterPos = 0;
+    private int modulePos, bookPos, chapterPos;
     private Librarian myLibrarian;
     private View.OnClickListener onBtnModuleClick = new View.OnClickListener() {
         @Override

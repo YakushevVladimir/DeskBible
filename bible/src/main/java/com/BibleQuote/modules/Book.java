@@ -30,8 +30,7 @@ public abstract class Book implements Serializable {
 	/**
 	 * Количество глав в книге
 	 */
-	public Integer chapterQty = 0;
-
+	public Integer chapterQty; 
 	private Module module;
 	private ArrayList<String> chapterNumbers = new ArrayList<String>();
 

@@ -44,7 +44,7 @@ import java.util.regex.Pattern;
 public class FsLibraryContext extends LibraryContext {
     private static final String TAG = "FsLibraryContext";
     public CacheModuleController<FsModule> cache;
-    private File libraryDir = null;
+    private File libraryDir;
 
     public FsLibraryContext(File libraryDir, Context context, CacheModuleController<FsModule> cache) {
         super(context);

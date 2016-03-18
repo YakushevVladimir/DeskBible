@@ -33,7 +33,7 @@ public abstract class Task extends AsyncTask<String, String, Boolean> {
 	 */
 	private IProgressTracker mProgressTracker;
 
-	private Boolean mIsHidden = false;
+	private Boolean mIsHidden;
 
 	@Override
 	protected abstract Boolean doInBackground(String... arg0);
