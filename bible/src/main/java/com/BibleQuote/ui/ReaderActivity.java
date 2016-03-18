@@ -303,10 +303,10 @@ public class ReaderActivity extends BibleQuoteActivity implements OnTaskComplete
     }
 
     public void setTextInWebView() {
-        BibleReference OSISLink = myLibrarian.getCurrentOSISLink();
-        vWeb.setText(myLibrarian.getBaseUrl(), chapterInHTML, OSISLink.getFromVerse(), nightMode, myLibrarian.isBible());
+        BibleReference osisLink = myLibrarian.getCurrentOSISLink();
+        vWeb.setText(myLibrarian.getBaseUrl(), chapterInHTML, osisLink.getFromVerse(), nightMode, myLibrarian.isBible());
 
-        PreferenceHelper.saveStateString("last_read", OSISLink.getExtendedPath());
+        PreferenceHelper.saveStateString("last_read", osisLink.getExtendedPath());
 
         vModuleName.setText(myLibrarian.getModuleName());
         vBookLink.setText(myLibrarian.getHumanBookLink());

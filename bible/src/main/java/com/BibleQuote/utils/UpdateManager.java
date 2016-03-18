@@ -24,19 +24,19 @@ public class UpdateManager {
 
 	static public void Init(Context context) {
 
-		SharedPreferences Settings = PreferenceManager.getDefaultSharedPreferences(context);
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
 
 		String state = Environment.getExternalStorageState();
 
 		if (Environment.MEDIA_MOUNTED.equals(state)) {
-			File dir_modules = new File(DataConstants.FS_EXTERNAL_DATA_PATH);
-			if (!dir_modules.exists()) {
-				Log.i(TAG, String.format("Create directory %1$s", dir_modules));
-				dir_modules.mkdirs();
+			File dirModules = new File(DataConstants.FS_EXTERNAL_DATA_PATH);
+			if (!dirModules.exists()) {
+				Log.i(TAG, String.format("Create directory %1$s", dirModules));
+				dirModules.mkdirs();
 			}
 		}
 
-		int currVersionCode = Settings.getInt("versionCode", 0);
+		int currVersionCode = settings.getInt("versionCode", 0);
 
 		boolean updateModules = false;
 		if (currVersionCode == 0 && Environment.MEDIA_MOUNTED.equals(state)) {
@@ -65,9 +65,9 @@ public class UpdateManager {
 
 		try {
 			int versionCode = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode;
-			Settings.edit().putInt("versionCode", versionCode).commit();
+			settings.edit().putInt("versionCode", versionCode).commit();
 		} catch (NameNotFoundException e) {
-			Settings.edit().putInt("versionCode", 39).commit();
+			settings.edit().putInt("versionCode", 39).commit();
 		}
 	}
 
@@ -133,22 +133,22 @@ public class UpdateManager {
 			if (isReader == null) {
 				return;
 			}
-			BufferedReader tsk_br = new BufferedReader(isReader);
+			BufferedReader tskBr = new BufferedReader(isReader);
 
 			File tskFile = new File(DataConstants.FS_APP_DIR_NAME, "tsk.xml");
 			if (tskFile.exists()) {
 				tskFile.delete();
 			}
-			BufferedWriter tsk_bw = new BufferedWriter(new FileWriter(tskFile));
+			BufferedWriter tskBw = new BufferedWriter(new FileWriter(tskFile));
 
 			char[] buf = new char[1024];
 			int len;
-			while ((len = tsk_br.read(buf)) > 0) {
-				tsk_bw.write(buf, 0, len);
+			while ((len = tskBr.read(buf)) > 0) {
+				tskBw.write(buf, 0, len);
 			}
-			tsk_bw.flush();
-			tsk_bw.close();
-			tsk_br.close();
+			tskBw.flush();
+			tskBw.close();
+			tskBr.close();
 		} catch (FileNotFoundException e) {
 			Log.e(TAG, e.getMessage());
 		} catch (IOException e) {

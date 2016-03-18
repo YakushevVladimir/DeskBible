@@ -134,10 +134,10 @@ public class SearchActivity extends BibleQuoteActivity implements OnTaskComplete
 			ExceptionHelper.onBookDefinitionException(e, this, TAG);
 		}
 
-		SimpleAdapter AA = new SimpleAdapter(this, books,
+		SimpleAdapter aa = new SimpleAdapter(this, books,
 				android.R.layout.simple_spinner_item,
 				new String[]{ItemList.Name}, new int[]{android.R.id.text1});
-		AA.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		SimpleAdapter.ViewBinder viewBinder = new SimpleAdapter.ViewBinder() {
 			public boolean setViewValue(View view, Object data,
 										String textRepresentation) {
@@ -146,14 +146,14 @@ public class SearchActivity extends BibleQuoteActivity implements OnTaskComplete
 				return true;
 			}
 		};
-		AA.setViewBinder(viewBinder);
+		aa.setViewBinder(viewBinder);
 
 		spinnerFrom = (Spinner) findViewById(R.id.FromBookCB);
-		spinnerFrom.setAdapter(AA);
+		spinnerFrom.setAdapter(aa);
 		spinnerFrom.setOnItemSelectedListener(onClick_FromBook);
 
 		spinnerTo = (Spinner) findViewById(R.id.ToBookCB);
-		spinnerTo.setAdapter(AA);
+		spinnerTo.setAdapter(aa);
 		spinnerTo.setOnItemSelectedListener(onClick_ToBook);
 
 		restoreSelectedPosition();

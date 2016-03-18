@@ -26,12 +26,12 @@ public class BibleReference {
 	private int fromVerse = 1;
 	private int toVerse = 1;
 
-	public BibleReference(String BibleLinkPath) {
-		if (BibleLinkPath == null) {
+	public BibleReference(String bibleLinkPath) {
+		if (bibleLinkPath == null) {
 			return;
 		}
 
-		String[] linkParam = BibleLinkPath.split(SEP_GROUPS);
+		String[] linkParam = bibleLinkPath.split(SEP_GROUPS);
 		if (linkParam.length >= 5) {
             // BibleLinkPath extended path format = ds:fs;id:sd-card/mnt/biblequote/modules/rst;m:RST;b:MARK;ch:1;v:1
             try {
@@ -50,12 +50,12 @@ public class BibleReference {
                     e.printStackTrace();
                 }
             } catch (Exception e) {
-                Log.e(TAG, String.format("OSISLink(%1$s)", BibleLinkPath), e);
+                Log.e(TAG, String.format("OSISLink(%1$s)", bibleLinkPath), e);
             }
 
         } else {
             // BibleLinkPath short path format
-            linkParam = BibleLinkPath.split(SEP_SHORT);
+            linkParam = bibleLinkPath.split(SEP_SHORT);
             if (linkParam.length >= 2) {
                 this.moduleID = linkParam[0];
                 this.bookID = linkParam[1];

@@ -150,8 +150,8 @@ public class BookmarksFragment extends ListFragment implements AdapterView.OnIte
     }
 
     @Override
-    public void onListItemClick(ListView LV, View v, int position, long id) {
-        currBookmark = ((BookmarkItem) LV.getAdapter().getItem(position)).bookmark;
+    public void onListItemClick(ListView lv, View v, int position, long id) {
+        currBookmark = ((BookmarkItem) lv.getAdapter().getItem(position)).bookmark;
         Log.i(TAG, "Select bookmark: " + currBookmark.humanLink + " (OSIS link = " + currBookmark.OSISLink + ")");
 
         BibleReference osisLink = new BibleReference(currBookmark.OSISLink);
@@ -209,9 +209,9 @@ public class BookmarksFragment extends ListFragment implements AdapterView.OnIte
         this.onBookmarksListener = listener;
     }
 
-    private void alertListener(Bookmark OSISLink) {
+    private void alertListener(Bookmark osisLink) {
         if (onBookmarksListener != null) {
-            onBookmarksListener.onBookmarksSelect(OSISLink);
+            onBookmarksListener.onBookmarksSelect(osisLink);
         }
     }
 
@@ -220,7 +220,7 @@ public class BookmarksFragment extends ListFragment implements AdapterView.OnIte
     }
 
     public interface OnBookmarksChangeListener {
-        void onBookmarksSelect(Bookmark OSISLink);
+        void onBookmarksSelect(Bookmark osisLink);
 
         void onBookmarksUpdate();
     }
