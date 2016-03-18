@@ -15,10 +15,10 @@ public class BibleReference {
 	private static final String SEP_VALUES = "\\:";
 	private static final String SEP_SHORT = "\\.";
 
-	private String OSISLinkPath = null;
-	private String moduleDatasource = null;
-	private String moduleDatasourceID = null;
-	private String moduleID = null;
+	private String OSISLinkPath;
+	private String moduleDatasource;
+	private String moduleDatasourceID;
+	private String moduleID;
 
 	private String bookID = "Gen";
 	private String bookName = "Genesis";

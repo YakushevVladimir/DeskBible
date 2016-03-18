@@ -7,7 +7,7 @@ import java.io.*;
 public class CacheContext {
 	//private final String TAG = "CacheContext";
 
-	private File cacheDir = null;
+	private File cacheDir;
 	private String cacheName;
 
 	public CacheContext(File cacheDir, String cacheName) {

@@ -72,8 +72,8 @@ public class ReaderActivity extends BibleQuoteActivity implements OnTaskComplete
     private Task mTask;
     private ActionMode currActionMode;
     private String chapterInHTML = "";
-    private boolean nightMode = false;
-    private boolean exitToBackKey = false;
+    private boolean nightMode;
+    private boolean exitToBackKey;
     private String progressMessage = "";
     private TextView vModuleName;
     private TextView vBookLink;
