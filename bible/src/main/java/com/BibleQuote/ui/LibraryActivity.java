@@ -84,7 +84,7 @@ public class LibraryActivity extends BibleQuoteActivity implements OnTaskComplet
 
             String message = getResources().getString(R.string.messageLoadBooks);
             BibleReference currentOSISLink = myLibrarian.getCurrentOSISLink();
-            BibleReference OSISLink = new BibleReference(
+            BibleReference osisLink = new BibleReference(
                     currentOSISLink.getModuleDatasource(),
                     null,
                     moduleID,
@@ -92,7 +92,7 @@ public class LibraryActivity extends BibleQuoteActivity implements OnTaskComplet
                     currentOSISLink.getChapter(),
                     currentOSISLink.getFromVerse());
 
-            mTask = new AsyncOpenModule(message, false, myLibrarian, OSISLink);
+            mTask = new AsyncOpenModule(message, false, myLibrarian, osisLink);
             mAsyncManager.setupTask(mTask, LibraryActivity.this);
         }
     };

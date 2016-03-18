@@ -23,8 +23,8 @@ public class BookmarksManager {
 		add(ref.getPath(), ref.toString());
 	}
 
-	public long add(String OSISLink, String link) {
-		return bmRepo.add(new Bookmark(OSISLink, link));
+	public long add(String osisLink, String link) {
+		return bmRepo.add(new Bookmark(osisLink, link));
 	}
 
 	public long add(BibleReference ref, String tags) {
@@ -45,8 +45,8 @@ public class BookmarksManager {
 		return bmID;
 	}
 
-	public long add(String OSISLink, String link, String tags) {
-		long bmID = add(OSISLink, link);
+	public long add(String osisLink, String link, String tags) {
+		long bmID = add(osisLink, link);
 		ArrayList<Long> tagIDs = getTagsIDs(tags);
 		new dbBookmarksTagsRepository().add(bmID, tagIDs);
 		return bmID;
