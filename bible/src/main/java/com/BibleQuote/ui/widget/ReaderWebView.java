@@ -38,56 +38,11 @@ public class ReaderWebView extends WebView
 
 	private GestureDetector mGestureScanner;
 	private JavaScriptInterface jsInterface;
-
-	protected TreeSet<Integer> selectedVerse = new TreeSet<Integer>();
-
-	public TreeSet<Integer> getSelectedVerses() {
-		return this.selectedVerse;
-	}
-
-	public void setSelectedVerse(TreeSet<Integer> selectedVerse) {
-		jsInterface.clearSelectedVerse();
-		this.selectedVerse = selectedVerse;
-		for (Integer verse : selectedVerse) {
-			jsInterface.selectVerse(verse);
-		}
-	}
-
-	public void gotoVerse(int verse) {
-		jsInterface.gotoVerse(verse);
-	}
-
-	public enum Mode {
-		Read, Study, Speak
-	}
-
 	private Mode currMode = Mode.Read;
-
-	public void setMode(Mode mode) {
-		currMode = mode;
-		if (currMode != Mode.Study) {
-			clearSelectedVerse();
-		}
-		notifyListeners(IReaderViewListener.ChangeCode.onChangeReaderMode);
-	}
-
-	public Mode getMode() {
-		return currMode;
-	}
-
+	
 	private ArrayList<IReaderViewListener> listeners = new ArrayList<IReaderViewListener>();
 
-	public void setOnReaderViewListener(IReaderViewListener listener) {
-		if (!listeners.contains(listener)) {
-			listeners.add(listener);
-		}
-	}
-
-	private void notifyListeners(IReaderViewListener.ChangeCode code) {
-		for (IReaderViewListener listener : listeners) {
-			listener.onReaderViewChange(code);
-		}
-	}
+	protected TreeSet<Integer> selectedVerse = new TreeSet<Integer>();
 
 	public boolean mPageLoaded;
 
@@ -114,6 +69,50 @@ public class ReaderWebView extends WebView
 		mGestureScanner = new GestureDetector(mContext, this);
 		mGestureScanner.setIsLongpressEnabled(true);
 		mGestureScanner.setOnDoubleTapListener(this);
+	}
+
+	public TreeSet<Integer> getSelectedVerses() {
+		return this.selectedVerse;
+	}
+
+	public void setSelectedVerse(TreeSet<Integer> selectedVerse) {
+		jsInterface.clearSelectedVerse();
+		this.selectedVerse = selectedVerse;
+		for (Integer verse : selectedVerse) {
+			jsInterface.selectVerse(verse);
+		}
+	}
+
+	public void gotoVerse(int verse) {
+		jsInterface.gotoVerse(verse);
+	}
+
+	public enum Mode {
+		Read, Study, Speak
+	}
+
+	public void setMode(Mode mode) {
+		currMode = mode;
+		if (currMode != Mode.Study) {
+			clearSelectedVerse();
+		}
+		notifyListeners(IReaderViewListener.ChangeCode.onChangeReaderMode);
+	}
+
+	public Mode getMode() {
+		return currMode;
+	}
+
+	public void setOnReaderViewListener(IReaderViewListener listener) {
+		if (!listeners.contains(listener)) {
+			listeners.add(listener);
+		}
+	}
+
+	private void notifyListeners(IReaderViewListener.ChangeCode code) {
+		for (IReaderViewListener listener : listeners) {
+			listener.onReaderViewChange(code);
+		}
 	}
 
 	public void setText(String baseUrl, String text, int currVerse, Boolean nightMode, Boolean isBible) {

@@ -9,12 +9,12 @@ public class CacheRepository<T> {
 
 	private CacheContext cacheContext;
 
-	public CacheContext getCacheContext() {
-		return cacheContext;
-	}
-
 	public CacheRepository(CacheContext cacheContext) {
 		this.cacheContext = cacheContext;
+	}
+
+	public CacheContext getCacheContext() {
+		return cacheContext;
 	}
 
 	public T getData() throws FileAccessException {

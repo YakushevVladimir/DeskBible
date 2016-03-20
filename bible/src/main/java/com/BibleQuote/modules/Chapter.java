@@ -14,6 +14,15 @@ public class Chapter {
 	private TreeMap<Integer, Verse> verses = new TreeMap<Integer, Verse>();
 	private Book book;
 
+	public Chapter(Book book, Integer number, ArrayList<Verse> verseList) {
+		this.book = book;
+		this.number = number;
+
+		Integer verseNumber = 1;
+		for (Verse verse : verseList) {
+			verses.put(verseNumber++, verse);
+		}
+	}
 
 	public Integer getNumber() {
 		return number;
@@ -81,16 +90,6 @@ public class Chapter {
 			verseList.add(verses.get(verse));
 		}
 		return verseList;
-	}
-
-	public Chapter(Book book, Integer number, ArrayList<Verse> verseList) {
-		this.book = book;
-		this.number = number;
-
-		Integer verseNumber = 1;
-		for (Verse verse : verseList) {
-			verses.put(verseNumber++, verse);
-		}
 	}
 
 	public Book getBook() {

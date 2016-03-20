@@ -35,6 +35,8 @@ public class PlayerView extends LinearLayout {
 
 	ImageButton play, pause;
 
+	private ArrayList<OnClickListener> listeners = new ArrayList<OnClickListener>();
+
 	public PlayerView(Context context) {
 		super(context);
 		init();
@@ -62,8 +64,6 @@ public class PlayerView extends LinearLayout {
 	public interface OnClickListener {
 		public void onClick(Event ev);
 	}
-
-	private ArrayList<OnClickListener> listeners = new ArrayList<OnClickListener>();
 
 	private void notify(Event ev) {
 		for (OnClickListener listener : listeners) {
