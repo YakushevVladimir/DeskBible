@@ -34,6 +34,13 @@ public abstract class Book implements Serializable {
 	private Module module;
 	private ArrayList<String> chapterNumbers = new ArrayList<String>();
 
+	public Book(Module module, String name, String shortNames, int chapterQty) {
+		this.name = name;
+		this.chapterQty = chapterQty;
+		this.module = module;
+		setShortNames(shortNames);
+		setID();
+	}
 
 	/**
 	 * @return Возвращает краткое имя книги. являющееся первым в списке кратких имен
@@ -59,14 +66,6 @@ public abstract class Book implements Serializable {
 
 	public Module getModule() {
 		return module;
-	}
-
-	public Book(Module module, String name, String shortNames, int chapterQty) {
-		this.name = name;
-		this.chapterQty = chapterQty;
-		this.module = module;
-		setShortNames(shortNames);
-		setID();
 	}
 
 	private void setID() {

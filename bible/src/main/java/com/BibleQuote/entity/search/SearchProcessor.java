@@ -83,16 +83,16 @@ public class SearchProcessor {
         private String bookID;
         private String query;
 
-		public String getBookID() {
-			return bookID;
-		}
-
 		private SearchThread(CountDownLatch latch, Module module, String bookID, String query) {
             this.latch = latch;
 			this.module = module;
 			this.bookID = bookID;
 			this.query = query;
 		}
+
+        public String getBookID() {
+            return bookID;
+        }
 
 		@Override
 		public void run() {

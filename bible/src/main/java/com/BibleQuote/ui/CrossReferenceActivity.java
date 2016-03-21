@@ -56,6 +56,18 @@ public class CrossReferenceActivity extends BibleQuoteActivity implements OnTask
 
 	private ListView LV;
 
+	private AdapterView.OnItemClickListener list_OnClick = new AdapterView.OnItemClickListener() {
+		public void onItemClick(AdapterView<?> a, View v, int position, long id) {
+			String key = ((TextItem) a.getAdapter().getItem(position)).text;
+			BibleReference ref = crossReference.get(key);
+
+			Intent intent = new Intent();
+			intent.putExtra("linkOSIS", ref.getPath());
+			setResult(RESULT_OK, intent);
+			finish();
+		}
+	};
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -94,18 +106,6 @@ public class CrossReferenceActivity extends BibleQuoteActivity implements OnTask
 			mAsyncManager.setupTask(mTask, this);
 		}
 	}
-
-	private AdapterView.OnItemClickListener list_OnClick = new AdapterView.OnItemClickListener() {
-		public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-			String key = ((TextItem) a.getAdapter().getItem(position)).text;
-			BibleReference ref = crossReference.get(key);
-
-			Intent intent = new Intent();
-			intent.putExtra("linkOSIS", ref.getPath());
-			setResult(RESULT_OK, intent);
-			finish();
-		}
-	};
 
 	@Override
 	public void onTaskComplete(Task task) {

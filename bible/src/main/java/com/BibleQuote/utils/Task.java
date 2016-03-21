@@ -35,6 +35,11 @@ public abstract class Task extends AsyncTask<String, String, Boolean> {
 
 	private Boolean mIsHidden;
 
+	public Task(String message, Boolean isHidden) {
+		mProgressMessage = message;
+		mIsHidden = isHidden;
+	}
+
 	@Override
 	protected abstract Boolean doInBackground(String... arg0);
 
@@ -48,11 +53,6 @@ public abstract class Task extends AsyncTask<String, String, Boolean> {
 		}
 		// Detach from progress tracker
 		mProgressTracker = null;
-	}
-
-	public Task(String message, Boolean isHidden) {
-		mProgressMessage = message;
-		mIsHidden = isHidden;
 	}
 
 	public void setProgressTracker(IProgressTracker progressTracker) {

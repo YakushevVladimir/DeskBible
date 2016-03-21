@@ -39,19 +39,27 @@ public class LibraryController {
 
 	private IModuleController moduleCtrl;
 	private LibraryContext libraryContext;
+	private IBookController bookCtrl;
+	private IChapterController chapterCtrl;
+	
+	private LibraryController(FsLibraryContext context, CacheContext cacheContext) {
+		LibraryUnitOfWork unit = new LibraryUnitOfWork(context, cacheContext);
+		libraryContext = context;
+		moduleCtrl = new FsModuleController(unit);
+		bookCtrl = new FsBookController(unit);
+		chapterCtrl = new FsChapterController(unit);
+	}
+
+	public IChapterController getChapterCtrl() {
+		return chapterCtrl;
+	}
 
 	public IModuleController getModuleCtrl() {
 		return moduleCtrl;
 	}
 
-	private IBookController bookCtrl;
 	public IBookController getBookCtrl() {
 		return bookCtrl;
-	}
-
-	private IChapterController chapterCtrl;
-	public IChapterController getChapterCtrl() {
-		return chapterCtrl;
 	}
 
 	public static LibraryController getInstance(Context context) {
@@ -73,13 +81,5 @@ public class LibraryController {
 
 	public LibraryContext getContext() {
 		return libraryContext;
-	}
-
-	private LibraryController(FsLibraryContext context, CacheContext cacheContext) {
-		LibraryUnitOfWork unit = new LibraryUnitOfWork(context, cacheContext);
-		libraryContext = context;
-		moduleCtrl = new FsModuleController(unit);
-		bookCtrl = new FsBookController(unit);
-		chapterCtrl = new FsChapterController(unit);
 	}
 }
