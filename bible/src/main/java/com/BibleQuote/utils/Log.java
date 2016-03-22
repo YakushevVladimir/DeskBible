@@ -30,8 +30,12 @@ import java.util.Locale;
  *
  * @author Владимир Якушев (ru.phoenix@gmail.com)
  */
-public class Log {
+public final class Log {
 	static private File logFile;
+
+	private Log() throws InstantiationException {
+		throw new InstantiationException("This class is not for instantiation");
+	}
 
 	/**
 	 * Подготовка файла-протокола событий. Создание нового файла,

@@ -9,6 +9,11 @@ import android.util.TypedValue;
  * @version 1.0 of 03.2016
  */
 public class DrawingUtils {
+
+    private DrawingUtils() throws InstantiationException {
+        throw new InstantiationException("This class is not for instantiation");
+    }
+
     public static int dpToPx(Context c, float dipValue) {
         DisplayMetrics metrics = c.getResources().getDisplayMetrics();
         float val = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dipValue, metrics);

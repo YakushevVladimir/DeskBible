@@ -21,7 +21,11 @@ import android.util.Log;
 import com.BibleQuote.R;
 import com.BibleQuote.utils.NotifyDialog;
 
-public class ExceptionHelper {
+public final class ExceptionHelper {
+
+    private ExceptionHelper() throws InstantiationException {
+        throw new InstantiationException("This class is not for instantiation");
+    }
 
     public static void onException(Exception ex, Context context, String tag) {
         String message = ex.getMessage();

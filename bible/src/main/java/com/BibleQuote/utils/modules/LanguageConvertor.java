@@ -21,7 +21,12 @@ package com.BibleQuote.utils.modules;
  * Date: 10.02.13
  * Time: 0:35
  */
-public class LanguageConvertor {
+public final class LanguageConvertor {
+	
+	private LanguageConvertor() throws InstantiationException {
+		throw new InstantiationException("This class is not for instantiation");
+	}
+
 	public static String getISOLanguage(String language) {
 		language = language.toLowerCase();
 		if (language.equals("русский") || language.equals("russian")) {

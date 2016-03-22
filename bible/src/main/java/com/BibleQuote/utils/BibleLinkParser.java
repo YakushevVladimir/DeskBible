@@ -5,12 +5,16 @@ import com.BibleQuote.entity.BibleReference;
 
 import java.util.LinkedHashSet;
 
-public class BibleLinkParser {
+public final class BibleLinkParser {
 
 
 	//private static final String VERSE_SEPARATOR = ":";
 	private static final String TO_VERSE_SEPARATOR = "-";
 	private static final String LINK_SEPARATOR = ";";
+
+	private BibleLinkParser() throws InstantiationException {
+		throw new InstantiationException("This class is not for instantiation");
+	}
 
 	public static LinkedHashSet<BibleReference> parse(String moduleID, String references) {
 

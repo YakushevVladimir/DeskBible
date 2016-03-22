@@ -20,7 +20,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-public class PreferenceHelper {
+public final class PreferenceHelper {
 
 	private final static String TAG = "Share";
 
@@ -28,6 +28,10 @@ public class PreferenceHelper {
 
 	private static Context mContext;
 	private static SharedPreferences preference;
+
+	private PreferenceHelper() throws InstantiationException {
+		throw new InstantiationException("This class is not for instantiation");
+	}
 
 	static public void Init(Context context) {
 		mContext = context;
