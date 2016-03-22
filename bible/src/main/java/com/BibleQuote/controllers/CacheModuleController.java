@@ -7,25 +7,25 @@ import com.BibleQuote.exceptions.FileAccessException;
 
 import java.util.ArrayList;
 
-public class CacheModuleController<TModule> {
+public class CacheModuleController<T> {
 	private static final String TAG = "CacheRepository";
 
-	private CacheRepository<ArrayList<TModule>> cacheRepository;
+	private CacheRepository<ArrayList<T>> cacheRepository;
 
 	public CacheModuleController(CacheContext cacheContext) {
 		this.cacheRepository = getCacheRepository(cacheContext);
 	}
 
-	public ArrayList<TModule> getModuleList() {
+	public ArrayList<T> getModuleList() {
 		Log.i(TAG, "Get module list");
 		try {
 			return cacheRepository.getData();
 		} catch (FileAccessException e) {
-			return new ArrayList<TModule>();
+			return new ArrayList<T>();
 		}
 	}
 
-	public void saveModuleList(ArrayList<TModule> moduleList) {
+	public void saveModuleList(ArrayList<T> moduleList) {
 		Log.i(TAG, "Save modules list to cache");
 		try {
 			cacheRepository.saveData(moduleList);
@@ -38,9 +38,9 @@ public class CacheModuleController<TModule> {
 		return cacheRepository.isCacheExist();
 	}
 
-	private CacheRepository<ArrayList<TModule>> getCacheRepository(CacheContext cacheContext) {
+	private CacheRepository<ArrayList<T>> getCacheRepository(CacheContext cacheContext) {
 		if (this.cacheRepository == null) {
-			this.cacheRepository = new CacheRepository<ArrayList<TModule>>(cacheContext);
+			this.cacheRepository = new CacheRepository<ArrayList<T>>(cacheContext);
 		}
 		return cacheRepository;
 	}

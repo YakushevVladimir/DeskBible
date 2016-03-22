@@ -27,7 +27,7 @@ import com.BibleQuote.modules.Module;
 
 import java.util.Map;
 
-public interface IModuleRepository<TModuleId, TModule> {
+public interface IModuleRepository<T> {
 
 	/**
 	 * Загрузка списка модулей из хранилища без чтения данных.
@@ -36,11 +36,11 @@ public interface IModuleRepository<TModuleId, TModule> {
 	 */
 	Map<String, Module> loadFileModules();
 
-	void insertModule(TModule module);
+	void insertModule(T module);
 
 	void deleteModule(String moduleID);
 
-	void updateModule(TModule module);
+	void updateModule(T module);
 
 	void loadModule(String path) throws OpenModuleException;
 
@@ -53,6 +53,6 @@ public interface IModuleRepository<TModuleId, TModule> {
 	 * @param moduleID - ShortName модуля
 	 * @return Возвращает модуль из коллекции по его ShortName
 	 */
-	TModule getModuleByID(String moduleID);
+	T getModuleByID(String moduleID);
 
 }
