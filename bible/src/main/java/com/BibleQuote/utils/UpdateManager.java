@@ -18,9 +18,13 @@ import java.util.ArrayList;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-public class UpdateManager {
+public final class UpdateManager {
 
 	private final static String TAG = "UpdateManager";
+
+	private UpdateManager() throws InstantiationException {
+		throw new InstantiationException("This class is not for instantiation");
+	}
 
 	static public void Init(Context context) {
 
