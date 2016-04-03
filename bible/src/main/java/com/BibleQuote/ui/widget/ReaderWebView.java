@@ -23,9 +23,15 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.webkit.*;
-import com.BibleQuote.utils.PreferenceHelper;
+import android.webkit.JavascriptInterface;
+import android.webkit.JsResult;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+
 import com.BibleQuote.listeners.IReaderViewListener;
+import com.BibleQuote.utils.PreferenceHelper;
 
 import java.util.ArrayList;
 import java.util.TreeSet;
@@ -38,17 +44,16 @@ public class ReaderWebView extends WebView
     public static final int MIN_SWIPE_X = 100;
     public static final int MIN_SWIPE_Y = 50;
 
-	static final String TAG = "ReaderWebView";
+	private static final String TAG = "ReaderWebView";
 
-	private GestureDetector mGestureScanner;
+    public boolean mPageLoaded;
+
+    protected TreeSet<Integer> selectedVerse = new TreeSet<Integer>();
+
+    private GestureDetector mGestureScanner;
 	private JavaScriptInterface jsInterface;
 	private Mode currMode = Mode.Read;
-	
 	private ArrayList<IReaderViewListener> listeners = new ArrayList<IReaderViewListener>();
-
-	protected TreeSet<Integer> selectedVerse = new TreeSet<Integer>();
-
-	public boolean mPageLoaded;
 
 	@SuppressLint("AddJavascriptInterface")
 	public ReaderWebView(Context mContext, AttributeSet attributeSet) {
@@ -91,8 +96,8 @@ public class ReaderWebView extends WebView
 		jsInterface.gotoVerse(verse);
 	}
 
-	public enum Mode {
-		Read, Study, Speak
+	public Mode getMode() {
+		return currMode;
 	}
 
 	public void setMode(Mode mode) {
@@ -101,10 +106,6 @@ public class ReaderWebView extends WebView
 			clearSelectedVerse();
 		}
 		notifyListeners(IReaderViewListener.ChangeCode.onChangeReaderMode);
-	}
-
-	public Mode getMode() {
-		return currMode;
 	}
 
 	public void setOnReaderViewListener(IReaderViewListener listener) {
@@ -213,21 +214,6 @@ public class ReaderWebView extends WebView
 		return style.toString();
 	}
 
-	final class webClient extends WebViewClient {
-		webClient() {
-		}
-
-		public boolean shouldOverrideUrlLoading(WebView view, String url) {
-			Log.i(TAG, "shouldOverrideUrlLoading(" + url + ")");
-			return true;
-		}
-
-		public void onPageFinished(WebView paramWebView, String paramString) {
-			super.onPageFinished(paramWebView, paramString);
-			mPageLoaded = true;
-		}
-	}
-
 	public boolean onTouchEvent(MotionEvent event) {
 		return mGestureScanner.onTouchEvent(event) || (event != null && super.onTouchEvent(event));
 	}
@@ -308,7 +294,26 @@ public class ReaderWebView extends WebView
 		return false;
 	}
 
-	final class chromeClient extends WebChromeClient {
+	public enum Mode {
+		Read, Study, Speak
+	}
+
+	private final class webClient extends WebViewClient {
+		webClient() {
+		}
+
+		public boolean shouldOverrideUrlLoading(WebView view, String url) {
+			Log.i(TAG, "shouldOverrideUrlLoading(" + url + ")");
+			return true;
+		}
+
+		public void onPageFinished(WebView paramWebView, String paramString) {
+			super.onPageFinished(paramWebView, paramString);
+			mPageLoaded = true;
+		}
+	}
+
+    private final class chromeClient extends WebChromeClient {
 		chromeClient() {
 		}
 
@@ -320,7 +325,7 @@ public class ReaderWebView extends WebView
 		}
 	}
 
-	final class JavaScriptInterface {
+    private final class JavaScriptInterface {
 
 		public JavaScriptInterface() {
 			clearSelectedVerse();
