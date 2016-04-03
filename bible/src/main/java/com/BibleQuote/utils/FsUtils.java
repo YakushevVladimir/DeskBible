@@ -24,15 +24,21 @@ package com.BibleQuote.utils;
 import android.content.Context;
 import android.content.res.Resources;
 import android.util.Log;
+
 import com.BibleQuote.R;
 import com.BibleQuote.controllers.LibraryController;
 import com.BibleQuote.exceptions.FileAccessException;
 import com.BibleQuote.exceptions.OpenModuleException;
-import org.apache.http.util.ByteArrayBuffer;
 
-import java.io.*;
-import java.net.URL;
-import java.net.URLConnection;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileFilter;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UTFDataFormatException;
 import java.util.ArrayList;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -114,37 +120,37 @@ public class FsUtils {
 
 	}
 
-	public static boolean loadContentFromURL(String fromURL, String toFile) {
-		try {
-			URL url = new URL("http://bible-desktop.com/xml" + fromURL);
-			File file = new File(toFile);
-	
-			/* Open a connection to that URL. */
-			URLConnection ucon = url.openConnection();
-	
-			/* Define InputStreams to read from the URLConnection */
-			InputStream is = ucon.getInputStream();
-			BufferedInputStream bis = new BufferedInputStream(is);
-	
-			/* Read bytes to the Buffer until there is nothing more to read(-1) */
-			ByteArrayBuffer baf = new ByteArrayBuffer(50);
-			int current;
-			while ((current = bis.read()) != -1) {
-				baf.append((byte) current);
-			}
-	
-			/* Convert the Bytes read to a String. */
-			FileOutputStream fos = new FileOutputStream(file);
-			fos.write(baf.toByteArray());
-			fos.close();
-
-		} catch (IOException e) {
-			Log.e(TAG, String.format("loadContentFromURL(%1$s, %2$s)", fromURL, toFile), e);
-			return false;
-		}
-
-		return true;
-	}
+//	public static boolean loadContentFromURL(String fromURL, String toFile) {
+//		try {
+//			URL url = new URL("http://bible-desktop.com/xml" + fromURL);
+//			File file = new File(toFile);
+//
+//			/* Open a connection to that URL. */
+//			URLConnection ucon = url.openConnection();
+//
+//			/* Define InputStreams to read from the URLConnection */
+//			InputStream is = ucon.getInputStream();
+//			BufferedInputStream bis = new BufferedInputStream(is);
+//
+//			/* Read bytes to the Buffer until there is nothing more to read(-1) */
+//			ByteArrayBuffer baf = new ByteArrayBuffer(50);
+//			int current;
+//			while ((current = bis.read()) != -1) {
+//				baf.append((byte) current);
+//			}
+//
+//			/* Convert the Bytes read to a String. */
+//			FileOutputStream fos = new FileOutputStream(file);
+//			fos.write(baf.toByteArray());
+//			fos.close();
+//
+//		} catch (IOException e) {
+//			Log.e(TAG, String.format("loadContentFromURL(%1$s, %2$s)", fromURL, toFile), e);
+//			return false;
+//		}
+//
+//		return true;
+//	}
 
 	public static BufferedReader OpenFile(File file, String encoding) {
 		Log.i(TAG, "FileUtilities.OpenFile(" + file + ", " + encoding + ")");

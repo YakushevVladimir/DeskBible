@@ -138,4 +138,5 @@
     <string name="always_view_verse_numbers_disabled">Bare de bibeltekstene </string>
     <string name="always_view_verse_numbers_enabled">Alle tekster</string>
     <string name="always_view_verse_numbers_title"> Alltid se vers</string>
+    <string name="choice_chapter">åpen...</string>
 </resources>

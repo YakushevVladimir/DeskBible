@@ -39,5 +39,6 @@
     <dimen name="app_defaultsize_h">598.0dip</dimen>
     <dimen name="app_minimumsize_w">632.0dip</dimen>
     <dimen name="app_minimumsize_h">598.0dip</dimen>
+    <dimen name="default_margin">16dp</dimen>
 
 </resources>

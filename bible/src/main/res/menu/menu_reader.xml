@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2011 Scripture Software (http://scripturesoftware.org/)
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,59 +13,35 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<menu
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto">
-	<item
-		android:id="@id/action_bar_chooseCh"
-		android:orderInCategory="0"
-		android:icon="@drawable/ic_action_select"
-		app:showAsAction="always"/>
-	<item
-		android:title="@string/menu_search"
-		android:id="@id/action_bar_search"
-		android:orderInCategory="1"
-		android:icon="@drawable/ic_action_search"
-		app:showAsAction="always|withText"/>
-	<item
-		android:title="@string/menu_history"
-		android:id="@id/action_bar_history"
-		android:orderInCategory="2"
-		android:icon="@drawable/ic_action_history"
-		app:showAsAction="withText|always"/>
-	<item
-		android:title="@string/menu_favorites"
-		android:id="@id/action_bar_bookmarks"
-		android:orderInCategory="3"
-		android:icon="@drawable/ic_action_bookmark"
-		app:showAsAction="withText|ifRoom"/>
-	<item
-		android:title="@string/menu_night_day_mode"
-		android:id="@+id/NightDayMode"
-		android:orderInCategory="4"
-		android:icon="@drawable/ic_action_day_night"
-		app:showAsAction="ifRoom"/>
-	<item
-		android:title="@string/menu_speek"
-		android:id="@+id/action_speek"
-		android:orderInCategory="5"
-		app:showAsAction="ifRoom"/>
-	<item
-		android:title="@string/menu_settings"
-		android:id="@+id/Settings"
-		android:icon="@drawable/ic_action_preferences"
-		android:orderInCategory="5"
-		app:showAsAction="ifRoom"/>
-	<item
-		android:title="@string/menu_help"
-		android:id="@+id/Help"
-		android:orderInCategory="6"
-		android:icon="@drawable/ic_action_help"
-		app:showAsAction="ifRoom"/>
-	<item
-		android:title="@string/about"
-		android:id="@+id/About"
-		android:orderInCategory="7"
-		android:icon="@drawable/ic_action_about"
-		app:showAsAction="ifRoom"/>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_bar_chooseCh"
+        android:icon="@drawable/ic_action_select"
+        android:orderInCategory="0"
+        android:title="@string/choice_chapter"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_bar_search"
+        android:icon="@drawable/ic_action_search"
+        android:orderInCategory="1"
+        android:title="@string/menu_search"
+        app:showAsAction="always|withText" />
+    <item
+        android:id="@+id/action_bar_history"
+        android:icon="@drawable/ic_action_history"
+        android:orderInCategory="2"
+        android:title="@string/menu_history"
+        app:showAsAction="withText|ifRoom" />
+    <item
+        android:id="@+id/NightDayMode"
+        android:icon="@drawable/ic_action_day_night"
+        android:orderInCategory="4"
+        android:title="@string/menu_night_day_mode"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_speek"
+        android:orderInCategory="5"
+        android:title="@string/menu_speek"
+        app:showAsAction="never" />
 </menu>

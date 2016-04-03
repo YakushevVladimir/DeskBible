@@ -6,6 +6,8 @@ public interface IReaderViewListener {
 		onChangeSelection,
 		onLongPress,
 		onScroll,
+		onSwipeLeft,
+		onSwipeRight,
 		onChangeReaderMode,
 		onUpNavigation,
 		onDownNavigation,

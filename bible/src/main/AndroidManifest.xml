@@ -63,7 +63,8 @@
 			android:label="@string/help"/>
 
 		<activity android:name=".ui.ReaderActivity"
-			android:configChanges="keyboardHidden|orientation">
+			android:configChanges="keyboardHidden|orientation"
+			android:theme="@style/Theme.BibleQuote.NoActionBar">
 			<intent-filter>
 				<action android:name="android.intent.action.VIEW"/>
 				<category android:name="android.intent.category.DEFAULT"/>

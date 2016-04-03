@@ -33,8 +33,8 @@
 	<style name="Theme.BibleQuote" parent="@style/Theme.AppCompat.Light.DarkActionBar">
 		<item name="colorPrimary">@color/primary</item>
 		<item name="colorPrimaryDark">@color/primary_dark</item>
-		<item name="colorAccent">@color/accent</item>
-		<item name="android:textColorPrimary">@color/primary_text</item>
+		<item name="colorAccent">@color/primary</item>
+		<item name="android:textColorPrimary">@color/black</item>
 		<!-- Action bar -->
 		<item name="actionBarStyle">@style/Widget.ActionBar</item>
 		<item name="actionMenuTextColor">@color/accent</item>
@@ -43,6 +43,31 @@
 		<item name="actionModeStyle">@style/Widget.ActionMode</item>
 		<item name="actionModeBackground">@color/action_mode_background</item>
 	</style>
+
+	<style name="Theme.BibleQuote.NoActionBar" parent="@style/Theme.AppCompat.Light.NoActionBar">
+		<item name="colorPrimary">@color/primary</item>
+		<item name="colorPrimaryDark">@color/primary_dark</item>
+		<item name="colorAccent">@color/primary</item>
+		<item name="android:textColorPrimary">@color/black</item>
+		<!-- Action bar -->
+		<item name="actionBarStyle">@style/Widget.ActionBar</item>
+		<item name="actionMenuTextColor">@color/accent</item>
+		<!-- Action mode -->
+		<item name="windowActionModeOverlay">true</item>
+		<item name="actionModeStyle">@style/Widget.ActionMode</item>
+		<item name="actionModeBackground">@color/action_mode_background</item>
+	</style>
+
+    <style name="ToolbarTheme" parent="@style/Base.ThemeOverlay.AppCompat.ActionBar">
+        <item name="android:background">@color/primary</item>
+        <item name="android:textColorPrimary">@color/toolbarTextColor</item>
+        <item name="actionMenuTextColor">@color/toolbarTextColor</item>
+    </style>
+
+    <style name="ToolbarPopupTheme" parent="Base.ThemeOverlay.AppCompat.ActionBar">
+        <item name="android:background">@color/toolbarTextColor</item>
+        <item name="android:textColorPrimary">@color/primary</item>
+    </style>
 
 	<style name="Theme.FullscreenTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
 		<item name="android:windowNoTitle">true</item>

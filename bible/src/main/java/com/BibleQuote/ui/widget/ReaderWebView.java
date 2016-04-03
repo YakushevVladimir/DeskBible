@@ -23,9 +23,15 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.webkit.*;
-import com.BibleQuote.utils.PreferenceHelper;
+import android.webkit.JavascriptInterface;
+import android.webkit.JsResult;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+
 import com.BibleQuote.listeners.IReaderViewListener;
+import com.BibleQuote.utils.PreferenceHelper;
 
 import java.util.ArrayList;
 import java.util.TreeSet;
@@ -34,7 +40,10 @@ import java.util.TreeSet;
 public class ReaderWebView extends WebView
 		implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
 
-	final String TAG = "ReaderWebView";
+    public static final int MIN_SWIPE_VELOCITY = 2000;
+    public static final int MIN_SWIPE_X = 100;
+    public static final int MIN_SWIPE_Y = 50;
+    final String TAG = "ReaderWebView";
 
 	private GestureDetector mGestureScanner;
 	private JavaScriptInterface jsInterface;
@@ -94,6 +103,10 @@ public class ReaderWebView extends WebView
 	@SuppressLint("AddJavascriptInterface")
 	public ReaderWebView(Context mContext, AttributeSet attributeSet) {
 		super(mContext, attributeSet);
+
+		if (isInEditMode()) {
+			return;
+		}
 
 		WebSettings settings = getSettings();
 		settings.setJavaScriptEnabled(true);
@@ -226,7 +239,8 @@ public class ReaderWebView extends WebView
 	}
 
 	public boolean onTouchEvent(MotionEvent event) {
-		return mGestureScanner.onTouchEvent(event) || (event != null && super.onTouchEvent(event));
+		mGestureScanner.onTouchEvent(event);
+        return super.onTouchEvent(event);
 	}
 
 	public boolean onSingleTapUp(MotionEvent event) {
@@ -267,9 +281,17 @@ public class ReaderWebView extends WebView
 		return false;
 	}
 
-	public boolean onFling(MotionEvent e1, MotionEvent e2,
-						   float velocityX, float velocityY) {
-		notifyListeners(IReaderViewListener.ChangeCode.onScroll);
+	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+        float distX = e1.getX() - e2.getX();
+        float distY = e1.getY() - e2.getY();
+        if (Math.abs(distY) < MIN_SWIPE_Y && Math.abs(distX) > MIN_SWIPE_X
+                && Math.abs(velocityX) > MIN_SWIPE_VELOCITY) {
+            if (distX < 0) {
+                notifyListeners(IReaderViewListener.ChangeCode.onLeftNavigation);
+            } else {
+                notifyListeners(IReaderViewListener.ChangeCode.onRightNavigation);
+            }
+        }
 		return false;
 	}
 

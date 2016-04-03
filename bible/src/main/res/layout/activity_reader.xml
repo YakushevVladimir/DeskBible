@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+/*
+ * Copyright (C) 2011 Scripture Software (http://scripturesoftware.org/)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+-->
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".ui.ReaderActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/Theme.BibleQuote.NoActionBar">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:theme="@style/ToolbarTheme"
+                app:popupTheme="@style/ToolbarPopupTheme" />
+
+        </android.support.design.widget.AppBarLayout>
+
+        <RelativeLayout
+            android:id="@+id/reader"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="#ff000000"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/bookLink_container"
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/bookLink_container_height"
+                android:background="#F5CC99"
+                android:clickable="false">
+
+                <TextView
+                    android:id="@+id/linkBook"
+                    style="@style/BookLinkContainer"
+                    android:layout_alignParentRight="true" />
+
+                <TextView
+                    android:id="@+id/moduleName"
+                    style="@style/BookLinkContainer"
+                    android:layout_alignParentLeft="true"
+                    android:layout_toLeftOf="@id/linkBook" />
+
+            </RelativeLayout>
+
+            <com.BibleQuote.ui.widget.ReaderWebView
+                android:id="@+id/readerView"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_below="@id/bookLink_container" />
+
+            <FrameLayout
+                android:id="@+id/tts_player_frame"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <android.support.design.widget.NavigationView
+        android:id="@+id/navigation_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:headerLayout="@layout/drawer_header"
+        app:menu="@menu/drawer_menu" />
+
+</android.support.v4.widget.DrawerLayout>

@@ -139,4 +139,5 @@
     <string name="always_view_verse_numbers_disabled">Nur die Bibeltexte </string>
     <string name="always_view_verse_numbers_enabled">Alle Texte</string>
     <string name="always_view_verse_numbers_title">Immer sehen Versnummern</string>
+    <string name="choice_chapter">Offen...</string>
 </resources>

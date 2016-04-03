@@ -115,5 +115,6 @@
     <string name="always_view_verse_numbers_disabled">Тільки для текстів Біблії</string>
     <string name="always_view_verse_numbers_enabled">Для всіх текстів</string>
     <string name="always_view_verse_numbers_title">Завжди показувати номери віршів</string>
+    <string name="choice_chapter">Відкрити...</string>
 
 </resources>

@@ -23,15 +23,23 @@ import android.graphics.Point;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.view.ActionMode;
-import android.view.*;
-import android.view.View.OnClickListener;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
+import android.support.v7.widget.Toolbar;
+import android.view.Display;
+import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.Surface;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
 import com.BibleQuote.async.AsyncManager;
@@ -46,10 +54,13 @@ import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.modules.Module;
 import com.BibleQuote.ui.base.BibleQuoteActivity;
 import com.BibleQuote.ui.fragments.TTSPlayerFragment;
-import com.BibleQuote.ui.handlers.ReaderHandler;
 import com.BibleQuote.ui.handlers.SelectTextHandler;
 import com.BibleQuote.ui.widget.ReaderWebView;
-import com.BibleQuote.utils.*;
+import com.BibleQuote.utils.DevicesKeyCodes;
+import com.BibleQuote.utils.Log;
+import com.BibleQuote.utils.OnTaskCompleteListener;
+import com.BibleQuote.utils.PreferenceHelper;
+import com.BibleQuote.utils.Task;
 
 import java.util.TreeSet;
 
@@ -64,7 +75,6 @@ public class ReaderActivity extends BibleQuoteActivity implements OnTaskComplete
     public static final int ID_SETTINGS = 6;
 
     private static final String TAG = "ReaderActivity";
-    private static final int VIEW_CHAPTER_NAV_LENGTH = 3000;
 
     private ReaderWebView.Mode oldMode;
     private Librarian myLibrarian;
@@ -77,10 +87,8 @@ public class ReaderActivity extends BibleQuoteActivity implements OnTaskComplete
     private String progressMessage = "";
     private TextView vModuleName;
     private TextView vBookLink;
-    private LinearLayout btnChapterNav;
     private ReaderWebView vWeb;
     private TTSPlayerFragment ttsPlayer;
-    private Handler chapterNavHandler;
 
     @Override
     public void onStopSpeak() {
@@ -90,7 +98,58 @@ public class ReaderActivity extends BibleQuoteActivity implements OnTaskComplete
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.reader);
+        setContentView(R.layout.activity_reader);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
+        final DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        final NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem menuItem) {
+                menuItem.setChecked(false);
+                drawerLayout.closeDrawers();
+                switch (menuItem.getItemId()) {
+                    case R.id.drawer_bookmarks:
+                        Intent intentBookmarks = new Intent().setClass(ReaderActivity.this, BookmarksActivity.class);
+                        startActivityForResult(intentBookmarks, ID_BOOKMARKS);
+                        return true;
+                    case R.id.drawer_settings:
+                        Intent intentSettings = new Intent(ReaderActivity.this, SettingsActivity.class);
+                        startActivity(intentSettings);
+                        return true;
+                    case R.id.drawer_help:
+                        Intent intentHelp = new Intent(ReaderActivity.this, HelpActivity.class);
+                        startActivity(intentHelp);
+                        return true;
+                    case R.id.drawer_about:
+                        Intent intentAbout = new Intent().setClass(ReaderActivity.this, AboutActivity.class);
+                        startActivity(intentAbout);
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        });
+
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(
+                this, drawerLayout, toolbar, R.string.openDrawer, R.string.closeDrawer) {
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+            }
+        };
+        drawerLayout.addDrawerListener(actionBarDrawerToggle);
+        actionBarDrawerToggle.syncState();
 
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
@@ -142,10 +201,6 @@ public class ReaderActivity extends BibleQuoteActivity implements OnTaskComplete
                 Intent intentSearch = new Intent().setClass(getApplicationContext(), SearchActivity.class);
                 startActivityForResult(intentSearch, ID_SEARCH);
                 break;
-            case R.id.action_bar_bookmarks:
-                Intent intentBookmarks = new Intent().setClass(getApplicationContext(), BookmarksActivity.class);
-                startActivityForResult(intentBookmarks, ID_BOOKMARKS);
-                break;
             case R.id.NightDayMode:
                 nightMode = !nightMode;
                 PreferenceHelper.saveStateBoolean("nightMode", nightMode);
@@ -157,18 +212,6 @@ public class ReaderActivity extends BibleQuoteActivity implements OnTaskComplete
                 break;
             case R.id.action_speek:
                 viewTTSPlayer();
-                break;
-            case R.id.Help:
-                Intent helpIntent = new Intent(this, HelpActivity.class);
-                startActivity(helpIntent);
-                break;
-            case R.id.Settings:
-                Intent intentSettings = new Intent().setClass(getApplicationContext(), SettingsActivity.class);
-                startActivityForResult(intentSettings, ID_SETTINGS);
-                break;
-            case R.id.About:
-                Intent intentAbout = new Intent().setClass(getApplicationContext(), AboutActivity.class);
-                startActivity(intentAbout);
                 break;
             default:
                 return false;
@@ -230,12 +273,10 @@ public class ReaderActivity extends BibleQuoteActivity implements OnTaskComplete
         if ((keyCode == KeyEvent.KEYCODE_VOLUME_UP && PreferenceHelper.volumeButtonsToScroll())
                 || DevicesKeyCodes.KeyCodeUp(keyCode)) {
             vWeb.pageUp(false);
-            viewChapterNav();
             return true;
         } else if ((keyCode == KeyEvent.KEYCODE_VOLUME_DOWN && PreferenceHelper.volumeButtonsToScroll())
                 || DevicesKeyCodes.KeyCodeDown(keyCode)) {
             vWeb.pageDown(false);
-            viewChapterNav();
             return true;
         } else {
             return super.onKeyDown(keyCode, event);
@@ -272,29 +313,33 @@ public class ReaderActivity extends BibleQuoteActivity implements OnTaskComplete
 
     @Override
     public void onReaderViewChange(ChangeCode code) {
-        if (code == ChangeCode.onChangeReaderMode) {
-            updateActivityMode();
-        } else if (code == ChangeCode.onUpdateText
-                || code == ChangeCode.onScroll) {
-            viewChapterNav();
-        } else if (code == ChangeCode.onChangeSelection) {
-            TreeSet<Integer> selVerses = vWeb.getSelectedVerses();
-            if (selVerses.size() == 0) {
-                disableActionMode();
-            } else if (currActionMode == null) {
-                currActionMode = startSupportActionMode(new SelectTextHandler(this, vWeb));
-            }
-        } else if (code == ChangeCode.onLongPress) {
-            viewChapterNav();
-            if (vWeb.getMode() == ReaderWebView.Mode.Read) onChooseChapterClick();
-        } else if (code == ChangeCode.onUpNavigation) {
-            vWeb.pageUp(false);
-        } else if (code == ChangeCode.onDownNavigation) {
-            vWeb.pageDown(false);
-        } else if (code == ChangeCode.onLeftNavigation) {
-            prevChapter();
-        } else if (code == ChangeCode.onRightNavigation) {
-            nextChapter();
+        switch (code) {
+            case onChangeReaderMode:
+                updateActivityMode();
+                break;
+            case onChangeSelection:
+                TreeSet<Integer> selVerses = vWeb.getSelectedVerses();
+                if (selVerses.size() == 0) {
+                    disableActionMode();
+                } else if (currActionMode == null) {
+                    currActionMode = startSupportActionMode(new SelectTextHandler(this, vWeb));
+                }
+                break;
+            case onLongPress:
+                if (vWeb.getMode() == ReaderWebView.Mode.Read) onChooseChapterClick();
+                break;
+            case onUpNavigation:
+                vWeb.pageUp(false);
+                break;
+            case onDownNavigation:
+                vWeb.pageDown(false);
+                break;
+            case onLeftNavigation:
+                prevChapter();
+                break;
+            case onRightNavigation:
+                nextChapter();
+                break;
         }
     }
 
@@ -310,7 +355,6 @@ public class ReaderActivity extends BibleQuoteActivity implements OnTaskComplete
 
         vModuleName.setText(myLibrarian.getModuleName());
         vBookLink.setText(myLibrarian.getHumanBookLink());
-        btnChapterNav.setVisibility(View.GONE);
     }
 
     public void onChooseChapterClick() {
@@ -337,18 +381,6 @@ public class ReaderActivity extends BibleQuoteActivity implements OnTaskComplete
         viewCurrentChapter();
     }
 
-    public void viewChapterNav() {
-        chapterNavHandler.removeCallbacksAndMessages(null);
-        if (vWeb.getMode() != ReaderWebView.Mode.Study) {
-            btnChapterNav.setVisibility(View.GONE);
-        } else {
-            btnChapterNav.setVisibility(View.VISIBLE);
-            if (!vWeb.isScrollToBottom()) {
-                chapterNavHandler.sendEmptyMessageDelayed(ReaderHandler.HIDE_NAV, VIEW_CHAPTER_NAV_LENGTH);
-            }
-        }
-    }
-
     public void updateActivityMode() {
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -358,7 +390,6 @@ public class ReaderActivity extends BibleQuoteActivity implements OnTaskComplete
                 actionBar.show();
             }
         }
-        viewChapterNav();
     }
 
     private void openChapterFromLink(BibleReference osisLink) {
@@ -367,39 +398,6 @@ public class ReaderActivity extends BibleQuoteActivity implements OnTaskComplete
     }
 
     private void initializeViews() {
-        btnChapterNav = (LinearLayout) findViewById(R.id.btn_chapter_nav);
-        chapterNavHandler = new ReaderHandler(btnChapterNav);
-
-        ImageButton btnChapterPrev = (ImageButton) findViewById(R.id.btn_reader_prev);
-        btnChapterPrev.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                prevChapter();
-            }
-        });
-
-        ImageButton btnChapterNext = (ImageButton) findViewById(R.id.btn_reader_next);
-        btnChapterNext.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                nextChapter();
-            }
-        });
-
-        ImageButton btnChapterUp = (ImageButton) findViewById(R.id.btn_reader_up);
-        btnChapterUp.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                vWeb.pageUp(false);
-                viewChapterNav();
-            }
-        });
-
-        ImageButton btnChapterDown = (ImageButton) findViewById(R.id.btn_reader_down);
-        btnChapterDown.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                vWeb.pageDown(false);
-                viewChapterNav();
-            }
-        });
-
         vModuleName = (TextView) findViewById(R.id.moduleName);
         vBookLink = (TextView) findViewById(R.id.linkBook);
 

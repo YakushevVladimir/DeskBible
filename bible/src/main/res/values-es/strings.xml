@@ -135,4 +135,5 @@
     <string name="always_view_verse_numbers_disabled">Los textos de la Biblia</string>
     <string name="always_view_verse_numbers_enabled">Todos los textos</string>
     <string name="always_view_verse_numbers_title">Siempre ver los números de verso</string>
+    <string name="choice_chapter">Abierto...</string>
 </resources>

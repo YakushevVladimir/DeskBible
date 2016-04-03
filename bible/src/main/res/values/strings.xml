@@ -145,4 +145,7 @@
 	<string name="always_view_verse_numbers_disabled">Don\'t display verse numbers in books</string>
 	<string name="always_view_verse_numbers_enabled">All texts</string>
 	<string name="always_view_verse_numbers_title">Verse numbers in books</string>
+	<string name="openDrawer" translatable="false">drawer_open</string>
+	<string name="closeDrawer" translatable="false">drawer_close</string>
+	<string name="choice_chapter">Goto...</string>
 </resources>
