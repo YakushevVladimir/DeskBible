@@ -30,7 +30,7 @@ import java.io.File;
  * User: Vladimir Yakushev
  * Date: 02.05.13
  */
-public class dbLibraryHelper {
+public final class dbLibraryHelper {
 	private final static String TAG = dbLibraryHelper.class.getSimpleName();
 
 	private static int version = 2;
@@ -39,6 +39,10 @@ public class dbLibraryHelper {
 	public static final String TAGS_TABLE = "tags";
 	public static final String BOOKMARKSTAGS_TABLE = "bookmarks_tags";
 	public static final String BOOKMARKS_TABLE = "bookmarks";
+
+	private dbLibraryHelper() throws InstantiationException {
+		throw new InstantiationException("This class is not for instantiation");
+	}
 
 	private static final String[] CREATE_DATABASE = new String[] {
 			"create table " + BOOKMARKS_TABLE + " ("

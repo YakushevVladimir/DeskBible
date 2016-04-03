@@ -5,16 +5,16 @@ import com.BibleQuote.utils.Log;
 import com.BibleQuote.exceptions.FileAccessException;
 
 public class CacheRepository<T> {
-	private final String TAG = "CacheRepository";
+	private static final String TAG = "CacheRepository";
 
 	private CacheContext cacheContext;
 
-	public CacheContext getCacheContext() {
-		return cacheContext;
-	}
-
 	public CacheRepository(CacheContext cacheContext) {
 		this.cacheContext = cacheContext;
+	}
+
+	public CacheContext getCacheContext() {
+		return cacheContext;
 	}
 
 	public T getData() throws FileAccessException {

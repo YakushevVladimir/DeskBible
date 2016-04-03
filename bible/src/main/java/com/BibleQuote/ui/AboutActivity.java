@@ -29,8 +29,8 @@ public class AboutActivity extends BibleQuoteActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.about);
 
-		TextView tv_app = (TextView) findViewById(R.id.about_name);
-		tv_app.setText(String.format(
+		TextView tvApp = (TextView) findViewById(R.id.about_name);
+		tvApp.setText(String.format(
 				getResources().getText(R.string.app_about_name).toString(),
 				BuildConfig.VERSION_NAME));
 	}

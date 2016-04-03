@@ -4,7 +4,7 @@ import android.util.Log;
 import com.BibleQuote.utils.Task;
 
 public class AsyncWait extends Task {
-	private final String TAG = "AsyncWait";
+	private static final String TAG = "AsyncWait";
 	private AsyncTaskManager currentAsyncTaskManager;
 
 

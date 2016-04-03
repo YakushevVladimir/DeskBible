@@ -38,7 +38,7 @@ public class ColorPickerPreference extends Preference
 	View mView;
 	String mDefaultValue = "#FF000000";
 	private String mValue = "#FF000000";
-	private float mDensity = 0;
+	private float mDensity;
 	private boolean mAlphaSliderEnabled = true;
 
 	private static final String androidns = "http://schemas.android.com/apk/res/android";

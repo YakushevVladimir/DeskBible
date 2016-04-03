@@ -21,7 +21,7 @@ import java.util.HashMap;
 
 //import android.util.Log;
 
-public class BibleBooksID {
+public final class BibleBooksID {
 
 	//private final static String TAG = "BibleBooksID";
 
@@ -183,6 +183,10 @@ public class BibleBooksID {
 			put("Herm.Vis", new String[]{"Herm.Vis", "Shepherd of Hermas, Visions"});
 		}
 	};
+
+	private BibleBooksID() throws InstantiationException {
+		throw new InstantiationException("This class is not for instantiation");
+	}
 
 	private static void qualifierInit() {
 		qualifier = new HashMap<String, String>();

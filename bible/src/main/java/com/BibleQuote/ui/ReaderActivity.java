@@ -82,8 +82,8 @@ public class ReaderActivity extends BibleQuoteActivity implements OnTaskComplete
     private Task mTask;
     private ActionMode currActionMode;
     private String chapterInHTML = "";
-    private boolean nightMode = false;
-    private boolean exitToBackKey = false;
+    private boolean nightMode;
+    private boolean exitToBackKey;
     private String progressMessage = "";
     private TextView vModuleName;
     private TextView vBookLink;
@@ -348,10 +348,10 @@ public class ReaderActivity extends BibleQuoteActivity implements OnTaskComplete
     }
 
     public void setTextInWebView() {
-        BibleReference OSISLink = myLibrarian.getCurrentOSISLink();
-        vWeb.setText(myLibrarian.getBaseUrl(), chapterInHTML, OSISLink.getFromVerse(), nightMode, myLibrarian.isBible());
+        BibleReference osisLink = myLibrarian.getCurrentOSISLink();
+        vWeb.setText(myLibrarian.getBaseUrl(), chapterInHTML, osisLink.getFromVerse(), nightMode, myLibrarian.isBible());
 
-        PreferenceHelper.saveStateString("last_read", OSISLink.getExtendedPath());
+        PreferenceHelper.saveStateString("last_read", osisLink.getExtendedPath());
 
         vModuleName.setText(myLibrarian.getModuleName());
         vBookLink.setText(myLibrarian.getHumanBookLink());

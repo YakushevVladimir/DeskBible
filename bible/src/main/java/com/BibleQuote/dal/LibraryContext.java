@@ -39,12 +39,12 @@ public abstract class LibraryContext {
 
 	private Context context;
 
-	public Context getContext() {
-		return context;
-	}
-
 	public LibraryContext(Context context) {
 		this.context = context;
+	}
+
+	public Context getContext() {
+		return context;
 	}
 
 	protected HashMap<String, String> getCharsets() {

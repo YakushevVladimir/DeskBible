@@ -23,7 +23,7 @@ import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.async.AsyncCommand;
 
 public class InitApplication implements AsyncCommand.ICommand {
-	private final String TAG = "InitApplication";
+	private static final String TAG = "InitApplication";
 	private Context context;
 
 	public InitApplication(Context context) {

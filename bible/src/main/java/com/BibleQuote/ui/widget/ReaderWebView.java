@@ -23,15 +23,9 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.webkit.JavascriptInterface;
-import android.webkit.JsResult;
-import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
-
-import com.BibleQuote.listeners.IReaderViewListener;
+import android.webkit.*;
 import com.BibleQuote.utils.PreferenceHelper;
+import com.BibleQuote.listeners.IReaderViewListener;
 
 import java.util.ArrayList;
 import java.util.TreeSet;
@@ -43,70 +37,22 @@ public class ReaderWebView extends WebView
     public static final int MIN_SWIPE_VELOCITY = 2000;
     public static final int MIN_SWIPE_X = 100;
     public static final int MIN_SWIPE_Y = 50;
-    final String TAG = "ReaderWebView";
+
+	static final String TAG = "ReaderWebView";
 
 	private GestureDetector mGestureScanner;
 	private JavaScriptInterface jsInterface;
+	private Mode currMode = Mode.Read;
+	
+	private ArrayList<IReaderViewListener> listeners = new ArrayList<IReaderViewListener>();
 
 	protected TreeSet<Integer> selectedVerse = new TreeSet<Integer>();
 
-	public TreeSet<Integer> getSelectedVerses() {
-		return this.selectedVerse;
-	}
-
-	public void setSelectedVerse(TreeSet<Integer> selectedVerse) {
-		jsInterface.clearSelectedVerse();
-		this.selectedVerse = selectedVerse;
-		for (Integer verse : selectedVerse) {
-			jsInterface.selectVerse(verse);
-		}
-	}
-
-	public void gotoVerse(int verse) {
-		jsInterface.gotoVerse(verse);
-	}
-
-	public enum Mode {
-		Read, Study, Speak
-	}
-
-	private Mode currMode = Mode.Read;
-
-	public void setMode(Mode mode) {
-		currMode = mode;
-		if (currMode != Mode.Study) {
-			clearSelectedVerse();
-		}
-		notifyListeners(IReaderViewListener.ChangeCode.onChangeReaderMode);
-	}
-
-	public Mode getMode() {
-		return currMode;
-	}
-
-	private ArrayList<IReaderViewListener> listeners = new ArrayList<IReaderViewListener>();
-
-	public void setOnReaderViewListener(IReaderViewListener listener) {
-		if (!listeners.contains(listener)) {
-			listeners.add(listener);
-		}
-	}
-
-	private void notifyListeners(IReaderViewListener.ChangeCode code) {
-		for (IReaderViewListener listener : listeners) {
-			listener.onReaderViewChange(code);
-		}
-	}
-
-	public boolean mPageLoaded = false;
+	public boolean mPageLoaded;
 
 	@SuppressLint("AddJavascriptInterface")
 	public ReaderWebView(Context mContext, AttributeSet attributeSet) {
 		super(mContext, attributeSet);
-
-		if (isInEditMode()) {
-			return;
-		}
 
 		WebSettings settings = getSettings();
 		settings.setJavaScriptEnabled(true);
@@ -129,23 +75,67 @@ public class ReaderWebView extends WebView
 		mGestureScanner.setOnDoubleTapListener(this);
 	}
 
+	public TreeSet<Integer> getSelectedVerses() {
+		return this.selectedVerse;
+	}
+
+	public void setSelectedVerse(TreeSet<Integer> selectedVerse) {
+		jsInterface.clearSelectedVerse();
+		this.selectedVerse = selectedVerse;
+		for (Integer verse : selectedVerse) {
+			jsInterface.selectVerse(verse);
+		}
+	}
+
+	public void gotoVerse(int verse) {
+		jsInterface.gotoVerse(verse);
+	}
+
+	public enum Mode {
+		Read, Study, Speak
+	}
+
+	public void setMode(Mode mode) {
+		currMode = mode;
+		if (currMode != Mode.Study) {
+			clearSelectedVerse();
+		}
+		notifyListeners(IReaderViewListener.ChangeCode.onChangeReaderMode);
+	}
+
+	public Mode getMode() {
+		return currMode;
+	}
+
+	public void setOnReaderViewListener(IReaderViewListener listener) {
+		if (!listeners.contains(listener)) {
+			listeners.add(listener);
+		}
+	}
+
+	private void notifyListeners(IReaderViewListener.ChangeCode code) {
+		for (IReaderViewListener listener : listeners) {
+			listener.onReaderViewChange(code);
+		}
+	}
+
 	public void setText(String baseUrl, String text, int currVerse, Boolean nightMode, Boolean isBible) {
 		mPageLoaded = false;
 		String modStyle = isBible ? "bible_style.css" : "book_style.css";
 
 		StringBuilder html = new StringBuilder();
-		html.append("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\r\n");
-		html.append("<html>\r\n");
-		html.append("<head>\r\n");
-		html.append("<meta http-equiv=Content-Type content=\"text/html; charset=UTF-8\">\r\n");
-		html.append("<script language=\"JavaScript\" src=\"file:///android_asset/reader.js\" type=\"text/javascript\"></script>\r\n");
-		html.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"file:///android_asset/").append(modStyle).append("\">\r\n");
-		html.append(getStyle(nightMode));
-		html.append("</head>\r\n");
-		html.append("<body").append(currVerse > 1 ? (" onLoad=\"document.location.href='#verse_" + currVerse + "';\"") : "").append(">\r\n");
-		html.append(text);
-		html.append("</body>\r\n");
-		html.append("</html>");
+		html.append("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\r\n")
+				.append("<html>\r\n")
+				.append("<head>\r\n")
+				.append("<meta http-equiv=Content-Type content=\"text/html; charset=UTF-8\">\r\n")
+				.append("<script language=\"JavaScript\" src=\"file:///android_asset/reader.js\" type=\"text/javascript\"></script>\r\n")
+				.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"file:///android_asset/").append(modStyle).append("\">\r\n")
+				.append(getStyle(nightMode))
+				.append("</head>\r\n")
+				.append("<body").append(currVerse > 1 ? (" onLoad=\"document.location.href='#verse_" + currVerse + "';\"") : "").append(">\r\n")
+				.append(text)
+				.append("</body>\r\n")
+				.append("</html>");
 
 		loadDataWithBaseURL("file://" + baseUrl, html.toString(), "text/html", "UTF-8", "about:config");
 		jsInterface.clearSelectedVerse();
@@ -197,28 +187,28 @@ public class ReaderWebView extends WebView
 		String textSize = PreferenceHelper.getTextSize();
 
 		StringBuilder style = new StringBuilder();
-		style.append("<style type=\"text/css\">\r\n");
-		style.append("body {\r\n");
-		style.append("padding-bottom: 50px;\r\n");
+		style.append("<style type=\"text/css\">\r\n")
+				.append("body {\r\n")
+				.append("padding-bottom: 50px;\r\n");
 		if (PreferenceHelper.textAlignJustify()) {
 			style.append("text-align: justify;\r\n");
 		}
-		style.append("color: ").append(textColor).append(";\r\n");
-		style.append("font-size: ").append(textSize).append("pt;\r\n");
-		style.append("line-height: 1.25;\r\n");
-		style.append("background: ").append(backColor).append(";\r\n");
-		style.append("}\r\n");
-		style.append(".verse {\r\n");
-		style.append("background: ").append(backColor).append(";\r\n");
-		style.append("}\r\n");
-		style.append(".selectedVerse {\r\n");
-		style.append("color: ").append(selTextColor).append(";\r\n");
-		style.append("background: ").append(selTextBack).append(";\r\n");
-		style.append("}\r\n");
-		style.append("img {\r\n");
-		style.append("max-width: 100%;\r\n");
-		style.append("}\r\n");
-		style.append("</style>\r\n");
+		style.append("color: ").append(textColor).append(";\r\n")
+				.append("font-size: ").append(textSize).append("pt;\r\n")
+				.append("line-height: 1.25;\r\n")
+				.append("background: ").append(backColor).append(";\r\n")
+				.append("}\r\n")
+				.append(".verse {\r\n")
+				.append("background: ").append(backColor).append(";\r\n")
+				.append("}\r\n")
+				.append(".selectedVerse {\r\n")
+				.append("color: ").append(selTextColor).append(";\r\n")
+				.append("background: ").append(selTextBack).append(";\r\n")
+				.append("}\r\n")
+				.append("img {\r\n")
+				.append("max-width: 100%;\r\n")
+				.append("}\r\n")
+				.append("</style>\r\n");
 
 		return style.toString();
 	}
@@ -239,8 +229,7 @@ public class ReaderWebView extends WebView
 	}
 
 	public boolean onTouchEvent(MotionEvent event) {
-		mGestureScanner.onTouchEvent(event);
-        return super.onTouchEvent(event);
+		return mGestureScanner.onTouchEvent(event) || (event != null && super.onTouchEvent(event));
 	}
 
 	public boolean onSingleTapUp(MotionEvent event) {

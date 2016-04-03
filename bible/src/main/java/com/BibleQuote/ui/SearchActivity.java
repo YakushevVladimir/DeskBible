@@ -55,6 +55,72 @@ public class SearchActivity extends BibleQuoteActivity implements OnTaskComplete
 	private Librarian myLibararian;
 	private ArrayList<Item> searchItems = new ArrayList<Item>();
 
+	private Button.OnClickListener onClick_Search = new Button.OnClickListener() {
+		@Override
+		public void onClick(View view) {
+			String query = ((EditText) findViewById(R.id.SearchEdit)).getText().toString().trim();
+
+			GoogleAnalyticsHelper.getInstance().actionSearch(myLibararian.getModuleID(), query);
+
+			int posFrom = spinnerFrom.getSelectedItemPosition();
+			int posTo = spinnerTo.getSelectedItemPosition();
+			if (posFrom == AdapterView.INVALID_POSITION || posTo == AdapterView.INVALID_POSITION) {
+				return;
+			}
+			String fromBookID = ((ItemList) spinnerFrom.getItemAtPosition(posFrom)).get("ID");
+			String toBookID = ((ItemList) spinnerTo.getItemAtPosition(posTo)).get("ID");
+
+			mTask = new AsyncCommand(new StartSearch(SearchActivity.this, query, fromBookID, toBookID), progressMessage, false);
+			mAsyncManager.setupTask(mTask, SearchActivity.this);
+		}
+	};
+
+	private OnItemClickListener onClick_searchResult = new OnItemClickListener() {
+		public void onItemClick(AdapterView<?> a, View v, int position, long id) {
+			String humanLink = ((SubtextItem) ResultList.getAdapter().getItem(position)).text;
+
+			PreferenceHelper.saveStateInt("changeSearchPosition", position);
+
+			Intent intent = new Intent();
+			intent.putExtra("linkOSIS", LinkConverter.getHumanToOSIS(humanLink));
+			setResult(RESULT_OK, intent);
+
+			finish();
+		}
+	};
+
+	private OnItemSelectedListener onClick_FromBook = new OnItemSelectedListener() {
+		public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2,
+								   long arg3) {
+			int fromBook = spinnerFrom.getSelectedItemPosition();
+			int toBook = spinnerTo.getSelectedItemPosition();
+			if (fromBook > toBook) {
+				spinnerTo.setSelection(fromBook);
+				toBook = fromBook;
+			}
+			saveSelectedPosition(fromBook, toBook);
+		}
+
+		public void onNothingSelected(AdapterView<?> arg0) {
+		}
+	};
+
+	private OnItemSelectedListener onClick_ToBook = new OnItemSelectedListener() {
+		public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2,
+								   long arg3) {
+			int fromBook = spinnerFrom.getSelectedItemPosition();
+			int toBook = spinnerTo.getSelectedItemPosition();
+			if (fromBook > toBook) {
+				spinnerFrom.setSelection(toBook);
+				fromBook = toBook;
+			}
+			saveSelectedPosition(fromBook, toBook);
+		}
+
+		public void onNothingSelected(AdapterView<?> arg0) {
+		}
+	};
+
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.search);
@@ -134,10 +200,10 @@ public class SearchActivity extends BibleQuoteActivity implements OnTaskComplete
 			ExceptionHelper.onBookDefinitionException(e, this, TAG);
 		}
 
-		SimpleAdapter AA = new SimpleAdapter(this, books,
+		SimpleAdapter aa = new SimpleAdapter(this, books,
 				android.R.layout.simple_spinner_item,
 				new String[]{ItemList.Name}, new int[]{android.R.id.text1});
-		AA.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		SimpleAdapter.ViewBinder viewBinder = new SimpleAdapter.ViewBinder() {
 			public boolean setViewValue(View view, Object data,
 										String textRepresentation) {
@@ -146,14 +212,14 @@ public class SearchActivity extends BibleQuoteActivity implements OnTaskComplete
 				return true;
 			}
 		};
-		AA.setViewBinder(viewBinder);
+		aa.setViewBinder(viewBinder);
 
 		spinnerFrom = (Spinner) findViewById(R.id.FromBookCB);
-		spinnerFrom.setAdapter(AA);
+		spinnerFrom.setAdapter(aa);
 		spinnerFrom.setOnItemSelectedListener(onClick_FromBook);
 
 		spinnerTo = (Spinner) findViewById(R.id.ToBookCB);
-		spinnerTo.setAdapter(AA);
+		spinnerTo.setAdapter(aa);
 		spinnerTo.setOnItemSelectedListener(onClick_ToBook);
 
 		restoreSelectedPosition();
@@ -168,72 +234,6 @@ public class SearchActivity extends BibleQuoteActivity implements OnTaskComplete
 		}
 		PreferenceHelper.saveStateInt("changeSearchPosition", 0);
 	}
-
-	private Button.OnClickListener onClick_Search = new Button.OnClickListener() {
-		@Override
-		public void onClick(View view) {
-			String query = ((EditText) findViewById(R.id.SearchEdit)).getText().toString().trim();
-
-            GoogleAnalyticsHelper.getInstance().actionSearch(myLibararian.getModuleID(), query);
-
-			int posFrom = spinnerFrom.getSelectedItemPosition();
-			int posTo = spinnerTo.getSelectedItemPosition();
-			if (posFrom == AdapterView.INVALID_POSITION || posTo == AdapterView.INVALID_POSITION) {
-				return;
-			}
-			String fromBookID = ((ItemList) spinnerFrom.getItemAtPosition(posFrom)).get("ID");
-			String toBookID = ((ItemList) spinnerTo.getItemAtPosition(posTo)).get("ID");
-
-			mTask = new AsyncCommand(new StartSearch(SearchActivity.this, query, fromBookID, toBookID), progressMessage, false);
-			mAsyncManager.setupTask(mTask, SearchActivity.this);
-		}
-	};
-
-	private OnItemClickListener onClick_searchResult = new OnItemClickListener() {
-		public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-			String humanLink = ((SubtextItem) ResultList.getAdapter().getItem(position)).text;
-
-			PreferenceHelper.saveStateInt("changeSearchPosition", position);
-
-			Intent intent = new Intent();
-			intent.putExtra("linkOSIS", LinkConverter.getHumanToOSIS(humanLink));
-			setResult(RESULT_OK, intent);
-
-			finish();
-		}
-	};
-
-	private OnItemSelectedListener onClick_FromBook = new OnItemSelectedListener() {
-		public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2,
-								   long arg3) {
-			int fromBook = spinnerFrom.getSelectedItemPosition();
-			int toBook = spinnerTo.getSelectedItemPosition();
-			if (fromBook > toBook) {
-				spinnerTo.setSelection(fromBook);
-				toBook = fromBook;
-			}
-			saveSelectedPosition(fromBook, toBook);
-		}
-
-		public void onNothingSelected(AdapterView<?> arg0) {
-		}
-	};
-
-	private OnItemSelectedListener onClick_ToBook = new OnItemSelectedListener() {
-		public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2,
-								   long arg3) {
-			int fromBook = spinnerFrom.getSelectedItemPosition();
-			int toBook = spinnerTo.getSelectedItemPosition();
-			if (fromBook > toBook) {
-				spinnerFrom.setSelection(toBook);
-				fromBook = toBook;
-			}
-			saveSelectedPosition(fromBook, toBook);
-		}
-
-		public void onNothingSelected(AdapterView<?> arg0) {
-		}
-	};
 
 	private void saveSelectedPosition(int fromBook, int toBook) {
 		PreferenceHelper.saveStateString("searchModuleID", myLibararian.getModuleID());

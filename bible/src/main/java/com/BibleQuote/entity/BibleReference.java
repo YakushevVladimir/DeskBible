@@ -10,15 +10,15 @@ public class BibleReference {
 	public final static String MOD_DATASOURCE_FS = "fs";
 	public final static String MOD_DATASOURCE_DB = "db";
 
-	private final String TAG = "LinkOSIS";
-	private final String SEP_GROUPS = "\\;";
-	private final String SEP_VALUES = "\\:";
-	private final String SEP_SHORT = "\\.";
+	private static final String TAG = "LinkOSIS";
+	private static final String SEP_GROUPS = "\\;";
+	private static final String SEP_VALUES = "\\:";
+	private static final String SEP_SHORT = "\\.";
 
-	private String OSISLinkPath = null;
-	private String moduleDatasource = null;
-	private String moduleDatasourceID = null;
-	private String moduleID = null;
+	private String OSISLinkPath;
+	private String moduleDatasource;
+	private String moduleDatasourceID;
+	private String moduleID;
 
 	private String bookID = "Gen";
 	private String bookName = "Genesis";
@@ -26,12 +26,12 @@ public class BibleReference {
 	private int fromVerse = 1;
 	private int toVerse = 1;
 
-	public BibleReference(String BibleLinkPath) {
-		if (BibleLinkPath == null) {
+	public BibleReference(String bibleLinkPath) {
+		if (bibleLinkPath == null) {
 			return;
 		}
 
-		String[] linkParam = BibleLinkPath.split(SEP_GROUPS);
+		String[] linkParam = bibleLinkPath.split(SEP_GROUPS);
 		if (linkParam.length >= 5) {
             // BibleLinkPath extended path format = ds:fs;id:sd-card/mnt/biblequote/modules/rst;m:RST;b:MARK;ch:1;v:1
             try {
@@ -50,12 +50,12 @@ public class BibleReference {
                     e.printStackTrace();
                 }
             } catch (Exception e) {
-                Log.e(TAG, String.format("OSISLink(%1$s)", BibleLinkPath), e);
+                Log.e(TAG, String.format("OSISLink(%1$s)", bibleLinkPath), e);
             }
 
         } else {
             // BibleLinkPath short path format
-            linkParam = BibleLinkPath.split(SEP_SHORT);
+            linkParam = bibleLinkPath.split(SEP_SHORT);
             if (linkParam.length >= 2) {
                 this.moduleID = linkParam[0];
                 this.bookID = linkParam[1];

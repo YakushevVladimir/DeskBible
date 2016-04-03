@@ -42,9 +42,9 @@ public class Bookmark {
 	public String date;
 	public String tags;
 
-	public Bookmark(long id, String OSISLink, String humanLink, String name, String date) {
+	public Bookmark(long id, String osisLink, String humanLink, String name, String date) {
 		this.id = id;
-		this.OSISLink = OSISLink;
+		this.OSISLink = osisLink;
 		this.humanLink = humanLink;
 		this.name = (name == null || name.equals("")) ? humanLink : name ;
 		this.date = date;
@@ -55,8 +55,8 @@ public class Bookmark {
 		this(0, OSISLink, humanLink, humanLink, DateFormat.getDateInstance(DateFormat.MEDIUM).format(Calendar.getInstance().getTime()));
 	}
 
-	public Bookmark(String OSISLink, String humanLink, String date) {
-		this(0, OSISLink, humanLink, humanLink, date);
+	public Bookmark(String osisLink, String humanLink, String date) {
+		this(0, osisLink, humanLink, humanLink, date);
 	}
 
 	public Bookmark(BibleReference ref) {

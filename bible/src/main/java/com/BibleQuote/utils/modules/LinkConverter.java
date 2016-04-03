@@ -24,7 +24,11 @@ import com.BibleQuote.exceptions.BookNotFoundException;
 import com.BibleQuote.exceptions.OpenModuleException;
 import com.BibleQuote.managers.Librarian;
 
-public class LinkConverter {
+public final class LinkConverter {
+
+	private LinkConverter() throws InstantiationException {
+		throw new InstantiationException("This class is not for instantiation");
+	}
 
 	public static String getOSIStoHuman(String linkOSIS, Librarian librarian) throws BookNotFoundException, OpenModuleException {
 		String[] param = linkOSIS.split("\\.");

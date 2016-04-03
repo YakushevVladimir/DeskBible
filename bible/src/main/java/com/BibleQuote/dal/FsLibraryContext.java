@@ -42,9 +42,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class FsLibraryContext extends LibraryContext {
-    private final String TAG = "FsLibraryContext";
+    private static final String TAG = "FsLibraryContext";
     public CacheModuleController<FsModule> cache;
-    private File libraryDir = null;
+    private File libraryDir;
 
     public FsLibraryContext(File libraryDir, Context context, CacheModuleController<FsModule> cache) {
         super(context);
@@ -138,7 +138,7 @@ public class FsLibraryContext extends LibraryContext {
     }
 
     public void fillModule(FsModule module, BufferedReader bReader) throws FileAccessException {
-        String str, HTMLFilter = "", key, value;
+        String str, htmlFilter = "", key, value;
 
         int pos;
         try {
@@ -173,7 +173,7 @@ public class FsLibraryContext extends LibraryContext {
                 } else if (key.equals("versesign")) {
                     module.VerseSign = value.toLowerCase();
                 } else if (key.equals("htmlfilter")) {
-                    HTMLFilter = value;
+                    htmlFilter = value;
                 } else if (key.equals("bible")) {
                     module.isBible = value.toLowerCase().contains("y");
                 } else if (key.equals("strongnumbers")) {
@@ -194,22 +194,22 @@ public class FsLibraryContext extends LibraryContext {
             throw new FileAccessException(message);
         }
 
-        String TagFilter[] = {"p", "b", "i", "em", "strong", "q", "big", "sub", "sup", "h1", "h2", "h3", "h4"};
-        ArrayList<String> TagArray = new ArrayList<String>();
-        Collections.addAll(TagArray, TagFilter);
+        String tagFilter[] = {"p", "b", "i", "em", "strong", "q", "big", "sub", "sup", "h1", "h2", "h3", "h4"};
+        ArrayList<String> tagArray = new ArrayList<String>();
+        Collections.addAll(tagArray, tagFilter);
 
-        if (!HTMLFilter.equals("")) {
-            String[] words = HTMLFilter.replaceAll("\\W", " ").trim().split("\\s+");
+        if (!htmlFilter.equals("")) {
+            String[] words = htmlFilter.replaceAll("\\W", " ").trim().split("\\s+");
             for (String word : words) {
-                if (word.equals("") || TagArray.contains(word)) {
+                if (word.equals("") || tagArray.contains(word)) {
                     continue;
                 }
-                TagArray.add(word);
+                tagArray.add(word);
             }
         }
 
         String separator = "";
-        for (String tag : TagArray) {
+        for (String tag : tagArray) {
             module.HtmlFilter += separator + "(" + tag + ")|(/" + tag + ")" + "|(" + tag.toUpperCase() + ")|(/" + tag.toUpperCase() + ")";
             separator = "|";
         }

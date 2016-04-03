@@ -30,8 +30,12 @@ import java.util.Locale;
  *
  * @author Владимир Якушев (ru.phoenix@gmail.com)
  */
-public class Log {
-	static private File logFile = null;
+public final class Log {
+	static private File logFile;
+
+	private Log() throws InstantiationException {
+		throw new InstantiationException("This class is not for instantiation");
+	}
 
 	/**
 	 * Подготовка файла-протокола событий. Создание нового файла,
@@ -59,10 +63,10 @@ public class Log {
 	/**
 	 * Запись в протокол события
 	 *
-	 * @param Tag  имя класса-инициатора события
+	 * @param tag  имя класса-инициатора события
 	 * @param text текст помещаемый в протокол событий
 	 */
-	private static void write(String Tag, String text) {
+	private static void write(String tag, String text) {
 		if (logFile == null) {
 			return;
 		}
@@ -73,7 +77,7 @@ public class Log {
 		}
 
 		try {
-			bWriter.write((Tag != null ? Tag + ": " : "") + text + "\r\n");
+			bWriter.write((tag != null ? tag + ": " : "") + text + "\r\n");
 			bWriter.flush();
 			bWriter.close();
 		} catch (IOException e) {
@@ -84,26 +88,26 @@ public class Log {
 	/**
 	 * Запись в протокол событий сообщения об ошибке
 	 *
-	 * @param Tag  имя класса-инициатора события
+	 * @param tag  имя класса-инициатора события
 	 * @param text текст помещаемый в протокол событий
 	 * @param e    ссылка на полученный Exception
 	 */
-	public static void e(String Tag, String text, Exception e) {
-		write(Tag, String.format("Error: $1$s\r\nMessage: %2$s", text, e.getMessage()));
+	public static void e(String tag, String text, Exception e) {
+		write(tag, String.format("Error: $1$s\r\nMessage: %2$s", text, e.getMessage()));
 	}
 
-	public static void e(String Tag, String text) {
-		write(Tag, "Error: " + text);
+	public static void e(String tag, String text) {
+		write(tag, "Error: " + text);
 	}
 
 	/**
 	 * Запись в протокол событий информационного сообщения
 	 *
-	 * @param Tag  имя класса-инициатора события
+	 * @param tag  имя класса-инициатора события
 	 * @param info текст помещаемый в протокол событий
 	 */
-	public static void i(String Tag, String info) {
-		write(Tag, info);
+	public static void i(String tag, String info) {
+		write(tag, info);
 	}
 
 	private static void write(String text) {

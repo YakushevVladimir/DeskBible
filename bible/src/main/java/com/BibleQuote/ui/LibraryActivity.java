@@ -48,7 +48,7 @@ public class LibraryActivity extends BibleQuoteActivity implements OnTaskComplet
     public static final String EMPTY_OBJECT = "---";
 	private static final int ACTION_CODE_GET_FILE = 1;
     private static final String TAG = "LibraryActivity";
-    private final int MODULE_VIEW = 1, BOOK_VIEW = 2, CHAPTER_VIEW = 3;
+    private static final int MODULE_VIEW = 1, BOOK_VIEW = 2, CHAPTER_VIEW = 3;
 	private String moduleID = EMPTY_OBJECT, bookID = EMPTY_OBJECT, chapter = EMPTY_OBJECT;
     private int viewMode = 1;
     private ListView modulesList, booksList;
@@ -57,7 +57,7 @@ public class LibraryActivity extends BibleQuoteActivity implements OnTaskComplet
     private ArrayList<ItemList> modules = new ArrayList<ItemList>();
     private ArrayList<ItemList> books = new ArrayList<ItemList>();
     private ArrayList<String> chapters = new ArrayList<String>();
-    private int modulePos = 0, bookPos = 0, chapterPos = 0;
+    private int modulePos, bookPos, chapterPos;
     private Librarian myLibrarian;
     private View.OnClickListener onBtnModuleClick = new View.OnClickListener() {
         @Override
@@ -84,7 +84,7 @@ public class LibraryActivity extends BibleQuoteActivity implements OnTaskComplet
 
             String message = getResources().getString(R.string.messageLoadBooks);
             BibleReference currentOSISLink = myLibrarian.getCurrentOSISLink();
-            BibleReference OSISLink = new BibleReference(
+            BibleReference osisLink = new BibleReference(
                     currentOSISLink.getModuleDatasource(),
                     null,
                     moduleID,
@@ -92,7 +92,7 @@ public class LibraryActivity extends BibleQuoteActivity implements OnTaskComplet
                     currentOSISLink.getChapter(),
                     currentOSISLink.getFromVerse());
 
-            mTask = new AsyncOpenModule(message, false, myLibrarian, OSISLink);
+            mTask = new AsyncOpenModule(message, false, myLibrarian, osisLink);
             mAsyncManager.setupTask(mTask, LibraryActivity.this);
         }
     };

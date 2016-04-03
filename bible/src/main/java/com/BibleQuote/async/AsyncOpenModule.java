@@ -10,7 +10,7 @@ import com.BibleQuote.exceptions.OpenModuleException;
 import com.BibleQuote.managers.Librarian;
 
 public class AsyncOpenModule extends Task {
-	private final String TAG = "AsyncOpenBooks";
+	private static final String TAG = "AsyncOpenBooks";
 
 	private Librarian librarian;
 	private BibleReference link;

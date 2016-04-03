@@ -105,8 +105,8 @@ public class TagsFragment extends ListFragment implements AdapterView.OnItemLong
     }
 
     @Override
-    public void onListItemClick(ListView LV, View v, int position, long id) {
-        final Tag currTag = ((TagItem) LV.getAdapter().getItem(position)).tag;
+    public void onListItemClick(ListView lv, View v, int position, long id) {
+        final Tag currTag = ((TagItem) lv.getAdapter().getItem(position)).tag;
         onTagSelectListenerAlert(currTag);
     }
 

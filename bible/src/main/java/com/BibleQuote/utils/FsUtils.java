@@ -44,8 +44,12 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 
-public class FsUtils {
+public final class FsUtils {
 	private static final String TAG = "FsUtils";
+
+	private FsUtils() throws InstantiationException {
+		throw new InstantiationException("This class is not for instantiation");
+	}
 
 	public static BufferedReader getTextFileReaderFromZipArchive(String archivePath, String textFileInArchive,
 																 String textFileEncoding) throws FileAccessException {

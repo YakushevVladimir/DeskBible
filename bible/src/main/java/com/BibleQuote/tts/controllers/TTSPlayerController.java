@@ -39,9 +39,9 @@ public class TTSPlayerController extends UtteranceProgressListener implements Te
 	TextToSpeech ttsEngine;
 	HashMap<String, String> ttsParams;
 	Context cont;
-	boolean isPaused = false;
+	boolean isPaused;
 
-    private int currText = 0;
+    private int currText;
     private Locale locale;
     private Exception error;
     private ArrayList<String> textList;

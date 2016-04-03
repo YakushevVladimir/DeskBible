@@ -28,7 +28,7 @@ import java.util.Map;
 
 public class TSKController {
 
-	private final int MAX_PULL_SIZE = 10;
+	private static final int MAX_PULL_SIZE = 10;
 
 	private ITskRepository repository;
 	private Map<String, LinkedHashSet<BibleReference>> bCrossReferenceCache = Collections
