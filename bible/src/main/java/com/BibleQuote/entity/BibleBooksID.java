@@ -19,11 +19,7 @@ package com.BibleQuote.entity;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-//import android.util.Log;
-
 public final class BibleBooksID {
-
-	//private final static String TAG = "BibleBooksID";
 
 	private static HashMap<String, String> qualifier;
 	private static HashMap<String, String[]> bookShortNames = new HashMap<String, String[]>() {

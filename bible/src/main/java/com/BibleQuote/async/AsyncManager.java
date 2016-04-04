@@ -6,8 +6,6 @@ import com.BibleQuote.utils.OnTaskCompleteListener;
 
 public class AsyncManager implements OnTaskCompleteListener {
 
-	//private static String TAG = "AsyncManager";
-
 	private AsyncTaskManager mWaitTaskManager;
 	private AsyncTaskManager mAsyncTaskManager;
 	private Task waitTask;    // the task is waiting its execution

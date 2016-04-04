@@ -87,6 +87,5 @@ public final class SelectTextHandler implements ActionMode.Callback {
     @Override
     public void onDestroyActionMode(ActionMode mode) {
         webView.clearSelectedVerse();
-        //currActionMode = null;
     }
 }

@@ -711,9 +711,6 @@ public class ColorPickerView extends View{
 		int widthAllowed = MeasureSpec.getSize(widthMeasureSpec) - getPaddingLeft() - getPaddingRight();
 		int heightAllowed = MeasureSpec.getSize(heightMeasureSpec) - getPaddingBottom() - getPaddingTop();
 
-
-		//Log.d("color-picker-view", "widthMode: " + modeToString(widthMode) + " heightMode: " + modeToString(heightMode) + " widthAllowed: " + widthAllowed + " heightAllowed: " + heightAllowed);
-
 		if(widthMode == MeasureSpec.EXACTLY || heightMode == MeasureSpec.EXACTLY) {
 			//A exact value has been set in either direction, we need to stay within this size.
 
@@ -793,10 +790,6 @@ public class ColorPickerView extends View{
 				heightOk = true;
 			}
 
-
-			//Log.d("color-picker-view", "Size - Allowed w: " + widthAllowed + " h: " + heightAllowed + " Needed w:" + widthNeeded + " h: " + heightNeeded);
-
-
 			if(widthOk && heightOk) {
 				finalWidth = widthAllowed;
 				finalHeight = heightNeeded;
@@ -815,8 +808,6 @@ public class ColorPickerView extends View{
 			}
 
 		}
-
-		//Log.d("color-picker-view", "Final Size: " + finalWidth + "x" + finalHeight);
 
 		setMeasuredDimension(finalWidth + getPaddingLeft() + getPaddingRight(),
 				finalHeight + getPaddingTop() + getPaddingBottom());
@@ -878,8 +869,6 @@ public class ColorPickerView extends View{
 		// Clear those bitmap caches since the size may have changed.
 		mSatValBackgroundCache = null;
 		mHueBackgroundCache = null;
-
-		//Log.d("color-picker-view", "Size: " + w + "x" + h);
 
 		setUpSatValRect();
 		setUpHueRect();

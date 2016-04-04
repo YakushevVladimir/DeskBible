@@ -467,7 +467,6 @@ public class FsLibraryContext extends LibraryContext {
         String[] words = query.toLowerCase().replaceAll("[^\\s\\w]", "").split("\\s+");
         for (String currWord : words) {
             if (result.length() != 0) {
-                //result.append("\\s(.)*?");
                 result.append("(.)*?");
             }
             result.append(currWord);
