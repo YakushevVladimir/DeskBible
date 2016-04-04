@@ -23,6 +23,7 @@ import android.util.Log;
 public final class PreferenceHelper {
 
 	private final static String TAG = "Share";
+	private final static String BLACK = "#000000";
 
 	public static final String KEY_VIEW_BOOK_VERSE = "always_view_verse_numbers";
 
@@ -102,9 +103,9 @@ public final class PreferenceHelper {
 
 	static public String getTextColor() {
 		if (preference == null) {
-			return "#000000";
+			return BLACK;
 		}
-		String color = preference.getString("TextColor", "#000000");
+		String color = preference.getString("TextColor", BLACK);
 		return getWebColor(color);
 	}
 
@@ -118,9 +119,9 @@ public final class PreferenceHelper {
 
 	public static String getTextColorSelected() {
 		if (preference == null) {
-			return "#000000";
+			return BLACK;
 		}
-		String colorSelected = preference.getString("TextColorSel", "#000000");
+		String colorSelected = preference.getString("TextColorSel", BLACK);
 		return getWebColor(colorSelected);
 	}
 

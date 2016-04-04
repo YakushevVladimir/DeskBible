@@ -35,7 +35,9 @@ public class ReaderWebView extends WebView
 		implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
 
 	static final String TAG = "ReaderWebView";
-
+	private static final String COLOR = "color: ";
+	private static final String BACKGROUND = "background: ";
+	private static final String CHAR_SET = "}\r\n";
 	private GestureDetector mGestureScanner;
 	private JavaScriptInterface jsInterface;
 	private Mode currMode = Mode.Read;
@@ -189,21 +191,21 @@ public class ReaderWebView extends WebView
 		if (PreferenceHelper.textAlignJustify()) {
 			style.append("text-align: justify;\r\n");
 		}
-		style.append("color: ").append(textColor).append(";\r\n")
+		style.append(COLOR).append(textColor).append(";\r\n")
 				.append("font-size: ").append(textSize).append("pt;\r\n")
 				.append("line-height: 1.25;\r\n")
-				.append("background: ").append(backColor).append(";\r\n")
-				.append("}\r\n")
+				.append(BACKGROUND).append(backColor).append(";\r\n")
+				.append(CHAR_SET)
 				.append(".verse {\r\n")
-				.append("background: ").append(backColor).append(";\r\n")
-				.append("}\r\n")
+				.append(BACKGROUND).append(backColor).append(";\r\n")
+				.append(CHAR_SET)
 				.append(".selectedVerse {\r\n")
-				.append("color: ").append(selTextColor).append(";\r\n")
-				.append("background: ").append(selTextBack).append(";\r\n")
-				.append("}\r\n")
+				.append(COLOR).append(selTextColor).append(";\r\n")
+				.append(BACKGROUND).append(selTextBack).append(";\r\n")
+				.append(CHAR_SET)
 				.append("img {\r\n")
 				.append("max-width: 100%;\r\n")
-				.append("}\r\n")
+				.append(CHAR_SET)
 				.append("</style>\r\n");
 
 		return style.toString();

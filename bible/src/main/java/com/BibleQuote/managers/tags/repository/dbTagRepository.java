@@ -14,6 +14,7 @@ import java.util.LinkedHashMap;
 
 public class dbTagRepository implements ITagRepository {
 	private final static String TAG = dbTagRepository.class.getSimpleName();
+	private static final String FROM = " FROM ";
 	private dbBookmarksTagsRepository bmTagRepo = new dbBookmarksTagsRepository();
 
 	@Override
@@ -91,7 +92,7 @@ public class dbTagRepository implements ITagRepository {
 					"SELECT " + dbLibraryHelper.TAGS_TABLE + "." + Tag.KEY_ID + ", "
 							+ dbLibraryHelper.TAGS_TABLE + "." + Tag.NAME + ", " +
 							" COUNT(" + dbLibraryHelper.BOOKMARKSTAGS_TABLE + "." + BookmarksTags.BOOKMARKSTAGS_KEY_ID + ") AS count " +
-					" FROM " + dbLibraryHelper.TAGS_TABLE + " " +
+					FROM + dbLibraryHelper.TAGS_TABLE + " " +
 					" LEFT OUTER JOIN " + dbLibraryHelper.BOOKMARKSTAGS_TABLE +
 							" ON " + dbLibraryHelper.TAGS_TABLE + "." + Tag.KEY_ID +
 								" = " + dbLibraryHelper.BOOKMARKSTAGS_TABLE + "." + BookmarksTags.BOOKMARKSTAGS_TAG_ID +
@@ -134,9 +135,9 @@ public class dbTagRepository implements ITagRepository {
 			db.execSQL(
 				"DELETE FROM " + dbLibraryHelper.TAGS_TABLE
 					+ " WHERE " + Tag.KEY_ID
-					+ " IN (SELECT " + Tag.KEY_ID + " FROM " + dbLibraryHelper.TAGS_TABLE
+					+ " IN (SELECT " + Tag.KEY_ID + FROM + dbLibraryHelper.TAGS_TABLE
 						+ " WHERE NOT " + Tag.KEY_ID
-						+ " IN (SELECT " + BookmarksTags.BOOKMARKSTAGS_TAG_ID + " FROM " + dbLibraryHelper.BOOKMARKSTAGS_TABLE + "))");
+						+ " IN (SELECT " + BookmarksTags.BOOKMARKSTAGS_TAG_ID + FROM + dbLibraryHelper.BOOKMARKSTAGS_TABLE + "))");
 			db.setTransactionSuccessful();
 		} finally {
 			db.endTransaction();
