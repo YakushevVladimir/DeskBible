@@ -32,7 +32,7 @@ public class TSKController {
 
 	private ITskRepository repository;
 	private Map<String, LinkedHashSet<BibleReference>> bCrossReferenceCache = Collections
-			.synchronizedMap(new CachePool<LinkedHashSet<BibleReference>>(
+			.synchronizedMap(new CachePool<>(
 					MAX_PULL_SIZE));
 
 	public TSKController(ITskRepository repository) {

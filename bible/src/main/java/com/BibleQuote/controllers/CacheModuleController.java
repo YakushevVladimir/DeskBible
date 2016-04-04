@@ -21,7 +21,7 @@ public class CacheModuleController<TModule> {
 		try {
 			return cacheRepository.getData();
 		} catch (FileAccessException e) {
-			return new ArrayList<TModule>();
+			return new ArrayList<>();
 		}
 	}
 
@@ -40,7 +40,7 @@ public class CacheModuleController<TModule> {
 
 	private CacheRepository<ArrayList<TModule>> getCacheRepository(CacheContext cacheContext) {
 		if (this.cacheRepository == null) {
-			this.cacheRepository = new CacheRepository<ArrayList<TModule>>(cacheContext);
+			this.cacheRepository = new CacheRepository<>(cacheContext);
 		}
 		return cacheRepository;
 	}

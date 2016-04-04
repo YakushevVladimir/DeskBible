@@ -70,7 +70,7 @@ public class LibraryController {
 						: DataConstants.FS_DATA_PATH;
 
 				CacheContext cacheContext = new CacheContext(context.getCacheDir(), DataConstants.LIBRARY_CACHE);
-				CacheModuleController<FsModule> cache = new CacheModuleController<FsModule>(cacheContext);
+				CacheModuleController<FsModule> cache = new CacheModuleController<>(cacheContext);
 				FsLibraryContext libContext = new FsLibraryContext(new File(libraryPath), context, cache);
 				instance = new LibraryController(libContext, cacheContext);
 			}

@@ -18,7 +18,7 @@ public final class BibleLinkParser {
 
 	public static LinkedHashSet<BibleReference> parse(String moduleID, String references) {
 
-		LinkedHashSet<BibleReference> bibleLinks = new LinkedHashSet<BibleReference>();
+		LinkedHashSet<BibleReference> bibleLinks = new LinkedHashSet<>();
 		String currSymbol;
 		StringBuilder book, chapter, fromVerse, toVerse;
 

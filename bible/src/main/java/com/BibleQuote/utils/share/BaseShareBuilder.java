@@ -33,7 +33,7 @@ public abstract class BaseShareBuilder {
 			textFormater = new SimpleBibleShareFormatter(verses);
 		}
 
-		TreeSet<Integer> verseNumbers = new TreeSet<Integer>();
+		TreeSet<Integer> verseNumbers = new TreeSet<>();
 		for (Integer numb : verses.keySet()) {
 			verseNumbers.add(numb);
 		}

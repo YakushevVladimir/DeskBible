@@ -33,9 +33,9 @@ import java.util.*;
 
 public abstract class LibraryContext {
 
-	public Map<String, Module> moduleSet = Collections.synchronizedMap(new TreeMap<String, Module>());
-	public Map<String, Book> bookSet = Collections.synchronizedMap(new LinkedHashMap<String, Book>());
-	public Map<String, Chapter> chapterPool = Collections.synchronizedMap(new CachePool<Chapter>());
+	public Map<String, Module> moduleSet = Collections.synchronizedMap(new TreeMap<>());
+	public Map<String, Book> bookSet = Collections.synchronizedMap(new LinkedHashMap<>());
+	public Map<String, Chapter> chapterPool = Collections.synchronizedMap(new CachePool<>());
 
 	private Context context;
 
@@ -48,7 +48,7 @@ public abstract class LibraryContext {
 	}
 
 	protected HashMap<String, String> getCharsets() {
-		HashMap<String, String> charsets = new HashMap<String, String>();
+		HashMap<String, String> charsets = new HashMap<>();
 		charsets.put("0", "ISO-8859-1"); // ANSI charset
 		charsets.put("1", "US-ASCII"); // DEFAULT charset
 		charsets.put("77", "MacRoman"); // Mac Roman

@@ -105,12 +105,12 @@ public class TTSPlayerFragment extends Fragment implements PlayerView.OnClickLis
             Toast.makeText(getActivity(), ttsController.getError().getMessage(), Toast.LENGTH_LONG).show();
         } else if (ev == TTSPlayerController.Event.ChangeTextIndex) {
             int nextTextIndex = ttsController.getCurrText();
-            TreeSet<Integer> selected = new TreeSet<Integer>();
+            TreeSet<Integer> selected = new TreeSet<>();
             selected.add((++nextTextIndex));
             webView.setSelectedVerse(selected);
             webView.gotoVerse(nextTextIndex);
         } else if (ev == TTSPlayerController.Event.PauseSpeak) {
-            TreeSet<Integer> selected = new TreeSet<Integer>();
+            TreeSet<Integer> selected = new TreeSet<>();
             webView.setSelectedVerse(selected);
             player.viewPlayButton();
         }

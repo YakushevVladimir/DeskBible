@@ -30,7 +30,7 @@ public class FsBookRepository implements IBookRepository<FsModule, FsBook> {
 
 			if (module.Books != context.bookSet) {
 
-				module.Books = context.bookSet = new LinkedHashMap<String, Book>();
+				module.Books = context.bookSet = new LinkedHashMap<>();
 				BufferedReader reader = null;
 				String moduleID = "";
 				String moduleDatasourceID = "";

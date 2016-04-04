@@ -12,7 +12,7 @@ public class ChangeModulesEvent {
 	}
 
 	public ChangeCode code;
-	public TreeMap<String, Module> modules = new TreeMap<String, Module>();
+	public TreeMap<String, Module> modules = new TreeMap<>();
 
 	public ChangeModulesEvent(ChangeCode code, TreeMap<String, Module> modules) {
 		this.code = code;

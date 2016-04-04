@@ -50,7 +50,7 @@ public class Librarian {
 
 	private static final String TAG = "Librarian";
 
-	private LinkedHashMap<String, String> searchResults = new LinkedHashMap<String, String>();
+	private LinkedHashMap<String, String> searchResults = new LinkedHashMap<>();
 
     private Module currModule;
 	private Book currBook;
@@ -140,13 +140,13 @@ public class Librarian {
 	 */
 	public ArrayList<ItemList> getModulesList() {
 		// Сначала отсортируем список по наименованием модулей
-		TreeMap<String, Module> tMap = new TreeMap<String, Module>();
+		TreeMap<String, Module> tMap = new TreeMap<>();
 		for (Module currModule : libCtrl.getModuleCtrl().getModules().values()) {
 			tMap.put(currModule.getName(), currModule);
 		}
 
 		// Теперь создадим результирующий список на основе отсортированных данных
-		ArrayList<ItemList> moduleList = new ArrayList<ItemList>();
+		ArrayList<ItemList> moduleList = new ArrayList<>();
 		for (Module currModule : tMap.values()) {
 			moduleList.add(new ItemList(currModule.getID(), currModule.getName()));
 		}
@@ -162,7 +162,7 @@ public class Librarian {
 	public ArrayList<ItemList> getModuleBooksList(String moduleID) throws OpenModuleException, BooksDefinitionException, BookDefinitionException {
 		// Получим модуль по его ID
 		Module module = libCtrl.getModuleCtrl().getModuleByID(moduleID);
-		ArrayList<ItemList> booksList = new ArrayList<ItemList>();
+		ArrayList<ItemList> booksList = new ArrayList<>();
 		for (Book book : libCtrl.getBookCtrl().getBookList(module)) {
 			booksList.add(new ItemList(book.getID(), book.name));
 		}
@@ -171,7 +171,7 @@ public class Librarian {
 
 	public ArrayList<ItemList> getCurrentModuleBooksList() throws OpenModuleException, BooksDefinitionException, BookDefinitionException {
 		if (getCurrModule() == null) {
-			return new ArrayList<ItemList>();
+			return new ArrayList<>();
 		}
 		return this.getModuleBooksList(getCurrModule().getID());
 	}
@@ -269,7 +269,7 @@ public class Librarian {
 
 	public LinkedHashMap<String, String> search(String query, String fromBook, String toBook) throws OpenModuleException, BookNotFoundException {
 		if (getCurrModule() == null) {
-			searchResults = new LinkedHashMap<String, String>();
+			searchResults = new LinkedHashMap<>();
 		} else {
 			searchResults = libCtrl.getBookCtrl().search(getCurrModule(), query, fromBook, toBook);
 		}
@@ -417,7 +417,7 @@ public class Librarian {
 
 		LinkedHashSet<BibleReference> csLinks = tskCtrl.getLinks(bReference);
 
-		LinkedHashMap<String, BibleReference> parallels = new LinkedHashMap<String, BibleReference>();
+		LinkedHashMap<String, BibleReference> parallels = new LinkedHashMap<>();
 		for (BibleReference reference : csLinks) {
 			Book book;
 			try {
@@ -445,7 +445,7 @@ public class Librarian {
 		ModuleTextFormatter formatter = new ModuleTextFormatter(currModule, new StripTagsTextFormatter());
         formatter.setVisibleVerseNumbers(false);
 
-        HashMap<BibleReference, String> crossReferenceContent = new HashMap<BibleReference, String>();
+        HashMap<BibleReference, String> crossReferenceContent = new HashMap<>();
         for (BibleReference ref : bReferences) {
 			try {
 				int fromVerse = ref.getFromVerse();
@@ -480,7 +480,7 @@ public class Librarian {
 	}
 
 	public ArrayList<String> getCleanedVersesText() {
-		ArrayList<String> result = new ArrayList<String>();
+		ArrayList<String> result = new ArrayList<>();
 
 		if (currModule == null) {
 			return result;

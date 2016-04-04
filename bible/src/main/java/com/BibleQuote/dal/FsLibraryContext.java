@@ -72,7 +72,7 @@ public class FsLibraryContext extends LibraryContext {
     }
 
     public ArrayList<FsModule> getModuleList(Map<String, Module> moduleSet) {
-        ArrayList<FsModule> result = new ArrayList<FsModule>();
+        ArrayList<FsModule> result = new ArrayList<>();
         for (Module currModule : moduleSet.values()) {
             result.add((FsModule) currModule);
         }
@@ -80,7 +80,7 @@ public class FsLibraryContext extends LibraryContext {
     }
 
     public ArrayList<FsBook> getBookList(Map<String, Book> bookSet) {
-        ArrayList<FsBook> bookList = new ArrayList<FsBook>();
+        ArrayList<FsBook> bookList = new ArrayList<>();
         if (bookSet != null) {
             for (Book currBook : bookSet.values()) {
                 bookList.add((FsBook) currBook);
@@ -90,7 +90,7 @@ public class FsLibraryContext extends LibraryContext {
     }
 
     public ArrayList<Chapter> getChapterList(Map<String, Chapter> chapterSet) {
-        ArrayList<Chapter> chapterList = new ArrayList<Chapter>();
+        ArrayList<Chapter> chapterList = new ArrayList<>();
         for (Chapter currChapter : chapterSet.values()) {
             chapterList.add(currChapter);
         }
@@ -120,7 +120,7 @@ public class FsLibraryContext extends LibraryContext {
 
         Log.i(TAG, "SearchModules()");
 
-        ArrayList<String> iniFiles = new ArrayList<String>();
+        ArrayList<String> iniFiles = new ArrayList<>();
 
         if (!isLibraryExist()) {
             return iniFiles;
@@ -195,7 +195,7 @@ public class FsLibraryContext extends LibraryContext {
         }
 
         String tagFilter[] = {"p", "b", "i", "em", "strong", "q", "big", "sub", "sup", "h1", "h2", "h3", "h4"};
-        ArrayList<String> tagArray = new ArrayList<String>();
+        ArrayList<String> tagArray = new ArrayList<>();
         Collections.addAll(tagArray, tagFilter);
 
         if (!htmlFilter.equals("")) {
@@ -218,10 +218,10 @@ public class FsLibraryContext extends LibraryContext {
     public void fillBooks(FsModule module, BufferedReader bReader) throws FileAccessException, BooksDefinitionException, BookDefinitionException {
         String str, key, value;
 
-        ArrayList<String> fullNames = new ArrayList<String>();
-        ArrayList<String> pathNames = new ArrayList<String>();
-        ArrayList<String> shortNames = new ArrayList<String>();
-        ArrayList<Integer> chapterQty = new ArrayList<Integer>();
+        ArrayList<String> fullNames = new ArrayList<>();
+        ArrayList<String> pathNames = new ArrayList<>();
+        ArrayList<String> shortNames = new ArrayList<>();
+        ArrayList<Integer> chapterQty = new ArrayList<>();
         int booksCount = 0;
 
         int pos;
@@ -334,7 +334,7 @@ public class FsLibraryContext extends LibraryContext {
 
     public Chapter loadChapter(Book book, Integer chapterNumber, BufferedReader bReader) {
 
-        ArrayList<String> lines = new ArrayList<String>();
+        ArrayList<String> lines = new ArrayList<>();
         try {
             String str;
             int currentChapter = book.getModule().ChapterZero ? 0 : 1;
@@ -370,7 +370,7 @@ public class FsLibraryContext extends LibraryContext {
             return null;
         }
 
-        ArrayList<Verse> verseList = new ArrayList<Verse>();
+        ArrayList<Verse> verseList = new ArrayList<>();
         String verseSign = book.getModule().VerseSign;
         int i = -1;
         for (String currLine : lines) {
@@ -387,7 +387,7 @@ public class FsLibraryContext extends LibraryContext {
 
 
     public LinkedHashMap<String, String> searchInBook(Module module, String bookID, String query, BufferedReader bReader) {
-        LinkedHashMap<String, String> searchRes = new LinkedHashMap<String, String>();
+        LinkedHashMap<String, String> searchRes = new LinkedHashMap<>();
 
         // Подготовим регулярное выражение для поиска
         String searchQuery = getSearchQuery(query);

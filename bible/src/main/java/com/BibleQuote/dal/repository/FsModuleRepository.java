@@ -50,7 +50,7 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 
 		Log.i(TAG, "Load modules from sd-card:");
 
-		TreeMap<String, Module> newModuleSet = new TreeMap<String, Module>();
+		TreeMap<String, Module> newModuleSet = new TreeMap<>();
 
 		// Load zip-compressed BQ-modules
 		ArrayList<String> bqZipIniFiles = context.SearchModules(new OnlyBQZipIni());
@@ -183,7 +183,7 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 
 	private void loadCachedModules() {
 		ArrayList<FsModule> moduleList = cache.getModuleList();
-		context.moduleSet = new TreeMap<String, Module>();
+		context.moduleSet = new TreeMap<>();
 		for (FsModule fsModule : moduleList) {
 			insertModule(fsModule);
 		}

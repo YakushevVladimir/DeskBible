@@ -37,7 +37,7 @@ public abstract class Module implements Serializable {
     public boolean isBible;
     public String defaultEncoding = "utf-8";
     public String language = "ru_RU";
-    public Map<String, Book> Books = new LinkedHashMap<String, Book>();    // to lazy loading on demand
+    public Map<String, Book> Books = new LinkedHashMap<>();    // to lazy loading on demand
     private String Name = "";
     public String fontName = "";
     public String fontPath = "";

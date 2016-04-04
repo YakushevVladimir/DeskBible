@@ -174,7 +174,7 @@ public class BookmarksFragment extends ListFragment implements AdapterView.OnIte
     }
 
     private void setAdapter() {
-        List<Item> items = new ArrayList<Item>();
+        List<Item> items = new ArrayList<>();
         for (Bookmark curr : getBookmarksManager().getAll()) {
             items.add(new BookmarkItem(curr));
         }
@@ -183,7 +183,7 @@ public class BookmarksFragment extends ListFragment implements AdapterView.OnIte
     }
 
     private void setAdapter(Tag tag) {
-        List<Item> items = new ArrayList<Item>();
+        List<Item> items = new ArrayList<>();
         for (Bookmark curr : getBookmarksManager().getAll(tag)) {
             items.add(new BookmarkItem(curr));
         }

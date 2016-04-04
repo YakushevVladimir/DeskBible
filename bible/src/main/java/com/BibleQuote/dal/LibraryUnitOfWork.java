@@ -15,7 +15,7 @@ public class LibraryUnitOfWork implements ILibraryUnitOfWork<String, FsModule, F
 
 	public LibraryUnitOfWork(FsLibraryContext fsLibraryContext, CacheContext cacheContext) {
 		this.libraryContext = fsLibraryContext;
-		this.cacheModuleController = new CacheModuleController<FsModule>(cacheContext);
+		this.cacheModuleController = new CacheModuleController<>(cacheContext);
 	}
 
 	public LibraryContext getLibraryContext() {

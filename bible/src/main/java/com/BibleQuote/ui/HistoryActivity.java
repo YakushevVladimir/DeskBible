@@ -39,7 +39,7 @@ public class HistoryActivity extends BibleQuoteActivity {
 
     private ListView vHistoryList;
     private Librarian myLibrarian;
-    private LinkedList<ItemList> list = new LinkedList<ItemList>();
+    private LinkedList<ItemList> list = new LinkedList<>();
     private AdapterView.OnItemClickListener OnItemClickListener = new AdapterView.OnItemClickListener() {
         public void onItemClick(AdapterView<?> a, View v, int position, long id) {
             Intent intent = new Intent();

@@ -35,7 +35,7 @@ public class SearchProcessor {
     private static final String TAG = SearchProcessor.class.getSimpleName();
 
     private final IBookRepository repository;
-	private Map<String, LinkedHashMap<String, String>> results = Collections.synchronizedMap(new HashMap<String, LinkedHashMap<String, String>>());
+	private Map<String, LinkedHashMap<String, String>> results = Collections.synchronizedMap(new HashMap<>());
     private ExecutorService executor;
 
     public SearchProcessor(IBookRepository<FsModule, FsBook> repository) {
@@ -68,7 +68,7 @@ public class SearchProcessor {
             e.printStackTrace();
         }
 
-        LinkedHashMap<String, String> searchRes = new LinkedHashMap<String, String>();
+        LinkedHashMap<String, String> searchRes = new LinkedHashMap<>();
         for (String bookID : bookList) {
             LinkedHashMap<String, String> searches = results.get(bookID);
             searchRes.putAll(searches);
@@ -100,7 +100,7 @@ public class SearchProcessor {
 				results.put(bookID, repository.searchInBook(module, bookID, query));
 			} catch (BookNotFoundException e) {
 				Log.e(TAG, e.getMessage());
-				results.put(bookID, new LinkedHashMap<String, String>());
+				results.put(bookID, new LinkedHashMap<>());
 			}
             latch.countDown();
 		}
