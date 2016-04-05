@@ -45,6 +45,8 @@ import java.util.LinkedHashMap;
 
 public class SearchActivity extends BibleQuoteActivity implements OnTaskCompleteListener {
 	private static final String TAG = "SearchActivity";
+	private static final String CHANGE_SEARCH_POSITION = "changeSearchPosition";
+	private static final String SEARCH_MODULE_ID = "searchModuleID";
 	private Spinner spinnerFrom, spinnerTo;
 	private ListView ResultList;
 	private AsyncManager mAsyncManager;
@@ -79,7 +81,7 @@ public class SearchActivity extends BibleQuoteActivity implements OnTaskComplete
 		public void onItemClick(AdapterView<?> a, View v, int position, long id) {
 			String humanLink = ((SubtextItem) ResultList.getAdapter().getItem(position)).text;
 
-			PreferenceHelper.saveStateInt("changeSearchPosition", position);
+			PreferenceHelper.saveStateInt(CHANGE_SEARCH_POSITION, position);
 
 			Intent intent = new Intent();
 			intent.putExtra("linkOSIS", LinkConverter.getHumanToOSIS(humanLink));
@@ -133,7 +135,7 @@ public class SearchActivity extends BibleQuoteActivity implements OnTaskComplete
 
 		progressMessage = getResources().getString(R.string.messageSearch);
 
-		String searchModuleID = PreferenceHelper.restoreStateString("searchModuleID");
+		String searchModuleID = PreferenceHelper.restoreStateString(SEARCH_MODULE_ID);
 		if (myLibararian.getModuleID().equalsIgnoreCase(searchModuleID)) {
 			searchResults = myLibararian.getSearchResults();
 		}
@@ -172,9 +174,9 @@ public class SearchActivity extends BibleQuoteActivity implements OnTaskComplete
 		ItemAdapter adapter = new ItemAdapter(this, searchItems);
 		ResultList.setAdapter(adapter);
 
-		String searchModuleID = PreferenceHelper.restoreStateString("searchModuleID");
+		String searchModuleID = PreferenceHelper.restoreStateString(SEARCH_MODULE_ID);
 		if (myLibararian.getModuleID().equalsIgnoreCase(searchModuleID)) {
-			int changeSearchPosition = PreferenceHelper.restoreStateInt("changeSearchPosition");
+			int changeSearchPosition = PreferenceHelper.restoreStateInt(CHANGE_SEARCH_POSITION);
 			if (changeSearchPosition < searchItems.size()) {
 				ResultList.setSelection(changeSearchPosition);
 			}
@@ -232,17 +234,17 @@ public class SearchActivity extends BibleQuoteActivity implements OnTaskComplete
 			searchResults = myLibararian.getSearchResults();
 			setAdapter();
 		}
-		PreferenceHelper.saveStateInt("changeSearchPosition", 0);
+		PreferenceHelper.saveStateInt(CHANGE_SEARCH_POSITION, 0);
 	}
 
 	private void saveSelectedPosition(int fromBook, int toBook) {
-		PreferenceHelper.saveStateString("searchModuleID", myLibararian.getModuleID());
+		PreferenceHelper.saveStateString(SEARCH_MODULE_ID, myLibararian.getModuleID());
 		PreferenceHelper.saveStateInt("fromBook", fromBook);
 		PreferenceHelper.saveStateInt("toBook", toBook);
 	}
 
 	private void restoreSelectedPosition() {
-		String searchModuleID = PreferenceHelper.restoreStateString("searchModuleID");
+		String searchModuleID = PreferenceHelper.restoreStateString(SEARCH_MODULE_ID);
 		int fromBook = 0;
 		int toBook = spinnerTo.getCount() - 1;
 

@@ -43,6 +43,7 @@ import java.util.regex.Pattern;
 
 public class FsLibraryContext extends LibraryContext {
     private static final String TAG = "FsLibraryContext";
+    private static final String LANGUAGE = "language";
     public CacheModuleController<FsModule> cache;
     private File libraryDir;
 
@@ -144,10 +145,10 @@ public class FsLibraryContext extends LibraryContext {
         try {
             while ((str = bReader.readLine()) != null) {
                 pos = str.indexOf("//");
-                if (str.toLowerCase().contains("language") && pos >= 0) {
+                if (str.toLowerCase().contains(LANGUAGE) && pos >= 0) {
                     // Тег языка в старых модулях может быть закомментирован,
                     // поэтому раскомментируем его
-                    str = str.substring(str.toLowerCase().indexOf("language"));
+                    str = str.substring(str.toLowerCase().indexOf(LANGUAGE));
                     pos = str.indexOf("//");
                 }
                 if (pos >= 0) str = str.substring(0, pos);
@@ -178,7 +179,7 @@ public class FsLibraryContext extends LibraryContext {
                     module.isBible = value.toLowerCase().contains("y");
                 } else if (key.equals("strongnumbers")) {
                     module.containsStrong = value.toLowerCase().contains("y");
-                } else if (key.equals("language")) {
+                } else if (key.equals(LANGUAGE)) {
                     module.language = LanguageConvertor.getISOLanguage(value);
                 } else if (key.equalsIgnoreCase("PathName")) {
                     break;

@@ -32,6 +32,8 @@ import java.io.File;
  */
 public final class dbLibraryHelper {
 	private final static String TAG = dbLibraryHelper.class.getSimpleName();
+	private static final String CREAT_TABLE = "create table ";
+	private static final String INTEGER_PRIMARY_KEY_AUTOINCREMENT = " integer primary key autoincrement, ";
 
 	private static int version = 2;
 	private static SQLiteDatabase db;
@@ -45,20 +47,20 @@ public final class dbLibraryHelper {
 	}
 
 	private static final String[] CREATE_DATABASE = new String[] {
-			"create table " + BOOKMARKS_TABLE + " ("
-					+ Bookmark.KEY_ID + " integer primary key autoincrement, "
+			CREAT_TABLE + BOOKMARKS_TABLE + " ("
+					+ Bookmark.KEY_ID + INTEGER_PRIMARY_KEY_AUTOINCREMENT
 					+ Bookmark.OSIS + " text unique not null, "
 					+ Bookmark.LINK + " text not null, "
 					+ Bookmark.NAME + " text not null, "
 					+ Bookmark.DATE + " text not null"
 				+ ");",
-			"create table " + BOOKMARKSTAGS_TABLE + " ("
-					+ BookmarksTags.BOOKMARKSTAGS_KEY_ID + " integer primary key autoincrement, "
+			CREAT_TABLE + BOOKMARKSTAGS_TABLE + " ("
+					+ BookmarksTags.BOOKMARKSTAGS_KEY_ID + INTEGER_PRIMARY_KEY_AUTOINCREMENT
 					+ BookmarksTags.BOOKMARKSTAGS_BM_ID + " integer not null, "
 					+ BookmarksTags.BOOKMARKSTAGS_TAG_ID + " integer not null"
 				+ ");",
-			"create table " + TAGS_TABLE + " ("
-					+ Tag.KEY_ID + " integer primary key autoincrement, "
+			CREAT_TABLE + TAGS_TABLE + " ("
+					+ Tag.KEY_ID + INTEGER_PRIMARY_KEY_AUTOINCREMENT
 					+ Tag.NAME + " text unique not null"
 				+ ");"
 	};

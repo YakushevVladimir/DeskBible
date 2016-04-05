@@ -20,7 +20,8 @@ import java.util.zip.ZipInputStream;
 
 public final class UpdateManager {
 
-	private final static String TAG = "UpdateManager";
+	private static final String TAG = "UpdateManager";
+	private static final String VERSION_CODE = "versionCode";
 
 	private UpdateManager() throws InstantiationException {
 		throw new InstantiationException("This class is not for instantiation");
@@ -40,7 +41,7 @@ public final class UpdateManager {
 			}
 		}
 
-		int currVersionCode = settings.getInt("versionCode", 0);
+		int currVersionCode = settings.getInt(VERSION_CODE, 0);
 
 		boolean updateModules = false;
 		if (currVersionCode == 0 && Environment.MEDIA_MOUNTED.equals(state)) {
@@ -69,9 +70,9 @@ public final class UpdateManager {
 
 		try {
 			int versionCode = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode;
-			settings.edit().putInt("versionCode", versionCode).commit();
+			settings.edit().putInt(VERSION_CODE, versionCode).commit();
 		} catch (NameNotFoundException e) {
-			settings.edit().putInt("versionCode", 39).commit();
+			settings.edit().putInt(VERSION_CODE, 39).commit();
 		}
 	}
 

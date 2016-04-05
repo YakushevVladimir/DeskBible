@@ -31,31 +31,32 @@ public class prefBookmarksRepository implements IBookmarksRepository {
 
 	private static final Byte BOOKMARK_DELIMITER = (byte) 0xFE;
 	private static final Byte BOOKMARK_PATH_DELIMITER = (byte) 0xFF;
+	private static final String FAVORITS = "Favorits";
 
 	@Override
 	public long add(Bookmark bookmark) {
-		String fav = PreferenceHelper.restoreStateString("Favorits");
-		PreferenceHelper.saveStateString("Favorits", bookmark.humanLink + BOOKMARK_PATH_DELIMITER + bookmark.OSISLink + BOOKMARK_DELIMITER + fav);
+		String fav = PreferenceHelper.restoreStateString(FAVORITS);
+		PreferenceHelper.saveStateString(FAVORITS, bookmark.humanLink + BOOKMARK_PATH_DELIMITER + bookmark.OSISLink + BOOKMARK_DELIMITER + fav);
 		return 0;
 	}
 
 	@Override
 	public void delete(Bookmark bookmark) {
-		String fav = PreferenceHelper.restoreStateString("Favorits");
+		String fav = PreferenceHelper.restoreStateString(FAVORITS);
 		fav = fav.replaceAll(bookmark.humanLink + "(.)+?" + BOOKMARK_DELIMITER, "");
-		PreferenceHelper.saveStateString("Favorits", fav);
+		PreferenceHelper.saveStateString(FAVORITS, fav);
 	}
 
 	@Override
 	public void deleteAll() {
-		PreferenceHelper.saveStateString("Favorits", "");
+		PreferenceHelper.saveStateString(FAVORITS, "");
 	}
 
 	@Override
 	public ArrayList<Bookmark> getAll() {
 		ArrayList<Bookmark> result = new ArrayList<Bookmark>();
 
-		String fav = PreferenceHelper.restoreStateString("Favorits");
+		String fav = PreferenceHelper.restoreStateString(FAVORITS);
 		if (fav.equals("")) {
 			return result;
 		}
