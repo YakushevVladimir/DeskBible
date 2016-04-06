@@ -33,7 +33,6 @@ import com.BibleQuote.utils.textFormatters.ModuleTextFormatter;
 import java.util.ArrayList;
 
 public class FsChapterController implements IChapterController {
-	//private final String TAG = "FsChapterController";
 
 	private IBookRepository<FsModule, FsBook> bRepository;
 	private IChapterRepository<FsBook> chRepository;

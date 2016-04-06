@@ -35,8 +35,6 @@ import java.util.LinkedList;
 
 public class HistoryActivity extends BibleQuoteActivity {
 
-    //private final String TAG = "HistoryActivity";
-
     private ListView vHistoryList;
     private Librarian myLibrarian;
     private LinkedList<ItemList> list = new LinkedList<ItemList>();

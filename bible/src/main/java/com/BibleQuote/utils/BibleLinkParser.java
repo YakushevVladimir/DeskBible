@@ -7,8 +7,6 @@ import java.util.LinkedHashSet;
 
 public final class BibleLinkParser {
 
-
-	//private static final String VERSE_SEPARATOR = ":";
 	private static final String TO_VERSE_SEPARATOR = "-";
 	private static final String LINK_SEPARATOR = ";";
 

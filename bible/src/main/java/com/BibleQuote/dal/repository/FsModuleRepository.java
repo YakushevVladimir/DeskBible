@@ -109,7 +109,6 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 			Log.i(TAG, "....Load modules from " + moduleDatasourceID);
 			context.fillModule(fsModule, reader);
 			if (!"".equals(fsModule.fontName)) {
-				//loadFont(fsModule);
 				Log.i(TAG, "Skip load font");
 			}
 		} catch (FileAccessException e) {

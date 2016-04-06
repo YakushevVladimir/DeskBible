@@ -5,7 +5,6 @@ import com.BibleQuote.exceptions.FileAccessException;
 import java.io.*;
 
 public class CacheContext {
-	//private final String TAG = "CacheContext";
 
 	private File cacheDir;
 	private String cacheName;
