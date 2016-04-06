@@ -185,7 +185,7 @@ public final class BibleBooksID {
 	}
 
 	private static void qualifierInit() {
-		qualifier = new HashMap<String, String>();
+		qualifier = new HashMap<>();
 		for (String key : bookShortNames.keySet()) {
 			String[] bookNames = bookShortNames.get(key);
 			for (String name : bookNames) {
@@ -203,7 +203,7 @@ public final class BibleBooksID {
 	}
 
 	public static String getID(String shortNames) {
-		ArrayList<String> moduleShortNames = new ArrayList<String>();
+		ArrayList<String> moduleShortNames = new ArrayList<>();
 		for (String shName : shortNames.split(" ")) moduleShortNames.add(shName);
 		return getID(moduleShortNames);
 	}

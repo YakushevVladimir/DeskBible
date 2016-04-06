@@ -53,7 +53,7 @@ public class prefBookmarksRepository implements IBookmarksRepository {
 
 	@Override
 	public ArrayList<Bookmark> getAll() {
-		ArrayList<Bookmark> result = new ArrayList<Bookmark>();
+		ArrayList<Bookmark> result = new ArrayList<>();
 
 		String fav = PreferenceHelper.restoreStateString("Favorits");
 		if (fav.equals("")) {
@@ -70,6 +70,6 @@ public class prefBookmarksRepository implements IBookmarksRepository {
 
 	@Override
 	public ArrayList<Bookmark> getAll(Tag tag) {
-		return new ArrayList<Bookmark>();
+		return new ArrayList<>();
 	}
 }

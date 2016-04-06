@@ -13,7 +13,7 @@ public class ModuleTextFormatter implements ITextFormatter {
 
     private static final String VERSE_NUMBER_PATTERN = "(?m)^(<[^/]+?>)*?(\\d+)(</(.)+?>){0,1}?\\s+";
 
-    private ArrayList<ITextFormatter> formatters = new ArrayList<ITextFormatter>();
+    private ArrayList<ITextFormatter> formatters = new ArrayList<>();
     private boolean visibleVerseNumbers;
 
     public ModuleTextFormatter(Module module) {

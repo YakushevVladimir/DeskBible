@@ -60,13 +60,13 @@ public class SimpleHistoryManager implements IHistoryManager {
 		try {
 			return repository.load();
 		} catch (FileAccessException e) {
-			return new LinkedList<ItemList>();
+			return new LinkedList<>();
 		}
 	}
 
 	@Override
 	public void clearLinks() {
-		LinkedList<ItemList> history = new LinkedList<ItemList>();
+		LinkedList<ItemList> history = new LinkedList<>();
 		repository.save(history);
 	}
 }

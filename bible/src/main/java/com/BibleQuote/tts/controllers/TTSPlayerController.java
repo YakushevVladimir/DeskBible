@@ -45,7 +45,7 @@ public class TTSPlayerController extends UtteranceProgressListener implements Te
     private Locale locale;
     private Exception error;
     private ArrayList<String> textList;
-    private ArrayList<OnEventListener> listeners = new ArrayList<OnEventListener>();
+    private ArrayList<OnEventListener> listeners = new ArrayList<>();
 
     public TTSPlayerController(Context cont, Locale locale) {
         this.cont = cont;
@@ -87,7 +87,7 @@ public class TTSPlayerController extends UtteranceProgressListener implements Te
 	public void onInit(int initStatus) {
 		Log.i(TAG, "onInit()");
 		if (initStatus == TextToSpeech.SUCCESS) {
-			ttsParams = new HashMap<String, String>();
+			ttsParams = new HashMap<>();
 			ttsParams.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "TTSPlayerController");
 			setLanguage();
 			ttsEngine.setOnUtteranceProgressListener(this);

@@ -71,7 +71,7 @@ public class dbTagRepository implements ITagRepository {
 	public ArrayList<Tag> getAll() {
 		SQLiteDatabase db = dbLibraryHelper.getLibraryDB();
 		db.beginTransaction();
-		ArrayList<Tag> result = new ArrayList<Tag>();
+		ArrayList<Tag> result = new ArrayList<>();
 		try {
 			result = getAllRowsToArray(db);
 			db.setTransactionSuccessful();
@@ -85,7 +85,7 @@ public class dbTagRepository implements ITagRepository {
 	public LinkedHashMap<Tag, String> getAllWithCount() {
 		SQLiteDatabase db = dbLibraryHelper.getLibraryDB();
 		db.beginTransaction();
-		LinkedHashMap<Tag, String> result = new LinkedHashMap<Tag, String>();
+		LinkedHashMap<Tag, String> result = new LinkedHashMap<>();
 		try {
 			Cursor allRows = db.rawQuery(
 					"SELECT " + dbLibraryHelper.TAGS_TABLE + "." + Tag.KEY_ID + ", "
@@ -146,7 +146,7 @@ public class dbTagRepository implements ITagRepository {
 	}
 
 	private ArrayList<Tag> getAllRowsToArray(SQLiteDatabase db) {
-		ArrayList<Tag> result = new ArrayList<Tag>();
+		ArrayList<Tag> result = new ArrayList<>();
 		Cursor allRows = db.query(true, dbLibraryHelper.TAGS_TABLE,
 				null, null, null, null, null, Tag.NAME, null);
 		if (allRows.moveToFirst()) {

@@ -11,7 +11,7 @@ public class Chapter {
 
 	private Integer number;
 	private String text;
-	private TreeMap<Integer, Verse> verses = new TreeMap<Integer, Verse>();
+	private TreeMap<Integer, Verse> verses = new TreeMap<>();
 	private Book book;
 
 	public Chapter(Book book, Integer number, ArrayList<Verse> verseList) {
@@ -62,7 +62,7 @@ public class Chapter {
 	}
 
 	public ArrayList<Integer> getVerseNumbers() {
-		ArrayList<Integer> verseNumbers = new ArrayList<Integer>();
+		ArrayList<Integer> verseNumbers = new ArrayList<>();
 		for (Integer verse : verses.keySet()) {
 			verseNumbers.add(verse);
 		}
@@ -70,7 +70,7 @@ public class Chapter {
 	}
 
 	public LinkedHashMap<Integer, String> getVerses(TreeSet<Integer> verses) {
-		LinkedHashMap<Integer, String> result = new LinkedHashMap<Integer, String>();
+		LinkedHashMap<Integer, String> result = new LinkedHashMap<>();
 		ArrayList<Verse> versesList = getVerseList();
 		int verseListSize = versesList.size();
 		for (Integer verse : verses) {
@@ -85,7 +85,7 @@ public class Chapter {
 	}
 
 	public ArrayList<Verse> getVerseList() {
-		ArrayList<Verse> verseList = new ArrayList<Verse>();
+		ArrayList<Verse> verseList = new ArrayList<>();
 		for (Integer verse : verses.keySet()) {
 			verseList.add(verses.get(verse));
 		}

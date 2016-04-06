@@ -40,9 +40,9 @@ public class ReaderWebView extends WebView
 	private JavaScriptInterface jsInterface;
 	private Mode currMode = Mode.Read;
 	
-	private ArrayList<IReaderViewListener> listeners = new ArrayList<IReaderViewListener>();
+	private ArrayList<IReaderViewListener> listeners = new ArrayList<>();
 
-	protected TreeSet<Integer> selectedVerse = new TreeSet<Integer>();
+	protected TreeSet<Integer> selectedVerse = new TreeSet<>();
 
 	public boolean mPageLoaded;
 

@@ -51,9 +51,9 @@ public class SearchActivity extends BibleQuoteActivity implements OnTaskComplete
 	private Task mTask;
 	private String progressMessage = "";
 
-	private LinkedHashMap<String, String> searchResults = new LinkedHashMap<String, String>();
+	private LinkedHashMap<String, String> searchResults = new LinkedHashMap<>();
 	private Librarian myLibararian;
-	private ArrayList<Item> searchItems = new ArrayList<Item>();
+	private ArrayList<Item> searchItems = new ArrayList<>();
 
 	private Button.OnClickListener onClick_Search = new Button.OnClickListener() {
 		@Override
@@ -189,7 +189,7 @@ public class SearchActivity extends BibleQuoteActivity implements OnTaskComplete
 	}
 
 	private void SpinnerInit() {
-		ArrayList<ItemList> books = new ArrayList<ItemList>();
+		ArrayList<ItemList> books = new ArrayList<>();
 		try {
 			books = myLibararian.getCurrentModuleBooksList();
 		} catch (OpenModuleException e) {

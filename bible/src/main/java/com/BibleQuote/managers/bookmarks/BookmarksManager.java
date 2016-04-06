@@ -71,7 +71,7 @@ public class BookmarksManager {
 	}
 
 	private ArrayList<Long> getTagsIDs(String tags) {
-		ArrayList<Long> result = new ArrayList<Long>();
+		ArrayList<Long> result = new ArrayList<>();
 		for (String tag : tags.split(TAGS_DELIMETER)) {
 			if (!tag.trim().equals("")) result.add(tagRepo.add(tag.trim()));
 		}

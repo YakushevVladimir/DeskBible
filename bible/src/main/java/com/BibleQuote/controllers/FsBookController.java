@@ -29,7 +29,7 @@ public class FsBookController implements IBookController {
 	}
 
 	public LinkedHashMap<String, Book> getBooks(Module module) throws OpenModuleException, BooksDefinitionException, BookDefinitionException {
-		LinkedHashMap<String, Book> result = new LinkedHashMap<String, Book>();
+		LinkedHashMap<String, Book> result = new LinkedHashMap<>();
 		ArrayList<Book> bookList = getBookList(module);
 		for (Book book : bookList) {
 			result.put(book.getID(), book);
@@ -42,7 +42,7 @@ public class FsBookController implements IBookController {
 		if (bookList.size() == 0) {
 			bookList = loadBooks((FsModule) module);
 		}
-		return new ArrayList<Book>(bookList);
+		return new ArrayList<>(bookList);
 	}
 
 	public Book getBookByID(Module module, String bookID) throws BookNotFoundException, OpenModuleException {
@@ -76,7 +76,7 @@ public class FsBookController implements IBookController {
 	}
 
 	public ArrayList<String> getBookList(Module module, String fromBookID, String toBookID) throws OpenModuleException {
-		ArrayList<String> result = new ArrayList<String>();
+		ArrayList<String> result = new ArrayList<>();
 		boolean startSearch = false;
 		try {
 			for (String bookID : getBooks(module).keySet()) {

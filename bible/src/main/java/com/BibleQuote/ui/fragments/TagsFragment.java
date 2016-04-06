@@ -131,7 +131,7 @@ public class TagsFragment extends ListFragment implements AdapterView.OnItemLong
     }
 
     private void setAdapter() {
-        List<Item> items = new ArrayList<Item>();
+        List<Item> items = new ArrayList<>();
         LinkedHashMap<Tag, String> tagList = tagManager.getAllWithCount();
         for (Tag currTag : tagList.keySet()) {
             items.add(new TagItem(currTag, tagList.get(currTag)));

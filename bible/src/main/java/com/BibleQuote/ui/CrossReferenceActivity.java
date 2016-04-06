@@ -49,8 +49,8 @@ public class CrossReferenceActivity extends BibleQuoteActivity implements OnTask
 	private static String TAG = "CrossReferenceActivity";
 
 	private Librarian myLibrarian;
-	private LinkedHashMap<String, BibleReference> crossReference = new LinkedHashMap<String, BibleReference>();
-	private HashMap<BibleReference, String> crossReferenceContent = new HashMap<BibleReference, String>();
+	private LinkedHashMap<String, BibleReference> crossReference = new LinkedHashMap<>();
+	private HashMap<BibleReference, String> crossReferenceContent = new HashMap<>();
 	private BibleReference bReference;
 	private Task mTask;
 
@@ -123,7 +123,7 @@ public class CrossReferenceActivity extends BibleQuoteActivity implements OnTask
 	}
 
 	private void setListAdapter() {
-		List<Item> items = new ArrayList<Item>();
+		List<Item> items = new ArrayList<>();
 		for (String link : crossReference.keySet()) {
 			if (PreferenceHelper.crossRefViewDetails()) {
 				items.add(new SubtextItem(link, crossReferenceContent.get(crossReference.get(link))));

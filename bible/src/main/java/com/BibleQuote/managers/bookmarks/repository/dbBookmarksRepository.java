@@ -159,7 +159,7 @@ public class dbBookmarksRepository implements IBookmarksRepository {
 	}
 
 	private ArrayList<Bookmark> getBookmarks(Cursor allRows) {
-		ArrayList<Bookmark> result = new ArrayList<Bookmark>();
+		ArrayList<Bookmark> result = new ArrayList<>();
 		if (allRows.moveToFirst()) {
 			do {
 				Bookmark bm = new Bookmark(

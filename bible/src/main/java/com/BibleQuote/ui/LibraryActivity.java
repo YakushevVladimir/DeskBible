@@ -54,9 +54,9 @@ public class LibraryActivity extends BibleQuoteActivity implements OnTaskComplet
     private ListView modulesList, booksList;
     private GridView chapterList;
     private Button btnModule, btnBook, btnChapter;
-    private ArrayList<ItemList> modules = new ArrayList<ItemList>();
-    private ArrayList<ItemList> books = new ArrayList<ItemList>();
-    private ArrayList<String> chapters = new ArrayList<String>();
+    private ArrayList<ItemList> modules = new ArrayList<>();
+    private ArrayList<ItemList> books = new ArrayList<>();
+    private ArrayList<String> chapters = new ArrayList<>();
     private int modulePos, bookPos, chapterPos;
     private Librarian myLibrarian;
     private View.OnClickListener onBtnModuleClick = new View.OnClickListener() {
@@ -354,7 +354,7 @@ public class LibraryActivity extends BibleQuoteActivity implements OnTaskComplet
     }
 
     private SimpleAdapter getBookAdapter() {
-        books = new ArrayList<ItemList>();
+        books = new ArrayList<>();
         if (myLibrarian.getModulesList().size() > 0) {
             try {
                 books = myLibrarian.getModuleBooksList(moduleID);
@@ -373,7 +373,7 @@ public class LibraryActivity extends BibleQuoteActivity implements OnTaskComplet
     }
 
     private ArrayAdapter<String> getChapterAdapter() {
-        chapters = new ArrayList<String>();
+        chapters = new ArrayList<>();
         try {
             chapters = myLibrarian.getChaptersList(moduleID, bookID);
         } catch (BookNotFoundException e) {

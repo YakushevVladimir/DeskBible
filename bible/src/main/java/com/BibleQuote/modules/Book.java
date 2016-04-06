@@ -20,7 +20,7 @@ public abstract class Book implements Serializable {
 	/**
 	 * Краткое имя книги. являющееся первым в списке кратких имен
 	 */
-	public ArrayList<String> shortNames = new ArrayList<String>();
+	public ArrayList<String> shortNames = new ArrayList<>();
 
 	/**
 	 * Имя книги по классификации OSIS
@@ -32,7 +32,7 @@ public abstract class Book implements Serializable {
 	 */
 	public Integer chapterQty; 
 	private Module module;
-	private ArrayList<String> chapterNumbers = new ArrayList<String>();
+	private ArrayList<String> chapterNumbers = new ArrayList<>();
 
 	public Book(Module module, String name, String shortNames, int chapterQty) {
 		this.name = name;

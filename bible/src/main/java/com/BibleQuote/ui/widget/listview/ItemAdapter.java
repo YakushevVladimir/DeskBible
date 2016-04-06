@@ -37,7 +37,7 @@ public class ItemAdapter extends BaseAdapter {
 	 * @param context The context associated with this array adapter.
 	 */
 	public ItemAdapter(Context context) {
-		this(context, new ArrayList<Item>());
+		this(context, new ArrayList<>());
 	}
 
 	/**
@@ -110,7 +110,7 @@ public class ItemAdapter extends BaseAdapter {
 	public ItemAdapter(Context context, List<Item> items, int maxViewTypeCount) {
 		mContext = context;
 		mItems = items;
-		mTypes = new HashMap<Class<? extends Item>, TypeInfo>();
+		mTypes = new HashMap<>();
 		mMaxViewTypeCount = Integer.MAX_VALUE;
 
 		for (Item item : mItems) {
@@ -296,7 +296,7 @@ public class ItemAdapter extends BaseAdapter {
 			throw new XmlPullParserException("Unknown start tag. Should be 'item-array'");
 		}
 
-		final List<Item> items = new ArrayList<Item>();
+		final List<Item> items = new ArrayList<>();
 		final int innerDepth = parser.getDepth() + 1;
 		final Resources r = context.getResources();
 
