@@ -23,19 +23,25 @@
 package com.BibleQuote.managers;
 
 import android.content.Context;
+
 import com.BibleQuote.controllers.LibraryController;
 import com.BibleQuote.controllers.TSKController;
 import com.BibleQuote.dal.repository.XmlTskRepository;
 import com.BibleQuote.dal.repository.fsHistoryRepository;
 import com.BibleQuote.entity.BibleReference;
 import com.BibleQuote.entity.ItemList;
-import com.BibleQuote.exceptions.*;
+import com.BibleQuote.entity.modules.Book;
+import com.BibleQuote.entity.modules.Chapter;
+import com.BibleQuote.entity.modules.Module;
+import com.BibleQuote.entity.modules.Verse;
+import com.BibleQuote.exceptions.BQUniversalException;
+import com.BibleQuote.exceptions.BookDefinitionException;
+import com.BibleQuote.exceptions.BookNotFoundException;
+import com.BibleQuote.exceptions.BooksDefinitionException;
+import com.BibleQuote.exceptions.OpenModuleException;
+import com.BibleQuote.exceptions.TskNotFoundException;
 import com.BibleQuote.managers.history.IHistoryManager;
 import com.BibleQuote.managers.history.SimpleHistoryManager;
-import com.BibleQuote.modules.Book;
-import com.BibleQuote.modules.Chapter;
-import com.BibleQuote.modules.Module;
-import com.BibleQuote.modules.Verse;
 import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.modules.LinkConverter;
@@ -44,7 +50,15 @@ import com.BibleQuote.utils.share.ShareBuilder.Destination;
 import com.BibleQuote.utils.textFormatters.ModuleTextFormatter;
 import com.BibleQuote.utils.textFormatters.StripTagsTextFormatter;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.Locale;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 public class Librarian {
 

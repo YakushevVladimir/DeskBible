@@ -24,11 +24,12 @@ package com.BibleQuote.controllers;
 
 import android.content.Context;
 import android.os.Environment;
+
 import com.BibleQuote.dal.CacheContext;
 import com.BibleQuote.dal.FsLibraryContext;
 import com.BibleQuote.dal.LibraryContext;
 import com.BibleQuote.dal.LibraryUnitOfWork;
-import com.BibleQuote.modules.FsModule;
+import com.BibleQuote.entity.modules.FsModule;
 import com.BibleQuote.utils.DataConstants;
 
 import java.io.File;

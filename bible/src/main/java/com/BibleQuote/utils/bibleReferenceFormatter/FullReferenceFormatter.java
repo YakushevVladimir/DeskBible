@@ -16,8 +16,8 @@
 
 package com.BibleQuote.utils.bibleReferenceFormatter;
 
-import com.BibleQuote.modules.Book;
-import com.BibleQuote.modules.Module;
+import com.BibleQuote.entity.modules.Book;
+import com.BibleQuote.entity.modules.Module;
 import com.BibleQuote.utils.PreferenceHelper;
 
 import java.util.TreeSet;

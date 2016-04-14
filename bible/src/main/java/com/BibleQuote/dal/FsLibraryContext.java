@@ -23,12 +23,18 @@ package com.BibleQuote.dal;
 
 import android.content.Context;
 import android.util.Log;
+
 import com.BibleQuote.controllers.CacheModuleController;
 import com.BibleQuote.entity.BibleReference;
+import com.BibleQuote.entity.modules.Book;
+import com.BibleQuote.entity.modules.Chapter;
+import com.BibleQuote.entity.modules.FsBook;
+import com.BibleQuote.entity.modules.FsModule;
+import com.BibleQuote.entity.modules.Module;
+import com.BibleQuote.entity.modules.Verse;
 import com.BibleQuote.exceptions.BookDefinitionException;
 import com.BibleQuote.exceptions.BooksDefinitionException;
 import com.BibleQuote.exceptions.FileAccessException;
-import com.BibleQuote.modules.*;
 import com.BibleQuote.utils.FsUtils;
 import com.BibleQuote.utils.modules.LanguageConvertor;
 import com.BibleQuote.utils.textFormatters.ModuleTextFormatter;
@@ -37,7 +43,11 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

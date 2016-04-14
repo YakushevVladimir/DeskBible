@@ -1,14 +1,15 @@
 package com.BibleQuote.utils.share;
 
 import android.content.Context;
-import com.BibleQuote.modules.Book;
-import com.BibleQuote.modules.Chapter;
-import com.BibleQuote.modules.Module;
+
+import com.BibleQuote.entity.modules.Book;
+import com.BibleQuote.entity.modules.Chapter;
+import com.BibleQuote.entity.modules.Module;
 import com.BibleQuote.utils.PreferenceHelper;
+import com.BibleQuote.utils.bibleReferenceFormatter.EmptyReferenceFormatter;
 import com.BibleQuote.utils.bibleReferenceFormatter.FullReferenceFormatter;
 import com.BibleQuote.utils.bibleReferenceFormatter.IBibleReferenceFormatter;
 import com.BibleQuote.utils.bibleReferenceFormatter.ShortReferenceFormatter;
-import com.BibleQuote.utils.bibleReferenceFormatter.EmptyReferenceFormatter;
 import com.BibleQuote.utils.textFormatters.BreakVerseBibleShareFormatter;
 import com.BibleQuote.utils.textFormatters.IShareTextFormatter;
 import com.BibleQuote.utils.textFormatters.SimpleBibleShareFormatter;

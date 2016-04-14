@@ -1,13 +1,14 @@
 package com.BibleQuote.async;
 
 import android.util.Log;
-import com.BibleQuote.modules.Module;
-import com.BibleQuote.utils.Task;
+
 import com.BibleQuote.entity.BibleReference;
+import com.BibleQuote.entity.modules.Module;
 import com.BibleQuote.exceptions.BookDefinitionException;
 import com.BibleQuote.exceptions.BooksDefinitionException;
 import com.BibleQuote.exceptions.OpenModuleException;
 import com.BibleQuote.managers.Librarian;
+import com.BibleQuote.utils.Task;
 
 public class AsyncOpenModule extends Task {
 	private static final String TAG = "AsyncOpenBooks";

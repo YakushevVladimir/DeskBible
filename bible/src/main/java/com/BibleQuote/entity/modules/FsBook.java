@@ -1,4 +1,4 @@
-package com.BibleQuote.modules;
+package com.BibleQuote.entity.modules;
 
 /**
  * @author Yakushev Vladimir, Sergey Ursul

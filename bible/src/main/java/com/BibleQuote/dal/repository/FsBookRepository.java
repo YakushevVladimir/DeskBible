@@ -2,10 +2,14 @@ package com.BibleQuote.dal.repository;
 
 import com.BibleQuote.controllers.CacheModuleController;
 import com.BibleQuote.dal.FsLibraryContext;
-import com.BibleQuote.exceptions.*;
-import com.BibleQuote.modules.Book;
-import com.BibleQuote.modules.FsBook;
-import com.BibleQuote.modules.FsModule;
+import com.BibleQuote.entity.modules.Book;
+import com.BibleQuote.entity.modules.FsBook;
+import com.BibleQuote.entity.modules.FsModule;
+import com.BibleQuote.exceptions.BookDefinitionException;
+import com.BibleQuote.exceptions.BookNotFoundException;
+import com.BibleQuote.exceptions.BooksDefinitionException;
+import com.BibleQuote.exceptions.FileAccessException;
+import com.BibleQuote.exceptions.OpenModuleException;
 
 import java.io.BufferedReader;
 import java.io.IOException;

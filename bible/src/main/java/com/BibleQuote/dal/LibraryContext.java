@@ -23,13 +23,18 @@
 package com.BibleQuote.dal;
 
 import android.content.Context;
-import com.BibleQuote.modules.Book;
-import com.BibleQuote.modules.Chapter;
-import com.BibleQuote.modules.Module;
+
+import com.BibleQuote.entity.modules.Book;
+import com.BibleQuote.entity.modules.Chapter;
+import com.BibleQuote.entity.modules.Module;
 import com.BibleQuote.utils.CachePool;
 
 import java.io.File;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 public abstract class LibraryContext {
 

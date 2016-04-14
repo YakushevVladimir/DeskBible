@@ -24,9 +24,9 @@ package com.BibleQuote.controllers;
 
 import com.BibleQuote.dal.LibraryUnitOfWork;
 import com.BibleQuote.dal.repository.IModuleRepository;
+import com.BibleQuote.entity.modules.FsModule;
+import com.BibleQuote.entity.modules.Module;
 import com.BibleQuote.exceptions.OpenModuleException;
-import com.BibleQuote.modules.FsModule;
-import com.BibleQuote.modules.Module;
 
 import java.util.Map;
 

@@ -1,4 +1,4 @@
-package com.BibleQuote.modules;
+package com.BibleQuote.entity.modules;
 
 public class Verse {
 	private Integer number;

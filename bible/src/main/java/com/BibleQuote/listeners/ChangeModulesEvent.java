@@ -1,6 +1,6 @@
 package com.BibleQuote.listeners;
 
-import com.BibleQuote.modules.Module;
+import com.BibleQuote.entity.modules.Module;
 
 import java.util.TreeMap;
 

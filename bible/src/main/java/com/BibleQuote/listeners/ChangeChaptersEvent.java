@@ -1,9 +1,9 @@
 package com.BibleQuote.listeners;
 
+import com.BibleQuote.entity.modules.Book;
+import com.BibleQuote.entity.modules.Chapter;
+import com.BibleQuote.entity.modules.Module;
 import com.BibleQuote.listeners.IChangeChaptersListener.ChangeCode;
-import com.BibleQuote.modules.Book;
-import com.BibleQuote.modules.Chapter;
-import com.BibleQuote.modules.Module;
 
 public class ChangeChaptersEvent {
 

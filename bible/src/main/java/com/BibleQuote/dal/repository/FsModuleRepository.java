@@ -24,13 +24,21 @@ package com.BibleQuote.dal.repository;
 
 import com.BibleQuote.controllers.CacheModuleController;
 import com.BibleQuote.dal.FsLibraryContext;
+import com.BibleQuote.entity.modules.FsModule;
+import com.BibleQuote.entity.modules.Module;
 import com.BibleQuote.exceptions.FileAccessException;
 import com.BibleQuote.exceptions.OpenModuleException;
-import com.BibleQuote.modules.FsModule;
-import com.BibleQuote.modules.Module;
-import com.BibleQuote.utils.*;
+import com.BibleQuote.utils.DataConstants;
+import com.BibleQuote.utils.FsUtils;
+import com.BibleQuote.utils.Log;
+import com.BibleQuote.utils.OnlyBQIni;
+import com.BibleQuote.utils.OnlyBQZipIni;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;

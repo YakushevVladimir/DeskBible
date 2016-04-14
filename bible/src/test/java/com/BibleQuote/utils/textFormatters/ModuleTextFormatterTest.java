@@ -1,9 +1,11 @@
 package com.BibleQuote.utils.textFormatters;
 
 import android.os.Build;
+
 import com.BibleQuote.BuildConfig;
-import com.BibleQuote.modules.FsModule;
-import com.BibleQuote.modules.Module;
+import com.BibleQuote.entity.modules.FsModule;
+import com.BibleQuote.entity.modules.Module;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;

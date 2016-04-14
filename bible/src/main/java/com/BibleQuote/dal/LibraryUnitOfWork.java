@@ -1,9 +1,14 @@
 package com.BibleQuote.dal;
 
-import com.BibleQuote.dal.repository.*;
-import com.BibleQuote.modules.FsModule;
 import com.BibleQuote.controllers.CacheModuleController;
-import com.BibleQuote.modules.FsBook;
+import com.BibleQuote.dal.repository.FsBookRepository;
+import com.BibleQuote.dal.repository.FsChapterRepository;
+import com.BibleQuote.dal.repository.FsModuleRepository;
+import com.BibleQuote.dal.repository.IBookRepository;
+import com.BibleQuote.dal.repository.IChapterRepository;
+import com.BibleQuote.dal.repository.IModuleRepository;
+import com.BibleQuote.entity.modules.FsBook;
+import com.BibleQuote.entity.modules.FsModule;
 
 public class LibraryUnitOfWork implements ILibraryUnitOfWork<String, FsModule, FsBook> {
 

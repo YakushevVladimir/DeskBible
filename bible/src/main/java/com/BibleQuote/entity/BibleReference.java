@@ -1,9 +1,10 @@
 package com.BibleQuote.entity;
 
 import android.net.Uri;
-import com.BibleQuote.modules.Book;
-import com.BibleQuote.modules.FsModule;
-import com.BibleQuote.modules.Module;
+
+import com.BibleQuote.entity.modules.Book;
+import com.BibleQuote.entity.modules.FsModule;
+import com.BibleQuote.entity.modules.Module;
 import com.BibleQuote.utils.Log;
 
 public class BibleReference {

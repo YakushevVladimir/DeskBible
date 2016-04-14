@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.BibleQuote.modules;
+package com.BibleQuote.entity.modules;
 
 import java.io.Serializable;
 import java.util.LinkedHashMap;

@@ -25,8 +25,13 @@ package com.BibleQuote.controllers;
 import com.BibleQuote.dal.LibraryUnitOfWork;
 import com.BibleQuote.dal.repository.IBookRepository;
 import com.BibleQuote.dal.repository.IChapterRepository;
+import com.BibleQuote.entity.modules.Book;
+import com.BibleQuote.entity.modules.Chapter;
+import com.BibleQuote.entity.modules.FsBook;
+import com.BibleQuote.entity.modules.FsModule;
+import com.BibleQuote.entity.modules.Module;
+import com.BibleQuote.entity.modules.Verse;
 import com.BibleQuote.exceptions.BookNotFoundException;
-import com.BibleQuote.modules.*;
 import com.BibleQuote.utils.textFormatters.ITextFormatter;
 import com.BibleQuote.utils.textFormatters.ModuleTextFormatter;
 

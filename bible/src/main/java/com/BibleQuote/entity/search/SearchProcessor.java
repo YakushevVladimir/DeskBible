@@ -17,13 +17,18 @@
 package com.BibleQuote.entity.search;
 
 import android.util.Log;
-import com.BibleQuote.dal.repository.IBookRepository;
-import com.BibleQuote.exceptions.BookNotFoundException;
-import com.BibleQuote.modules.FsBook;
-import com.BibleQuote.modules.FsModule;
-import com.BibleQuote.modules.Module;
 
-import java.util.*;
+import com.BibleQuote.dal.repository.IBookRepository;
+import com.BibleQuote.entity.modules.FsBook;
+import com.BibleQuote.entity.modules.FsModule;
+import com.BibleQuote.entity.modules.Module;
+import com.BibleQuote.exceptions.BookNotFoundException;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

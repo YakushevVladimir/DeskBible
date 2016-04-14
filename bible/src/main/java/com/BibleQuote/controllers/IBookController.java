@@ -1,11 +1,11 @@
 package com.BibleQuote.controllers;
 
+import com.BibleQuote.entity.modules.Book;
+import com.BibleQuote.entity.modules.Module;
 import com.BibleQuote.exceptions.BookDefinitionException;
 import com.BibleQuote.exceptions.BookNotFoundException;
 import com.BibleQuote.exceptions.BooksDefinitionException;
 import com.BibleQuote.exceptions.OpenModuleException;
-import com.BibleQuote.modules.Book;
-import com.BibleQuote.modules.Module;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

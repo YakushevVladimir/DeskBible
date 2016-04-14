@@ -1,6 +1,6 @@
 package com.BibleQuote.utils.textFormatters;
 
-import com.BibleQuote.modules.Module;
+import com.BibleQuote.entity.modules.Module;
 import com.BibleQuote.utils.PreferenceHelper;
 
 import java.util.ArrayList;

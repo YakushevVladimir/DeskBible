@@ -1,4 +1,4 @@
-package com.BibleQuote.modules;
+package com.BibleQuote.entity.modules;
 
 import com.BibleQuote.entity.BibleBooksID;
 

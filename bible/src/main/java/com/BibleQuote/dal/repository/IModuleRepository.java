@@ -22,8 +22,8 @@
 
 package com.BibleQuote.dal.repository;
 
+import com.BibleQuote.entity.modules.Module;
 import com.BibleQuote.exceptions.OpenModuleException;
-import com.BibleQuote.modules.Module;
 
 import java.util.Map;
 
