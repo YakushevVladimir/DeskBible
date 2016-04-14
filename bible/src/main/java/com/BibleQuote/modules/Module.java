@@ -42,12 +42,6 @@ public abstract class Module implements Serializable {
     public String fontName = "";
     public String fontPath = "";
 
-    // public String Categories = "";
-    // public String Copyright = "";
-    // public boolean containsOT = false;
-    // public boolean containsNT = false;
-    // public boolean containsAP = false;
-
     public String toString() {
         return this.Name;
     }

@@ -13,8 +13,6 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 
 public class FsBookRepository implements IBookRepository<FsModule, FsBook> {
-
-	//private String TAG = "FsBookRepository";
 	private FsLibraryContext context;
 	private CacheModuleController<FsModule> cache;
 
@@ -41,7 +39,7 @@ public class FsBookRepository implements IBookRepository<FsModule, FsBook> {
 					context.fillBooks(module, reader);
 
 				} catch (FileAccessException e) {
-					//Log.e(TAG, String.format("Can't load books from module (%1$s, %2$s)", moduleID, moduleDatasourceID));
+					Log.e(TAG, String.format("Can't load books from module (%1$s, %2$s)", moduleID, moduleDatasourceID));
 					throw new OpenModuleException(moduleID, moduleDatasourceID);
 
 				} finally {

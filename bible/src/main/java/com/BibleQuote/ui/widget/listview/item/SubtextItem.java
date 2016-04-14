@@ -43,7 +43,6 @@ public class SubtextItem extends TextItem {
 	public SubtextItem(String text, String subtext) {
 		super(text);
 		this.subtext = subtext;
-		//enabled = false;
 	}
 
 	@Override

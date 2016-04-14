@@ -62,13 +62,6 @@ public class ColorPickerDialog extends Dialog
 		mOldColor = (ColorPickerPanelView) layout.findViewById(R.id.old_color_panel);
 		mNewColor = (ColorPickerPanelView) layout.findViewById(R.id.new_color_panel);
 
-		//((LinearLayout) mOldColor.getParent()).setPadding(
-		//		Math.round(mColorPicker.getDrawingOffset()),
-		//		0,
-		//		Math.round(mColorPicker.getDrawingOffset()),
-		//		0
-		//);
-
 		mOldColor.setOnClickListener(this);
 		mNewColor.setOnClickListener(this);
 		mColorPicker.setOnColorChangedListener(this);
@@ -81,12 +74,6 @@ public class ColorPickerDialog extends Dialog
 	public void onColorChanged(int color) {
 
 		mNewColor.setColor(color);
-
-		/*
-		if (mListener != null) {
-			mListener.onColorChanged(color);
-		}
-		*/
 
 	}
 
