@@ -1,4 +1,4 @@
-[![Build Status](https://drone.io/github.com/YakushevVladimir/BibleQuote-for-Android/status.png)](https://drone.io/github.com/YakushevVladimir/BibleQuote-for-Android/latest)
+[![Build Status](https://travis-ci.org/YakushevVladimir/BibleQuote-for-Android.svg?branch=develop)](https://travis-ci.org/YakushevVladimir/BibleQuote-for-Android)
 [![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
 #BibleQuote for Android
