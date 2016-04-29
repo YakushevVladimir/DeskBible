@@ -126,6 +126,10 @@ public class ReaderActivity extends BibleQuoteActivity implements OnTaskComplete
                         Intent intentHelp = new Intent(ReaderActivity.this, HelpActivity.class);
                         startActivity(intentHelp);
                         return true;
+                    case R.id.drawer_donate:
+                        Intent intentDonate = new Intent(ReaderActivity.this, DonateActivity.class);
+                        startActivity(intentDonate);
+                        return true;
                     case R.id.drawer_about:
                         Intent intentAbout = new Intent().setClass(ReaderActivity.this, AboutActivity.class);
                         startActivity(intentAbout);

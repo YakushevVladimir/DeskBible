@@ -3,4 +3,5 @@
     <string name="always_view_verse_numbers_disabled">Only the Bible texts</string>
     <string name="always_view_verse_numbers_title">Always view verse numbers</string>
     <string name="choice_chapter">Open...</string>
+    <string name="donate">Donate</string>
 </resources>

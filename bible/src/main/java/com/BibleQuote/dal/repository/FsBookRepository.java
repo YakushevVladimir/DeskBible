@@ -1,5 +1,7 @@
 package com.BibleQuote.dal.repository;
 
+import android.util.Log;
+
 import com.BibleQuote.controllers.CacheModuleController;
 import com.BibleQuote.dal.FsLibraryContext;
 import com.BibleQuote.entity.modules.Book;
@@ -17,6 +19,9 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 
 public class FsBookRepository implements IBookRepository<FsModule, FsBook> {
+
+	private final String TAG = FsBookRepository.class.getSimpleName();
+
 	private FsLibraryContext context;
 	private CacheModuleController<FsModule> cache;
 

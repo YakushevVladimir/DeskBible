@@ -59,6 +59,8 @@
 			android:label="@string/settings"/>
 		<activity android:name=".ui.AboutActivity"
 			android:label="@string/about"/>
+		<activity android:name=".ui.DonateActivity"
+			android:label="@string/donate"/>
 		<activity android:name=".ui.HelpActivity"
 			android:label="@string/help"/>
 

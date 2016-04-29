@@ -139,4 +139,5 @@
     <string name="always_view_verse_numbers_enabled">Alle tekster</string>
     <string name="always_view_verse_numbers_title"> Alltid se vers</string>
     <string name="choice_chapter">åpen...</string>
+    <string name="donate">Donate</string>
 </resources>
