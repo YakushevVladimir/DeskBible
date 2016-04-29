@@ -1,0 +1,9 @@
+sudo: false
+language: android
+android:
+  components:
+    - build-tools-22.0.1
+    - android-22
+    - android-15
+script:
+  - ./gradlew clean assemble
