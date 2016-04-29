@@ -30,16 +30,9 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
-import android.view.Display;
-import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.Surface;
-import android.view.View;
+import android.view.*;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
 import com.BibleQuote.async.AsyncManager;
@@ -56,11 +49,7 @@ import com.BibleQuote.ui.base.BibleQuoteActivity;
 import com.BibleQuote.ui.fragments.TTSPlayerFragment;
 import com.BibleQuote.ui.handlers.SelectTextHandler;
 import com.BibleQuote.ui.widget.ReaderWebView;
-import com.BibleQuote.utils.DevicesKeyCodes;
-import com.BibleQuote.utils.Log;
-import com.BibleQuote.utils.OnTaskCompleteListener;
-import com.BibleQuote.utils.PreferenceHelper;
-import com.BibleQuote.utils.Task;
+import com.BibleQuote.utils.*;
 
 import java.util.TreeSet;
 
@@ -126,10 +115,10 @@ public class ReaderActivity extends BibleQuoteActivity implements OnTaskComplete
                         Intent intentHelp = new Intent(ReaderActivity.this, HelpActivity.class);
                         startActivity(intentHelp);
                         return true;
-                    case R.id.drawer_donate:
-                        Intent intentDonate = new Intent(ReaderActivity.this, DonateActivity.class);
-                        startActivity(intentDonate);
-                        return true;
+                    //case R.id.drawer_donate:
+                    //    Intent intentDonate = new Intent(ReaderActivity.this, DonateActivity.class);
+                    //    startActivity(intentDonate);
+                    //    return true;
                     case R.id.drawer_about:
                         Intent intentAbout = new Intent().setClass(ReaderActivity.this, AboutActivity.class);
                         startActivity(intentAbout);
