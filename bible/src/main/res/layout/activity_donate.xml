@@ -16,23 +16,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/default_margin"
-            android:text="@string/donate_text1"
+            android:text=""
             android:textSize="16sp" />
         <TextView
             android:id="@+id/donate_description2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/default_margin"
-            android:text="@string/donate_text2"
+            android:text=""
             android:textSize="16sp" />
         <TextView
             android:id="@+id/donate_description3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/default_margin"
-            android:text="@string/donate_text3"
+            android:text=""
             android:textSize="16sp" />
-
         <Button
             android:id="@+id/btn_donate"
             android:layout_width="match_parent"
