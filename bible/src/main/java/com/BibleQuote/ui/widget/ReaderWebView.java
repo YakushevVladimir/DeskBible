@@ -34,7 +34,7 @@ import java.util.TreeSet;
 public class ReaderWebView extends WebView
 		implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
 
-	static final String TAG = "ReaderWebView";
+	private static final String TAG = "ReaderWebView";
 
 	private GestureDetector mGestureScanner;
 	private JavaScriptInterface jsInterface;

@@ -39,10 +39,10 @@ import java.util.TreeSet;
  */
 public class TTSPlayerFragment extends Fragment implements PlayerView.OnClickListener, TTSPlayerController.OnEventListener {
 
-    TTSPlayerController ttsController;
-    ReaderWebView webView;
+    private TTSPlayerController ttsController;
+    private ReaderWebView webView;
 
-    onTTSStopSpeakListener listener;
+    private onTTSStopSpeakListener listener;
     private PlayerView player;
 
     @Override

@@ -35,8 +35,8 @@ import android.widget.LinearLayout;
 public class ColorPickerPreference extends Preference
 		implements Preference.OnPreferenceClickListener, ColorPickerDialog.OnColorChangedListener {
 
-	View mView;
-	String mDefaultValue = "#FF000000";
+	private View mView;
+	private String mDefaultValue = "#FF000000";
 	private String mValue = "#FF000000";
 	private float mDensity;
 	private boolean mAlphaSliderEnabled = true;

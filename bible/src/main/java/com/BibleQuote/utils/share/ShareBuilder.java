@@ -13,11 +13,11 @@ public class ShareBuilder {
 		Clipboard, ActionSend
 	}
 
-	Context context;
-	Module module;
-	Book book;
-	Chapter chapter;
-	LinkedHashMap<Integer, String> verses;
+	private Context context;
+	private Module module;
+	private Book book;
+	private Chapter chapter;
+	private LinkedHashMap<Integer, String> verses;
 
 	public ShareBuilder(Context context, Module module, Book book, Chapter chapter, LinkedHashMap<Integer, String> verses) {
 		this.context = context;
