@@ -18,6 +18,7 @@ package com.BibleQuote.entity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 //import android.util.Log;
 
@@ -190,10 +191,10 @@ public final class BibleBooksID {
 
 	private static void qualifierInit() {
 		qualifier = new HashMap<String, String>();
-		for (String key : bookShortNames.keySet()) {
-			String[] bookNames = bookShortNames.get(key);
+		for (Map.Entry<String, String[]> entry : bookShortNames.entrySet()) {
+			String[] bookNames = entry.getValue();
 			for (String name : bookNames) {
-				qualifier.put(name.toLowerCase(), key);
+				qualifier.put(name.toLowerCase(), entry.getKey());
 			}
 		}
 	}

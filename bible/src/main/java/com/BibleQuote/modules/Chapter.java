@@ -4,6 +4,7 @@ import com.BibleQuote.utils.textFormatters.ITextFormatter;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
@@ -31,8 +32,8 @@ public class Chapter {
 	public String getText() {
 		if (text == null && verses.size() > 0) {
 			StringBuilder buffer = new StringBuilder();
-			for (Integer verseNumber : verses.keySet()) {
-				buffer.append(verses.get(verseNumber).getText());
+			for (Map.Entry<Integer, Verse> entry : verses.entrySet()) {
+				buffer.append(entry.getValue().getText());
 			}
 			text = buffer.toString();
 		}
@@ -86,8 +87,8 @@ public class Chapter {
 
 	public ArrayList<Verse> getVerseList() {
 		ArrayList<Verse> verseList = new ArrayList<Verse>();
-		for (Integer verse : verses.keySet()) {
-			verseList.add(verses.get(verse));
+		for (Map.Entry<Integer, Verse> entry : verses.entrySet()) {
+			verseList.add(entry.getValue());
 		}
 		return verseList;
 	}
