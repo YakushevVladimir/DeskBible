@@ -1,6 +1,7 @@
 package com.BibleQuote.utils.textFormatters;
 
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class BreakVerseBibleShareFormatter implements IShareTextFormatter {
 	private LinkedHashMap<Integer, String> verses;
@@ -13,12 +14,12 @@ public class BreakVerseBibleShareFormatter implements IShareTextFormatter {
 	public String format() {
 		StringBuilder shareText = new StringBuilder();
 
-		for (Integer verseNumber : verses.keySet()) {
+		for (Map.Entry<Integer, String> entry : verses.entrySet()) {
 			if (shareText.length() != 0) {
 				shareText.append(" ");
 			}
-			shareText.append(String.format("%1$s %2$s", verseNumber,
-					verses.get(verseNumber))
+			shareText.append(String.format("%1$s %2$s", entry.getKey(),
+					entry.getValue())
 					+ "\r\n");
 		}
 

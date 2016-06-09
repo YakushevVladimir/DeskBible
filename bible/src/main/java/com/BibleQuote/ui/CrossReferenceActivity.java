@@ -40,6 +40,7 @@ import com.BibleQuote.ui.widget.listview.item.Item;
 import com.BibleQuote.ui.widget.listview.item.SubtextItem;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -124,11 +125,11 @@ public class CrossReferenceActivity extends BibleQuoteActivity implements OnTask
 
 	private void setListAdapter() {
 		List<Item> items = new ArrayList<Item>();
-		for (String link : crossReference.keySet()) {
+		for (Map.Entry<String, BibleReference> entry : crossReference.entrySet()) {
 			if (PreferenceHelper.crossRefViewDetails()) {
-				items.add(new SubtextItem(link, crossReferenceContent.get(crossReference.get(link))));
+				items.add(new SubtextItem(entry.getKey(), crossReferenceContent.get(entry.getValue())));
 			} else {
-				items.add(new TextItem(link));
+				items.add(new TextItem(entry.getKey()));
 			}
 		}
 

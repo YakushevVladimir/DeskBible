@@ -383,8 +383,8 @@ public class Librarian {
         formatter.setVisibleVerseNumbers(false);
 
 		LinkedHashMap<Integer, String> verses = getCurrChapter().getVerses(selectVerses);
-        for (Integer key : verses.keySet()) {
-            verses.put(key, formatter.format(verses.get(key)));
+        for (Map.Entry<Integer, String> entry : verses.entrySet()) {
+            verses.put(entry.getKey(), formatter.format(entry.getValue()));
         }
 
 		ShareBuilder builder = new ShareBuilder(context, getCurrModule(), getCurrBook(), getCurrChapter(), verses);

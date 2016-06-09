@@ -42,6 +42,7 @@ import com.BibleQuote.ui.widget.listview.item.SubtextItem;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class SearchActivity extends BibleQuoteActivity implements OnTaskCompleteListener {
 	private static final String TAG = "SearchActivity";
@@ -158,11 +159,11 @@ public class SearchActivity extends BibleQuoteActivity implements OnTaskComplete
 	 */
 	private void setAdapter() {
 		searchItems.clear();
-		for (String key : searchResults.keySet()) {
+		for (Map.Entry<String, String> entry : searchResults.entrySet()) {
 			String humanLink;
 			try {
-				humanLink = LinkConverter.getOSIStoHuman(key, myLibararian);
-				searchItems.add(new SubtextItem(humanLink, searchResults.get(key)));
+				humanLink = LinkConverter.getOSIStoHuman(entry.getKey(), myLibararian);
+				searchItems.add(new SubtextItem(humanLink, entry.getValue()));
 			} catch (BookNotFoundException e) {
 				ExceptionHelper.onBookNotFoundException(e, this, TAG);
 			} catch (OpenModuleException e) {

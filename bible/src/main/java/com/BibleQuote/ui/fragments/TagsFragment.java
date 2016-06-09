@@ -39,6 +39,7 @@ import com.BibleQuote.ui.widget.listview.item.TagItem;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * User: Vladimir Yakushev
@@ -133,8 +134,8 @@ public class TagsFragment extends ListFragment implements AdapterView.OnItemLong
     private void setAdapter() {
         List<Item> items = new ArrayList<Item>();
         LinkedHashMap<Tag, String> tagList = tagManager.getAllWithCount();
-        for (Tag currTag : tagList.keySet()) {
-            items.add(new TagItem(currTag, tagList.get(currTag)));
+        for (Map.Entry<Tag, String> entry : tagList.entrySet()) {
+            items.add(new TagItem(entry.getKey(), entry.getValue()));
         }
         ItemAdapter adapter = new ItemAdapter(getActivity(), items);
         setListAdapter(adapter);
