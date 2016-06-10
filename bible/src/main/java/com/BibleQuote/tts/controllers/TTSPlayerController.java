@@ -36,10 +36,10 @@ public class TTSPlayerController extends UtteranceProgressListener implements Te
 
 	private static final String TAG = "TTSPlayerController";
 
-	TextToSpeech ttsEngine;
-	HashMap<String, String> ttsParams;
-	Context cont;
-	boolean isPaused;
+	private TextToSpeech ttsEngine;
+    private HashMap<String, String> ttsParams;
+    private Context cont;
+    private boolean isPaused;
 
     private int currText;
     private Locale locale;
