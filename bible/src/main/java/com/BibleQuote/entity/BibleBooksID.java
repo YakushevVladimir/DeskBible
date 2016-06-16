@@ -215,7 +215,7 @@ public final class BibleBooksID {
 	public static String getID(ArrayList<String> shortNames) {
 		String result = null;
 
-		if (shortNames.size() == 0) {
+		if (shortNames.isEmpty()) {
 			return result;
 		}
 

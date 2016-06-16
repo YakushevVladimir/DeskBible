@@ -255,7 +255,7 @@ public class LibraryActivity extends BibleQuoteActivity implements OnTaskComplet
             try {
                 bookShortName = myLibrarian.getBookShortName(moduleID, bookID);
                 ArrayList<String> chList = myLibrarian.getChaptersList(moduleID, bookID);
-                if (chList.size() != 0) {
+                if (!chList.isEmpty()) {
                     chapter = chList.contains(chapter) ? chapter : chList.get(0);
                 } else {
                     chapter = EMPTY_OBJECT;
@@ -355,7 +355,7 @@ public class LibraryActivity extends BibleQuoteActivity implements OnTaskComplet
 
     private SimpleAdapter getBookAdapter() {
         books = new ArrayList<ItemList>();
-        if (myLibrarian.getModulesList().size() > 0) {
+        if (!myLibrarian.getModulesList().isEmpty()) {
             try {
                 books = myLibrarian.getModuleBooksList(moduleID);
             } catch (OpenModuleException e) {

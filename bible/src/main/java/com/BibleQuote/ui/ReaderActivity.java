@@ -279,7 +279,7 @@ public class ReaderActivity extends BibleQuoteActivity implements OnTaskComplete
             viewChapterNav();
         } else if (code == ChangeCode.onChangeSelection) {
             TreeSet<Integer> selVerses = vWeb.getSelectedVerses();
-            if (selVerses.size() == 0) {
+            if (selVerses.isEmpty()) {
                 disableActionMode();
             } else if (currActionMode == null) {
                 currActionMode = startSupportActionMode(new SelectTextHandler(this, vWeb));

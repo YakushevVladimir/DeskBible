@@ -151,7 +151,7 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 	}
 
 	public Map<String, Module> getModules() {
-		if ((context.moduleSet == null || context.moduleSet.size() == 0) && cache.isCacheExist()) {
+		if ((context.moduleSet == null || context.moduleSet.isEmpty()) && cache.isCacheExist()) {
 			Log.i(TAG, "....Load modules from cache");
 			loadCachedModules();
 		}
