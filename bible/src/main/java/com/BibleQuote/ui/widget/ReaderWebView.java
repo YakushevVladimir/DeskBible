@@ -152,7 +152,7 @@ public class ReaderWebView extends WebView
 	}
 
 	public void clearSelectedVerse() {
-		if (selectedVerse.size() == 0) {
+		if (selectedVerse.isEmpty()) {
 			return;
 		}
 		jsInterface.clearSelectedVerse();

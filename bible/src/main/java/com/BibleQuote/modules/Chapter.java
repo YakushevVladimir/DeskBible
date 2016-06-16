@@ -29,7 +29,7 @@ public class Chapter {
 	}
 
 	public String getText() {
-		if (text == null && verses.size() > 0) {
+		if (text == null && !verses.isEmpty()) {
 			StringBuilder buffer = new StringBuilder();
 			for (Integer verseNumber : verses.keySet()) {
 				buffer.append(verses.get(verseNumber).getText());

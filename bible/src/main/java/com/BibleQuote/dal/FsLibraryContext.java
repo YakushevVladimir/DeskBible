@@ -347,7 +347,7 @@ public class FsLibraryContext extends LibraryContext {
                         // Возьмем то, что есть до теги начала главы и добавим
                         // к найденным строкам
                         str = str.substring(0, str.toLowerCase().indexOf(chapterSign));
-                        if (str.trim().length() > 0) {
+                        if (!str.trim().isEmpty()) {
                             lines.add(str);
                         }
                         break;
@@ -377,7 +377,7 @@ public class FsLibraryContext extends LibraryContext {
             if (currLine.toLowerCase().contains(verseSign)) {
                 i++;
                 verseList.add(new Verse(i, currLine));
-            } else if (verseList.size() > 0) {
+            } else if (!verseList.isEmpty()) {
                 verseList.set(i, new Verse(i, verseList.get(i).getText() + " " + currLine));
             }
         }

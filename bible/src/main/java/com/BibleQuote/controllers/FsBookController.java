@@ -39,7 +39,7 @@ public class FsBookController implements IBookController {
 
 	public ArrayList<Book> getBookList(Module module) throws BooksDefinitionException, BookDefinitionException, OpenModuleException {
 		ArrayList<FsBook> bookList = (ArrayList<FsBook>) bRepository.getBooks((FsModule) module);
-		if (bookList.size() == 0) {
+		if (bookList.isEmpty()) {
 			bookList = loadBooks((FsModule) module);
 		}
 		return new ArrayList<Book>(bookList);

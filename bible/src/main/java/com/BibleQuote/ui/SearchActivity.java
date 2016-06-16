@@ -181,7 +181,7 @@ public class SearchActivity extends BibleQuoteActivity implements OnTaskComplete
 		}
 
 		String title = getResources().getString(R.string.search);
-		if (searchResults.size() > 0) {
+		if (!searchResults.isEmpty()) {
 			title += " (" + searchResults.size() + " "
 					+ getResources().getString(R.string.results) + ")";
 		}
