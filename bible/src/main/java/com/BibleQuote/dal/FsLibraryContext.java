@@ -152,7 +152,7 @@ public class FsLibraryContext extends LibraryContext {
                 }
                 if (pos >= 0) str = str.substring(0, pos);
 
-                int delimiterPos = str.indexOf("=");
+                int delimiterPos = str.indexOf('=');
                 if (delimiterPos == -1) {
                     continue;
                 }
@@ -231,7 +231,7 @@ public class FsLibraryContext extends LibraryContext {
                 if (pos >= 0)
                     str = str.substring(0, pos);
 
-                int delimiterPos = str.indexOf("=");
+                int delimiterPos = str.indexOf('=');
                 if (delimiterPos == -1) {
                     continue;
                 }
@@ -306,7 +306,7 @@ public class FsLibraryContext extends LibraryContext {
                 if (pos >= 0)
                     str = str.substring(0, pos);
 
-                int delimiterPos = str.indexOf("=");
+                int delimiterPos = str.indexOf('=');
                 if (delimiterPos == -1) {
                     continue;
                 }

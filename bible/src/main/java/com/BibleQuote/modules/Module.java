@@ -68,7 +68,7 @@ public abstract class Module implements Serializable {
         if (language == null || !language.contains("-")) {
             return DEFAULT_LANGUAGE;
         } else {
-            return language.substring(0, language.indexOf("-")).toLowerCase();
+            return language.substring(0, language.indexOf('-')).toLowerCase();
         }
     }
 }

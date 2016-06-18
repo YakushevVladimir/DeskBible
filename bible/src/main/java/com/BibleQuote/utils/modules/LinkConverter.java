@@ -72,7 +72,7 @@ public final class LinkConverter {
 
 	public static String getHumanToOSIS(String humanLink) {
 		// Получим имя модуля
-		int position = humanLink.indexOf(":");
+		int position = humanLink.indexOf(':');
 		if (position == -1) {
 			return "";
 		}
@@ -83,7 +83,7 @@ public final class LinkConverter {
 		}
 
 		// Получим имя книги
-		position = humanLink.indexOf(" ");
+		position = humanLink.indexOf(' ');
 		if (position == -1) {
 			return "";
 		}
@@ -94,7 +94,7 @@ public final class LinkConverter {
 		}
 
 		// Получим номер главы
-		position = humanLink.indexOf(":");
+		position = humanLink.indexOf(':');
 		if (position == -1) {
 			return "";
 		}
