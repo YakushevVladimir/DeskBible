@@ -57,7 +57,7 @@ public abstract class ReferenceFormatter implements IBibleReferenceFormatter {
 				if (fromVerse == toVerse) {
 					verseLink.append(fromVerse);
 				} else {
-					verseLink.append(fromVerse + "-" + toVerse);
+					verseLink.append(fromVerse).append("-").append(toVerse);
 				}
 				fromVerse = verse;
 			}
@@ -69,7 +69,7 @@ public abstract class ReferenceFormatter implements IBibleReferenceFormatter {
 		if (fromVerse == toVerse) {
 			verseLink.append(fromVerse);
 		} else {
-			verseLink.append(fromVerse + "-" + toVerse);
+			verseLink.append(fromVerse).append("-").append(toVerse);
 		}
 
 		return verseLink.toString();
