@@ -716,7 +716,7 @@ public class ColorPickerView extends View{
 
 			if(widthMode == MeasureSpec.EXACTLY && heightMode != MeasureSpec.EXACTLY) {
 				//The with has been specified exactly, we need to adopt the height to fit.
-				int h = (int) (widthAllowed - mPanelSpacingPx - mHuePanelWidthPx);
+				int h = widthAllowed - mPanelSpacingPx - mHuePanelWidthPx;
 
 				if(mShowAlphaPanel) {
 					h += mPanelSpacingPx + mAlphaPanelHeightPx;
@@ -736,7 +736,7 @@ public class ColorPickerView extends View{
 			else if(heightMode == MeasureSpec.EXACTLY && widthMode != MeasureSpec.EXACTLY) {
 				//The height has been specified exactly, we need to stay within this height and adopt the width.
 
-				int w = (int) (heightAllowed + mPanelSpacingPx + mHuePanelWidthPx);
+				int w = heightAllowed + mPanelSpacingPx + mHuePanelWidthPx;
 
 				if(mShowAlphaPanel) {
 					w -= (mPanelSpacingPx + mAlphaPanelHeightPx);
@@ -769,10 +769,10 @@ public class ColorPickerView extends View{
 			//within the allowed space.
 
 			//Calculate the needed width to layout using max allowed height.
-			int widthNeeded = (int) (heightAllowed + mPanelSpacingPx + mHuePanelWidthPx);
+			int widthNeeded = heightAllowed + mPanelSpacingPx + mHuePanelWidthPx;
 
 			//Calculate the needed height to layout using max allowed width.
-			int heightNeeded = (int) (widthAllowed - mPanelSpacingPx - mHuePanelWidthPx);
+			int heightNeeded = widthAllowed - mPanelSpacingPx - mHuePanelWidthPx;
 
 			if(mShowAlphaPanel) {
 				widthNeeded -= (mPanelSpacingPx + mAlphaPanelHeightPx);

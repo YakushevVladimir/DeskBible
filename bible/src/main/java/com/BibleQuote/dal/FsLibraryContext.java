@@ -285,7 +285,7 @@ public class FsLibraryContext extends LibraryContext {
                 throw new BookDefinitionException(message, module.getDataSourceID(), i, pathNames.get(i), fullNames.get(i), shortNames.get(i), chapterQty.get(i));
             }
             FsBook book = new FsBook(module, fullNames.get(i), pathNames.get(i),
-                    (shortNames.size() > i ? shortNames.get(i) : ""),
+                    shortNames.size() > i ? shortNames.get(i) : "",
                     chapterQty.get(i));
             module.Books.put(book.getID(), book);
         }

@@ -252,7 +252,7 @@ public class ReaderActivity extends BibleQuoteActivity implements OnTaskComplete
     public void onTaskComplete(Task task) {
         if (task != null && !task.isCancelled()) {
             if (task instanceof AsyncOpenChapter) {
-                AsyncOpenChapter t = ((AsyncOpenChapter) task);
+                AsyncOpenChapter t = (AsyncOpenChapter) task;
                 if (t.isSuccess()) {
                     chapterInHTML = myLibrarian.getChapterHTMLView();
                     setTextInWebView();
