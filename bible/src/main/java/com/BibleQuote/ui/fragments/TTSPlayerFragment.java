@@ -106,7 +106,7 @@ public class TTSPlayerFragment extends Fragment implements PlayerView.OnClickLis
         } else if (ev == TTSPlayerController.Event.ChangeTextIndex) {
             int nextTextIndex = ttsController.getCurrText();
             TreeSet<Integer> selected = new TreeSet<Integer>();
-            selected.add((++nextTextIndex));
+            selected.add(++nextTextIndex);
             webView.setSelectedVerse(selected);
             webView.gotoVerse(nextTextIndex);
         } else if (ev == TTSPlayerController.Event.PauseSpeak) {

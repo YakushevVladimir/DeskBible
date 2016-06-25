@@ -141,7 +141,7 @@ public class ReaderWebView extends WebView
 		int scrollY = getScrollY();
 		int scrollExtent = computeVerticalScrollExtent();
 		int scrollPos = scrollY + scrollExtent;
-		return (scrollPos >= (computeVerticalScrollRange() - 10));
+		return scrollPos >= (computeVerticalScrollRange() - 10);
 	}
 
 	public void computeScroll() {
