@@ -33,7 +33,7 @@ import com.BibleQuote.utils.DataConstants;
 
 import java.io.File;
 
-public class LibraryController {
+public final class LibraryController {
 
 	private static volatile LibraryController instance;
 
