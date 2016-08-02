@@ -5,15 +5,15 @@ import com.BibleQuote.modules.Chapter;
 
 import java.util.Collection;
 
-public interface IChapterRepository<TBook> {
+public interface IChapterRepository<T> {
 
 	/*
 	 * Data source related methods
 	 * 
 	 */
-	Collection<Chapter> loadChapters(TBook book) throws BookNotFoundException;
+	Collection<Chapter> loadChapters(T book) throws BookNotFoundException;
 
-	Chapter loadChapter(TBook book, Integer chapterNumber) throws BookNotFoundException;
+	Chapter loadChapter(T book, Integer chapterNumber) throws BookNotFoundException;
 
 	void insertChapter(Chapter chapter);
 
@@ -25,8 +25,8 @@ public interface IChapterRepository<TBook> {
 	 * Internal cache related methods
 	 *
 	 */
-	Collection<Chapter> getChapters(TBook book);
+	Collection<Chapter> getChapters(T book);
 
-	Chapter getChapterByNumber(TBook book, Integer chapterNumber);
+	Chapter getChapterByNumber(T book, Integer chapterNumber);
 
 }

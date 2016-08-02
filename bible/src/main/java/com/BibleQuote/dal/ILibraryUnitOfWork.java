@@ -5,15 +5,15 @@ import com.BibleQuote.controllers.CacheModuleController;
 import com.BibleQuote.dal.repository.IBookRepository;
 import com.BibleQuote.dal.repository.IModuleRepository;
 
-public interface ILibraryUnitOfWork<TModuleId, TModule, TBook> {
+public interface ILibraryUnitOfWork<T, S, U> {
 
-	public IModuleRepository<TModuleId, TModule> getModuleRepository();
+	public IModuleRepository<S> getModuleRepository();
 
-	public IBookRepository<TModule, TBook> getBookRepository();
+	public IBookRepository<S, U> getBookRepository();
 
-	public IChapterRepository<TBook> getChapterRepository();
+	public IChapterRepository<U> getChapterRepository();
 
 	public LibraryContext getLibraryContext();
 
-	public CacheModuleController<TModule> getCacheModuleController();
+	public CacheModuleController<S> getCacheModuleController();
 }
