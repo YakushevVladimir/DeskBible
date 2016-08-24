@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/YakushevVladimir/BibleQuote-for-Android.svg?branch=develop)](https://travis-ci.org/YakushevVladimir/BibleQuote-for-Android)
+[![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
+
 #BibleQuote for Android
 
 [![](http://scripturesoftware.org/wp-content/uploads/2012/06/icon.png)](http://scripturesoftware.org/wp-content/uploads/2012/06/icon.png)
