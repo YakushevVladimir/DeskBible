@@ -1,12 +1,41 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ *
+ * --------------------------------------------------
+ *
+ * Project: BibleQuote-for-Android
+ * File: AsyncOpenModule.java
+ *
+ * Created by Vladimir Yakushev at 8/2016
+ * E-mail: ru.phoenix@gmail.com
+ * WWW: http://www.scripturesoftware.org
+ *
+ */
+
 package com.BibleQuote.async;
 
 import android.util.Log;
 
-import com.BibleQuote.entity.BibleReference;
-import com.BibleQuote.entity.modules.Module;
-import com.BibleQuote.exceptions.BookDefinitionException;
-import com.BibleQuote.exceptions.BooksDefinitionException;
-import com.BibleQuote.exceptions.OpenModuleException;
+import com.BibleQuote.domain.entity.BibleReference;
+import com.BibleQuote.domain.entity.Module;
+import com.BibleQuote.domain.exceptions.BookDefinitionException;
+import com.BibleQuote.domain.exceptions.BooksDefinitionException;
+import com.BibleQuote.domain.exceptions.OpenModuleException;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.utils.Task;
 
@@ -39,7 +68,7 @@ public class AsyncOpenModule extends Task {
 
 			isSuccess = true;
 		} catch (OpenModuleException e) {
-			Log.e(TAG, String.format("AsyncOpenBooks(): ", e.toString()), e);
+			Log.e(TAG, String.format("AsyncOpenBooks(): %s", e.toString()), e);
 			exception = e;
 		} catch (BooksDefinitionException e) {
 			exception = e;

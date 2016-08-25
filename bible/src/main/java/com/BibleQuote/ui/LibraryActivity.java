@@ -1,7 +1,4 @@
 /*
- * Copyright (c) 2011-2015 Scripture Software
- * http://www.scripturesoftware.org
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -10,7 +7,7 @@
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -18,6 +15,16 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
+ *
+ * --------------------------------------------------
+ *
+ * Project: BibleQuote-for-Android
+ * File: LibraryActivity.java
+ *
+ * Created by Vladimir Yakushev at 8/2016
+ * E-mail: ru.phoenix@gmail.com
+ * WWW: http://www.scripturesoftware.org
+ *
  */
 package com.BibleQuote.ui;
 
@@ -27,16 +34,27 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.*;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.GridView;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
+import android.widget.Toast;
+
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
 import com.BibleQuote.async.AsyncManager;
 import com.BibleQuote.async.AsyncOpenModule;
 import com.BibleQuote.async.AsyncRefreshModules;
 import com.BibleQuote.async.LoadModuleFromFile;
-import com.BibleQuote.entity.BibleReference;
+import com.BibleQuote.domain.entity.BibleReference;
+import com.BibleQuote.domain.exceptions.BookDefinitionException;
+import com.BibleQuote.domain.exceptions.BookNotFoundException;
+import com.BibleQuote.domain.exceptions.BooksDefinitionException;
+import com.BibleQuote.domain.exceptions.ExceptionHelper;
+import com.BibleQuote.domain.exceptions.OpenModuleException;
 import com.BibleQuote.entity.ItemList;
-import com.BibleQuote.exceptions.*;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.ui.base.BibleQuoteActivity;
 import com.BibleQuote.utils.OnTaskCompleteListener;

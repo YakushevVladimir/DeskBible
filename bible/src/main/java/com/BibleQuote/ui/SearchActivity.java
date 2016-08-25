@@ -1,17 +1,30 @@
 /*
- * Copyright (C) 2011 Scripture Software (http://scripturesoftware.org/)
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * --------------------------------------------------
+ *
+ * Project: BibleQuote-for-Android
+ * File: SearchActivity.java
+ *
+ * Created by Vladimir Yakushev at 8/2016
+ * E-mail: ru.phoenix@gmail.com
+ * WWW: http://www.scripturesoftware.org
+ *
  */
 
 package com.BibleQuote.ui;
@@ -19,29 +32,42 @@ package com.BibleQuote.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.*;
+import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
+import com.BibleQuote.async.AsyncCommand;
 import com.BibleQuote.async.AsyncManager;
 import com.BibleQuote.async.command.StartSearch;
+import com.BibleQuote.domain.exceptions.BookDefinitionException;
+import com.BibleQuote.domain.exceptions.BookNotFoundException;
+import com.BibleQuote.domain.exceptions.BooksDefinitionException;
+import com.BibleQuote.domain.exceptions.ExceptionHelper;
+import com.BibleQuote.domain.exceptions.OpenModuleException;
 import com.BibleQuote.entity.ItemList;
-import com.BibleQuote.exceptions.*;
 import com.BibleQuote.managers.GoogleAnalyticsHelper;
+import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.ui.base.BibleQuoteActivity;
 import com.BibleQuote.ui.widget.listview.ItemAdapter;
+import com.BibleQuote.ui.widget.listview.item.Item;
+import com.BibleQuote.ui.widget.listview.item.SubtextItem;
 import com.BibleQuote.utils.OnTaskCompleteListener;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.Task;
 import com.BibleQuote.utils.modules.LinkConverter;
-import com.BibleQuote.BibleQuoteApp;
-import com.BibleQuote.async.AsyncCommand;
-import com.BibleQuote.managers.Librarian;
-import com.BibleQuote.ui.widget.listview.item.Item;
-import com.BibleQuote.ui.widget.listview.item.SubtextItem;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class SearchActivity extends BibleQuoteActivity implements OnTaskCompleteListener {
 	private static final String TAG = "SearchActivity";
@@ -51,7 +77,7 @@ public class SearchActivity extends BibleQuoteActivity implements OnTaskComplete
 	private Task mTask;
 	private String progressMessage = "";
 
-	private LinkedHashMap<String, String> searchResults = new LinkedHashMap<String, String>();
+	private Map<String, String> searchResults = new LinkedHashMap<String, String>();
 	private Librarian myLibararian;
 	private ArrayList<Item> searchItems = new ArrayList<Item>();
 

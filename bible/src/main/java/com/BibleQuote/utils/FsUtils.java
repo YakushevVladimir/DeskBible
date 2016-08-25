@@ -1,7 +1,4 @@
 /*
- * Copyright (c) 2011-2015 Scripture Software
- * http://www.scripturesoftware.org
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -10,7 +7,7 @@
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -18,6 +15,16 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
+ *
+ * --------------------------------------------------
+ *
+ * Project: BibleQuote-for-Android
+ * File: FsUtils.java
+ *
+ * Created by Vladimir Yakushev at 8/2016
+ * E-mail: ru.phoenix@gmail.com
+ * WWW: http://www.scripturesoftware.org
+ *
  */
 package com.BibleQuote.utils;
 
@@ -26,9 +33,9 @@ import android.content.res.Resources;
 import android.util.Log;
 
 import com.BibleQuote.R;
-import com.BibleQuote.controllers.LibraryController;
-import com.BibleQuote.exceptions.FileAccessException;
-import com.BibleQuote.exceptions.OpenModuleException;
+import com.BibleQuote.dal.controllers.FsLibraryController;
+import com.BibleQuote.domain.exceptions.DataAccessException;
+import com.BibleQuote.domain.exceptions.OpenModuleException;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -52,7 +59,7 @@ public final class FsUtils {
 	}
 
 	public static BufferedReader getTextFileReaderFromZipArchive(String archivePath, String textFileInArchive,
-																 String textFileEncoding) throws FileAccessException {
+																 String textFileEncoding) throws DataAccessException {
 		File zipFile = new File(archivePath);
 		try {
 			InputStream moduleStream = new FileInputStream(zipFile);
@@ -71,32 +78,32 @@ public final class FsUtils {
 			}
 			String message = String.format("File %1$s in zip-arhive %2$s not found", textFileInArchive, archivePath);
 			Log.e(TAG, message);
-			throw new FileAccessException(message);
+			throw new DataAccessException(message);
 		} catch (UTFDataFormatException e) {
 			String message = String.format("Archive %1$s contains the file names not in the UTF format", zipFile.getName());
 			Log.e(TAG, message);
-			throw new FileAccessException(message);
+			throw new DataAccessException(message);
 		} catch (FileNotFoundException e) {
 			String message = String.format("File %1$s in zip-arhive %2$s not found", textFileInArchive, archivePath);
-			throw new FileAccessException(message);
+			throw new DataAccessException(message);
 		} catch (IOException e) {
 			Log.e(TAG,
 					String.format("getTextFileReaderFromZipArchive(%1$s, %2$s, %3$s)",
 							archivePath, textFileInArchive, textFileEncoding), e);
-			throw new FileAccessException(e);
+			throw new DataAccessException(e);
 		}
 	}
 
-	public static BufferedReader getTextFileReader(String dir, String textfileName, String textFileEncoding) throws FileAccessException {
+	public static BufferedReader getTextFileReader(String dir, String textfileName, String textFileEncoding) throws DataAccessException {
 		BufferedReader bReader;
 		try {
 			File file = new File(dir, textfileName);
 			bReader = FsUtils.OpenFile(file, textFileEncoding);
 			if (bReader == null) {
-				throw new FileAccessException(String.format("File %1$s not exists", textfileName));
+				throw new DataAccessException(String.format("File %1$s not exists", textfileName));
 			}
 		} catch (Exception e) {
-			throw new FileAccessException(e);
+			throw new DataAccessException(e);
 		}
 		return bReader;
 	}
@@ -199,23 +206,23 @@ public final class FsUtils {
 		}
 	}
 
-	public static void addModuleFromFile(Context context, String path) throws OpenModuleException, FileAccessException{
+	public static void addModuleFromFile(Context context, String path) throws OpenModuleException, DataAccessException {
 		File source = new File(path);
 		Resources resources = context.getResources();
 		if (!source.exists()) {
-			throw new FileAccessException(resources.getString(R.string.file_not_exist));
+			throw new DataAccessException(resources.getString(R.string.file_not_exist));
 		} else if (!source.canRead()) {
-			throw new FileAccessException(resources.getString(R.string.file_cant_read));
+			throw new DataAccessException(resources.getString(R.string.file_cant_read));
 		} else if (!source.getName().endsWith("zip")) {
-			throw new FileAccessException(resources.getString(R.string.file_not_supported));
+			throw new DataAccessException(resources.getString(R.string.file_not_supported));
 		}
 
-		File libraryDir = LibraryController.getInstance(context).getContext().getLibraryDir();
+		File libraryDir = new File(DataConstants.getLibraryPath());
 		File target = new File(libraryDir, source.getName());
 		if (!source.renameTo(target)) {
-			throw new FileAccessException(resources.getString(R.string.file_not_moved));
+			throw new DataAccessException(resources.getString(R.string.file_not_moved));
 		}
 
-		LibraryController.getInstance(context).getModuleCtrl().loadModule(target.getAbsolutePath());
+		FsLibraryController.getInstance(context).getModuleCtrl().loadModule(target.getAbsolutePath());
 	}
 }

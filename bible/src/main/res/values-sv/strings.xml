@@ -1,21 +1,32 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <!--
-/*
- * Copyright (C) 2011 Scripture Software (http://scripturesoftware.org/)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
--->
+  ~ Licensed to the Apache Software Foundation (ASF) under one
+  ~ or more contributor license agreements.  See the NOTICE file
+  ~ distributed with this work for additional information
+  ~ regarding copyright ownership.  The ASF licenses this file
+  ~ to you under the Apache License, Version 2.0 (the
+  ~ "License"); you may not use this file except in compliance
+  ~ with the License.  You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied.  See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  ~
+  ~ --------------------------------------------------
+  ~
+  ~ Project: BibleQuote-for-Android
+  ~ File: strings.xml
+  ~
+  ~ Created by Vladimir Yakushev at 8/2016
+  ~ E-mail: ru.phoenix@gmail.com
+  ~ WWW: http://www.scripturesoftware.org
+  ~
+  -->
 <resources>
     <string name="app_name">Bibeln</string>
     <!-- Tab's -->
@@ -40,7 +51,7 @@
     <color name="gray_color">#aaa</color>
     <string name="menu_night_day_mode">Nigth / Dag-läget</string>
     <string name="fav_delete_all_question">Är du säker på att du vill ta bort alla bokmärken?</string>
-    <string name="messageLoad">Ladda...</string>
+    <string name="messageLoad">Ladda…</string>
     <string name="share">Dela</string>
     <string name="disable_auto_screen_rotation">Inaktivera automatisk skärmrotation</string>
     <string name="results">resultat</string>
@@ -50,7 +61,7 @@
     <string name="menu_favorites">Bokmärken</string>
     <string name="messageSearchCanceled">Sök avbryts</string>
     <string name="fav_sort_alphabetically">Sortera</string>
-    <string name="messageSearch">Sök ...</string>
+    <string name="messageSearch">Sök …</string>
     <string name="menu_settings">Inställningar</string>
     <string name="menu_search">Sök</string>
     <string name="copy">Kopiera</string>
@@ -58,16 +69,16 @@
     <string name="app_about_design_label">Design:</string>
     <string name="bookmark_invalid_removed">Ogiltig bokmärke avlägsnas</string>
     <string name="category_reader_other_history_size_summary">Nuvarande historien storlek: %1$s</string>
-    <string name="messageRefresh">Uppdatera ...</string>
+    <string name="messageRefresh">Uppdatera …</string>
     <string name="category_reader_appearance">Utseende</string>
     <string name="category_reader_other_history_size">Historia storlek</string>
     <string name="category_reader_other">Andra</string>
     <string name="read_mode_by_default_summary">Använd läget standard läs</string>
     <string name="app_about_thanks_label">Tack:</string>
     <string name="about">Ca</string>
-    <string name="messageLoadBooks">Ladda böcker ...</string>
+    <string name="messageLoadBooks">Ladda böcker …</string>
     <string name="category_reports_summary">Crash rapporter inställningar</string>
-    <string name="messageLoadModules">Ladda moduler ...</string>
+    <string name="messageLoadModules">Ladda moduler …</string>
     <string name="read_mode_by_default">Läs läget som standard</string>
     <string name="category_reader_summary">Reader fönsterinställningar</string>
     <string name="app_about_dev_label">Utvecklare:</string>
@@ -103,7 +114,7 @@
     <string name="exception_book_not_found">Book %1$s not found in module %2$s</string>
     <string name="exception_books_definition">Incorrect module description in module %1$s: BookQty=%2$s, PathName#=%3$s, FullName#=%4$s, ShortName#=%5$s, ChapterQty#=%6$s</string>
     <string name="exception_open_module">Incorrect module %1$s(%2$s)</string>
-    <string name="exception_open_module_short">Incorrect module %1$s(%2$s)</string>
+    <string name="exception_open_module_short">Incorrect module %s</string>
     <string name="font_family">Font family</string>
     <string name="menu_history">History</string>
     <string name="menu_history_clear">Clear</string>
@@ -126,7 +137,7 @@
     <string name="text_color_selected">Text color of selected text</string>
     <string name="text_color_selected_summary">Choose text color of selected text</string>
     <string name="volume_butons_to_scroll">Volume buttons to scroll</string>
-    <string name="copy_module_from_file"> Copying a module ...</string>
+    <string name="copy_module_from_file"> Copying a module …</string>
     <string name="error_open_module">Error opening module %1$s from %2$s</string>
     <string name="file_cant_read">The file is not readable</string>
     <string name="file_not_exist">File not found</string>

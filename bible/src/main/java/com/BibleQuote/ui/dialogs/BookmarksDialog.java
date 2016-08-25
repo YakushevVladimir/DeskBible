@@ -1,17 +1,30 @@
 /*
- * Copyright (C) 2011 Scripture Software (http://scripturesoftware.org/)
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * --------------------------------------------------
+ *
+ * Project: BibleQuote-for-Android
+ * File: BookmarksDialog.java
+ *
+ * Created by Vladimir Yakushev at 8/2016
+ * E-mail: ru.phoenix@gmail.com
+ * WWW: http://www.scripturesoftware.org
+ *
  */
 
 package com.BibleQuote.ui.dialogs;
@@ -20,17 +33,21 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.BibleQuote.R;
+import com.BibleQuote.dal.repository.bookmarks.dbBookmarksRepository;
+import com.BibleQuote.dal.repository.bookmarks.dbBookmarksTagsRepository;
+import com.BibleQuote.dal.repository.bookmarks.dbTagRepository;
+import com.BibleQuote.domain.entity.Bookmark;
 import com.BibleQuote.managers.GoogleAnalyticsHelper;
-import com.BibleQuote.managers.bookmarks.Bookmark;
 import com.BibleQuote.managers.bookmarks.BookmarksManager;
-import com.BibleQuote.managers.bookmarks.repository.dbBookmarksRepository;
 import com.BibleQuote.ui.BookmarksActivity;
 
 public class BookmarksDialog extends DialogFragment {
@@ -44,6 +61,7 @@ public class BookmarksDialog extends DialogFragment {
         return result;
     }
 
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -76,7 +94,7 @@ public class BookmarksDialog extends DialogFragment {
 
     private void addBookmarks() {
         readField();
-        new BookmarksManager(new dbBookmarksRepository()).add(bookmark, bookmark.tags);
+        new BookmarksManager(new dbBookmarksRepository(), new dbBookmarksTagsRepository(), new dbTagRepository()).add(bookmark, bookmark.tags);
 
         GoogleAnalyticsHelper.getInstance().actionSendBookmark(bookmark);
 

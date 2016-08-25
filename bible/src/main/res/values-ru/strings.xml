@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <!--
-  ~ Copyright (c) 2011-2015 Scripture Software
-  ~ http://www.scripturesoftware.org
-  ~
   ~ Licensed to the Apache Software Foundation (ASF) under one
   ~ or more contributor license agreements.  See the NOTICE file
   ~ distributed with this work for additional information
@@ -11,7 +8,7 @@
   ~ "License"); you may not use this file except in compliance
   ~ with the License.  You may obtain a copy of the License at
   ~
-  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~ http://www.apache.org/licenses/LICENSE-2.0
   ~
   ~ Unless required by applicable law or agreed to in writing,
   ~ software distributed under the License is distributed on an
@@ -19,6 +16,16 @@
   ~ KIND, either express or implied.  See the License for the
   ~ specific language governing permissions and limitations
   ~ under the License.
+  ~
+  ~ --------------------------------------------------
+  ~
+  ~ Project: BibleQuote-for-Android
+  ~ File: strings.xml
+  ~
+  ~ Created by Vladimir Yakushev at 8/2016
+  ~ E-mail: ru.phoenix@gmail.com
+  ~ WWW: http://www.scripturesoftware.org
+  ~
   -->
 <resources>
 	<string name="app_name">Библия</string>
@@ -52,11 +59,11 @@
 	<string name="select_module">Выберите модуль</string>
 	<string name="added">Добавлена</string>
 	<string name="removed">Удалено</string>
-	<string name="messageLoad">Загрузка...</string>
-	<string name="messageLoadBooks">Загрузка книг...</string>
-	<string name="messageLoadModules">Загрузка модулей...</string>
+	<string name="messageLoad">Загрузка…</string>
+	<string name="messageLoadBooks">Загрузка книг…</string>
+	<string name="messageLoadModules">Загрузка модулей…</string>
 	<string name="messageLoadCanceled">Загрузка завершена</string>
-	<string name="messageSearch">Поиск...</string>
+	<string name="messageSearch">Поиск…</string>
 	<string name="messageSearchCanceled">Поиск завершен</string>
 	<string name="results">результатов</string>
 	<string name="share">Поделиться</string>
@@ -69,12 +76,12 @@
 	<string name="about">О программе</string>
 	<string name="app_about_dev_label">Разработчики:</string>
 	<string name="exception_open_module">Некорректный модуль %1$s(%2$s)</string>
-	<string name="messageRefresh">Обновление...</string>
+	<string name="messageRefresh">Обновление…</string>
 	<string name="exception_books_definition">Некорректное описание книги в модуле %1$s:
 		BookQty=%2$s, PathName#=%3$s, FullName#=%4$s, ShortName#=%5$s,
 		ChapterQty#=%6$s
 	</string>
-	<string name="exception_open_module_short">Некорректный модуль %1$s</string>
+	<string name="exception_open_module_short">Некорректный модуль %s</string>
 	<string name="exception_book_not_found">Книга %1$s не найден а в модуле %2$s</string>
 	<string name="exception_book_definition">Некорректные параметры книги #%1$s в модуле %2$s:
 		PathName=%3$s, FullName=%4$s, ShortName=%5$s, ChapterQty=%6$s
@@ -114,7 +121,7 @@
 	<string name="add_reference_summary">Добавлять ссылку к отрывку</string>
 	<string name="add_module_to_reference">Добавлять имя модуля</string>
 	<string name="add_reference">Добавлять ссылку</string>
-	<string name="menu_speek">Читать...</string>
+	<string name="menu_speek">Читать…</string>
 	<string name="no_tags">Меток нет</string>
 	<string name="empty">Нет данных</string>
 	<string name="tags">Метки</string>
@@ -135,12 +142,12 @@
 	<string name="file_not_supported">Файл не поддерживается</string>
 	<string name="file_not_moved">Операция не удалась</string>
 	<string name="error_open_module">Не удалось открыть модуль %1$s из %2$s</string>
-	<string name="copy_module_from_file">Копирование модуля...</string>
+	<string name="copy_module_from_file">Копирование модуля…</string>
 	<string name="exception_add_module_from_file">Данная функция не доступна! Установите файловый менеджер.</string>
 	<string name="notify_dialog_title">Ошибка</string>
 	<string name="always_view_verse_numbers_enabled">Для всех текстов</string>
 	<string name="always_view_verse_numbers_disabled">Только для текстов Библии</string>
 	<string name="always_view_verse_numbers_title">Всегда показывать номера стихов</string>
-	<string name="choice_chapter">Открыть...</string>
+	<string name="choice_chapter">Открыть…</string>
 	<string name="donate">Donate</string>
 </resources>

@@ -1,7 +1,4 @@
 /*
- * Copyright (c) 2011-2015. Scripture Software
- * http://www.scripturesoftware.org
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -10,7 +7,7 @@
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -19,19 +16,24 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * Project: BibleQuote
+ * --------------------------------------------------
+ *
+ * Project: BibleQuote-for-Android
  * File: BibleQuoteApp.java
  *
- * Created by Vladimir Yakushev at 5/2015
+ * Created by Vladimir Yakushev at 8/2016
  * E-mail: ru.phoenix@gmail.com
+ * WWW: http://www.scripturesoftware.org
+ *
  */
 package com.BibleQuote;
 
 import android.app.Application;
+
 import com.BibleQuote.async.AsyncManager;
+import com.BibleQuote.dal.repository.bookmarks.dbBookmarksRepository;
+import com.BibleQuote.domain.repository.IBookmarksRepository;
 import com.BibleQuote.managers.Librarian;
-import com.BibleQuote.managers.bookmarks.repository.IBookmarksRepository;
-import com.BibleQuote.managers.bookmarks.repository.dbBookmarksRepository;
 import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.UpdateManager;

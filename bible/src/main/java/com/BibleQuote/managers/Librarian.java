@@ -1,7 +1,4 @@
 /*
- * Copyright (c) 2011-2015 Scripture Software
- * http://www.scripturesoftware.org
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -10,7 +7,7 @@
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -18,28 +15,38 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
+ *
+ * --------------------------------------------------
+ *
+ * Project: BibleQuote-for-Android
+ * File: Librarian.java
+ *
+ * Created by Vladimir Yakushev at 8/2016
+ * E-mail: ru.phoenix@gmail.com
+ * WWW: http://www.scripturesoftware.org
+ *
  */
 
 package com.BibleQuote.managers;
 
 import android.content.Context;
 
-import com.BibleQuote.controllers.LibraryController;
-import com.BibleQuote.controllers.TSKController;
+import com.BibleQuote.dal.controllers.FsLibraryController;
 import com.BibleQuote.dal.repository.XmlTskRepository;
 import com.BibleQuote.dal.repository.fsHistoryRepository;
-import com.BibleQuote.entity.BibleReference;
+import com.BibleQuote.domain.controllers.TSKController;
+import com.BibleQuote.domain.entity.BibleReference;
+import com.BibleQuote.domain.entity.Book;
+import com.BibleQuote.domain.entity.Chapter;
+import com.BibleQuote.domain.entity.Module;
+import com.BibleQuote.domain.entity.Verse;
+import com.BibleQuote.domain.exceptions.BQUniversalException;
+import com.BibleQuote.domain.exceptions.BookDefinitionException;
+import com.BibleQuote.domain.exceptions.BookNotFoundException;
+import com.BibleQuote.domain.exceptions.BooksDefinitionException;
+import com.BibleQuote.domain.exceptions.OpenModuleException;
+import com.BibleQuote.domain.exceptions.TskNotFoundException;
 import com.BibleQuote.entity.ItemList;
-import com.BibleQuote.entity.modules.Book;
-import com.BibleQuote.entity.modules.Chapter;
-import com.BibleQuote.entity.modules.Module;
-import com.BibleQuote.entity.modules.Verse;
-import com.BibleQuote.exceptions.BQUniversalException;
-import com.BibleQuote.exceptions.BookDefinitionException;
-import com.BibleQuote.exceptions.BookNotFoundException;
-import com.BibleQuote.exceptions.BooksDefinitionException;
-import com.BibleQuote.exceptions.OpenModuleException;
-import com.BibleQuote.exceptions.TskNotFoundException;
 import com.BibleQuote.managers.history.IHistoryManager;
 import com.BibleQuote.managers.history.SimpleHistoryManager;
 import com.BibleQuote.utils.Log;
@@ -57,6 +64,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
@@ -64,7 +72,7 @@ public class Librarian {
 
 	private static final String TAG = "Librarian";
 
-	private LinkedHashMap<String, String> searchResults = new LinkedHashMap<String, String>();
+	private Map<String, String> searchResults = new LinkedHashMap<String, String>();
 
     private Module currModule;
 	private Book currBook;
@@ -75,14 +83,14 @@ public class Librarian {
 	private IHistoryManager historyManager;
 
 	private TSKController tskCtrl;
-	private final LibraryController libCtrl;
+	private final FsLibraryController libCtrl;
 
 	/**
 	 * Инициализация контроллеров библиотеки, модулей, книг и глав.
 	 * Подписка на событие ChangeBooksEvent
 	 */
 	public Librarian(Context context) {
-		libCtrl = LibraryController.getInstance(context);
+		libCtrl = FsLibraryController.getInstance(context);
 		historyManager = new SimpleHistoryManager(
 				new fsHistoryRepository(context.getCacheDir()),
 				PreferenceHelper.getHistorySize());
@@ -97,9 +105,9 @@ public class Librarian {
 	 *
 	 * @param module модуль для которого необходимо получить коллекцию Book
 	 * @return коллекцию Book для указанного модуля
-	 * @throws com.BibleQuote.exceptions.OpenModuleException
-	 * @throws com.BibleQuote.exceptions.BooksDefinitionException
-	 * @throws com.BibleQuote.exceptions.BookDefinitionException
+	 * @throws com.BibleQuote.domain.exceptions.OpenModuleException
+	 * @throws com.BibleQuote.domain.exceptions.BooksDefinitionException
+	 * @throws com.BibleQuote.domain.exceptions.BookDefinitionException
 	 */
 	public ArrayList<Book> getBookList(Module module) throws OpenModuleException, BooksDefinitionException, BookDefinitionException {
 		return libCtrl.getBookCtrl().getBookList(module);
@@ -277,15 +285,15 @@ public class Librarian {
 	///////////////////////////////////////////////////////////////////////////
 	// SEARCH
 
-	public LinkedHashMap<String, String> getSearchResults() {
+	public Map<String, String> getSearchResults() {
 		return this.searchResults;
 	}
 
-	public LinkedHashMap<String, String> search(String query, String fromBook, String toBook) throws OpenModuleException, BookNotFoundException {
+	public Map<String, String> search(String query, String fromBook, String toBook) throws OpenModuleException, BookNotFoundException {
 		if (getCurrModule() == null) {
 			searchResults = new LinkedHashMap<String, String>();
 		} else {
-			searchResults = libCtrl.getBookCtrl().search(getCurrModule(), query, fromBook, toBook);
+			searchResults = libCtrl.getModuleCtrl(currModule).search(currModule.getBookList(fromBook, toBook), query);
 		}
 		return searchResults;
 	}

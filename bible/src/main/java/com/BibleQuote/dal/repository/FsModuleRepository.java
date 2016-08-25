@@ -1,7 +1,4 @@
 /*
- * Copyright (c) 2011-2015 Scripture Software
- * http://www.scripturesoftware.org
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -10,7 +7,7 @@
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -18,41 +15,48 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
+ *
+ * --------------------------------------------------
+ *
+ * Project: BibleQuote-for-Android
+ * File: FsModuleRepository.java
+ *
+ * Created by Vladimir Yakushev at 8/2016
+ * E-mail: ru.phoenix@gmail.com
+ * WWW: http://www.scripturesoftware.org
+ *
  */
 
 package com.BibleQuote.dal.repository;
 
-import com.BibleQuote.controllers.CacheModuleController;
 import com.BibleQuote.dal.FsLibraryContext;
-import com.BibleQuote.entity.modules.FsModule;
-import com.BibleQuote.entity.modules.Module;
-import com.BibleQuote.exceptions.FileAccessException;
-import com.BibleQuote.exceptions.OpenModuleException;
-import com.BibleQuote.utils.DataConstants;
-import com.BibleQuote.utils.FsUtils;
+import com.BibleQuote.dal.controllers.FsCacheModuleController;
+import com.BibleQuote.domain.entity.Module;
+import com.BibleQuote.domain.exceptions.OpenModuleException;
+import com.BibleQuote.domain.repository.old.IModuleRepository;
+import com.BibleQuote.entity.modules.BQModule;
 import com.BibleQuote.utils.Log;
 import com.BibleQuote.utils.OnlyBQIni;
 import com.BibleQuote.utils.OnlyBQZipIni;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class FsModuleRepository implements IModuleRepository<String, FsModule> {
+public class FsModuleRepository implements IModuleRepository<String, BQModule> {
 
 	private static final String TAG = "FsModuleRepository";
+
 	private FsLibraryContext context;
-	private CacheModuleController<FsModule> cache;
+    private FsCacheModuleController<BQModule> cache;
+    private BQModuleRepository repository;
 
 	public FsModuleRepository(FsLibraryContext context) {
 		this.context = context;
 		this.cache = context.getCache();
-	}
+        this.repository = new BQModuleRepository(context);
+    }
 
 	public synchronized Map<String, Module> loadFileModules() {
 
@@ -89,8 +93,8 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 	}
 
 	private String getZipDataSourceId(String path) {
-		return path + File.separator + DataConstants.DEFAULT_INI_FILE_NAME;
-	}
+        return path + File.separator + "bibleqt.ini";
+    }
 
 	@Override
 	public void loadModule(String path) throws OpenModuleException {
@@ -101,60 +105,8 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 	}
 
 	private void loadFileModule(String moduleDataSourceId, Map<String, Module> newModuleSet) throws OpenModuleException {
-		FsModule module = loadModuleById(moduleDataSourceId);
-		newModuleSet.put(module.getID(), module);
-	}
-
-	private FsModule loadModuleById(String moduleDatasourceID) throws OpenModuleException {
-		FsModule fsModule = null;
-		BufferedReader reader = null;
-		try {
-			fsModule = new FsModule(moduleDatasourceID);
-			reader = context.getModuleReader(fsModule);
-			fsModule.defaultEncoding = context.getModuleEncoding(reader);
-			reader = context.getModuleReader(fsModule);
-
-			Log.i(TAG, "....Load modules from " + moduleDatasourceID);
-			context.fillModule(fsModule, reader);
-			if (!"".equals(fsModule.fontName)) {
-				Log.i(TAG, "Skip load font");
-			}
-		} catch (FileAccessException e) {
-			Log.i(TAG, "!!!..Error open module from " + moduleDatasourceID);
-			throw new OpenModuleException(moduleDatasourceID, fsModule.modulePath);
-		} finally {
-			try {
-				if (reader != null) {
-					reader.close();
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		return fsModule;
-	}
-
-	private void loadFont(FsModule fsModule) {
-		try {
-			BufferedReader reader = fsModule.isArchive
-					? FsUtils.getTextFileReaderFromZipArchive(fsModule.modulePath, fsModule.fontPath, fsModule.defaultEncoding)
-					: FsUtils.getTextFileReader(fsModule.modulePath, fsModule.fontPath, fsModule.defaultEncoding);
-			File fontDir = new File(DataConstants.FONT_DIR);
-			if (!fontDir.exists() && !fontDir.mkdir()) {
-				return;
-			}
-			BufferedWriter writer = new BufferedWriter(new FileWriter(new File(fontDir, fsModule.fontPath)));
-
-			int value;
-			while ((value = reader.read()) != -1) {
-				writer.write(value);
-			}
-			reader.close();
-			writer.flush();
-			writer.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+        Module module = repository.loadModule(moduleDataSourceId);
+        newModuleSet.put(module.getID(), module);
 	}
 
 	public Map<String, Module> getModules() {
@@ -165,16 +117,16 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 		return context.moduleSet;
 	}
 
-	public FsModule getModuleByID(String moduleID) {
-		if (moduleID == null) {
+    public BQModule getModuleByID(String moduleID) {
+        if (moduleID == null) {
 			return null;
 		}
-		return (FsModule) context.moduleSet.get(moduleID);
-	}
+        return (BQModule) context.moduleSet.get(moduleID);
+    }
 
 	@Override
-	public void insertModule(FsModule module) {
-		context.moduleSet.put(module.getID(), module);
+    public void insertModule(BQModule module) {
+        context.moduleSet.put(module.getID(), module);
 	}
 
 	@Override
@@ -183,16 +135,16 @@ public class FsModuleRepository implements IModuleRepository<String, FsModule> {
 	}
 
 	@Override
-	public void updateModule(FsModule module) {
-		deleteModule(module.getID());
+    public void updateModule(BQModule module) {
+        deleteModule(module.getID());
 		insertModule(module);
 	}
 
 	private void loadCachedModules() {
-		ArrayList<FsModule> moduleList = cache.getModuleList();
-		context.moduleSet = new TreeMap<String, Module>();
-		for (FsModule fsModule : moduleList) {
-			insertModule(fsModule);
+        ArrayList<BQModule> moduleList = cache.getModuleList();
+        context.moduleSet = new TreeMap<String, Module>();
+        for (BQModule fsModule : moduleList) {
+            insertModule(fsModule);
 		}
 	}
 }

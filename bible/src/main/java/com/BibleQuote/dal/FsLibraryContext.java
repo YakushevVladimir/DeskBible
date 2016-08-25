@@ -1,7 +1,4 @@
 /*
- * Copyright (c) 2011-2015 Scripture Software
- * http://www.scripturesoftware.org
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -10,7 +7,7 @@
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -18,23 +15,33 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
+ *
+ * --------------------------------------------------
+ *
+ * Project: BibleQuote-for-Android
+ * File: FsLibraryContext.java
+ *
+ * Created by Vladimir Yakushev at 8/2016
+ * E-mail: ru.phoenix@gmail.com
+ * WWW: http://www.scripturesoftware.org
+ *
  */
 package com.BibleQuote.dal;
 
-import android.content.Context;
 import android.util.Log;
 
-import com.BibleQuote.controllers.CacheModuleController;
-import com.BibleQuote.entity.BibleReference;
-import com.BibleQuote.entity.modules.Book;
-import com.BibleQuote.entity.modules.Chapter;
-import com.BibleQuote.entity.modules.FsBook;
-import com.BibleQuote.entity.modules.FsModule;
-import com.BibleQuote.entity.modules.Module;
-import com.BibleQuote.entity.modules.Verse;
-import com.BibleQuote.exceptions.BookDefinitionException;
-import com.BibleQuote.exceptions.BooksDefinitionException;
-import com.BibleQuote.exceptions.FileAccessException;
+import com.BibleQuote.dal.controllers.FsCacheModuleController;
+import com.BibleQuote.domain.LibraryContext;
+import com.BibleQuote.domain.entity.BibleReference;
+import com.BibleQuote.domain.entity.Book;
+import com.BibleQuote.domain.entity.Chapter;
+import com.BibleQuote.domain.entity.Module;
+import com.BibleQuote.domain.entity.Verse;
+import com.BibleQuote.domain.exceptions.BookDefinitionException;
+import com.BibleQuote.domain.exceptions.BooksDefinitionException;
+import com.BibleQuote.domain.exceptions.DataAccessException;
+import com.BibleQuote.entity.modules.BQBook;
+import com.BibleQuote.entity.modules.BQModule;
 import com.BibleQuote.utils.FsUtils;
 import com.BibleQuote.utils.modules.LanguageConvertor;
 import com.BibleQuote.utils.textFormatters.ModuleTextFormatter;
@@ -53,11 +60,10 @@ import java.util.regex.Pattern;
 
 public class FsLibraryContext extends LibraryContext {
     private static final String TAG = "FsLibraryContext";
-    public CacheModuleController<FsModule> cache;
+    public FsCacheModuleController<BQModule> cache;
     private File libraryDir;
 
-    public FsLibraryContext(File libraryDir, Context context, CacheModuleController<FsModule> cache) {
-        super(context);
+    public FsLibraryContext(File libraryDir, FsCacheModuleController<BQModule> cache) {
         this.cache = cache;
         this.libraryDir = libraryDir;
         if (libraryDir != null && !libraryDir.exists()) {
@@ -68,12 +74,7 @@ public class FsLibraryContext extends LibraryContext {
         }
     }
 
-    @Override
-    public File getLibraryDir() {
-        return libraryDir;
-    }
-
-    public CacheModuleController<FsModule> getCache() {
+    public FsCacheModuleController<BQModule> getCache() {
         return cache;
     }
 
@@ -81,19 +82,19 @@ public class FsLibraryContext extends LibraryContext {
         return libraryDir != null && libraryDir.exists();
     }
 
-    public ArrayList<FsModule> getModuleList(Map<String, Module> moduleSet) {
-        ArrayList<FsModule> result = new ArrayList<FsModule>();
+    public ArrayList<BQModule> getModuleList(Map<String, Module> moduleSet) {
+        ArrayList<BQModule> result = new ArrayList<BQModule>();
         for (Module currModule : moduleSet.values()) {
-            result.add((FsModule) currModule);
+            result.add((BQModule) currModule);
         }
         return result;
     }
 
-    public ArrayList<FsBook> getBookList(Map<String, Book> bookSet) {
-        ArrayList<FsBook> bookList = new ArrayList<FsBook>();
+    public ArrayList<BQBook> getBookList(Map<String, Book> bookSet) {
+        ArrayList<BQBook> bookList = new ArrayList<BQBook>();
         if (bookSet != null) {
             for (Book currBook : bookSet.values()) {
-                bookList.add((FsBook) currBook);
+                bookList.add((BQBook) currBook);
             }
         }
         return bookList;
@@ -107,16 +108,16 @@ public class FsLibraryContext extends LibraryContext {
         return chapterList;
     }
 
-    public BufferedReader getModuleReader(FsModule fsModule) throws FileAccessException {
-        return fsModule.isArchive
+    public BufferedReader getModuleReader(BQModule fsModule) throws DataAccessException {
+        return fsModule.isArchive()
                 ? FsUtils.getTextFileReaderFromZipArchive(fsModule.modulePath, fsModule.iniFileName, fsModule.defaultEncoding)
                 : FsUtils.getTextFileReader(fsModule.modulePath, fsModule.iniFileName, fsModule.defaultEncoding);
     }
 
 
-    public BufferedReader getBookReader(FsBook book) throws FileAccessException {
-        FsModule fsModule = (FsModule) book.getModule();
-        return fsModule.isArchive
+    public BufferedReader getBookReader(BQBook book) throws DataAccessException {
+        BQModule fsModule = (BQModule) book.getModule();
+        return fsModule.isArchive()
                 ? FsUtils.getTextFileReaderFromZipArchive(fsModule.modulePath, book.getDataSourceID(), fsModule.defaultEncoding)
                 : FsUtils.getTextFileReader(fsModule.modulePath, book.getDataSourceID(), fsModule.defaultEncoding);
     }
@@ -147,9 +148,12 @@ public class FsLibraryContext extends LibraryContext {
         return iniFiles;
     }
 
-    public void fillModule(FsModule module, BufferedReader bReader) throws FileAccessException {
-        String str, htmlFilter = "", key, value;
+    public void fillModule(BQModule module, BufferedReader bReader) throws DataAccessException {
+        if (bReader == null) {
+            return;
+        }
 
+        String str, htmlFilter = "", key, value;
         int pos;
         try {
             while ((str = bReader.readLine()) != null) {
@@ -175,7 +179,7 @@ public class FsLibraryContext extends LibraryContext {
                 if (key.equals("biblename")) {
                     module.setName(value);
                 } else if (key.equals("bibleshortname")) {
-                    module.ShortName = value.replaceAll("\\.", "");
+                    module.shortName = value.replaceAll("\\.", "");
                 } else if (key.equals("chaptersign")) {
                     module.ChapterSign = value.toLowerCase();
                 } else if (key.equals("chapterzero")) {
@@ -201,7 +205,13 @@ public class FsLibraryContext extends LibraryContext {
         } catch (IOException e) {
             String message = String.format("fillModule(%1$s)", module.getDataSourceID());
             Log.e(TAG, message, e);
-            throw new FileAccessException(message);
+            throw new DataAccessException(message);
+        } finally {
+            try {
+                bReader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         String tagFilter[] = {"p", "b", "i", "em", "strong", "q", "big", "sub", "sup", "h1", "h2", "h3", "h4"};
@@ -225,7 +235,7 @@ public class FsLibraryContext extends LibraryContext {
         }
     }
 
-    public void fillBooks(FsModule module, BufferedReader bReader) throws FileAccessException, BooksDefinitionException, BookDefinitionException {
+    public void fillBooks(BQModule module, BufferedReader bReader) throws DataAccessException, BooksDefinitionException, BookDefinitionException {
         String str, key, value;
 
         ArrayList<String> fullNames = new ArrayList<String>();
@@ -276,7 +286,7 @@ public class FsLibraryContext extends LibraryContext {
         } catch (IOException e) {
             String message = String.format("fillBooks(%1$s) Exception: %2$s", module.getDataSourceID(), e);
             Log.e(TAG, message, e);
-            throw new FileAccessException(message);
+            throw new DataAccessException(message);
         }
 
         if (booksCount == 0 || pathNames.size() < booksCount || fullNames.size() < booksCount || shortNames.size() < booksCount || chapterQty.size() < booksCount) {
@@ -294,10 +304,10 @@ public class FsLibraryContext extends LibraryContext {
                         i, module.getDataSourceID(), pathNames.get(i), fullNames.get(i), shortNames.get(i), chapterQty.get(i));
                 throw new BookDefinitionException(message, module.getDataSourceID(), i, pathNames.get(i), fullNames.get(i), shortNames.get(i), chapterQty.get(i));
             }
-            FsBook book = new FsBook(module, fullNames.get(i), pathNames.get(i),
+            BQBook book = new BQBook(module, fullNames.get(i), pathNames.get(i),
                     (shortNames.size() > i ? shortNames.get(i) : ""),
                     chapterQty.get(i));
-            module.Books.put(book.getID(), book);
+            module.getBooks().put(book.getID(), book);
         }
     }
 
@@ -336,6 +346,12 @@ public class FsLibraryContext extends LibraryContext {
             Log.e(TAG, "getModuleEncoding()", e);
             e.printStackTrace();
             return encoding;
+        } finally {
+            try {
+                bReader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         return encoding;
