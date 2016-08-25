@@ -16,14 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * --------------------------------------------------
- *
  * Project: BibleQuote-for-Android
  * File: GoogleAnalyticsHelper.java
  *
  * Created by Vladimir Yakushev at 8/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
+ *
  *
  */
 
@@ -32,7 +31,7 @@ package com.BibleQuote.managers;
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.domain.entity.BibleReference;
 import com.BibleQuote.domain.entity.Bookmark;
-import com.BibleQuote.ui.ReaderActivity;
+import com.BibleQuote.ui.presenters.ReaderViewPresenter;
 import com.google.android.gms.analytics.HitBuilders;
 
 /**
@@ -73,19 +72,19 @@ public class GoogleAnalyticsHelper {
 
     public void actionOpenLink(BibleReference reference, int openCode) {
         switch (openCode) {
-            case ReaderActivity.ID_BOOKMARKS:
+            case ReaderViewPresenter.ID_BOOKMARKS:
                 actionOpenBookmark(reference);
                 break;
-            case ReaderActivity.ID_CHOOSE_CH:
+            case ReaderViewPresenter.ID_CHOOSE_CH:
                 actionOpenChapter(reference);
                 break;
-            case ReaderActivity.ID_HISTORY:
+            case ReaderViewPresenter.ID_HISTORY:
                 actionOpenHistory(reference);
                 break;
-            case ReaderActivity.ID_PARALLELS:
+            case ReaderViewPresenter.ID_PARALLELS:
                 actionOpenParallels(reference);
                 break;
-            case ReaderActivity.ID_SEARCH:
+            case ReaderViewPresenter.ID_SEARCH:
                 actionOpenSearchReference(reference);
                 break;
         }

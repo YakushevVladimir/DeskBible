@@ -16,14 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * --------------------------------------------------
- *
  * Project: BibleQuote-for-Android
  * File: ReaderActivity.java
  *
  * Created by Vladimir Yakushev at 8/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
+ *
  *
  */
 
@@ -55,101 +54,58 @@ import android.widget.Toast;
 
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
-import com.BibleQuote.async.AsyncManager;
-import com.BibleQuote.async.AsyncOpenChapter;
 import com.BibleQuote.domain.entity.BibleReference;
-import com.BibleQuote.domain.entity.Module;
-import com.BibleQuote.domain.exceptions.BookNotFoundException;
-import com.BibleQuote.domain.exceptions.ExceptionHelper;
-import com.BibleQuote.domain.exceptions.OpenModuleException;
 import com.BibleQuote.listeners.IReaderViewListener;
-import com.BibleQuote.managers.GoogleAnalyticsHelper;
-import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.ui.base.BibleQuoteActivity;
 import com.BibleQuote.ui.fragments.TTSPlayerFragment;
 import com.BibleQuote.ui.handlers.SelectTextHandler;
+import com.BibleQuote.ui.presenters.ReaderViewPresenter;
 import com.BibleQuote.ui.widget.ReaderWebView;
 import com.BibleQuote.utils.DevicesKeyCodes;
-import com.BibleQuote.utils.Log;
-import com.BibleQuote.utils.OnTaskCompleteListener;
-import com.BibleQuote.utils.PreferenceHelper;
-import com.BibleQuote.utils.Task;
 
 import java.util.TreeSet;
 
-public class ReaderActivity extends BibleQuoteActivity implements OnTaskCompleteListener, IReaderViewListener,
-        TTSPlayerFragment.onTTSStopSpeakListener {
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
-    public static final int ID_CHOOSE_CH = 1;
-    public static final int ID_SEARCH = 2;
-    public static final int ID_HISTORY = 3;
-    public static final int ID_BOOKMARKS = 4;
-    public static final int ID_PARALLELS = 5;
-    public static final int ID_SETTINGS = 6;
+public class ReaderActivity extends BibleQuoteActivity implements ReaderViewPresenter.IReaderView, IReaderViewListener {
 
-    private static final String TAG = "ReaderActivity";
+    @BindView(R.id.moduleName)
+    TextView vModuleName;
+    @BindView(R.id.linkBook)
+    TextView vBookLink;
+    @BindView(R.id.readerView)
+    ReaderWebView vWeb;
 
     private ReaderWebView.Mode oldMode;
-    private Librarian myLibrarian;
-    private AsyncManager mAsyncManager;
-    private Task mTask;
     private ActionMode currActionMode;
-    private String chapterInHTML = "";
     private boolean nightMode;
     private boolean exitToBackKey;
-    private String progressMessage = "";
-    private TextView vModuleName;
-    private TextView vBookLink;
-    private ReaderWebView vWeb;
     private TTSPlayerFragment ttsPlayer;
-
-    @Override
-    public void onStopSpeak() {
-        hideTTSPlayer();
-    }
+    private ReaderViewPresenter presenter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reader);
+        ButterKnife.bind(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
-        final DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        final NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
+        final DrawerLayout drawerLayout = ButterKnife.findById(this, R.id.drawer_layout);
+        final NavigationView navigationView = ButterKnife.findById(this, R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
                 menuItem.setChecked(false);
                 drawerLayout.closeDrawers();
-                switch (menuItem.getItemId()) {
-                    case R.id.drawer_bookmarks:
-                        Intent intentBookmarks = new Intent().setClass(ReaderActivity.this, BookmarksActivity.class);
-                        startActivityForResult(intentBookmarks, ID_BOOKMARKS);
-                        return true;
-                    case R.id.drawer_settings:
-                        Intent intentSettings = new Intent(ReaderActivity.this, SettingsActivity.class);
-                        startActivity(intentSettings);
-                        return true;
-                    case R.id.drawer_help:
-                        Intent intentHelp = new Intent(ReaderActivity.this, HelpActivity.class);
-                        startActivity(intentHelp);
-                        return true;
-                    //case R.id.drawer_donate:
-                    //    Intent intentDonate = new Intent(ReaderActivity.this, DonateActivity.class);
-                    //    startActivity(intentDonate);
-                    //    return true;
-                    case R.id.drawer_about:
-                        Intent intentAbout = new Intent().setClass(ReaderActivity.this, AboutActivity.class);
-                        startActivity(intentAbout);
-                        return true;
-                    default:
-                        return false;
-                }
+                return presenter.onNavigationItemSelected(menuItem.getItemId());
             }
         });
 
@@ -165,39 +121,25 @@ public class ReaderActivity extends BibleQuoteActivity implements OnTaskComplete
                 super.onDrawerOpened(drawerView);
             }
         };
-        drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
 
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
+        vWeb.setOnReaderViewListener(this);
 
-        BibleQuoteApp app = (BibleQuoteApp) getApplication();
-        myLibrarian = app.getLibrarian();
-
-        mAsyncManager = app.getAsyncManager();
-        mAsyncManager.handleRetainedTask(mTask, this);
-
-        initializeViews();
-        setCurrentOrientation();
-        updateActivityMode();
-
-        BibleReference osisLink;
+        BibleReference osisLink = null;
         Intent intent = getIntent();
         if (intent != null && intent.getData() != null) {
             osisLink = new BibleReference(intent.getData());
-        } else {
-            osisLink = new BibleReference(PreferenceHelper.restoreStateString("last_read"));
         }
 
-        if (!myLibrarian.isOSISLinkValid(osisLink)) {
-            onChooseChapterClick();
-        } else {
-            openChapterFromLink(osisLink);
-        }
+        presenter = new ReaderViewPresenter(this, this, BibleQuoteApp.getInstance().getLibrarian());
+        presenter.setOSISLink(osisLink);
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+        presenter.onConfigurationChanged(newConfig);
     }
 
     @Override
@@ -209,56 +151,13 @@ public class ReaderActivity extends BibleQuoteActivity implements OnTaskComplete
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        hideTTSPlayer();
-        switch (item.getItemId()) {
-            case R.id.action_bar_chooseCh:
-                onChooseChapterClick();
-                break;
-            case R.id.action_bar_search:
-                Intent intentSearch = new Intent().setClass(getApplicationContext(), SearchActivity.class);
-                startActivityForResult(intentSearch, ID_SEARCH);
-                break;
-            case R.id.NightDayMode:
-                nightMode = !nightMode;
-                PreferenceHelper.saveStateBoolean("nightMode", nightMode);
-                setTextInWebView();
-                break;
-            case R.id.action_bar_history:
-                Intent intentHistory = new Intent().setClass(getApplicationContext(), HistoryActivity.class);
-                startActivityForResult(intentHistory, ID_HISTORY);
-                break;
-            case R.id.action_speek:
-                viewTTSPlayer();
-                break;
-            default:
-                return false;
-        }
-        return true;
+        return presenter.onOptionsItemSelected(item.getItemId());
     }
 
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode == RESULT_OK) {
-            if ((requestCode == ID_BOOKMARKS)
-                    || (requestCode == ID_SEARCH)
-                    || (requestCode == ID_CHOOSE_CH)
-                    || (requestCode == ID_PARALLELS)
-                    || (requestCode == ID_HISTORY)) {
-                Bundle extras = data.getExtras();
-                BibleReference osisLink = new BibleReference(extras.getString("linkOSIS"));
-                if (myLibrarian.isOSISLinkValid(osisLink)) {
-                    openChapterFromLink(osisLink);
-                    GoogleAnalyticsHelper.getInstance().actionOpenLink(osisLink, requestCode);
-                }
-            }
-        } else if (requestCode == ID_SETTINGS) {
-            vWeb.setMode(PreferenceHelper.isReadModeByDefault() ? ReaderWebView.Mode.Read : ReaderWebView.Mode.Study);
-            updateActivityMode();
-            setCurrentOrientation();
-            setKeepScreen();
-            openChapterFromLink(myLibrarian.getCurrentOSISLink());
-        }
+        presenter.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -279,19 +178,17 @@ public class ReaderActivity extends BibleQuoteActivity implements OnTaskComplete
 
     @Override
     public boolean onSearchRequested() {
-        Intent intentSearch = new Intent().setClass(
-                getApplicationContext(), SearchActivity.class);
-        startActivityForResult(intentSearch, ID_SEARCH);
+        openSearchActivity(ReaderViewPresenter.ID_SEARCH);
         return false;
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if ((keyCode == KeyEvent.KEYCODE_VOLUME_UP && PreferenceHelper.volumeButtonsToScroll())
+        if ((keyCode == KeyEvent.KEYCODE_VOLUME_UP && presenter.isVolumeButtonsToScroll())
                 || DevicesKeyCodes.KeyCodeUp(keyCode)) {
             vWeb.pageUp(false);
             return true;
-        } else if ((keyCode == KeyEvent.KEYCODE_VOLUME_DOWN && PreferenceHelper.volumeButtonsToScroll())
+        } else if ((keyCode == KeyEvent.KEYCODE_VOLUME_DOWN && presenter.isVolumeButtonsToScroll())
                 || DevicesKeyCodes.KeyCodeDown(keyCode)) {
             vWeb.pageDown(false);
             return true;
@@ -303,29 +200,7 @@ public class ReaderActivity extends BibleQuoteActivity implements OnTaskComplete
     @Override
     protected void onResume() {
         super.onResume();
-        setCurrentOrientation();
-        setKeepScreen();
-    }
-
-    public void onTaskComplete(Task task) {
-        if (task != null && !task.isCancelled()) {
-            if (task instanceof AsyncOpenChapter) {
-                AsyncOpenChapter t = ((AsyncOpenChapter) task);
-                if (t.isSuccess()) {
-                    chapterInHTML = myLibrarian.getChapterHTMLView();
-                    setTextInWebView();
-                } else {
-                    Exception e = t.getException();
-                    if (e instanceof OpenModuleException) {
-                        ExceptionHelper.onOpenModuleException((OpenModuleException) e, this, TAG);
-                    } else if (e instanceof BookNotFoundException) {
-                        ExceptionHelper.onBookNotFoundException((BookNotFoundException) e, this, TAG);
-                    } else {
-                        ExceptionHelper.onException(e, this, TAG);
-                    }
-                }
-            }
-        }
+        presenter.onResume();
     }
 
     @Override
@@ -343,7 +218,9 @@ public class ReaderActivity extends BibleQuoteActivity implements OnTaskComplete
                 }
                 break;
             case onLongPress:
-                if (vWeb.getMode() == ReaderWebView.Mode.Read) onChooseChapterClick();
+                if (vWeb.getMode() == ReaderWebView.Mode.Read) {
+                    openLibraryActivity(ReaderViewPresenter.ID_CHOOSE_CH);
+                }
                 break;
             case onUpNavigation:
                 vWeb.pageUp(false);
@@ -352,84 +229,17 @@ public class ReaderActivity extends BibleQuoteActivity implements OnTaskComplete
                 vWeb.pageDown(false);
                 break;
             case onLeftNavigation:
-                prevChapter();
+                presenter.prevChapter();
                 break;
             case onRightNavigation:
-                nextChapter();
+                presenter.nextChapter();
                 break;
         }
     }
 
-    public Librarian getLibrarian() {
-        return myLibrarian;
-    }
-
-    public void setTextInWebView() {
-        BibleReference osisLink = myLibrarian.getCurrentOSISLink();
-        vWeb.setText(myLibrarian.getBaseUrl(), chapterInHTML, osisLink.getFromVerse(), nightMode, myLibrarian.isBible());
-
-        PreferenceHelper.saveStateString("last_read", osisLink.getExtendedPath());
-
-        vModuleName.setText(myLibrarian.getModuleName());
-        vBookLink.setText(myLibrarian.getHumanBookLink());
-    }
-
-    public void onChooseChapterClick() {
-        Intent intent = new Intent();
-        intent.setClass(this, LibraryActivity.class);
-        startActivityForResult(intent, ID_CHOOSE_CH);
-    }
-
-    public void prevChapter() {
-        try {
-            myLibrarian.prevChapter();
-        } catch (OpenModuleException e) {
-            Log.e(TAG, "prevChapter()", e);
-        }
-        viewCurrentChapter();
-    }
-
-    public void nextChapter() {
-        try {
-            myLibrarian.nextChapter();
-        } catch (OpenModuleException e) {
-            Log.e(TAG, "nextChapter()", e);
-        }
-        viewCurrentChapter();
-    }
-
-    public void updateActivityMode() {
-        final ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            if (vWeb.getMode() == ReaderWebView.Mode.Read) {
-                actionBar.hide();
-            } else {
-                actionBar.show();
-            }
-        }
-    }
-
-    private void openChapterFromLink(BibleReference osisLink) {
-        mTask = new AsyncOpenChapter(progressMessage, false, myLibrarian, osisLink);
-        mAsyncManager.setupTask(mTask, this);
-    }
-
-    private void initializeViews() {
-        vModuleName = (TextView) findViewById(R.id.moduleName);
-        vBookLink = (TextView) findViewById(R.id.linkBook);
-
-        progressMessage = getResources().getString(R.string.messageLoad);
-        nightMode = PreferenceHelper.restoreStateBoolean("nightMode");
-
-        vWeb = (ReaderWebView) findViewById(R.id.readerView);
-        vWeb.setOnReaderViewListener(this);
-        vWeb.setMode(PreferenceHelper.isReadModeByDefault() ? ReaderWebView.Mode.Read : ReaderWebView.Mode.Study);
-
-        setKeepScreen();
-    }
-
-    private void setCurrentOrientation() {
-        if (!PreferenceHelper.restoreStateBoolean("DisableAutoScreenRotation")) {
+    @Override
+    public void setCurrentOrientation(boolean disableAutoRotation) {
+        if (disableAutoRotation) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
             return;
         }
@@ -476,29 +286,84 @@ public class ReaderActivity extends BibleQuoteActivity implements OnTaskComplete
         }
     }
 
-    private void setKeepScreen() {
-        vWeb.setKeepScreenOn(PreferenceHelper.restoreStateBoolean("DisableTurnScreen"));
+    @Override
+    public void openBookmarkActivity(int requestCode) {
+        Intent intentBookmarks = new Intent()
+                .setClass(this, BookmarksActivity.class)
+                .putExtra(BookmarksActivity.EXTRA_MODE, BookmarksActivity.MODE_BOOKMARKS);
+        startActivityForResult(intentBookmarks, requestCode);
     }
 
-    private void viewTTSPlayer() {
-        if (ttsPlayer != null) {
-            return;
-        }
-
-        Module currModule = myLibrarian.getCurrModule();
-        if (currModule == null) {
-            onChooseChapterClick();
-            return;
-        }
-
-        ttsPlayer = new TTSPlayerFragment();
-        getSupportFragmentManager().beginTransaction().add(R.id.tts_player_frame, ttsPlayer).commit();
-
-        oldMode = vWeb.getMode();
-        vWeb.setMode(ReaderWebView.Mode.Speak);
+    @Override
+    public void openAboutActivity() {
+        Intent intentAbout = new Intent().setClass(this, AboutActivity.class);
+        startActivity(intentAbout);
     }
 
-    private void hideTTSPlayer() {
+    @Override
+    public void openHelpActivity() {
+        Intent intentHelp = new Intent(this, HelpActivity.class);
+        startActivity(intentHelp);
+    }
+
+    @Override
+    public void openLibraryActivity(int requestCode) {
+        Intent intent = new Intent().setClass(this, LibraryActivity.class);
+        startActivityForResult(intent, requestCode);
+    }
+
+    @Override
+    public void openSettingsActivity(int requestCode) {
+        Intent intentSettings = new Intent(this, SettingsActivity.class);
+        startActivityForResult(intentSettings, requestCode);
+    }
+
+    @Override
+    public void openTagsActivity(int requestCode) {
+        Intent intentBookmarks = new Intent()
+                .setClass(this, BookmarksActivity.class)
+                .putExtra(BookmarksActivity.EXTRA_MODE, BookmarksActivity.MODE_TAGS);
+        startActivityForResult(intentBookmarks, requestCode);
+    }
+
+    @Override
+    public void openHistoryActivity(int requestCode) {
+        Intent intentHistory = new Intent().setClass(this, HistoryActivity.class);
+        startActivityForResult(intentHistory, requestCode);
+    }
+
+    @Override
+    public void openSearchActivity(int requestCode) {
+        Intent intentSearch = new Intent().setClass(this, SearchActivity.class);
+        startActivityForResult(intentSearch, requestCode);
+    }
+
+    @Override
+    public void setKeepScreen(boolean isKeepScreen) {
+        vWeb.setKeepScreenOn(isKeepScreen);
+    }
+
+    @Override
+    public void setNightMode(boolean isNightMode) {
+        nightMode = isNightMode;
+        vWeb.setNightMode(nightMode);
+    }
+
+    @Override
+    public boolean invertNightMode() {
+        nightMode = !nightMode;
+        vWeb.setNightMode(nightMode);
+        return nightMode;
+    }
+
+    @Override
+    public void setReaderMode(ReaderWebView.Mode mode) {
+        vWeb.setMode(mode);
+        updateActivityMode();
+    }
+
+    @Override
+    public void hideTTSPlayer() {
         if (ttsPlayer == null) return;
         FragmentTransaction tran = getSupportFragmentManager().beginTransaction();
         tran.remove(ttsPlayer);
@@ -507,12 +372,50 @@ public class ReaderActivity extends BibleQuoteActivity implements OnTaskComplete
         vWeb.setMode(oldMode);
     }
 
-    private void viewCurrentChapter() {
-        disableActionMode();
-        openChapterFromLink(myLibrarian.getCurrentOSISLink());
+    @Override
+    public void viewTTSPlayer() {
+        if (ttsPlayer != null) {
+            return;
+        }
+
+        ttsPlayer = new TTSPlayerFragment();
+        ttsPlayer.setTTSStopSpeakListener(presenter);
+        getSupportFragmentManager().beginTransaction().add(R.id.tts_player_frame, ttsPlayer).commit();
+
+        oldMode = vWeb.getMode();
+        vWeb.setMode(ReaderWebView.Mode.Speak);
     }
 
-    private void disableActionMode() {
+    @Override
+    public void setContent(String baseUrl, String content, int verse, boolean isBible) {
+        vWeb.setText(baseUrl, content, verse, nightMode, isBible);
+    }
+
+    @Override
+    public void setTitle(String moduleName, String link) {
+        vModuleName.setText(moduleName);
+        vBookLink.setText(link);
+    }
+
+    @Override
+    public void updateActivityMode() {
+        final ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            if (vWeb.getMode() == ReaderWebView.Mode.Read) {
+                actionBar.hide();
+            } else {
+                actionBar.show();
+            }
+        }
+    }
+
+    @Override
+    public void updateContent() {
+        vWeb.update();
+    }
+
+    @Override
+    public void disableActionMode() {
         if (currActionMode != null) {
             currActionMode.finish();
             currActionMode = null;

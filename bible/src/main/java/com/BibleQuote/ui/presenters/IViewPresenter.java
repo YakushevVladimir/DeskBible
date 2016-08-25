@@ -17,7 +17,7 @@
  * under the License.
  *
  * Project: BibleQuote-for-Android
- * File: OnTaskCompleteListener.java
+ * File: IViewPresenter.java
  *
  * Created by Vladimir Yakushev at 8/2016
  * E-mail: ru.phoenix@gmail.com
@@ -25,13 +25,25 @@
  *
  *
  */
-package com.BibleQuote.utils;
 
-import android.content.Context;
+package com.BibleQuote.ui.presenters;
 
-public interface OnTaskCompleteListener {
-	// Notifies about task completeness
-	void onTaskComplete(Task task);
+import android.content.Intent;
+import android.content.res.Configuration;
 
-    Context getContext();
+/**
+ *
+ */
+public interface IViewPresenter {
+    void onActivityResult(int requestCode, int resultCode, Intent data);
+
+    void onConfigurationChanged(Configuration newConfig);
+
+    boolean onNavigationItemSelected(int itemId);
+
+    boolean onOptionsItemSelected(int itemId);
+
+    void onPause();
+
+    void onResume();
 }

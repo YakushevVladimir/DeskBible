@@ -16,14 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * --------------------------------------------------
- *
  * Project: BibleQuote-for-Android
  * File: Librarian.java
  *
  * Created by Vladimir Yakushev at 8/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
+ *
  *
  */
 
@@ -309,7 +308,7 @@ public class Librarian {
 		return getCurrModule().getName();
 	}
 
-	public CharSequence getModuleName() {
+	public String getModuleName() {
 		if (getCurrModule() == null) {
 			return "";
 		} else {
@@ -367,7 +366,7 @@ public class Librarian {
 		this.currVerseNumber = verse;
 	}
 
-	public CharSequence getHumanBookLink() {
+	public String getHumanBookLink() {
 		if (getCurrBook() == null || getCurrChapter() == null) {
 			return "";
 		}
@@ -508,8 +507,8 @@ public class Librarian {
 			return result;
 		}
 
-        ModuleTextFormatter formatter = new ModuleTextFormatter(currModule);
-        formatter.setVisibleVerseNumbers(false);
+		ModuleTextFormatter formatter = new ModuleTextFormatter(currModule, new StripTagsTextFormatter());
+		formatter.setVisibleVerseNumbers(false);
 
 		ArrayList<Verse> verses = currChapter.getVerseList();
 		for (Verse verse : verses) {

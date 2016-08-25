@@ -16,8 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * --------------------------------------------------
- *
  * Project: BibleQuote-for-Android
  * File: CrossReferenceActivity.java
  *
@@ -25,9 +23,11 @@
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  *
+ *
  */
 package com.BibleQuote.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -134,6 +134,11 @@ public class CrossReferenceActivity extends BibleQuoteActivity implements OnTask
 				}
 			}
 		}
+	}
+
+	@Override
+	public Context getContext() {
+		return this;
 	}
 
 	private void setListAdapter() {

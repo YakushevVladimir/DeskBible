@@ -16,14 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * --------------------------------------------------
- *
  * Project: BibleQuote-for-Android
  * File: BookmarksActivity.java
  *
  * Created by Vladimir Yakushev at 8/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
+ *
  *
  */
 
@@ -48,6 +47,10 @@ import com.BibleQuote.ui.fragments.TagsFragment;
 public class BookmarksActivity extends BibleQuoteActivity
         implements BookmarksFragment.OnBookmarksChangeListener, TagsFragment.OnTagsChangeListener {
 
+    public static final String EXTRA_MODE = "extra_mode";
+    public static final String MODE_TAGS = "tags";
+    public static final String MODE_BOOKMARKS = "bookmarks";
+
     private TabHost mTabHost;
     private TabsAdapter mTabsAdapter;
 
@@ -61,12 +64,15 @@ public class BookmarksActivity extends BibleQuoteActivity
         ViewPager mViewPager = (ViewPager) findViewById(R.id.pager);
 
         mTabsAdapter = new TabsAdapter(this, mTabHost, mViewPager);
-        mTabsAdapter.addTab(mTabHost.newTabSpec("bookmarks").setIndicator(getTabIndicator(R.string.bookmarks)),
+        mTabsAdapter.addTab(mTabHost.newTabSpec(MODE_BOOKMARKS).setIndicator(getTabIndicator(R.string.bookmarks)),
                 new BookmarksFragment(), null);
-        mTabsAdapter.addTab(mTabHost.newTabSpec("tags").setIndicator(getTabIndicator(R.string.tags)),
+        mTabsAdapter.addTab(mTabHost.newTabSpec(MODE_TAGS).setIndicator(getTabIndicator(R.string.tags)),
                 new TagsFragment(), null);
 
-        if (savedInstanceState != null) {
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra(EXTRA_MODE)) {
+            mTabHost.setCurrentTabByTag(intent.getStringExtra(EXTRA_MODE));
+        } else if (savedInstanceState != null) {
             mTabHost.setCurrentTabByTag(savedInstanceState.getString("tab"));
         }
     }

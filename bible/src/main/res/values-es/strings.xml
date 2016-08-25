@@ -17,14 +17,13 @@
   ~ specific language governing permissions and limitations
   ~ under the License.
   ~
-  ~ --------------------------------------------------
-  ~
   ~ Project: BibleQuote-for-Android
   ~ File: strings.xml
   ~
   ~ Created by Vladimir Yakushev at 8/2016
   ~ E-mail: ru.phoenix@gmail.com
   ~ WWW: http://www.scripturesoftware.org
+  ~
   ~
   -->
 <resources>
@@ -148,4 +147,5 @@
     <string name="always_view_verse_numbers_title">Siempre ver los números de verso</string>
     <string name="choice_chapter">Abierto…</string>
     <string name="donate">Donate</string>
+    <string name="menu_tags">Etiquetas</string>
 </resources>

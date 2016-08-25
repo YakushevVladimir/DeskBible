@@ -16,14 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * --------------------------------------------------
- *
  * Project: BibleQuote-for-Android
  * File: SelectTextHandler.java
  *
  * Created by Vladimir Yakushev at 8/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
+ *
  *
  */
 
@@ -42,6 +41,7 @@ import com.BibleQuote.domain.entity.Bookmark;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.ui.ReaderActivity;
 import com.BibleQuote.ui.dialogs.BookmarksDialog;
+import com.BibleQuote.ui.presenters.ReaderViewPresenter;
 import com.BibleQuote.ui.widget.ReaderWebView;
 import com.BibleQuote.utils.share.ShareBuilder;
 
@@ -103,7 +103,7 @@ public final class SelectTextHandler implements ActionMode.Callback {
                 myLibrarian.setCurrentVerseNumber(selVerses.first());
                 Intent intParallels = new Intent(VIEW_REFERENCE);
                 intParallels.putExtra("linkOSIS", myLibrarian.getCurrentOSISLink().getPath());
-                readerActivity.startActivityForResult(intParallels, ReaderActivity.ID_PARALLELS);
+                readerActivity.startActivityForResult(intParallels, ReaderViewPresenter.ID_PARALLELS);
                 break;
 
             default:

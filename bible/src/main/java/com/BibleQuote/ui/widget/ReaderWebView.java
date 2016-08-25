@@ -1,17 +1,29 @@
 /*
- * Copyright (C) 2011 Scripture Software (http://scripturesoftware.org/)
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Project: BibleQuote-for-Android
+ * File: ReaderWebView.java
+ *
+ * Created by Vladimir Yakushev at 8/2016
+ * E-mail: ru.phoenix@gmail.com
+ * WWW: http://www.scripturesoftware.org
+ *
+ *
  */
 package com.BibleQuote.ui.widget;
 
@@ -42,7 +54,7 @@ public class ReaderWebView extends WebView
 
     public static final int MIN_SWIPE_VELOCITY = 2000;
     public static final int MIN_SWIPE_X = 100;
-    public static final int MIN_SWIPE_Y = 50;
+    public static final int MIN_SWIPE_Y = 100;
 
 	private static final String TAG = "ReaderWebView";
 
@@ -54,6 +66,11 @@ public class ReaderWebView extends WebView
 	private JavaScriptInterface jsInterface;
 	private Mode currMode = Mode.Read;
 	private ArrayList<IReaderViewListener> listeners = new ArrayList<IReaderViewListener>();
+    private boolean isNightMode;
+    private String baseUrl;
+    private String content;
+    private int currVerse;
+    private boolean isBible;
 
 	@SuppressLint("AddJavascriptInterface")
 	public ReaderWebView(Context mContext, AttributeSet attributeSet) {
@@ -114,33 +131,50 @@ public class ReaderWebView extends WebView
 		}
 	}
 
+    public void setNightMode(boolean isNightMode) {
+        this.isNightMode = isNightMode;
+    }
+
+    public void update() {
+        if (baseUrl == null || content == null) {
+            return;
+        }
+
+        mPageLoaded = false;
+        String modStyle = isBible ? "bible_style.css" : "book_style.css";
+
+        StringBuilder html = new StringBuilder();
+        html.append("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\r\n")
+                .append("<html>\r\n")
+                .append("<head>\r\n")
+                .append("<meta http-equiv=Content-Type content=\"text/html; charset=UTF-8\">\r\n")
+                .append("<script language=\"JavaScript\" src=\"file:///android_asset/reader.js\" type=\"text/javascript\"></script>\r\n")
+                .append("<link rel=\"stylesheet\" type=\"text/css\" href=\"file:///android_asset/").append(modStyle).append("\">\r\n")
+                .append(getStyle(isNightMode))
+                .append("</head>\r\n")
+                .append("<body").append(currVerse > 1 ? (" onLoad=\"document.location.href='#verse_" + currVerse + "';\"") : "").append(">\r\n")
+                .append(content)
+                .append("</body>\r\n")
+                .append("</html>");
+
+        loadDataWithBaseURL("file://" + baseUrl, html.toString(), "text/html", "UTF-8", "about:config");
+        jsInterface.clearSelectedVerse();
+    }
+
 	private void notifyListeners(IReaderViewListener.ChangeCode code) {
 		for (IReaderViewListener listener : listeners) {
 			listener.onReaderViewChange(code);
 		}
 	}
 
-	public void setText(String baseUrl, String text, int currVerse, Boolean nightMode, Boolean isBible) {
-		mPageLoaded = false;
-		String modStyle = isBible ? "bible_style.css" : "book_style.css";
-
-		StringBuilder html = new StringBuilder();
-		html.append("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\r\n")
-				.append("<html>\r\n")
-				.append("<head>\r\n")
-				.append("<meta http-equiv=Content-Type content=\"text/html; charset=UTF-8\">\r\n")
-				.append("<script language=\"JavaScript\" src=\"file:///android_asset/reader.js\" type=\"text/javascript\"></script>\r\n")
-				.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"file:///android_asset/").append(modStyle).append("\">\r\n")
-				.append(getStyle(nightMode))
-				.append("</head>\r\n")
-				.append("<body").append(currVerse > 1 ? (" onLoad=\"document.location.href='#verse_" + currVerse + "';\"") : "").append(">\r\n")
-				.append(text)
-				.append("</body>\r\n")
-				.append("</html>");
-
-		loadDataWithBaseURL("file://" + baseUrl, html.toString(), "text/html", "UTF-8", "about:config");
-		jsInterface.clearSelectedVerse();
-	}
+    public void setText(String baseUrl, String content, int currVerse, Boolean isNightMode, Boolean isBible) {
+        this.baseUrl = baseUrl;
+        this.content = content;
+        this.currVerse = currVerse;
+        this.isNightMode = isNightMode;
+        this.isBible = isBible;
+        update();
+    }
 
 	public boolean isScrollToBottom() {
 		int scrollY = getScrollY();
@@ -266,6 +300,8 @@ public class ReaderWebView extends WebView
             } else {
                 notifyListeners(IReaderViewListener.ChangeCode.onRightNavigation);
             }
+        } else {
+            Log.d(TAG, String.format("distX: %f, distY: %f, velocityX: %f", distX, distY, velocityX));
         }
 		return false;
 	}

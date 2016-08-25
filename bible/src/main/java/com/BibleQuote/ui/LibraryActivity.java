@@ -16,8 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * --------------------------------------------------
- *
  * Project: BibleQuote-for-Android
  * File: LibraryActivity.java
  *
@@ -25,9 +23,11 @@
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  *
+ *
  */
 package com.BibleQuote.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -245,6 +245,11 @@ public class LibraryActivity extends BibleQuoteActivity implements OnTaskComplet
                 updateView(MODULE_VIEW);
             }
         }
+    }
+
+    @Override
+    public Context getContext() {
+        return this;
     }
 
     private void choiceModuleFromFile() {

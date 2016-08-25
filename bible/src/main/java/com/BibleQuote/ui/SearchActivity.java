@@ -16,8 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * --------------------------------------------------
- *
  * Project: BibleQuote-for-Android
  * File: SearchActivity.java
  *
@@ -25,10 +23,12 @@
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  *
+ *
  */
 
 package com.BibleQuote.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -259,6 +259,11 @@ public class SearchActivity extends BibleQuoteActivity implements OnTaskComplete
 			setAdapter();
 		}
 		PreferenceHelper.saveStateInt("changeSearchPosition", 0);
+	}
+
+	@Override
+	public Context getContext() {
+		return this;
 	}
 
 	private void saveSelectedPosition(int fromBook, int toBook) {
