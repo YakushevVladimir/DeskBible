@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2011 Scripture Software
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,18 +18,15 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * --------------------------------------------------
- *
  * Project: BibleQuote-for-Android
  * File: ModuleTextFormatter.java
  *
  * Created by Vladimir Yakushev at 8/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
- *
  */
 
-package com.BibleQuote.utils.textFormatters;
+package com.BibleQuote.domain.textFormatters;
 
 import com.BibleQuote.domain.entity.Module;
 import com.BibleQuote.utils.PreferenceHelper;
@@ -46,16 +45,16 @@ public class ModuleTextFormatter implements ITextFormatter {
     private boolean visibleVerseNumbers;
 
     public ModuleTextFormatter(Module module) {
-        this.visibleVerseNumbers = module.isBible || PreferenceHelper.restoreStateBoolean(PreferenceHelper.KEY_VIEW_BOOK_VERSE);
-        if (module.containsStrong) {
+        this.visibleVerseNumbers = module.isBible() || PreferenceHelper.restoreStateBoolean(PreferenceHelper.KEY_VIEW_BOOK_VERSE);
+        if (module.isContainsStrong()) {
             formatters.add(new NoStrongTextFormatter());
         }
-        formatters.add(new StripTagsTextFormatter("<(?!" + module.HtmlFilter + ")(.)*?>"));
+        formatters.add(new StripTagsTextFormatter("<(?!" + module.getHtmlFilter() + ")(.)*?>"));
     }
 
     public ModuleTextFormatter(Module module, ITextFormatter formatter) {
-        this.visibleVerseNumbers = module.isBible;
-        if (module.containsStrong) {
+        this.visibleVerseNumbers = module.isBible();
+        if (module.isContainsStrong()) {
             formatters.add(new NoStrongTextFormatter());
         }
         formatters.add(formatter);

@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2011 Scripture Software
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,18 +18,17 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * --------------------------------------------------
- *
  * Project: BibleQuote-for-Android
  * File: BQModuleController.java
  *
  * Created by Vladimir Yakushev at 8/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
- *
  */
 
 package com.BibleQuote.domain.controllers.modules;
+
+import android.graphics.Bitmap;
 
 import com.BibleQuote.domain.entity.Book;
 import com.BibleQuote.domain.entity.Chapter;
@@ -36,7 +37,7 @@ import com.BibleQuote.domain.repository.IModuleRepository;
 import com.BibleQuote.entity.modules.BQModule;
 import com.BibleQuote.search.BQSearchProcessor;
 
-import java.util.LinkedHashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -54,28 +55,73 @@ public class BQModuleController implements IModuleController {
     }
 
     @Override
-    public String getModuleId() {
-        return module.getID();
-    }
-
-    @Override
-    public String getModuleName() {
-        return module.getName();
-    }
-
-    @Override
-    public Map<String, String> getBooks() {
+    public List<Book> getBooks() {
         Map<String, Book> books = module.getBooks();
-        Map<String, String> result = new LinkedHashMap<String, String>(books.size());
+        ArrayList<Book> result = new ArrayList<Book>(books.size());
         for (String bookID : books.keySet()) {
-            result.put(bookID, books.get(bookID).name);
+            result.add(books.get(bookID));
         }
         return result;
     }
 
     @Override
-    public Chapter getChapter(String book, int chapter) throws BookNotFoundException {
-        return repository.loadChapter(module, book, chapter);
+    public Bitmap getBitmap(String path) {
+        return repository.getBitmap(module, path);
+    }
+
+    @Override
+    public Book getBookByID(String bookId) throws BookNotFoundException {
+        Map<String, Book> books = module.getBooks();
+        Book result = books.get(bookId);
+        if (result == null) {
+            throw new BookNotFoundException(module.getID(), bookId);
+        }
+        return result;
+    }
+
+    @Override
+    public Book getNextBook(String bookId) throws BookNotFoundException {
+        Book result = getBookByID(bookId);
+        if (result == null) {
+            throw new BookNotFoundException(module.getID(), bookId);
+        }
+
+        List<Book> books = getBooks();
+        int pos = books.indexOf(result);
+        if (books.size() > ++pos) {
+            return books.get(pos);
+        }
+        return null;
+    }
+
+    @Override
+    public Book getPrevBook(String bookId) throws BookNotFoundException {
+        Book result = getBookByID(bookId);
+        if (result == null) {
+            throw new BookNotFoundException(module.getID(), bookId);
+        }
+
+        List<Book> books = getBooks();
+        int pos = books.indexOf(result);
+        if (pos > 0) {
+            return books.get(--pos);
+        }
+        return null;
+    }
+
+    @Override
+    public List<String> getChapterNumbers(String bookId) throws BookNotFoundException {
+        ArrayList<String> result = new ArrayList<String>();
+        Book book = getBookByID(bookId);
+        for (int i = 0; i < book.getChapterQty(); i++) {
+            result.add("" + (i + (module.isChapterZero() ? 0 : 1)));
+        }
+        return result;
+    }
+
+    @Override
+    public Chapter getChapter(String bookId, int chapter) throws BookNotFoundException {
+        return repository.loadChapter(module, bookId, chapter);
     }
 
     @Override

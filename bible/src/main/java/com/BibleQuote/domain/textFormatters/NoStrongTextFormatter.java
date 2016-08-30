@@ -19,31 +19,22 @@
  * under the License.
  *
  * Project: BibleQuote-for-Android
- * File: IReaderViewListener.java
+ * File: NoStrongTextFormatter.java
  *
  * Created by Vladimir Yakushev at 8/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
 
-package com.BibleQuote.listeners;
+package com.BibleQuote.domain.textFormatters;
 
-public interface IReaderViewListener {
-	enum ChangeCode {
-		onUpdateText,
-		onChangeSelection,
-		onLongPress,
-		onScroll,
-		onSwipeLeft,
-		onSwipeRight,
-		onChangeReaderMode,
-		onUpNavigation,
-		onDownNavigation,
-		onLeftNavigation,
-		onRightNavigation
-	}
-
-	void onReaderViewChange(ChangeCode code);
-
-    void onReaderClickImage(String path);
+/**
+ * @author Vladimir Yakushev
+ * @version 1.0 of 11.2015
+ */
+public class NoStrongTextFormatter implements ITextFormatter {
+    @Override
+    public String format(String text) {
+        return text.replaceAll("((\\s*?(G|H)+?\\d+)|(\\s\\d+))", "");
+    }
 }

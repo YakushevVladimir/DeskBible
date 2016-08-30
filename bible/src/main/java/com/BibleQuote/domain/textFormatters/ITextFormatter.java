@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2011 Scripture Software
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,45 +19,21 @@
  * under the License.
  *
  * Project: BibleQuote-for-Android
- * File: IChapterRepository.java
+ * File: ITextFormatter.java
  *
  * Created by Vladimir Yakushev at 8/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
- *
- *
  */
 
-package com.BibleQuote.domain.repository;
+package com.BibleQuote.domain.textFormatters;
 
-import com.BibleQuote.domain.entity.Book;
-import com.BibleQuote.domain.entity.Chapter;
-import com.BibleQuote.domain.exceptions.BookNotFoundException;
-
-import java.util.Collection;
-
-public interface IChapterRepository<T extends Book> {
-
-	/*
-	 * Data source related methods
-	 * 
-	 */
-	Collection<Chapter> loadChapters(T book) throws BookNotFoundException;
-
-	Chapter loadChapter(T book, Integer chapterNumber) throws BookNotFoundException;
-
-	void insertChapter(Chapter chapter);
-
-	void deleteChapter(Chapter chapter);
-
-	void updateChapter(Chapter chapter);
-
-	/*
-	 * Internal cache related methods
-	 *
-	 */
-	Collection<Chapter> getChapters(T book);
-
-	Chapter getChapterByNumber(T book, Integer chapterNumber);
-
+/**
+ * Интерфейс для форматирования текста с учетом особенностей модуля
+ *
+ * @author Vladimir Yakushev
+ * @version 1.0 of 11.2015
+ */
+public interface ITextFormatter {
+    String format(String text);
 }

@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2011 Scripture Software
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,33 +18,20 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * --------------------------------------------------
- *
  * Project: BibleQuote-for-Android
- * File: IChapterController.java
+ * File: ModuleList.java
  *
  * Created by Vladimir Yakushev at 8/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
- *
  */
 
-package com.BibleQuote.domain.controllers;
-
-import com.BibleQuote.domain.entity.Book;
-import com.BibleQuote.domain.entity.Chapter;
-import com.BibleQuote.domain.exceptions.BookNotFoundException;
+package com.BibleQuote.domain.entity;
 
 import java.util.ArrayList;
 
-public interface IChapterController {
-
-	ArrayList<Chapter> getChapterList(Book book) throws BookNotFoundException;
-
-	Chapter getChapter(Book book, Integer chapterNumber) throws BookNotFoundException;
-
-	ArrayList<Integer> getVerseNumbers(Book book, Integer chapterNumber) throws BookNotFoundException;
-
-	String getChapterHTMLView(Chapter chapter);
-
+/**
+ *
+ */
+public class ModuleList extends ArrayList<Module> {
 }

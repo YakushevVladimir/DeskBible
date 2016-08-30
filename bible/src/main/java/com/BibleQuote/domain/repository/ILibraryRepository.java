@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2011 Scripture Software
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,23 +19,23 @@
  * under the License.
  *
  * Project: BibleQuote-for-Android
- * File: IModuleRepository.java
+ * File: ILibraryRepository.java
  *
  * Created by Vladimir Yakushev at 8/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
- *
- *
  */
 
-package com.BibleQuote.domain.repository.old;
+package com.BibleQuote.domain.repository;
 
 import com.BibleQuote.domain.entity.Module;
+import com.BibleQuote.domain.exceptions.BookDefinitionException;
+import com.BibleQuote.domain.exceptions.BooksDefinitionException;
 import com.BibleQuote.domain.exceptions.OpenModuleException;
 
 import java.util.Map;
 
-public interface IModuleRepository<T extends Module> {
+public interface ILibraryRepository<T extends Module> {
 
 	/**
 	 * Загрузка списка модулей из хранилища без чтения данных.
@@ -42,23 +44,5 @@ public interface IModuleRepository<T extends Module> {
 	 */
 	Map<String, Module> loadFileModules();
 
-	void insertModule(T module);
-
-	void deleteModule(String moduleID);
-
-	void updateModule(T module);
-
-	void loadModule(String path) throws OpenModuleException;
-
-	/**
-	 * @return Возвращает коллекцию модулей. Если коллекция модулей пустая, пытается загрузить её из кэш.
-	 */
-	Map<String, Module> getModules();
-
-	/**
-	 * @param moduleID - ShortName модуля
-	 * @return Возвращает модуль из коллекции по его ShortName
-	 */
-	T getModuleByID(String moduleID);
-
+	Module loadModule(String path) throws OpenModuleException, BooksDefinitionException, BookDefinitionException;
 }

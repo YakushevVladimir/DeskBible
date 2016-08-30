@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2011 Scripture Software
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,15 +18,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * --------------------------------------------------
- *
  * Project: BibleQuote-for-Android
  * File: ReferenceFormatter.java
  *
  * Created by Vladimir Yakushev at 8/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
- *
  */
 
 package com.BibleQuote.utils.bibleReferenceFormatter;
@@ -51,8 +50,8 @@ public abstract class ReferenceFormatter implements IBibleReferenceFormatter {
 
 	protected String getOnLineBibleLink() {
 		return "http://b-bq.eu/"
-				+ book.OSIS_ID + "/" + chapter + "_" + getVerseLink()
-				+ "/" + module.shortName;
+				+ book.getOSIS_ID() + "/" + chapter + "_" + getVerseLink()
+				+ "/" + module.getShortName();
 
 	}
 

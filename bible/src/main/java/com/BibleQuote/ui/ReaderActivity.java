@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2011 Scripture Software
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -22,8 +24,6 @@
  * Created by Vladimir Yakushev at 8/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
- *
- *
  */
 
 package com.BibleQuote.ui;
@@ -55,6 +55,7 @@ import android.widget.Toast;
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
 import com.BibleQuote.domain.entity.BibleReference;
+import com.BibleQuote.domain.entity.Chapter;
 import com.BibleQuote.listeners.IReaderViewListener;
 import com.BibleQuote.ui.base.BibleQuoteActivity;
 import com.BibleQuote.ui.fragments.TTSPlayerFragment;
@@ -238,6 +239,11 @@ public class ReaderActivity extends BibleQuoteActivity implements ReaderViewPres
     }
 
     @Override
+    public void onReaderClickImage(String path) {
+        presenter.onClickImage(path);
+    }
+
+    @Override
     public void setCurrentOrientation(boolean disableAutoRotation) {
         if (disableAutoRotation) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
@@ -304,6 +310,13 @@ public class ReaderActivity extends BibleQuoteActivity implements ReaderViewPres
     public void openHelpActivity() {
         Intent intentHelp = new Intent(this, HelpActivity.class);
         startActivity(intentHelp);
+    }
+
+    @Override
+    public void openImageViewActivity(String imagePath) {
+        Intent intent = new Intent(this, ImageViewActivity.class);
+        intent.putExtra(ImageViewActivity.EXTRA_IMAGE_PATH, imagePath);
+        startActivity(intent);
     }
 
     @Override
@@ -387,8 +400,8 @@ public class ReaderActivity extends BibleQuoteActivity implements ReaderViewPres
     }
 
     @Override
-    public void setContent(String baseUrl, String content, int verse, boolean isBible) {
-        vWeb.setText(baseUrl, content, verse, nightMode, isBible);
+    public void setContent(String baseUrl, Chapter chapter, int verse, boolean isBible) {
+        vWeb.setContent(baseUrl, chapter, verse, nightMode, isBible);
     }
 
     @Override

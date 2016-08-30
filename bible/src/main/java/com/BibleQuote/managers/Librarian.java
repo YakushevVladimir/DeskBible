@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2011 Scripture Software
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -22,18 +24,18 @@
  * Created by Vladimir Yakushev at 8/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
- *
- *
  */
 
 package com.BibleQuote.managers;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.support.annotation.NonNull;
 
-import com.BibleQuote.dal.controllers.FsLibraryController;
-import com.BibleQuote.dal.repository.XmlTskRepository;
 import com.BibleQuote.dal.repository.fsHistoryRepository;
-import com.BibleQuote.domain.controllers.TSKController;
+import com.BibleQuote.domain.controllers.ILibraryController;
+import com.BibleQuote.domain.controllers.ITSKController;
+import com.BibleQuote.domain.controllers.modules.IModuleController;
 import com.BibleQuote.domain.entity.BibleReference;
 import com.BibleQuote.domain.entity.Book;
 import com.BibleQuote.domain.entity.Chapter;
@@ -45,6 +47,8 @@ import com.BibleQuote.domain.exceptions.BookNotFoundException;
 import com.BibleQuote.domain.exceptions.BooksDefinitionException;
 import com.BibleQuote.domain.exceptions.OpenModuleException;
 import com.BibleQuote.domain.exceptions.TskNotFoundException;
+import com.BibleQuote.domain.textFormatters.ModuleTextFormatter;
+import com.BibleQuote.domain.textFormatters.StripTagsTextFormatter;
 import com.BibleQuote.entity.ItemList;
 import com.BibleQuote.managers.history.IHistoryManager;
 import com.BibleQuote.managers.history.SimpleHistoryManager;
@@ -53,15 +57,13 @@ import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.modules.LinkConverter;
 import com.BibleQuote.utils.share.ShareBuilder;
 import com.BibleQuote.utils.share.ShareBuilder.Destination;
-import com.BibleQuote.utils.textFormatters.ModuleTextFormatter;
-import com.BibleQuote.utils.textFormatters.StripTagsTextFormatter;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
@@ -69,457 +71,396 @@ import java.util.TreeSet;
 
 public class Librarian {
 
-	private static final String TAG = "Librarian";
+    private static final String NOT_FOUND = "---";
+    private static final String TAG = Librarian.class.getSimpleName();
 
-	private Map<String, String> searchResults = new LinkedHashMap<String, String>();
-
+    private ILibraryController libCtrl;
+    private Map<String, String> searchResults = new LinkedHashMap<String, String>();
     private Module currModule;
-	private Book currBook;
-	private Chapter currChapter;
-	private Integer currChapterNumber = -1;
-	private Integer currVerseNumber = 1;
+    private Book currBook;
+    private Chapter currChapter;
+    private Integer currChapterNumber = -1;
+    private Integer currVerseNumber = 1;
+    private IHistoryManager historyManager;
+    private ITSKController tskCtrl;
 
-	private IHistoryManager historyManager;
+    /**
+     * Инициализация контроллеров библиотеки, модулей, книг и глав.
+     * Подписка на событие ChangeBooksEvent
+     */
+    public Librarian(@NonNull Context context, @NonNull ILibraryController libCtrl, @NonNull ITSKController tskCtrl) {
+        this.libCtrl = libCtrl;
+        this.tskCtrl = tskCtrl;
+        historyManager = new SimpleHistoryManager(
+                new fsHistoryRepository(context.getCacheDir()),
+                PreferenceHelper.getHistorySize());
+    }
 
-	private TSKController tskCtrl;
-	private final FsLibraryController libCtrl;
+    public String getBaseUrl() {
+        if (getCurrModule() == null) {
+            return "file:///url_initial_load";
+        }
+        String dataSourceID = getCurrModule().getDataSourceID();
+        int pos = dataSourceID.lastIndexOf('/');
+        if (++pos <= dataSourceID.length()) {
+            return dataSourceID.substring(0, pos);
+        } else {
+            return dataSourceID;
+        }
+    }
 
-	/**
-	 * Инициализация контроллеров библиотеки, модулей, книг и глав.
-	 * Подписка на событие ChangeBooksEvent
-	 */
-	public Librarian(Context context) {
-		libCtrl = FsLibraryController.getInstance(context);
-		historyManager = new SimpleHistoryManager(
-				new fsHistoryRepository(context.getCacheDir()),
-				PreferenceHelper.getHistorySize());
+    public ArrayList<String> getCleanedVersesText() {
+        ArrayList<String> result = new ArrayList<String>();
 
-		getModules();
-	}
-
-	/**
-	 * Возвращает коллекцию Book для указанного модуля. Данные о книгах в первую
-	 * очередь берутся из контекста библиотеки. Если там для выбранного модуля
-	 * список книг отсутсвует, то производится загрузка коллекции Book из хранилища
-	 *
-	 * @param module модуль для которого необходимо получить коллекцию Book
-	 * @return коллекцию Book для указанного модуля
-	 * @throws com.BibleQuote.domain.exceptions.OpenModuleException
-	 * @throws com.BibleQuote.domain.exceptions.BooksDefinitionException
-	 * @throws com.BibleQuote.domain.exceptions.BookDefinitionException
-	 */
-	public ArrayList<Book> getBookList(Module module) throws OpenModuleException, BooksDefinitionException, BookDefinitionException {
-		return libCtrl.getBookCtrl().getBookList(module);
-	}
-
-	/**
-	 * Инициализирует полную загрузку модулей. Сначала проверяется наличие
-	 * модулей в коллекции. Если коллекция пуста, то производится попытка
-	 * загрузки коллекции модулей из кэш. Иначе производится загрузка модулей
-	 * из файлового хранилища. Производится запись загруженных модулей в кэш.
-	 */
-	public void loadFileModules() {
-		libCtrl.getModuleCtrl().loadFileModules();
-	}
-
-	public void getModules() {
-		libCtrl.getModuleCtrl().getModules();
-	}
-
-	public Module getModuleByID(String moduleID) throws OpenModuleException {
-		return libCtrl.getModuleCtrl().getModuleByID(moduleID);
-	}
-
-	public Book getBookByID(Module module, String bookID) throws BookNotFoundException, OpenModuleException {
-		return libCtrl.getBookCtrl().getBookByID(module, bookID);
-	}
-
-	public Chapter getChapterByNumber(Book book, Integer chapterNumber) throws BookNotFoundException {
-		return libCtrl.getChapterCtrl().getChapter(book, chapterNumber);
-	}
-
-	public Chapter openChapter(BibleReference link) throws BookNotFoundException, OpenModuleException {
-		currModule = getModuleByID(link.getModuleID());
-		currBook = getBookByID(getCurrModule(), link.getBookID());
-		currChapter = getChapterByNumber(getCurrBook(), link.getChapter());
-		currChapterNumber = link.getChapter();
-		currVerseNumber = link.getFromVerse();
-
-		historyManager.addLink(new BibleReference(getCurrModule(), getCurrBook(), getCurrChapterNumber(), getCurrVerseNumber()));
-
-		return getCurrChapter();
-	}
-
-
-	///////////////////////////////////////////////////////////////////////////
-	// NAVIGATION
-
-	/**
-	 * Возвращает список доступных модулей с Библиями, апокрифами, книгами
-	 *
-	 * @return возвращает ArrayList, содержащий модули с книгами Библии и апокрифами
-	 */
-	public ArrayList<ItemList> getModulesList() {
-		// Сначала отсортируем список по наименованием модулей
-		TreeMap<String, Module> tMap = new TreeMap<String, Module>();
-		for (Module currModule : libCtrl.getModuleCtrl().getModules().values()) {
-			tMap.put(currModule.getName(), currModule);
-		}
-
-		// Теперь создадим результирующий список на основе отсортированных данных
-		ArrayList<ItemList> moduleList = new ArrayList<ItemList>();
-		for (Module currModule : tMap.values()) {
-			moduleList.add(new ItemList(currModule.getID(), currModule.getName()));
-		}
-
-		return moduleList;
-	}
-
-	public LinkedList<ItemList> getHistoryList() {
-		return historyManager.getLinks();
-	}
-
-
-	public ArrayList<ItemList> getModuleBooksList(String moduleID) throws OpenModuleException, BooksDefinitionException, BookDefinitionException {
-		// Получим модуль по его ID
-		Module module = libCtrl.getModuleCtrl().getModuleByID(moduleID);
-		ArrayList<ItemList> booksList = new ArrayList<ItemList>();
-		for (Book book : libCtrl.getBookCtrl().getBookList(module)) {
-			booksList.add(new ItemList(book.getID(), book.name));
-		}
-		return booksList;
-	}
-
-	public ArrayList<ItemList> getCurrentModuleBooksList() throws OpenModuleException, BooksDefinitionException, BookDefinitionException {
-		if (getCurrModule() == null) {
-			return new ArrayList<ItemList>();
-		}
-		return this.getModuleBooksList(getCurrModule().getID());
-	}
-
-	/**
-	 * Возвращает список глав книги
-	 *
-	 * @throws OpenModuleException
-	 * @throws BookNotFoundException
-	 */
-	public ArrayList<String> getChaptersList(String moduleID, String bookID)
-			throws BookNotFoundException, OpenModuleException {
-		// Получим модуль по его ID
-		Module module = getModule(moduleID);
-		Book book = libCtrl.getBookCtrl().getBookByID(module, bookID);
-		return book.getChapterNumbers(module.ChapterZero);
-	}
-
-	private Module getModule(String moduleID) throws OpenModuleException {
-		return libCtrl.getModuleCtrl().getModuleByID(moduleID);
-	}
-
-
-	public void nextChapter() throws OpenModuleException {
-		if (getCurrModule() == null || getCurrBook() == null) {
-			return;
-		}
-
-		Integer chapterQty = getCurrBook().chapterQty;
-		if (chapterQty > (getCurrChapterNumber() + (getCurrModule().ChapterZero ? 1 : 0))) {
-			currChapterNumber = getCurrChapterNumber() + 1;
-			currVerseNumber = 1;
-		} else {
-			try {
-				ArrayList<Book> books = libCtrl.getBookCtrl().getBookList(getCurrModule());
-				int pos = books.indexOf(getCurrBook());
-				if (++pos < books.size()) {
-					currBook = books.get(pos);
-					currChapterNumber = getCurrBook().getFirstChapterNumber();
-					currVerseNumber = 1;
-				}
-			} catch (BooksDefinitionException e) {
-				Log.e(TAG, e.getMessage());
-			} catch (BookDefinitionException e) {
-				Log.e(TAG, e.getMessage());
-			}
-		}
-	}
-
-	public void prevChapter() throws OpenModuleException {
-		if (getCurrModule() == null || getCurrBook() == null) {
-			return;
-		}
-
-		if (!getCurrChapterNumber().equals(getCurrBook().getFirstChapterNumber())) {
-			currChapterNumber = getCurrChapterNumber() - 1;
-			currVerseNumber = 1;
-		} else {
-			try {
-				ArrayList<Book> books = libCtrl.getBookCtrl().getBookList(getCurrModule());
-				int pos = books.indexOf(getCurrBook());
-				if (pos > 0) {
-					currBook = books.get(--pos);
-					Integer chapterQty = getCurrBook().chapterQty;
-					currChapterNumber = chapterQty - (getCurrModule().ChapterZero ? 1 : 0);
-					currVerseNumber = 1;
-				}
-			} catch (BooksDefinitionException e) {
-				Log.e(TAG, e.getMessage());
-			} catch (BookDefinitionException e) {
-				Log.e(TAG, e.getMessage());
-			}
-		}
-	}
-
-
-	///////////////////////////////////////////////////////////////////////////
-	// GET CONTENT
-
-	public String getChapterHTMLView() {
-		return libCtrl.getChapterCtrl().getChapterHTMLView(getCurrChapter());
-	}
-
-	public Boolean isBible() {
-		return getCurrModule() != null && getCurrModule().isBible;
-	}
-
-
-	///////////////////////////////////////////////////////////////////////////
-	// SEARCH
-
-	public Map<String, String> getSearchResults() {
-		return this.searchResults;
-	}
-
-	public Map<String, String> search(String query, String fromBook, String toBook) throws OpenModuleException, BookNotFoundException {
-		if (getCurrModule() == null) {
-			searchResults = new LinkedHashMap<String, String>();
-		} else {
-			searchResults = libCtrl.getModuleCtrl(currModule).search(currModule.getBookList(fromBook, toBook), query);
-		}
-		return searchResults;
-	}
-
-
-	///////////////////////////////////////////////////////////////////////////
-	// GET LINK OF STRING
-
-	public String getModuleFullName() {
-		if (getCurrModule() == null) {
-			return "";
-		}
-		return getCurrModule().getName();
-	}
-
-	public String getModuleName() {
-		if (getCurrModule() == null) {
-			return "";
-		} else {
-			return getCurrModule().getName();
-		}
-	}
-
-	public String getModuleID() {
-		if (getCurrModule() == null) {
-			return "";
-		} else {
-			return getCurrModule().getID();
-		}
-	}
-
-	public String getBookFullName(String moduleID, String bookID) throws OpenModuleException {
-		// Получим модуль по его ID
-		Module module;
-		try {
-			module = getModule(moduleID);
-		} catch (OpenModuleException e) {
-			return "---";
-		}
-
-		try {
-			Book book = libCtrl.getBookCtrl().getBookByID(module, bookID);
-			return book.name;
-		} catch (BookNotFoundException e) {
-			return "---";
-		}
-	}
-
-	public String getBookShortName(String moduleID, String bookID) throws OpenModuleException {
-		// Получим модуль по его ID
-		Module module;
-		try {
-			module = getModule(moduleID);
-		} catch (OpenModuleException e) {
-			return "---";
-		}
-
-		try {
-			Book book = libCtrl.getBookCtrl().getBookByID(module, bookID);
-			return book.getShortName();
-		} catch (BookNotFoundException e) {
-			return "---";
-		}
-	}
-
-	public BibleReference getCurrentOSISLink() {
-		return new BibleReference(getCurrModule(), getCurrBook(), getCurrChapterNumber(), getCurrVerseNumber());
-	}
-
-	public void setCurrentVerseNumber(int verse) {
-		this.currVerseNumber = verse;
-	}
-
-	public String getHumanBookLink() {
-		if (getCurrBook() == null || getCurrChapter() == null) {
-			return "";
-		}
-		String bookLink = getCurrBook().getShortName() + " " + getCurrChapter().getNumber();
-		if (bookLink.length() > 10) {
-			int strLenght = bookLink.length();
-			bookLink = bookLink.substring(0, 4) + "..." + bookLink.substring(strLenght - 4, strLenght);
-		}
-		return bookLink;
-	}
-
-	public Boolean isOSISLinkValid(BibleReference link) {
-		if (link.getPath() == null) {
-			return false;
-		}
-
-		try {
-			getModuleByID(link.getModuleID());
-		} catch (OpenModuleException e) {
-			return false;
-		}
-		return true;
-	}
-
-
-	///////////////////////////////////////////////////////////////////////////
-	// SHARE
-
-	public void shareText(Context context, TreeSet<Integer> selectVerses, Destination dest) {
-		if (getCurrChapter() == null) {
-			return;
-		}
+        if (currModule == null) {
+            return result;
+        }
 
         ModuleTextFormatter formatter = new ModuleTextFormatter(currModule, new StripTagsTextFormatter());
         formatter.setVisibleVerseNumbers(false);
 
-		LinkedHashMap<Integer, String> verses = getCurrChapter().getVerses(selectVerses);
-        for (Integer key : verses.keySet()) {
-            verses.put(key, formatter.format(verses.get(key)));
+        ArrayList<Verse> verses = currChapter.getVerseList();
+        for (Verse verse : verses) {
+            result.add(formatter.format(verse.getText()));
+        }
+        return result;
+    }
+
+    public Book getCurrBook() {
+        return currBook;
+    }
+
+    public Chapter getCurrChapter() {
+        return currChapter;
+    }
+
+    public Integer getCurrChapterNumber() {
+        return currChapterNumber;
+    }
+
+    public Module getCurrModule() {
+        return currModule;
+    }
+
+    public Integer getCurrVerseNumber() {
+        return currVerseNumber;
+    }
+
+    public ArrayList<ItemList> getCurrentModuleBooksList() throws OpenModuleException, BooksDefinitionException, BookDefinitionException {
+        return getBookItemLists(currModule);
+    }
+
+    public BibleReference getCurrentOSISLink() {
+        return new BibleReference(getCurrModule(), getCurrBook(), getCurrChapterNumber(), getCurrVerseNumber());
+    }
+
+    public LinkedList<ItemList> getHistoryList() {
+        return historyManager.getLinks();
+    }
+
+    public String getHumanBookLink() {
+        if (getCurrBook() == null || getCurrChapter() == null) {
+            return "";
+        }
+        String bookLink = getCurrBook().getShortName() + " " + getCurrChapter().getNumber();
+        if (bookLink.length() > 10) {
+            int strLenght = bookLink.length();
+            bookLink = bookLink.substring(0, 4) + "..." + bookLink.substring(strLenght - 4, strLenght);
+        }
+        return bookLink;
+    }
+
+    public String getModuleFullName() {
+        if (getCurrModule() == null) {
+            return "";
+        }
+        return getCurrModule().getName();
+    }
+
+    public String getModuleID() {
+        if (getCurrModule() == null) {
+            return "";
+        } else {
+            return getCurrModule().getID();
+        }
+    }
+
+    public String getModuleName() {
+        if (getCurrModule() == null) {
+            return "";
+        } else {
+            return getCurrModule().getName();
+        }
+    }
+
+    /**
+     * Возвращает список доступных модулей с Библиями, апокрифами, книгами
+     *
+     * @return возвращает ArrayList, содержащий модули с книгами Библии и апокрифами
+     */
+    public ArrayList<ItemList> getModulesList() {
+        // Сначала отсортируем список по наименованием модулей
+        TreeMap<String, Module> tMap = new TreeMap<String, Module>();
+        for (Module currModule : libCtrl.getModules().values()) {
+            tMap.put(currModule.getName(), currModule);
         }
 
-		ShareBuilder builder = new ShareBuilder(context, getCurrModule(), getCurrBook(), getCurrChapter(), verses);
-		builder.share(dest);
-	}
+        // Теперь создадим результирующий список на основе отсортированных данных
+        ArrayList<ItemList> moduleList = new ArrayList<ItemList>();
+        for (Module currModule : tMap.values()) {
+            moduleList.add(new ItemList(currModule.getID(), currModule.getName()));
+        }
 
-	public String getBaseUrl() {
-		if (getCurrModule() == null) {
-			return "file:///url_initial_load";
-		}
-		String dataSourceID = getCurrModule().getDataSourceID();
-		int pos = dataSourceID.lastIndexOf('/');
-		if (++pos <= dataSourceID.length()) {
-			return dataSourceID.substring(0, pos);
-		} else {
-			return dataSourceID;
-		}
-	}
+        return moduleList;
+    }
 
-	public void clearHistory() {
-		historyManager.clearLinks();
-	}
+    public Map<String, String> getSearchResults() {
+        return this.searchResults;
+    }
 
-	public LinkedHashMap<String, BibleReference> getCrossReference(BibleReference bReference)
-			throws TskNotFoundException, BQUniversalException {
+    public Locale getTextLocale() {
+        return currModule == null
+                ? new Locale(Module.DEFAULT_LANGUAGE)
+                : new Locale(currModule.getLanguage());
+    }
 
-		if (tskCtrl == null) {
-			tskCtrl = new TSKController(new XmlTskRepository());
-		}
+    public void setCurrentVerseNumber(int verse) {
+        this.currVerseNumber = verse;
+    }
 
-		LinkedHashSet<BibleReference> csLinks = tskCtrl.getLinks(bReference);
+    public void clearHistory() {
+        historyManager.clearLinks();
+    }
 
-		LinkedHashMap<String, BibleReference> parallels = new LinkedHashMap<String, BibleReference>();
-		for (BibleReference reference : csLinks) {
-			Book book;
-			try {
-				book = getBookByID(getCurrModule(), reference.getBookID());
-			} catch (OpenModuleException e) {
-				Log.e(TAG, String.format("Error open module %1$s for link %2$s",
-						reference.getModuleID(), reference.getBookID()));
-				continue;
-			} catch (BookNotFoundException e) {
-				Log.e(TAG, String.format("Not found book %1$s in module %2$s",
-						reference.getBookID(), reference.getModuleID()));
-				continue;
-			}
-			BibleReference newReference = new BibleReference(getCurrModule(), book,
-					reference.getChapter(), reference.getFromVerse(), reference.getToVerse());
-			parallels.put(
-					LinkConverter.getOSIStoHuman(newReference),
-					newReference);
-		}
+    public Book getBookByID(Module module, String bookID) throws BookNotFoundException, OpenModuleException {
+        IModuleController modCtrl = Injector.getModuleController(module);
+        return modCtrl.getBookByID(bookID);
+    }
 
-		return parallels;
-	}
+    public String getBookFullName(String moduleID, String bookID) throws OpenModuleException {
+        try {
+            Module module = libCtrl.getModuleByID(moduleID);
+            IModuleController modCtrl = Injector.getModuleController(module);
+            Book book = modCtrl.getBookByID(bookID);
+            return book.getName();
+        } catch (OpenModuleException e) {
+            Log.e(TAG, e.getMessage());
+        } catch (BookNotFoundException e) {
+            Log.e(TAG, e.getMessage());
+        }
+        return NOT_FOUND;
+    }
 
-	public HashMap<BibleReference, String> getCrossReferenceContent(Collection<BibleReference> bReferences) {
-		ModuleTextFormatter formatter = new ModuleTextFormatter(currModule, new StripTagsTextFormatter());
+    public String getBookShortName(String moduleID, String bookID) {
+        try {
+            Module module = libCtrl.getModuleByID(moduleID);
+            IModuleController modCtrl = Injector.getModuleController(module);
+            Book book = modCtrl.getBookByID(bookID);
+            return book.getShortName();
+        } catch (BookNotFoundException e) {
+            Log.e(TAG, e.getMessage());
+        } catch (OpenModuleException e) {
+            Log.e(TAG, e.getMessage());
+        }
+        return NOT_FOUND;
+    }
+
+    public Chapter getChapterByNumber(Book book, Integer chapterNumber) throws BookNotFoundException {
+        IModuleController modCtrl = Injector.getModuleController(book.getModule());
+        return modCtrl.getChapter(book.getID(), chapterNumber);
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    // SHARE
+
+    /**
+     * Возвращает список глав книги
+     *
+     * @throws OpenModuleException
+     * @throws BookNotFoundException
+     */
+    public List<String> getChaptersList(String moduleID, String bookID)
+            throws BookNotFoundException, OpenModuleException {
+        // Получим модуль по его ID
+        Module module = libCtrl.getModuleByID(moduleID);
+        IModuleController modCtrl = Injector.getModuleController(module);
+        return modCtrl.getChapterNumbers(bookID);
+    }
+
+    public LinkedHashMap<String, BibleReference> getCrossReference(BibleReference bReference)
+            throws TskNotFoundException, BQUniversalException {
+
+        LinkedHashMap<String, BibleReference> result = new LinkedHashMap<String, BibleReference>();
+        for (BibleReference reference : tskCtrl.getLinks(bReference)) {
+            Book book;
+            try {
+                book = getBookByID(getCurrModule(), reference.getBookID());
+            } catch (OpenModuleException e) {
+                Log.e(TAG, String.format("Error open module %1$s for link %2$s",
+                        reference.getModuleID(), reference.getBookID()));
+                continue;
+            } catch (BookNotFoundException e) {
+                Log.e(TAG, String.format("Not found book %1$s in module %2$s",
+                        reference.getBookID(), reference.getModuleID()));
+                continue;
+            }
+            BibleReference newReference = new BibleReference(getCurrModule(), book,
+                    reference.getChapter(), reference.getFromVerse(), reference.getToVerse());
+            result.put(
+                    LinkConverter.getOSIStoHuman(newReference),
+                    newReference);
+        }
+
+        return result;
+    }
+
+    public HashMap<BibleReference, String> getCrossReferenceContent(Collection<BibleReference> bReferences) {
+        ModuleTextFormatter formatter = new ModuleTextFormatter(currModule, new StripTagsTextFormatter());
         formatter.setVisibleVerseNumbers(false);
 
         HashMap<BibleReference, String> crossReferenceContent = new HashMap<BibleReference, String>();
         for (BibleReference ref : bReferences) {
-			try {
-				int fromVerse = ref.getFromVerse();
-				int toVerse = ref.getToVerse();
-				Chapter chapter = getChapterByNumber(getBookByID(getCurrModule(), ref.getBookID()), ref.getChapter());
-				crossReferenceContent.put(ref, chapter.getText(fromVerse, toVerse, formatter));
-			} catch (Exception e) {
-				Log.e(TAG, e.getMessage());
-			}
-		}
-		return crossReferenceContent;
-	}
+            try {
+                int fromVerse = ref.getFromVerse();
+                int toVerse = ref.getToVerse();
+                Chapter chapter = getChapterByNumber(getBookByID(getCurrModule(), ref.getBookID()), ref.getChapter());
+                crossReferenceContent.put(ref, chapter.getText(fromVerse, toVerse, formatter));
+            } catch (Exception e) {
+                Log.e(TAG, e.getMessage());
+            }
+        }
+        return crossReferenceContent;
+    }
 
-	public Module getCurrModule() {
-		return currModule;
-	}
+    public ArrayList<ItemList> getModuleBooksList(String moduleID) throws OpenModuleException, BooksDefinitionException, BookDefinitionException {
+        Module module = libCtrl.getModuleByID(moduleID);
+        return getBookItemLists(module);
+    }
 
-	public Book getCurrBook() {
-		return currBook;
-	}
+    public Bitmap getModuleImage(String path) {
+        if (currModule == null) {
+            return null;
+        }
 
-	public Chapter getCurrChapter() {
-		return currChapter;
-	}
+        IModuleController modCtrl = Injector.getModuleController(currModule);
+        return modCtrl.getBitmap(path);
+    }
 
-	public Integer getCurrChapterNumber() {
-		return currChapterNumber;
-	}
+    public Boolean isBible() {
+        return currModule != null && currModule.isBible();
+    }
 
-	public Integer getCurrVerseNumber() {
-		return currVerseNumber;
-	}
+    public Boolean isOSISLinkValid(BibleReference link) {
+        if (link.getPath() == null) {
+            return false;
+        }
 
-	public ArrayList<String> getCleanedVersesText() {
-		ArrayList<String> result = new ArrayList<String>();
+        try {
+            libCtrl.getModuleByID(link.getModuleID());
+        } catch (OpenModuleException e) {
+            return false;
+        }
+        return true;
+    }
 
-		if (currModule == null) {
-			return result;
-		}
+    public void nextChapter() throws OpenModuleException {
+        if (currModule == null || currBook == null) {
+            return;
+        }
 
-		ModuleTextFormatter formatter = new ModuleTextFormatter(currModule, new StripTagsTextFormatter());
-		formatter.setVisibleVerseNumbers(false);
+        if (currBook.getChapterQty() > (currChapterNumber + (currModule.isChapterZero() ? 1 : 0))) {
+            currChapterNumber++;
+            currVerseNumber = 1;
+        } else {
+            IModuleController modCtrl = Injector.getModuleController(currModule);
+            try {
+                Book nextBook = modCtrl.getNextBook(currBook.getID());
+                if (nextBook != null) {
+                    currBook = nextBook;
+                    currChapterNumber = currBook.getFirstChapterNumber();
+                    currVerseNumber = 1;
+                }
+            } catch (BookNotFoundException e) {
+                Log.e(TAG, e.getMessage());
+            }
+        }
+    }
 
-		ArrayList<Verse> verses = currChapter.getVerseList();
-		for (Verse verse : verses) {
-			result.add(formatter.format(verse.getText()));
-		}
-		return result;
-	}
+    public Chapter openChapter(BibleReference link) throws BookNotFoundException, OpenModuleException {
+        currModule = libCtrl.getModuleByID(link.getModuleID());
+        IModuleController modCtrl = Injector.getModuleController(currModule);
+        currBook = modCtrl.getBookByID(link.getBookID());
+        currChapter = modCtrl.getChapter(link.getBookID(), link.getChapter());
+        currChapterNumber = link.getChapter();
+        currVerseNumber = link.getFromVerse();
 
-	public Locale getTextLocale() {
-		return currModule == null
-				? new Locale(Module.DEFAULT_LANGUAGE)
-				: new Locale(currModule.getLanguage());
-	}
+        historyManager.addLink(new BibleReference(getCurrModule(), getCurrBook(), getCurrChapterNumber(), getCurrVerseNumber()));
+
+        return getCurrChapter();
+    }
+
+    public void prevChapter() throws OpenModuleException {
+        if (currModule == null || currBook == null) {
+            return;
+        }
+
+        if (!currChapterNumber.equals(currBook.getFirstChapterNumber())) {
+            currChapterNumber--;
+            currVerseNumber = 1;
+        } else {
+            try {
+                IModuleController modCtrl = Injector.getModuleController(currModule);
+                Book nextBook = modCtrl.getPrevBook(currBook.getID());
+                if (nextBook != null) {
+                    currBook = nextBook;
+                    currChapterNumber = currBook.getChapterQty() - (currModule.isChapterZero() ? 1 : 0);
+                    currVerseNumber = 1;
+                }
+            } catch (BookNotFoundException e) {
+                Log.e(TAG, e.getMessage());
+            }
+        }
+    }
+
+    public Map<String, String> search(String query, String fromBook, String toBook) throws OpenModuleException, BookNotFoundException {
+        if (getCurrModule() == null) {
+            searchResults = new LinkedHashMap<String, String>();
+        } else {
+            IModuleController moduleCtrl = Injector.getModuleController(currModule);
+            searchResults = moduleCtrl.search(currModule.getBookList(fromBook, toBook), query);
+        }
+        return searchResults;
+    }
+
+    public void shareText(Context context, TreeSet<Integer> selectVerses, Destination dest) {
+        if (getCurrChapter() == null) {
+            return;
+        }
+
+        ModuleTextFormatter formatter = new ModuleTextFormatter(currModule, new StripTagsTextFormatter());
+        formatter.setVisibleVerseNumbers(false);
+
+        LinkedHashMap<Integer, String> verses = getCurrChapter().getVerses(selectVerses);
+        for (Integer key : verses.keySet()) {
+            verses.put(key, formatter.format(verses.get(key)));
+        }
+
+        ShareBuilder builder = new ShareBuilder(context, getCurrModule(), getCurrBook(), getCurrChapter(), verses);
+        builder.share(dest);
+    }
+
+    @NonNull
+    private ArrayList<ItemList> getBookItemLists(Module module) {
+        ArrayList<ItemList> result = new ArrayList<ItemList>();
+        if (module == null) {
+            return result;
+        }
+
+        IModuleController modCtrl = Injector.getModuleController(module);
+        for (Book book : modCtrl.getBooks()) {
+            result.add(new ItemList(book.getID(), book.getName()));
+        }
+        return result;
+    }
 }

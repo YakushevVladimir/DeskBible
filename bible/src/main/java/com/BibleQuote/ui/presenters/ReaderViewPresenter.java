@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2011 Scripture Software
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -22,8 +24,6 @@
  * Created by Vladimir Yakushev at 8/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
- *
- *
  */
 
 package com.BibleQuote.ui.presenters;
@@ -39,6 +39,7 @@ import com.BibleQuote.R;
 import com.BibleQuote.async.AsyncManager;
 import com.BibleQuote.async.AsyncOpenChapter;
 import com.BibleQuote.domain.entity.BibleReference;
+import com.BibleQuote.domain.entity.Chapter;
 import com.BibleQuote.domain.exceptions.BookNotFoundException;
 import com.BibleQuote.domain.exceptions.ExceptionHelper;
 import com.BibleQuote.domain.exceptions.OpenModuleException;
@@ -102,7 +103,7 @@ public class ReaderViewPresenter implements OnTaskCompleteListener, TTSPlayerFra
                 AsyncOpenChapter chapterTask = ((AsyncOpenChapter) task);
                 if (chapterTask.isSuccess()) {
                     BibleReference osisLink = librarian.getCurrentOSISLink();
-                    view.setContent(librarian.getBaseUrl(), librarian.getChapterHTMLView(), osisLink.getFromVerse(), librarian.isBible());
+                    view.setContent(librarian.getBaseUrl(), librarian.getCurrChapter(), osisLink.getFromVerse(), librarian.isBible());
                     view.setTitle(librarian.getModuleName(), librarian.getHumanBookLink());
                     PreferenceHelper.saveStateString("last_read", osisLink.getExtendedPath());
                 } else {
@@ -223,6 +224,10 @@ public class ReaderViewPresenter implements OnTaskCompleteListener, TTSPlayerFra
         viewCurrentChapter();
     }
 
+    public void onClickImage(String path) {
+        view.openImageViewActivity(path);
+    }
+
     public void prevChapter() {
         try {
             librarian.prevChapter();
@@ -283,6 +288,8 @@ public class ReaderViewPresenter implements OnTaskCompleteListener, TTSPlayerFra
 
         void openHelpActivity();
 
+        void openImageViewActivity(String imagePath);
+
         void openLibraryActivity(int requestCode);
 
         void openHistoryActivity(int requestCode);
@@ -293,7 +300,7 @@ public class ReaderViewPresenter implements OnTaskCompleteListener, TTSPlayerFra
 
         void openTagsActivity(int requestCode);
 
-        void setContent(String baseUrl, String content, int verse, boolean isBible);
+        void setContent(String baseUrl, Chapter chapter, int verse, boolean isBible);
 
         void setTitle(String moduleName, String link);
 

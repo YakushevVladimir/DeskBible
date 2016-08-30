@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <!--
+  ~ Copyright (C) 2011 Scripture Software
+  ~
   ~ Licensed to the Apache Software Foundation (ASF) under one
   ~ or more contributor license agreements.  See the NOTICE file
   ~ distributed with this work for additional information
@@ -23,8 +25,6 @@
   ~ Created by Vladimir Yakushev at 8/2016
   ~ E-mail: ru.phoenix@gmail.com
   ~ WWW: http://www.scripturesoftware.org
-  ~
-  ~
   -->
 <resources>
     <string name="app_name">Біблія</string>
@@ -125,7 +125,7 @@
     <string name="edit">Редактировать</string>
     <string name="empty">Нет данных</string>
     <string name="enabled">Включено</string>
-    <string name="exception_book_definition">Некорректные параметры книги #%1$s в модуле %2$s:\nPathName=%3$s, FullName=%4$s, ShortName=%5$s, ChapterQty=%6$s</string>
+    <string name="exception_book_definition">Некорректные параметры книги #%1$s в модуле %2$s</string>
     <string name="exception_book_not_found">Книга %1$s не найден а в модуле %2$s</string>
     <string name="exception_books_definition">Некорректное описание книги в модуле %1$s:\nBookQty=%2$s, PathName#=%3$s, FullName#=%4$s, ShortName#=%5$s,\nChapterQty#=%6$s</string>
     <string name="exception_open_module">Некорректный модуль %1$s(%2$s)</string>

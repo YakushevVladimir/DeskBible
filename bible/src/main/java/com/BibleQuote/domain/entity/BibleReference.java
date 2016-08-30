@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2011 Scripture Software
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,15 +18,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * --------------------------------------------------
- *
  * Project: BibleQuote-for-Android
  * File: BibleReference.java
  *
  * Created by Vladimir Yakushev at 8/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
- *
  */
 
 package com.BibleQuote.domain.entity;
@@ -125,7 +124,7 @@ public class BibleReference {
 		this.moduleDatasourceID = module == null ? null : module.getDataSourceID();
 		this.moduleID = module == null ? null : module.getID();
 		this.bookID = book == null ? null : book.getID();
-		this.bookName = book == null ? null : book.name;
+		this.bookName = book == null ? null : book.getName();
 		this.chapterNumber = chapterNumber;
 		this.fromVerse = fromVerse;
 		this.toVerse = toVerse;

@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2011 Scripture Software
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,18 +18,15 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * --------------------------------------------------
- *
  * Project: BibleQuote-for-Android
  * File: ModuleTextFormatterTest.java
  *
  * Created by Vladimir Yakushev at 8/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
- *
  */
 
-package com.BibleQuote.utils.textFormatters;
+package com.BibleQuote.domain.textFormatters;
 
 import android.os.Build;
 
@@ -65,8 +64,8 @@ public class ModuleTextFormatterTest {
     @Before
     public void testBefore() {
         mModule = new BQModule("base/biblequote.ini");
-        mModule.containsStrong = false;
-        mModule.isBible = true;
+        mModule.setContainsStrong(false);
+        mModule.setBible(true);
     }
 
     @After
@@ -107,7 +106,7 @@ public class ModuleTextFormatterTest {
 
     @Test
     public void testFormatModuleWithStrong() throws Exception {
-        mModule.containsStrong = true;
+        mModule.setContainsStrong(true);
         ModuleTextFormatter formatter = new ModuleTextFormatter(mModule);
 
         String result = formatter.format(testVersesWithStrong);
@@ -123,7 +122,7 @@ public class ModuleTextFormatterTest {
 
     @Test
     public void testFormatModuleWithoutStrong() throws Exception {
-        mModule.containsStrong = false;
+        mModule.setContainsStrong(false);
         ModuleTextFormatter formatter = new ModuleTextFormatter(mModule);
 
         String result = formatter.format(testVersesWithStrong);

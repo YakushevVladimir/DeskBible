@@ -30,6 +30,9 @@ function handleClick(x, y) {
 	while (element != null && element.id.indexOf('verse') == -1) {
 		if (element instanceof window.HTMLAnchorElement && (element.href.indexOf('#') != -1)) {
 			return;
+		} else if (element.nodeName == "IMG") {
+		    reader.onClickImage(element.getAttribute("src"));
+		    return;
 		}
 		element = element.parentElement;
 	}

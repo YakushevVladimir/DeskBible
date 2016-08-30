@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2011 Scripture Software
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,15 +18,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * --------------------------------------------------
- *
  * Project: BibleQuote-for-Android
  * File: Module.java
  *
  * Created by Vladimir Yakushev at 8/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
- *
  */
 
 package com.BibleQuote.domain.entity;
@@ -44,17 +43,17 @@ public abstract class Module implements Serializable {
 
     private static final long serialVersionUID = -499369158022814559L;
 
-    public String shortName = "";
-    public String ChapterSign = "";
-    public String VerseSign = "";
-    public String HtmlFilter = "";
-    public boolean ChapterZero;
-    public boolean containsStrong;
-    public boolean isBible;
-    public String defaultEncoding = "utf-8";
-    public String language = "ru_RU";
-    public String fontName = "";
-    public String fontPath = "";
+    private boolean chapterZero;
+    private String shortName = "";
+    private String chapterSign = "";
+    private String verseSign = "";
+    private String htmlFilter = "";
+    private boolean containsStrong;
+    private boolean isBible;
+    private String defaultEncoding = "utf-8";
+    private String language = "ru_RU";
+    private String fontName = "";
+    private String fontPath = "";
 
     private Map<String, Book> books = new LinkedHashMap<String, Book>();    // to lazy loading on demand
     private String Name = "";
@@ -63,7 +62,27 @@ public abstract class Module implements Serializable {
         return books;
     }
 
+    public String getChapterSign() {
+        return chapterSign;
+    }
+
     public abstract String getDataSourceID();
+
+    public String getDefaultEncoding() {
+        return defaultEncoding;
+    }
+
+    public String getFontName() {
+        return fontName;
+    }
+
+    public String getFontPath() {
+        return fontPath;
+    }
+
+    public String getHtmlFilter() {
+        return htmlFilter;
+    }
 
     public abstract String getID();
 
@@ -79,17 +98,76 @@ public abstract class Module implements Serializable {
         return Name;
     }
 
+    public String getShortName() {
+        return shortName;
+    }
+
+    public String getVerseSign() {
+        return verseSign;
+    }
+
+    public boolean isBible() {
+        return isBible;
+    }
+
+    public boolean isChapterZero() {
+        return chapterZero;
+    }
+
+    public boolean isContainsStrong() {
+        return containsStrong;
+    }
+
+    public void setBible(boolean bible) {
+        isBible = bible;
+    }
+
     public void setBooks(Map<String, Book> books) {
         this.books = books;
+    }
+
+    public void setChapterSign(String chapterSign) {
+        this.chapterSign = chapterSign;
+    }
+
+    public void setChapterZero(boolean chapterZero) {
+        this.chapterZero = chapterZero;
+    }
+
+    public void setContainsStrong(boolean containsStrong) {
+        this.containsStrong = containsStrong;
+    }
+
+    public void setDefaultEncoding(String defaultEncoding) {
+        this.defaultEncoding = defaultEncoding;
+    }
+
+    public void setFontName(String fontName) {
+        this.fontName = fontName;
+    }
+
+    public void setFontPath(String fontPath) {
+        this.fontPath = fontPath;
+    }
+
+    public void setHtmlFilter(String htmlFilter) {
+        this.htmlFilter = htmlFilter;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
     }
 
     public void setName(String name) {
         Name = name;
     }
 
-    @Override
-    public String toString() {
-        return this.Name;
+    public void setShortName(String shortName) {
+        this.shortName = shortName;
+    }
+
+    public void setVerseSign(String verseSign) {
+        this.verseSign = verseSign;
     }
 
     public Book getBook(String bookID) {
@@ -109,5 +187,10 @@ public abstract class Module implements Serializable {
         }
         return result;
 
+    }
+
+    @Override
+    public String toString() {
+        return this.Name;
     }
 }

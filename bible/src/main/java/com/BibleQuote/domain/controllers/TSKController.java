@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2011 Scripture Software
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,15 +18,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * --------------------------------------------------
- *
  * Project: BibleQuote-for-Android
  * File: TSKController.java
  *
  * Created by Vladimir Yakushev at 8/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
- *
  */
 package com.BibleQuote.domain.controllers;
 
@@ -38,8 +37,9 @@ import com.BibleQuote.utils.CachePool;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 
-public class TSKController {
+public class TSKController implements ITSKController {
 
 	private static final int MAX_PULL_SIZE = 10;
 
@@ -52,7 +52,8 @@ public class TSKController {
 		this.repository = repository;
 	}
 
-	public LinkedHashSet<BibleReference> getLinks(BibleReference reference) throws TskNotFoundException, BQUniversalException {
+	@Override
+	public Set<BibleReference> getLinks(BibleReference reference) throws TskNotFoundException, BQUniversalException {
 		if (bCrossReferenceCache.containsKey(reference.getPath())) {
 			return bCrossReferenceCache.get(reference.getPath());
 		}

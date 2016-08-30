@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2011 Scripture Software
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -22,8 +24,6 @@
  * Created by Vladimir Yakushev at 8/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
- *
- *
  */
 package com.BibleQuote.ui;
 
@@ -61,6 +61,7 @@ import com.BibleQuote.utils.OnTaskCompleteListener;
 import com.BibleQuote.utils.Task;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class LibraryActivity extends BibleQuoteActivity implements OnTaskCompleteListener {
     public static final String EMPTY_OBJECT = "---";
@@ -74,7 +75,7 @@ public class LibraryActivity extends BibleQuoteActivity implements OnTaskComplet
     private Button btnModule, btnBook, btnChapter;
     private ArrayList<ItemList> modules = new ArrayList<ItemList>();
     private ArrayList<ItemList> books = new ArrayList<ItemList>();
-    private ArrayList<String> chapters = new ArrayList<String>();
+    private List<String> chapters = new ArrayList<String>();
     private int modulePos, bookPos, chapterPos;
     private Librarian myLibrarian;
     private View.OnClickListener onBtnModuleClick = new View.OnClickListener() {
@@ -110,7 +111,7 @@ public class LibraryActivity extends BibleQuoteActivity implements OnTaskComplet
                     currentOSISLink.getChapter(),
                     currentOSISLink.getFromVerse());
 
-            mTask = new AsyncOpenModule(message, false, myLibrarian, osisLink);
+            mTask = new AsyncOpenModule(message, false, osisLink);
             mAsyncManager.setupTask(mTask, LibraryActivity.this);
         }
     };
@@ -209,7 +210,7 @@ public class LibraryActivity extends BibleQuoteActivity implements OnTaskComplet
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.action_bar_refresh:
-                mAsyncManager.setupTask(new AsyncRefreshModules(messageRefresh, false, myLibrarian), this);
+                mAsyncManager.setupTask(new AsyncRefreshModules(messageRefresh, false), this);
                 return true;
             case R.id.menu_library_add:
                 choiceModuleFromFile();
@@ -277,7 +278,7 @@ public class LibraryActivity extends BibleQuoteActivity implements OnTaskComplet
         if (!moduleID.equals(EMPTY_OBJECT) && !bookID.equals(EMPTY_OBJECT)) {
             try {
                 bookShortName = myLibrarian.getBookShortName(moduleID, bookID);
-                ArrayList<String> chList = myLibrarian.getChaptersList(moduleID, bookID);
+                List<String> chList = myLibrarian.getChaptersList(moduleID, bookID);
                 if (!chList.isEmpty()) {
                     chapter = chList.contains(chapter) ? chapter : chList.get(0);
                 } else {
@@ -396,7 +397,6 @@ public class LibraryActivity extends BibleQuoteActivity implements OnTaskComplet
     }
 
     private ArrayAdapter<String> getChapterAdapter() {
-        chapters = new ArrayList<String>();
         try {
             chapters = myLibrarian.getChaptersList(moduleID, bookID);
         } catch (BookNotFoundException e) {
@@ -404,8 +404,7 @@ public class LibraryActivity extends BibleQuoteActivity implements OnTaskComplet
         } catch (OpenModuleException e) {
             ExceptionHelper.onOpenModuleException(e, this, TAG);
         }
-        return new ArrayAdapter<String>(this, R.layout.chapter_item,
-                R.id.chapter, chapters);
+        return new ArrayAdapter<String>(this, R.layout.chapter_item, R.id.chapter, chapters);
     }
 
 	private void getModuleFromFile(String path) {
@@ -413,12 +412,12 @@ public class LibraryActivity extends BibleQuoteActivity implements OnTaskComplet
 	}
 
     private void onAsyncOpenModuleComplete(AsyncOpenModule task) {
-        if (task.isSuccess()) {
+        Exception e = task.getException();
+        if (e == null) {
             moduleID = task.getModule().getID();
             setButtonText();
             updateView(BOOK_VIEW);
         } else {
-            Exception e = task.getException();
             if (e instanceof OpenModuleException) {
                 ExceptionHelper.onOpenModuleException((OpenModuleException) e, this, TAG);
 

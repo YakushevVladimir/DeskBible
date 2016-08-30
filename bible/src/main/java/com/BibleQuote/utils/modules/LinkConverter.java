@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2011 Scripture Software
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,19 +18,17 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * --------------------------------------------------
- *
  * Project: BibleQuote-for-Android
  * File: LinkConverter.java
  *
  * Created by Vladimir Yakushev at 8/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
- *
  */
 
 package com.BibleQuote.utils.modules;
 
+import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.domain.entity.BibleReference;
 import com.BibleQuote.domain.entity.Book;
 import com.BibleQuote.domain.entity.Module;
@@ -55,7 +55,7 @@ public final class LinkConverter {
 
 		Module currModule;
 		try {
-			currModule = librarian.getModuleByID(moduleID);
+			currModule = BibleQuoteApp.getInstance().getLibraryController().getModuleByID(moduleID);
 		} catch (OpenModuleException e) {
 			return "";
 		}

@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2011 Scripture Software
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,15 +18,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * --------------------------------------------------
- *
  * Project: BibleQuote-for-Android
  * File: FullReferenceFormatter.java
  *
  * Created by Vladimir Yakushev at 8/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
- *
  */
 
 package com.BibleQuote.utils.bibleReferenceFormatter;
@@ -47,7 +46,7 @@ public class FullReferenceFormatter extends ReferenceFormatter implements IBible
 
 		String result = String.format(
 				"%1$s %2$s:%3$s",
-				book.name, chapter, getVerseLink());
+				book.getName(), chapter, getVerseLink());
 		if (PreferenceHelper.addModuleToBibleReference()) {
 			result = String.format("%1$s|%2$s", result, module.getID());
 		}

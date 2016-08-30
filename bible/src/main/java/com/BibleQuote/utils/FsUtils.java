@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2011 Scripture Software
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,15 +18,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * --------------------------------------------------
- *
  * Project: BibleQuote-for-Android
  * File: FsUtils.java
  *
  * Created by Vladimir Yakushev at 8/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
- *
  */
 package com.BibleQuote.utils;
 
@@ -32,8 +31,10 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.util.Log;
 
+import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
-import com.BibleQuote.dal.controllers.FsLibraryController;
+import com.BibleQuote.domain.exceptions.BookDefinitionException;
+import com.BibleQuote.domain.exceptions.BooksDefinitionException;
 import com.BibleQuote.domain.exceptions.DataAccessException;
 import com.BibleQuote.domain.exceptions.OpenModuleException;
 
@@ -58,10 +59,42 @@ public final class FsUtils {
 		throw new InstantiationException("This class is not for instantiation");
 	}
 
-	public static BufferedReader getTextFileReaderFromZipArchive(String archivePath, String textFileInArchive,
-																 String textFileEncoding) throws DataAccessException {
-		File zipFile = new File(archivePath);
-		try {
+    public static InputStream getStreamFromZip(String path, String fileName) {
+        try {
+            FileInputStream fis = new FileInputStream(new File(path));
+            ZipInputStream zis = new ZipInputStream(fis);
+            ZipEntry entry;
+            while ((entry = zis.getNextEntry()) != null) {
+                String entryName = entry.getName();
+                if (entryName.contains(File.separator)) {
+                    entryName = entryName.substring(entryName.lastIndexOf(File.separator) + 1);
+                }
+                if (entryName.equalsIgnoreCase(fileName)) {
+                    return zis;
+                }
+            }
+        } catch (IOException e) {
+            String message = String.format("File %1$s in zip-arhive %2$s not found", fileName, path);
+            Log.e(TAG, message);
+        }
+        return null;
+    }
+
+    public static InputStream getStream(String path, String fileName) {
+        File streamFile = new File(path, fileName);
+        try {
+            return new FileInputStream(streamFile);
+        } catch (IOException e) {
+            String message = String.format("File %s/%s not found", path, fileName);
+            Log.e(TAG, message);
+        }
+        return null;
+    }
+
+    public static BufferedReader getTextFileReaderFromZipArchive(String archivePath, String searchFileName,
+                                                                 String encoding) throws DataAccessException {
+        File zipFile = new File(archivePath);
+        try {
 			InputStream moduleStream = new FileInputStream(zipFile);
 			ZipInputStream zStream = new ZipInputStream(moduleStream);
 			ZipEntry entry;
@@ -70,46 +103,45 @@ public final class FsUtils {
 				if (entryName.contains(File.separator)) {
 					entryName = entryName.substring(entryName.lastIndexOf(File.separator) + 1);
 				}
-				String fileName = textFileInArchive.toLowerCase();
-				if (entryName.equals(fileName)) {
-					InputStreamReader iReader = new InputStreamReader(zStream, textFileEncoding);
-					return new BufferedReader(iReader);
-				}
+                if (entryName.equalsIgnoreCase(searchFileName)) {
+                    InputStreamReader iReader = new InputStreamReader(zStream, encoding);
+                    return new BufferedReader(iReader);
+                }
 			}
-			String message = String.format("File %1$s in zip-arhive %2$s not found", textFileInArchive, archivePath);
-			Log.e(TAG, message);
-			throw new DataAccessException(message);
+            String message = String.format("File %1$s in zip-arhive %2$s not found", searchFileName, archivePath);
+            Log.e(TAG, message);
+            throw new DataAccessException(message);
 		} catch (UTFDataFormatException e) {
 			String message = String.format("Archive %1$s contains the file names not in the UTF format", zipFile.getName());
 			Log.e(TAG, message);
 			throw new DataAccessException(message);
 		} catch (FileNotFoundException e) {
-			String message = String.format("File %1$s in zip-arhive %2$s not found", textFileInArchive, archivePath);
-			throw new DataAccessException(message);
-		} catch (IOException e) {
+            String message = String.format("File %1$s in zip-arhive %2$s not found", searchFileName, archivePath);
+            throw new DataAccessException(message);
+        } catch (IOException e) {
 			Log.e(TAG,
 					String.format("getTextFileReaderFromZipArchive(%1$s, %2$s, %3$s)",
-							archivePath, textFileInArchive, textFileEncoding), e);
-			throw new DataAccessException(e);
-		}
+                            archivePath, searchFileName, encoding), e);
+            throw new DataAccessException(e);
+        }
 	}
 
-	public static BufferedReader getTextFileReader(String dir, String textfileName, String textFileEncoding) throws DataAccessException {
-		BufferedReader bReader;
-		try {
-			File file = new File(dir, textfileName);
-			bReader = FsUtils.OpenFile(file, textFileEncoding);
-			if (bReader == null) {
-				throw new DataAccessException(String.format("File %1$s not exists", textfileName));
-			}
-		} catch (Exception e) {
+    public static BufferedReader getTextFileReader(String dir, String fileName, String textFileEncoding) throws DataAccessException {
+        BufferedReader bReader;
+        try {
+            File file = new File(dir, fileName);
+            bReader = FsUtils.openFile(file, textFileEncoding);
+            if (bReader == null) {
+                throw new DataAccessException(String.format("File %1$s not exists", fileName));
+            }
+        } catch (Exception e) {
 			throw new DataAccessException(e);
 		}
 		return bReader;
 	}
 
-	public static void SearchByFilter(File currentFile, ArrayList<String> resultFiles, FileFilter filter)
-			throws IOException {
+    public static void searchByFilter(File currentFile, ArrayList<String> resultFiles, FileFilter filter)
+            throws IOException {
 
 		try {
 			File[] files = currentFile.listFiles(filter);
@@ -118,9 +150,9 @@ public final class FsUtils {
 			}
 			for (File file : files) {
 				if (file.isDirectory()) {
-					SearchByFilter(file, resultFiles, filter);
-				} else if (file.canRead()) {
-					resultFiles.add(file.getAbsolutePath());
+                    searchByFilter(file, resultFiles, filter);
+                } else if (file.canRead()) {
+                    resultFiles.add(file.getAbsolutePath());
 				}
 			}
 		} catch (Exception e) {
@@ -163,8 +195,8 @@ public final class FsUtils {
 //		return true;
 //	}
 
-	public static BufferedReader OpenFile(File file, String encoding) {
-		Log.i(TAG, "FileUtilities.OpenFile(" + file + ", " + encoding + ")");
+    public static BufferedReader openFile(File file, String encoding) {
+        Log.i(TAG, "FileUtilities.OpenFile(" + file + ", " + encoding + ")");
 
 		if (!file.exists()) {
 			return null;
@@ -206,9 +238,9 @@ public final class FsUtils {
 		}
 	}
 
-	public static void addModuleFromFile(Context context, String path) throws OpenModuleException, DataAccessException {
-		File source = new File(path);
-		Resources resources = context.getResources();
+    public static void addModuleFromFile(Context context, String path) throws OpenModuleException, DataAccessException, BooksDefinitionException, BookDefinitionException {
+        File source = new File(path);
+        Resources resources = context.getResources();
 		if (!source.exists()) {
 			throw new DataAccessException(resources.getString(R.string.file_not_exist));
 		} else if (!source.canRead()) {
@@ -223,6 +255,6 @@ public final class FsUtils {
 			throw new DataAccessException(resources.getString(R.string.file_not_moved));
 		}
 
-		FsLibraryController.getInstance(context).getModuleCtrl().loadModule(target.getAbsolutePath());
-	}
+        BibleQuoteApp.getInstance().getLibraryController().loadModule(target.getAbsolutePath());
+    }
 }

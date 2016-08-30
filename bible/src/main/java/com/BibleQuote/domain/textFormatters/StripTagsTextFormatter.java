@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2011 Scripture Software
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,28 +18,43 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * --------------------------------------------------
- *
  * Project: BibleQuote-for-Android
- * File: ICacheModuleController.java
+ * File: StripTagsTextFormatter.java
  *
  * Created by Vladimir Yakushev at 8/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
- *
  */
 
-package com.BibleQuote.domain.controllers;
-
-import java.util.ArrayList;
+package com.BibleQuote.domain.textFormatters;
 
 /**
- *
+ * @author Vladimir Yakushev
+ * @version 1.0 of 11.2015
  */
-public interface ICacheModuleController<TModule> {
-    ArrayList<TModule> getModuleList();
+public class StripTagsTextFormatter implements ITextFormatter {
 
-    boolean isCacheExist();
+    private String pattern;
 
-    void saveModuleList(ArrayList<TModule> moduleList);
+    public StripTagsTextFormatter() {
+        this.pattern = getPattern("<(.)+?>");
+    }
+
+    public StripTagsTextFormatter(String pattern) {
+        this.pattern = getPattern(pattern);
+    }
+
+    @Override
+    public String format(String text) {
+        return text.replaceAll(pattern, "");
+    }
+
+    private String getPattern(String pattern) {
+        return "(" +
+                "(<script(.)+?</script>)|" +
+                "(<style(.)+?</style>)|" +
+                "(<img src=\"http(.)+?>)|" +
+                "(" + pattern + ")" +
+                ")";
+    }
 }

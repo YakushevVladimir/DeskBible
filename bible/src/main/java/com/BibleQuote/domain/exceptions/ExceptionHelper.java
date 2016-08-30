@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2011 Scripture Software
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,15 +18,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * --------------------------------------------------
- *
  * Project: BibleQuote-for-Android
  * File: ExceptionHelper.java
  *
  * Created by Vladimir Yakushev at 8/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
- *
  */
 
 package com.BibleQuote.domain.exceptions;
@@ -87,8 +86,7 @@ public final class ExceptionHelper {
     public static void onBookDefinitionException(BookDefinitionException ex, Context context, String tag) {
         String message = String.format(
                 context.getResources().getString(R.string.exception_book_definition),
-                ex.getBookNumber(), ex.getModuleDatasourceID(),
-                ex.getPathName(), ex.getFullName(), ex.getShortName(), ex.getChapterQty());
+                ex.getBookNumber(), ex.getModuleDatasourceID());
         Log.e(tag, message);
         new NotifyDialog(message, context).show();
     }

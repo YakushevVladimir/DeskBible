@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2011 Scripture Software
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,32 +19,37 @@
  * under the License.
  *
  * Project: BibleQuote-for-Android
- * File: ILibraryUnitOfWork.java
+ * File: BreakVerseBibleShareFormatter.java
  *
  * Created by Vladimir Yakushev at 8/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
- *
- *
  */
 
-package com.BibleQuote.domain.repository;
+package com.BibleQuote.domain.textFormatters;
 
-import com.BibleQuote.domain.LibraryContext;
-import com.BibleQuote.domain.controllers.ICacheModuleController;
-import com.BibleQuote.domain.entity.Book;
-import com.BibleQuote.domain.entity.Module;
-import com.BibleQuote.domain.repository.old.IModuleRepository;
+import java.util.LinkedHashMap;
 
-public interface ILibraryUnitOfWork<S extends String, M extends Module, B extends Book> {
+public class BreakVerseBibleShareFormatter implements IShareTextFormatter {
+	private LinkedHashMap<Integer, String> verses;
 
-    IModuleRepository<M> getModuleRepository();
+	public BreakVerseBibleShareFormatter(LinkedHashMap<Integer, String> verses) {
+		this.verses = verses;
+	}
 
-    IBookRepository<M, B> getBookRepository();
+	@Override
+	public String format() {
+		StringBuilder shareText = new StringBuilder();
 
-    IChapterRepository<B> getChapterRepository();
+		for (Integer verseNumber : verses.keySet()) {
+			if (shareText.length() != 0) {
+				shareText.append(" ");
+			}
+			shareText.append(String.format("%1$s %2$s", verseNumber,
+					verses.get(verseNumber))).append("\r\n");
+		}
 
-    LibraryContext getLibraryContext();
+		return shareText.toString();
+	}
 
-    ICacheModuleController<M> getCacheModuleController();
 }

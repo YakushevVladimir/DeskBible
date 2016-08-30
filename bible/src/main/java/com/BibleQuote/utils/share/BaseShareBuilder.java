@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2011 Scripture Software
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,15 +18,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * --------------------------------------------------
- *
  * Project: BibleQuote-for-Android
  * File: BaseShareBuilder.java
  *
  * Created by Vladimir Yakushev at 8/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
- *
  */
 
 package com.BibleQuote.utils.share;
@@ -34,14 +33,14 @@ import android.content.Context;
 import com.BibleQuote.domain.entity.Book;
 import com.BibleQuote.domain.entity.Chapter;
 import com.BibleQuote.domain.entity.Module;
+import com.BibleQuote.domain.textFormatters.BreakVerseBibleShareFormatter;
+import com.BibleQuote.domain.textFormatters.IShareTextFormatter;
+import com.BibleQuote.domain.textFormatters.SimpleBibleShareFormatter;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.bibleReferenceFormatter.EmptyReferenceFormatter;
 import com.BibleQuote.utils.bibleReferenceFormatter.FullReferenceFormatter;
 import com.BibleQuote.utils.bibleReferenceFormatter.IBibleReferenceFormatter;
 import com.BibleQuote.utils.bibleReferenceFormatter.ShortReferenceFormatter;
-import com.BibleQuote.utils.textFormatters.BreakVerseBibleShareFormatter;
-import com.BibleQuote.utils.textFormatters.IShareTextFormatter;
-import com.BibleQuote.utils.textFormatters.SimpleBibleShareFormatter;
 
 import java.util.LinkedHashMap;
 import java.util.TreeSet;

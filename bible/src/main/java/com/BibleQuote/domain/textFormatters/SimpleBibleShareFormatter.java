@@ -19,31 +19,44 @@
  * under the License.
  *
  * Project: BibleQuote-for-Android
- * File: IReaderViewListener.java
+ * File: SimpleBibleShareFormatter.java
  *
  * Created by Vladimir Yakushev at 8/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
 
-package com.BibleQuote.listeners;
+package com.BibleQuote.domain.textFormatters;
 
-public interface IReaderViewListener {
-	enum ChangeCode {
-		onUpdateText,
-		onChangeSelection,
-		onLongPress,
-		onScroll,
-		onSwipeLeft,
-		onSwipeRight,
-		onChangeReaderMode,
-		onUpNavigation,
-		onDownNavigation,
-		onLeftNavigation,
-		onRightNavigation
+import java.util.LinkedHashMap;
+
+public class SimpleBibleShareFormatter implements IShareTextFormatter {
+	private LinkedHashMap<Integer, String> verses;
+
+	public SimpleBibleShareFormatter(LinkedHashMap<Integer, String> verses) {
+		this.verses = verses;
 	}
 
-	void onReaderViewChange(ChangeCode code);
+	@Override
+	public String format() {
+		StringBuilder shareText = new StringBuilder();
 
-    void onReaderClickImage(String path);
+		Integer prevVerseNumber = 0;
+		for (Integer verseNumber : verses.keySet()) {
+			if (prevVerseNumber == 0) {
+				prevVerseNumber = verseNumber;
+			}
+
+			if (verseNumber - prevVerseNumber > 1) {
+				shareText.append(" ... ");
+			} else if (shareText.length() != 0) {
+				shareText.append(" ");
+			}
+			shareText.append(verses.get(verseNumber).trim());
+			prevVerseNumber = verseNumber;
+		}
+
+		return shareText.toString();
+	}
+
 }

@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2011 Scripture Software
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,20 +18,16 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * --------------------------------------------------
- *
  * Project: BibleQuote-for-Android
  * File: Injector.java
  *
  * Created by Vladimir Yakushev at 8/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
- *
  */
 
 package com.BibleQuote.managers;
 
-import com.BibleQuote.dal.FsLibraryContext;
 import com.BibleQuote.dal.repository.BQModuleRepository;
 import com.BibleQuote.domain.controllers.modules.BQModuleController;
 import com.BibleQuote.domain.controllers.modules.IModuleController;
@@ -40,9 +38,10 @@ import com.BibleQuote.entity.modules.BQModule;
  *
  */
 public final class Injector {
-    public static IModuleController getModuleController(FsLibraryContext libraryContext, Module module) {
+
+    public static IModuleController getModuleController(Module module) {
         if (module instanceof BQModule) {
-            return new BQModuleController((BQModule) module, new BQModuleRepository(libraryContext));
+            return new BQModuleController((BQModule) module, new BQModuleRepository());
         }
         return null;
     }

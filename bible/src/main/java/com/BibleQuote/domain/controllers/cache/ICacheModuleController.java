@@ -19,31 +19,24 @@
  * under the License.
  *
  * Project: BibleQuote-for-Android
- * File: IReaderViewListener.java
+ * File: ICacheModuleController.java
  *
  * Created by Vladimir Yakushev at 8/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
 
-package com.BibleQuote.listeners;
+package com.BibleQuote.domain.controllers.cache;
 
-public interface IReaderViewListener {
-	enum ChangeCode {
-		onUpdateText,
-		onChangeSelection,
-		onLongPress,
-		onScroll,
-		onSwipeLeft,
-		onSwipeRight,
-		onChangeReaderMode,
-		onUpNavigation,
-		onDownNavigation,
-		onLeftNavigation,
-		onRightNavigation
-	}
+import com.BibleQuote.domain.entity.ModuleList;
 
-	void onReaderViewChange(ChangeCode code);
+/**
+ *
+ */
+public interface ICacheModuleController {
+    ModuleList getModuleList();
 
-    void onReaderClickImage(String path);
+    boolean isCacheExist();
+
+    void saveModuleList(ModuleList moduleList);
 }

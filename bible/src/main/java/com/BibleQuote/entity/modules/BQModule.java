@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2011 Scripture Software
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,15 +18,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * --------------------------------------------------
- *
  * Project: BibleQuote-for-Android
  * File: BQModule.java
  *
  * Created by Vladimir Yakushev at 8/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
- *
  */
 package com.BibleQuote.entity.modules;
 
@@ -38,17 +37,14 @@ import java.io.File;
 public class BQModule extends Module {
 
 	private static final long serialVersionUID = -660821372799486761L;
-
 	/**
 	 * modulePath is a directory path or an archive path with a name
 	 */
 	public final String modulePath;
-
 	/**
 	 * Имя ini-файла (раскладка в названии файла может быть произвольной)
 	 */
 	public final String iniFileName;
-
 	private final Boolean isArchive;
 
 	public BQModule(String iniFilePath) {
@@ -57,8 +53,8 @@ public class BQModule extends Module {
 		isArchive = modulePath.toLowerCase().endsWith(".zip");
 	}
 
-	public Boolean isArchive() {
-		return isArchive;
+	public String getModulePath() {
+		return modulePath;
 	}
 
 	@Override
@@ -68,7 +64,11 @@ public class BQModule extends Module {
 
 	@Override
 	public String getID() {
-		return shortName.toUpperCase();
+		return getShortName().toUpperCase();
+	}
+
+	public Boolean isArchive() {
+		return isArchive;
 	}
 
 }

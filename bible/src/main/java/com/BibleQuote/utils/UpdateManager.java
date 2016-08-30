@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2011 Scripture Software
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,15 +18,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * --------------------------------------------------
- *
  * Project: BibleQuote-for-Android
  * File: UpdateManager.java
  *
  * Created by Vladimir Yakushev at 8/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
- *
  */
 
 package com.BibleQuote.utils;
@@ -37,11 +36,13 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.util.Xml.Encoding;
 
+import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
 import com.BibleQuote.dal.repository.bookmarks.dbBookmarksRepository;
 import com.BibleQuote.dal.repository.bookmarks.dbBookmarksTagsRepository;
 import com.BibleQuote.dal.repository.bookmarks.dbTagRepository;
 import com.BibleQuote.dal.repository.bookmarks.prefBookmarksRepository;
+import com.BibleQuote.domain.controllers.ILibraryController;
 import com.BibleQuote.domain.entity.Bookmark;
 import com.BibleQuote.managers.bookmarks.BookmarksManager;
 
@@ -67,7 +68,7 @@ public final class UpdateManager {
 		throw new InstantiationException("This class is not for instantiation");
 	}
 
-	static public void Init(Context context) {
+	static public void init(Context context) {
 
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
 
@@ -84,7 +85,7 @@ public final class UpdateManager {
 		int currVersionCode = settings.getInt("versionCode", 0);
 
 		boolean updateModules = false;
-		if (currVersionCode == 0 && Environment.MEDIA_MOUNTED.equals(state)) {
+		if (currVersionCode < 53 && Environment.MEDIA_MOUNTED.equals(state)) {
 			updateModules = true;
 		}
 
@@ -93,14 +94,15 @@ public final class UpdateManager {
 			saveTSK(context);
 		}
 
-		if (currVersionCode < 53) {
-			updateModules = true;
-		}
-
 		if (currVersionCode < 59) {
 			convertBookmarks_59();
 		} else if (currVersionCode < 63) {
 			convertBookmarks_63();
+		}
+
+		if (currVersionCode < 76) {
+			ILibraryController libraryController = BibleQuoteApp.getInstance().getLibraryController();
+			libraryController.loadModules();
 		}
 
 		if (updateModules) {

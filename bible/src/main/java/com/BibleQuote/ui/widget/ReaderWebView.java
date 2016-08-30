@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2011 Scripture Software
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -22,16 +24,14 @@
  * Created by Vladimir Yakushev at 8/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
- *
- *
  */
 package com.BibleQuote.ui.widget;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.os.Build;
 import android.os.Handler;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -42,6 +42,10 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.BibleQuote.domain.entity.Chapter;
+import com.BibleQuote.domain.entity.Verse;
+import com.BibleQuote.domain.textFormatters.ITextFormatter;
+import com.BibleQuote.domain.textFormatters.ModuleTextFormatter;
 import com.BibleQuote.listeners.IReaderViewListener;
 import com.BibleQuote.utils.PreferenceHelper;
 
@@ -54,7 +58,7 @@ public class ReaderWebView extends WebView
 
     public static final int MIN_SWIPE_VELOCITY = 2000;
     public static final int MIN_SWIPE_X = 100;
-    public static final int MIN_SWIPE_Y = 100;
+    public static final int MAX_SWIPE_Y = 200;
 
 	private static final String TAG = "ReaderWebView";
 
@@ -71,6 +75,9 @@ public class ReaderWebView extends WebView
     private String content;
     private int currVerse;
     private boolean isBible;
+    private int minSwipeX = MIN_SWIPE_X;
+    private int maxSwipeY = MAX_SWIPE_Y;
+    private int minVelocity = MIN_SWIPE_VELOCITY;
 
 	@SuppressLint("AddJavascriptInterface")
 	public ReaderWebView(Context mContext, AttributeSet attributeSet) {
@@ -97,9 +104,38 @@ public class ReaderWebView extends WebView
 		mGestureScanner.setOnDoubleTapListener(this);
 	}
 
-	public TreeSet<Integer> getSelectedVerses() {
-		return this.selectedVerse;
-	}
+    public Mode getMode() {
+        return currMode;
+    }
+
+    public TreeSet<Integer> getSelectedVerses() {
+        return this.selectedVerse;
+    }
+
+    public boolean isScrollToBottom() {
+        int scrollY = getScrollY();
+        int scrollExtent = computeVerticalScrollExtent();
+        int scrollPos = scrollY + scrollExtent;
+        return (scrollPos >= (computeVerticalScrollRange() - 10));
+    }
+
+    public void setMode(Mode mode) {
+        currMode = mode;
+        if (currMode != Mode.Study) {
+            clearSelectedVerse();
+        }
+        notifyListeners(IReaderViewListener.ChangeCode.onChangeReaderMode);
+    }
+
+    public void setNightMode(boolean isNightMode) {
+        this.isNightMode = isNightMode;
+    }
+
+    public void setOnReaderViewListener(IReaderViewListener listener) {
+        if (!listeners.contains(listener)) {
+            listeners.add(listener);
+        }
+    }
 
 	public void setSelectedVerse(TreeSet<Integer> selectedVerse) {
 		jsInterface.clearSelectedVerse();
@@ -109,30 +145,123 @@ public class ReaderWebView extends WebView
 		}
 	}
 
-	public void gotoVerse(int verse) {
-		jsInterface.gotoVerse(verse);
-	}
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        DisplayMetrics metrics = getContext().getResources().getDisplayMetrics();
+        minSwipeX = metrics.widthPixels / 2;
+        maxSwipeY = metrics.heightPixels / 4;
+        minVelocity = metrics.widthPixels * 2;
+    }
 
-	public Mode getMode() {
-		return currMode;
-	}
+    public void computeScroll() {
+        super.computeScroll();
+        if (mPageLoaded && isScrollToBottom()) {
+            notifyListeners(IReaderViewListener.ChangeCode.onScroll);
+        }
+    }
 
-	public void setMode(Mode mode) {
-		currMode = mode;
-		if (currMode != Mode.Study) {
-			clearSelectedVerse();
-		}
-		notifyListeners(IReaderViewListener.ChangeCode.onChangeReaderMode);
-	}
+    public boolean onTouchEvent(MotionEvent event) {
+        return mGestureScanner.onTouchEvent(event) || (event != null && super.onTouchEvent(event));
+    }
 
-	public void setOnReaderViewListener(IReaderViewListener listener) {
-		if (!listeners.contains(listener)) {
-			listeners.add(listener);
-		}
-	}
+    public boolean onSingleTapUp(MotionEvent event) {
+        return false;
+    }
 
-    public void setNightMode(boolean isNightMode) {
+    public boolean onSingleTapConfirmed(MotionEvent event) {
+        int x = (int) event.getX();
+        int y = (int) event.getY();
+        if (currMode == Mode.Study) {
+            float density = getContext().getResources().getDisplayMetrics().density;
+            x = (int) (x / density);
+            y = (int) (y / density);
+
+            loadUrl("javascript:handleClick(" + x + ", " + y + ");");
+            notifyListeners(IReaderViewListener.ChangeCode.onChangeSelection);
+        } else if (currMode == Mode.Read) {
+            int width = this.getWidth();
+            int height = this.getHeight();
+
+            if (((float) y / height) <= 0.33) {
+                notifyListeners(IReaderViewListener.ChangeCode.onUpNavigation);
+            } else if (((float) y / height) > 0.67) {
+                notifyListeners(IReaderViewListener.ChangeCode.onDownNavigation);
+            } else if (((float) x / width) <= 0.33) {
+                notifyListeners(IReaderViewListener.ChangeCode.onLeftNavigation);
+            } else if (((float) x / width) > 0.67) {
+                notifyListeners(IReaderViewListener.ChangeCode.onRightNavigation);
+            }
+        }
+        return false;
+    }
+
+    public boolean onDown(MotionEvent event) {
+        return false;
+    }
+
+    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+        float distX = e1.getX() - e2.getX();
+        float distY = e1.getY() - e2.getY();
+        if (Math.abs(distY) < maxSwipeY && Math.abs(distX) > minSwipeX
+                && Math.abs(velocityX) > minVelocity) {
+            if (distX < 0) {
+                notifyListeners(IReaderViewListener.ChangeCode.onLeftNavigation);
+            } else {
+                notifyListeners(IReaderViewListener.ChangeCode.onRightNavigation);
+            }
+            return true;
+        } else {
+            Log.d(TAG, String.format("distX: %f, distY: %f, velocityX: %f", distX, distY, velocityX));
+        }
+        return false;
+    }
+
+    public void onLongPress(MotionEvent event) {
+        notifyListeners(IReaderViewListener.ChangeCode.onLongPress);
+    }
+
+    public boolean onScroll(MotionEvent e1, MotionEvent e2,
+                            float distanceX, float distanceY) {
+        notifyListeners(IReaderViewListener.ChangeCode.onScroll);
+        return false;
+    }
+
+    public void onShowPress(MotionEvent event) {
+    }
+
+    public boolean onDoubleTap(MotionEvent event) {
+        if (currMode != Mode.Speak) {
+            setMode(currMode == Mode.Study ? Mode.Read : Mode.Study);
+        }
+        return false;
+    }
+
+    public boolean onDoubleTapEvent(MotionEvent event) {
+        return false;
+    }
+
+    public void clearSelectedVerse() {
+        if (selectedVerse.size() == 0) {
+            return;
+        }
+        jsInterface.clearSelectedVerse();
+        if (currMode == Mode.Study) {
+            notifyListeners(IReaderViewListener.ChangeCode.onChangeSelection);
+        }
+    }
+
+    public void gotoVerse(int verse) {
+        jsInterface.gotoVerse(verse);
+    }
+
+    public void setContent(String baseUrl, Chapter chapter, int currVerse, Boolean isNightMode, Boolean isBible) {
+        this.baseUrl = baseUrl;
+        this.content = getContent(chapter);
+        this.currVerse = currVerse;
         this.isNightMode = isNightMode;
+        this.isBible = isBible;
+        update();
     }
 
     public void update() {
@@ -161,44 +290,24 @@ public class ReaderWebView extends WebView
         jsInterface.clearSelectedVerse();
     }
 
-	private void notifyListeners(IReaderViewListener.ChangeCode code) {
-		for (IReaderViewListener listener : listeners) {
-			listener.onReaderViewChange(code);
-		}
-	}
+    private String getContent(Chapter chapter) {
+        if (chapter == null) {
+            return "";
+        }
 
-    public void setText(String baseUrl, String content, int currVerse, Boolean isNightMode, Boolean isBible) {
-        this.baseUrl = baseUrl;
-        this.content = content;
-        this.currVerse = currVerse;
-        this.isNightMode = isNightMode;
-        this.isBible = isBible;
-        update();
+        ITextFormatter formatter = new ModuleTextFormatter(chapter.getBook().getModule());
+        ArrayList<Verse> verses = chapter.getVerseList();
+        StringBuilder chapterHTML = new StringBuilder();
+        for (int verse = 1; verse <= verses.size(); verse++) {
+            String verseText = formatter.format(verses.get(verse - 1).getText());
+            chapterHTML.append("<div id=\"verse_").append(verse).append("\" class=\"verse\">")
+                    .append(verseText.replaceAll("<(/)*div(.*?)>", "<$1p$2>"))
+                    .append("</div>")
+                    .append("\r\n");
+        }
+
+        return chapterHTML.toString();
     }
-
-	public boolean isScrollToBottom() {
-		int scrollY = getScrollY();
-		int scrollExtent = computeVerticalScrollExtent();
-		int scrollPos = scrollY + scrollExtent;
-		return (scrollPos >= (computeVerticalScrollRange() - 10));
-	}
-
-	public void computeScroll() {
-		super.computeScroll();
-		if (mPageLoaded && isScrollToBottom()) {
-			notifyListeners(IReaderViewListener.ChangeCode.onScroll);
-		}
-	}
-
-	public void clearSelectedVerse() {
-		if (selectedVerse.size() == 0) {
-			return;
-		}
-		jsInterface.clearSelectedVerse();
-		if (currMode == Mode.Study) {
-			notifyListeners(IReaderViewListener.ChangeCode.onChangeSelection);
-		}
-	}
 
 	private String getStyle(Boolean nightMode) {
 		String textColor;
@@ -248,86 +357,16 @@ public class ReaderWebView extends WebView
 		return style.toString();
 	}
 
-	public boolean onTouchEvent(MotionEvent event) {
-		return mGestureScanner.onTouchEvent(event) || (event != null && super.onTouchEvent(event));
-	}
-
-	public boolean onSingleTapUp(MotionEvent event) {
-		return false;
-	}
-
-	public boolean onSingleTapConfirmed(MotionEvent event) {
-		int x = (int) event.getX();
-		int y = (int) event.getY();
-		if (currMode == Mode.Study) {
-			if (Build.VERSION.SDK_INT < 8) {
-				y += getScrollY();
-			}
-			float density = getContext().getResources().getDisplayMetrics().density;
-			x = (int) (x / density);
-			y = (int) (y / density);
-
-			loadUrl("javascript:handleClick(" + x + ", " + y + ");");
-			notifyListeners(IReaderViewListener.ChangeCode.onChangeSelection);
-		} else if (currMode == Mode.Read) {
-			int width = this.getWidth();
-			int height = this.getHeight();
-
-			if (((float) y / height) <= 0.33) {
-				notifyListeners(IReaderViewListener.ChangeCode.onUpNavigation);
-			} else if (((float) y / height) > 0.67) {
-				notifyListeners(IReaderViewListener.ChangeCode.onDownNavigation);
-			} else if (((float) x / width) <= 0.33) {
-				notifyListeners(IReaderViewListener.ChangeCode.onLeftNavigation);
-			} else if (((float) x / width) > 0.67) {
-				notifyListeners(IReaderViewListener.ChangeCode.onRightNavigation);
-			}
-		}
-		return false;
-	}
-
-	public boolean onDown(MotionEvent event) {
-		return false;
-	}
-
-	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-        float distX = e1.getX() - e2.getX();
-        float distY = e1.getY() - e2.getY();
-        if (Math.abs(distY) < MIN_SWIPE_Y && Math.abs(distX) > MIN_SWIPE_X
-                && Math.abs(velocityX) > MIN_SWIPE_VELOCITY) {
-            if (distX < 0) {
-                notifyListeners(IReaderViewListener.ChangeCode.onLeftNavigation);
-            } else {
-                notifyListeners(IReaderViewListener.ChangeCode.onRightNavigation);
-            }
-        } else {
-            Log.d(TAG, String.format("distX: %f, distY: %f, velocityX: %f", distX, distY, velocityX));
+    private void notifyListeners(IReaderViewListener.ChangeCode code) {
+        for (IReaderViewListener listener : listeners) {
+            listener.onReaderViewChange(code);
         }
-		return false;
-	}
+    }
 
-	public void onLongPress(MotionEvent event) {
-		notifyListeners(IReaderViewListener.ChangeCode.onLongPress);
-	}
-
-	public boolean onScroll(MotionEvent e1, MotionEvent e2,
-							float distanceX, float distanceY) {
-		notifyListeners(IReaderViewListener.ChangeCode.onScroll);
-		return false;
-	}
-
-	public void onShowPress(MotionEvent event) {
-	}
-
-	public boolean onDoubleTap(MotionEvent event) {
-		if (currMode != Mode.Speak) {
-			setMode(currMode == Mode.Study ? Mode.Read : Mode.Study);
-		}
-		return false;
-	}
-
-	public boolean onDoubleTapEvent(MotionEvent event) {
-		return false;
+    private void notifyListenersOnClickImage(String path) {
+        for (IReaderViewListener listener : listeners) {
+            listener.onReaderClickImage(path);
+        }
 	}
 
 	public enum Mode {
@@ -367,6 +406,10 @@ public class ReaderWebView extends WebView
 			clearSelectedVerse();
 		}
 
+        public void alert(final String message) {
+            Log.i(TAG, "JavaScriptInterface.alert()");
+        }
+
         @JavascriptInterface
 		public void clearSelectedVerse() {
             for (Integer verse : selectedVerse) {
@@ -374,6 +417,16 @@ public class ReaderWebView extends WebView
             }
 			selectedVerse.clear();
 		}
+
+        public void gotoVerse(int verse) {
+            loadUrl("javascript: gotoVerse(" + verse + ");");
+        }
+
+        @JavascriptInterface
+        public void onClickImage(String path) {
+            Log.d(TAG, "OnClickImage: " + path);
+            notifyListenersOnClickImage(path);
+        }
 
         @JavascriptInterface
         public void onClickVerse(String id) {
@@ -422,14 +475,6 @@ public class ReaderWebView extends WebView
                     loadUrl("javascript: selectVerse('verse_" + verse + "');");
                 }
             });
-		}
-
-		public void gotoVerse(int verse) {
-			loadUrl("javascript: gotoVerse(" + verse + ");");
-		}
-
-		public void alert(final String message) {
-			Log.i(TAG, "JavaScriptInterface.alert()");
 		}
 	}
 }

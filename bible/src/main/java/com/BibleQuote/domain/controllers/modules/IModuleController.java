@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2011 Scripture Software
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,19 +18,19 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * --------------------------------------------------
- *
  * Project: BibleQuote-for-Android
  * File: IModuleController.java
  *
  * Created by Vladimir Yakushev at 8/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
- *
  */
 
 package com.BibleQuote.domain.controllers.modules;
 
+import android.graphics.Bitmap;
+
+import com.BibleQuote.domain.entity.Book;
 import com.BibleQuote.domain.entity.Chapter;
 import com.BibleQuote.domain.exceptions.BookNotFoundException;
 
@@ -39,13 +41,20 @@ import java.util.Map;
  *
  */
 public interface IModuleController {
-    String getModuleId();
 
-    String getModuleName();
+    List<Book> getBooks();
 
-    Map<String, String> getBooks();
+    Bitmap getBitmap(String path);
 
-    Chapter getChapter(String book, int chapter) throws BookNotFoundException;
+    Book getBookByID(String bookId) throws BookNotFoundException;
+
+    Book getNextBook(String bookId) throws BookNotFoundException;
+
+    Book getPrevBook(String bookId) throws BookNotFoundException;
+
+    List<String> getChapterNumbers(String bookId) throws BookNotFoundException;
+
+    Chapter getChapter(String bookId, int chapter) throws BookNotFoundException;
 
     Map<String, String> search(List<String> bookList, String searchQuery);
 }

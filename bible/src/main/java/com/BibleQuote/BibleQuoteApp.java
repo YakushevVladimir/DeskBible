@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2011 Scripture Software
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,22 +18,23 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * --------------------------------------------------
- *
  * Project: BibleQuote-for-Android
  * File: BibleQuoteApp.java
  *
  * Created by Vladimir Yakushev at 8/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
- *
  */
 package com.BibleQuote;
 
 import android.app.Application;
 
 import com.BibleQuote.async.AsyncManager;
+import com.BibleQuote.dal.repository.XmlTskRepository;
 import com.BibleQuote.dal.repository.bookmarks.dbBookmarksRepository;
+import com.BibleQuote.domain.controllers.FsLibraryController;
+import com.BibleQuote.domain.controllers.ILibraryController;
+import com.BibleQuote.domain.controllers.TSKController;
 import com.BibleQuote.domain.repository.IBookmarksRepository;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.utils.Log;
@@ -47,6 +50,7 @@ public class BibleQuoteApp extends Application {
 
 	private Librarian myLibrarian;
 	private AsyncManager mAsyncManager;
+    private ILibraryController libraryController;
 
 	public static BibleQuoteApp getInstance() {
 		return instance;
@@ -59,19 +63,27 @@ public class BibleQuoteApp extends Application {
 	}
 
 	public void init() {
-		Log.i(TAG, "Init application preference helper...");
-		initPreferenceHelper();
-		Log.i(TAG, "Start update manager...");
-		UpdateManager.Init(this);
-		if (myLibrarian == null) {
-			Log.i(TAG, "Init library...");
+        Log.init();
+        Log.i(TAG, "Init application preference helper...");
+        initPreferenceHelper();
+        Log.i(TAG, "Init library controller");
+        libraryController = FsLibraryController.getInstance(this);
+        libraryController.getModules();
+        Log.i(TAG, "Start update manager...");
+        UpdateManager.init(this);
+        if (myLibrarian == null) {
+            Log.i(TAG, "Init library...");
 			initLibrarian();
 		}
 	}
 
-	public Librarian getLibrarian() {
-		if (myLibrarian == null) {
-			// Сборщик мусора уничтожил ссылки на myLibrarian и на PreferenceHelper
+    public ILibraryController getLibraryController() {
+        return libraryController;
+    }
+
+    public Librarian getLibrarian() {
+        if (myLibrarian == null) {
+            // Сборщик мусора уничтожил ссылки на myLibrarian и на PreferenceHelper
 			// Восстановим ссылки
 			initPreferenceHelper();
 			initLibrarian();
@@ -95,8 +107,8 @@ public class BibleQuoteApp extends Application {
 	}
 
 	private void initLibrarian() {
-		myLibrarian = new Librarian(this);
-	}
+        myLibrarian = new Librarian(this, libraryController, new TSKController(new XmlTskRepository()));
+    }
 
 	public synchronized Tracker getTracker() {
 		GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);

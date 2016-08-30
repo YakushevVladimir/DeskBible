@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2011 Scripture Software
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -22,16 +24,19 @@
  * Created by Vladimir Yakushev at 8/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
- *
- *
  */
 
 package com.BibleQuote.domain.repository;
 
+import android.graphics.Bitmap;
+
 import com.BibleQuote.domain.entity.Chapter;
 import com.BibleQuote.domain.entity.Module;
+import com.BibleQuote.domain.exceptions.BookDefinitionException;
 import com.BibleQuote.domain.exceptions.BookNotFoundException;
+import com.BibleQuote.domain.exceptions.BooksDefinitionException;
 import com.BibleQuote.domain.exceptions.OpenModuleException;
+import com.BibleQuote.entity.modules.BQModule;
 
 import java.util.LinkedHashMap;
 
@@ -39,7 +44,9 @@ import java.util.LinkedHashMap;
  *
  */
 public interface IModuleRepository<D, T extends Module> {
-    T loadModule(D path) throws OpenModuleException;
+    Bitmap getBitmap(BQModule module, String path);
+
+    T loadModule(D path) throws OpenModuleException, BooksDefinitionException, BookDefinitionException;
 
     Chapter loadChapter(T module, String bookID, int chapter) throws BookNotFoundException;
 

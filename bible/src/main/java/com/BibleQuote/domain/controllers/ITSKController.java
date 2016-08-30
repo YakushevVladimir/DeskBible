@@ -19,31 +19,24 @@
  * under the License.
  *
  * Project: BibleQuote-for-Android
- * File: IReaderViewListener.java
+ * File: ITSKController.java
  *
  * Created by Vladimir Yakushev at 8/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
 
-package com.BibleQuote.listeners;
+package com.BibleQuote.domain.controllers;
 
-public interface IReaderViewListener {
-	enum ChangeCode {
-		onUpdateText,
-		onChangeSelection,
-		onLongPress,
-		onScroll,
-		onSwipeLeft,
-		onSwipeRight,
-		onChangeReaderMode,
-		onUpNavigation,
-		onDownNavigation,
-		onLeftNavigation,
-		onRightNavigation
-	}
+import com.BibleQuote.domain.entity.BibleReference;
+import com.BibleQuote.domain.exceptions.BQUniversalException;
+import com.BibleQuote.domain.exceptions.TskNotFoundException;
 
-	void onReaderViewChange(ChangeCode code);
+import java.util.Set;
 
-    void onReaderClickImage(String path);
+/**
+ *
+ */
+public interface ITSKController {
+    Set<BibleReference> getLinks(BibleReference reference) throws TskNotFoundException, BQUniversalException;
 }

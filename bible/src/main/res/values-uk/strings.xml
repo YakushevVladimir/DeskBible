@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
+  ~ Copyright (C) 2011 Scripture Software
+  ~
   ~ Licensed to the Apache Software Foundation (ASF) under one
   ~ or more contributor license agreements.  See the NOTICE file
   ~ distributed with this work for additional information
@@ -23,8 +25,6 @@
   ~ Created by Vladimir Yakushev at 8/2016
   ~ E-mail: ru.phoenix@gmail.com
   ~ WWW: http://www.scripturesoftware.org
-  ~
-  ~
   -->
 
 <resources>
@@ -90,7 +90,7 @@
     <string name="dialog_color_picker">Обрати колір</string>
     <string name="press_color_to_apply">Натисніть для застосування</string>
     <string name="references">Посилання</string>
-    <string name="exception_book_definition">Невірні параметри книги #%1$s в модулі %2$s: PathName=%3$s, FullName=%4$s, ShortName=%5$s, ChapterQty=%6$s</string>
+    <string name="exception_book_definition">Невірні параметри книги #%1$s в модулі %2$s</string>
     <string name="exception_book_not_found">Книгу %1$s не знайдено в модулі %2$s</string>
     <string name="exception_open_module">Невірний модуль %1$s(%2$s)</string>
     <string name="exception_open_module_short">Невірний модуль %s</string>

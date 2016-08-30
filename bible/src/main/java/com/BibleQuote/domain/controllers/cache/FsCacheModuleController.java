@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2011 Scripture Software
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,49 +18,42 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * --------------------------------------------------
- *
  * Project: BibleQuote-for-Android
  * File: FsCacheModuleController.java
  *
  * Created by Vladimir Yakushev at 8/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
- *
  */
 
-package com.BibleQuote.dal.controllers;
+package com.BibleQuote.domain.controllers.cache;
 
-import com.BibleQuote.dal.FsCacheContext;
-import com.BibleQuote.dal.repository.FsCacheRepository;
-import com.BibleQuote.dal.repository.ICacheRepository;
-import com.BibleQuote.domain.controllers.ICacheModuleController;
+import com.BibleQuote.domain.entity.ModuleList;
 import com.BibleQuote.domain.exceptions.DataAccessException;
+import com.BibleQuote.domain.repository.ICacheRepository;
 import com.BibleQuote.utils.Log;
 
-import java.util.ArrayList;
-
-public class FsCacheModuleController<TModule> implements ICacheModuleController<TModule> {
+public class FsCacheModuleController implements ICacheModuleController {
     private static final String TAG = "FsCacheRepository";
 
-    private ICacheRepository<ArrayList<TModule>> cacheRepository;
+    private ICacheRepository cacheRepository;
 
-    public FsCacheModuleController(FsCacheContext cacheContext) {
-        this.cacheRepository = getCacheRepository(cacheContext);
+    public FsCacheModuleController(ICacheRepository cacheRepository) {
+        this.cacheRepository = cacheRepository;
     }
 
     @Override
-    public ArrayList<TModule> getModuleList() {
+    public ModuleList getModuleList() {
         Log.i(TAG, "Get module list");
         try {
             return cacheRepository.getData();
         } catch (DataAccessException e) {
-            return new ArrayList<TModule>();
+            return new ModuleList();
         }
     }
 
     @Override
-    public void saveModuleList(ArrayList<TModule> moduleList) {
+    public void saveModuleList(ModuleList moduleList) {
         Log.i(TAG, "Save modules list to cache");
         try {
             cacheRepository.saveData(moduleList);
@@ -70,12 +65,5 @@ public class FsCacheModuleController<TModule> implements ICacheModuleController<
     @Override
     public boolean isCacheExist() {
         return cacheRepository.isCacheExist();
-    }
-
-    private ICacheRepository<ArrayList<TModule>> getCacheRepository(FsCacheContext cacheContext) {
-        if (this.cacheRepository == null) {
-            this.cacheRepository = new FsCacheRepository<ArrayList<TModule>>(cacheContext);
-        }
-        return cacheRepository;
     }
 }

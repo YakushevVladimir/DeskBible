@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2011 Scripture Software
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,15 +18,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * --------------------------------------------------
- *
  * Project: BibleQuote-for-Android
  * File: BookDefinitionException.java
  *
  * Created by Vladimir Yakushev at 8/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
- *
  */
 package com.BibleQuote.domain.exceptions;
 
@@ -33,20 +32,12 @@ public class BookDefinitionException extends Exception {
 	private static final long serialVersionUID = -1652902166548627455L;
 	private String moduleDatasourceID;
 	private int bookNumber;
-	private String pathName;
-	private String fullName;
-	private String shortName;
-	private Integer chapterQty;
 
 	public BookDefinitionException(String message,
-								   String moduleDatasourceID, int bookNumber, String pathName, String fullName, String shortName, Integer chapterQty) {
+								   String moduleDatasourceID, int bookNumber) {
 		super(message);
 		this.moduleDatasourceID = moduleDatasourceID;
 		this.bookNumber = bookNumber;
-		this.pathName = pathName;
-		this.fullName = fullName;
-		this.shortName = shortName;
-		this.chapterQty = chapterQty;
 	}
 
 	public BookDefinitionException(Exception parent) {
@@ -59,22 +50,6 @@ public class BookDefinitionException extends Exception {
 
 	public int getBookNumber() {
 		return bookNumber;
-	}
-
-	public String getPathName() {
-		return pathName;
-	}
-
-	public String getFullName() {
-		return fullName;
-	}
-
-	public String getShortName() {
-		return shortName;
-	}
-
-	public Integer getChapterQty() {
-		return chapterQty;
 	}
 
 }
