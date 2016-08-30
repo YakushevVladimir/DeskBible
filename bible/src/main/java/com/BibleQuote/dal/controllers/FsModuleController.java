@@ -16,14 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * --------------------------------------------------
- *
  * Project: BibleQuote-for-Android
  * File: FsModuleController.java
  *
  * Created by Vladimir Yakushev at 8/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
+ *
  *
  */
 
@@ -40,7 +39,7 @@ import java.util.Map;
 
 public class FsModuleController implements IModuleController {
 
-	private IModuleRepository<String, BQModule> mRepository;
+	private IModuleRepository<BQModule> mRepository;
 
 	public FsModuleController(FsLibraryUnitOfWork unit) {
 		mRepository = unit.getModuleRepository();

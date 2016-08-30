@@ -16,14 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * --------------------------------------------------
- *
  * Project: BibleQuote-for-Android
  * File: FsBookController.java
  *
  * Created by Vladimir Yakushev at 8/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
+ *
  *
  */
 
@@ -52,7 +51,7 @@ public class FsBookController implements IBookController {
 	private static final String TAG = "FsBookController";
 
 	private IBookRepository<BQModule, BQBook> bRepository;
-	private IModuleRepository<String, BQModule> mRepository;
+	private IModuleRepository<BQModule> mRepository;
 
 	public FsBookController(FsLibraryUnitOfWork unit) {
 		bRepository = unit.getBookRepository();

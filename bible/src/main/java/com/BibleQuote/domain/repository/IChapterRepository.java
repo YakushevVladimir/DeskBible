@@ -16,8 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * --------------------------------------------------
- *
  * Project: BibleQuote-for-Android
  * File: IChapterRepository.java
  *
@@ -25,24 +23,26 @@
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  *
+ *
  */
 
 package com.BibleQuote.domain.repository;
 
+import com.BibleQuote.domain.entity.Book;
 import com.BibleQuote.domain.entity.Chapter;
 import com.BibleQuote.domain.exceptions.BookNotFoundException;
 
 import java.util.Collection;
 
-public interface IChapterRepository<TBook> {
+public interface IChapterRepository<T extends Book> {
 
 	/*
 	 * Data source related methods
 	 * 
 	 */
-	Collection<Chapter> loadChapters(TBook book) throws BookNotFoundException;
+	Collection<Chapter> loadChapters(T book) throws BookNotFoundException;
 
-	Chapter loadChapter(TBook book, Integer chapterNumber) throws BookNotFoundException;
+	Chapter loadChapter(T book, Integer chapterNumber) throws BookNotFoundException;
 
 	void insertChapter(Chapter chapter);
 
@@ -54,8 +54,8 @@ public interface IChapterRepository<TBook> {
 	 * Internal cache related methods
 	 *
 	 */
-	Collection<Chapter> getChapters(TBook book);
+	Collection<Chapter> getChapters(T book);
 
-	Chapter getChapterByNumber(TBook book, Integer chapterNumber);
+	Chapter getChapterByNumber(T book, Integer chapterNumber);
 
 }

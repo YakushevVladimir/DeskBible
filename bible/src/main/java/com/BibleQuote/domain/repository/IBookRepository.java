@@ -16,8 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * --------------------------------------------------
- *
  * Project: BibleQuote-for-Android
  * File: IBookRepository.java
  *
@@ -25,10 +23,13 @@
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  *
+ *
  */
 
 package com.BibleQuote.domain.repository;
 
+import com.BibleQuote.domain.entity.Book;
+import com.BibleQuote.domain.entity.Module;
 import com.BibleQuote.domain.exceptions.BookDefinitionException;
 import com.BibleQuote.domain.exceptions.BookNotFoundException;
 import com.BibleQuote.domain.exceptions.BooksDefinitionException;
@@ -37,7 +38,7 @@ import com.BibleQuote.domain.exceptions.OpenModuleException;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 
-public interface IBookRepository<TModule, TBook> {
+public interface IBookRepository<M extends Module, B extends Book> {
 
 	/**
 	 * Загружает данные о книгах модуля из хранилища
@@ -45,7 +46,7 @@ public interface IBookRepository<TModule, TBook> {
 	 * @param module Модуль для которого необходимо произвести загрузку книг
 	 * @return Возвращает коллекцию Book
 	 */
-	Collection<TBook> loadBooks(TModule module) throws OpenModuleException, BooksDefinitionException, BookDefinitionException;
+	Collection<B> loadBooks(M module) throws OpenModuleException, BooksDefinitionException, BookDefinitionException;
 
 	/**
 	 * Читает из контекта биьблиотеки текущую кллекцию книг для указанного модуля
@@ -53,14 +54,14 @@ public interface IBookRepository<TModule, TBook> {
 	 * @param module модуль для которого необходимо получить список книг
 	 * @return полученную колекцию книг из контекста библиотеки
 	 */
-	Collection<TBook> getBooks(TModule module);
+	Collection<B> getBooks(M module);
 
 	/**
 	 * @param module модуль в котором производится поиск книги
 	 * @param bookID ID книги модуля
 	 * @return возвращает Book модуля по её ID или null
 	 */
-	TBook getBookByID(TModule module, String bookID);
+	B getBookByID(M module, String bookID);
 
 	/**
 	 * Производит поиск в указанной книге модуля поиск regQuery
@@ -72,6 +73,6 @@ public interface IBookRepository<TModule, TBook> {
 	 *         в которых была найдена фраза regQuery
 	 * @throws com.BibleQuote.domain.exceptions.BookNotFoundException книга с указанным ID отсутсвует в модуле
 	 */
-	LinkedHashMap<String, String> searchInBook(TModule module, String bookID, String regQuery) throws BookNotFoundException;
+	LinkedHashMap<String, String> searchInBook(M module, String bookID, String regQuery) throws BookNotFoundException;
 
 }

@@ -16,8 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * --------------------------------------------------
- *
  * Project: BibleQuote-for-Android
  * File: IModuleRepository.java
  *
@@ -25,11 +23,13 @@
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  *
+ *
  */
 
 package com.BibleQuote.domain.repository;
 
 import com.BibleQuote.domain.entity.Chapter;
+import com.BibleQuote.domain.entity.Module;
 import com.BibleQuote.domain.exceptions.BookNotFoundException;
 import com.BibleQuote.domain.exceptions.OpenModuleException;
 
@@ -38,10 +38,10 @@ import java.util.LinkedHashMap;
 /**
  *
  */
-public interface IModuleRepository<TModule> {
-    TModule loadModule(String path) throws OpenModuleException;
+public interface IModuleRepository<D, T extends Module> {
+    T loadModule(D path) throws OpenModuleException;
 
-    Chapter loadChapter(TModule module, String bookID, int chapter) throws BookNotFoundException;
+    Chapter loadChapter(T module, String bookID, int chapter) throws BookNotFoundException;
 
-    LinkedHashMap<String, String> searchInBook(TModule module, String bookID, String regQuery) throws BookNotFoundException;
+    LinkedHashMap<String, String> searchInBook(T module, String bookID, String regQuery) throws BookNotFoundException;
 }

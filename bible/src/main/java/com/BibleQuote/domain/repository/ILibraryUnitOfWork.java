@@ -16,8 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * --------------------------------------------------
- *
  * Project: BibleQuote-for-Android
  * File: ILibraryUnitOfWork.java
  *
@@ -25,23 +23,26 @@
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  *
+ *
  */
 
 package com.BibleQuote.domain.repository;
 
 import com.BibleQuote.domain.LibraryContext;
 import com.BibleQuote.domain.controllers.ICacheModuleController;
+import com.BibleQuote.domain.entity.Book;
+import com.BibleQuote.domain.entity.Module;
 import com.BibleQuote.domain.repository.old.IModuleRepository;
 
-public interface ILibraryUnitOfWork<TModuleId, TModule, TBook> {
+public interface ILibraryUnitOfWork<S extends String, M extends Module, B extends Book> {
 
-    IModuleRepository<TModuleId, TModule> getModuleRepository();
+    IModuleRepository<M> getModuleRepository();
 
-    IBookRepository<TModule, TBook> getBookRepository();
+    IBookRepository<M, B> getBookRepository();
 
-    IChapterRepository<TBook> getChapterRepository();
+    IChapterRepository<B> getChapterRepository();
 
     LibraryContext getLibraryContext();
 
-    ICacheModuleController<TModule> getCacheModuleController();
+    ICacheModuleController<M> getCacheModuleController();
 }

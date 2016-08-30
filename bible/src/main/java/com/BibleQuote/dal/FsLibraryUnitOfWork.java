@@ -16,14 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * --------------------------------------------------
- *
  * Project: BibleQuote-for-Android
  * File: FsLibraryUnitOfWork.java
  *
  * Created by Vladimir Yakushev at 8/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
+ *
  *
  */
 
@@ -44,7 +43,7 @@ import com.BibleQuote.entity.modules.BQModule;
 public class FsLibraryUnitOfWork implements ILibraryUnitOfWork<String, BQModule, BQBook> {
 
 	private FsLibraryContext libraryContext;
-	private IModuleRepository<String, BQModule> moduleRepository;
+	private IModuleRepository<BQModule> moduleRepository;
 	private IBookRepository<BQModule, BQBook> bookRepository;
 	private IChapterRepository<BQBook> chapterRepository;
 	private FsCacheModuleController<BQModule> cacheModuleController;
@@ -58,7 +57,7 @@ public class FsLibraryUnitOfWork implements ILibraryUnitOfWork<String, BQModule,
 		return this.libraryContext;
 	}
 
-	public IModuleRepository<String, BQModule> getModuleRepository() {
+	public IModuleRepository<BQModule> getModuleRepository() {
 		if (this.moduleRepository == null) {
 			this.moduleRepository = new FsModuleRepository(libraryContext);
 		}

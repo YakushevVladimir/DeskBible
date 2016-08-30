@@ -16,14 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * --------------------------------------------------
- *
  * Project: BibleQuote-for-Android
  * File: BQModuleRepository.java
  *
  * Created by Vladimir Yakushev at 8/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
+ *
  *
  */
 
@@ -53,7 +52,7 @@ import java.util.Map;
 /**
  *
  */
-public class BQModuleRepository implements IModuleRepository<BQModule> {
+public class BQModuleRepository implements IModuleRepository<String, BQModule> {
 
     public static final String TAG = BQModuleRepository.class.getSimpleName();
     public static final String INI_FILENAME = "bibleqt.ini";
@@ -67,19 +66,19 @@ public class BQModuleRepository implements IModuleRepository<BQModule> {
     }
 
     @Override
-    public BQModule loadModule(String dataSourceID) throws OpenModuleException {
-        if (dataSourceID.endsWith("zip")) {
-            dataSourceID = dataSourceID + File.separator + INI_FILENAME;
+    public BQModule loadModule(String path) throws OpenModuleException {
+        if (path.endsWith("zip")) {
+            path = path + File.separator + INI_FILENAME;
         }
 
         BQModule result = null;
         try {
-            result = new BQModule(dataSourceID);
+            result = new BQModule(path);
             result.defaultEncoding = context.getModuleEncoding(getModuleReader(result));
             context.fillModule(result, getModuleReader(result));
         } catch (DataAccessException e) {
-            Log.i(TAG, "!!!..Error open module from " + dataSourceID);
-            throw new OpenModuleException(dataSourceID, result.modulePath);
+            Log.i(TAG, "!!!..Error open module from " + path);
+            throw new OpenModuleException(path, result.modulePath);
         }
         return result;
     }

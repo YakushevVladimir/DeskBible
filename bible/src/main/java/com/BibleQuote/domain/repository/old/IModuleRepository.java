@@ -16,14 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * --------------------------------------------------
- *
  * Project: BibleQuote-for-Android
  * File: IModuleRepository.java
  *
  * Created by Vladimir Yakushev at 8/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
+ *
  *
  */
 
@@ -34,7 +33,7 @@ import com.BibleQuote.domain.exceptions.OpenModuleException;
 
 import java.util.Map;
 
-public interface IModuleRepository<TModuleId, TModule> {
+public interface IModuleRepository<T extends Module> {
 
 	/**
 	 * Загрузка списка модулей из хранилища без чтения данных.
@@ -43,11 +42,11 @@ public interface IModuleRepository<TModuleId, TModule> {
 	 */
 	Map<String, Module> loadFileModules();
 
-	void insertModule(TModule module);
+	void insertModule(T module);
 
 	void deleteModule(String moduleID);
 
-	void updateModule(TModule module);
+	void updateModule(T module);
 
 	void loadModule(String path) throws OpenModuleException;
 
@@ -60,6 +59,6 @@ public interface IModuleRepository<TModuleId, TModule> {
 	 * @param moduleID - ShortName модуля
 	 * @return Возвращает модуль из коллекции по его ShortName
 	 */
-	TModule getModuleByID(String moduleID);
+	T getModuleByID(String moduleID);
 
 }
