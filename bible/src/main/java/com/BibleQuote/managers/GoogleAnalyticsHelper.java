@@ -38,7 +38,7 @@ import com.google.android.gms.analytics.HitBuilders;
  * @author Vladimir Yakushev
  * @version 1.0
  */
-public class GoogleAnalyticsHelper {
+public final class GoogleAnalyticsHelper {
     private final static String CAATEGORY_BOOKMARKS = "bookmarks";
     private static final String CATEGORY_MODULES = "modules";
     private static final String CATEGORY_SEARCH = "search";

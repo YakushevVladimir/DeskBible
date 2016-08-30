@@ -8,7 +8,7 @@ import android.util.TypedValue;
  * @author Vladimir Yakushev
  * @version 1.0 of 03.2016
  */
-public class DrawingUtils {
+public final class DrawingUtils {
 
     private DrawingUtils() throws InstantiationException {
         throw new InstantiationException("This class is not for instantiation");

@@ -77,7 +77,7 @@ public final class SelectTextHandler implements ActionMode.Callback {
     @Override
     public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
         TreeSet<Integer> selVerses = webView.getSelectedVerses();
-        if (selVerses.size() == 0) {
+        if (selVerses.isEmpty()) {
             return true;
         }
 

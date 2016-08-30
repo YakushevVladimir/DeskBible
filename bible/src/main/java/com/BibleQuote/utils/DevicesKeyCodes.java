@@ -2,7 +2,7 @@ package com.BibleQuote.utils;
 
 import android.view.KeyEvent;
 
-public class DevicesKeyCodes {
+public final class DevicesKeyCodes {
 
 	// additional key codes for Nook
 	public static final int NOOK_KEY_PREV_LEFT = 96;

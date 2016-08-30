@@ -20,8 +20,8 @@ public class ItemAdapter extends BaseAdapter {
 	private static final int DEFAULT_MAX_VIEW_TYPE_COUNT = 10;
 
 	private static class TypeInfo {
-		int count;
-		int type;
+		private int count;
+		private int type;
 	}
 
 	private List<Item> mItems;

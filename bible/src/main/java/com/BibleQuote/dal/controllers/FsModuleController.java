@@ -54,7 +54,7 @@ public class FsModuleController implements IModuleController {
 	@Override
 	public Map<String, Module> getModules() {
 		Map<String, Module> result = mRepository.getModules();
-		if (result.size() == 0) {
+		if (result.isEmpty()) {
 			return loadFileModules();
 		} else {
 			return result;

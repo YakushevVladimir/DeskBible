@@ -91,8 +91,8 @@ public class BibleReference {
                 this.chapterNumber = 1;
                 this.fromVerse = 1;
                 try {
-                    this.chapterNumber = (linkParam.length >= 3 ? Integer.parseInt(linkParam[2]) : 1);
-                    this.fromVerse = (linkParam.length >= 4 ? Integer.parseInt(linkParam[3]) : 1);
+                    this.chapterNumber = linkParam.length >= 3 ? Integer.parseInt(linkParam[2]) : 1;
+                    this.fromVerse = linkParam.length >= 4 ? Integer.parseInt(linkParam[3]) : 1;
                     this.toVerse = fromVerse;
                 } catch (NumberFormatException e) {
                     e.printStackTrace();

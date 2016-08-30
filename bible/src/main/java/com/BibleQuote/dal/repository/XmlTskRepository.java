@@ -50,12 +50,12 @@ import java.io.UnsupportedEncodingException;
 
 public class XmlTskRepository implements ITskRepository {
 
-	final static String TAG = "XmlTskRepository";
+	private static final String TAG = "XmlTskRepository";
 
-	final static String DOCUMENT = "tsk";
-	final static String BOOK = "book";
-	final static String CHAPTER = "chapter";
-	final static String VERSE = "verse";
+	private static final String DOCUMENT = "tsk";
+	private static final String BOOK = "book";
+	private static final String CHAPTER = "chapter";
+	private static final String VERSE = "verse";
 
 	@Override
 	public String getReferences(String book, String chapter, String verse) throws TskNotFoundException, BQUniversalException {

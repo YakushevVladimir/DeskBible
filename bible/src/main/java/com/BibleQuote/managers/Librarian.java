@@ -417,7 +417,7 @@ public class Librarian {
 			return "file:///url_initial_load";
 		}
 		String dataSourceID = getCurrModule().getDataSourceID();
-		int pos = dataSourceID.lastIndexOf("/");
+		int pos = dataSourceID.lastIndexOf('/');
 		if (++pos <= dataSourceID.length()) {
 			return dataSourceID.substring(0, pos);
 		} else {

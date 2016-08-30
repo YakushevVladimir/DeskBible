@@ -85,35 +85,35 @@ public final class LinkConverter {
 
 	public static String getHumanToOSIS(String humanLink) {
 		// Получим имя модуля
-		int position = humanLink.indexOf(":");
+		int position = humanLink.indexOf(':');
 		if (position == -1) {
 			return "";
 		}
 		String linkOSIS = humanLink.substring(0, position).trim();
 		humanLink = humanLink.substring(position + 1).trim();
-		if (humanLink.length() == 0) {
+		if (humanLink.isEmpty()) {
 			return "";
 		}
 
 		// Получим имя книги
-		position = humanLink.indexOf(" ");
+		position = humanLink.indexOf(' ');
 		if (position == -1) {
 			return "";
 		}
 		linkOSIS += "." + BibleBooksID.getID(humanLink.substring(0, position).trim());
 		humanLink = humanLink.substring(position).trim();
-		if (humanLink.length() == 0) {
+		if (humanLink.isEmpty()) {
 			return linkOSIS + ".1";
 		}
 
 		// Получим номер главы
-		position = humanLink.indexOf(":");
+		position = humanLink.indexOf(':');
 		if (position == -1) {
 			return "";
 		}
 		linkOSIS += "." + humanLink.substring(0, position).trim().replaceAll("\\D", "");
 		humanLink = humanLink.substring(position).trim().replaceAll("\\D", "");
-		if (humanLink.length() == 0) {
+		if (humanLink.isEmpty()) {
 			return linkOSIS;
 		} else {
 			// Оставшийся кусок - номер стиха

@@ -18,8 +18,7 @@ public class BreakVerseBibleShareFormatter implements IShareTextFormatter {
 				shareText.append(" ");
 			}
 			shareText.append(String.format("%1$s %2$s", verseNumber,
-					verses.get(verseNumber))
-					+ "\r\n");
+					verses.get(verseNumber))).append("\r\n");
 		}
 
 		return shareText.toString();

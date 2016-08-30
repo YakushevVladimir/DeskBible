@@ -33,7 +33,7 @@ import android.os.Environment;
 
 import java.io.File;
 
-public class DataConstants {
+public final class DataConstants {
 
 	private static final String APP_PACKAGE_NAME = "com.BibleQuote";
 	private static final String APP_DIR_NAME = "BibleQuote";

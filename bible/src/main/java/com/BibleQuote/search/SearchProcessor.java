@@ -96,7 +96,7 @@ public class SearchProcessor {
 		return searchRes;
 	}
 
-	private class SearchThread implements Runnable {
+	private final class SearchThread implements Runnable {
         private CountDownLatch latch;
         private Module module;
         private String bookID;

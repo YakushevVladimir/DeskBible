@@ -33,7 +33,7 @@ import java.util.ArrayList;
  */
 public class PlayerView extends LinearLayout {
 
-	ImageButton play, pause;
+	private ImageButton play, pause;
 
 	private ArrayList<OnClickListener> listeners = new ArrayList<OnClickListener>();
 

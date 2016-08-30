@@ -77,9 +77,9 @@ public final class dbLibraryHelper {
 				+ ");"
 	};
 
-	private static final String DB_DIR_PATH = (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)
+	private static final String DB_DIR_PATH = Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)
 			? DataConstants.DB_EXTERNAL_DATA_PATH
-			: DataConstants.DB_DATA_PATH);
+			: DataConstants.DB_DATA_PATH;
 
 	private static SQLiteDatabase getDB() {
 		File dbDir = new File(DB_DIR_PATH);

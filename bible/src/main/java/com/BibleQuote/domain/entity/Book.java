@@ -80,7 +80,7 @@ public abstract class Book implements Serializable {
 
 
 	public ArrayList<String> getChapterNumbers(Boolean isChapterZero) {
-		if (chapterQty > 0 && chapterNumbers.size() == 0) {
+		if (chapterQty > 0 && chapterNumbers.isEmpty()) {
 			for (int i = 0; i < chapterQty; i++) {
 				chapterNumbers.add("" + (i + (isChapterZero ? 0 : 1)));
 			}
