@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2011 Scripture Software
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,15 +18,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * --------------------------------------------------
- *
  * Project: BibleQuote-for-Android
- * File: prefBookmarksRepository.java
+ * File: PrefBookmarksRepository.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 9/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
- *
  */
 
 package com.BibleQuote.dal.repository.bookmarks;
@@ -41,35 +40,40 @@ import java.util.ArrayList;
  * Date: 09.04.13
  * Time: 0:26
  */
-public class prefBookmarksRepository implements IBookmarksRepository {
+public class PrefBookmarksRepository implements IBookmarksRepository {
 
 	private static final Byte BOOKMARK_DELIMITER = (byte) 0xFE;
 	private static final Byte BOOKMARK_PATH_DELIMITER = (byte) 0xFF;
+	private PreferenceHelper preferenceHelper;
+
+	public PrefBookmarksRepository() {
+		preferenceHelper = PreferenceHelper.getInstance();
+	}
 
 	@Override
 	public long add(Bookmark bookmark) {
-		String fav = PreferenceHelper.restoreStateString("Favorits");
-		PreferenceHelper.saveStateString("Favorits", bookmark.humanLink + BOOKMARK_PATH_DELIMITER + bookmark.OSISLink + BOOKMARK_DELIMITER + fav);
+		String fav = preferenceHelper.restoreStateString("Favorits");
+		preferenceHelper.saveStateString("Favorits", bookmark.humanLink + BOOKMARK_PATH_DELIMITER + bookmark.OSISLink + BOOKMARK_DELIMITER + fav);
 		return 0;
 	}
 
 	@Override
 	public void delete(Bookmark bookmark) {
-		String fav = PreferenceHelper.restoreStateString("Favorits");
+		String fav = preferenceHelper.restoreStateString("Favorits");
 		fav = fav.replaceAll(bookmark.humanLink + "(.)+?" + BOOKMARK_DELIMITER, "");
-		PreferenceHelper.saveStateString("Favorits", fav);
+		preferenceHelper.saveStateString("Favorits", fav);
 	}
 
 	@Override
 	public void deleteAll() {
-		PreferenceHelper.saveStateString("Favorits", "");
+		preferenceHelper.saveStateString("Favorits", "");
 	}
 
 	@Override
 	public ArrayList<Bookmark> getAll() {
 		ArrayList<Bookmark> result = new ArrayList<Bookmark>();
 
-		String fav = PreferenceHelper.restoreStateString("Favorits");
+		String fav = preferenceHelper.restoreStateString("Favorits");
 		if (fav.equals("")) {
 			return result;
 		}

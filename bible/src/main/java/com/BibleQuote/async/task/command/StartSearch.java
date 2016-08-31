@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2011 Scripture Software
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,28 +18,22 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * --------------------------------------------------
- *
  * Project: BibleQuote-for-Android
  * File: StartSearch.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 9/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
- *
  */
 
-package com.BibleQuote.async.command;
+package com.BibleQuote.async.task.command;
 
 import android.content.Context;
-import android.support.v4.app.FragmentActivity;
 
 import com.BibleQuote.BibleQuoteApp;
-import com.BibleQuote.async.AsyncCommand;
 import com.BibleQuote.domain.exceptions.BookNotFoundException;
 import com.BibleQuote.domain.exceptions.ExceptionHelper;
 import com.BibleQuote.domain.exceptions.OpenModuleException;
-import com.BibleQuote.managers.Librarian;
 
 public class StartSearch implements AsyncCommand.ICommand {
     private static final String TAG = "StartSearch";
@@ -52,18 +48,20 @@ public class StartSearch implements AsyncCommand.ICommand {
     }
 
     @Override
-    public void execute() throws Exception {
+    public boolean execute() throws Exception {
         if (query.equals("") || fromBookID.equals("") || toBookID.equals("")) {
-            return;
+            return false;
         }
 
-        Librarian lib = ((BibleQuoteApp) ((FragmentActivity) context).getApplication()).getLibrarian();
         try {
-            lib.search(query, fromBookID, toBookID);
+            BibleQuoteApp.getInstance().getLibrarian().search(query, fromBookID, toBookID);
+            return true;
         } catch (BookNotFoundException e) {
             ExceptionHelper.onBookNotFoundException(e, context, TAG);
         } catch (OpenModuleException e) {
             ExceptionHelper.onOpenModuleException(e, context, TAG);
         }
+
+        return false;
     }
 }

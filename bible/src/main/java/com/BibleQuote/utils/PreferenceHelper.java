@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2011 Scripture Software
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -19,11 +21,9 @@
  * Project: BibleQuote-for-Android
  * File: PreferenceHelper.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 9/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
- *
- *
  */
 package com.BibleQuote.utils;
 
@@ -31,123 +31,90 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 public final class PreferenceHelper {
 
-	public static final String KEY_VIEW_BOOK_VERSE = "always_view_verse_numbers";
+    private static final String KEY_VIEW_BOOK_VERSE = "always_view_verse_numbers";
+    private static volatile PreferenceHelper instance;
 
-    private final static String TAG = "Share";
+    private final SharedPreferences preference;
 
-	private static SharedPreferences preference;
-
-	private PreferenceHelper() throws InstantiationException {
-		throw new InstantiationException("This class is not for instantiation");
-	}
-
-	static public void Init(Context context) {
+    private PreferenceHelper(Context context) {
         preference = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
+    public static PreferenceHelper createInstance(Context context) {
+        if (instance == null) {
+            instance = new PreferenceHelper(context);
+        }
+        return instance;
+    }
+
+    public static PreferenceHelper getInstance() {
+        if (instance == null) {
+            throw new IllegalStateException(
+                    "PreferenceHelper::createInstance() needs to be called "
+                            + "before PreferenceHelper::getInstance()");
+        }
+        return instance;
+    }
+
     @NonNull
-    static public String restoreStateString(String key) {
-        Log.i(TAG, "restoreStateString(" + key + ")");
-		if (preference == null) {
-			return "";
-		}
-		return preference.getString(key, "");
+    public String restoreStateString(String key) {
+        return preference.getString(key, "");
 	}
 
-	static public void saveStateString(String key, String value) {
-		Log.i(TAG, "saveStateString(" + key + ", " + value + ")");
-		if (preference == null) {
-			return;
-		}
+    public void saveStateString(String key, String value) {
         preference.edit().putString(key, value).apply();
     }
 
-	static public int restoreStateInt(String key) {
-		Log.i(TAG, "restoreStateString(" + key + ")");
-		if (preference == null) {
-			return 0;
-		}
-		return preference.getInt(key, 0);
+    public int restoreStateInt(String key) {
+        return preference.getInt(key, 0);
 	}
 
-	static public void saveStateInt(String key, int value) {
-		Log.i(TAG, "saveStateString(" + key + ", " + value + ")");
-		if (preference == null) {
-			return;
-		}
+    public void saveStateInt(String key, int value) {
         preference.edit().putInt(key, value).apply();
     }
 
     @NonNull
-    static public Boolean restoreStateBoolean(String key) {
-        Log.i(TAG, "restoreStateBoolean(" + key + ")");
-        return preference != null && preference.getBoolean(key, false);
+    public Boolean restoreStateBoolean(String key) {
+        return preference.getBoolean(key, false);
     }
 
-	static public void saveStateBoolean(String key, Boolean v) {
-		Log.i(TAG, "saveStateBoolean(" + key + ", " + v + ")");
-		if (preference == null) {
-			return;
-		}
+    public void saveStateBoolean(String key, Boolean v) {
         preference.edit().putBoolean(key, v).apply();
     }
 
-	static public boolean isReadModeByDefault() {
-        return preference != null && preference.getBoolean("ReadModeByDefault", false);
+    public boolean isReadModeByDefault() {
+        return preference.getBoolean("ReadModeByDefault", false);
     }
 
-	static public String getTextSize() {
-		if (preference == null) {
-			return "12";
-		}
-		return String.valueOf(preference.getInt("TextSize", 12));
+    public String getTextSize() {
+        return String.valueOf(preference.getInt("TextSize", 12));
 	}
 
-	static public String getTextColor() {
-		if (preference == null) {
-			return "#000000";
-		}
-		String color = preference.getString("TextColor", "#000000");
-		return getWebColor(color);
-	}
+    public String getTextColor() {
+        return getWebColor(preference.getString("TextColor", "#000000"));
+    }
 
-	public static String getTextBackground() {
-		if (preference == null) {
-			return "#ffffff";
-		}
-		String background = preference.getString("TextBG", "#ffffff");
-		return getWebColor(background);
-	}
+    public String getTextBackground() {
+        return getWebColor(preference.getString("TextBG", "#ffffff"));
+    }
 
-	public static String getTextColorSelected() {
-		if (preference == null) {
-			return "#000000";
-		}
-		String colorSelected = preference.getString("TextColorSel", "#000000");
-		return getWebColor(colorSelected);
-	}
+    public String getTextColorSelected() {
+        return getWebColor(preference.getString("TextColorSel", "#000000"));
+    }
 
-	public static String getTextBackgroundSelected() {
-		if (preference == null) {
-			return "#FEF8C4";
-		}
-		String backgroundSelected = preference.getString("TextBGSel", "#FEF8C4");
-		return getWebColor(backgroundSelected);
-	}
+    public String getTextBackgroundSelected() {
+        return getWebColor(preference.getString("TextBGSel", "#FEF8C4"));
+    }
 
-	public static Integer getHistorySize() {
-		if (preference == null) {
-			return 10;
-		}
-		return Integer.parseInt(preference.getString("HistorySize", "10"));
-	}
+    public Integer getHistorySize() {
+        return Integer.parseInt(preference.getString("HistorySize", "50"));
+    }
 
-	private static String getWebColor(String color) {
-		if (color.length() > 7) {
+    private String getWebColor(String color) {
+        if (color.length() > 7) {
 			int lenght = color.length();
 			return "#" + color.substring(lenght - 6);
 		} else {
@@ -155,42 +122,43 @@ public final class PreferenceHelper {
 		}
 	}
 
-	public static boolean crossRefViewDetails() {
-        return preference != null && preference.getBoolean("cross_reference_display_context", false);
+    public boolean crossRefViewDetails() {
+        return preference.getBoolean("cross_reference_display_context", false);
     }
 
-	public static boolean volumeButtonsToScroll() {
-        return preference != null && preference.getBoolean("volume_butons_to_scroll", false);
+    public boolean volumeButtonsToScroll() {
+        return preference.getBoolean("volume_butons_to_scroll", false);
     }
 
-	public static boolean textAlignJustify() {
-        return preference != null && preference.getBoolean("text_align_justify", false);
+    public boolean textAlignJustify() {
+        return preference.getBoolean("text_align_justify", false);
     }
 
-	public static String getFontFamily() {
-		if (preference == null) {
-			return "sans-serif";
-		}
-		return preference.getString("font_family", "sans-serif");
+    public String getFontFamily() {
+        return preference.getString("font_family", "sans-serif");
 	}
 
-	public static boolean divideTheVerses() {
-        return preference != null && preference.getBoolean("divide_the_verses", false);
+    public boolean divideTheVerses() {
+        return preference.getBoolean("divide_the_verses", false);
     }
 
-	public static boolean addReference() {
-        return preference == null || preference.getBoolean("add_reference", true);
+    public boolean addReference() {
+        return preference.getBoolean("add_reference", true);
     }
 
-	public static boolean putReferenceInBeginning() {
-        return preference != null && preference.getBoolean("put_reference_in_beginning", false);
+    public boolean putReferenceInBeginning() {
+        return preference.getBoolean("put_reference_in_beginning", false);
     }
 
-	public static boolean shortReference() {
-        return preference != null && preference.getBoolean("short_reference", false);
+    public boolean shortReference() {
+        return preference.getBoolean("short_reference", false);
     }
 
-	public static boolean addModuleToBibleReference() {
-        return preference == null || preference.getBoolean("add_module_to_reference", true);
+    public boolean addModuleToBibleReference() {
+        return preference.getBoolean("add_module_to_reference", true);
+    }
+
+    public boolean viewBookVerse() {
+        return preference.getBoolean(PreferenceHelper.KEY_VIEW_BOOK_VERSE, false);
     }
 }

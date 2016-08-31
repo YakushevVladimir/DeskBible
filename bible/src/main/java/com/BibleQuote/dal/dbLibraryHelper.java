@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2011 Scripture Software
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,15 +18,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * --------------------------------------------------
- *
  * Project: BibleQuote-for-Android
  * File: dbLibraryHelper.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 9/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
- *
  */
 
 package com.BibleQuote.dal;
@@ -36,7 +35,7 @@ import com.BibleQuote.dal.repository.bookmarks.BookmarksTags;
 import com.BibleQuote.domain.entity.Bookmark;
 import com.BibleQuote.domain.entity.Tag;
 import com.BibleQuote.utils.DataConstants;
-import com.BibleQuote.utils.Log;
+import com.BibleQuote.utils.Logger;
 
 import java.io.File;
 
@@ -125,7 +124,7 @@ public final class dbLibraryHelper {
 
 	private static void onUpgrade(SQLiteDatabase db, int currVersion) {
 		if (currVersion == 1 && version == 2) {
-			Log.i(TAG, "Upgrade DB to version 2");
+			Logger.i(TAG, "Upgrade DB to version 2");
 			db.execSQL("ALTER TABLE " + BOOKMARKS_TABLE + " ADD COLUMN " + Bookmark.NAME + " TEXT;");
 			db.setVersion(version);
 		}

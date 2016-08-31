@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: FsLibraryRepository.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 9/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -35,7 +35,7 @@ import com.BibleQuote.domain.exceptions.OpenModuleException;
 import com.BibleQuote.domain.repository.ILibraryRepository;
 import com.BibleQuote.entity.modules.BQModule;
 import com.BibleQuote.utils.FsUtils;
-import com.BibleQuote.utils.Log;
+import com.BibleQuote.utils.Logger;
 import com.BibleQuote.utils.OnlyBQIni;
 import com.BibleQuote.utils.OnlyBQZipIni;
 
@@ -60,7 +60,7 @@ public class FsLibraryRepository implements ILibraryRepository<BQModule> {
     @Override
     public synchronized Map<String, Module> loadFileModules() {
 
-		Log.i(TAG, "Load modules from sd-card:");
+        Logger.i(TAG, "Load modules from sd-card:");
 
         Map<String, Module> newModuleSet = new TreeMap<String, Module>();
 
@@ -120,7 +120,7 @@ public class FsLibraryRepository implements ILibraryRepository<BQModule> {
      * @return Возвращает ArrayList со списком ini-файлов модулей
      */
     private ArrayList<String> searchModules(FileFilter filter) {
-        Log.i(TAG, "searchModules()");
+        Logger.i(TAG, "searchModules()");
 
         ArrayList<String> iniFiles = new ArrayList<String>();
         if (!isLibraryExist()) {
@@ -131,7 +131,7 @@ public class FsLibraryRepository implements ILibraryRepository<BQModule> {
             // Рекурсивная функция проходит по всем каталогам в поисках ini-файлов Цитаты
             FsUtils.searchByFilter(libraryDir, iniFiles, filter);
         } catch (Exception e) {
-            Log.e(TAG, "searchModules()", e);
+            Logger.e(TAG, "searchModules()", e);
             return iniFiles;
         }
 

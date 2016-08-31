@@ -21,12 +21,12 @@
  * Project: BibleQuote-for-Android
  * File: AsyncOpenModule.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 9/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
 
-package com.BibleQuote.async;
+package com.BibleQuote.async.task;
 
 import android.util.Log;
 
@@ -56,13 +56,13 @@ public class AsyncOpenModule extends Task {
 		try {
 			Log.i(TAG, String.format("Open OSIS link with moduleID=%1$s", link.getModuleID()));
 			module = libCtrl.getModuleByID(link.getModuleID());
-		} catch (OpenModuleException e) {
+            return true;
+        } catch (OpenModuleException e) {
 			Log.e(TAG, String.format("AsyncOpenBooks(): %s", e.toString()), e);
 			exception = e;
 		}
-
-		return true;
-	}
+        return false;
+    }
 
 	@Override
 	protected void onPostExecute(Boolean result) {
@@ -76,5 +76,4 @@ public class AsyncOpenModule extends Task {
 	public Module getModule() {
 		return module;
 	}
-
 }

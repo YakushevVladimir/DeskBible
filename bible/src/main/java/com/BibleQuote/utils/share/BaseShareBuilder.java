@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: BaseShareBuilder.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 9/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -46,21 +46,22 @@ import java.util.LinkedHashMap;
 import java.util.TreeSet;
 
 public abstract class BaseShareBuilder {
-	IShareTextFormatter textFormater;
-	IBibleReferenceFormatter referenceFormatter;
+    IShareTextFormatter textFormatter;
+    IBibleReferenceFormatter referenceFormatter;
 
 	Context context;
 	Module module;
 	Book book;
 	Chapter chapter;
 	LinkedHashMap<Integer, String> verses;
+    PreferenceHelper preferenceHelper = PreferenceHelper.getInstance();
 
 	protected void initFormatters() {
-		if (PreferenceHelper.divideTheVerses()) {
-			textFormater = new BreakVerseBibleShareFormatter(verses);
-		} else {
-			textFormater = new SimpleBibleShareFormatter(verses);
-		}
+        if (preferenceHelper.divideTheVerses()) {
+            textFormatter = new BreakVerseBibleShareFormatter(verses);
+        } else {
+            textFormatter = new SimpleBibleShareFormatter(verses);
+        }
 
 		TreeSet<Integer> verseNumbers = new TreeSet<Integer>();
 		for (Integer numb : verses.keySet()) {
@@ -68,24 +69,24 @@ public abstract class BaseShareBuilder {
 		}
 
 		String chapterNumber = String.valueOf(chapter.getNumber());
-		if (!PreferenceHelper.addReference()) {
-			referenceFormatter = new EmptyReferenceFormatter(module, book, chapterNumber, verseNumbers);
-		} else if (PreferenceHelper.shortReference()) {
-			referenceFormatter = new ShortReferenceFormatter(module, book, chapterNumber, verseNumbers);
+        if (!preferenceHelper.addReference()) {
+            referenceFormatter = new EmptyReferenceFormatter(module, book, chapterNumber, verseNumbers);
+        } else if (preferenceHelper.shortReference()) {
+            referenceFormatter = new ShortReferenceFormatter(module, book, chapterNumber, verseNumbers);
 		} else {
 			referenceFormatter = new FullReferenceFormatter(module, book, chapterNumber, verseNumbers);
 		}
 	}
 
 	protected String getShareText() {
-		String text = textFormater.format();
-		if (!PreferenceHelper.addReference()) {
-			return text;
+        String text = textFormatter.format();
+        if (!preferenceHelper.addReference()) {
+            return text;
 		}
 
 		String reference = referenceFormatter.getLink();
-		if (PreferenceHelper.putReferenceInBeginning()) {
-			return String.format("%1$s - %2$s", reference, text);
+        if (preferenceHelper.putReferenceInBeginning()) {
+            return String.format("%1$s - %2$s", reference, text);
 		} else {
 			return String.format("%1$s (%2$s)", text, reference);
 		}

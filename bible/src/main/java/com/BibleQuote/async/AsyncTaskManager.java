@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2011-2015 Scripture Software
- * http://www.scripturesoftware.org
+ * Copyright (C) 2011 Scripture Software
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -10,7 +9,7 @@
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -18,6 +17,13 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
+ *
+ * Project: BibleQuote-for-Android
+ * File: AsyncTaskManager.java
+ *
+ * Created by Vladimir Yakushev at 9/2016
+ * E-mail: ru.phoenix@gmail.com
+ * WWW: http://www.scripturesoftware.org
  */
 package com.BibleQuote.async;
 
@@ -25,24 +31,26 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
+
 import com.BibleQuote.utils.IProgressTracker;
-import com.BibleQuote.utils.Log;
-import com.BibleQuote.utils.OnTaskCompleteListener;
+import com.BibleQuote.utils.Logger;
 import com.BibleQuote.utils.Task;
 
-public final class AsyncTaskManager implements IProgressTracker,
-		OnCancelListener {
-	private String TAG = "AsyncTaskManager";
+import java.lang.ref.WeakReference;
 
-	private OnTaskCompleteListener mTaskCompleteListener;
-	private ProgressDialog mProgressDialog;
+public final class AsyncTaskManager implements IProgressTracker, OnCancelListener {
+    private String TAG = "AsyncTaskManager";
+
+    private OnTaskCompleteListener taskCompleteListener;
+    private ProgressDialog mProgressDialog;
 	private Task mAsyncTask;
+    private WeakReference<Context> weakContext;
 
-	public AsyncTaskManager(Context context, OnTaskCompleteListener taskCompleteListener) {
-		// Save reference to complete listener (activity)
-		mTaskCompleteListener = taskCompleteListener;
-		// Setup progress dialog
-		setupProgressDialog(context);
+    public AsyncTaskManager(OnTaskCompleteListener taskCompleteListener) {
+        this.taskCompleteListener = taskCompleteListener;
+        Context context = taskCompleteListener.getContext();
+        this.weakContext = new WeakReference<Context>(context);
+        setupProgressDialog(context);
 	}
 
 	public void setupTask(Task asyncTask, String... params) {
@@ -69,8 +77,13 @@ public final class AsyncTaskManager implements IProgressTracker,
 			return;
 		}
 
-		// Show dialog if it wasn't shown yet or was removed on configuration
-		// (rotation) change
+        Context context = weakContext.get();
+        if (context == null) {
+            return;
+        }
+
+        // Show dialog if it wasn't shown yet or was removed on configuration
+        // (rotation) change
 		try {
 			if (!mProgressDialog.isShowing()) {
 				mProgressDialog.show();
@@ -91,31 +104,31 @@ public final class AsyncTaskManager implements IProgressTracker,
 		// Cancel task
 		mAsyncTask.cancel(true);
 		// Notify activity about completion
-		mTaskCompleteListener.onTaskComplete(mAsyncTask);
-		// Reset task
+        taskCompleteListener.onTaskComplete(mAsyncTask);
+        // Reset task
 		mAsyncTask = null;
 	}
 
 	@Override
 	public void onComplete() {
 		// Close progress dialog
-		try {
-			mProgressDialog.cancel();
+        try {
+            mProgressDialog.cancel();
 		} catch (IllegalArgumentException e) {
-			Log.e(TAG, "View not attached to window manager");
-		}
+            Logger.e(TAG, "View not attached to window manager");
+        }
 
-		Task completedTask = mAsyncTask;
-		// Reset task
-		mAsyncTask = null;
+        // Reset task
+        Task completedTask = mAsyncTask;
+        mAsyncTask = null;
 
 		// Notify activity about completion
-		mTaskCompleteListener.onTaskComplete(completedTask);
-	}
+        taskCompleteListener.onTaskComplete(completedTask);
+    }
 
 	public Object retainTask() {
-		// Close progress dialog
-		mProgressDialog.cancel();
+        // Close progress dialog
+        mProgressDialog.cancel();
 
 		// Detach task from tracker (this) before retain
 		if (mAsyncTask != null) {
@@ -125,21 +138,14 @@ public final class AsyncTaskManager implements IProgressTracker,
 		return mAsyncTask;
 	}
 
-	public void handleRetainedTask(Object instance, OnTaskCompleteListener taskCompleteListener) {
-		if (taskCompleteListener instanceof Context) {
-			// Save reference to complete listener (activity)
-			mTaskCompleteListener = taskCompleteListener;
-
-			// Setup progress dialog
-			setupProgressDialog((Context) mTaskCompleteListener);
-		}
+    public void handleRetainedTask(Task task, OnTaskCompleteListener taskCompleteListener) {
+        this.taskCompleteListener = taskCompleteListener;
+        setupProgressDialog(taskCompleteListener.getContext());
 
 		// Restore retained task and attach it to tracker (this)
-		if (instance instanceof Task) {
-			mAsyncTask = (Task) instance;
-			mAsyncTask.setProgressTracker(this);
-		}
-	}
+        mAsyncTask = task;
+        mAsyncTask.setProgressTracker(this);
+    }
 
 	public boolean isWorking() {
 		// Track current status

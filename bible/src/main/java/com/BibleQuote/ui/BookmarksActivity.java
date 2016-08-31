@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2011 Scripture Software
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -19,11 +21,9 @@
  * Project: BibleQuote-for-Android
  * File: BookmarksActivity.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 9/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
- *
- *
  */
 
 package com.BibleQuote.ui;
@@ -31,6 +31,7 @@ package com.BibleQuote.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TabHost;
@@ -40,11 +41,10 @@ import com.BibleQuote.R;
 import com.BibleQuote.domain.entity.Bookmark;
 import com.BibleQuote.domain.entity.Tag;
 import com.BibleQuote.ui.adapters.TabsAdapter;
-import com.BibleQuote.ui.base.BibleQuoteActivity;
 import com.BibleQuote.ui.fragments.BookmarksFragment;
 import com.BibleQuote.ui.fragments.TagsFragment;
 
-public class BookmarksActivity extends BibleQuoteActivity
+public class BookmarksActivity extends AppCompatActivity
         implements BookmarksFragment.OnBookmarksChangeListener, TagsFragment.OnTagsChangeListener {
 
     public static final String EXTRA_MODE = "extra_mode";

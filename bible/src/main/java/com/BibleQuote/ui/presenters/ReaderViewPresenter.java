@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: ReaderViewPresenter.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 9/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -34,10 +34,10 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
-import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
-import com.BibleQuote.async.AsyncManager;
-import com.BibleQuote.async.AsyncOpenChapter;
+import com.BibleQuote.async.AsyncTaskManager;
+import com.BibleQuote.async.OnTaskCompleteListener;
+import com.BibleQuote.async.task.AsyncOpenChapter;
 import com.BibleQuote.domain.entity.BibleReference;
 import com.BibleQuote.domain.entity.Chapter;
 import com.BibleQuote.domain.exceptions.BookNotFoundException;
@@ -47,8 +47,7 @@ import com.BibleQuote.managers.GoogleAnalyticsHelper;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.ui.fragments.TTSPlayerFragment;
 import com.BibleQuote.ui.widget.ReaderWebView;
-import com.BibleQuote.utils.Log;
-import com.BibleQuote.utils.OnTaskCompleteListener;
+import com.BibleQuote.utils.Logger;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.Task;
 
@@ -57,7 +56,7 @@ import java.lang.ref.WeakReference;
 /**
  *
  */
-public class ReaderViewPresenter implements OnTaskCompleteListener, TTSPlayerFragment.OnTTSStopSpeakListener, IViewPresenter {
+public class ReaderViewPresenter implements TTSPlayerFragment.OnTTSStopSpeakListener, IViewPresenter {
 
     private static final String TAG = ReaderViewPresenter.class.getSimpleName();
 
@@ -68,19 +67,14 @@ public class ReaderViewPresenter implements OnTaskCompleteListener, TTSPlayerFra
     public static final int ID_PARALLELS = 5;
     public static final int ID_SETTINGS = 6;
 
-    private String progressMessage;
     private IReaderView view;
     private WeakReference<Context> weakContext;
     private Librarian librarian;
-    private Task mTask;
-    private AsyncManager asyncManager;
+    private PreferenceHelper preferenceHelper = PreferenceHelper.getInstance();
 
     public ReaderViewPresenter(Context context, IReaderView view, Librarian librarian) {
         this.weakContext = new WeakReference<Context>(context);
         this.librarian = librarian;
-        this.progressMessage = context.getString(R.string.messageLoad);
-        this.asyncManager = BibleQuoteApp.getInstance().getAsyncManager();
-        this.asyncManager.handleRetainedTask(mTask, this);
         this.view = view;
 
         initView();
@@ -89,40 +83,6 @@ public class ReaderViewPresenter implements OnTaskCompleteListener, TTSPlayerFra
     @Override
     public void onStopSpeak() {
         view.hideTTSPlayer();
-    }
-
-    @Override
-    public void onTaskComplete(Task task) {
-        Context context = weakContext.get();
-        if (context == null) {
-            return;
-        }
-
-        if (task != null && !task.isCancelled()) {
-            if (task instanceof AsyncOpenChapter) {
-                AsyncOpenChapter chapterTask = ((AsyncOpenChapter) task);
-                if (chapterTask.isSuccess()) {
-                    BibleReference osisLink = librarian.getCurrentOSISLink();
-                    view.setContent(librarian.getBaseUrl(), librarian.getCurrChapter(), osisLink.getFromVerse(), librarian.isBible());
-                    view.setTitle(librarian.getModuleName(), librarian.getHumanBookLink());
-                    PreferenceHelper.saveStateString("last_read", osisLink.getExtendedPath());
-                } else {
-                    Exception e = chapterTask.getException();
-                    if (e instanceof OpenModuleException) {
-                        ExceptionHelper.onOpenModuleException((OpenModuleException) e, context, TAG);
-                    } else if (e instanceof BookNotFoundException) {
-                        ExceptionHelper.onBookNotFoundException((BookNotFoundException) e, context, TAG);
-                    } else {
-                        ExceptionHelper.onException(e, context, TAG);
-                    }
-                }
-            }
-        }
-    }
-
-    @Override
-    public Context getContext() {
-        return weakContext.get();
     }
 
     @Override
@@ -135,10 +95,8 @@ public class ReaderViewPresenter implements OnTaskCompleteListener, TTSPlayerFra
                     || (requestCode == ID_HISTORY)) {
                 Bundle extras = data.getExtras();
                 BibleReference osisLink = new BibleReference(extras.getString("linkOSIS"));
-                if (librarian.isOSISLinkValid(osisLink)) {
-                    openChapterFromLink(osisLink);
-                    GoogleAnalyticsHelper.getInstance().actionOpenLink(osisLink, requestCode);
-                }
+                openChapterFromLink(osisLink);
+                GoogleAnalyticsHelper.getInstance().actionOpenLink(osisLink, requestCode);
             }
         } else if (requestCode == ID_SETTINGS) {
             initView();
@@ -148,7 +106,7 @@ public class ReaderViewPresenter implements OnTaskCompleteListener, TTSPlayerFra
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
-        view.setCurrentOrientation(PreferenceHelper.restoreStateBoolean("DisableAutoScreenRotation"));
+        view.setCurrentOrientation(preferenceHelper.restoreStateBoolean("DisableAutoScreenRotation"));
     }
 
     @Override
@@ -185,7 +143,7 @@ public class ReaderViewPresenter implements OnTaskCompleteListener, TTSPlayerFra
                 view.openSearchActivity(ID_SEARCH);
                 break;
             case R.id.NightDayMode:
-                PreferenceHelper.saveStateBoolean("nightMode", view.invertNightMode());
+                preferenceHelper.saveStateBoolean("nightMode", view.invertNightMode());
                 view.updateContent();
                 break;
             case R.id.action_bar_history:
@@ -202,8 +160,8 @@ public class ReaderViewPresenter implements OnTaskCompleteListener, TTSPlayerFra
 
     @Override
     public void onResume() {
-        view.setKeepScreen(PreferenceHelper.restoreStateBoolean("DisableTurnScreen"));
-        view.setCurrentOrientation(PreferenceHelper.restoreStateBoolean("DisableAutoScreenRotation"));
+        view.setKeepScreen(preferenceHelper.restoreStateBoolean("DisableTurnScreen"));
+        view.setCurrentOrientation(preferenceHelper.restoreStateBoolean("DisableAutoScreenRotation"));
     }
 
     @Override
@@ -212,14 +170,14 @@ public class ReaderViewPresenter implements OnTaskCompleteListener, TTSPlayerFra
     }
 
     public boolean isVolumeButtonsToScroll() {
-        return PreferenceHelper.volumeButtonsToScroll();
+        return preferenceHelper.volumeButtonsToScroll();
     }
 
     public void nextChapter() {
         try {
             librarian.nextChapter();
         } catch (OpenModuleException e) {
-            Log.e(TAG, "nextChapter()", e);
+            Logger.e(TAG, "nextChapter()", e);
         }
         viewCurrentChapter();
     }
@@ -232,14 +190,14 @@ public class ReaderViewPresenter implements OnTaskCompleteListener, TTSPlayerFra
         try {
             librarian.prevChapter();
         } catch (OpenModuleException e) {
-            Log.e(TAG, "prevChapter()", e);
+            Logger.e(TAG, "prevChapter()", e);
         }
         viewCurrentChapter();
     }
 
     public void setOSISLink(BibleReference osisLink) {
         if (osisLink == null) {
-            osisLink = new BibleReference(PreferenceHelper.restoreStateString("last_read"));
+            osisLink = new BibleReference(preferenceHelper.restoreStateString("last_read"));
         }
 
         if (!librarian.isOSISLinkValid(osisLink)) {
@@ -250,16 +208,47 @@ public class ReaderViewPresenter implements OnTaskCompleteListener, TTSPlayerFra
     }
 
     private void initView() {
-        view.setNightMode(PreferenceHelper.restoreStateBoolean("nightMode"));
-        view.setReaderMode(PreferenceHelper.isReadModeByDefault() ? ReaderWebView.Mode.Read : ReaderWebView.Mode.Study);
-        view.setKeepScreen(PreferenceHelper.restoreStateBoolean("DisableTurnScreen"));
-        view.setCurrentOrientation(PreferenceHelper.restoreStateBoolean("DisableAutoScreenRotation"));
+        view.setNightMode(preferenceHelper.restoreStateBoolean("nightMode"));
+        view.setReaderMode(preferenceHelper.isReadModeByDefault() ? ReaderWebView.Mode.Read : ReaderWebView.Mode.Study);
+        view.setKeepScreen(preferenceHelper.restoreStateBoolean("DisableTurnScreen"));
+        view.setCurrentOrientation(preferenceHelper.restoreStateBoolean("DisableAutoScreenRotation"));
         view.updateActivityMode();
     }
 
     private void openChapterFromLink(BibleReference osisLink) {
-        mTask = new AsyncOpenChapter(progressMessage, false, librarian, osisLink);
-        asyncManager.setupTask(mTask, this);
+        final Context context = weakContext.get();
+        if (librarian.isOSISLinkValid(osisLink)) {
+            new AsyncTaskManager(new OnTaskCompleteListener() {
+                @Override
+                public void onTaskComplete(Task task) {
+                    Context context = weakContext.get();
+                    if (context == null) {
+                        return;
+                    }
+
+                    if (task.isSuccess()) {
+                        BibleReference osisLink = librarian.getCurrentOSISLink();
+                        view.setContent(librarian.getBaseUrl(), librarian.getCurrChapter(), osisLink.getFromVerse(), librarian.isBible());
+                        view.setTitle(librarian.getModuleName(), librarian.getHumanBookLink());
+                        preferenceHelper.saveStateString("last_read", osisLink.getExtendedPath());
+                    } else {
+                        Exception e = ((AsyncOpenChapter) task).getException();
+                        if (e instanceof OpenModuleException) {
+                            ExceptionHelper.onOpenModuleException((OpenModuleException) e, context, TAG);
+                        } else if (e instanceof BookNotFoundException) {
+                            ExceptionHelper.onBookNotFoundException((BookNotFoundException) e, context, TAG);
+                        } else {
+                            ExceptionHelper.onException(e, context, TAG);
+                        }
+                    }
+                }
+
+                @Override
+                public Context getContext() {
+                    return context;
+                }
+            }).setupTask(new AsyncOpenChapter(osisLink, context.getString(R.string.messageLoad)));
+        }
     }
 
     private void viewCurrentChapter() {

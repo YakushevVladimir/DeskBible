@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: BibleQuoteApp.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 9/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -30,22 +30,21 @@ package com.BibleQuote;
 import android.app.Application;
 
 import com.BibleQuote.async.AsyncManager;
+import com.BibleQuote.dal.repository.FsHistoryRepository;
 import com.BibleQuote.dal.repository.XmlTskRepository;
-import com.BibleQuote.dal.repository.bookmarks.dbBookmarksRepository;
+import com.BibleQuote.dal.repository.bookmarks.DbBookmarksRepository;
 import com.BibleQuote.domain.controllers.FsLibraryController;
 import com.BibleQuote.domain.controllers.ILibraryController;
 import com.BibleQuote.domain.controllers.TSKController;
 import com.BibleQuote.domain.repository.IBookmarksRepository;
 import com.BibleQuote.managers.Librarian;
-import com.BibleQuote.utils.Log;
+import com.BibleQuote.managers.history.HistoryManager;
 import com.BibleQuote.utils.PreferenceHelper;
-import com.BibleQuote.utils.UpdateManager;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 
 public class BibleQuoteApp extends Application {
 
-	private static final String TAG = "BibleQuoteApp";
 	private static BibleQuoteApp instance;
 
 	private Librarian myLibrarian;
@@ -60,35 +59,26 @@ public class BibleQuoteApp extends Application {
 	public void onCreate() {
 		super.onCreate();
 		instance = this;
-	}
-
-	public void init() {
-        Log.init();
-        Log.i(TAG, "Init application preference helper...");
-        initPreferenceHelper();
-        Log.i(TAG, "Init library controller");
-        libraryController = FsLibraryController.getInstance(this);
-        libraryController.getModules();
-        Log.i(TAG, "Start update manager...");
-        UpdateManager.init(this);
-        if (myLibrarian == null) {
-            Log.i(TAG, "Init library...");
-			initLibrarian();
-		}
-	}
+        PreferenceHelper.createInstance(this);
+    }
 
     public ILibraryController getLibraryController() {
+        if (libraryController == null) {
+            libraryController = FsLibraryController.getInstance(this);
+            libraryController.getModules();
+        }
         return libraryController;
     }
 
     public Librarian getLibrarian() {
         if (myLibrarian == null) {
-            // Сборщик мусора уничтожил ссылки на myLibrarian и на PreferenceHelper
-			// Восстановим ссылки
-			initPreferenceHelper();
-			initLibrarian();
-		}
-		return myLibrarian;
+            myLibrarian = new Librarian(
+                    getLibraryController(),
+                    new TSKController(new XmlTskRepository()),
+                    new HistoryManager(new FsHistoryRepository(this),
+                            PreferenceHelper.getInstance().getHistorySize()));
+        }
+        return myLibrarian;
 	}
 
 	public AsyncManager getAsyncManager() {
@@ -99,15 +89,7 @@ public class BibleQuoteApp extends Application {
 	}
 
 	public IBookmarksRepository getBookmarksRepository() {
-		return new dbBookmarksRepository();
-	}
-
-	private void initPreferenceHelper() {
-		PreferenceHelper.Init(this);
-	}
-
-	private void initLibrarian() {
-        myLibrarian = new Librarian(this, libraryController, new TSKController(new XmlTskRepository()));
+        return new DbBookmarksRepository();
     }
 
 	public synchronized Tracker getTracker() {

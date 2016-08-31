@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: FsCacheModuleController.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 9/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -31,7 +31,7 @@ package com.BibleQuote.domain.controllers.cache;
 import com.BibleQuote.domain.entity.ModuleList;
 import com.BibleQuote.domain.exceptions.DataAccessException;
 import com.BibleQuote.domain.repository.ICacheRepository;
-import com.BibleQuote.utils.Log;
+import com.BibleQuote.utils.Logger;
 
 public class FsCacheModuleController implements ICacheModuleController {
     private static final String TAG = "FsCacheRepository";
@@ -44,7 +44,7 @@ public class FsCacheModuleController implements ICacheModuleController {
 
     @Override
     public ModuleList getModuleList() {
-        Log.i(TAG, "Get module list");
+        Logger.i(TAG, "Get module list");
         try {
             return cacheRepository.getData();
         } catch (DataAccessException e) {
@@ -54,11 +54,11 @@ public class FsCacheModuleController implements ICacheModuleController {
 
     @Override
     public void saveModuleList(ModuleList moduleList) {
-        Log.i(TAG, "Save modules list to cache");
+        Logger.i(TAG, "Save modules list to cache");
         try {
             cacheRepository.saveData(moduleList);
         } catch (DataAccessException e) {
-            Log.e(TAG, "Can't save modules to a cache.", e);
+            Logger.e(TAG, "Can't save modules to a cache.", e);
         }
     }
 

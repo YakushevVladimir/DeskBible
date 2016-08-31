@@ -1,17 +1,29 @@
 /*
- * Copyright (C) 2011 Scripture Software (http://scripturesoftware.org/)
+ * Copyright (C) 2011 Scripture Software
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ *
+ * Project: BibleQuote-for-Android
+ * File: Task.java
+ *
+ * Created by Vladimir Yakushev at 9/2016
+ * E-mail: ru.phoenix@gmail.com
+ * WWW: http://www.scripturesoftware.org
  */
 package com.BibleQuote.utils;
 
@@ -19,8 +31,8 @@ import android.os.AsyncTask;
 
 public abstract class Task extends AsyncTask<String, String, Boolean> {
 
-	/**
-	 * @uml.property name="mResult"
+    /**
+     * @uml.property name="mResult"
 	 */
 	private Boolean mResult;
 	/**
@@ -32,13 +44,24 @@ public abstract class Task extends AsyncTask<String, String, Boolean> {
 	 * @uml.associationEnd
 	 */
 	private IProgressTracker mProgressTracker;
-
 	private Boolean mIsHidden;
 
 	public Task(String message, Boolean isHidden) {
 		mProgressMessage = message;
 		mIsHidden = isHidden;
 	}
+
+    public void setProgressTracker(IProgressTracker progressTracker) {
+        // Attach to progress tracker
+        mProgressTracker = progressTracker;
+        // Initialize progress tracker with current task state
+        if (mProgressTracker != null) {
+            mProgressTracker.onProgress(mProgressMessage);
+            if (mResult != null) {
+                mProgressTracker.onComplete();
+            }
+        }
+    }
 
 	@Override
 	protected abstract Boolean doInBackground(String... arg0);
@@ -55,23 +78,12 @@ public abstract class Task extends AsyncTask<String, String, Boolean> {
 		mProgressTracker = null;
 	}
 
-	public void setProgressTracker(IProgressTracker progressTracker) {
-		// Attach to progress tracker
-		mProgressTracker = progressTracker;
-		// Initialize progress tracker with current task state
-		if (mProgressTracker != null) {
-			mProgressTracker.onProgress(mProgressMessage);
-			if (mResult != null) {
-				mProgressTracker.onComplete();
-			}
-		}
-	}
-
 	@Override
 	protected void onCancelled() {
 		// Detach from progress tracker
 		mProgressTracker = null;
-	}
+        mResult = false;
+    }
 
 	@Override
 	protected void onProgressUpdate(String... values) {
@@ -83,8 +95,18 @@ public abstract class Task extends AsyncTask<String, String, Boolean> {
 		}
 	}
 
+    public void setHidden(Boolean value) {
+        mIsHidden = value;
+        if (!mIsHidden) {
+            onProgressUpdate(mProgressMessage);
+        }
+    }
+
 	public Boolean isHidden() {
 		return mIsHidden;
 	}
 
+    public Boolean isSuccess() {
+        return mResult != null && mResult;
+    }
 }

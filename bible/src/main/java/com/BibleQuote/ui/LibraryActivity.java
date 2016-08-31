@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: LibraryActivity.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 9/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -44,10 +44,9 @@ import android.widget.Toast;
 
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
-import com.BibleQuote.async.AsyncManager;
-import com.BibleQuote.async.AsyncOpenModule;
-import com.BibleQuote.async.AsyncRefreshModules;
-import com.BibleQuote.async.LoadModuleFromFile;
+import com.BibleQuote.async.task.AsyncOpenModule;
+import com.BibleQuote.async.task.AsyncRefreshModules;
+import com.BibleQuote.async.task.LoadModuleFromFile;
 import com.BibleQuote.domain.entity.BibleReference;
 import com.BibleQuote.domain.exceptions.BookDefinitionException;
 import com.BibleQuote.domain.exceptions.BookNotFoundException;
@@ -56,19 +55,21 @@ import com.BibleQuote.domain.exceptions.ExceptionHelper;
 import com.BibleQuote.domain.exceptions.OpenModuleException;
 import com.BibleQuote.entity.ItemList;
 import com.BibleQuote.managers.Librarian;
-import com.BibleQuote.ui.base.BibleQuoteActivity;
-import com.BibleQuote.utils.OnTaskCompleteListener;
+import com.BibleQuote.ui.base.AsyncTaskActivity;
 import com.BibleQuote.utils.Task;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class LibraryActivity extends BibleQuoteActivity implements OnTaskCompleteListener {
-    public static final String EMPTY_OBJECT = "---";
-	private static final int ACTION_CODE_GET_FILE = 1;
+public class LibraryActivity extends AsyncTaskActivity {
+
+    private static final int ACTION_CODE_GET_FILE = 1;
     private static final String TAG = "LibraryActivity";
     private static final int MODULE_VIEW = 1, BOOK_VIEW = 2, CHAPTER_VIEW = 3;
-	private String moduleID = EMPTY_OBJECT, bookID = EMPTY_OBJECT, chapter = EMPTY_OBJECT;
+
+    private String moduleID = Librarian.EMPTY_OBJ;
+    private String bookID = Librarian.EMPTY_OBJ;
+    private String chapter = Librarian.EMPTY_OBJ;
     private int viewMode = 1;
     private ListView modulesList, booksList;
     private GridView chapterList;
@@ -81,14 +82,12 @@ public class LibraryActivity extends BibleQuoteActivity implements OnTaskComplet
     private View.OnClickListener onBtnModuleClick = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            if (moduleID.equals("---"))
+            if (moduleID.equals(Librarian.EMPTY_OBJ))
                 return;
             updateView(MODULE_VIEW);
         }
     };
-    private AsyncManager mAsyncManager;
     private String messageRefresh;
-    private Task mTask;
     private AdapterView.OnItemClickListener modulesList_onClick = new AdapterView.OnItemClickListener() {
         public void onItemClick(AdapterView<?> a, View v, int position, long id) {
             modules = myLibrarian.getModulesList();
@@ -111,8 +110,7 @@ public class LibraryActivity extends BibleQuoteActivity implements OnTaskComplet
                     currentOSISLink.getChapter(),
                     currentOSISLink.getFromVerse());
 
-            mTask = new AsyncOpenModule(message, false, osisLink);
-            mAsyncManager.setupTask(mTask, LibraryActivity.this);
+            mAsyncManager.setupTask(new AsyncOpenModule(message, false, osisLink), LibraryActivity.this);
         }
     };
     private AdapterView.OnItemClickListener booksList_onClick = new AdapterView.OnItemClickListener() {
@@ -141,7 +139,7 @@ public class LibraryActivity extends BibleQuoteActivity implements OnTaskComplet
     private View.OnClickListener onBtnBookClick = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            if (bookID.equals("---"))
+            if (bookID.equals(Librarian.EMPTY_OBJ))
                 return;
             updateView(BOOK_VIEW);
         }
@@ -149,7 +147,7 @@ public class LibraryActivity extends BibleQuoteActivity implements OnTaskComplet
     private View.OnClickListener onBtnChapterClick = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            if (chapter.equals("-"))
+            if (chapter.equals(Librarian.EMPTY_OBJ))
                 return;
             updateView(CHAPTER_VIEW);
         }
@@ -160,11 +158,7 @@ public class LibraryActivity extends BibleQuoteActivity implements OnTaskComplet
         super.onCreate(savedInstanceState);
         setContentView(R.layout.books);
 
-        BibleQuoteApp app = (BibleQuoteApp) getApplication();
-        myLibrarian = app.getLibrarian();
-
-        mAsyncManager = app.getAsyncManager();
-        mAsyncManager.handleRetainedTask(mTask, this);
+        myLibrarian = BibleQuoteApp.getInstance().getLibrarian();
 
         messageRefresh = getResources().getString(R.string.messageRefresh);
 
@@ -273,26 +267,25 @@ public class LibraryActivity extends BibleQuoteActivity implements OnTaskComplet
 
     private void setButtonText() {
 
-        String bookShortName = EMPTY_OBJECT;
-
-        if (!moduleID.equals(EMPTY_OBJECT) && !bookID.equals(EMPTY_OBJECT)) {
+        String bookShortName = Librarian.EMPTY_OBJ;
+        if (!moduleID.equals(Librarian.EMPTY_OBJ) && !bookID.equals(Librarian.EMPTY_OBJ)) {
             try {
                 bookShortName = myLibrarian.getBookShortName(moduleID, bookID);
                 List<String> chList = myLibrarian.getChaptersList(moduleID, bookID);
                 if (!chList.isEmpty()) {
                     chapter = chList.contains(chapter) ? chapter : chList.get(0);
                 } else {
-                    chapter = EMPTY_OBJECT;
+                    chapter = Librarian.EMPTY_OBJ;
                 }
             } catch (OpenModuleException e) {
                 ExceptionHelper.onOpenModuleException(e, this, TAG);
-                moduleID = EMPTY_OBJECT;
-                bookID = EMPTY_OBJECT;
-                chapter = EMPTY_OBJECT;
+                moduleID = Librarian.EMPTY_OBJ;
+                bookID = Librarian.EMPTY_OBJ;
+                chapter = Librarian.EMPTY_OBJ;
             } catch (BookNotFoundException e) {
                 ExceptionHelper.onBookNotFoundException(e, this, TAG);
-                bookID = EMPTY_OBJECT;
-                chapter = EMPTY_OBJECT;
+                bookID = Librarian.EMPTY_OBJ;
+                chapter = Librarian.EMPTY_OBJ;
             }
         }
 

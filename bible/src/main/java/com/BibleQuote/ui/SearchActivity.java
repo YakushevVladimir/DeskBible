@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2011 Scripture Software
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -19,18 +21,16 @@
  * Project: BibleQuote-for-Android
  * File: SearchActivity.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 9/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
- *
- *
  */
 
 package com.BibleQuote.ui;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -45,9 +45,8 @@ import android.widget.Toast;
 
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
-import com.BibleQuote.async.AsyncCommand;
-import com.BibleQuote.async.AsyncManager;
-import com.BibleQuote.async.command.StartSearch;
+import com.BibleQuote.async.task.command.AsyncCommand;
+import com.BibleQuote.async.task.command.StartSearch;
 import com.BibleQuote.domain.exceptions.BookDefinitionException;
 import com.BibleQuote.domain.exceptions.BookNotFoundException;
 import com.BibleQuote.domain.exceptions.BooksDefinitionException;
@@ -56,11 +55,10 @@ import com.BibleQuote.domain.exceptions.OpenModuleException;
 import com.BibleQuote.entity.ItemList;
 import com.BibleQuote.managers.GoogleAnalyticsHelper;
 import com.BibleQuote.managers.Librarian;
-import com.BibleQuote.ui.base.BibleQuoteActivity;
+import com.BibleQuote.ui.base.AsyncTaskActivity;
 import com.BibleQuote.ui.widget.listview.ItemAdapter;
 import com.BibleQuote.ui.widget.listview.item.Item;
 import com.BibleQuote.ui.widget.listview.item.SubtextItem;
-import com.BibleQuote.utils.OnTaskCompleteListener;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.Task;
 import com.BibleQuote.utils.modules.LinkConverter;
@@ -69,227 +67,217 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class SearchActivity extends BibleQuoteActivity implements OnTaskCompleteListener {
+public class SearchActivity extends AsyncTaskActivity {
+
 	private static final String TAG = "SearchActivity";
-	private Spinner spinnerFrom, spinnerTo;
-	private ListView ResultList;
-	private AsyncManager mAsyncManager;
-	private Task mTask;
-	private String progressMessage = "";
-
+    private final PreferenceHelper preferenceHelper = PreferenceHelper.getInstance();
+    private Spinner spinnerFrom, spinnerTo;
+    private ListView resultList;
+    private String progressMessage = "";
 	private Map<String, String> searchResults = new LinkedHashMap<String, String>();
-	private Librarian myLibararian;
-	private ArrayList<Item> searchItems = new ArrayList<Item>();
+    private Librarian myLibrarian;
+    private ArrayList<Item> searchItems = new ArrayList<Item>();
 
-	private Button.OnClickListener onClick_Search = new Button.OnClickListener() {
-		@Override
-		public void onClick(View view) {
-			String query = ((EditText) findViewById(R.id.SearchEdit)).getText().toString().trim();
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.search);
 
-			GoogleAnalyticsHelper.getInstance().actionSearch(myLibararian.getModuleID(), query);
+        myLibrarian = BibleQuoteApp.getInstance().getLibrarian();
+        progressMessage = getResources().getString(R.string.messageSearch);
 
-			int posFrom = spinnerFrom.getSelectedItemPosition();
-			int posTo = spinnerTo.getSelectedItemPosition();
-			if (posFrom == AdapterView.INVALID_POSITION || posTo == AdapterView.INVALID_POSITION) {
-				return;
-			}
-			String fromBookID = ((ItemList) spinnerFrom.getItemAtPosition(posFrom)).get("ID");
-			String toBookID = ((ItemList) spinnerTo.getItemAtPosition(posTo)).get("ID");
+        String searchModuleID = preferenceHelper.restoreStateString("searchModuleID");
+        if (myLibrarian.getModuleID().equalsIgnoreCase(searchModuleID)) {
+            searchResults = myLibrarian.getSearchResults();
+        }
 
-			mTask = new AsyncCommand(new StartSearch(SearchActivity.this, query, fromBookID, toBookID), progressMessage, false);
-			mAsyncManager.setupTask(mTask, SearchActivity.this);
-		}
-	};
+        findViewById(R.id.SearchButton).setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startSearch();
+            }
+        });
 
-	private OnItemClickListener onClick_searchResult = new OnItemClickListener() {
-		public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-			String humanLink = ((SubtextItem) ResultList.getAdapter().getItem(position)).text;
+        resultList = (ListView) findViewById(R.id.SearchLV);
+        resultList.setOnItemClickListener(new OnItemClickListener() {
+            public void onItemClick(AdapterView<?> a, View v, int position, long id) {
+                openLink(position);
+            }
+        });
+        setAdapter();
+        spinnerInit();
+    }
 
-			PreferenceHelper.saveStateInt("changeSearchPosition", position);
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        spinnerInit();
+    }
 
-			Intent intent = new Intent();
-			intent.putExtra("linkOSIS", LinkConverter.getHumanToOSIS(humanLink));
-			setResult(RESULT_OK, intent);
+    @Override
+    public void onTaskComplete(Task task) {
+        if (task.isCancelled()) {
+            Toast.makeText(this, R.string.messageSearchCanceled, Toast.LENGTH_LONG).show();
+        } else {
+            searchResults = myLibrarian.getSearchResults();
+            setAdapter();
+        }
+        preferenceHelper.saveStateInt("changeSearchPosition", 0);
+    }
 
-			finish();
-		}
-	};
+    private void spinnerInit() {
+        ArrayList<ItemList> books = new ArrayList<ItemList>();
+        try {
+            books = myLibrarian.getCurrentModuleBooksList();
+        } catch (OpenModuleException e) {
+            ExceptionHelper.onOpenModuleException(e, this, TAG);
+        } catch (BooksDefinitionException e) {
+            ExceptionHelper.onBooksDefinitionException(e, this, TAG);
+        } catch (BookDefinitionException e) {
+            ExceptionHelper.onBookDefinitionException(e, this, TAG);
+        }
 
-	private OnItemSelectedListener onClick_FromBook = new OnItemSelectedListener() {
-		public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2,
-								   long arg3) {
-			int fromBook = spinnerFrom.getSelectedItemPosition();
-			int toBook = spinnerTo.getSelectedItemPosition();
-			if (fromBook > toBook) {
-				spinnerTo.setSelection(fromBook);
-				toBook = fromBook;
-			}
-			saveSelectedPosition(fromBook, toBook);
-		}
+        SimpleAdapter aa = new SimpleAdapter(this, books,
+                android.R.layout.simple_spinner_item,
+                new String[]{ItemList.Name}, new int[]{android.R.id.text1});
+        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        SimpleAdapter.ViewBinder viewBinder = new SimpleAdapter.ViewBinder() {
+            public boolean setViewValue(View view, Object data,
+                                        String textRepresentation) {
+                TextView textView = (TextView) view;
+                textView.setText(textRepresentation);
+                return true;
+            }
+        };
+        aa.setViewBinder(viewBinder);
 
-		public void onNothingSelected(AdapterView<?> arg0) {
-		}
-	};
+        spinnerFrom = (Spinner) findViewById(R.id.FromBookCB);
+        spinnerFrom.setAdapter(aa);
+        spinnerFrom.setOnItemSelectedListener(new OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+                int fromBook = spinnerFrom.getSelectedItemPosition();
+                int toBook = spinnerTo.getSelectedItemPosition();
+                if (fromBook > toBook) {
+                    spinnerTo.setSelection(fromBook);
+                    toBook = fromBook;
+                }
+                saveSelectedPosition(fromBook, toBook);
+            }
 
-	private OnItemSelectedListener onClick_ToBook = new OnItemSelectedListener() {
-		public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2,
-								   long arg3) {
-			int fromBook = spinnerFrom.getSelectedItemPosition();
-			int toBook = spinnerTo.getSelectedItemPosition();
-			if (fromBook > toBook) {
-				spinnerFrom.setSelection(toBook);
-				fromBook = toBook;
-			}
-			saveSelectedPosition(fromBook, toBook);
-		}
+            public void onNothingSelected(AdapterView<?> arg0) {
+            }
+        });
 
-		public void onNothingSelected(AdapterView<?> arg0) {
-		}
-	};
+        spinnerTo = (Spinner) findViewById(R.id.ToBookCB);
+        spinnerTo.setAdapter(aa);
+        spinnerTo.setOnItemSelectedListener(new OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+                int fromBook = spinnerFrom.getSelectedItemPosition();
+                int toBook = spinnerTo.getSelectedItemPosition();
+                if (fromBook > toBook) {
+                    spinnerFrom.setSelection(toBook);
+                    fromBook = toBook;
+                }
+                saveSelectedPosition(fromBook, toBook);
+            }
 
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.search);
+            public void onNothingSelected(AdapterView<?> arg0) {
+            }
+        });
 
-		BibleQuoteApp app = (BibleQuoteApp) getApplication();
-		myLibararian = app.getLibrarian();
+        restoreSelectedPosition();
+    }
 
-		mAsyncManager = app.getAsyncManager();
-		mAsyncManager.handleRetainedTask(mTask, this);
+    private void openLink(int position) {
+        String humanLink = ((SubtextItem) resultList.getAdapter().getItem(position)).text;
 
-		progressMessage = getResources().getString(R.string.messageSearch);
+        preferenceHelper.saveStateInt("changeSearchPosition", position);
 
-		String searchModuleID = PreferenceHelper.restoreStateString("searchModuleID");
-		if (myLibararian.getModuleID().equalsIgnoreCase(searchModuleID)) {
-			searchResults = myLibararian.getSearchResults();
-		}
+        Intent intent = new Intent();
+        intent.putExtra("linkOSIS", LinkConverter.getHumanToOSIS(humanLink));
+        setResult(RESULT_OK, intent);
 
-		findViewById(R.id.SearchButton).setOnClickListener(onClick_Search);
+        finish();
+    }
 
-		ResultList = (ListView) findViewById(R.id.SearchLV);
-		ResultList.setOnItemClickListener(onClick_searchResult);
-		setAdapter();
+    private void restoreSelectedPosition() {
+        String searchModuleID = preferenceHelper.restoreStateString("searchModuleID");
+        int fromBook = 0;
+        int toBook = spinnerTo.getCount() - 1;
 
-		SpinnerInit();
-	}
+        if (myLibrarian.getModuleID().equalsIgnoreCase(searchModuleID)) {
+            fromBook = preferenceHelper.restoreStateInt("fromBook");
+            if (spinnerFrom.getCount() <= fromBook) {
+                fromBook = 0;
+            }
 
-	@Override
-	protected void onPostResume() {
-		super.onPostResume();
-		SpinnerInit();
-	}
-
-	/**
-	 * Устанавливает список результатов поиска по последнему запросу
-	 */
-	private void setAdapter() {
-		searchItems.clear();
-		for (String key : searchResults.keySet()) {
-			String humanLink;
-			try {
-				humanLink = LinkConverter.getOSIStoHuman(key, myLibararian);
-				searchItems.add(new SubtextItem(humanLink, searchResults.get(key)));
-			} catch (BookNotFoundException e) {
-				ExceptionHelper.onBookNotFoundException(e, this, TAG);
-			} catch (OpenModuleException e) {
-				ExceptionHelper.onOpenModuleException(e, this, TAG);
-			}
-		}
-		ItemAdapter adapter = new ItemAdapter(this, searchItems);
-		ResultList.setAdapter(adapter);
-
-		String searchModuleID = PreferenceHelper.restoreStateString("searchModuleID");
-		if (myLibararian.getModuleID().equalsIgnoreCase(searchModuleID)) {
-			int changeSearchPosition = PreferenceHelper.restoreStateInt("changeSearchPosition");
-			if (changeSearchPosition < searchItems.size()) {
-				ResultList.setSelection(changeSearchPosition);
-			}
-		}
-
-		String title = getResources().getString(R.string.search);
-		if (!searchResults.isEmpty()) {
-			title += " (" + searchResults.size() + " "
-					+ getResources().getString(R.string.results) + ")";
-		}
-		getSupportActionBar().setTitle(title);
-	}
-
-	private void SpinnerInit() {
-		ArrayList<ItemList> books = new ArrayList<ItemList>();
-		try {
-			books = myLibararian.getCurrentModuleBooksList();
-		} catch (OpenModuleException e) {
-			ExceptionHelper.onOpenModuleException(e, this, TAG);
-		} catch (BooksDefinitionException e) {
-			ExceptionHelper.onBooksDefinitionException(e, this, TAG);
-		} catch (BookDefinitionException e) {
-			ExceptionHelper.onBookDefinitionException(e, this, TAG);
+            toBook = preferenceHelper.restoreStateInt("toBook");
+            if (spinnerTo.getCount() <= toBook) {
+                toBook = spinnerTo.getCount() - 1;
+            }
 		}
 
-		SimpleAdapter aa = new SimpleAdapter(this, books,
-				android.R.layout.simple_spinner_item,
-				new String[]{ItemList.Name}, new int[]{android.R.id.text1});
-		aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		SimpleAdapter.ViewBinder viewBinder = new SimpleAdapter.ViewBinder() {
-			public boolean setViewValue(View view, Object data,
-										String textRepresentation) {
-				TextView textView = (TextView) view;
-				textView.setText(textRepresentation);
-				return true;
-			}
-		};
-		aa.setViewBinder(viewBinder);
+        spinnerFrom.setSelection(fromBook);
+        spinnerTo.setSelection(toBook);
+    }
 
-		spinnerFrom = (Spinner) findViewById(R.id.FromBookCB);
-		spinnerFrom.setAdapter(aa);
-		spinnerFrom.setOnItemSelectedListener(onClick_FromBook);
+    private void saveSelectedPosition(int fromBook, int toBook) {
+        preferenceHelper.saveStateString("searchModuleID", myLibrarian.getModuleID());
+        preferenceHelper.saveStateInt("fromBook", fromBook);
+        preferenceHelper.saveStateInt("toBook", toBook);
+    }
 
-		spinnerTo = (Spinner) findViewById(R.id.ToBookCB);
-		spinnerTo.setAdapter(aa);
-		spinnerTo.setOnItemSelectedListener(onClick_ToBook);
+    /**
+     * Устанавливает список результатов поиска по последнему запросу
+     */
+    private void setAdapter() {
+        searchItems.clear();
+        for (String key : searchResults.keySet()) {
+            String humanLink;
+            try {
+                humanLink = LinkConverter.getOSIStoHuman(key, myLibrarian);
+                searchItems.add(new SubtextItem(humanLink, searchResults.get(key)));
+            } catch (BookNotFoundException e) {
+                ExceptionHelper.onBookNotFoundException(e, this, TAG);
+            } catch (OpenModuleException e) {
+                ExceptionHelper.onOpenModuleException(e, this, TAG);
+            }
+        }
+        ItemAdapter adapter = new ItemAdapter(this, searchItems);
+        resultList.setAdapter(adapter);
 
-		restoreSelectedPosition();
-	}
+        String searchModuleID = preferenceHelper.restoreStateString("searchModuleID");
+        if (myLibrarian.getModuleID().equalsIgnoreCase(searchModuleID)) {
+            int changeSearchPosition = preferenceHelper.restoreStateInt("changeSearchPosition");
+            if (changeSearchPosition < searchItems.size()) {
+                resultList.setSelection(changeSearchPosition);
+            }
+        }
 
-	public void onTaskComplete(Task task) {
-		if (task.isCancelled()) {
-			Toast.makeText(this, R.string.messageSearchCanceled, Toast.LENGTH_LONG).show();
-		} else {
-			searchResults = myLibararian.getSearchResults();
-			setAdapter();
-		}
-		PreferenceHelper.saveStateInt("changeSearchPosition", 0);
-	}
+        String title = getResources().getString(R.string.search);
+        if (!searchResults.isEmpty()) {
+            title += " (" + searchResults.size() + " "
+                    + getResources().getString(R.string.results) + ")";
+        }
+        ActionBar supportActionBar = getSupportActionBar();
+        if (supportActionBar != null) {
+            supportActionBar.setTitle(title);
+        }
+    }
 
-	@Override
-	public Context getContext() {
-		return this;
-	}
+    private void startSearch() {
+        String query = ((EditText) findViewById(R.id.SearchEdit)).getText().toString().trim();
 
-	private void saveSelectedPosition(int fromBook, int toBook) {
-		PreferenceHelper.saveStateString("searchModuleID", myLibararian.getModuleID());
-		PreferenceHelper.saveStateInt("fromBook", fromBook);
-		PreferenceHelper.saveStateInt("toBook", toBook);
-	}
+        GoogleAnalyticsHelper.getInstance().actionSearch(myLibrarian.getModuleID(), query);
 
-	private void restoreSelectedPosition() {
-		String searchModuleID = PreferenceHelper.restoreStateString("searchModuleID");
-		int fromBook = 0;
-		int toBook = spinnerTo.getCount() - 1;
+        int posFrom = spinnerFrom.getSelectedItemPosition();
+        int posTo = spinnerTo.getSelectedItemPosition();
+        if (posFrom == AdapterView.INVALID_POSITION || posTo == AdapterView.INVALID_POSITION) {
+            return;
+        }
+        String fromBookID = ((ItemList) spinnerFrom.getItemAtPosition(posFrom)).get("ID");
+        String toBookID = ((ItemList) spinnerTo.getItemAtPosition(posTo)).get("ID");
 
-		if (myLibararian.getModuleID().equalsIgnoreCase(searchModuleID)) {
-			fromBook = PreferenceHelper.restoreStateInt("fromBook");
-			if (spinnerFrom.getCount() <= fromBook) {
-				fromBook = 0;
-			}
-
-			toBook = PreferenceHelper.restoreStateInt("toBook");
-			if (spinnerTo.getCount() <= toBook) {
-				toBook = spinnerTo.getCount() - 1;
-			}
-		}
-
-		spinnerFrom.setSelection(fromBook);
-		spinnerTo.setSelection(toBook);
-	}
+        Task mTask = new AsyncCommand(new StartSearch(SearchActivity.this, query, fromBookID, toBookID), progressMessage, false);
+        mAsyncManager.setupTask(mTask, SearchActivity.this);
+    }
 }

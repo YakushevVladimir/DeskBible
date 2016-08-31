@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: FsLibraryController.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 9/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -86,9 +86,9 @@ public class FsLibraryController implements ILibraryController {
         if (moduleSet.isEmpty() && cache.isCacheExist()) {
             Log.i(TAG, "....Load modules from cache");
             loadCachedModules();
-            if (moduleSet.isEmpty()) {
-                loadModules();
-            }
+        }
+        if (moduleSet.isEmpty()) {
+            loadModules();
         }
         return moduleSet;
     }
@@ -98,7 +98,11 @@ public class FsLibraryController implements ILibraryController {
         if (moduleID == null) {
             return null;
         }
-        return moduleSet.get(moduleID);
+        Module module = moduleSet.get(moduleID);
+        if (module == null) {
+            throw new OpenModuleException(moduleID, null);
+        }
+        return module;
     }
 
     @Override

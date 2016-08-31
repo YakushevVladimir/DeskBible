@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: ModuleTextFormatter.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 9/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -45,7 +45,7 @@ public class ModuleTextFormatter implements ITextFormatter {
     private boolean visibleVerseNumbers;
 
     public ModuleTextFormatter(Module module) {
-        this.visibleVerseNumbers = module.isBible() || PreferenceHelper.restoreStateBoolean(PreferenceHelper.KEY_VIEW_BOOK_VERSE);
+        this.visibleVerseNumbers = module.isBible() || PreferenceHelper.getInstance().viewBookVerse();
         if (module.isContainsStrong()) {
             formatters.add(new NoStrongTextFormatter());
         }

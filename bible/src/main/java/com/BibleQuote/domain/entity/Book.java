@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: Book.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 9/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -153,9 +153,18 @@ public abstract class Book implements Serializable {
 	}
 
 
-	public Integer getFirstChapterNumber() {
-		return module.isChapterZero() ? 0 : 1;
+    public int getFirstChapterNumber() {
+        return module.isChapterZero() ? 0 : 1;
 	}
 
+    public int getLastChapterNumber() {
+        return chapterQty - (module.isChapterZero() ? 1 : 0);
+    }
+
 	public abstract String getDataSourceID();
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

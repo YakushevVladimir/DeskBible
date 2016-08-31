@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: SplashActivity.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 9/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -35,47 +35,36 @@ import android.view.WindowManager;
 
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
-import com.BibleQuote.async.AsyncCommand;
-import com.BibleQuote.async.AsyncManager;
-import com.BibleQuote.async.command.InitApplication;
-import com.BibleQuote.utils.Log;
-import com.BibleQuote.utils.OnTaskCompleteListener;
+import com.BibleQuote.async.AsyncTaskManager;
+import com.BibleQuote.async.OnTaskCompleteListener;
+import com.BibleQuote.async.task.command.AsyncCommand;
 import com.BibleQuote.utils.Task;
+import com.BibleQuote.utils.UpdateManager;
 
 public class SplashActivity extends Activity implements OnTaskCompleteListener {
-
-    private static final String TAG = "SplashActivity";
-    private AsyncCommand initApp;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.main);
-
-
-        BibleQuoteApp app = (BibleQuoteApp) getApplication();
-
-        AsyncManager myAsyncManager = app.getAsyncManager();
-        if (initApp != null) {
-            Log.i(TAG, "Restore old task...");
-            myAsyncManager.handleRetainedTask(initApp, this);
-        } else {
-            Log.i(TAG, "Start task InitApplication...");
-            myAsyncManager.setupTask(getTaskObject(), this);
-        }
     }
 
-    private AsyncCommand getTaskObject() {
-        String progressMessage = getResources().getString(R.string.messageLoad);
-        initApp = new AsyncCommand(new InitApplication(this), progressMessage, true);
-        return initApp;
+    @Override
+    protected void onStart() {
+        super.onStart();
+        new AsyncTaskManager(this).setupTask(new AsyncCommand(new AsyncCommand.ICommand() {
+            @Override
+            public boolean execute() throws Exception {
+                UpdateManager.start(SplashActivity.this);
+                BibleQuoteApp.getInstance().getLibrarian();
+                return true;
+            }
+        }, null, true));
     }
 
     @Override
     public void onTaskComplete(Task task) {
-        Log.i(TAG, "Start reader activity");
         startActivity(new Intent(this, ReaderActivity.class));
         finish();
     }

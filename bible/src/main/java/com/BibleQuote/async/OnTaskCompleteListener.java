@@ -19,48 +19,21 @@
  * under the License.
  *
  * Project: BibleQuote-for-Android
- * File: ActionSendShare.java
+ * File: OnTaskCompleteListener.java
  *
  * Created by Vladimir Yakushev at 9/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
-
-package com.BibleQuote.utils.share;
+package com.BibleQuote.async;
 
 import android.content.Context;
-import android.content.Intent;
 
-import com.BibleQuote.R;
-import com.BibleQuote.domain.entity.Book;
-import com.BibleQuote.domain.entity.Chapter;
-import com.BibleQuote.domain.entity.Module;
+import com.BibleQuote.utils.Task;
 
-import java.util.LinkedHashMap;
+public interface OnTaskCompleteListener {
+	// Notifies about task completeness
+	void onTaskComplete(Task task);
 
-public class ActionSendShare extends BaseShareBuilder {
-
-	public ActionSendShare(Context context, Module module, Book book,
-						   Chapter chapter, LinkedHashMap<Integer, String> verses) {
-		this.context = context;
-		this.module = module;
-		this.book = book;
-		this.chapter = chapter;
-		this.verses = verses;
-	}
-
-	@Override
-	public void share() {
-		initFormatters();
-        if (textFormatter == null || referenceFormatter == null) {
-            return;
-		}
-
-		final String share = context.getResources().getString(R.string.share);
-		Intent send = new Intent(Intent.ACTION_SEND);
-		send.setType("text/plain");
-		send.putExtra(Intent.EXTRA_TEXT, getShareText());
-		context.startActivity(Intent.createChooser(send, share));
-	}
-
+    Context getContext();
 }

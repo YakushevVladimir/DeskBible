@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: FullReferenceFormatter.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 9/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -47,7 +47,7 @@ public class FullReferenceFormatter extends ReferenceFormatter implements IBible
 		String result = String.format(
 				"%1$s %2$s:%3$s",
 				book.getName(), chapter, getVerseLink());
-		if (PreferenceHelper.addModuleToBibleReference()) {
+		if (PreferenceHelper.getInstance().addModuleToBibleReference()) {
 			result = String.format("%1$s|%2$s", result, module.getID());
 		}
 		result = String.format("%1$s-%2$s", result, getOnLineBibleLink());

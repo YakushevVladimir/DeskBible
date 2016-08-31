@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2011 Scripture Software
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,15 +18,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * --------------------------------------------------
- *
  * Project: BibleQuote-for-Android
  * File: BookmarksDialog.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 9/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
- *
  */
 
 package com.BibleQuote.ui.dialogs;
@@ -42,7 +41,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.BibleQuote.R;
-import com.BibleQuote.dal.repository.bookmarks.dbBookmarksRepository;
+import com.BibleQuote.dal.repository.bookmarks.DbBookmarksRepository;
 import com.BibleQuote.dal.repository.bookmarks.dbBookmarksTagsRepository;
 import com.BibleQuote.dal.repository.bookmarks.dbTagRepository;
 import com.BibleQuote.domain.entity.Bookmark;
@@ -94,7 +93,7 @@ public class BookmarksDialog extends DialogFragment {
 
     private void addBookmarks() {
         readField();
-        new BookmarksManager(new dbBookmarksRepository(), new dbBookmarksTagsRepository(), new dbTagRepository()).add(bookmark, bookmark.tags);
+        new BookmarksManager(new DbBookmarksRepository(), new dbBookmarksTagsRepository(), new dbTagRepository()).add(bookmark, bookmark.tags);
 
         GoogleAnalyticsHelper.getInstance().actionSendBookmark(bookmark);
 

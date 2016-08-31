@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: FsCacheRepository.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 9/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -34,7 +34,7 @@ import com.BibleQuote.domain.entity.ModuleList;
 import com.BibleQuote.domain.exceptions.DataAccessException;
 import com.BibleQuote.domain.repository.ICacheRepository;
 import com.BibleQuote.utils.DataConstants;
-import com.BibleQuote.utils.Log;
+import com.BibleQuote.utils.Logger;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -51,13 +51,16 @@ public class FsCacheRepository implements ICacheRepository {
     private String cacheName;
 
     public FsCacheRepository(Context context) {
-        this.cacheDir = context.getCacheDir();
+        this.cacheDir = context.getExternalCacheDir();
+        if (this.cacheDir == null || !this.cacheDir.exists()) {
+            this.cacheDir = context.getCacheDir();
+        }
         this.cacheName = DataConstants.LIBRARY_CACHE;
     }
 
     @Override
     public ModuleList getData() throws DataAccessException {
-        Log.i(TAG, "Loading data from a file system cache.");
+        Logger.i(TAG, "Loading data from a file system cache.");
         ModuleList result;
         try {
             FileInputStream fStr = new FileInputStream(new File(cacheDir, cacheName));
@@ -83,7 +86,7 @@ public class FsCacheRepository implements ICacheRepository {
 
     @Override
     public void saveData(ModuleList data) throws DataAccessException {
-        Log.i(TAG, "Save modules to a file system cache.");
+        Logger.i(TAG, "Save modules to a file system cache.");
         try {
             FileOutputStream fStr = new FileOutputStream(new File(cacheDir, cacheName));
             ObjectOutputStream out = new ObjectOutputStream(fStr);

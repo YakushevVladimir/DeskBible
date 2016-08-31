@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: ReaderWebView.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 9/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -61,6 +61,7 @@ public class ReaderWebView extends WebView
     public static final int MAX_SWIPE_Y = 200;
 
 	private static final String TAG = "ReaderWebView";
+    private final PreferenceHelper preferenceHelper;
 
     public boolean mPageLoaded;
 
@@ -79,14 +80,15 @@ public class ReaderWebView extends WebView
     private int maxSwipeY = MAX_SWIPE_Y;
     private int minVelocity = MIN_SWIPE_VELOCITY;
 
-	@SuppressLint("AddJavascriptInterface")
-	public ReaderWebView(Context mContext, AttributeSet attributeSet) {
+    @SuppressLint("AddJavascriptInterface")
+    public ReaderWebView(Context mContext, AttributeSet attributeSet) {
 		super(mContext, attributeSet);
 
 		WebSettings settings = getSettings();
 		settings.setJavaScriptEnabled(true);
-		settings.setNeedInitialFocus(false);
-		settings.setBuiltInZoomControls(false);
+        settings.setDomStorageEnabled(true);
+        settings.setNeedInitialFocus(false);
+        settings.setBuiltInZoomControls(false);
 		settings.setSupportZoom(false);
 
 		setFocusable(true);
@@ -102,7 +104,8 @@ public class ReaderWebView extends WebView
 		mGestureScanner = new GestureDetector(mContext, this);
 		mGestureScanner.setIsLongpressEnabled(true);
 		mGestureScanner.setOnDoubleTapListener(this);
-	}
+        preferenceHelper = PreferenceHelper.getInstance();
+    }
 
     public Mode getMode() {
         return currMode;
@@ -315,27 +318,27 @@ public class ReaderWebView extends WebView
 		String selTextColor;
 		String selTextBack;
 
-		getSettings().setStandardFontFamily(PreferenceHelper.getFontFamily());
+        getSettings().setStandardFontFamily(preferenceHelper.getFontFamily());
 
 		if (!nightMode) {
-			backColor = PreferenceHelper.getTextBackground();
-			textColor = PreferenceHelper.getTextColor();
-			selTextColor = PreferenceHelper.getTextColorSelected();
-			selTextBack = PreferenceHelper.getTextBackgroundSelected();
-		} else {
+            backColor = preferenceHelper.getTextBackground();
+            textColor = preferenceHelper.getTextColor();
+            selTextColor = preferenceHelper.getTextColorSelected();
+            selTextBack = preferenceHelper.getTextBackgroundSelected();
+        } else {
 			textColor = "#EEEEEE";
 			backColor = "#000000";
 			selTextColor = "#EEEEEE";
 			selTextBack = "#562000";
 		}
-		String textSize = PreferenceHelper.getTextSize();
+        String textSize = preferenceHelper.getTextSize();
 
 		StringBuilder style = new StringBuilder();
 		style.append("<style type=\"text/css\">\r\n")
 				.append("body {\r\n")
 				.append("padding-bottom: 50px;\r\n");
-		if (PreferenceHelper.textAlignJustify()) {
-			style.append("text-align: justify;\r\n");
+        if (preferenceHelper.textAlignJustify()) {
+            style.append("text-align: justify;\r\n");
 		}
 		style.append("color: ").append(textColor).append(";\r\n")
 				.append("font-size: ").append(textSize).append("pt;\r\n")

@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: BQModuleRepository.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 9/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -47,7 +47,7 @@ import com.BibleQuote.entity.modules.BQBook;
 import com.BibleQuote.entity.modules.BQModule;
 import com.BibleQuote.utils.CachePool;
 import com.BibleQuote.utils.FsUtils;
-import com.BibleQuote.utils.Log;
+import com.BibleQuote.utils.Logger;
 import com.BibleQuote.utils.modules.LanguageConvertor;
 
 import java.io.BufferedReader;
@@ -104,7 +104,7 @@ public class BQModuleRepository implements IModuleRepository<String, BQModule> {
             result.setDefaultEncoding(getModuleEncoding(getReader(result, result.iniFileName)));
             fillModule(result, getReader(result, result.iniFileName));
         } catch (DataAccessException e) {
-            Log.i(TAG, "!!!..Error open module from " + path);
+            Logger.i(TAG, "!!!..Error open module from " + path);
             throw new OpenModuleException(path, result.modulePath);
         }
         return result;
@@ -128,7 +128,7 @@ public class BQModuleRepository implements IModuleRepository<String, BQModule> {
             result = loadChapter(book, chapter, reader);
             chapterPool.put(chapterID, result);
         } catch (DataAccessException e) {
-            Log.e(TAG, "Can't load chapters of book with ID = " + bookID, e);
+            Logger.e(TAG, "Can't load chapters of book with ID = " + bookID, e);
             throw new BookNotFoundException(module.getID(), bookID);
 
         } finally {

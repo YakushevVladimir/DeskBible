@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2011 Scripture Software
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,15 +18,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * --------------------------------------------------
- *
  * Project: BibleQuote-for-Android
  * File: ClipboardShare.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 9/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
- *
  */
 
 package com.BibleQuote.utils.share;
@@ -53,7 +52,7 @@ public class ClipboardShare extends BaseShareBuilder {
 	@Override
 	public void share() {
 		initFormatters();
-		if (textFormater == null || referenceFormatter == null) {
+		if (textFormatter == null || referenceFormatter == null) {
 			return;
 		}
 

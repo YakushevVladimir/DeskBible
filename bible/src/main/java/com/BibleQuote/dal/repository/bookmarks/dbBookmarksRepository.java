@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2011 Scripture Software
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,15 +18,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * --------------------------------------------------
- *
  * Project: BibleQuote-for-Android
- * File: dbBookmarksRepository.java
+ * File: DbBookmarksRepository.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 9/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
- *
  */
 
 package com.BibleQuote.dal.repository.bookmarks;
@@ -38,17 +37,17 @@ import com.BibleQuote.domain.entity.Bookmark;
 import com.BibleQuote.domain.entity.Tag;
 import com.BibleQuote.domain.repository.IBookmarksRepository;
 import com.BibleQuote.domain.repository.IBookmarksTagsRepository;
-import com.BibleQuote.utils.Log;
+import com.BibleQuote.utils.Logger;
 
 import java.util.ArrayList;
 
-public class dbBookmarksRepository implements IBookmarksRepository {
-	private final static String TAG = dbBookmarksRepository.class.getSimpleName();
+public class DbBookmarksRepository implements IBookmarksRepository {
+	private final static String TAG = DbBookmarksRepository.class.getSimpleName();
 	private IBookmarksTagsRepository bmTagRepo = new dbBookmarksTagsRepository();
 
 	@Override
 	public long add(Bookmark bookmark) {
-		Log.i(TAG, String.format("Add bookmarks %S:%s", bookmark.OSISLink, bookmark.humanLink));
+		Logger.i(TAG, String.format("Add bookmarks %S:%s", bookmark.OSISLink, bookmark.humanLink));
 
 		SQLiteDatabase db = dbLibraryHelper.getLibraryDB();
 		db.beginTransaction();
@@ -66,7 +65,7 @@ public class dbBookmarksRepository implements IBookmarksRepository {
 
 	@Override
 	public void delete(final Bookmark bookmark) {
-		Log.i(TAG, String.format("Delete bookmarks %S:%s", bookmark.OSISLink, bookmark.humanLink));
+		Logger.i(TAG, String.format("Delete bookmarks %S:%s", bookmark.OSISLink, bookmark.humanLink));
 		SQLiteDatabase db = dbLibraryHelper.getLibraryDB();
 		db.beginTransaction();
 		try {
@@ -81,7 +80,7 @@ public class dbBookmarksRepository implements IBookmarksRepository {
 
 	@Override
 	public void deleteAll() {
-		Log.i(TAG, "Delete all bookmarks");
+		Logger.i(TAG, "Delete all bookmarks");
 		SQLiteDatabase db = dbLibraryHelper.getLibraryDB();
 		db.beginTransaction();
 		try {
@@ -96,7 +95,7 @@ public class dbBookmarksRepository implements IBookmarksRepository {
 
 	@Override
 	public ArrayList<Bookmark> getAll() {
-		Log.i(TAG, "Get all bookmarks");
+		Logger.i(TAG, "Get all bookmarks");
 		SQLiteDatabase db = dbLibraryHelper.getLibraryDB();
 		db.beginTransaction();
 		ArrayList<Bookmark> result;
@@ -112,7 +111,7 @@ public class dbBookmarksRepository implements IBookmarksRepository {
 
 	@Override
 	public ArrayList<Bookmark> getAll(Tag tag) {
-		Log.i(TAG, "Get all bookmarks to tag: " + tag.name);
+		Logger.i(TAG, "Get all bookmarks to tag: " + tag.name);
 		SQLiteDatabase db = dbLibraryHelper.getLibraryDB();
 		db.beginTransaction();
 		ArrayList<Bookmark> result;

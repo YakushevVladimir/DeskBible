@@ -19,50 +19,57 @@
  * under the License.
  *
  * Project: BibleQuote-for-Android
- * File: DonateActivity.java
+ * File: AsyncTaskActivity.java
  *
  * Created by Vladimir Yakushev at 9/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
 
-package com.BibleQuote.ui;
+package com.BibleQuote.ui.base;
 
-import android.content.Intent;
-import android.net.Uri;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.Button;
 
-import com.BibleQuote.R;
+import com.BibleQuote.BibleQuoteApp;
+import com.BibleQuote.async.AsyncManager;
+import com.BibleQuote.async.OnTaskCompleteListener;
+import com.BibleQuote.utils.Task;
 
 /**
- *
+ * @author Vladimir Yakushev
+ * @version 1.0
  */
-public class DonateActivity extends AppCompatActivity {
+public abstract class AsyncTaskActivity extends AppCompatActivity implements OnTaskCompleteListener {
 
-    private static final String DONATE_URL = "http://scripturesoftware.org/donate/";
+    protected AsyncManager mAsyncManager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_donate);
-
-        Button donate = (Button) findViewById(R.id.btn_donate);
-        donate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                donate();
-            }
-        });
+        initAsyncManager();
     }
 
-    private void donate() {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(DONATE_URL));
-        if (intent.resolveActivity(getPackageManager()) != null) {
-            startActivity(intent);
+    @Override
+    public abstract void onTaskComplete(Task task);
+
+    @Override
+    public Context getContext() {
+        return this;
+    }
+
+    @Override
+    public Object onRetainCustomNonConfigurationInstance() {
+        return mAsyncManager.retainTask();
+    }
+
+    private void initAsyncManager() {
+        mAsyncManager = BibleQuoteApp.getInstance().getAsyncManager();
+        Object retainedTask = getLastCustomNonConfigurationInstance();
+        if (retainedTask != null && retainedTask instanceof Task) {
+            mAsyncManager.handleRetainedTask((Task) retainedTask, this);
         }
     }
 }

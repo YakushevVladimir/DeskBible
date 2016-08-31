@@ -19,31 +19,46 @@
  * under the License.
  *
  * Project: BibleQuote-for-Android
- * File: AsyncRefreshModules.java
+ * File: AsyncCommand.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 9/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
+package com.BibleQuote.async.task.command;
 
-package com.BibleQuote.async;
-
-import com.BibleQuote.BibleQuoteApp;
-import com.BibleQuote.domain.controllers.ILibraryController;
 import com.BibleQuote.utils.Task;
 
-public class AsyncRefreshModules extends Task {
+public class AsyncCommand extends Task {
 
-	private ILibraryController libCtrl;
+    private ICommand command;
+    private Exception exception;
 
-	public AsyncRefreshModules(String message, Boolean isHidden) {
-		super(message, isHidden);
-		this.libCtrl = BibleQuoteApp.getInstance().getLibraryController();
-	}
+    public interface ICommand {
+        boolean execute() throws Exception;
+    }
 
-	@Override
-	protected Boolean doInBackground(String... arg0) {
-		libCtrl.loadModules();
-		return true;
-	}
+    public AsyncCommand(ICommand command, String message, Boolean isHidden) {
+        super(message, isHidden);
+        this.command = command;
+    }
+
+    @Override
+    protected Boolean doInBackground(String... arg0) {
+        try {
+            return command.execute();
+        } catch (Exception e) {
+            exception = e;
+        }
+        return false;
+    }
+
+    @Override
+    protected void onPostExecute(Boolean result) {
+        super.onPostExecute(result);
+    }
+
+    public Exception getException() {
+        return exception;
+    }
 }

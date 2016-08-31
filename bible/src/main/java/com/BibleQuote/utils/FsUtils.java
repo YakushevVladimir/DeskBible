@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: FsUtils.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 9/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -188,7 +188,7 @@ public final class FsUtils {
 //			fos.close();
 //
 //		} catch (IOException e) {
-//			Log.e(TAG, String.format("loadContentFromURL(%1$s, %2$s)", fromURL, toFile), e);
+    //			Logger.e(TAG, String.format("loadContentFromURL(%1$s, %2$s)", fromURL, toFile), e);
 //			return false;
 //		}
 //

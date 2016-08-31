@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: BibleReference.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 9/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -31,7 +31,7 @@ package com.BibleQuote.domain.entity;
 import android.net.Uri;
 
 import com.BibleQuote.entity.modules.BQModule;
-import com.BibleQuote.utils.Log;
+import com.BibleQuote.utils.Logger;
 
 public class BibleReference {
 	public final static String MOD_DATASOURCE_FS = "fs";
@@ -77,8 +77,8 @@ public class BibleReference {
                     e.printStackTrace();
                 }
             } catch (Exception e) {
-                Log.e(TAG, String.format("OSISLink(%1$s)", bibleLinkPath), e);
-            }
+				Logger.e(TAG, String.format("OSISLink(%1$s)", bibleLinkPath), e);
+			}
 
         } else {
             // BibleLinkPath short path format

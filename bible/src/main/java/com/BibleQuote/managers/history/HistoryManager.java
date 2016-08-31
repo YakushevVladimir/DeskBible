@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2011 Scripture Software
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,15 +18,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * --------------------------------------------------
- *
  * Project: BibleQuote-for-Android
- * File: SimpleHistoryManager.java
+ * File: HistoryManager.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 9/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
- *
  */
 
 package com.BibleQuote.managers.history;
@@ -36,12 +35,12 @@ import com.BibleQuote.entity.ItemList;
 
 import java.util.LinkedList;
 
-public class SimpleHistoryManager implements IHistoryManager {
+public class HistoryManager implements IHistoryManager {
 
 	private final int HISTORY_LENGHT;
 	private IHistoryRepository repository;
 
-	public SimpleHistoryManager(IHistoryRepository repository, int lenght) {
+	public HistoryManager(IHistoryRepository repository, int lenght) {
 		this.repository = repository;
 		this.HISTORY_LENGHT = lenght;
 	}

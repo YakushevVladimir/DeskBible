@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: UpdateManager.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 9/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -33,15 +33,14 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Environment;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.util.Xml.Encoding;
 
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
-import com.BibleQuote.dal.repository.bookmarks.dbBookmarksRepository;
+import com.BibleQuote.dal.repository.bookmarks.DbBookmarksRepository;
+import com.BibleQuote.dal.repository.bookmarks.PrefBookmarksRepository;
 import com.BibleQuote.dal.repository.bookmarks.dbBookmarksTagsRepository;
 import com.BibleQuote.dal.repository.bookmarks.dbTagRepository;
-import com.BibleQuote.dal.repository.bookmarks.prefBookmarksRepository;
 import com.BibleQuote.domain.controllers.ILibraryController;
 import com.BibleQuote.domain.entity.Bookmark;
 import com.BibleQuote.managers.bookmarks.BookmarksManager;
@@ -62,144 +61,145 @@ import java.util.zip.ZipInputStream;
 
 public final class UpdateManager {
 
-	private final static String TAG = "UpdateManager";
+    private final static String TAG = "UpdateManager";
 
-	private UpdateManager() throws InstantiationException {
-		throw new InstantiationException("This class is not for instantiation");
-	}
+    private UpdateManager() throws InstantiationException {
+        throw new InstantiationException("This class is not for instantiation");
+    }
 
-	static public void init(Context context) {
+    public static void start(Context context) {
 
-		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+        Logger.i(TAG, "Start update manager...");
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
 
-		String state = Environment.getExternalStorageState();
+        String state = Environment.getExternalStorageState();
 
-		if (Environment.MEDIA_MOUNTED.equals(state)) {
-			File dirModules = new File(DataConstants.FS_EXTERNAL_DATA_PATH);
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            File dirModules = new File(DataConstants.FS_EXTERNAL_DATA_PATH);
             if (!dirModules.exists() && !dirModules.mkdirs()) {
-                Log.i(TAG, String.format("Fail create module directory %1$s", dirModules));
+                Logger.i(TAG, String.format("Fail create module directory %1$s", dirModules));
                 return;
             }
-		}
+        }
 
-		int currVersionCode = settings.getInt("versionCode", 0);
+        int currVersionCode = settings.getInt("versionCode", 0);
 
-		boolean updateModules = false;
-		if (currVersionCode < 53 && Environment.MEDIA_MOUNTED.equals(state)) {
-			updateModules = true;
-		}
+        boolean updateModules = false;
+        if (currVersionCode < 53 && Environment.MEDIA_MOUNTED.equals(state)) {
+            updateModules = true;
+        }
 
-		if (currVersionCode < 39) {
-			Log.i(TAG, "Update to version 0.05.02");
-			saveTSK(context);
-		}
+        if (currVersionCode < 39) {
+            Logger.i(TAG, "Update to version 0.05.02");
+            saveTSK(context);
+        }
 
-		if (currVersionCode < 59) {
-			convertBookmarks_59();
-		} else if (currVersionCode < 63) {
-			convertBookmarks_63();
-		}
+        if (currVersionCode < 59) {
+            convertBookmarks_59();
+        } else if (currVersionCode < 63) {
+            convertBookmarks_63();
+        }
 
-		if (currVersionCode < 76) {
-			ILibraryController libraryController = BibleQuoteApp.getInstance().getLibraryController();
-			libraryController.loadModules();
-		}
+        if (updateModules) {
+            Logger.i(TAG, "Update built-in modules on external storage");
+            updateBuiltInModules(context);
+        }
 
-		if (updateModules) {
-			Log.i(TAG, "Update built-in modules on external storage");
-			updateBuiltInModules(context);
-		}
+        if (currVersionCode < 76) {
+            ILibraryController libraryController = BibleQuoteApp.getInstance().getLibraryController();
+            libraryController.loadModules();
+        }
 
-		try {
-			int versionCode = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode;
+        try {
+            int versionCode = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode;
             settings.edit().putInt("versionCode", versionCode).apply();
         } catch (NameNotFoundException e) {
             settings.edit().putInt("versionCode", 39).apply();
         }
-	}
+    }
 
-	private static void convertBookmarks_63() {
-		Log.d(TAG, "Convert bookmarks to DB version 2");
-        BookmarksManager bmManager = new BookmarksManager(new dbBookmarksRepository(), new dbBookmarksTagsRepository(), new dbTagRepository());
+    private static void convertBookmarks_63() {
+        Logger.d(TAG, "Convert bookmarks to DB version 2");
+        BookmarksManager bmManager = new BookmarksManager(new DbBookmarksRepository(), new dbBookmarksTagsRepository(), new dbTagRepository());
         ArrayList<Bookmark> bookmarks = bmManager.getAll();
-		for (Bookmark currBM : bookmarks) {
-			if (currBM.name == null) currBM.name = currBM.humanLink;
-			bmManager.add(currBM);
-		}
-	}
+        for (Bookmark currBM : bookmarks) {
+            if (currBM.name == null) currBM.name = currBM.humanLink;
+            bmManager.add(currBM);
+        }
+    }
 
-	private static void convertBookmarks_59() {
-		Log.d(TAG, "Convert bookmarks to DB version 1");
-        BookmarksManager newBM = new BookmarksManager(new dbBookmarksRepository(), new dbBookmarksTagsRepository(), new dbTagRepository());
-        ArrayList<Bookmark> bookmarks = new BookmarksManager(new prefBookmarksRepository(), new dbBookmarksTagsRepository(), new dbTagRepository()).getAll();
+    private static void convertBookmarks_59() {
+        Logger.d(TAG, "Convert bookmarks to DB version 1");
+        BookmarksManager newBM = new BookmarksManager(new DbBookmarksRepository(), new dbBookmarksTagsRepository(), new dbTagRepository());
+        ArrayList<Bookmark> bookmarks = new BookmarksManager(new PrefBookmarksRepository(), new dbBookmarksTagsRepository(), new dbTagRepository()).getAll();
         for (Bookmark curr : bookmarks) {
-			newBM.add(curr.OSISLink, curr.humanLink);
-		}
-	}
+            newBM.add(curr.OSISLink, curr.humanLink);
+        }
+    }
 
-	private static void updateBuiltInModules(Context context) {
-		try {
-			saveBuiltInModule(context, "bible_rst.zip", R.raw.bible_rst);
-			saveBuiltInModule(context, "bible_kjv.zip", R.raw.bible_kjv);
-		} catch (IOException e) {
-			Log.e(TAG, e.getMessage());
-		}
-	}
+    private static void updateBuiltInModules(Context context) {
+        try {
+            saveBuiltInModule(context, "bible_rst.zip", R.raw.bible_rst);
+            saveBuiltInModule(context, "bible_kjv.zip", R.raw.bible_kjv);
+        } catch (IOException e) {
+            Logger.e(TAG, e.getMessage());
+        }
+    }
 
-	private static void saveBuiltInModule(Context context, String fileName, int rawId) throws IOException {
-		File moduleDir = new File(DataConstants.FS_EXTERNAL_DATA_PATH);
-		InputStream moduleStream = context.getResources().openRawResource(rawId);
-		OutputStream newModule = new FileOutputStream(new File(moduleDir, fileName));
-		byte[] buf = new byte[1024];
-		int len;
-		while ((len = moduleStream.read(buf)) > 0) {
-			newModule.write(buf, 0, len);
-		}
-		moduleStream.close();
-		newModule.close();
-	}
+    private static void saveBuiltInModule(Context context, String fileName, int rawId) throws IOException {
+        File moduleDir = new File(DataConstants.FS_EXTERNAL_DATA_PATH);
+        InputStream moduleStream = context.getResources().openRawResource(rawId);
+        OutputStream newModule = new FileOutputStream(new File(moduleDir, fileName));
+        byte[] buf = new byte[1024];
+        int len;
+        while ((len = moduleStream.read(buf)) > 0) {
+            newModule.write(buf, 0, len);
+        }
+        moduleStream.close();
+        newModule.close();
+    }
 
-	private static void saveTSK(Context context) {
-		try {
-			InputStream tskStream = context.getResources().openRawResource(R.raw.tsk);
-			ZipInputStream zStream = new ZipInputStream(tskStream);
+    private static void saveTSK(Context context) {
+        try {
+            InputStream tskStream = context.getResources().openRawResource(R.raw.tsk);
+            ZipInputStream zStream = new ZipInputStream(tskStream);
 
-			InputStreamReader isReader = null;
-			ZipEntry entry;
-			while ((entry = zStream.getNextEntry()) != null) {
-				String entryName = entry.getName().toLowerCase();
-				if (entryName.contains(File.separator)) {
-					entryName = entryName.substring(entryName.lastIndexOf(File.separator) + 1);
-				}
-				if (entryName.equalsIgnoreCase("tsk.xml")) {
-					isReader = new InputStreamReader(zStream, Encoding.UTF_8.toString());
-					break;
-				}
-			}
-			if (isReader == null) {
-				return;
-			}
-			BufferedReader tskBr = new BufferedReader(isReader);
-
-			File tskFile = new File(DataConstants.FS_APP_DIR_NAME, "tsk.xml");
-            if (tskFile.exists() && !tskFile.delete()) {
-                Log.e(TAG, "Can't delete TSK-file");
+            InputStreamReader isReader = null;
+            ZipEntry entry;
+            while ((entry = zStream.getNextEntry()) != null) {
+                String entryName = entry.getName().toLowerCase();
+                if (entryName.contains(File.separator)) {
+                    entryName = entryName.substring(entryName.lastIndexOf(File.separator) + 1);
+                }
+                if (entryName.equalsIgnoreCase("tsk.xml")) {
+                    isReader = new InputStreamReader(zStream, Encoding.UTF_8.toString());
+                    break;
+                }
+            }
+            if (isReader == null) {
                 return;
             }
-			BufferedWriter tskBw = new BufferedWriter(new FileWriter(tskFile));
+            BufferedReader tskBr = new BufferedReader(isReader);
 
-			char[] buf = new char[1024];
-			int len;
-			while ((len = tskBr.read(buf)) > 0) {
-				tskBw.write(buf, 0, len);
-			}
-			tskBw.flush();
-			tskBw.close();
-			tskBr.close();
-		} catch (FileNotFoundException e) {
-			Log.e(TAG, e.getMessage());
-		} catch (IOException e) {
-			Log.e(TAG, e.getMessage());
-		}
-	}
+            File tskFile = new File(DataConstants.FS_APP_DIR_NAME, "tsk.xml");
+            if (tskFile.exists() && !tskFile.delete()) {
+                Logger.e(TAG, "Can't delete TSK-file");
+                return;
+            }
+            BufferedWriter tskBw = new BufferedWriter(new FileWriter(tskFile));
+
+            char[] buf = new char[1024];
+            int len;
+            while ((len = tskBr.read(buf)) > 0) {
+                tskBw.write(buf, 0, len);
+            }
+            tskBw.flush();
+            tskBw.close();
+            tskBr.close();
+        } catch (FileNotFoundException e) {
+            Logger.e(TAG, e.getMessage());
+        } catch (IOException e) {
+            Logger.e(TAG, e.getMessage());
+        }
+    }
 }

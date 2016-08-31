@@ -1,77 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-/*
- * Copyright (C) 2011 Scripture Software (http://scripturesoftware.org/)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
--->
-<TableLayout 
-	android:layout_width="fill_parent" 
-	android:layout_height="fill_parent"
-	xmlns:android="http://schemas.android.com/apk/res/android">
+  ~ Copyright (C) 2011 Scripture Software
+  ~
+  ~ Licensed to the Apache Software Foundation (ASF) under one
+  ~ or more contributor license agreements.  See the NOTICE file
+  ~ distributed with this work for additional information
+  ~ regarding copyright ownership.  The ASF licenses this file
+  ~ to you under the Apache License, Version 2.0 (the
+  ~ "License"); you may not use this file except in compliance
+  ~ with the License.  You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied.  See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  ~
+  ~ Project: BibleQuote-for-Android
+  ~ File: search.xml
+  ~
+  ~ Created by Vladimir Yakushev at 9/2016
+  ~ E-mail: ru.phoenix@gmail.com
+  ~ WWW: http://www.scripturesoftware.org
+  -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-	<LinearLayout 
-		android:layout_width="fill_parent"
+	<LinearLayout
+        android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:orientation="vertical" 
-		android:background="@drawable/btn_bar_background"
+		android:orientation="vertical"
+        android:background="@color/light_gray"
+        android:focusable="true"
 		android:padding="2.0dip">
-		
-		<LinearLayout 
+
+        <RelativeLayout
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
 			android:orientation="horizontal" 
 			android:padding="2.0dip"
 			android:baselineAligned="true">
-			
-			<EditText 
-				android:id="@+id/SearchEdit"
-				android:layout_width="fill_parent" 
-				android:layout_height="45.0dip"
-				android:layout_margin="1.0dip"
-				android:layout_weight="1" 
-				android:singleLine="true" />
-			
-			<ImageButton 
+
+            <ImageButton
 				android:id="@+id/SearchButton"
-				style="@style/DefaultButton" 
-				android:layout_width="40.0dip" 
-				android:layout_height="40.0dip"
-				android:layout_margin="1.0dip"
-				android:src="@drawable/ic_btn_search"
-				android:onClick="onSearchClick" />
-		
-		</LinearLayout>
+                style="@style/DefaultButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_margin="1dp"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/ic_btn_search"/>
+
+            <EditText
+                android:id="@+id/SearchEdit"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_margin="1dp"
+                android:layout_toLeftOf="@+id/SearchButton"
+                android:singleLine="true"
+                android:inputType="textAutoComplete"/>
+        </RelativeLayout>
 		
 		<LinearLayout 
 			android:id="@+id/LinearLayout02"
 			android:layout_width="fill_parent" 
 			android:layout_height="41dip"
 			android:orientation="horizontal">
-			
-			<Spinner 
+
+            <Spinner
 				android:id="@+id/FromBookCB" 
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content" 
 				android:layout_weight="1" />
-			
-			<Spinner 
+
+            <Spinner
 				android:id="@+id/ToBookCB" 
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content" 
 				android:layout_weight="1" />
-		
 		</LinearLayout>
 	
 	</LinearLayout>
@@ -82,4 +93,4 @@
 		android:layout_height="fill_parent"
 		android:background="@android:color/white" />
 
-</TableLayout>
+</LinearLayout>

@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2011 Scripture Software
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,19 +18,17 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * --------------------------------------------------
- *
  * Project: BibleQuote-for-Android
- * File: fsHistoryRepository.java
+ * File: FsHistoryRepository.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 9/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
- *
  */
 
 package com.BibleQuote.dal.repository;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.BibleQuote.domain.exceptions.DataAccessException;
@@ -43,14 +43,19 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.LinkedList;
 
-public class fsHistoryRepository implements IHistoryRepository {
-	private File dirPath;
-	private static final String historyFileName = "history.dat";
-	private static final String TAG = "fsHistoryRepository";
+public class FsHistoryRepository implements IHistoryRepository {
 
-	public fsHistoryRepository(File file) {
-		this.dirPath = file;
-	}
+    private static final String TAG = FsHistoryRepository.class.getSimpleName();
+    private static final String historyFileName = "history.dat";
+
+    private File dirPath;
+
+    public FsHistoryRepository(Context context) {
+        this.dirPath = context.getExternalCacheDir();
+        if (this.dirPath == null || !dirPath.exists()) {
+            this.dirPath = context.getCacheDir();
+        }
+    }
 
 	public void save(LinkedList<ItemList> list) {
 		try {
