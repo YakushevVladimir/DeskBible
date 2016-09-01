@@ -40,11 +40,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
-import com.BibleQuote.dal.repository.bookmarks.DbBookmarksRepository;
 import com.BibleQuote.dal.repository.bookmarks.dbBookmarksTagsRepository;
 import com.BibleQuote.dal.repository.bookmarks.dbTagRepository;
 import com.BibleQuote.domain.entity.Bookmark;
+import com.BibleQuote.domain.repository.IBookmarksRepository;
 import com.BibleQuote.managers.GoogleAnalyticsHelper;
 import com.BibleQuote.managers.bookmarks.BookmarksManager;
 import com.BibleQuote.ui.BookmarksActivity;
@@ -53,11 +54,17 @@ public class BookmarksDialog extends DialogFragment {
     private Bookmark bookmark;
     private TextView tvDate, tvHumanLink;
     private EditText tvName, tvTags;
+    private IBookmarksRepository bookmarksRepository;
 
     public static BookmarksDialog newInstance(Bookmark bookmark) {
         BookmarksDialog result = new BookmarksDialog();
         result.setBookmark(bookmark);
         return result;
+    }
+
+    public BookmarksDialog() {
+        super();
+        bookmarksRepository = BibleQuoteApp.getInstance().getBookmarksRepository();
     }
 
     @NonNull
@@ -93,7 +100,7 @@ public class BookmarksDialog extends DialogFragment {
 
     private void addBookmarks() {
         readField();
-        new BookmarksManager(new DbBookmarksRepository(), new dbBookmarksTagsRepository(), new dbTagRepository()).add(bookmark, bookmark.tags);
+        new BookmarksManager(bookmarksRepository, new dbBookmarksTagsRepository(), new dbTagRepository()).add(bookmark, bookmark.tags);
 
         GoogleAnalyticsHelper.getInstance().actionSendBookmark(bookmark);
 

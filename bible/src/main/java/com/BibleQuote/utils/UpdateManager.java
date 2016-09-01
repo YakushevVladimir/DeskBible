@@ -37,12 +37,12 @@ import android.util.Xml.Encoding;
 
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
-import com.BibleQuote.dal.repository.bookmarks.DbBookmarksRepository;
 import com.BibleQuote.dal.repository.bookmarks.PrefBookmarksRepository;
 import com.BibleQuote.dal.repository.bookmarks.dbBookmarksTagsRepository;
 import com.BibleQuote.dal.repository.bookmarks.dbTagRepository;
 import com.BibleQuote.domain.controllers.ILibraryController;
 import com.BibleQuote.domain.entity.Bookmark;
+import com.BibleQuote.domain.repository.IBookmarksRepository;
 import com.BibleQuote.managers.bookmarks.BookmarksManager;
 
 import java.io.BufferedReader;
@@ -120,7 +120,8 @@ public final class UpdateManager {
 
     private static void convertBookmarks_63() {
         Logger.d(TAG, "Convert bookmarks to DB version 2");
-        BookmarksManager bmManager = new BookmarksManager(new DbBookmarksRepository(), new dbBookmarksTagsRepository(), new dbTagRepository());
+        final IBookmarksRepository bookmarksRepo = BibleQuoteApp.getInstance().getBookmarksRepository();
+        BookmarksManager bmManager = new BookmarksManager(bookmarksRepo, new dbBookmarksTagsRepository(), new dbTagRepository());
         ArrayList<Bookmark> bookmarks = bmManager.getAll();
         for (Bookmark currBM : bookmarks) {
             if (currBM.name == null) currBM.name = currBM.humanLink;
@@ -130,7 +131,8 @@ public final class UpdateManager {
 
     private static void convertBookmarks_59() {
         Logger.d(TAG, "Convert bookmarks to DB version 1");
-        BookmarksManager newBM = new BookmarksManager(new DbBookmarksRepository(), new dbBookmarksTagsRepository(), new dbTagRepository());
+        final IBookmarksRepository bookmarksRepo = BibleQuoteApp.getInstance().getBookmarksRepository();
+        BookmarksManager newBM = new BookmarksManager(bookmarksRepo, new dbBookmarksTagsRepository(), new dbTagRepository());
         ArrayList<Bookmark> bookmarks = new BookmarksManager(new PrefBookmarksRepository(), new dbBookmarksTagsRepository(), new dbTagRepository()).getAll();
         for (Bookmark curr : bookmarks) {
             newBM.add(curr.OSISLink, curr.humanLink);
