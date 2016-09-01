@@ -32,7 +32,7 @@ import android.app.Application;
 import com.BibleQuote.async.AsyncManager;
 import com.BibleQuote.dal.repository.FsHistoryRepository;
 import com.BibleQuote.dal.repository.XmlTskRepository;
-import com.BibleQuote.dal.repository.bookmarks.DB_BookmarksRepository;
+import com.BibleQuote.dal.repository.bookmarks.DbBookmarksRepository;
 import com.BibleQuote.domain.controllers.FsLibraryController;
 import com.BibleQuote.domain.controllers.ILibraryController;
 import com.BibleQuote.domain.controllers.TSKController;
@@ -89,7 +89,7 @@ public class BibleQuoteApp extends Application {
 	}
 
 	public IBookmarksRepository getBookmarksRepository() {
-        return new DB_BookmarksRepository();
+        return new DbBookmarksRepository();
     }
 
 	public synchronized Tracker getTracker() {

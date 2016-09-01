@@ -41,8 +41,8 @@ import com.BibleQuote.utils.Logger;
 
 import java.util.ArrayList;
 
-public class DB_BookmarksRepository implements IBookmarksRepository {
-    private final static String TAG = DB_BookmarksRepository.class.getSimpleName();
+public class DbBookmarksRepository implements IBookmarksRepository {
+    private final static String TAG = DbBookmarksRepository.class.getSimpleName();
     private IBookmarksTagsRepository bmTagRepo = new dbBookmarksTagsRepository();
 
     @Override
