@@ -60,7 +60,7 @@ public class PrefBookmarksRepository implements IBookmarksRepository {
 	@Override
 	public void delete(Bookmark bookmark) {
 		String fav = preferenceHelper.restoreStateString("Favorits");
-		fav = fav.replaceAll(bookmark.humanLink + "(.)+?" + BOOKMARK_DELIMITER, "");
+		fav = fav.replaceAll(String.format("%s(.)+?%s", bookmark.humanLink, BOOKMARK_DELIMITER), "");
 		preferenceHelper.saveStateString("Favorits", fav);
 	}
 
