@@ -146,4 +146,5 @@
     <string name="choice_chapter">Відкрити…</string>
     <string name="donate">Donate</string>
     <string name="menu_tags">Ярлик</string>
+    <string name="search_hint">Що знайти?</string>
 </resources>

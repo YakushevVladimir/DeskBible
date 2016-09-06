@@ -22,7 +22,7 @@
   ~ Project: BibleQuote-for-Android
   ~ File: strings.xml
   ~
-  ~ Created by Vladimir Yakushev at 8/2016
+  ~ Created by Vladimir Yakushev at 9/2016
   ~ E-mail: ru.phoenix@gmail.com
   ~ WWW: http://www.scripturesoftware.org
   -->
@@ -148,4 +148,5 @@
     <string name="choice_chapter">Abierto…</string>
     <string name="donate">Donate</string>
     <string name="menu_tags">Etiquetas</string>
+    <string name="search_hint">Lo que hay que encontrar?</string>
 </resources>

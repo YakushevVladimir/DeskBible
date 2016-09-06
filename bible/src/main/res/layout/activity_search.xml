@@ -20,7 +20,7 @@
   ~ under the License.
   ~
   ~ Project: BibleQuote-for-Android
-  ~ File: search.xml
+  ~ File: activity_search.xml
   ~
   ~ Created by Vladimir Yakushev at 9/2016
   ~ E-mail: ru.phoenix@gmail.com
@@ -30,42 +30,26 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true"
     android:orientation="vertical">
 
 	<LinearLayout
         android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:orientation="vertical"
         android:background="@color/light_gray"
-        android:focusable="true"
+        android:orientation="vertical"
 		android:padding="2.0dip">
 
-        <RelativeLayout
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:orientation="horizontal" 
-			android:padding="2.0dip"
-			android:baselineAligned="true">
-
-            <ImageButton
-				android:id="@+id/SearchButton"
-                style="@style/DefaultButton"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_margin="1dp"
-                android:layout_alignParentRight="true"
-                android:src="@drawable/ic_btn_search"/>
-
-            <EditText
-                android:id="@+id/SearchEdit"
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:layout_margin="1dp"
-                android:layout_toLeftOf="@+id/SearchButton"
-                android:singleLine="true"
-                android:inputType="textAutoComplete"/>
-        </RelativeLayout>
-		
+        <EditText
+            android:id="@+id/search_text"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_margin="1dp"
+            android:hint="@string/search_hint"
+            android:imeOptions="actionSearch"
+            android:inputType="textAutoComplete"
+            android:singleLine="true"/>
 		<LinearLayout 
 			android:id="@+id/LinearLayout02"
 			android:layout_width="fill_parent" 
@@ -73,13 +57,13 @@
 			android:orientation="horizontal">
 
             <Spinner
-				android:id="@+id/FromBookCB" 
+                android:id="@+id/from_book"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content" 
 				android:layout_weight="1" />
 
             <Spinner
-				android:id="@+id/ToBookCB" 
+                android:id="@+id/to_book"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content" 
 				android:layout_weight="1" />
@@ -87,8 +71,8 @@
 	
 	</LinearLayout>
 	
-	<ListView 
-		android:id="@+id/SearchLV" 
+	<ListView
+        android:id="@+id/search_list"
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent"
 		android:background="@android:color/white" />
