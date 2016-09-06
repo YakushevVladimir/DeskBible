@@ -43,6 +43,8 @@ import com.BibleQuote.domain.entity.Chapter;
 import com.BibleQuote.domain.exceptions.BookNotFoundException;
 import com.BibleQuote.domain.exceptions.ExceptionHelper;
 import com.BibleQuote.domain.exceptions.OpenModuleException;
+import com.BibleQuote.domain.textFormatters.ITextFormatter;
+import com.BibleQuote.domain.textFormatters.ModuleTextFormatter;
 import com.BibleQuote.managers.GoogleAnalyticsHelper;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.ui.fragments.TTSPlayerFragment;
@@ -58,15 +60,13 @@ import java.lang.ref.WeakReference;
  */
 public class ReaderViewPresenter implements TTSPlayerFragment.OnTTSStopSpeakListener, IViewPresenter {
 
-    private static final String TAG = ReaderViewPresenter.class.getSimpleName();
-
     public static final int ID_CHOOSE_CH = 1;
     public static final int ID_SEARCH = 2;
     public static final int ID_HISTORY = 3;
     public static final int ID_BOOKMARKS = 4;
     public static final int ID_PARALLELS = 5;
     public static final int ID_SETTINGS = 6;
-
+    private static final String TAG = ReaderViewPresenter.class.getSimpleName();
     private IReaderView view;
     private WeakReference<Context> weakContext;
     private Librarian librarian;
@@ -78,6 +78,22 @@ public class ReaderViewPresenter implements TTSPlayerFragment.OnTTSStopSpeakList
         this.view = view;
 
         initView();
+    }
+
+    public boolean isVolumeButtonsToScroll() {
+        return preferenceHelper.volumeButtonsToScroll();
+    }
+
+    public void setOSISLink(BibleReference osisLink) {
+        if (osisLink == null) {
+            osisLink = new BibleReference(preferenceHelper.restoreStateString("last_read"));
+        }
+
+        if (!librarian.isOSISLinkValid(osisLink)) {
+            view.openLibraryActivity(ID_CHOOSE_CH);
+        } else {
+            openChapterFromLink(osisLink);
+        }
     }
 
     @Override
@@ -169,10 +185,6 @@ public class ReaderViewPresenter implements TTSPlayerFragment.OnTTSStopSpeakList
 
     }
 
-    public boolean isVolumeButtonsToScroll() {
-        return preferenceHelper.volumeButtonsToScroll();
-    }
-
     public void nextChapter() {
         try {
             librarian.nextChapter();
@@ -193,18 +205,6 @@ public class ReaderViewPresenter implements TTSPlayerFragment.OnTTSStopSpeakList
             Logger.e(TAG, "prevChapter()", e);
         }
         viewCurrentChapter();
-    }
-
-    public void setOSISLink(BibleReference osisLink) {
-        if (osisLink == null) {
-            osisLink = new BibleReference(preferenceHelper.restoreStateString("last_read"));
-        }
-
-        if (!librarian.isOSISLinkValid(osisLink)) {
-            view.openLibraryActivity(ID_CHOOSE_CH);
-        } else {
-            openChapterFromLink(osisLink);
-        }
     }
 
     private void initView() {
@@ -228,6 +228,7 @@ public class ReaderViewPresenter implements TTSPlayerFragment.OnTTSStopSpeakList
 
                     if (task.isSuccess()) {
                         BibleReference osisLink = librarian.getCurrentOSISLink();
+                        view.setTextFormatter(new ModuleTextFormatter(librarian.getCurrModule()));
                         view.setContent(librarian.getBaseUrl(), librarian.getCurrChapter(), osisLink.getFromVerse(), librarian.isBible());
                         view.setTitle(librarian.getModuleName(), librarian.getHumanBookLink());
                         preferenceHelper.saveStateString("last_read", osisLink.getExtendedPath());
@@ -257,19 +258,21 @@ public class ReaderViewPresenter implements TTSPlayerFragment.OnTTSStopSpeakList
     }
 
     public interface IReaderView {
-        void disableActionMode();
-
         void setCurrentOrientation(boolean disableAutoRotation);
 
         void setKeepScreen(boolean isKeepScreen);
 
         void setNightMode(boolean isNightMode);
 
-        boolean invertNightMode();
-
         void setReaderMode(ReaderWebView.Mode mode);
 
+        void setTextFormatter(ITextFormatter formatter);
+
+        void disableActionMode();
+
         void hideTTSPlayer();
+
+        boolean invertNightMode();
 
         void openAboutActivity();
 
@@ -277,11 +280,11 @@ public class ReaderViewPresenter implements TTSPlayerFragment.OnTTSStopSpeakList
 
         void openHelpActivity();
 
+        void openHistoryActivity(int requestCode);
+
         void openImageViewActivity(String imagePath);
 
         void openLibraryActivity(int requestCode);
-
-        void openHistoryActivity(int requestCode);
 
         void openSearchActivity(int requestCode);
 
@@ -293,10 +296,10 @@ public class ReaderViewPresenter implements TTSPlayerFragment.OnTTSStopSpeakList
 
         void setTitle(String moduleName, String link);
 
-        void viewTTSPlayer();
-
         void updateActivityMode();
 
         void updateContent();
+
+        void viewTTSPlayer();
     }
 }

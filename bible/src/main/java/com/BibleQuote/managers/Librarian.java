@@ -127,6 +127,10 @@ public class Librarian {
         return currChapter;
     }
 
+    public Module getCurrModule() {
+        return currModule;
+    }
+
     public ArrayList<ItemList> getCurrentModuleBooksList() throws OpenModuleException, BooksDefinitionException, BookDefinitionException {
         return getBookItemLists(currModule);
     }
@@ -247,7 +251,7 @@ public class Librarian {
     }
 
     public Chapter getChapterByNumber(Book book, Integer chapterNumber) throws BookNotFoundException {
-        IModuleController modCtrl = Injector.getModuleController(book.getModule());
+        IModuleController modCtrl = Injector.getModuleController(currModule);
         return modCtrl.getChapter(book.getID(), chapterNumber);
     }
 
@@ -345,19 +349,6 @@ public class Librarian {
         return true;
     }
 
-    public Chapter openChapter(BibleReference link) throws BookNotFoundException, OpenModuleException {
-        currModule = libCtrl.getModuleByID(link.getModuleID());
-        IModuleController modCtrl = Injector.getModuleController(currModule);
-        currBook = modCtrl.getBookByID(link.getBookID());
-        currChapter = modCtrl.getChapter(link.getBookID(), link.getChapter());
-        currChapterNumber = link.getChapter();
-        currVerseNumber = link.getFromVerse();
-
-        historyManager.addLink(new BibleReference(currModule, currBook, currChapterNumber, currVerseNumber));
-
-        return currChapter;
-    }
-
     public void nextChapter() throws OpenModuleException {
         if (currModule == null || currBook == null) {
             return;
@@ -380,6 +371,19 @@ public class Librarian {
                 Logger.e(TAG, e.getMessage());
             }
         }
+    }
+
+    public Chapter openChapter(BibleReference link) throws BookNotFoundException, OpenModuleException {
+        currModule = libCtrl.getModuleByID(link.getModuleID());
+        IModuleController modCtrl = Injector.getModuleController(currModule);
+        currBook = modCtrl.getBookByID(link.getBookID());
+        currChapter = modCtrl.getChapter(link.getBookID(), link.getChapter());
+        currChapterNumber = link.getChapter();
+        currVerseNumber = link.getFromVerse();
+
+        historyManager.addLink(new BibleReference(currModule, currBook, currChapterNumber, currVerseNumber));
+
+        return currChapter;
     }
 
     public void prevChapter() throws OpenModuleException {

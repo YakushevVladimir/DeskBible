@@ -28,6 +28,8 @@
 
 package com.BibleQuote.domain.entity;
 
+import android.support.annotation.NonNull;
+
 import com.BibleQuote.managers.BibleBooksID;
 
 import java.io.Serializable;
@@ -41,22 +43,17 @@ public abstract class Book implements Serializable {
 	private static final long serialVersionUID = -6348188202419079481L;
 
 	private String name;
-
 	private ArrayList<String> shortNames = new ArrayList<String>();
+    private String osisId;
+    private Integer chapterQty;
+    private boolean hasChapterZero;
 
-	private String OSIS_ID;
-
-	private Integer chapterQty;
-	private Module module;
-	private ArrayList<String> chapterNumbers = new ArrayList<String>();
-
-	public Book(Module module, String name, String shortNames, int chapterQty) {
-		this.setName(name);
-		this.setChapterQty(chapterQty);
-		this.module = module;
-		setShortNames(shortNames);
-		setID();
-	}
+    public Book(String name, String shortNames, int chapterQty, boolean hasChapterZero) {
+        this.name = name;
+        this.chapterQty = chapterQty;
+        this.hasChapterZero = hasChapterZero;
+        this.shortNames = getShortNames(shortNames);
+    }
 
 	/**
 	 * Количество глав в книге
@@ -65,106 +62,89 @@ public abstract class Book implements Serializable {
 		return chapterQty;
 	}
 
-	/**
-	 * Полное имя книги
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * Имя книги по классификации OSIS
-	 */
-	public String getOSIS_ID() {
-		return OSIS_ID;
-	}
-
-	/**
-	 * @return Возвращает краткое имя книги. являющееся первым в списке кратких имен
-	 */
-	public String getShortName() {
-		return getShortNames().get(0);
-	}
-
-	/**
-	 * Краткое имя книги. являющееся первым в списке кратких имен
-	 */
-	public ArrayList<String> getShortNames() {
-		return shortNames;
-	}
-
-	public void setChapterQty(Integer chapterQty) {
-		this.chapterQty = chapterQty;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public void setOSIS_ID(String OSIS_ID) {
-		this.OSIS_ID = OSIS_ID;
-	}
-
-	public void setShortNames(ArrayList<String> shortNames) {
-		this.shortNames = shortNames;
-	}
-
-
-	public ArrayList<String> getChapterNumbers(Boolean isChapterZero) {
-		if (getChapterQty() > 0 && chapterNumbers.isEmpty()) {
-			for (int i = 0; i < getChapterQty(); i++) {
-				chapterNumbers.add("" + (i + (isChapterZero ? 0 : 1)));
-			}
-		}
-		return chapterNumbers;
-	}
-
-	public String getID() {
-		return getOSIS_ID();
-	}
-
-
-	public Module getModule() {
-		return module;
-	}
-
-	private void setID() {
-		setOSIS_ID(BibleBooksID.getID(this.getShortNames()));
-		if (getOSIS_ID() == null) {
-			setOSIS_ID(this.getShortNames().get(0));
-		}
-	}
-
-	private void setShortNames(String shortNames) {
-		String[] names = shortNames.trim().split("\\s+");
-		if (names.length == 0) {
-			this.getShortNames().add((this.getName().length() < 4 ? this.getName() : this.getName().substring(0, 3)) + ".");
-		} else {
-			for (String shortName : names) {
-				// В bibleqt.ini может содержаться одно и то же имя
-				// с точкой и без. При загрузке модуля точки удаляем,
-				// чтобы не было проблемм с ссылками OSIS. Отсюда
-				// могут быть не нужные нам дубли имен, избавляемся от них
-				if (!this.getShortNames().contains(shortName.trim())) {
-					this.getShortNames().add(shortName.trim());
-				}
-			}
-		}
-	}
-
+    public abstract String getDataSourceID();
 
     public int getFirstChapterNumber() {
-        return module.isChapterZero() ? 0 : 1;
-	}
-
-    public int getLastChapterNumber() {
-        return chapterQty - (module.isChapterZero() ? 1 : 0);
+        return hasChapterZero ? 0 : 1;
     }
 
-	public abstract String getDataSourceID();
+    public String getID() {
+        return getOSIS_ID();
+    }
+
+    public int getLastChapterNumber() {
+        return chapterQty - (hasChapterZero ? 1 : 0);
+    }
+
+    /**
+     * Полное имя книги
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Имя книги по классификации OSIS
+     */
+    public String getOSIS_ID() {
+        if (osisId == null) {
+            if (shortNames.size() == 0) {
+                throw new IllegalStateException("Short names not found");
+            }
+
+            osisId = BibleBooksID.getID(shortNames);
+            if (osisId == null) {
+                osisId = shortNames.get(0);
+            }
+        }
+        return osisId;
+    }
+
+    /**
+     * @return Возвращает краткое имя книги. являющееся первым в списке кратких имен
+     */
+    public String getShortName() {
+        return getShortNames().get(0);
+    }
+
+    /**
+     * Краткое имя книги. являющееся первым в списке кратких имен
+     */
+    public ArrayList<String> getShortNames() {
+        return shortNames;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     @Override
     public String toString() {
         return name;
+    }
+
+    @NonNull
+    private String createShortName() {
+        return (name.length() < 4 ? name : name.substring(0, 3)) + ".";
+    }
+
+    private ArrayList<String> getShortNames(String shortNames) {
+        final ArrayList<String> result = this.getShortNames();
+        String[] names = shortNames == null ? new String[]{} : shortNames.trim().split("\\s+");
+        if (names.length == 0) {
+            result.add(createShortName());
+        } else {
+            for (String shortName : names) {
+                // В bibleqt.ini может содержаться одно и то же имя
+                // с точкой и без. При загрузке модуля точки удаляем,
+                // чтобы не было проблемм с ссылками OSIS. Отсюда
+                // могут быть не нужные нам дубли имен, избавляемся от них
+                if (!result.contains(shortName.trim())) {
+                    result.add(shortName.trim());
+                }
+            }
+        }
+
+        return result;
     }
 }

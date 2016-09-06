@@ -67,10 +67,45 @@ import java.util.regex.Pattern;
  */
 public class BQModuleRepository implements IModuleRepository<String, BQModule> {
 
-    public static final String TAG = BQModuleRepository.class.getSimpleName();
-    public static final String INI_FILENAME = "bibleqt.ini";
+    private static final String TAG = BQModuleRepository.class.getSimpleName();
+    private static final String INI_FILENAME = "bibleqt.ini";
+    private static final HashMap<String, String> charsets = new HashMap<String, String>();
+    private static final Map<String, Chapter> chapterPool = Collections.synchronizedMap(new CachePool<Chapter>());
 
-    public Map<String, Chapter> chapterPool = Collections.synchronizedMap(new CachePool<Chapter>());
+    static {
+        charsets.put("0", "ISO-8859-1"); // ANSI charset
+        charsets.put("1", "US-ASCII"); // DEFAULT charset
+        charsets.put("77", "MacRoman"); // Mac Roman
+        charsets.put("78", "Shift_JIS"); // Mac Shift Jis
+        charsets.put("79", "ms949"); // Mac Hangul
+        charsets.put("80", "GB2312"); // Mac GB2312
+        charsets.put("81", "Big5"); // Mac Big5
+        charsets.put("82", "johab"); // Mac Johab (old)
+        charsets.put("83", "MacHebrew"); // Mac Hebrew
+        charsets.put("84", "MacArabic"); // Mac Arabic
+        charsets.put("85", "MacGreek"); // Mac Greek
+        charsets.put("86", "MacTurkish"); // Mac Turkish
+        charsets.put("87", "MacThai"); // Mac Thai
+        charsets.put("88", "cp1250"); // Mac East Europe
+        charsets.put("89", "cp1251"); // Mac Russian
+        charsets.put("128", "MS932"); // Shift JIS
+        charsets.put("129", "ms949"); // Hangul
+        charsets.put("130", "ms1361"); // Johab
+        charsets.put("134", "ms936"); // GB2312
+        charsets.put("136", "ms950"); // Big5
+        charsets.put("161", "cp1253"); // Greek
+        charsets.put("162", "cp1254"); // Turkish
+        charsets.put("163", "cp1258"); // Vietnamese
+        charsets.put("177", "cp1255"); // Hebrew
+        charsets.put("178", "cp1256"); // Arabic
+        charsets.put("186", "cp1257"); // Baltic
+        charsets.put("201", "cp1252"); // Cyrillic charset
+        charsets.put("204", "cp1251"); // Russian
+        charsets.put("222", "ms874"); // Thai
+        charsets.put("238", "cp1250"); // Eastern European
+        charsets.put("254", "cp437"); // PC 437
+        charsets.put("255", "cp850"); // OEM
+    }
 
     public BQModuleRepository() {
     }
@@ -82,14 +117,6 @@ public class BQModuleRepository implements IModuleRepository<String, BQModule> {
             return null;
         }
         return BitmapFactory.decodeStream(imageStream);
-    }
-
-    private InputStream getImageReader(BQModule module, String path) {
-        if (module.isArchive()) {
-            return FsUtils.getStreamFromZip(module.getDataSourceID(), path);
-        } else {
-            return FsUtils.getStream(module.getModulePath(), path);
-        }
     }
 
     @Override
@@ -125,7 +152,7 @@ public class BQModuleRepository implements IModuleRepository<String, BQModule> {
                 throw new BookNotFoundException(module.getID(), bookID);
             }
             reader = getReader(module, book.getDataSourceID());
-            result = loadChapter(book, chapter, reader);
+            result = loadChapter(module, book, chapter, reader);
             chapterPool.put(chapterID, result);
         } catch (DataAccessException e) {
             Logger.e(TAG, "Can't load chapters of book with ID = " + bookID, e);
@@ -170,72 +197,11 @@ public class BQModuleRepository implements IModuleRepository<String, BQModule> {
         return searchRes;
     }
 
-    private BufferedReader getReader(BQModule module, String dataSourceID) throws DataAccessException {
-        return module.isArchive()
-                ? FsUtils.getTextFileReaderFromZipArchive(module.modulePath, dataSourceID, module.getDefaultEncoding())
-                : FsUtils.getTextFileReader(module.modulePath, dataSourceID, module.getDefaultEncoding());
+    private boolean contains(String text, String query) {
+        return Pattern.matches(query, text);
     }
 
-    /**
-     * Получить внутреннее представление ссылки на главу
-     *
-     * @param module  ссылка на модуль
-     * @param bookID  id книги в модуле
-     * @param chapter номер главы в книге
-     * @return внутреннее представление ссылки на главу
-     */
-    private String getChapterID(Module module, String bookID, int chapter) {
-        return String.format("%s:%s:%s", module.getID(), bookID, chapter);
-    }
-
-
-    public String getModuleEncoding(BufferedReader bReader) {
-        String encoding = "cp1251";
-
-        if (bReader == null) {
-            return encoding;
-        }
-
-        HashMap<String, String> charsets = getCharsets();
-        String str, key, value;
-        try {
-            while ((str = bReader.readLine()) != null) {
-                int pos = str.indexOf("//");
-                if (pos >= 0)
-                    str = str.substring(0, pos);
-
-                int delimiterPos = str.indexOf("=");
-                if (delimiterPos == -1) {
-                    continue;
-                }
-
-                key = str.substring(0, delimiterPos).trim().toLowerCase();
-                delimiterPos++;
-                value = delimiterPos >= str.length()
-                        ? ""
-                        : str.substring(delimiterPos, str.length()).trim();
-                if (key.equals("desiredfontcharset")) {
-                    return charsets.containsKey(value) ? charsets.get(value) : encoding;
-                } else if (key.equals("defaultencoding")) {
-                    return value;
-                }
-            }
-        } catch (IOException e) {
-            android.util.Log.e(TAG, "getModuleEncoding()", e);
-            e.printStackTrace();
-            return encoding;
-        } finally {
-            try {
-                bReader.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return encoding;
-    }
-
-    public void fillModule(BQModule module, BufferedReader bReader)
+    private void fillModule(BQModule module, BufferedReader bReader)
             throws DataAccessException, BooksDefinitionException, BookDefinitionException {
         if (bReader == null) {
             return;
@@ -356,13 +322,117 @@ public class BQModuleRepository implements IModuleRepository<String, BQModule> {
         }
     }
 
-    public Chapter loadChapter(Book book, Integer chapterNumber, BufferedReader bReader) {
+    /**
+     * Получить внутреннее представление ссылки на главу
+     *
+     * @param module  ссылка на модуль
+     * @param bookID  id книги в модуле
+     * @param chapter номер главы в книге
+     * @return внутреннее представление ссылки на главу
+     */
+    private String getChapterID(Module module, String bookID, int chapter) {
+        return String.format("%s:%s:%s", module.getID(), bookID, chapter);
+    }
+
+    private InputStream getImageReader(BQModule module, String path) {
+        if (module.isArchive()) {
+            return FsUtils.getStreamFromZip(module.getDataSourceID(), path);
+        } else {
+            return FsUtils.getStream(module.getModulePath(), path);
+        }
+    }
+
+    private String getModuleEncoding(BufferedReader bReader) {
+        String encoding = "cp1251";
+
+        if (bReader == null) {
+            return encoding;
+        }
+
+        String str, key, value;
+        try {
+            while ((str = bReader.readLine()) != null) {
+                int pos = str.indexOf("//");
+                if (pos >= 0)
+                    str = str.substring(0, pos);
+
+                int delimiterPos = str.indexOf("=");
+                if (delimiterPos == -1) {
+                    continue;
+                }
+
+                key = str.substring(0, delimiterPos).trim().toLowerCase();
+                delimiterPos++;
+                value = delimiterPos >= str.length()
+                        ? ""
+                        : str.substring(delimiterPos, str.length()).trim();
+                if (key.equals("desiredfontcharset")) {
+                    return charsets.containsKey(value) ? charsets.get(value) : encoding;
+                } else if (key.equals("defaultencoding")) {
+                    return value;
+                }
+            }
+        } catch (IOException e) {
+            android.util.Log.e(TAG, "getModuleEncoding()", e);
+            e.printStackTrace();
+            return encoding;
+        } finally {
+            try {
+                bReader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return encoding;
+    }
+
+    private BufferedReader getReader(BQModule module, String dataSourceID) throws DataAccessException {
+        return module.isArchive()
+                ? FsUtils.getTextFileReaderFromZipArchive(module.modulePath, dataSourceID, module.getDefaultEncoding())
+                : FsUtils.getTextFileReader(module.modulePath, dataSourceID, module.getDefaultEncoding());
+    }
+
+    private String getSearchQuery(String query) {
+        StringBuilder result = new StringBuilder();
+        if (query.trim().equals("")) {
+            return result.toString();
+        }
+
+        String[] words = query.toLowerCase().replaceAll("[^\\s\\w]", "").split("\\s+");
+        for (String currWord : words) {
+            if (result.length() != 0) {
+                result.append("(.)*?");
+            }
+            result.append(currWord);
+        }
+        return "((?ui).*?" + result.toString() + ".*?)"; // любые символы в начале и конце
+    }
+
+    // ToDo: убрать во внешний обработчик
+    private String highlightWords(String query, String verse) {
+        String[] words = query.toLowerCase().replaceAll("[^\\s\\w]", "").split("\\s+");
+        StringBuilder pattern = new StringBuilder(query.length() + words.length);
+        for (String word : words) {
+            if (pattern.length() != 0) {
+                pattern.append("|");
+            }
+            pattern.append(word);
+        }
+
+        Pattern regex = Pattern.compile("((?ui)" + pattern.toString() + ")");
+        Matcher regexMatcher = regex.matcher(verse);
+        verse = regexMatcher.replaceAll("<b><font color=\"#6b0b0b\">$1</font></b>");
+        return verse;
+    }
+
+    private Chapter loadChapter(Module module, Book book, Integer chapterNumber, BufferedReader bReader) {
 
         ArrayList<String> lines = new ArrayList<String>();
         try {
             String str;
-            int currentChapter = book.getModule().isChapterZero() ? 0 : 1;
-            String chapterSign = book.getModule().getChapterSign();
+            int currentChapter = book.getFirstChapterNumber();
+            String chapterSign = module.getChapterSign();
             boolean chapterFind = false;
             while ((str = bReader.readLine()) != null) {
                 if (str.toLowerCase().contains(chapterSign)) {
@@ -395,7 +465,7 @@ public class BQModuleRepository implements IModuleRepository<String, BQModule> {
         }
 
         ArrayList<Verse> verseList = new ArrayList<Verse>();
-        String verseSign = book.getModule().getVerseSign();
+        String verseSign = module.getVerseSign();
         int i = -1;
         for (String currLine : lines) {
             if (currLine.toLowerCase().contains(verseSign)) {
@@ -406,10 +476,10 @@ public class BQModuleRepository implements IModuleRepository<String, BQModule> {
             }
         }
 
-        return new Chapter(book, chapterNumber, verseList);
+        return new Chapter(chapterNumber, verseList);
     }
 
-    public LinkedHashMap<String, String> searchInBook(Module module, String bookID, String query, BufferedReader bReader) {
+    private LinkedHashMap<String, String> searchInBook(Module module, String bookID, String query, BufferedReader bReader) {
         LinkedHashMap<String, String> searchRes = new LinkedHashMap<String, String>();
 
         // Подготовим регулярное выражение для поиска
@@ -452,87 +522,12 @@ public class BQModuleRepository implements IModuleRepository<String, BQModule> {
                 if (!contains(verse, searchQuery)) continue;
                 searchRes.put(
                         new BibleReference(module.getID(), bookID, chapterNumber - chapterDev, verseNumber).getPath(),
-                        higlightWords(query, verse));
+                        highlightWords(query, verse));
             }
         }
 
         android.util.Log.i(TAG, " - Cancel search in book " + bookID);
 
         return searchRes;
-    }
-
-    private String getSearchQuery(String query) {
-        StringBuilder result = new StringBuilder();
-        if (query.trim().equals("")) {
-            return result.toString();
-        }
-
-        String[] words = query.toLowerCase().replaceAll("[^\\s\\w]", "").split("\\s+");
-        for (String currWord : words) {
-            if (result.length() != 0) {
-                result.append("(.)*?");
-            }
-            result.append(currWord);
-        }
-        return "((?ui).*?" + result.toString() + ".*?)"; // любые символы в начале и конце
-    }
-
-    private boolean contains(String text, String query) {
-        return Pattern.matches(query, text);
-    }
-
-    // ToDo: убрать во внешний обработчик
-    private String higlightWords(String query, String verse) {
-        String[] words = query.toLowerCase().replaceAll("[^\\s\\w]", "").split("\\s+");
-        StringBuilder pattern = new StringBuilder(query.length() + words.length);
-        for (String word : words) {
-            if (pattern.length() != 0) {
-                pattern.append("|");
-            }
-            pattern.append(word);
-        }
-
-        Pattern regex = Pattern.compile("((?ui)" + pattern.toString() + ")");
-        Matcher regexMatcher = regex.matcher(verse);
-        verse = regexMatcher.replaceAll("<b><font color=\"#6b0b0b\">$1</font></b>");
-        return verse;
-    }
-
-    private HashMap<String, String> getCharsets() {
-        HashMap<String, String> charsets = new HashMap<String, String>();
-        charsets.put("0", "ISO-8859-1"); // ANSI charset
-        charsets.put("1", "US-ASCII"); // DEFAULT charset
-        charsets.put("77", "MacRoman"); // Mac Roman
-        charsets.put("78", "Shift_JIS"); // Mac Shift Jis
-        charsets.put("79", "ms949"); // Mac Hangul
-        charsets.put("80", "GB2312"); // Mac GB2312
-        charsets.put("81", "Big5"); // Mac Big5
-        charsets.put("82", "johab"); // Mac Johab (old)
-        charsets.put("83", "MacHebrew"); // Mac Hebrew
-        charsets.put("84", "MacArabic"); // Mac Arabic
-        charsets.put("85", "MacGreek"); // Mac Greek
-        charsets.put("86", "MacTurkish"); // Mac Turkish
-        charsets.put("87", "MacThai"); // Mac Thai
-        charsets.put("88", "cp1250"); // Mac East Europe
-        charsets.put("89", "cp1251"); // Mac Russian
-        charsets.put("128", "MS932"); // Shift JIS
-        charsets.put("129", "ms949"); // Hangul
-        charsets.put("130", "ms1361"); // Johab
-        charsets.put("134", "ms936"); // GB2312
-        charsets.put("136", "ms950"); // Big5
-        charsets.put("161", "cp1253"); // Greek
-        charsets.put("162", "cp1254"); // Turkish
-        charsets.put("163", "cp1258"); // Vietnamese
-        charsets.put("177", "cp1255"); // Hebrew
-        charsets.put("178", "cp1256"); // Arabic
-        charsets.put("186", "cp1257"); // Baltic
-        charsets.put("201", "cp1252"); // Cyrillic charset
-        charsets.put("204", "cp1251"); // Russian
-        charsets.put("222", "ms874"); // Thai
-        charsets.put("238", "cp1250"); // Eastern European
-        charsets.put("254", "cp437"); // PC 437
-        charsets.put("255", "cp850"); // OEM
-
-        return charsets;
     }
 }

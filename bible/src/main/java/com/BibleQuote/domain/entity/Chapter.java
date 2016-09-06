@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: Chapter.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 9/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -40,12 +40,9 @@ public class Chapter {
 	private Integer number;
 	private String text;
 	private TreeMap<Integer, Verse> verses = new TreeMap<Integer, Verse>();
-	private Book book;
 
-	public Chapter(Book book, Integer number, ArrayList<Verse> verseList) {
-		this.book = book;
+	public Chapter(Integer number, ArrayList<Verse> verseList) {
 		this.number = number;
-
 		Integer verseNumber = 1;
 		for (Verse verse : verseList) {
 			verses.put(verseNumber++, verse);
@@ -65,6 +62,14 @@ public class Chapter {
 			text = buffer.toString();
 		}
 		return text;
+	}
+
+	public ArrayList<Verse> getVerseList() {
+		ArrayList<Verse> verseList = new ArrayList<Verse>();
+		for (Integer verse : verses.keySet()) {
+			verseList.add(verses.get(verse));
+		}
+		return verseList;
 	}
 
 	public String getText(int fromVerse, int toVerse) {
@@ -89,14 +94,6 @@ public class Chapter {
 		return buffer.toString();
 	}
 
-	public ArrayList<Integer> getVerseNumbers() {
-		ArrayList<Integer> verseNumbers = new ArrayList<Integer>();
-		for (Integer verse : verses.keySet()) {
-			verseNumbers.add(verse);
-		}
-		return verseNumbers;
-	}
-
 	public LinkedHashMap<Integer, String> getVerses(TreeSet<Integer> verses) {
 		LinkedHashMap<Integer, String> result = new LinkedHashMap<Integer, String>();
 		ArrayList<Verse> versesList = getVerseList();
@@ -110,17 +107,5 @@ public class Chapter {
 		}
 
 		return result;
-	}
-
-	public ArrayList<Verse> getVerseList() {
-		ArrayList<Verse> verseList = new ArrayList<Verse>();
-		for (Integer verse : verses.keySet()) {
-			verseList.add(verses.get(verse));
-		}
-		return verseList;
-	}
-
-	public Book getBook() {
-		return book;
 	}
 }

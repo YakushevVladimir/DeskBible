@@ -30,6 +30,7 @@ package com.BibleQuote.ui.widget;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -45,7 +46,7 @@ import android.webkit.WebViewClient;
 import com.BibleQuote.domain.entity.Chapter;
 import com.BibleQuote.domain.entity.Verse;
 import com.BibleQuote.domain.textFormatters.ITextFormatter;
-import com.BibleQuote.domain.textFormatters.ModuleTextFormatter;
+import com.BibleQuote.domain.textFormatters.StripTagsTextFormatter;
 import com.BibleQuote.listeners.IReaderViewListener;
 import com.BibleQuote.utils.PreferenceHelper;
 
@@ -79,6 +80,7 @@ public class ReaderWebView extends WebView
     private int minSwipeX = MIN_SWIPE_X;
     private int maxSwipeY = MAX_SWIPE_Y;
     private int minVelocity = MIN_SWIPE_VELOCITY;
+    private ITextFormatter formatter = new StripTagsTextFormatter();
 
     @SuppressLint("AddJavascriptInterface")
     public ReaderWebView(Context mContext, AttributeSet attributeSet) {
@@ -120,6 +122,10 @@ public class ReaderWebView extends WebView
         int scrollExtent = computeVerticalScrollExtent();
         int scrollPos = scrollY + scrollExtent;
         return (scrollPos >= (computeVerticalScrollRange() - 10));
+    }
+
+    public void setFormatter(@NonNull ITextFormatter formatter) {
+        this.formatter = formatter;
     }
 
     public void setMode(Mode mode) {
@@ -298,7 +304,6 @@ public class ReaderWebView extends WebView
             return "";
         }
 
-        ITextFormatter formatter = new ModuleTextFormatter(chapter.getBook().getModule());
         ArrayList<Verse> verses = chapter.getVerseList();
         StringBuilder chapterHTML = new StringBuilder();
         for (int verse = 1; verse <= verses.size(); verse++) {

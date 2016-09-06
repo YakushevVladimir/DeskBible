@@ -35,6 +35,7 @@ import android.graphics.Point;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
@@ -57,6 +58,7 @@ import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
 import com.BibleQuote.domain.entity.BibleReference;
 import com.BibleQuote.domain.entity.Chapter;
+import com.BibleQuote.domain.textFormatters.ITextFormatter;
 import com.BibleQuote.listeners.IReaderViewListener;
 import com.BibleQuote.ui.fragments.TTSPlayerFragment;
 import com.BibleQuote.ui.handlers.SelectTextHandler;
@@ -425,6 +427,11 @@ public class ReaderActivity extends AppCompatActivity implements ReaderViewPrese
     @Override
     public void updateContent() {
         vWeb.update();
+    }
+
+    @Override
+    public void setTextFormatter(@NonNull ITextFormatter formatter) {
+        vWeb.setFormatter(formatter);
     }
 
     @Override
