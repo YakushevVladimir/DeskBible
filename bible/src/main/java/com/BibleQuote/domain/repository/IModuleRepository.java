@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: IModuleRepository.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 9/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -38,7 +38,7 @@ import com.BibleQuote.domain.exceptions.BooksDefinitionException;
 import com.BibleQuote.domain.exceptions.OpenModuleException;
 import com.BibleQuote.entity.modules.BQModule;
 
-import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  *
@@ -46,9 +46,9 @@ import java.util.LinkedHashMap;
 public interface IModuleRepository<D, T extends Module> {
     Bitmap getBitmap(BQModule module, String path);
 
-    T loadModule(D path) throws OpenModuleException, BooksDefinitionException, BookDefinitionException;
-
     Chapter loadChapter(T module, String bookID, int chapter) throws BookNotFoundException;
 
-    LinkedHashMap<String, String> searchInBook(T module, String bookID, String regQuery) throws BookNotFoundException;
+    T loadModule(D path) throws OpenModuleException, BooksDefinitionException, BookDefinitionException;
+
+    Map<String, String> searchInBook(T module, String bookID, String regQuery) throws BookNotFoundException;
 }

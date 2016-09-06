@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: BQModuleController.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 9/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -30,10 +30,10 @@ package com.BibleQuote.domain.controllers.modules;
 
 import android.graphics.Bitmap;
 
+import com.BibleQuote.dal.repository.BQModuleRepository;
 import com.BibleQuote.domain.entity.Book;
 import com.BibleQuote.domain.entity.Chapter;
 import com.BibleQuote.domain.exceptions.BookNotFoundException;
-import com.BibleQuote.domain.repository.IModuleRepository;
 import com.BibleQuote.entity.modules.BQModule;
 import com.BibleQuote.search.BQSearchProcessor;
 
@@ -47,9 +47,9 @@ import java.util.Map;
 public class BQModuleController implements IModuleController {
 
     private BQModule module;
-    private IModuleRepository repository;
+    private BQModuleRepository repository;
 
-    public BQModuleController(BQModule module, IModuleRepository repository) {
+    public BQModuleController(BQModule module, BQModuleRepository repository) {
         this.module = module;
         this.repository = repository;
     }

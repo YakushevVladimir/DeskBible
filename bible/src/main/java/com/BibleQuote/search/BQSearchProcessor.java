@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2011 Scripture Software
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,25 +18,22 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * --------------------------------------------------
- *
  * Project: BibleQuote-for-Android
  * File: BQSearchProcessor.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 9/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
- *
  */
 
 package com.BibleQuote.search;
 
 import android.util.Log;
 
+import com.BibleQuote.dal.repository.BQModuleRepository;
 import com.BibleQuote.domain.entity.BibleReference;
-import com.BibleQuote.domain.entity.Module;
 import com.BibleQuote.domain.exceptions.BookNotFoundException;
-import com.BibleQuote.domain.repository.IModuleRepository;
+import com.BibleQuote.entity.modules.BQModule;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -51,11 +50,11 @@ public class BQSearchProcessor {
     private static final int POOL_SIZE = CPU_COUNT * 2 + 1;
     private static final String TAG = BQSearchProcessor.class.getSimpleName();
 
-    private final IModuleRepository repository;
+    private final BQModuleRepository repository;
     private Map<String, Map<String, String>> results = Collections.synchronizedMap(new HashMap<String, Map<String, String>>());
     private ExecutorService executor;
 
-    public BQSearchProcessor(IModuleRepository repository) {
+    public BQSearchProcessor(BQModuleRepository repository) {
         this.repository = repository;
         this.executor = Executors.newFixedThreadPool(POOL_SIZE);
     }
@@ -70,7 +69,7 @@ public class BQSearchProcessor {
      * @return возвращает словарь, в котором ключами являются ссылки на место в модуле
      * (см. {@linkplain BibleReference}), а значениями полный текст данного места
      */
-    public Map<String, String> search(Module module, List<String> bookList, String searchQuery) {
+    public Map<String, String> search(BQModule module, List<String> bookList, String searchQuery) {
         CountDownLatch latch = new CountDownLatch(bookList.size());
         for (String bookID : bookList) {
             SearchThread thread = new SearchThread(latch, module, bookID, searchQuery);
@@ -86,8 +85,7 @@ public class BQSearchProcessor {
 
         Map<String, String> searchRes = new LinkedHashMap<String, String>();
         for (String bookID : bookList) {
-            Map<String, String> searches = results.get(bookID);
-            searchRes.putAll(searches);
+            searchRes.putAll(results.get(bookID));
         }
 
         return searchRes;
@@ -95,19 +93,15 @@ public class BQSearchProcessor {
 
     private class SearchThread implements Runnable {
         private CountDownLatch latch;
-        private Module module;
+        private BQModule module;
         private String bookID;
         private String query;
 
-        private SearchThread(CountDownLatch latch, Module module, String bookID, String query) {
+        private SearchThread(CountDownLatch latch, BQModule module, String bookID, String query) {
             this.latch = latch;
             this.module = module;
             this.bookID = bookID;
             this.query = query;
-        }
-
-        public String getBookID() {
-            return bookID;
         }
 
         @Override

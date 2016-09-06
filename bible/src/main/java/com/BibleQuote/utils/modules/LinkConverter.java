@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: LinkConverter.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 9/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -29,6 +29,7 @@
 package com.BibleQuote.utils.modules;
 
 import com.BibleQuote.BibleQuoteApp;
+import com.BibleQuote.domain.controllers.ILibraryController;
 import com.BibleQuote.domain.entity.BibleReference;
 import com.BibleQuote.domain.entity.Book;
 import com.BibleQuote.domain.entity.Module;
@@ -41,46 +42,6 @@ public final class LinkConverter {
 
 	private LinkConverter() throws InstantiationException {
 		throw new InstantiationException("This class is not for instantiation");
-	}
-
-	public static String getOSIStoHuman(String linkOSIS, Librarian librarian) throws BookNotFoundException, OpenModuleException {
-		String[] param = linkOSIS.split("\\.");
-		if (param.length < 3) {
-			return "";
-		}
-
-		String moduleID = param[0];
-		String bookID = param[1];
-		String chapter = param[2];
-
-		Module currModule;
-		try {
-			currModule = BibleQuoteApp.getInstance().getLibraryController().getModuleByID(moduleID);
-		} catch (OpenModuleException e) {
-			return "";
-		}
-		Book currBook = librarian.getBookByID(currModule, bookID);
-		if (currBook == null) {
-			return "";
-		}
-
-		String humanLink = moduleID + ": " + currBook.getShortName() + " " + chapter;
-		if (param.length > 3) {
-			humanLink += ":" + param[3];
-		}
-
-		return humanLink;
-	}
-
-	public static String getOSIStoHuman(BibleReference reference) {
-		if (reference.getFromVerse() != reference.getToVerse()) {
-			return String.format("%1$s %2$s:%3$s-%4$s",
-					reference.getBookFullName(), reference.getChapter(),
-					reference.getFromVerse(), reference.getToVerse());
-		} else {
-			return String.format("%1$s %2$s:%3$s",
-					reference.getBookFullName(), reference.getChapter(), reference.getFromVerse());
-		}
 	}
 
 	public static String getHumanToOSIS(String humanLink) {
@@ -119,6 +80,47 @@ public final class LinkConverter {
 			// Оставшийся кусок - номер стиха
 			return linkOSIS + "." + humanLink;
 		}
+	}
+
+	public static String getOSIStoHuman(BibleReference reference) {
+		if (reference.getFromVerse() != reference.getToVerse()) {
+			return String.format("%1$s %2$s:%3$s-%4$s",
+					reference.getBookFullName(), reference.getChapter(),
+					reference.getFromVerse(), reference.getToVerse());
+		} else {
+			return String.format("%1$s %2$s:%3$s",
+					reference.getBookFullName(), reference.getChapter(), reference.getFromVerse());
+		}
+	}
+
+	public static String getOSIStoHuman(String linkOSIS, Librarian librarian) throws BookNotFoundException, OpenModuleException {
+		String[] param = linkOSIS.split("\\.");
+		if (param.length < 3) {
+			return "";
+		}
+
+		String moduleID = param[0];
+		String bookID = param[1];
+		String chapter = param[2];
+
+		Module currModule;
+		try {
+			final ILibraryController libCtrl = BibleQuoteApp.getInstance().getLibraryController();
+			currModule = libCtrl.getModuleByID(moduleID);
+		} catch (OpenModuleException e) {
+			return "";
+		}
+		Book currBook = librarian.getBookByID(currModule, bookID);
+		if (currBook == null) {
+			return "";
+		}
+
+		String humanLink = moduleID + ": " + currBook.getShortName() + " " + chapter;
+		if (param.length > 3) {
+			humanLink += ":" + param[3];
+		}
+
+		return humanLink;
 	}
 
 }

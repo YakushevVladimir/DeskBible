@@ -171,7 +171,7 @@ public class BQModuleRepository implements IModuleRepository<String, BQModule> {
     }
 
     @Override
-    public LinkedHashMap<String, String> searchInBook(BQModule module, String bookID, String regQuery) throws BookNotFoundException {
+    public Map<String, String> searchInBook(BQModule module, String bookID, String regQuery) throws BookNotFoundException {
         BQBook book = (BQBook) module.getBook(bookID);
         if (book == null) {
             throw new BookNotFoundException(module.getID(), bookID);
@@ -492,7 +492,7 @@ public class BQModuleRepository implements IModuleRepository<String, BQModule> {
         StringBuilder bookContent = new StringBuilder(1000);
         try {
             while ((str = bReader.readLine()) != null) {
-                bookContent.append(str.replaceAll("\\s(\\d)+", ""));
+                bookContent.append(str);
             }
         } catch (IOException e) {
             android.util.Log.e(TAG, String.format("searchInBook(%1$s, %2$s, %3$s)", module.getID(), bookID, searchQuery), e);
@@ -518,11 +518,11 @@ public class BQModuleRepository implements IModuleRepository<String, BQModule> {
             if (!contains(chapter, searchQuery)) continue;
             String[] verses = Pattern.compile(module.getVerseSign(), patternFlags).split(chapter);
             for (int verseNumber = 0; verseNumber < verses.length; verseNumber++) {
-                verse = formatter.format(verses[verseNumber]);
+                verse = module.getVerseSign() + verses[verseNumber];
                 if (!contains(verse, searchQuery)) continue;
                 searchRes.put(
                         new BibleReference(module.getID(), bookID, chapterNumber - chapterDev, verseNumber).getPath(),
-                        highlightWords(query, verse));
+                        highlightWords(query, formatter.format(verse)));
             }
         }
 
