@@ -31,7 +31,6 @@ package com.BibleQuote.ui.presenters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 
 import com.BibleQuote.R;
@@ -121,11 +120,6 @@ public class ReaderViewPresenter implements TTSPlayerFragment.OnTTSStopSpeakList
     }
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        view.setCurrentOrientation(preferenceHelper.restoreStateBoolean("DisableAutoScreenRotation"));
-    }
-
-    @Override
     public boolean onNavigationItemSelected(int itemId) {
         switch (itemId) {
             case R.id.drawer_bookmarks:
@@ -178,11 +172,6 @@ public class ReaderViewPresenter implements TTSPlayerFragment.OnTTSStopSpeakList
     public void onResume() {
         view.setKeepScreen(preferenceHelper.restoreStateBoolean("DisableTurnScreen"));
         view.setCurrentOrientation(preferenceHelper.restoreStateBoolean("DisableAutoScreenRotation"));
-    }
-
-    @Override
-    public void onPause() {
-
     }
 
     public void nextChapter() {

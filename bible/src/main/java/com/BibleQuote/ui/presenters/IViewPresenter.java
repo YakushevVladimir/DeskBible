@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2011 Scripture Software
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -19,17 +21,14 @@
  * Project: BibleQuote-for-Android
  * File: IViewPresenter.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 9/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
- *
- *
  */
 
 package com.BibleQuote.ui.presenters;
 
 import android.content.Intent;
-import android.content.res.Configuration;
 
 /**
  *
@@ -37,13 +36,9 @@ import android.content.res.Configuration;
 public interface IViewPresenter {
     void onActivityResult(int requestCode, int resultCode, Intent data);
 
-    void onConfigurationChanged(Configuration newConfig);
-
     boolean onNavigationItemSelected(int itemId);
 
     boolean onOptionsItemSelected(int itemId);
-
-    void onPause();
 
     void onResume();
 }

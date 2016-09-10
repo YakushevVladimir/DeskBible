@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2011 Scripture Software
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,24 +18,20 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * --------------------------------------------------
- *
  * Project: BibleQuote-for-Android
  * File: BibleReferenceTest.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 9/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
- *
  */
 
-package com.BibleQuote.entity;
+package com.BibleQuote.domain.entity;
 
 import android.net.Uri;
 import android.os.Build;
 
 import com.BibleQuote.BuildConfig;
-import com.BibleQuote.domain.entity.BibleReference;
 
 import org.junit.Assert;
 import org.junit.Test;

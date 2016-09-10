@@ -142,7 +142,6 @@ public class ReaderActivity extends AppCompatActivity implements ReaderViewPrese
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        presenter.onConfigurationChanged(newConfig);
     }
 
     @Override
@@ -247,7 +246,7 @@ public class ReaderActivity extends AppCompatActivity implements ReaderViewPrese
 
     @Override
     public void setCurrentOrientation(boolean disableAutoRotation) {
-        if (disableAutoRotation) {
+        if (!disableAutoRotation) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
             return;
         }
