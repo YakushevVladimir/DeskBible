@@ -149,4 +149,5 @@
     <string name="donate">Donate</string>
     <string name="menu_tags">Etiquetas</string>
     <string name="search_hint">Lo que hay que encontrar?</string>
+    <string name="hide_nav_buttons">Ocultar los botones de navegación</string>
 </resources>

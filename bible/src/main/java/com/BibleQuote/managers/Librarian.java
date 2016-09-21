@@ -52,6 +52,7 @@ import com.BibleQuote.entity.ItemList;
 import com.BibleQuote.managers.history.HistoryManager;
 import com.BibleQuote.managers.history.IHistoryManager;
 import com.BibleQuote.utils.Logger;
+import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.modules.LinkConverter;
 import com.BibleQuote.utils.share.ShareBuilder;
 import com.BibleQuote.utils.share.ShareBuilder.Destination;
@@ -211,6 +212,9 @@ public class Librarian {
 
     public void setCurrentVerseNumber(int verse) {
         this.currVerseNumber = verse;
+        PreferenceHelper.getInstance().saveStateString("last_read",
+                new BibleReference(currModule, currBook, currChapter.getNumber(), currVerseNumber)
+                        .getExtendedPath());
     }
 
     public void clearHistory() {
@@ -381,7 +385,9 @@ public class Librarian {
         currChapterNumber = link.getChapter();
         currVerseNumber = link.getFromVerse();
 
-        historyManager.addLink(new BibleReference(currModule, currBook, currChapterNumber, currVerseNumber));
+        final BibleReference reference = new BibleReference(currModule, currBook, currChapterNumber, currVerseNumber);
+        historyManager.addLink(reference);
+        PreferenceHelper.getInstance().saveStateString("last_read", reference.getExtendedPath());
 
         return currChapter;
     }

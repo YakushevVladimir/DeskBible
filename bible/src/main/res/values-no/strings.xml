@@ -152,4 +152,5 @@
     <string name="donate">Donate</string>
     <string name="menu_tags">Tags</string>
     <string name="search_hint">Hva å finne?</string>
+    <string name="hide_nav_buttons">Skjule navigasjonsknappene </string>
 </resources>

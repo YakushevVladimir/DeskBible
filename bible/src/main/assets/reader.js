@@ -24,6 +24,23 @@ function deselectVerse(id) {
 	element.className = "verse";
 }
 
+function getCurrentVerse() {
+    var y = 0;
+    var element;
+    while (element == null && y < 100) {
+        element = document.elementFromPoint(100, y);
+        y = y + 5;
+    }
+
+    while (element != null && element.id.indexOf('verse') == -1) {
+        element = element.parentElement;
+    }
+
+    if (element != null) {
+        reader.setCurrentVerse(element.id);
+    }
+}
+
 function handleClick(x, y) {
 	var element = document.elementFromPoint(x, y);
 	

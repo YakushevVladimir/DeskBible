@@ -63,8 +63,10 @@ import com.BibleQuote.listeners.IReaderViewListener;
 import com.BibleQuote.ui.fragments.TTSPlayerFragment;
 import com.BibleQuote.ui.handlers.SelectTextHandler;
 import com.BibleQuote.ui.presenters.ReaderViewPresenter;
+import com.BibleQuote.ui.widget.ChapterNavigator;
 import com.BibleQuote.ui.widget.ReaderWebView;
 import com.BibleQuote.utils.DevicesKeyCodes;
+import com.BibleQuote.utils.PreferenceHelper;
 
 import java.util.TreeSet;
 
@@ -73,12 +75,12 @@ import butterknife.ButterKnife;
 
 public class ReaderActivity extends AppCompatActivity implements ReaderViewPresenter.IReaderView, IReaderViewListener {
 
-    @BindView(R.id.moduleName)
-    TextView vModuleName;
-    @BindView(R.id.linkBook)
-    TextView vBookLink;
-    @BindView(R.id.readerView)
-    ReaderWebView vWeb;
+    private static final int VIEW_CHAPTER_NAV_LENGTH = 3000;
+
+    @BindView(R.id.moduleName) TextView vModuleName;
+    @BindView(R.id.linkBook) TextView vBookLink;
+    @BindView(R.id.readerView) ReaderWebView vWeb;
+    @BindView(R.id.chapter_nav) ChapterNavigator chapterNav;
 
     private ReaderWebView.Mode oldMode;
     private ActionMode currActionMode;
@@ -86,6 +88,7 @@ public class ReaderActivity extends AppCompatActivity implements ReaderViewPrese
     private boolean exitToBackKey;
     private TTSPlayerFragment ttsPlayer;
     private ReaderViewPresenter presenter;
+    private Handler chapterNavHandler = new Handler();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -126,16 +129,35 @@ public class ReaderActivity extends AppCompatActivity implements ReaderViewPrese
         };
         actionBarDrawerToggle.syncState();
 
+        presenter = new ReaderViewPresenter(this, this, BibleQuoteApp.getInstance().getLibrarian());
+
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
         vWeb.setOnReaderViewListener(this);
+
+        chapterNav.setOnClickListener(new ChapterNavigator.OnClickListener() {
+            @Override
+            public void onClick(ChapterNavigator.ClickedButton btn) {
+                switch (btn) {
+                    case DOWN:
+                        vWeb.pageDown(false);
+                        break;
+                    case UP:
+                        vWeb.pageUp(false);
+                        break;
+                    case PREV:
+                        presenter.prevChapter();
+                        break;
+                    case NEXT:
+                        presenter.nextChapter();
+                }
+            }
+        });
 
         BibleReference osisLink = null;
         Intent intent = getIntent();
         if (intent != null && intent.getData() != null) {
             osisLink = new BibleReference(intent.getData());
         }
-
-        presenter = new ReaderViewPresenter(this, this, BibleQuoteApp.getInstance().getLibrarian());
         presenter.setOSISLink(osisLink);
     }
 
@@ -189,10 +211,12 @@ public class ReaderActivity extends AppCompatActivity implements ReaderViewPrese
         if ((keyCode == KeyEvent.KEYCODE_VOLUME_UP && presenter.isVolumeButtonsToScroll())
                 || DevicesKeyCodes.KeyCodeUp(keyCode)) {
             vWeb.pageUp(false);
+            viewChapterNavigator();
             return true;
         } else if ((keyCode == KeyEvent.KEYCODE_VOLUME_DOWN && presenter.isVolumeButtonsToScroll())
                 || DevicesKeyCodes.KeyCodeDown(keyCode)) {
             vWeb.pageDown(false);
+            viewChapterNavigator();
             return true;
         } else {
             return super.onKeyDown(keyCode, event);
@@ -206,10 +230,20 @@ public class ReaderActivity extends AppCompatActivity implements ReaderViewPrese
     }
 
     @Override
-    public void onReaderViewChange(ChangeCode code) {
+    public void onReaderViewChange(ChangeCode code, Object... values) {
         switch (code) {
+            case onChangeCurrentVerse:
+                if (values.length > 0) {
+                    presenter.setCurrentVerse((Integer) values[0]);
+                }
+            case onScroll:
+                viewChapterNavigator();
+                break;
             case onChangeReaderMode:
                 updateActivityMode();
+                break;
+            case onUpdateText:
+                viewChapterNavigator();
                 break;
             case onChangeSelection:
                 TreeSet<Integer> selVerses = vWeb.getSelectedVerses();
@@ -220,6 +254,7 @@ public class ReaderActivity extends AppCompatActivity implements ReaderViewPrese
                 }
                 break;
             case onLongPress:
+                viewChapterNavigator();
                 if (vWeb.getMode() == ReaderWebView.Mode.Read) {
                     openLibraryActivity(ReaderViewPresenter.ID_CHOOSE_CH);
                 }
@@ -421,6 +456,7 @@ public class ReaderActivity extends AppCompatActivity implements ReaderViewPrese
                 actionBar.show();
             }
         }
+        viewChapterNavigator();
     }
 
     @Override
@@ -438,6 +474,24 @@ public class ReaderActivity extends AppCompatActivity implements ReaderViewPrese
         if (currActionMode != null) {
             currActionMode.finish();
             currActionMode = null;
+        }
+    }
+
+    private void viewChapterNavigator() {
+        chapterNavHandler.removeCallbacksAndMessages(null);
+        if (vWeb.getMode() != ReaderWebView.Mode.Study || PreferenceHelper.getInstance().hideNavButtons()) {
+            chapterNav.setVisibility(View.GONE);
+        } else {
+            chapterNav.setVisibility(View.VISIBLE);
+            if (!vWeb.isScrollToBottom()) {
+                chapterNavHandler.postDelayed(
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                chapterNav.setVisibility(View.GONE);
+                            }
+                        }, VIEW_CHAPTER_NAV_LENGTH);
+            }
         }
     }
 }

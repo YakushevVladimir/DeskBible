@@ -59,21 +59,60 @@ public final class PreferenceHelper {
         return instance;
     }
 
-    @NonNull
-    public String restoreStateString(String key) {
-        return preference.getString(key, "");
-	}
-
-    public void saveStateString(String key, String value) {
-        preference.edit().putString(key, value).apply();
+    public String getFontFamily() {
+        return preference.getString("font_family", "sans-serif");
     }
 
-    public int restoreStateInt(String key) {
-        return preference.getInt(key, 0);
+    public Integer getHistorySize() {
+        return Integer.parseInt(preference.getString("HistorySize", "50"));
+    }
+
+    public String getTextBackground() {
+        return getWebColor(preference.getString("TextBG", "#ffffff"));
+    }
+
+    public String getTextBackgroundSelected() {
+        return getWebColor(preference.getString("TextBGSel", "#FEF8C4"));
+    }
+
+    public String getTextColor() {
+        return getWebColor(preference.getString("TextColor", "#000000"));
+    }
+
+    public String getTextColorSelected() {
+        return getWebColor(preference.getString("TextColorSel", "#000000"));
+    }
+
+    public String getTextSize() {
+        return String.valueOf(preference.getInt("TextSize", 12));
 	}
 
-    public void saveStateInt(String key, int value) {
-        preference.edit().putInt(key, value).apply();
+    public boolean isReadModeByDefault() {
+        return preference.getBoolean("ReadModeByDefault", false);
+    }
+
+    public boolean addModuleToBibleReference() {
+        return preference.getBoolean("add_module_to_reference", true);
+    }
+
+    public boolean addReference() {
+        return preference.getBoolean("add_reference", true);
+    }
+
+    public boolean crossRefViewDetails() {
+        return preference.getBoolean("cross_reference_display_context", false);
+    }
+
+    public boolean divideTheVerses() {
+        return preference.getBoolean("divide_the_verses", false);
+    }
+
+    public boolean hideNavButtons() {
+        return preference.getBoolean("hide_nav_buttons", false);
+    }
+
+    public boolean putReferenceInBeginning() {
+        return preference.getBoolean("put_reference_in_beginning", false);
     }
 
     @NonNull
@@ -81,84 +120,49 @@ public final class PreferenceHelper {
         return preference.getBoolean(key, false);
     }
 
+    public int restoreStateInt(String key) {
+        return preference.getInt(key, 0);
+    }
+
+    @NonNull
+    public String restoreStateString(String key) {
+        return preference.getString(key, "");
+    }
+
     public void saveStateBoolean(String key, Boolean v) {
         preference.edit().putBoolean(key, v).apply();
     }
 
-    public boolean isReadModeByDefault() {
-        return preference.getBoolean("ReadModeByDefault", false);
+    public void saveStateInt(String key, int value) {
+        preference.edit().putInt(key, value).apply();
     }
 
-    public String getTextSize() {
-        return String.valueOf(preference.getInt("TextSize", 12));
-	}
-
-    public String getTextColor() {
-        return getWebColor(preference.getString("TextColor", "#000000"));
-    }
-
-    public String getTextBackground() {
-        return getWebColor(preference.getString("TextBG", "#ffffff"));
-    }
-
-    public String getTextColorSelected() {
-        return getWebColor(preference.getString("TextColorSel", "#000000"));
-    }
-
-    public String getTextBackgroundSelected() {
-        return getWebColor(preference.getString("TextBGSel", "#FEF8C4"));
-    }
-
-    public Integer getHistorySize() {
-        return Integer.parseInt(preference.getString("HistorySize", "50"));
-    }
-
-    private String getWebColor(String color) {
-        if (color.length() > 7) {
-			int lenght = color.length();
-			return "#" + color.substring(lenght - 6);
-		} else {
-			return color;
-		}
-	}
-
-    public boolean crossRefViewDetails() {
-        return preference.getBoolean("cross_reference_display_context", false);
-    }
-
-    public boolean volumeButtonsToScroll() {
-        return preference.getBoolean("volume_butons_to_scroll", false);
-    }
-
-    public boolean textAlignJustify() {
-        return preference.getBoolean("text_align_justify", false);
-    }
-
-    public String getFontFamily() {
-        return preference.getString("font_family", "sans-serif");
-	}
-
-    public boolean divideTheVerses() {
-        return preference.getBoolean("divide_the_verses", false);
-    }
-
-    public boolean addReference() {
-        return preference.getBoolean("add_reference", true);
-    }
-
-    public boolean putReferenceInBeginning() {
-        return preference.getBoolean("put_reference_in_beginning", false);
+    public void saveStateString(String key, String value) {
+        preference.edit().putString(key, value).apply();
     }
 
     public boolean shortReference() {
         return preference.getBoolean("short_reference", false);
     }
 
-    public boolean addModuleToBibleReference() {
-        return preference.getBoolean("add_module_to_reference", true);
+    public boolean textAlignJustify() {
+        return preference.getBoolean("text_align_justify", false);
     }
 
     public boolean viewBookVerse() {
         return preference.getBoolean(PreferenceHelper.KEY_VIEW_BOOK_VERSE, false);
+    }
+
+    public boolean volumeButtonsToScroll() {
+        return preference.getBoolean("volume_butons_to_scroll", false);
+    }
+
+    private String getWebColor(String color) {
+        if (color.length() > 7) {
+            int lenght = color.length();
+            return "#" + color.substring(lenght - 6);
+        } else {
+            return color;
+        }
     }
 }

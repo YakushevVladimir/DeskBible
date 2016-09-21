@@ -146,4 +146,5 @@
     <string name="donate">Donate</string>
     <string name="menu_tags">Tags</string>
     <string name="search_hint">Што знайсці?</string>
+    <string name="hide_nav_buttons">Схаваць кнопкі навігацыі</string>
 </resources>

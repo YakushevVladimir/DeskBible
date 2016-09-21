@@ -83,6 +83,10 @@ public class ReaderViewPresenter implements TTSPlayerFragment.OnTTSStopSpeakList
         return preferenceHelper.volumeButtonsToScroll();
     }
 
+    public void setCurrentVerse(int value) {
+        librarian.setCurrentVerseNumber(value);
+    }
+
     public void setOSISLink(BibleReference osisLink) {
         if (osisLink == null) {
             osisLink = new BibleReference(preferenceHelper.restoreStateString("last_read"));
@@ -220,7 +224,6 @@ public class ReaderViewPresenter implements TTSPlayerFragment.OnTTSStopSpeakList
                         view.setTextFormatter(new ModuleTextFormatter(librarian.getCurrModule()));
                         view.setContent(librarian.getBaseUrl(), librarian.getCurrChapter(), osisLink.getFromVerse(), librarian.isBible());
                         view.setTitle(librarian.getModuleName(), librarian.getHumanBookLink());
-                        preferenceHelper.saveStateString("last_read", osisLink.getExtendedPath());
                     } else {
                         Exception e = ((AsyncOpenChapter) task).getException();
                         if (e instanceof OpenModuleException) {

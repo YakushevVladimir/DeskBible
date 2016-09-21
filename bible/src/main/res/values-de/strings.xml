@@ -153,4 +153,5 @@
     <string name="donate">Donate</string>
     <string name="menu_tags">Tags</string>
     <string name="search_hint">Was zu finden?</string>
+    <string name="hide_nav_buttons">Blenden Sie die Navigationstasten </string>
 </resources>

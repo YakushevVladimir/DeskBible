@@ -30,10 +30,10 @@ package com.BibleQuote.ui.widget;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.webkit.JavascriptInterface;
@@ -50,6 +50,7 @@ import com.BibleQuote.domain.textFormatters.StripTagsTextFormatter;
 import com.BibleQuote.listeners.IReaderViewListener;
 import com.BibleQuote.utils.PreferenceHelper;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.TreeSet;
 
@@ -61,17 +62,13 @@ public class ReaderWebView extends WebView
     public static final int MIN_SWIPE_X = 100;
     public static final int MAX_SWIPE_Y = 200;
 
-	private static final String TAG = "ReaderWebView";
-    private final PreferenceHelper preferenceHelper;
-
     public boolean mPageLoaded;
 
-    protected TreeSet<Integer> selectedVerse = new TreeSet<Integer>();
-
+    private TreeSet<Integer> selectedVerse = new TreeSet<Integer>();
+    private PreferenceHelper preferenceHelper;
     private GestureDetector mGestureScanner;
 	private JavaScriptInterface jsInterface;
 	private Mode currMode = Mode.Read;
-	private ArrayList<IReaderViewListener> listeners = new ArrayList<IReaderViewListener>();
     private boolean isNightMode;
     private String baseUrl;
     private String content;
@@ -81,32 +78,36 @@ public class ReaderWebView extends WebView
     private int maxSwipeY = MAX_SWIPE_Y;
     private float minVelocity = MIN_FLING_VELOCITY;
     private ITextFormatter formatter = new StripTagsTextFormatter();
+    private ViewHandler handler;
 
     @SuppressLint("AddJavascriptInterface")
     public ReaderWebView(Context mContext, AttributeSet attributeSet) {
 		super(mContext, attributeSet);
 
-		WebSettings settings = getSettings();
-		settings.setJavaScriptEnabled(true);
-        settings.setDomStorageEnabled(true);
-        settings.setNeedInitialFocus(false);
-        settings.setBuiltInZoomControls(false);
-		settings.setSupportZoom(false);
+        handler = new ViewHandler();
+        if (!isInEditMode()) {
+            WebSettings settings = getSettings();
+            settings.setJavaScriptEnabled(true);
+            settings.setDomStorageEnabled(true);
+            settings.setNeedInitialFocus(false);
+            settings.setBuiltInZoomControls(false);
+            settings.setSupportZoom(false);
 
-		setFocusable(true);
-		setFocusableInTouchMode(true);
-		setWebViewClient(new webClient());
-		setWebChromeClient(new chromeClient());
+            setFocusable(true);
+            setFocusableInTouchMode(true);
+            setWebViewClient(new webClient());
+            setWebChromeClient(new ChromeClient());
 
-		this.jsInterface = new JavaScriptInterface();
-		addJavascriptInterface(this.jsInterface, "reader");
+            this.jsInterface = new JavaScriptInterface();
+            addJavascriptInterface(this.jsInterface, "reader");
 
-		setVerticalScrollbarOverlay(true);
+            setVerticalScrollbarOverlay(true);
 
-		mGestureScanner = new GestureDetector(mContext, this);
-		mGestureScanner.setIsLongpressEnabled(true);
-		mGestureScanner.setOnDoubleTapListener(this);
-        preferenceHelper = PreferenceHelper.getInstance();
+            mGestureScanner = new GestureDetector(mContext, this);
+            mGestureScanner.setIsLongpressEnabled(true);
+            mGestureScanner.setOnDoubleTapListener(this);
+            preferenceHelper = PreferenceHelper.getInstance();
+        }
     }
 
     public Mode getMode() {
@@ -118,10 +119,9 @@ public class ReaderWebView extends WebView
     }
 
     public boolean isScrollToBottom() {
-        int scrollY = getScrollY();
-        int scrollExtent = computeVerticalScrollExtent();
-        int scrollPos = scrollY + scrollExtent;
-        return (scrollPos >= (computeVerticalScrollRange() - 10));
+        int scrollPos = getScrollY() + computeVerticalScrollExtent();
+        final int scrollRange = computeVerticalScrollRange();
+        return (scrollPos >= (scrollRange - 10));
     }
 
     public void setFormatter(@NonNull ITextFormatter formatter) {
@@ -141,9 +141,7 @@ public class ReaderWebView extends WebView
     }
 
     public void setOnReaderViewListener(IReaderViewListener listener) {
-        if (!listeners.contains(listener)) {
-            listeners.add(listener);
-        }
+        handler.setListener(listener);
     }
 
 	public void setSelectedVerse(TreeSet<Integer> selectedVerse) {
@@ -163,21 +161,32 @@ public class ReaderWebView extends WebView
         minVelocity = MIN_FLING_VELOCITY * metrics.density;
     }
 
+    @Override
     public void computeScroll() {
         super.computeScroll();
         if (mPageLoaded && isScrollToBottom()) {
-            notifyListeners(IReaderViewListener.ChangeCode.onScroll);
+            handler.sendEmptyMessage(ViewHandler.MSG_ON_COMPUTE_SCROLL);
         }
+        loadUrl("javascript: getCurrentVerse();");
     }
 
+    @Override
     public boolean onTouchEvent(MotionEvent event) {
         return mGestureScanner.onTouchEvent(event) || (event != null && super.onTouchEvent(event));
     }
 
+    @Override
     public boolean onSingleTapUp(MotionEvent event) {
         return false;
     }
 
+    @Override
+    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+        notifyListeners(IReaderViewListener.ChangeCode.onScroll);
+        return false;
+    }
+
+    @Override
     public boolean onSingleTapConfirmed(MotionEvent event) {
         int x = (int) event.getX();
         int y = (int) event.getY();
@@ -205,10 +214,12 @@ public class ReaderWebView extends WebView
         return false;
     }
 
+    @Override
     public boolean onDown(MotionEvent event) {
         return false;
     }
 
+    @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
         float dx = e1.getX() - e2.getX();
         float dy = e1.getY() - e2.getY();
@@ -220,25 +231,20 @@ public class ReaderWebView extends WebView
                 notifyListeners(IReaderViewListener.ChangeCode.onRightNavigation);
             }
             return true;
-        } else {
-            Log.d(TAG, String.format("distX: %f, distY: %f, velocityX: %f", dx, dy, velocityX));
         }
         return false;
     }
 
+    @Override
     public void onLongPress(MotionEvent event) {
         notifyListeners(IReaderViewListener.ChangeCode.onLongPress);
     }
 
-    public boolean onScroll(MotionEvent e1, MotionEvent e2,
-                            float distanceX, float distanceY) {
-        notifyListeners(IReaderViewListener.ChangeCode.onScroll);
-        return false;
-    }
-
+    @Override
     public void onShowPress(MotionEvent event) {
     }
 
+    @Override
     public boolean onDoubleTap(MotionEvent event) {
         if (currMode != Mode.Speak) {
             setMode(currMode == Mode.Study ? Mode.Read : Mode.Study);
@@ -246,6 +252,7 @@ public class ReaderWebView extends WebView
         return false;
     }
 
+    @Override
     public boolean onDoubleTapEvent(MotionEvent event) {
         return false;
     }
@@ -365,48 +372,80 @@ public class ReaderWebView extends WebView
 		return style.toString();
 	}
 
-    private void notifyListeners(IReaderViewListener.ChangeCode code) {
-        for (IReaderViewListener listener : listeners) {
-            listener.onReaderViewChange(code);
+    private void notifyListeners(IReaderViewListener.ChangeCode code, Object... values) {
+        Message msg;
+        if (code != IReaderViewListener.ChangeCode.onChangeCurrentVerse || values.length == 0) {
+            msg = Message.obtain(handler, ViewHandler.MSG_OTHER, code);
+        } else {
+            msg = Message.obtain(handler, ViewHandler.MSG_CHANGE_CURRENT_VERSE, code);
+            msg.arg1 = (Integer) values[0];
         }
+        handler.sendMessage(msg);
     }
-
-    private void notifyListenersOnClickImage(String path) {
-        for (IReaderViewListener listener : listeners) {
-            listener.onReaderClickImage(path);
-        }
-	}
 
 	public enum Mode {
 		Read, Study, Speak
 	}
 
-	private final class webClient extends WebViewClient {
-		webClient() {
-		}
-
-		public boolean shouldOverrideUrlLoading(WebView view, String url) {
-			Log.i(TAG, "shouldOverrideUrlLoading(" + url + ")");
-			return true;
-		}
-
-		public void onPageFinished(WebView paramWebView, String paramString) {
-			super.onPageFinished(paramWebView, paramString);
-			mPageLoaded = true;
-		}
+    private static final class ChromeClient extends WebChromeClient {
+        public boolean onJsAlert(WebView webView, String url, String message, JsResult result) {
+            if (result != null)
+                result.confirm();
+            return true;
+        }
 	}
 
-    private final class chromeClient extends WebChromeClient {
-		chromeClient() {
-		}
+    private static class ViewHandler extends Handler {
 
-		public boolean onJsAlert(WebView webView, String url, String message, JsResult result) {
-			Log.i(TAG, message);
-			if (result != null)
-				result.confirm();
-			return true;
-		}
-	}
+        public static final int MSG_ON_COMPUTE_SCROLL = 1;
+        public static final int MSG_ON_CLICK_IMAGE = 2;
+        public static final int MSG_CHANGE_CURRENT_VERSE = 3;
+        public static final int MSG_OTHER = 4;
+
+        private WeakReference<IReaderViewListener> weakListener;
+
+        public void setListener(IReaderViewListener listener) {
+            this.weakListener = new WeakReference<IReaderViewListener>(listener);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            IReaderViewListener listener = weakListener.get();
+            if (listener == null) {
+                return;
+            }
+
+            switch (msg.what) {
+                case MSG_ON_COMPUTE_SCROLL:
+                    listener.onReaderViewChange(IReaderViewListener.ChangeCode.onScroll);
+                    break;
+                case MSG_ON_CLICK_IMAGE:
+                    listener.onReaderClickImage((String) msg.obj);
+                    break;
+                case MSG_CHANGE_CURRENT_VERSE:
+                    listener.onReaderViewChange(IReaderViewListener.ChangeCode.onChangeCurrentVerse, msg.arg1);
+                    break;
+                default:
+                    listener.onReaderViewChange((IReaderViewListener.ChangeCode) msg.obj);
+            }
+            super.handleMessage(msg);
+        }
+    }
+
+    private final class webClient extends WebViewClient {
+        webClient() {
+        }
+
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            return true;
+        }
+
+        public void onPageFinished(WebView paramWebView, String paramString) {
+            super.onPageFinished(paramWebView, paramString);
+            mPageLoaded = true;
+            handler.sendMessage(Message.obtain(handler, ViewHandler.MSG_OTHER, IReaderViewListener.ChangeCode.onUpdateText));
+        }
+    }
 
     private final class JavaScriptInterface {
 
@@ -414,8 +453,18 @@ public class ReaderWebView extends WebView
 			clearSelectedVerse();
 		}
 
-        public void alert(final String message) {
-            Log.i(TAG, "JavaScriptInterface.alert()");
+        @JavascriptInterface
+        public void setCurrentVerse(String id) {
+            if (id.matches("verse_\\d+?")) {
+                try {
+                    currVerse = Integer.parseInt(id.split("_")[1]);
+                    final Message msg = Message.obtain(handler, ViewHandler.MSG_CHANGE_CURRENT_VERSE, IReaderViewListener.ChangeCode.onChangeSelection);
+                    msg.arg1 = currVerse;
+                    handler.sendMessage(msg);
+                } catch (NumberFormatException ex) {
+                    ex.printStackTrace();
+                }
+            }
         }
 
         @JavascriptInterface
@@ -426,14 +475,21 @@ public class ReaderWebView extends WebView
 			selectedVerse.clear();
 		}
 
-        public void gotoVerse(int verse) {
-            loadUrl("javascript: gotoVerse(" + verse + ");");
+        public void gotoVerse(final int verse) {
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    loadUrl("javascript: gotoVerse(" + verse + ");");
+                }
+            });
         }
 
         @JavascriptInterface
         public void onClickImage(String path) {
-            Log.d(TAG, "OnClickImage: " + path);
-            notifyListenersOnClickImage(path);
+            Message msg = new Message();
+            msg.what = ViewHandler.MSG_ON_CLICK_IMAGE;
+            msg.obj = path;
+            handler.sendMessage(msg);
         }
 
         @JavascriptInterface
@@ -451,24 +507,15 @@ public class ReaderWebView extends WebView
                     selectedVerse.add(verse);
                     selectVerse(verse);
                 }
-
-                try {
-                    Handler mHandler = getHandler();
-                    mHandler.post(new Runnable() {
-                        public void run() {
-                            notifyListeners(IReaderViewListener.ChangeCode.onChangeSelection);
-                        }
-                    });
-                } catch (NullPointerException e) {
-                    Log.e(TAG, "Error when notifying clients ReaderWebView");
-                }
+                final Message msg = Message.obtain(handler, ViewHandler.MSG_OTHER, IReaderViewListener.ChangeCode.onChangeSelection);
+                handler.sendMessage(msg);
             } catch (NumberFormatException e) {
                 e.printStackTrace();
             }
 		}
 
         private void deselectVerse(final Integer verse) {
-            ReaderWebView.this.post(new Runnable() {
+            handler.post(new Runnable() {
                 @Override
                 public void run() {
                     loadUrl("javascript: deselectVerse('verse_" + verse + "');");
@@ -477,7 +524,7 @@ public class ReaderWebView extends WebView
         }
 
         private void selectVerse(final int verse) {
-            ReaderWebView.this.post(new Runnable() {
+            handler.post(new Runnable() {
                 @Override
                 public void run() {
                     loadUrl("javascript: selectVerse('verse_" + verse + "');");

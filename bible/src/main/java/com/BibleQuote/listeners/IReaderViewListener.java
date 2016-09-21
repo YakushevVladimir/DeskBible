@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: IReaderViewListener.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 9/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -29,21 +29,20 @@
 package com.BibleQuote.listeners;
 
 public interface IReaderViewListener {
+	void onReaderClickImage(String path);
+
+	void onReaderViewChange(ChangeCode code, Object... values);
+
 	enum ChangeCode {
 		onUpdateText,
 		onChangeSelection,
+		onChangeCurrentVerse,
 		onLongPress,
 		onScroll,
-		onSwipeLeft,
-		onSwipeRight,
 		onChangeReaderMode,
 		onUpNavigation,
 		onDownNavigation,
 		onLeftNavigation,
 		onRightNavigation
 	}
-
-	void onReaderViewChange(ChangeCode code);
-
-    void onReaderClickImage(String path);
 }

@@ -149,4 +149,5 @@
 	<string name="donate">Donate</string>
 	<string name="menu_tags">Метки</string>
 	<string name="search_hint">Что найти?</string>
+	<string name="hide_nav_buttons">Скрыть кнопки навигации</string>
 </resources>
