@@ -37,8 +37,8 @@ android {
         applicationId "com.BibleQuote"
         minSdkVersion 15
         targetSdkVersion 22
-        versionCode 78
-        versionName "1.0.78"
+        versionCode 79
+        versionName "1.0.79"
     }
 
     compileOptions {
