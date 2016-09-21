@@ -57,7 +57,7 @@ import java.util.TreeSet;
 public class ReaderWebView extends WebView
 		implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
 
-    public static final int MIN_SWIPE_VELOCITY = 2000;
+    public static final int MIN_FLING_VELOCITY = 400;
     public static final int MIN_SWIPE_X = 100;
     public static final int MAX_SWIPE_Y = 200;
 
@@ -79,7 +79,7 @@ public class ReaderWebView extends WebView
     private boolean isBible;
     private int minSwipeX = MIN_SWIPE_X;
     private int maxSwipeY = MAX_SWIPE_Y;
-    private int minVelocity = MIN_SWIPE_VELOCITY;
+    private float minVelocity = MIN_FLING_VELOCITY;
     private ITextFormatter formatter = new StripTagsTextFormatter();
 
     @SuppressLint("AddJavascriptInterface")
@@ -158,9 +158,9 @@ public class ReaderWebView extends WebView
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         DisplayMetrics metrics = getContext().getResources().getDisplayMetrics();
-        minSwipeX = metrics.widthPixels / 2;
-        maxSwipeY = metrics.heightPixels / 4;
-        minVelocity = metrics.widthPixels * 2;
+        minSwipeX = metrics.widthPixels / 3;
+        maxSwipeY = metrics.heightPixels / 3;
+        minVelocity = MIN_FLING_VELOCITY * metrics.density;
     }
 
     public void computeScroll() {
@@ -210,18 +210,18 @@ public class ReaderWebView extends WebView
     }
 
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-        float distX = e1.getX() - e2.getX();
-        float distY = e1.getY() - e2.getY();
-        if (Math.abs(distY) < maxSwipeY && Math.abs(distX) > minSwipeX
+        float dx = e1.getX() - e2.getX();
+        float dy = e1.getY() - e2.getY();
+        if (Math.abs(dy) < maxSwipeY && Math.abs(dx) > minSwipeX
                 && Math.abs(velocityX) > minVelocity) {
-            if (distX < 0) {
+            if (dx < 0) {
                 notifyListeners(IReaderViewListener.ChangeCode.onLeftNavigation);
             } else {
                 notifyListeners(IReaderViewListener.ChangeCode.onRightNavigation);
             }
             return true;
         } else {
-            Log.d(TAG, String.format("distX: %f, distY: %f, velocityX: %f", distX, distY, velocityX));
+            Log.d(TAG, String.format("distX: %f, distY: %f, velocityX: %f", dx, dy, velocityX));
         }
         return false;
     }
