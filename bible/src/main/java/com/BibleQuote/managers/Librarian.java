@@ -211,10 +211,12 @@ public class Librarian {
     }
 
     public void setCurrentVerseNumber(int verse) {
-        this.currVerseNumber = verse;
-        PreferenceHelper.getInstance().saveStateString("last_read",
-                new BibleReference(currModule, currBook, currChapter.getNumber(), currVerseNumber)
-                        .getExtendedPath());
+        if (currModule != null && currBook != null && currChapter != null) {
+            this.currVerseNumber = verse;
+            PreferenceHelper.getInstance().saveStateString("last_read",
+                    new BibleReference(currModule, currBook, currChapter.getNumber(), currVerseNumber)
+                            .getExtendedPath());
+        }
     }
 
     public void clearHistory() {
