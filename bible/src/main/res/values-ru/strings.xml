@@ -76,13 +76,10 @@
 	<string name="app_about_dev_label">Разработчики:</string>
 	<string name="exception_open_module">Некорректный модуль %1$s(%2$s)</string>
 	<string name="messageRefresh">Обновление…</string>
-	<string name="exception_books_definition">Некорректное описание книги в модуле %1$s:
-		BookQty=%2$s, PathName#=%3$s, FullName#=%4$s, ShortName#=%5$s,
-		ChapterQty#=%6$s
-	</string>
+	<string name="exception_books_definition">Некорректное описание книги в модуле %1$s: BookQty=%2$d, PathName#=%3$d, FullName#=%4$d, ShortName#=%5$d, ChapterQty#=%6$d\n\t</string>
 	<string name="exception_open_module_short">Некорректный модуль %s</string>
 	<string name="exception_book_not_found">Книга %1$s не найден а в модуле %2$s</string>
-	<string name="exception_book_definition">Некорректные параметры книги #%1$s в модуле %2$s</string>
+	<string name="exception_book_definition">Некорректные параметры книги #%1$d в модуле %2$s</string>
 	<string name="category_reports_summary">Настройки параметров отправки</string>
 	<string name="category_reader_summary">Настройки параметров окна чтения</string>
 	<string name="app_about_design_label">Дизайн:</string>

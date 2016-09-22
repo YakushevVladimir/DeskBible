@@ -102,13 +102,13 @@
     <string name="dialog_color_picker">Choose a color</string>
     <string name="press_color_to_apply">Press to apply</string>
     <string name="references">References</string>
-    <string name="exception_book_definition">Incorrect attributes of book #%1$s in module %2$s</string>
+    <string name="exception_book_definition">Incorrect attributes of book #%1$d in module %2$s</string>
     <string name="exception_book_not_found">Book %1$s not found in module %2$s</string>
     <string name="exception_open_module">Incorrect module %1$s(%2$s)</string>
     <string name="exception_open_module_short">Incorrect module %s</string>
     <string name="category_reports_summary">Crash reports settings</string>
     <string name="category_reader_summary">Reader window settings</string>
-    <string name="exception_books_definition">Incorrect module description in module %1$s: BookQty=%2$s, PathName#=%3$s, FullName#=%4$s, ShortName#=%5$s, ChapterQty#=%6$s</string>
+    <string name="exception_books_definition">Incorrect module description in module %1$s: BookQty=%2$d, PathName#=%3$d, FullName#=%4$d, ShortName#=%5$d, ChapterQty#=%6$d</string>
     <string name="enabled">Enabled</string>
     <string name="volume_butons_to_scroll">Volume buttons to scroll</string>
     <string name="disabled">Disabled</string>

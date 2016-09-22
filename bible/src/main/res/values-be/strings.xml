@@ -125,9 +125,9 @@
     <string name="edit">Редактировать</string>
     <string name="empty">Нет данных</string>
     <string name="enabled">Включено</string>
-    <string name="exception_book_definition">Некорректные параметры книги #%1$s в модуле %2$s</string>
+    <string name="exception_book_definition">Некорректные параметры книги #%1$d в модуле %2$s</string>
     <string name="exception_book_not_found">Книга %1$s не найден а в модуле %2$s</string>
-    <string name="exception_books_definition">Некорректное описание книги в модуле %1$s:\nBookQty=%2$s, PathName#=%3$s, FullName#=%4$s, ShortName#=%5$s,\nChapterQty#=%6$s</string>
+    <string name="exception_books_definition">Некорректное описание книги в модуле %1$s: BookQty=%2$d, PathName#=%3$d, FullName#=%4$d, ShortName#=%5$d, ChapterQty#=%6$d</string>
     <string name="exception_open_module">Некорректный модуль %1$s(%2$s)</string>
     <string name="exception_open_module_short">Некорректный модуль %s</string>
     <string name="copy_module_from_file"> Copying a module…</string>

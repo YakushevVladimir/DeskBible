@@ -90,13 +90,13 @@
     <string name="dialog_color_picker">Обрати колір</string>
     <string name="press_color_to_apply">Натисніть для застосування</string>
     <string name="references">Посилання</string>
-    <string name="exception_book_definition">Невірні параметри книги #%1$s в модулі %2$s</string>
+    <string name="exception_book_definition">Невірні параметри книги #%1$d в модулі %2$s</string>
     <string name="exception_book_not_found">Книгу %1$s не знайдено в модулі %2$s</string>
     <string name="exception_open_module">Невірний модуль %1$s(%2$s)</string>
     <string name="exception_open_module_short">Невірний модуль %s</string>
     <string name="category_reports_summary">Налаштування звітів про збої</string>
     <string name="category_reader_summary">Налаштування вікна читання</string>
-    <string name="exception_books_definition">Невірний опис книги в модулі %1$s: BookQty=%2$s, PathName#=%3$s, FullName#=%4$s, ShortName#=%5$s, ChapterQty#=%6$s</string>
+    <string name="exception_books_definition">Невірний опис книги в модулі %1$s: BookQty=%2$d, PathName#=%3$d, FullName#=%4$d, ShortName#=%5$d, ChapterQty#=%6$d</string>
     <string name="enabled">Увімкнено</string>
     <string name="volume_butons_to_scroll">Прокручувати кнопками гучності</string>
     <string name="disabled">Вимкнено</string>
