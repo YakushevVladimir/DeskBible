@@ -31,12 +31,11 @@ package com.BibleQuote.listeners;
 public interface IReaderViewListener {
 	void onReaderClickImage(String path);
 
-	void onReaderViewChange(ChangeCode code, Object... values);
+	void onReaderViewChange(ChangeCode code);
 
 	enum ChangeCode {
 		onUpdateText,
 		onChangeSelection,
-		onChangeCurrentVerse,
 		onLongPress,
 		onScroll,
 		onChangeReaderMode,

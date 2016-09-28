@@ -33,12 +33,11 @@ import android.content.Intent;
 /**
  *
  */
-public interface IViewPresenter {
+interface IViewPresenter {
     void onActivityResult(int requestCode, int resultCode, Intent data);
-
     boolean onNavigationItemSelected(int itemId);
-
     boolean onOptionsItemSelected(int itemId);
 
+    void onPause();
     void onResume();
 }

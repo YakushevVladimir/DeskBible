@@ -110,7 +110,11 @@ public class ReaderWebView extends WebView
         }
     }
 
-    public Mode getMode() {
+    public int getCurrVerse() {
+        return currVerse;
+    }
+
+    public Mode getReaderMode() {
         return currMode;
     }
 
@@ -165,7 +169,7 @@ public class ReaderWebView extends WebView
     public void computeScroll() {
         super.computeScroll();
         if (mPageLoaded && isScrollToBottom()) {
-            handler.sendEmptyMessage(ViewHandler.MSG_ON_COMPUTE_SCROLL);
+            notifyListeners(IReaderViewListener.ChangeCode.onScroll);
         }
         loadUrl("javascript: getCurrentVerse();");
     }
@@ -288,19 +292,20 @@ public class ReaderWebView extends WebView
         mPageLoaded = false;
         String modStyle = isBible ? "bible_style.css" : "book_style.css";
 
+        @SuppressWarnings("StringBufferReplaceableByString")
         StringBuilder html = new StringBuilder();
-        html.append("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\r\n")
-                .append("<html>\r\n")
-                .append("<head>\r\n")
-                .append("<meta http-equiv=Content-Type content=\"text/html; charset=UTF-8\">\r\n")
-                .append("<script language=\"JavaScript\" src=\"file:///android_asset/reader.js\" type=\"text/javascript\"></script>\r\n")
-                .append("<link rel=\"stylesheet\" type=\"text/css\" href=\"file:///android_asset/").append(modStyle).append("\">\r\n")
-                .append(getStyle(isNightMode))
-                .append("</head>\r\n")
-                .append("<body").append(currVerse > 1 ? (" onLoad=\"document.location.href='#verse_" + currVerse + "';\"") : "").append(">\r\n")
-                .append(content)
-                .append("</body>\r\n")
-                .append("</html>");
+        html.append("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\r\n");
+        html.append("<html>\r\n");
+        html.append("<head>\r\n");
+        html.append("<meta http-equiv=Content-Type content=\"text/html; charset=UTF-8\">\r\n");
+        html.append("<script language=\"JavaScript\" src=\"file:///android_asset/reader.js\" type=\"text/javascript\"></script>\r\n");
+        html.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"file:///android_asset/").append(modStyle).append("\">\r\n");
+        html.append(getStyle(isNightMode));
+        html.append("</head>\r\n");
+        html.append("<body").append(currVerse > 1 ? (" onLoad=\"document.location.href='#verse_" + currVerse + "';\"") : "").append(">\r\n");
+        html.append(content);
+        html.append("</body>\r\n");
+        html.append("</html>");
 
         loadDataWithBaseURL("file://" + baseUrl, html.toString(), "text/html", "UTF-8", "about:config");
         jsInterface.clearSelectedVerse();
@@ -372,14 +377,8 @@ public class ReaderWebView extends WebView
 		return style.toString();
 	}
 
-    private void notifyListeners(IReaderViewListener.ChangeCode code, Object... values) {
-        Message msg;
-        if (code != IReaderViewListener.ChangeCode.onChangeCurrentVerse || values.length == 0) {
-            msg = Message.obtain(handler, ViewHandler.MSG_OTHER, code);
-        } else {
-            msg = Message.obtain(handler, ViewHandler.MSG_CHANGE_CURRENT_VERSE, code);
-            msg.arg1 = (Integer) values[0];
-        }
+    private void notifyListeners(IReaderViewListener.ChangeCode code) {
+        Message msg = Message.obtain(handler, ViewHandler.MSG_OTHER, code);
         handler.sendMessage(msg);
     }
 
@@ -397,10 +396,8 @@ public class ReaderWebView extends WebView
 
     private static class ViewHandler extends Handler {
 
-        public static final int MSG_ON_COMPUTE_SCROLL = 1;
-        public static final int MSG_ON_CLICK_IMAGE = 2;
-        public static final int MSG_CHANGE_CURRENT_VERSE = 3;
-        public static final int MSG_OTHER = 4;
+        static final int MSG_OTHER = 1;
+        static final int MSG_ON_CLICK_IMAGE = 2;
 
         private WeakReference<IReaderViewListener> weakListener;
 
@@ -416,14 +413,8 @@ public class ReaderWebView extends WebView
             }
 
             switch (msg.what) {
-                case MSG_ON_COMPUTE_SCROLL:
-                    listener.onReaderViewChange(IReaderViewListener.ChangeCode.onScroll);
-                    break;
                 case MSG_ON_CLICK_IMAGE:
                     listener.onReaderClickImage((String) msg.obj);
-                    break;
-                case MSG_CHANGE_CURRENT_VERSE:
-                    listener.onReaderViewChange(IReaderViewListener.ChangeCode.onChangeCurrentVerse, msg.arg1);
                     break;
                 default:
                     listener.onReaderViewChange((IReaderViewListener.ChangeCode) msg.obj);
@@ -449,39 +440,19 @@ public class ReaderWebView extends WebView
 
     private final class JavaScriptInterface {
 
-		public JavaScriptInterface() {
-			clearSelectedVerse();
-		}
+        JavaScriptInterface() {
+            clearSelectedVerse();
+        }
 
         @JavascriptInterface
         public void setCurrentVerse(String id) {
             if (id.matches("verse_\\d+?")) {
                 try {
                     currVerse = Integer.parseInt(id.split("_")[1]);
-                    final Message msg = Message.obtain(handler, ViewHandler.MSG_CHANGE_CURRENT_VERSE, IReaderViewListener.ChangeCode.onChangeSelection);
-                    msg.arg1 = currVerse;
-                    handler.sendMessage(msg);
                 } catch (NumberFormatException ex) {
                     ex.printStackTrace();
                 }
             }
-        }
-
-        @JavascriptInterface
-		public void clearSelectedVerse() {
-            for (Integer verse : selectedVerse) {
-                deselectVerse(verse);
-            }
-			selectedVerse.clear();
-		}
-
-        public void gotoVerse(final int verse) {
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    loadUrl("javascript: gotoVerse(" + verse + ");");
-                }
-            });
         }
 
         @JavascriptInterface
@@ -514,11 +485,27 @@ public class ReaderWebView extends WebView
             }
 		}
 
+        private void clearSelectedVerse() {
+            for (Integer verse : selectedVerse) {
+                deselectVerse(verse);
+            }
+            selectedVerse.clear();
+        }
+
         private void deselectVerse(final Integer verse) {
             handler.post(new Runnable() {
                 @Override
                 public void run() {
                     loadUrl("javascript: deselectVerse('verse_" + verse + "');");
+                }
+            });
+        }
+
+        private void gotoVerse(final int verse) {
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    loadUrl("javascript: gotoVerse(" + verse + ");");
                 }
             });
         }

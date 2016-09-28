@@ -79,7 +79,7 @@ public class ReaderActivity extends AppCompatActivity implements ReaderViewPrese
 
     @BindView(R.id.moduleName) TextView vModuleName;
     @BindView(R.id.linkBook) TextView vBookLink;
-    @BindView(R.id.readerView) ReaderWebView vWeb;
+    @BindView(R.id.readerView) ReaderWebView readerView;
     @BindView(R.id.chapter_nav) ChapterNavigator chapterNav;
 
     private ReaderWebView.Mode oldMode;
@@ -132,17 +132,17 @@ public class ReaderActivity extends AppCompatActivity implements ReaderViewPrese
         presenter = new ReaderViewPresenter(this, this, BibleQuoteApp.getInstance().getLibrarian());
 
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
-        vWeb.setOnReaderViewListener(this);
+        readerView.setOnReaderViewListener(this);
 
         chapterNav.setOnClickListener(new ChapterNavigator.OnClickListener() {
             @Override
             public void onClick(ChapterNavigator.ClickedButton btn) {
                 switch (btn) {
                     case DOWN:
-                        vWeb.pageDown(false);
+                        readerView.pageDown(false);
                         break;
                     case UP:
-                        vWeb.pageUp(false);
+                        readerView.pageUp(false);
                         break;
                     case PREV:
                         presenter.prevChapter();
@@ -210,12 +210,12 @@ public class ReaderActivity extends AppCompatActivity implements ReaderViewPrese
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_VOLUME_UP && presenter.isVolumeButtonsToScroll())
                 || DevicesKeyCodes.KeyCodeUp(keyCode)) {
-            vWeb.pageUp(false);
+            readerView.pageUp(false);
             viewChapterNavigator();
             return true;
         } else if ((keyCode == KeyEvent.KEYCODE_VOLUME_DOWN && presenter.isVolumeButtonsToScroll())
                 || DevicesKeyCodes.KeyCodeDown(keyCode)) {
-            vWeb.pageDown(false);
+            readerView.pageDown(false);
             viewChapterNavigator();
             return true;
         } else {
@@ -230,12 +230,14 @@ public class ReaderActivity extends AppCompatActivity implements ReaderViewPrese
     }
 
     @Override
-    public void onReaderViewChange(ChangeCode code, Object... values) {
+    protected void onPause() {
+        super.onPause();
+        presenter.onPause();
+    }
+
+    @Override
+    public void onReaderViewChange(ChangeCode code) {
         switch (code) {
-            case onChangeCurrentVerse:
-                if (values.length > 0) {
-                    presenter.setCurrentVerse((Integer) values[0]);
-                }
             case onScroll:
                 viewChapterNavigator();
                 break;
@@ -246,24 +248,24 @@ public class ReaderActivity extends AppCompatActivity implements ReaderViewPrese
                 viewChapterNavigator();
                 break;
             case onChangeSelection:
-                TreeSet<Integer> selVerses = vWeb.getSelectedVerses();
+                TreeSet<Integer> selVerses = readerView.getSelectedVerses();
                 if (selVerses.size() == 0) {
                     disableActionMode();
                 } else if (currActionMode == null) {
-                    currActionMode = startSupportActionMode(new SelectTextHandler(this, vWeb));
+                    currActionMode = startSupportActionMode(new SelectTextHandler(this, readerView));
                 }
                 break;
             case onLongPress:
                 viewChapterNavigator();
-                if (vWeb.getMode() == ReaderWebView.Mode.Read) {
+                if (readerView.getReaderMode() == ReaderWebView.Mode.Read) {
                     openLibraryActivity(ReaderViewPresenter.ID_CHOOSE_CH);
                 }
                 break;
             case onUpNavigation:
-                vWeb.pageUp(false);
+                readerView.pageUp(false);
                 break;
             case onDownNavigation:
-                vWeb.pageDown(false);
+                readerView.pageDown(false);
                 break;
             case onLeftNavigation:
                 presenter.prevChapter();
@@ -389,25 +391,25 @@ public class ReaderActivity extends AppCompatActivity implements ReaderViewPrese
 
     @Override
     public void setKeepScreen(boolean isKeepScreen) {
-        vWeb.setKeepScreenOn(isKeepScreen);
+        readerView.setKeepScreenOn(isKeepScreen);
     }
 
     @Override
     public void setNightMode(boolean isNightMode) {
         nightMode = isNightMode;
-        vWeb.setNightMode(nightMode);
+        readerView.setNightMode(nightMode);
     }
 
     @Override
     public boolean invertNightMode() {
         nightMode = !nightMode;
-        vWeb.setNightMode(nightMode);
+        readerView.setNightMode(nightMode);
         return nightMode;
     }
 
     @Override
     public void setReaderMode(ReaderWebView.Mode mode) {
-        vWeb.setMode(mode);
+        readerView.setMode(mode);
         updateActivityMode();
     }
 
@@ -418,7 +420,7 @@ public class ReaderActivity extends AppCompatActivity implements ReaderViewPrese
         tran.remove(ttsPlayer);
         tran.commit();
         ttsPlayer = null;
-        vWeb.setMode(oldMode);
+        readerView.setMode(oldMode);
     }
 
     @Override
@@ -431,13 +433,13 @@ public class ReaderActivity extends AppCompatActivity implements ReaderViewPrese
         ttsPlayer.setTTSStopSpeakListener(presenter);
         getSupportFragmentManager().beginTransaction().add(R.id.tts_player_frame, ttsPlayer).commit();
 
-        oldMode = vWeb.getMode();
-        vWeb.setMode(ReaderWebView.Mode.Speak);
+        oldMode = readerView.getReaderMode();
+        readerView.setMode(ReaderWebView.Mode.Speak);
     }
 
     @Override
     public void setContent(String baseUrl, Chapter chapter, int verse, boolean isBible) {
-        vWeb.setContent(baseUrl, chapter, verse, nightMode, isBible);
+        readerView.setContent(baseUrl, chapter, verse, nightMode, isBible);
     }
 
     @Override
@@ -450,7 +452,7 @@ public class ReaderActivity extends AppCompatActivity implements ReaderViewPrese
     public void updateActivityMode() {
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            if (vWeb.getMode() == ReaderWebView.Mode.Read) {
+            if (readerView.getReaderMode() == ReaderWebView.Mode.Read) {
                 actionBar.hide();
             } else {
                 actionBar.show();
@@ -461,12 +463,12 @@ public class ReaderActivity extends AppCompatActivity implements ReaderViewPrese
 
     @Override
     public void updateContent() {
-        vWeb.update();
+        readerView.update();
     }
 
     @Override
     public void setTextFormatter(@NonNull ITextFormatter formatter) {
-        vWeb.setFormatter(formatter);
+        readerView.setFormatter(formatter);
     }
 
     @Override
@@ -477,13 +479,18 @@ public class ReaderActivity extends AppCompatActivity implements ReaderViewPrese
         }
     }
 
+    @Override
+    public int getCurrVerse() {
+        return readerView.getCurrVerse();
+    }
+
     private void viewChapterNavigator() {
         chapterNavHandler.removeCallbacksAndMessages(null);
-        if (vWeb.getMode() != ReaderWebView.Mode.Study || PreferenceHelper.getInstance().hideNavButtons()) {
+        if (readerView.getReaderMode() != ReaderWebView.Mode.Study || PreferenceHelper.getInstance().hideNavButtons()) {
             chapterNav.setVisibility(View.GONE);
         } else {
             chapterNav.setVisibility(View.VISIBLE);
-            if (!vWeb.isScrollToBottom()) {
+            if (!readerView.isScrollToBottom()) {
                 chapterNavHandler.postDelayed(
                         new Runnable() {
                             @Override

@@ -65,7 +65,9 @@ public class ReaderViewPresenter implements TTSPlayerFragment.OnTTSStopSpeakList
     public static final int ID_BOOKMARKS = 4;
     public static final int ID_PARALLELS = 5;
     public static final int ID_SETTINGS = 6;
+
     private static final String TAG = ReaderViewPresenter.class.getSimpleName();
+
     private IReaderView view;
     private WeakReference<Context> weakContext;
     private Librarian librarian;
@@ -81,10 +83,6 @@ public class ReaderViewPresenter implements TTSPlayerFragment.OnTTSStopSpeakList
 
     public boolean isVolumeButtonsToScroll() {
         return preferenceHelper.volumeButtonsToScroll();
-    }
-
-    public void setCurrentVerse(int value) {
-        librarian.setCurrentVerseNumber(value);
     }
 
     public void setOSISLink(BibleReference osisLink) {
@@ -173,6 +171,11 @@ public class ReaderViewPresenter implements TTSPlayerFragment.OnTTSStopSpeakList
     }
 
     @Override
+    public void onPause() {
+        librarian.setCurrentVerseNumber(view.getCurrVerse());
+    }
+
+    @Override
     public void onResume() {
         view.setKeepScreen(preferenceHelper.restoreStateBoolean("DisableTurnScreen"));
         view.setCurrentOrientation(preferenceHelper.restoreStateBoolean("DisableAutoScreenRotation"));
@@ -250,6 +253,8 @@ public class ReaderViewPresenter implements TTSPlayerFragment.OnTTSStopSpeakList
     }
 
     public interface IReaderView {
+        int getCurrVerse();
+
         void setCurrentOrientation(boolean disableAutoRotation);
 
         void setKeepScreen(boolean isKeepScreen);
