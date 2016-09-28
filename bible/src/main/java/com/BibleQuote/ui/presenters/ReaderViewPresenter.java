@@ -113,7 +113,7 @@ public class ReaderViewPresenter implements TTSPlayerFragment.OnTTSStopSpeakList
                 Bundle extras = data.getExtras();
                 BibleReference osisLink = new BibleReference(extras.getString("linkOSIS"));
                 openChapterFromLink(osisLink);
-                GoogleAnalyticsHelper.getInstance().actionOpenLink(osisLink, requestCode);
+                GoogleAnalyticsHelper.getInstance().actionOpenLink(osisLink);
             }
         } else if (requestCode == ID_SETTINGS) {
             initView();

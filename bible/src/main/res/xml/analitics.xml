@@ -1,7 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (c) 2014, Nowtaxi LLC
-  ~ http://nowtaxi.ru
+  ~ Copyright (C) 2011 Scripture Software
+  ~
+  ~ Licensed to the Apache Software Foundation (ASF) under one
+  ~ or more contributor license agreements.  See the NOTICE file
+  ~ distributed with this work for additional information
+  ~ regarding copyright ownership.  The ASF licenses this file
+  ~ to you under the Apache License, Version 2.0 (the
+  ~ "License"); you may not use this file except in compliance
+  ~ with the License.  You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied.  See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  ~
+  ~ Project: BibleQuote-for-Android
+  ~ File: analitics.xml
+  ~
+  ~ Created by Vladimir Yakushev at 9/2016
+  ~ E-mail: ru.phoenix@gmail.com
+  ~ WWW: http://www.scripturesoftware.org
   -->
 
 <resources>
@@ -13,14 +36,14 @@
     <bool name="ga_autoActivityTracking">true</bool>
 
     <!-- The screen names that will appear in reports -->
-    <string name="com.BibleQuote.ui.AboutActivity">About</string>
-    <string name="com.BibleQuote.ui.BookmarksActivity">Bookmarks</string>
-    <string name="com.BibleQuote.ui.CrossReferenceActivity">CrossReference</string>
-    <string name="com.BibleQuote.ui.HelpActivity">Help Screen</string>
-    <string name="com.BibleQuote.ui.HistoryActivity">History</string>
-    <string name="com.BibleQuote.ui.LibraryActivity">Library</string>
-    <string name="com.BibleQuote.ui.ReaderActivity">Reader</string>
-    <string name="com.BibleQuote.ui.SearchActivity">Search</string>
+    <screenName name="com.BibleQuote.ui.AboutActivity">About</screenName>
+    <screenName name="com.BibleQuote.ui.BookmarksActivity">Bookmarks</screenName>
+    <screenName name="com.BibleQuote.ui.CrossReferenceActivity">CrossReference</screenName>
+    <screenName name="com.BibleQuote.ui.HelpActivity">Help Screen</screenName>
+    <screenName name="com.BibleQuote.ui.HistoryActivity">History</screenName>
+    <screenName name="com.BibleQuote.ui.LibraryActivity">Library</screenName>
+    <screenName name="com.BibleQuote.ui.ReaderActivity">Reader</screenName>
+    <screenName name="com.BibleQuote.ui.SearchActivity">Search</screenName>
 
     <!--Enable automatic exception tracking-->
     <bool name="ga_reportUncaughtExceptions">true</bool>

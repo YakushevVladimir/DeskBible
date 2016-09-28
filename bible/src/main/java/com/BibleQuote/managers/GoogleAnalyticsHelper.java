@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2011 Scripture Software
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -19,11 +21,9 @@
  * Project: BibleQuote-for-Android
  * File: GoogleAnalyticsHelper.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 9/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
- *
- *
  */
 
 package com.BibleQuote.managers;
@@ -31,7 +31,6 @@ package com.BibleQuote.managers;
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.domain.entity.BibleReference;
 import com.BibleQuote.domain.entity.Bookmark;
-import com.BibleQuote.ui.presenters.ReaderViewPresenter;
 import com.google.android.gms.analytics.HitBuilders;
 
 /**
@@ -39,11 +38,13 @@ import com.google.android.gms.analytics.HitBuilders;
  * @version 1.0
  */
 public final class GoogleAnalyticsHelper {
-    private final static String CAATEGORY_BOOKMARKS = "bookmarks";
+
+    private static final String CATEGORY_BOOKMARKS = "bookmarks";
     private static final String CATEGORY_MODULES = "modules";
     private static final String CATEGORY_SEARCH = "search";
-    private static final String CATEGORY_PARALLELS = "parallels";
-    private static final String CATEGORY_HISTORY = "history";
+
+    private static final String ACTION_OPEN_MODULE = "open_module";
+    private static final String ACTION_OPEN_BOOK = "open_book";
 
     private static volatile GoogleAnalyticsHelper instance;
 
@@ -61,58 +62,22 @@ public final class GoogleAnalyticsHelper {
         return instance;
     }
 
-    public void actionSendBookmark(Bookmark bookmark) {
-        for(String tag : bookmark.tags.split(",")) {
-            if (!"".equals(tag)) {
-                createEvent(CAATEGORY_BOOKMARKS, "tags", tag);
-            }
-        }
-        createEvent(CAATEGORY_BOOKMARKS, "bookmark", bookmark.OSISLink);
-    }
-
-    public void actionOpenLink(BibleReference reference, int openCode) {
-        switch (openCode) {
-            case ReaderViewPresenter.ID_BOOKMARKS:
-                actionOpenBookmark(reference);
-                break;
-            case ReaderViewPresenter.ID_CHOOSE_CH:
-                actionOpenChapter(reference);
-                break;
-            case ReaderViewPresenter.ID_HISTORY:
-                actionOpenHistory(reference);
-                break;
-            case ReaderViewPresenter.ID_PARALLELS:
-                actionOpenParallels(reference);
-                break;
-            case ReaderViewPresenter.ID_SEARCH:
-                actionOpenSearchReference(reference);
-                break;
-        }
-    }
-
-    private void actionOpenSearchReference(BibleReference reference) {
-        createEvent(CATEGORY_SEARCH, "open", reference.getPath());
-    }
-
-    private void actionOpenParallels(BibleReference reference) {
-        createEvent(CATEGORY_PARALLELS, "open", reference.getPath());
-    }
-
-    private void actionOpenHistory(BibleReference reference) {
-        createEvent(CATEGORY_HISTORY, "open", reference.getPath());
-    }
-
-    public void actionOpenBookmark(BibleReference osisLink) {
-        createEvent(CAATEGORY_BOOKMARKS, "open", osisLink.getModuleID());
-    }
-
-    public void actionOpenChapter(BibleReference reference) {
-        createEvent(CATEGORY_MODULES, "open_module", reference.getModuleID());
-        createEvent(CATEGORY_MODULES, "open_book", reference.getBookID());
+    public void actionOpenLink(BibleReference reference) {
+        createEvent(CATEGORY_MODULES, ACTION_OPEN_MODULE, reference.getModuleID());
+        createEvent(CATEGORY_MODULES, ACTION_OPEN_BOOK, reference.getBookID());
     }
 
     public void actionSearch(String moduleID, String query) {
         createEvent(CATEGORY_SEARCH, moduleID, query);
+    }
+
+    public void actionSendBookmark(Bookmark bookmark) {
+        for(String tag : bookmark.tags.split(",")) {
+            if (!"".equals(tag)) {
+                createEvent(CATEGORY_BOOKMARKS, "tags", tag, bookmark.OSISLink);
+            }
+        }
+        createEvent(CATEGORY_BOOKMARKS, "bookmark", bookmark.OSISLink);
     }
 
     private void createEvent(String category, String action, String label) {
@@ -120,6 +85,15 @@ public final class GoogleAnalyticsHelper {
                 .setCategory(category)
                 .setAction(action)
                 .setLabel(label)
+                .build());
+    }
+
+    private void createEvent(String category, String action, String label, String dimension1) {
+        BibleQuoteApp.getInstance().getTracker().send(new HitBuilders.EventBuilder()
+                .setCategory(category)
+                .setAction(action)
+                .setLabel(label)
+                .setCustomDimension(1, dimension1)
                 .build());
     }
 }
