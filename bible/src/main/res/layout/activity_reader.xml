@@ -21,7 +21,7 @@
   ~ Project: BibleQuote-for-Android
   ~ File: activity_reader.xml
   ~
-  ~ Created by Vladimir Yakushev at 9/2016
+  ~ Created by Vladimir Yakushev at 10/2016
   ~ E-mail: ru.phoenix@gmail.com
   ~ WWW: http://www.scripturesoftware.org
   -->
@@ -51,7 +51,9 @@
                 android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorPrimary"
                 app:popupTheme="@style/ToolbarPopupTheme"
-                app:theme="@style/ToolbarTheme"/>
+                app:subtitleTextAppearance="@style/Widget.ActionBar.SubtitleText"
+                app:theme="@style/ToolbarTheme"
+                app:titleTextAppearance="@style/Widget.ActionBar.TitleText"/>
 
         </android.support.design.widget.AppBarLayout>
 
@@ -59,34 +61,12 @@
             android:id="@+id/reader"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:background="#ff000000"
             android:orientation="vertical">
-
-            <RelativeLayout
-                android:id="@+id/bookLink_container"
-                android:layout_width="fill_parent"
-                android:layout_height="@dimen/bookLink_container_height"
-                android:background="#F5CC99"
-                android:clickable="false">
-
-                <TextView
-                    android:id="@+id/linkBook"
-                    style="@style/BookLinkContainer"
-                    android:layout_alignParentRight="true" />
-
-                <TextView
-                    android:id="@+id/moduleName"
-                    style="@style/BookLinkContainer"
-                    android:layout_alignParentLeft="true"
-                    android:layout_toLeftOf="@id/linkBook" />
-
-            </RelativeLayout>
 
             <com.BibleQuote.ui.widget.ReaderWebView
                 android:id="@+id/readerView"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_below="@id/bookLink_container" />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
 
             <com.BibleQuote.ui.widget.ChapterNavigator
                 android:id="@+id/chapter_nav"

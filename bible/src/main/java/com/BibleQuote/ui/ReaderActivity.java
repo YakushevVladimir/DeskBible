@@ -51,7 +51,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.Surface;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.BibleQuote.BibleQuoteApp;
@@ -78,8 +77,6 @@ public class ReaderActivity extends AppCompatActivity implements ReaderViewPrese
 
     private static final int VIEW_CHAPTER_NAV_LENGTH = 3000;
 
-    @BindView(R.id.moduleName) TextView vModuleName;
-    @BindView(R.id.linkBook) TextView vBookLink;
     @BindView(R.id.readerView) ReaderWebView readerView;
     @BindView(R.id.chapter_nav) ChapterNavigator chapterNav;
 
@@ -436,8 +433,8 @@ public class ReaderActivity extends AppCompatActivity implements ReaderViewPrese
 
     @Override
     public void setTitle(String moduleName, String link) {
-        vModuleName.setText(moduleName);
-        vBookLink.setText(link);
+        getSupportActionBar().setTitle(link);
+        getSupportActionBar().setSubtitle(moduleName);
     }
 
     @Override

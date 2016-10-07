@@ -37,4 +37,10 @@
         <item name="android:windowSharedElementExitTransition">@android:transition/move</item>
     </style>
 
+
+    <style name="ToolbarTheme" parent="@style/MaterialToolbarTheme.Base">
+        <item name="android:titleTextAppearance">@style/Widget.ActionBar.TitleText</item>
+        <item name="android:subtitleTextAppearance">@style/Widget.ActionBar.SubtitleText</item>
+    </style>
+
 </resources>

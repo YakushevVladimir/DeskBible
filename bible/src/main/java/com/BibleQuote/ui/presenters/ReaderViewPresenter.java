@@ -230,7 +230,7 @@ public class ReaderViewPresenter implements TTSPlayerFragment.OnTTSStopSpeakList
                         BibleReference osisLink = librarian.getCurrentOSISLink();
                         view.setTextFormatter(new ModuleTextFormatter(librarian.getCurrModule()));
                         view.setContent(librarian.getBaseUrl(), librarian.getCurrChapter(), osisLink.getFromVerse(), librarian.isBible());
-                        view.setTitle(librarian.getModuleName(), librarian.getHumanBookLink());
+                        view.setTitle(osisLink.getModuleID(), librarian.getHumanBookLink());
                     } else {
                         Exception e = ((AsyncOpenChapter) task).getException();
                         if (e instanceof OpenModuleException) {

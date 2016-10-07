@@ -73,9 +73,15 @@
 		<item name="actionModeBackground">@color/action_mode_background</item>
 	</style>
 
-    <style name="ToolbarTheme" parent="@style/Base.ThemeOverlay.AppCompat.ActionBar">
+    <style name="ToolbarTheme" parent="@style/MaterialToolbarTheme.Base">
+        <item name="titleTextAppearance">@style/Widget.ActionBar.TitleText</item>
+        <item name="subtitleTextAppearance">@style/Widget.ActionBar.SubtitleText</item>
+    </style>
+
+    <style name="MaterialToolbarTheme.Base" parent="@style/Base.ThemeOverlay.AppCompat.ActionBar">
         <item name="android:background">@color/primary</item>
         <item name="android:textColorPrimary">@color/toolbarTextColor</item>
+        <item name="android:textColorSecondary">@color/toolbarTextColor</item>
         <item name="actionMenuTextColor">@color/toolbarTextColor</item>
     </style>
 
@@ -102,6 +108,12 @@
 
 	<style name="Widget.ActionBar.TitleText" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">>
 		<item name="android:textColor">@color/accent</item>
+    </style>
+
+    <style name="Widget.ActionBar.SubtitleText" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle">
+        >
+        <item name="android:textColor">@color/accent</item>
+        <item name="android:textSize">@dimen/text_size_small</item>
 	</style>
 
     <style name="MaterialTheme.Base.Toolbar" parent="@style/Widget.AppCompat.Toolbar">
