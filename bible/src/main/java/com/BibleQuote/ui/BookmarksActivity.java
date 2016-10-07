@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: BookmarksActivity.java
  *
- * Created by Vladimir Yakushev at 9/2016
+ * Created by Vladimir Yakushev at 10/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -50,7 +50,7 @@ public class BookmarksActivity extends AppCompatActivity
     public static final String EXTRA_MODE = "extra_mode";
     public static final String MODE_TAGS = "tags";
     public static final String MODE_BOOKMARKS = "bookmarks";
-
+    private static final String KEY_TAB = "tab";
     private TabHost mTabHost;
     private TabsAdapter mTabsAdapter;
 
@@ -73,23 +73,15 @@ public class BookmarksActivity extends AppCompatActivity
         if (intent != null && intent.hasExtra(EXTRA_MODE)) {
             mTabHost.setCurrentTabByTag(intent.getStringExtra(EXTRA_MODE));
         } else if (savedInstanceState != null) {
-            mTabHost.setCurrentTabByTag(savedInstanceState.getString("tab"));
+            mTabHost.setCurrentTabByTag(savedInstanceState.getString(KEY_TAB));
         }
-    }
-
-    private View getTabIndicator(int stringID) {
-        View tabView = LayoutInflater.from(this).inflate(R.layout.tab_indicator, null);
-        TextView tv = (TextView) tabView.findViewById(R.id.tab);
-        tv.setText(getResources().getText(stringID).toString().toUpperCase());
-        return tabView;
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString("tab", mTabHost.getCurrentTabTag());
+        outState.putString(KEY_TAB, mTabHost.getCurrentTabTag());
     }
-
 
     @Override
     public void onBookmarksSelect(Bookmark bookmark) {
@@ -113,5 +105,12 @@ public class BookmarksActivity extends AppCompatActivity
     @Override
     public void onTagsUpdate() {
         ((BookmarksFragment) mTabsAdapter.getItem(0)).updateBookmarks();
+    }
+
+    private View getTabIndicator(int stringID) {
+        View tabView = LayoutInflater.from(this).inflate(R.layout.tab_indicator, mTabHost, false);
+        TextView tv = (TextView) tabView.findViewById(R.id.tab);
+        tv.setText(getResources().getText(stringID).toString().toUpperCase());
+        return tabView;
     }
 }

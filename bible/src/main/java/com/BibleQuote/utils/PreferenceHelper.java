@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: PreferenceHelper.java
  *
- * Created by Vladimir Yakushev at 9/2016
+ * Created by Vladimir Yakushev at 10/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -32,9 +32,38 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 
+import com.BibleQuote.entity.TextAppearance;
+
 public final class PreferenceHelper {
 
+    private static final String KEY_NIGHT_MODE = "nightMode";
     private static final String KEY_VIEW_BOOK_VERSE = "always_view_verse_numbers";
+    private static final String KEY_HISTORY_SIZE = "HistorySize";
+    private static final String KEY_READ_MODE_BY_DEFAULT = "ReadModeByDefault";
+    private static final String KEY_ADD_MODULE_TO_REFERENCE = "add_module_to_reference";
+    private static final String KEY_CROSS_REFERENCE_DISPLAY_CONTEXT = "cross_reference_display_context";
+    private static final String KEY_DIVIDE_THE_VERSES = "divide_the_verses";
+    private static final String KEY_HIDE_NAV_BUTTONS = "hide_nav_buttons";
+    private static final String KEY_PUT_REFERENCE_IN_BEGINNING = "put_reference_in_beginning";
+    private static final String KEY_SHORT_REFERENCE = "short_reference";
+    private static final String KEY_VOLUME_BUTTONS_TO_SCROLL = "volume_butons_to_scroll";
+    private static final String KEY_FONT_FAMILY = "font_family";
+    private static final String KEY_TEXT_BG = "TextBG";
+    private static final String KEY_TEXT_BG_SEL = "TextBGSel";
+    private static final String KEY_TEXT_COLOR = "TextColor";
+    private static final String KEY_TEXT_COLOR_SEL = "TextColorSel";
+    private static final String KEY_TEXT_SIZE = "TextSize";
+    private static final String KEY_TEXT_ALIGN_JUSTIFY = "text_align_justify";
+    private static final String KEY_ADD_REFERENCE = "add_reference";
+
+    private static final String DEF_TYPEFACE = "sans-serif";
+    private static final String DEF_HISTORY_SIZE = "50";
+    private static final String DEF_TEXT_BG = "#ffffff";
+    private static final String DEF_TEXT_BG_SEL = "#FEF8C4";
+    private static final String DEF_TEXT_COLOR = "#000000";
+    private static final String DEF_TEXT_COLOR_SEL = "#000000";
+    private static final int DEF_TEXT_SIZE = 12;
+
     private static volatile PreferenceHelper instance;
 
     private final SharedPreferences preference;
@@ -53,100 +82,80 @@ public final class PreferenceHelper {
     public static PreferenceHelper getInstance() {
         if (instance == null) {
             throw new IllegalStateException(
-                    "PreferenceHelper::createInstance() needs to be called "
-                            + "before PreferenceHelper::getInstance()");
+                    "PreferenceHelper.createInstance() needs to be called "
+                            + "before PreferenceHelper.getInstance()");
         }
         return instance;
     }
 
-    public String getFontFamily() {
-        return preference.getString("font_family", "sans-serif");
-    }
-
     public Integer getHistorySize() {
-        return Integer.parseInt(preference.getString("HistorySize", "50"));
+        return Integer.parseInt(preference.getString(KEY_HISTORY_SIZE, DEF_HISTORY_SIZE));
     }
 
-    public String getTextBackground() {
-        return getWebColor(preference.getString("TextBG", "#ffffff"));
+    public TextAppearance getTextAppearance() {
+        return new TextAppearance(
+                getFontFamily(), getTextSize(), getTextColor(), getTextBackground(),
+                getTextColorSelected(), getTextBackgroundSelected(),
+                textAlignJustify() ? "justify" : "left", getNightMode()
+        );
     }
-
-    public String getTextBackgroundSelected() {
-        return getWebColor(preference.getString("TextBGSel", "#FEF8C4"));
-    }
-
-    public String getTextColor() {
-        return getWebColor(preference.getString("TextColor", "#000000"));
-    }
-
-    public String getTextColorSelected() {
-        return getWebColor(preference.getString("TextColorSel", "#000000"));
-    }
-
-    public String getTextSize() {
-        return String.valueOf(preference.getInt("TextSize", 12));
-	}
 
     public boolean isReadModeByDefault() {
-        return preference.getBoolean("ReadModeByDefault", false);
+        return preference.getBoolean(KEY_READ_MODE_BY_DEFAULT, false);
+    }
+
+    public void setNightMode(boolean nightMode) {
+        preference.edit().putBoolean(KEY_NIGHT_MODE, nightMode).apply();
     }
 
     public boolean addModuleToBibleReference() {
-        return preference.getBoolean("add_module_to_reference", true);
+        return preference.getBoolean(KEY_ADD_MODULE_TO_REFERENCE, true);
     }
 
     public boolean addReference() {
-        return preference.getBoolean("add_reference", true);
+        return preference.getBoolean(KEY_ADD_REFERENCE, true);
     }
 
     public boolean crossRefViewDetails() {
-        return preference.getBoolean("cross_reference_display_context", false);
+        return preference.getBoolean(KEY_CROSS_REFERENCE_DISPLAY_CONTEXT, false);
     }
 
     public boolean divideTheVerses() {
-        return preference.getBoolean("divide_the_verses", false);
-    }
-
-    public boolean hideNavButtons() {
-        return preference.getBoolean("hide_nav_buttons", false);
-    }
-
-    public boolean putReferenceInBeginning() {
-        return preference.getBoolean("put_reference_in_beginning", false);
+        return preference.getBoolean(KEY_DIVIDE_THE_VERSES, false);
     }
 
     @NonNull
-    public Boolean restoreStateBoolean(String key) {
+    public Boolean getBoolean(String key) {
         return preference.getBoolean(key, false);
     }
 
-    public int restoreStateInt(String key) {
+    public int getInt(String key) {
         return preference.getInt(key, 0);
     }
 
     @NonNull
-    public String restoreStateString(String key) {
+    public String getString(String key) {
         return preference.getString(key, "");
     }
 
-    public void saveStateBoolean(String key, Boolean v) {
-        preference.edit().putBoolean(key, v).apply();
+    public boolean hideNavButtons() {
+        return preference.getBoolean(KEY_HIDE_NAV_BUTTONS, false);
     }
 
-    public void saveStateInt(String key, int value) {
+    public boolean putReferenceInBeginning() {
+        return preference.getBoolean(KEY_PUT_REFERENCE_IN_BEGINNING, false);
+    }
+
+    public void saveInt(String key, int value) {
         preference.edit().putInt(key, value).apply();
     }
 
-    public void saveStateString(String key, String value) {
+    public void saveString(String key, String value) {
         preference.edit().putString(key, value).apply();
     }
 
     public boolean shortReference() {
-        return preference.getBoolean("short_reference", false);
-    }
-
-    public boolean textAlignJustify() {
-        return preference.getBoolean("text_align_justify", false);
+        return preference.getBoolean(KEY_SHORT_REFERENCE, false);
     }
 
     public boolean viewBookVerse() {
@@ -154,7 +163,35 @@ public final class PreferenceHelper {
     }
 
     public boolean volumeButtonsToScroll() {
-        return preference.getBoolean("volume_butons_to_scroll", false);
+        return preference.getBoolean(KEY_VOLUME_BUTTONS_TO_SCROLL, false);
+    }
+
+    private String getFontFamily() {
+        return preference.getString(KEY_FONT_FAMILY, DEF_TYPEFACE);
+    }
+
+    private boolean getNightMode() {
+        return getBoolean(KEY_NIGHT_MODE);
+    }
+
+    private String getTextBackground() {
+        return getWebColor(preference.getString(KEY_TEXT_BG, DEF_TEXT_BG));
+    }
+
+    private String getTextBackgroundSelected() {
+        return getWebColor(preference.getString(KEY_TEXT_BG_SEL, DEF_TEXT_BG_SEL));
+    }
+
+    private String getTextColor() {
+        return getWebColor(preference.getString(KEY_TEXT_COLOR, DEF_TEXT_COLOR));
+    }
+
+    private String getTextColorSelected() {
+        return getWebColor(preference.getString(KEY_TEXT_COLOR_SEL, DEF_TEXT_COLOR_SEL));
+    }
+
+    private String getTextSize() {
+        return String.valueOf(preference.getInt(KEY_TEXT_SIZE, DEF_TEXT_SIZE));
     }
 
     private String getWebColor(String color) {
@@ -164,5 +201,9 @@ public final class PreferenceHelper {
         } else {
             return color;
         }
+    }
+
+    private boolean textAlignJustify() {
+        return preference.getBoolean(KEY_TEXT_ALIGN_JUSTIFY, false);
     }
 }

@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: ReaderWebView.java
  *
- * Created by Vladimir Yakushev at 9/2016
+ * Created by Vladimir Yakushev at 10/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -47,8 +47,8 @@ import com.BibleQuote.domain.entity.Chapter;
 import com.BibleQuote.domain.entity.Verse;
 import com.BibleQuote.domain.textFormatters.ITextFormatter;
 import com.BibleQuote.domain.textFormatters.StripTagsTextFormatter;
+import com.BibleQuote.entity.TextAppearance;
 import com.BibleQuote.listeners.IReaderViewListener;
-import com.BibleQuote.utils.PreferenceHelper;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -65,11 +65,9 @@ public class ReaderWebView extends WebView
     public boolean mPageLoaded;
 
     private TreeSet<Integer> selectedVerse = new TreeSet<Integer>();
-    private PreferenceHelper preferenceHelper;
     private GestureDetector mGestureScanner;
 	private JavaScriptInterface jsInterface;
 	private Mode currMode = Mode.Read;
-    private boolean isNightMode;
     private String baseUrl;
     private String content;
     private int currVerse;
@@ -79,6 +77,7 @@ public class ReaderWebView extends WebView
     private float minVelocity = MIN_FLING_VELOCITY;
     private ITextFormatter formatter = new StripTagsTextFormatter();
     private ViewHandler handler;
+    private TextAppearance textApearence;
 
     @SuppressLint("AddJavascriptInterface")
     public ReaderWebView(Context mContext, AttributeSet attributeSet) {
@@ -106,7 +105,6 @@ public class ReaderWebView extends WebView
             mGestureScanner = new GestureDetector(mContext, this);
             mGestureScanner.setIsLongpressEnabled(true);
             mGestureScanner.setOnDoubleTapListener(this);
-            preferenceHelper = PreferenceHelper.getInstance();
         }
     }
 
@@ -140,10 +138,6 @@ public class ReaderWebView extends WebView
         notifyListeners(IReaderViewListener.ChangeCode.onChangeReaderMode);
     }
 
-    public void setNightMode(boolean isNightMode) {
-        this.isNightMode = isNightMode;
-    }
-
     public void setOnReaderViewListener(IReaderViewListener listener) {
         handler.setListener(listener);
     }
@@ -155,6 +149,11 @@ public class ReaderWebView extends WebView
 			jsInterface.selectVerse(verse);
 		}
 	}
+
+    public void setTextApearence(TextAppearance textApearence) {
+        this.textApearence = textApearence;
+        update();
+    }
 
     @Override
     protected void onAttachedToWindow() {
@@ -275,20 +274,15 @@ public class ReaderWebView extends WebView
         jsInterface.gotoVerse(verse);
     }
 
-    public void setContent(String baseUrl, Chapter chapter, int currVerse, Boolean isNightMode, Boolean isBible) {
+    public void setContent(String baseUrl, Chapter chapter, int currVerse, Boolean isBible) {
         this.baseUrl = baseUrl;
         this.content = getContent(chapter);
         this.currVerse = currVerse;
-        this.isNightMode = isNightMode;
         this.isBible = isBible;
         update();
     }
 
     public void update() {
-        if (baseUrl == null || content == null) {
-            return;
-        }
-
         mPageLoaded = false;
         String modStyle = isBible ? "bible_style.css" : "book_style.css";
 
@@ -300,10 +294,10 @@ public class ReaderWebView extends WebView
         html.append("<meta http-equiv=Content-Type content=\"text/html; charset=UTF-8\">\r\n");
         html.append("<script language=\"JavaScript\" src=\"file:///android_asset/reader.js\" type=\"text/javascript\"></script>\r\n");
         html.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"file:///android_asset/").append(modStyle).append("\">\r\n");
-        html.append(getStyle(isNightMode));
+        html.append(getStyle());
         html.append("</head>\r\n");
         html.append("<body").append(currVerse > 1 ? (" onLoad=\"document.location.href='#verse_" + currVerse + "';\"") : "").append(">\r\n");
-        html.append(content);
+        if (content != null) html.append(content);
         html.append("</body>\r\n");
         html.append("</html>");
 
@@ -329,37 +323,35 @@ public class ReaderWebView extends WebView
         return chapterHTML.toString();
     }
 
-	private String getStyle(Boolean nightMode) {
-		String textColor;
-		String backColor;
+    private String getStyle() {
+        String textColor;
+        String backColor;
 		String selTextColor;
 		String selTextBack;
 
-        getSettings().setStandardFontFamily(preferenceHelper.getFontFamily());
+        getSettings().setStandardFontFamily(textApearence.getTypeface());
 
-		if (!nightMode) {
-            backColor = preferenceHelper.getTextBackground();
-            textColor = preferenceHelper.getTextColor();
-            selTextColor = preferenceHelper.getTextColorSelected();
-            selTextBack = preferenceHelper.getTextBackgroundSelected();
-        } else {
-			textColor = "#EEEEEE";
-			backColor = "#000000";
+        if (textApearence.isNightMode()) {
+            textColor = "#EEEEEE";
+            backColor = "#000000";
 			selTextColor = "#EEEEEE";
 			selTextBack = "#562000";
-		}
-        String textSize = preferenceHelper.getTextSize();
+        } else {
+            backColor = textApearence.getBackgroung();
+            textColor = textApearence.getTextColor();
+            selTextColor = textApearence.getSelectedTextColor();
+            selTextBack = textApearence.getSelectedBackgroung();
+        }
+        String textSize = textApearence.getTextSize();
 
 		StringBuilder style = new StringBuilder();
 		style.append("<style type=\"text/css\">\r\n")
 				.append("body {\r\n")
-				.append("padding-bottom: 50px;\r\n");
-        if (preferenceHelper.textAlignJustify()) {
-            style.append("text-align: justify;\r\n");
-		}
-		style.append("color: ").append(textColor).append(";\r\n")
-				.append("font-size: ").append(textSize).append("pt;\r\n")
-				.append("line-height: 1.25;\r\n")
+                .append("padding-bottom: 50px;\r\n")
+                .append("text-align: ").append(textApearence.getTextAlign()).append(";\r\n")
+                .append("color: ").append(textColor).append(";\r\n")
+                .append("font-size: ").append(textSize).append("pt;\r\n")
+                .append("line-height: 1.25;\r\n")
 				.append("background: ").append(backColor).append(";\r\n")
 				.append("}\r\n")
 				.append(".verse {\r\n")

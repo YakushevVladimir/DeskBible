@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: SettingsActivity.java
  *
- * Created by Vladimir Yakushev at 9/2016
+ * Created by Vladimir Yakushev at 10/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -68,7 +68,7 @@ public class SettingsActivity extends PreferenceActivity implements
 
         Preference fontFamily = findPreference("font_family");
         fontFamily.setOnPreferenceChangeListener(fontFamilyChangeListener);
-        setFontFamilySummary(fontFamily, PreferenceHelper.getInstance().getFontFamily());
+        setFontFamilySummary(fontFamily, PreferenceHelper.getInstance().getTextAppearance().getTypeface());
     }
 
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
@@ -79,17 +79,6 @@ public class SettingsActivity extends PreferenceActivity implements
     protected void onDestroy() {
         getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
         super.onDestroy();
-    }
-
-    private void setHistorySummary(Preference historySize, String value) {
-        try {
-            String summary = getResources().getString(R.string.category_reader_other_history_size_summary);
-            historySize.setSummary(String.format(summary, value));
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        } catch (NotFoundException e) {
-            e.printStackTrace();
-        }
     }
 
     private void setFontFamilySummary(Preference fontFamily, String newValue) {
@@ -103,5 +92,16 @@ public class SettingsActivity extends PreferenceActivity implements
         }
 
         fontFamily.setSummary(summary);
+    }
+
+    private void setHistorySummary(Preference historySize, String value) {
+        try {
+            String summary = getResources().getString(R.string.category_reader_other_history_size_summary);
+            historySize.setSummary(String.format(summary, value));
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        } catch (NotFoundException e) {
+            e.printStackTrace();
+        }
     }
 }

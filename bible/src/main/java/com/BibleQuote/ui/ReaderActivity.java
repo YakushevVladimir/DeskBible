@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: ReaderActivity.java
  *
- * Created by Vladimir Yakushev at 9/2016
+ * Created by Vladimir Yakushev at 10/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -59,6 +59,7 @@ import com.BibleQuote.R;
 import com.BibleQuote.domain.entity.BibleReference;
 import com.BibleQuote.domain.entity.Chapter;
 import com.BibleQuote.domain.textFormatters.ITextFormatter;
+import com.BibleQuote.entity.TextAppearance;
 import com.BibleQuote.listeners.IReaderViewListener;
 import com.BibleQuote.ui.fragments.TTSPlayerFragment;
 import com.BibleQuote.ui.handlers.SelectTextHandler;
@@ -84,7 +85,6 @@ public class ReaderActivity extends AppCompatActivity implements ReaderViewPrese
 
     private ReaderWebView.Mode oldMode;
     private ActionMode currActionMode;
-    private boolean nightMode;
     private boolean exitToBackKey;
     private TTSPlayerFragment ttsPlayer;
     private ReaderViewPresenter presenter;
@@ -395,19 +395,6 @@ public class ReaderActivity extends AppCompatActivity implements ReaderViewPrese
     }
 
     @Override
-    public void setNightMode(boolean isNightMode) {
-        nightMode = isNightMode;
-        readerView.setNightMode(nightMode);
-    }
-
-    @Override
-    public boolean invertNightMode() {
-        nightMode = !nightMode;
-        readerView.setNightMode(nightMode);
-        return nightMode;
-    }
-
-    @Override
     public void setReaderMode(ReaderWebView.Mode mode) {
         readerView.setMode(mode);
         updateActivityMode();
@@ -439,7 +426,12 @@ public class ReaderActivity extends AppCompatActivity implements ReaderViewPrese
 
     @Override
     public void setContent(String baseUrl, Chapter chapter, int verse, boolean isBible) {
-        readerView.setContent(baseUrl, chapter, verse, nightMode, isBible);
+        readerView.setContent(baseUrl, chapter, verse, isBible);
+    }
+
+    @Override
+    public void setTextAppearance(TextAppearance textAppearance) {
+        readerView.setTextApearence(textAppearance);
     }
 
     @Override

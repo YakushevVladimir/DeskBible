@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2011 Scripture Software
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -19,11 +21,9 @@
  * Project: BibleQuote-for-Android
  * File: ReaderViewPresenterTest.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 10/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
- *
- *
  */
 
 package com.BibleQuote.ui.presenters;
@@ -31,6 +31,7 @@ package com.BibleQuote.ui.presenters;
 import android.content.Context;
 
 import com.BibleQuote.domain.entity.BibleReference;
+import com.BibleQuote.entity.TextAppearance;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.ui.widget.ReaderWebView;
 
@@ -54,10 +55,22 @@ public class ReaderViewPresenterTest {
     private Context context;
     private Librarian librarian;
 
+    @Before
+    public void setUp() throws Exception {
+        view = mock(ReaderViewPresenter.IReaderView.class);
+        context = mock(Context.class);
+        librarian = mock(Librarian.class);
+    }
+
+    @Test
+    public void testGetContext() throws Exception {
+
+    }
+
     @Test
     public void testInitView() throws Exception {
         new ReaderViewPresenter(context, view, librarian);
-        verify(view, times(1)).setNightMode(anyBoolean());
+        verify(view, times(1)).setTextAppearance(any(TextAppearance.class));
         verify(view, times(1)).setReaderMode(any(ReaderWebView.Mode.class));
         verify(view, times(1)).setKeepScreen(anyBoolean());
         verify(view, times(1)).setCurrentOrientation(anyBoolean());
@@ -65,18 +78,7 @@ public class ReaderViewPresenterTest {
     }
 
     @Test
-    public void testSetOSISLink_invalidLink() throws Exception {
-        ReaderViewPresenter presenter = new ReaderViewPresenter(context, view, librarian);
-        when(librarian.isOSISLinkValid(any(BibleReference.class))).thenReturn(false);
-        BibleReference ref = mock(BibleReference.class);
-        when(ref.getPath()).thenReturn("RST:Gen.1.1");
-        presenter.setOSISLink(ref);
-        verify(librarian, times(1)).isOSISLinkValid(any(BibleReference.class));
-        verify(view).openLibraryActivity(anyInt());
-    }
-
-    @Test
-    public void testPrevChapter() throws Exception {
+    public void testIsVolumeButtonsToScroll() throws Exception {
 
     }
 
@@ -86,7 +88,22 @@ public class ReaderViewPresenterTest {
     }
 
     @Test
-    public void testIsVolumeButtonsToScroll() throws Exception {
+    public void testOnActivityResult() throws Exception {
+
+    }
+
+    @Test
+    public void testOnConfigurationChanged() throws Exception {
+
+    }
+
+    @Test
+    public void testOnNavigationItemSelected() throws Exception {
+
+    }
+
+    @Test
+    public void testOnOptionsItemSelected() throws Exception {
 
     }
 
@@ -101,27 +118,7 @@ public class ReaderViewPresenterTest {
     }
 
     @Test
-    public void testOnOptionsItemSelected() throws Exception {
-
-    }
-
-    @Test
-    public void testOnNavigationItemSelected() throws Exception {
-
-    }
-
-    @Test
-    public void testOnConfigurationChanged() throws Exception {
-
-    }
-
-    @Test
-    public void testOnActivityResult() throws Exception {
-
-    }
-
-    @Test
-    public void testGetContext() throws Exception {
+    public void testOnStopSpeak() throws Exception {
 
     }
 
@@ -131,14 +128,18 @@ public class ReaderViewPresenterTest {
     }
 
     @Test
-    public void testOnStopSpeak() throws Exception {
+    public void testPrevChapter() throws Exception {
 
     }
 
-    @Before
-    public void setUp() throws Exception {
-        view = mock(ReaderViewPresenter.IReaderView.class);
-        context = mock(Context.class);
-        librarian = mock(Librarian.class);
+    @Test
+    public void testSetOSISLink_invalidLink() throws Exception {
+        ReaderViewPresenter presenter = new ReaderViewPresenter(context, view, librarian);
+        when(librarian.isOSISLinkValid(any(BibleReference.class))).thenReturn(false);
+        BibleReference ref = mock(BibleReference.class);
+        when(ref.getPath()).thenReturn("RST:Gen.1.1");
+        presenter.setOSISLink(ref);
+        verify(librarian, times(1)).isOSISLinkValid(any(BibleReference.class));
+        verify(view).openLibraryActivity(anyInt());
     }
 }

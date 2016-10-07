@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: SearchActivity.java
  *
- * Created by Vladimir Yakushev at 9/2016
+ * Created by Vladimir Yakushev at 10/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -77,6 +77,10 @@ import butterknife.OnItemClick;
 public class SearchActivity extends AsyncTaskActivity implements TextView.OnEditorActionListener {
 
     private static final String TAG = SearchActivity.class.getSimpleName();
+    private static final String KEY_FROM_BOOK = "fromBook";
+    private static final String KEY_TO_BOOK = "toBook";
+    private static final String KEY_MODULE_ID = "searchModuleID";
+    private static final String KEY_SEARCH_POSITION = "changeSearchPosition";
 
     private final PreferenceHelper preferenceHelper = PreferenceHelper.getInstance();
     @BindView(R.id.from_book)
@@ -102,7 +106,7 @@ public class SearchActivity extends AsyncTaskActivity implements TextView.OnEdit
 
         searchText.setOnEditorActionListener(this);
 
-        String searchModuleID = preferenceHelper.restoreStateString("searchModuleID");
+        String searchModuleID = preferenceHelper.getString(KEY_MODULE_ID);
         if (myLibrarian.getModuleID().equalsIgnoreCase(searchModuleID)) {
             searchResults = myLibrarian.getSearchResults();
         }
@@ -129,7 +133,7 @@ public class SearchActivity extends AsyncTaskActivity implements TextView.OnEdit
             searchResults = myLibrarian.getSearchResults();
             setAdapter();
         }
-        preferenceHelper.saveStateInt("changeSearchPosition", 0);
+        preferenceHelper.saveInt(KEY_SEARCH_POSITION, 0);
     }
 
     @Override
@@ -148,7 +152,7 @@ public class SearchActivity extends AsyncTaskActivity implements TextView.OnEdit
     void openLink(int position) {
         String humanLink = ((SubtextItem) resultList.getAdapter().getItem(position)).text;
 
-        preferenceHelper.saveStateInt("changeSearchPosition", position);
+        preferenceHelper.saveInt(KEY_SEARCH_POSITION, position);
 
         Intent intent = new Intent();
         intent.putExtra("linkOSIS", LinkConverter.getHumanToOSIS(humanLink));
@@ -175,17 +179,17 @@ public class SearchActivity extends AsyncTaskActivity implements TextView.OnEdit
     }
 
     private void restoreSelectedPosition() {
-        String searchModuleID = preferenceHelper.restoreStateString("searchModuleID");
+        String searchModuleID = preferenceHelper.getString(KEY_MODULE_ID);
         int fromBook = 0;
         int toBook = spinnerTo.getCount() - 1;
 
         if (myLibrarian.getModuleID().equalsIgnoreCase(searchModuleID)) {
-            fromBook = preferenceHelper.restoreStateInt("fromBook");
+            fromBook = preferenceHelper.getInt(KEY_FROM_BOOK);
             if (spinnerFrom.getCount() <= fromBook) {
                 fromBook = 0;
             }
 
-            toBook = preferenceHelper.restoreStateInt("toBook");
+            toBook = preferenceHelper.getInt(KEY_TO_BOOK);
             if (spinnerTo.getCount() <= toBook) {
                 toBook = spinnerTo.getCount() - 1;
             }
@@ -196,9 +200,9 @@ public class SearchActivity extends AsyncTaskActivity implements TextView.OnEdit
     }
 
     private void saveSelectedPosition(int fromBook, int toBook) {
-        preferenceHelper.saveStateString("searchModuleID", myLibrarian.getModuleID());
-        preferenceHelper.saveStateInt("fromBook", fromBook);
-        preferenceHelper.saveStateInt("toBook", toBook);
+        preferenceHelper.saveString(KEY_MODULE_ID, myLibrarian.getModuleID());
+        preferenceHelper.saveInt(KEY_FROM_BOOK, fromBook);
+        preferenceHelper.saveInt(KEY_TO_BOOK, toBook);
     }
 
     /**
@@ -220,9 +224,9 @@ public class SearchActivity extends AsyncTaskActivity implements TextView.OnEdit
         ItemAdapter adapter = new ItemAdapter(this, searchItems);
         resultList.setAdapter(adapter);
 
-        String searchModuleID = preferenceHelper.restoreStateString("searchModuleID");
+        String searchModuleID = preferenceHelper.getString(KEY_MODULE_ID);
         if (myLibrarian.getModuleID().equalsIgnoreCase(searchModuleID)) {
-            int changeSearchPosition = preferenceHelper.restoreStateInt("changeSearchPosition");
+            int changeSearchPosition = preferenceHelper.getInt(KEY_SEARCH_POSITION);
             if (changeSearchPosition < searchItems.size()) {
                 resultList.setSelection(changeSearchPosition);
             }

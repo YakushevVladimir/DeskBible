@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: ReaderViewPresenter.java
  *
- * Created by Vladimir Yakushev at 9/2016
+ * Created by Vladimir Yakushev at 10/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -44,6 +44,7 @@ import com.BibleQuote.domain.exceptions.ExceptionHelper;
 import com.BibleQuote.domain.exceptions.OpenModuleException;
 import com.BibleQuote.domain.textFormatters.ITextFormatter;
 import com.BibleQuote.domain.textFormatters.ModuleTextFormatter;
+import com.BibleQuote.entity.TextAppearance;
 import com.BibleQuote.managers.GoogleAnalyticsHelper;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.ui.fragments.TTSPlayerFragment;
@@ -61,11 +62,13 @@ public class ReaderViewPresenter implements TTSPlayerFragment.OnTTSStopSpeakList
 
     public static final int ID_CHOOSE_CH = 1;
     public static final int ID_SEARCH = 2;
-    public static final int ID_HISTORY = 3;
-    public static final int ID_BOOKMARKS = 4;
     public static final int ID_PARALLELS = 5;
-    public static final int ID_SETTINGS = 6;
 
+    private static final int ID_HISTORY = 3;
+    private static final int ID_BOOKMARKS = 4;
+    private static final int ID_SETTINGS = 6;
+    private static final String KEY_LAST_READ = "last_read";
+    private static final String KEY_LINK_OSIS = "linkOSIS";
     private static final String TAG = ReaderViewPresenter.class.getSimpleName();
 
     private IReaderView view;
@@ -87,7 +90,7 @@ public class ReaderViewPresenter implements TTSPlayerFragment.OnTTSStopSpeakList
 
     public void setOSISLink(BibleReference osisLink) {
         if (osisLink == null) {
-            osisLink = new BibleReference(preferenceHelper.restoreStateString("last_read"));
+            osisLink = new BibleReference(preferenceHelper.getString(KEY_LAST_READ));
         }
 
         if (!librarian.isOSISLinkValid(osisLink)) {
@@ -111,7 +114,7 @@ public class ReaderViewPresenter implements TTSPlayerFragment.OnTTSStopSpeakList
                     || (requestCode == ID_PARALLELS)
                     || (requestCode == ID_HISTORY)) {
                 Bundle extras = data.getExtras();
-                BibleReference osisLink = new BibleReference(extras.getString("linkOSIS"));
+                BibleReference osisLink = new BibleReference(extras.getString(KEY_LINK_OSIS));
                 openChapterFromLink(osisLink);
                 GoogleAnalyticsHelper.getInstance().actionOpenLink(osisLink);
             }
@@ -155,8 +158,9 @@ public class ReaderViewPresenter implements TTSPlayerFragment.OnTTSStopSpeakList
                 view.openSearchActivity(ID_SEARCH);
                 break;
             case R.id.NightDayMode:
-                preferenceHelper.saveStateBoolean("nightMode", view.invertNightMode());
-                view.updateContent();
+                boolean nightMode = !preferenceHelper.getTextAppearance().isNightMode();
+                preferenceHelper.setNightMode(nightMode);
+                view.setTextAppearance(preferenceHelper.getTextAppearance());
                 break;
             case R.id.action_bar_history:
                 view.openHistoryActivity(ID_HISTORY);
@@ -177,8 +181,8 @@ public class ReaderViewPresenter implements TTSPlayerFragment.OnTTSStopSpeakList
 
     @Override
     public void onResume() {
-        view.setKeepScreen(preferenceHelper.restoreStateBoolean("DisableTurnScreen"));
-        view.setCurrentOrientation(preferenceHelper.restoreStateBoolean("DisableAutoScreenRotation"));
+        view.setKeepScreen(preferenceHelper.getBoolean("DisableTurnScreen"));
+        view.setCurrentOrientation(preferenceHelper.getBoolean("DisableAutoScreenRotation"));
     }
 
     public void nextChapter() {
@@ -204,10 +208,10 @@ public class ReaderViewPresenter implements TTSPlayerFragment.OnTTSStopSpeakList
     }
 
     private void initView() {
-        view.setNightMode(preferenceHelper.restoreStateBoolean("nightMode"));
+        view.setTextAppearance(preferenceHelper.getTextAppearance());
         view.setReaderMode(preferenceHelper.isReadModeByDefault() ? ReaderWebView.Mode.Read : ReaderWebView.Mode.Study);
-        view.setKeepScreen(preferenceHelper.restoreStateBoolean("DisableTurnScreen"));
-        view.setCurrentOrientation(preferenceHelper.restoreStateBoolean("DisableAutoScreenRotation"));
+        view.setKeepScreen(preferenceHelper.getBoolean("DisableTurnScreen"));
+        view.setCurrentOrientation(preferenceHelper.getBoolean("DisableAutoScreenRotation"));
         view.updateActivityMode();
     }
 
@@ -259,17 +263,15 @@ public class ReaderViewPresenter implements TTSPlayerFragment.OnTTSStopSpeakList
 
         void setKeepScreen(boolean isKeepScreen);
 
-        void setNightMode(boolean isNightMode);
-
         void setReaderMode(ReaderWebView.Mode mode);
+
+        void setTextAppearance(TextAppearance textAppearance);
 
         void setTextFormatter(ITextFormatter formatter);
 
         void disableActionMode();
 
         void hideTTSPlayer();
-
-        boolean invertNightMode();
 
         void openAboutActivity();
 

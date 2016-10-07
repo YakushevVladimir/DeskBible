@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: PrefBookmarksRepository.java
  *
- * Created by Vladimir Yakushev at 9/2016
+ * Created by Vladimir Yakushev at 10/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -44,6 +44,8 @@ public class PrefBookmarksRepository implements IBookmarksRepository {
 
 	private static final Byte BOOKMARK_DELIMITER = (byte) 0xFE;
 	private static final Byte BOOKMARK_PATH_DELIMITER = (byte) 0xFF;
+    private static final String KEY_FAVORITS = "Favorits";
+
 	private PreferenceHelper preferenceHelper;
 
 	public PrefBookmarksRepository() {
@@ -52,30 +54,30 @@ public class PrefBookmarksRepository implements IBookmarksRepository {
 
 	@Override
 	public long add(Bookmark bookmark) {
-		String fav = preferenceHelper.restoreStateString("Favorits");
-		preferenceHelper.saveStateString("Favorits", bookmark.humanLink + BOOKMARK_PATH_DELIMITER + bookmark.OSISLink + BOOKMARK_DELIMITER + fav);
-		return 0;
-	}
+        String fav = preferenceHelper.getString(KEY_FAVORITS);
+        preferenceHelper.saveString(KEY_FAVORITS, bookmark.humanLink + BOOKMARK_PATH_DELIMITER + bookmark.OSISLink + BOOKMARK_DELIMITER + fav);
+        return 0;
+    }
 
 	@Override
 	public void delete(Bookmark bookmark) {
-		String fav = preferenceHelper.restoreStateString("Favorits");
-		fav = fav.replaceAll(String.format("%s(.)+?%s", bookmark.humanLink, BOOKMARK_DELIMITER), "");
-		preferenceHelper.saveStateString("Favorits", fav);
-	}
+        String fav = preferenceHelper.getString(KEY_FAVORITS);
+        fav = fav.replaceAll(String.format("%s(.)+?%s", bookmark.humanLink, BOOKMARK_DELIMITER), "");
+        preferenceHelper.saveString(KEY_FAVORITS, fav);
+    }
 
 	@Override
 	public void deleteAll() {
-		preferenceHelper.saveStateString("Favorits", "");
-	}
+        preferenceHelper.saveString(KEY_FAVORITS, "");
+    }
 
 	@Override
 	public ArrayList<Bookmark> getAll() {
 		ArrayList<Bookmark> result = new ArrayList<Bookmark>();
 
-		String fav = preferenceHelper.restoreStateString("Favorits");
-		if (fav.equals("")) {
-			return result;
+        String fav = preferenceHelper.getString(KEY_FAVORITS);
+        if (fav.equals("")) {
+            return result;
 		}
 
 		String[] favs = fav.split(BOOKMARK_DELIMITER.toString());

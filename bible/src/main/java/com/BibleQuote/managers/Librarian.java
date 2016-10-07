@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: Librarian.java
  *
- * Created by Vladimir Yakushev at 9/2016
+ * Created by Vladimir Yakushev at 10/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -213,7 +213,7 @@ public class Librarian {
     public void setCurrentVerseNumber(int verse) {
         if (currModule != null && currBook != null && currChapter != null) {
             this.currVerseNumber = verse;
-            PreferenceHelper.getInstance().saveStateString("last_read",
+            PreferenceHelper.getInstance().saveString("last_read",
                     new BibleReference(currModule, currBook, currChapter.getNumber(), currVerseNumber)
                             .getExtendedPath());
         }
@@ -256,15 +256,6 @@ public class Librarian {
         return EMPTY_OBJ;
     }
 
-    public Chapter getChapterByNumber(Book book, Integer chapterNumber) throws BookNotFoundException {
-        IModuleController modCtrl = Injector.getModuleController(currModule);
-        return modCtrl.getChapter(book.getID(), chapterNumber);
-    }
-
-
-    ///////////////////////////////////////////////////////////////////////////
-    // SHARE
-
     /**
      * Возвращает список глав книги
      *
@@ -278,6 +269,10 @@ public class Librarian {
         IModuleController modCtrl = Injector.getModuleController(module);
         return modCtrl.getChapterNumbers(bookID);
     }
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    // SHARE
 
     public LinkedHashMap<String, BibleReference> getCrossReference(BibleReference bReference)
             throws TskNotFoundException, BQUniversalException {
@@ -389,7 +384,7 @@ public class Librarian {
 
         final BibleReference reference = new BibleReference(currModule, currBook, currChapterNumber, currVerseNumber);
         historyManager.addLink(reference);
-        PreferenceHelper.getInstance().saveStateString("last_read", reference.getExtendedPath());
+        PreferenceHelper.getInstance().saveString("last_read", reference.getExtendedPath());
 
         return currChapter;
     }
@@ -457,5 +452,10 @@ public class Librarian {
             result.add(new ItemList(book.getID(), book.getName()));
         }
         return result;
+    }
+
+    private Chapter getChapterByNumber(Book book, Integer chapterNumber) throws BookNotFoundException {
+        IModuleController modCtrl = Injector.getModuleController(currModule);
+        return modCtrl.getChapter(book.getID(), chapterNumber);
     }
 }
