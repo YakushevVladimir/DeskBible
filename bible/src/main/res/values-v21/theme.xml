@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <!--
   ~ Copyright (C) 2011 Scripture Software
   ~
@@ -21,31 +20,21 @@
   ~ under the License.
   ~
   ~ Project: BibleQuote-for-Android
-  ~ File: colors.xml
+  ~ File: theme.xml
   ~
   ~ Created by Vladimir Yakushev at 10/2016
   ~ E-mail: ru.phoenix@gmail.com
   ~ WWW: http://www.scripturesoftware.org
   -->
-<resources>
-	<color name="white">#ffffff</color>
-	<color name="black">#000000</color>
-	<color name="gray">#aaaaaa</color>
-	<color name="light_gray">#dadada</color>
-	<color name="dark_gray">#7e7e7e</color>
-	<color name="button_gray">#e7e7e7</color>
-	<color name="button_darkgray">#c9c9c9</color>
-	<color name="button_border">#9d9d9d</color>
 
-	<color name="primary">#6E1C14</color>
-	<color name="primary_dark">#51150F</color>
-	<color name="action_mode_background">#ff2f0d0d</color>
-	<color name="primary_light">#F8BBD0</color>
-	<color name="accent">#f5cc99</color>
-	<color name="accent_dark">#c1a078</color>
-	<color name="toolbarTextColor">#f5cc99</color>
-	<color name="primary_text">#212121</color>
-	<color name="secondary_text">#727272</color>
-	<color name="icons">#FFFFFF</color>
-	<color name="divider">#B6B6B6</color>
+<resources>
+
+    <style name="MaterialTheme" parent="MaterialTheme.Base">
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowAllowEnterTransitionOverlap">true</item>
+        <item name="android:windowAllowReturnTransitionOverlap">true</item>
+        <item name="android:windowSharedElementEnterTransition">@android:transition/move</item>
+        <item name="android:windowSharedElementExitTransition">@android:transition/move</item>
+    </style>
+
 </resources>

@@ -22,7 +22,7 @@
   ~ Project: BibleQuote-for-Android
   ~ File: AndroidManifest.xml
   ~
-  ~ Created by Vladimir Yakushev at 8/2016
+  ~ Created by Vladimir Yakushev at 10/2016
   ~ E-mail: ru.phoenix@gmail.com
   ~ WWW: http://www.scripturesoftware.org
   -->
@@ -63,7 +63,9 @@
             android:label="@string/library"/>
         <activity
             android:name=".ui.BookmarksActivity"
-            android:label="@string/bookmarks"/>
+            android:label="@string/bookmarks"
+            android:parentActivityName=".ui.ReaderActivity"
+            android:theme="@style/MaterialTheme"/>
         <activity
             android:name=".ui.HistoryActivity"
             android:label="@string/history"/>

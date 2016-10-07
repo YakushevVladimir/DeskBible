@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: build.gradle
  *
- * Created by Vladimir Yakushev at 9/2016
+ * Created by Vladimir Yakushev at 10/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -35,7 +35,7 @@ android {
 
     defaultConfig {
         applicationId "com.BibleQuote"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 22
         versionCode 80
         versionName "1.0.80"
