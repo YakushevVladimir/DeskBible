@@ -22,7 +22,7 @@
   ~ Project: BibleQuote-for-Android
   ~ File: activity_search.xml
   ~
-  ~ Created by Vladimir Yakushev at 9/2016
+  ~ Created by Vladimir Yakushev at 11/2016
   ~ E-mail: ru.phoenix@gmail.com
   ~ WWW: http://www.scripturesoftware.org
   -->
@@ -48,8 +48,8 @@
             android:layout_margin="1dp"
             android:hint="@string/search_hint"
             android:imeOptions="actionSearch"
-            android:inputType="textAutoComplete"
-            android:singleLine="true"/>
+			android:inputType="textAutoComplete|text"
+			android:maxLines="1"/>
 		<LinearLayout 
 			android:id="@+id/LinearLayout02"
 			android:layout_width="fill_parent" 

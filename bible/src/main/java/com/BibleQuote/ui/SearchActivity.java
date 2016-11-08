@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: SearchActivity.java
  *
- * Created by Vladimir Yakushev at 10/2016
+ * Created by Vladimir Yakushev at 11/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -83,18 +83,16 @@ public class SearchActivity extends AsyncTaskActivity implements TextView.OnEdit
     private static final String KEY_SEARCH_POSITION = "changeSearchPosition";
 
     private final PreferenceHelper preferenceHelper = PreferenceHelper.getInstance();
-    @BindView(R.id.from_book)
-    Spinner spinnerFrom;
-    @BindView(R.id.to_book)
-    Spinner spinnerTo;
-    @BindView(R.id.search_list)
-    ListView resultList;
-    @BindView(R.id.search_text)
-    EditText searchText;
-    private String progressMessage = "";
-	private Map<String, String> searchResults = new LinkedHashMap<String, String>();
+
+    @BindView(R.id.search_list) ListView resultList;
+    @BindView(R.id.search_text) EditText searchText;
+    @BindView(R.id.from_book) Spinner spinnerFrom;
+    @BindView(R.id.to_book) Spinner spinnerTo;
+
     private Librarian myLibrarian;
+    private String progressMessage = "";
     private ArrayList<Item> searchItems = new ArrayList<Item>();
+    private Map<String, String> searchResults = new LinkedHashMap<String, String>();
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -138,12 +136,14 @@ public class SearchActivity extends AsyncTaskActivity implements TextView.OnEdit
 
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-        switch (actionId) {
-            case EditorInfo.IME_ACTION_SEARCH:
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.RESULT_UNCHANGED_SHOWN);
-                startSearch();
-                return true;
+        if (actionId == EditorInfo.IME_ACTION_SEARCH
+                || actionId == EditorInfo.IME_ACTION_DONE
+                || (event.getAction() == KeyEvent.ACTION_DOWN
+                && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.RESULT_UNCHANGED_SHOWN);
+            startSearch();
+            return true;
         }
         return false;
     }
@@ -193,7 +193,7 @@ public class SearchActivity extends AsyncTaskActivity implements TextView.OnEdit
             if (spinnerTo.getCount() <= toBook) {
                 toBook = spinnerTo.getCount() - 1;
             }
-		}
+        }
 
         spinnerFrom.setSelection(fromBook);
         spinnerTo.setSelection(toBook);
