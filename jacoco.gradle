@@ -27,9 +27,14 @@
  */
 
 apply plugin: 'jacoco'
+apply plugin: 'com.github.kt3k.coveralls'
 
 jacoco {
     toolVersion = "0.7.7.201606060606"
+}
+
+coveralls {
+    sourceDirs = files(subprojects.sourceSets.main.allSource.srcDirs).files.absolutePath
 }
 
 project.afterEvaluate {
