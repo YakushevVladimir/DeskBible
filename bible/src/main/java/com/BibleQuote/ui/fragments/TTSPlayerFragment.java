@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2011 Scripture Software
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -19,11 +21,9 @@
  * Project: BibleQuote-for-Android
  * File: TTSPlayerFragment.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 11/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
- *
- *
  */
 
 package com.BibleQuote.ui.fragments;
@@ -51,11 +51,14 @@ import java.util.TreeSet;
  */
 public class TTSPlayerFragment extends Fragment implements PlayerView.OnClickListener, TTSPlayerController.OnEventListener {
 
+    OnTTSStopSpeakListener listener;
     TTSPlayerController ttsController;
     ReaderWebView webView;
-
-    OnTTSStopSpeakListener listener;
     private PlayerView player;
+
+    public void setTTSStopSpeakListener(OnTTSStopSpeakListener listener) {
+        this.listener = listener;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -95,7 +98,9 @@ public class TTSPlayerFragment extends Fragment implements PlayerView.OnClickLis
             ttsController.moveNext();
         } else if (ev == PlayerView.Event.StopClick) {
             ttsController.stop();
-            listener.onStopSpeak();
+            if (listener != null) {
+                listener.onStopSpeak();
+            }
         } else {
             Toast.makeText(getActivity(), "Unknown command", Toast.LENGTH_SHORT).show();
         }
@@ -116,10 +121,6 @@ public class TTSPlayerFragment extends Fragment implements PlayerView.OnClickLis
             webView.setSelectedVerse(selected);
             player.viewPlayButton();
         }
-    }
-
-    public void setTTSStopSpeakListener(OnTTSStopSpeakListener listener) {
-        this.listener = listener;
     }
 
     public interface OnTTSStopSpeakListener {
