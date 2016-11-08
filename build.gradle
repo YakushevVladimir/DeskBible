@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: build.gradle
  *
- * Created by Vladimir Yakushev at 9/2016
+ * Created by Vladimir Yakushev at 11/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -33,7 +33,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.0'
+        classpath 'com.android.tools.build:gradle:2.2.2'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
 
         // NOTE: Do not place your application dependencies here; they belong
