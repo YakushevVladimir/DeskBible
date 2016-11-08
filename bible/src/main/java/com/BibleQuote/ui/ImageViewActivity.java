@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: ImageViewActivity.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 11/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -33,32 +33,40 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
 import com.BibleQuote.managers.Librarian;
+import com.BibleQuote.ui.widget.TouchImageView;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class ImageViewActivity extends Activity {
 
     public static final String EXTRA_IMAGE_PATH = "image_path";
 
+    @BindView(R.id.image) TouchImageView imageView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_view);
+        ButterKnife.bind(this);
 
-        ImageView imageView = (ImageView) findViewById(R.id.image);
-        if (imageView == null) {
-            return;
-        }
+        imageView.setMaxZoom(10);
 
         Intent intent = getIntent();
         if (intent.hasExtra(EXTRA_IMAGE_PATH)) {
-            String imagePeth = intent.getStringExtra(EXTRA_IMAGE_PATH);
+            String imagePath = intent.getStringExtra(EXTRA_IMAGE_PATH);
             Librarian librarian = BibleQuoteApp.getInstance().getLibrarian();
-            Bitmap image = librarian.getModuleImage(imagePeth);
-            imageView.setImageDrawable(new BitmapDrawable(getResources(), image));
+            Bitmap image = librarian.getModuleImage(imagePath);
+            if (image == null) {
+                Toast.makeText(this, R.string.image_not_found, Toast.LENGTH_LONG).show();
+            } else {
+                imageView.setImageDrawable(new BitmapDrawable(getResources(), image));
+            }
         }
     }
 }

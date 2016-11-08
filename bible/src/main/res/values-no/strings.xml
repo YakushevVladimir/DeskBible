@@ -22,7 +22,7 @@
   ~ Project: BibleQuote-for-Android
   ~ File: strings.xml
   ~
-  ~ Created by Vladimir Yakushev at 9/2016
+  ~ Created by Vladimir Yakushev at 11/2016
   ~ E-mail: ru.phoenix@gmail.com
   ~ WWW: http://www.scripturesoftware.org
   -->
@@ -153,4 +153,5 @@
     <string name="menu_tags">Tags</string>
     <string name="search_hint">Hva å finne?</string>
     <string name="hide_nav_buttons">Skjule navigasjonsknappene </string>
+    <string name="image_not_found">Bilde ikke funnet</string>
 </resources>

@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: BQModuleRepository.java
  *
- * Created by Vladimir Yakushev at 9/2016
+ * Created by Vladimir Yakushev at 11/2016
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -30,6 +30,7 @@ package com.BibleQuote.dal.repository;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Base64;
 
 import com.BibleQuote.domain.entity.BibleReference;
 import com.BibleQuote.domain.entity.Book;
@@ -112,11 +113,17 @@ public class BQModuleRepository implements IModuleRepository<String, BQModule> {
 
     @Override
     public Bitmap getBitmap(BQModule module, String path) {
-        InputStream imageStream = getImageReader(module, path);
-        if (imageStream == null) {
+        if (path == null) {
             return null;
+        } else if (path.startsWith("data") && path.contains("base64")) {
+            return getBitmapFromBase64(path);
+        } else {
+            InputStream imageStream = getImageReader(module, path);
+            if (imageStream == null) {
+                return null;
+            }
+            return BitmapFactory.decodeStream(imageStream);
         }
-        return BitmapFactory.decodeStream(imageStream);
     }
 
     @Override
@@ -322,6 +329,16 @@ public class BQModuleRepository implements IModuleRepository<String, BQModule> {
         }
     }
 
+    private Bitmap getBitmapFromBase64(String path) {
+        String[] params = path.split("base64,");
+        if (params.length != 2) {
+            return null;
+        }
+
+        byte[] decodedString = Base64.decode(params[1], Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+    }
+
     /**
      * Получить внутреннее представление ссылки на главу
      *
@@ -336,7 +353,7 @@ public class BQModuleRepository implements IModuleRepository<String, BQModule> {
 
     private InputStream getImageReader(BQModule module, String path) {
         if (module.isArchive()) {
-            return FsUtils.getStreamFromZip(module.getDataSourceID(), path);
+            return FsUtils.getStreamFromZip(module.getModulePath(), path);
         } else {
             return FsUtils.getStream(module.getModulePath(), path);
         }
