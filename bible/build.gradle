@@ -28,6 +28,7 @@
 
 apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
+apply from: '../jacoco.gradle'
 
 android {
     compileSdkVersion 22
@@ -47,16 +48,29 @@ android {
     }
 
     buildTypes {
+        debug {
+            testCoverageEnabled true
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
         applicationVariants.all { variant ->
-            variant.outputs.each { output ->
-                def apk = output.outputFile;
-                def newName = apk.name.replace(".apk", "") + "-" + defaultConfig.versionName + ".apk";
-                output.outputFile = new File(apk.parentFile, newName);
+            if (variant.buildType.name.equals("release")) {
+                variant.outputs.each { output ->
+                    def apk = output.outputFile;
+                    def newName = apk.name.replace(".apk", "") + "-" + defaultConfig.versionName + ".apk";
+                    output.outputFile = new File(apk.parentFile, newName);
+                }
+            }
+        }
+    }
+
+    testOptions {
+        unitTests.all {
+            jacoco {
+                includeNoLocationClasses = true
             }
         }
     }
