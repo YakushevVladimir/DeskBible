@@ -1,11 +1,12 @@
 language: android
 jdk: oraclejdk8
+sudo: false
 
 android:
   components:
     - tools
     - platform-tools
-    - build-tools-22.0.1
+    - build-tools-25.0.2
     - android-22
     - extra-android-m2repository
     - extra-google-m2repository
@@ -17,8 +18,6 @@ script:
   - echo "Travis branch is $TRAVIS_BRANCH"
   - echo "Travis branch is in pull request $TRAVIS_PULL+REQUEST"
   - ./gradlew clean assembleDebug testDebugUnitTestCoverage coveralls
-
-sudo: false
 
 branches:
   only:
