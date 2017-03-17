@@ -21,13 +21,14 @@
  * Project: BibleQuote-for-Android
  * File: ModuleTextFormatter.java
  *
- * Created by Vladimir Yakushev at 9/2016
+ * Created by Vladimir Yakushev at 3/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
 
 package com.BibleQuote.domain.textFormatters;
 
+import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.domain.entity.Module;
 import com.BibleQuote.utils.PreferenceHelper;
 
@@ -41,11 +42,12 @@ public class ModuleTextFormatter implements ITextFormatter {
 
     private static final String VERSE_NUMBER_PATTERN = "(?m)^(<[^/]+?>)*?(\\d+)(</(.)+?>){0,1}?\\s+";
 
-    private ArrayList<ITextFormatter> formatters = new ArrayList<ITextFormatter>();
+    private ArrayList<ITextFormatter> formatters = new ArrayList<>();
     private boolean visibleVerseNumbers;
 
     public ModuleTextFormatter(Module module) {
-        this.visibleVerseNumbers = module.isBible() || PreferenceHelper.getInstance().viewBookVerse();
+        PreferenceHelper prefHelper = BibleQuoteApp.getInstance().getPrefHelper();
+        this.visibleVerseNumbers = module.isBible() || prefHelper.viewBookVerse();
         if (module.isContainsStrong()) {
             formatters.add(new NoStrongTextFormatter());
         }

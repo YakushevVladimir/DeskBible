@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: PreferenceHelper.java
  *
- * Created by Vladimir Yakushev at 10/2016
+ * Created by Vladimir Yakushev at 3/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -64,28 +64,10 @@ public final class PreferenceHelper {
     private static final String DEF_TEXT_COLOR_SEL = "#000000";
     private static final int DEF_TEXT_SIZE = 12;
 
-    private static volatile PreferenceHelper instance;
-
     private final SharedPreferences preference;
 
-    private PreferenceHelper(Context context) {
+    public PreferenceHelper(Context context) {
         preference = PreferenceManager.getDefaultSharedPreferences(context);
-    }
-
-    public static PreferenceHelper createInstance(Context context) {
-        if (instance == null) {
-            instance = new PreferenceHelper(context);
-        }
-        return instance;
-    }
-
-    public static PreferenceHelper getInstance() {
-        if (instance == null) {
-            throw new IllegalStateException(
-                    "PreferenceHelper.createInstance() needs to be called "
-                            + "before PreferenceHelper.getInstance()");
-        }
-        return instance;
     }
 
     public Integer getHistorySize() {
@@ -102,10 +84,6 @@ public final class PreferenceHelper {
 
     public boolean isReadModeByDefault() {
         return preference.getBoolean(KEY_READ_MODE_BY_DEFAULT, false);
-    }
-
-    public void setNightMode(boolean nightMode) {
-        preference.edit().putBoolean(KEY_NIGHT_MODE, nightMode).apply();
     }
 
     public boolean addModuleToBibleReference() {
@@ -172,6 +150,10 @@ public final class PreferenceHelper {
 
     private boolean getNightMode() {
         return getBoolean(KEY_NIGHT_MODE);
+    }
+
+    public void setNightMode(boolean nightMode) {
+        preference.edit().putBoolean(KEY_NIGHT_MODE, nightMode).apply();
     }
 
     private String getTextBackground() {

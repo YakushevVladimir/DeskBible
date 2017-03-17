@@ -19,9 +19,9 @@
  * under the License.
  *
  * Project: BibleQuote-for-Android
- * File: DB_BookmarksRepository.java
+ * File: DbBookmarksRepository.java
  *
- * Created by Vladimir Yakushev at 9/2016
+ * Created by Vladimir Yakushev at 3/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -174,7 +174,7 @@ public class DbBookmarksRepository implements IBookmarksRepository {
     }
 
     private ArrayList<Bookmark> getBookmarks(Cursor allRows) {
-        ArrayList<Bookmark> result = new ArrayList<Bookmark>();
+        ArrayList<Bookmark> result = new ArrayList<>();
         if (allRows.moveToFirst()) {
             do {
                 Bookmark bm = new Bookmark(

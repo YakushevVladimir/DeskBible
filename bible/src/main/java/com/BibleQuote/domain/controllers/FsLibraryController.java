@@ -21,30 +21,23 @@
  * Project: BibleQuote-for-Android
  * File: FsLibraryController.java
  *
- * Created by Vladimir Yakushev at 9/2016
+ * Created by Vladimir Yakushev at 3/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
 
 package com.BibleQuote.domain.controllers;
 
-import android.content.Context;
-import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.BibleQuote.dal.repository.FsCacheRepository;
-import com.BibleQuote.dal.repository.FsLibraryRepository;
-import com.BibleQuote.domain.controllers.cache.FsCacheModuleController;
+import com.BibleQuote.domain.controllers.cache.ICacheModuleController;
 import com.BibleQuote.domain.entity.Module;
 import com.BibleQuote.domain.entity.ModuleList;
 import com.BibleQuote.domain.exceptions.BookDefinitionException;
 import com.BibleQuote.domain.exceptions.BooksDefinitionException;
 import com.BibleQuote.domain.exceptions.OpenModuleException;
 import com.BibleQuote.domain.repository.ILibraryRepository;
-import com.BibleQuote.entity.modules.BQModule;
-import com.BibleQuote.utils.DataConstants;
 
-import java.io.File;
 import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
@@ -52,29 +45,28 @@ import java.util.TreeMap;
 public class FsLibraryController implements ILibraryController {
 
     private static final String TAG = FsLibraryController.class.getSimpleName();
-    private static volatile FsLibraryController instance;
-
-    private ILibraryRepository<BQModule> mRepository;
+    private ICacheModuleController cache;
+    private ILibraryRepository<? extends Module> mRepository;
     private Map<String, Module> moduleSet = Collections.synchronizedMap(new TreeMap<String, Module>());
-    private FsCacheModuleController cache;
 
-    private FsLibraryController(FsCacheModuleController cache) {
-        mRepository = new FsLibraryRepository(getLibraryDir());
-        this.cache = cache;
-    }
-
-    public static FsLibraryController getInstance(Context context) {
-        if (instance == null) {
-            synchronized (FsLibraryController.class) {
-                FsCacheModuleController cache = new FsCacheModuleController(new FsCacheRepository(context));
-                instance = new FsLibraryController(cache);
-            }
-        }
-        return instance;
+    public FsLibraryController(ILibraryRepository<? extends Module> repository, ICacheModuleController cacheModuleController) {
+        this.mRepository = repository;
+        this.cache = cacheModuleController;
     }
 
     @Override
-    public Map<String, Module> loadModules() {
+    public void init() {
+        if (moduleSet.isEmpty() && cache.isCacheExist()) {
+            Log.i(TAG, "....Load modules from cache");
+            loadCachedModules();
+        }
+        if (moduleSet.isEmpty()) {
+            reloadModules();
+        }
+    }
+
+    @Override
+    public Map<String, Module> reloadModules() {
         moduleSet.clear();
         moduleSet.putAll(mRepository.loadFileModules());
         cache.saveModuleList(getModuleList(moduleSet));
@@ -83,13 +75,6 @@ public class FsLibraryController implements ILibraryController {
 
     @Override
     public Map<String, Module> getModules() {
-        if (moduleSet.isEmpty() && cache.isCacheExist()) {
-            Log.i(TAG, "....Load modules from cache");
-            loadCachedModules();
-        }
-        if (moduleSet.isEmpty()) {
-            loadModules();
-        }
         return moduleSet;
     }
 
@@ -111,14 +96,10 @@ public class FsLibraryController implements ILibraryController {
         moduleSet.put(module.getID(), module);
     }
 
-    @NonNull
-    private static File getLibraryDir() {
-        File result = new File(DataConstants.getLibraryPath());
-        if (!result.exists()) {
-            boolean deleted = result.mkdir();
-            if (!deleted) {
-                Log.e(TAG, "Don't remove library directory");
-            }
+    private ModuleList getModuleList(Map<String, Module> moduleSet) {
+        ModuleList result = new ModuleList();
+        for (Module currModule : moduleSet.values()) {
+            result.add(currModule);
         }
         return result;
     }
@@ -129,13 +110,5 @@ public class FsLibraryController implements ILibraryController {
         for (Module fsModule : moduleList) {
             moduleSet.put(fsModule.getID(), fsModule);
         }
-    }
-
-    private ModuleList getModuleList(Map<String, Module> moduleSet) {
-        ModuleList result = new ModuleList();
-        for (Module currModule : moduleSet.values()) {
-            result.add(currModule);
-        }
-        return result;
     }
 }

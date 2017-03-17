@@ -49,7 +49,6 @@ import com.BibleQuote.domain.exceptions.TskNotFoundException;
 import com.BibleQuote.domain.textFormatters.ModuleTextFormatter;
 import com.BibleQuote.domain.textFormatters.StripTagsTextFormatter;
 import com.BibleQuote.entity.ItemList;
-import com.BibleQuote.managers.history.HistoryManager;
 import com.BibleQuote.managers.history.IHistoryManager;
 import com.BibleQuote.utils.Logger;
 import com.BibleQuote.utils.PreferenceHelper;
@@ -80,6 +79,7 @@ public class Librarian {
     private Integer currVerseNumber = 1;
     private IHistoryManager historyManager;
     private ILibraryController libCtrl;
+    private PreferenceHelper preferenceHelper;
     private Map<String, String> searchResults = new LinkedHashMap<>();
     private ITSKController tskCtrl;
 
@@ -87,10 +87,12 @@ public class Librarian {
      * Инициализация контроллеров библиотеки, модулей, книг и глав.
      * Подписка на событие ChangeBooksEvent
      */
-    public Librarian(@NonNull ILibraryController libCtrl, @NonNull ITSKController tskCtrl, @NonNull HistoryManager historyManager) {
+    public Librarian(@NonNull ILibraryController libCtrl, @NonNull ITSKController tskCtrl,
+            @NonNull IHistoryManager historyManager, @NonNull PreferenceHelper preferenceHelper) {
         this.libCtrl = libCtrl;
         this.tskCtrl = tskCtrl;
         this.historyManager = historyManager;
+        this.preferenceHelper = preferenceHelper;
     }
 
     public String getBaseUrl() {
@@ -204,7 +206,7 @@ public class Librarian {
     public void setCurrentVerseNumber(int verse) {
         if (currModule != null && currBook != null && currChapter != null) {
             this.currVerseNumber = verse;
-            PreferenceHelper.getInstance().saveString("last_read",
+            preferenceHelper.saveString("last_read",
                     new BibleReference(currModule, currBook, currChapter.getNumber(), currVerseNumber)
                             .getExtendedPath());
         }
@@ -375,7 +377,7 @@ public class Librarian {
 
         final BibleReference reference = new BibleReference(currModule, currBook, currChapterNumber, currVerseNumber);
         historyManager.addLink(reference);
-        PreferenceHelper.getInstance().saveString("last_read", reference.getExtendedPath());
+        preferenceHelper.saveString("last_read", reference.getExtendedPath());
 
         return currChapter;
     }

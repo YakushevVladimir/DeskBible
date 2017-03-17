@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: SplashActivity.java
  *
- * Created by Vladimir Yakushev at 9/2016
+ * Created by Vladimir Yakushev at 3/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -38,6 +38,7 @@ import com.BibleQuote.R;
 import com.BibleQuote.async.AsyncTaskManager;
 import com.BibleQuote.async.OnTaskCompleteListener;
 import com.BibleQuote.async.task.command.AsyncCommand;
+import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.Task;
 import com.BibleQuote.utils.UpdateManager;
 
@@ -56,8 +57,9 @@ public class SplashActivity extends Activity implements OnTaskCompleteListener {
         new AsyncTaskManager(this).setupTask(new AsyncCommand(new AsyncCommand.ICommand() {
             @Override
             public boolean execute() throws Exception {
-                UpdateManager.start(SplashActivity.this);
-                BibleQuoteApp.getInstance().getLibrarian();
+                PreferenceHelper preferenceHelper = BibleQuoteApp.getInstance().getPrefHelper();
+                UpdateManager.start(SplashActivity.this, preferenceHelper);
+                BibleQuoteApp.getInstance().getLibraryController().init();
                 return true;
             }
         }, null, true));

@@ -21,12 +21,15 @@
  * Project: BibleQuote-for-Android
  * File: FsLibraryRepository.java
  *
- * Created by Vladimir Yakushev at 9/2016
+ * Created by Vladimir Yakushev at 3/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
 
 package com.BibleQuote.dal.repository;
+
+import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.BibleQuote.domain.entity.Module;
 import com.BibleQuote.domain.exceptions.BookDefinitionException;
@@ -34,6 +37,7 @@ import com.BibleQuote.domain.exceptions.BooksDefinitionException;
 import com.BibleQuote.domain.exceptions.OpenModuleException;
 import com.BibleQuote.domain.repository.ILibraryRepository;
 import com.BibleQuote.entity.modules.BQModule;
+import com.BibleQuote.utils.DataConstants;
 import com.BibleQuote.utils.FsUtils;
 import com.BibleQuote.utils.Logger;
 import com.BibleQuote.utils.OnlyBQIni;
@@ -48,13 +52,24 @@ import java.util.TreeMap;
 public class FsLibraryRepository implements ILibraryRepository<BQModule> {
 
     private static final String TAG = FsLibraryRepository.class.getSimpleName();
-
-    private BQModuleRepository repository;
     private File libraryDir;
+    private BQModuleRepository repository;
 
-    public FsLibraryRepository(File libraryDir) {
-        this.libraryDir = libraryDir;
+    public FsLibraryRepository() {
+        this.libraryDir = getLibraryDir();
         this.repository = new BQModuleRepository();
+    }
+
+    @NonNull
+    private static File getLibraryDir() {
+        File result = new File(DataConstants.getLibraryPath());
+        if (!result.exists()) {
+            boolean deleted = result.mkdir();
+            if (!deleted) {
+                Log.e(TAG, "Don't remove library directory");
+            }
+        }
+        return result;
     }
 
     @Override
@@ -62,7 +77,7 @@ public class FsLibraryRepository implements ILibraryRepository<BQModule> {
 
         Logger.i(TAG, "Load modules from sd-card:");
 
-        Map<String, Module> newModuleSet = new TreeMap<String, Module>();
+        Map<String, Module> newModuleSet = new TreeMap<>();
 
 		// Load zip-compressed BQ-modules
         ArrayList<String> bqZipIniFiles = searchModules(new OnlyBQZipIni());
@@ -70,11 +85,7 @@ public class FsLibraryRepository implements ILibraryRepository<BQModule> {
             try {
                 Module module = loadFileModule(getZipDataSourceId(bqZipIniFile));
                 newModuleSet.put(module.getID(), module);
-            } catch (OpenModuleException e) {
-                e.printStackTrace();
-            } catch (BookDefinitionException e) {
-                e.printStackTrace();
-            } catch (BooksDefinitionException e) {
+            } catch (OpenModuleException | BookDefinitionException | BooksDefinitionException e) {
                 e.printStackTrace();
             }
         }
@@ -85,11 +96,7 @@ public class FsLibraryRepository implements ILibraryRepository<BQModule> {
             try {
                 Module module = loadFileModule(moduleDataSourceId);
                 newModuleSet.put(module.getID(), module);
-            } catch (OpenModuleException e) {
-                e.printStackTrace();
-            } catch (BookDefinitionException e) {
-                e.printStackTrace();
-            } catch (BooksDefinitionException e) {
+            } catch (OpenModuleException | BookDefinitionException | BooksDefinitionException e) {
                 e.printStackTrace();
             }
         }
@@ -109,6 +116,10 @@ public class FsLibraryRepository implements ILibraryRepository<BQModule> {
         return path + File.separator + "bibleqt.ini";
     }
 
+    private boolean isLibraryExist() {
+        return libraryDir != null && libraryDir.exists();
+    }
+
     private Module loadFileModule(String moduleDataSourceId)
             throws OpenModuleException, BooksDefinitionException, BookDefinitionException {
         return repository.loadModule(moduleDataSourceId);
@@ -122,7 +133,7 @@ public class FsLibraryRepository implements ILibraryRepository<BQModule> {
     private ArrayList<String> searchModules(FileFilter filter) {
         Logger.i(TAG, "searchModules()");
 
-        ArrayList<String> iniFiles = new ArrayList<String>();
+        ArrayList<String> iniFiles = new ArrayList<>();
         if (!isLibraryExist()) {
             return iniFiles;
         }
@@ -136,9 +147,5 @@ public class FsLibraryRepository implements ILibraryRepository<BQModule> {
         }
 
         return iniFiles;
-    }
-
-    private boolean isLibraryExist() {
-        return libraryDir != null && libraryDir.exists();
     }
 }

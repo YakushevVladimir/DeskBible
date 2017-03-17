@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: ReaderActivity.java
  *
- * Created by Vladimir Yakushev at 10/2016
+ * Created by Vladimir Yakushev at 3/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -76,16 +76,14 @@ import butterknife.ButterKnife;
 public class ReaderActivity extends AppCompatActivity implements ReaderViewPresenter.IReaderView, IReaderViewListener {
 
     private static final int VIEW_CHAPTER_NAV_LENGTH = 3000;
-
-    @BindView(R.id.readerView) ReaderWebView readerView;
     @BindView(R.id.chapter_nav) ChapterNavigator chapterNav;
-
-    private ReaderWebView.Mode oldMode;
+    @BindView(R.id.readerView) ReaderWebView readerView;
+    private Handler chapterNavHandler = new Handler();
     private ActionMode currActionMode;
     private boolean exitToBackKey;
-    private TTSPlayerFragment ttsPlayer;
+    private ReaderWebView.Mode oldMode;
     private ReaderViewPresenter presenter;
-    private Handler chapterNavHandler = new Handler();
+    private TTSPlayerFragment ttsPlayer;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -433,8 +431,11 @@ public class ReaderActivity extends AppCompatActivity implements ReaderViewPrese
 
     @Override
     public void setTitle(String moduleName, String link) {
-        getSupportActionBar().setTitle(link);
-        getSupportActionBar().setSubtitle(moduleName);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle(link);
+            actionBar.setSubtitle(moduleName);
+        }
     }
 
     @Override
@@ -475,7 +476,8 @@ public class ReaderActivity extends AppCompatActivity implements ReaderViewPrese
 
     private void viewChapterNavigator() {
         chapterNavHandler.removeCallbacksAndMessages(null);
-        if (readerView.getReaderMode() != ReaderWebView.Mode.Study || PreferenceHelper.getInstance().hideNavButtons()) {
+        PreferenceHelper prefHelper = BibleQuoteApp.getInstance().getPrefHelper();
+        if (readerView.getReaderMode() != ReaderWebView.Mode.Study || prefHelper.hideNavButtons()) {
             chapterNav.setVisibility(View.GONE);
         } else {
             chapterNav.setVisibility(View.VISIBLE);

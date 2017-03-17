@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: ILibraryController.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 3/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -41,35 +41,21 @@ import java.util.Map;
 public interface ILibraryController {
 
     /**
-     * Загружает из хранилища список модулей без загрузки их данных. Для каждого из модулей
-     * установлен флаг isClosed = true.
-     *
-     * @return Возвращает TreeMap, где в качестве ключа путь к модулю, а в качестве значения
-     * closed-модуль
-     */
-    Map<String, Module> loadModules();
-
-
-    /**
-     * @return Возвращает TreeMap коллекцию модулей с ключом по Module.ShortName
+     * @return Возвращает коллекцию модулей с ключом по Module.ShortName
      */
     Map<String, Module> getModules();
-
     /**
-     * Возвращает полностью загруженный модуль из коллекции по его ShortName.
-     * Если модуль в коллекции isClosed, то производит его загрузку
-     * <br/>
-     * <font color='red'>Производится полная перезапись в кэш коллекции модулей
-     * при загрузке closed-модуля</font>
-     * <br/>
+     * Получение модуля из коллекции по его ShortName.
      *
      * @param moduleID ShortName модуля
-     * @return Возвращает полностью загруженный модуль
-     * @throws com.BibleQuote.domain.exceptions.OpenModuleException - указанный ShortName отсутствует в коллекции или
-     *                                                              произошла ошибка при попытке загрузить данные closed-модуля
+     * @return найденный модуль
+     * @throws com.BibleQuote.domain.exceptions.OpenModuleException - указанный ShortName отсутствует в коллекции
      */
     Module getModuleByID(String moduleID) throws OpenModuleException;
-
+    /**
+     * Инициализация библиотеки
+     */
+    void init();
     /**
      * Загружает из хранилища модуль по его пути\
      *
@@ -77,4 +63,12 @@ public interface ILibraryController {
      * @throws OpenModuleException по указанному пути модуль не найден
      */
     void loadModule(String path) throws OpenModuleException, BooksDefinitionException, BookDefinitionException;
+    /**
+     * Загружает из хранилища список модулей без загрузки их данных. Для каждого из модулей
+     * установлен флаг isClosed = true.
+     *
+     * @return Возвращает TreeMap, где в качестве ключа путь к модулю, а в качестве значения
+     * closed-модуль
+     */
+    Map<String, Module> reloadModules();
 }

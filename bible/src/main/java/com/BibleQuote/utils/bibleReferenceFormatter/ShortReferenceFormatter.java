@@ -21,13 +21,14 @@
  * Project: BibleQuote-for-Android
  * File: ShortReferenceFormatter.java
  *
- * Created by Vladimir Yakushev at 9/2016
+ * Created by Vladimir Yakushev at 3/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
 
 package com.BibleQuote.utils.bibleReferenceFormatter;
 
+import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.domain.entity.Book;
 import com.BibleQuote.domain.entity.Module;
 import com.BibleQuote.utils.PreferenceHelper;
@@ -43,11 +44,11 @@ public class ShortReferenceFormatter extends ReferenceFormatter implements IBibl
 
 	@Override
 	public String getLink() {
-
+		PreferenceHelper prefHelper = BibleQuoteApp.getInstance().getPrefHelper();
 		String result = String.format(
 				"%1$s.%2$s:%3$s",
 				book.getShortName(), chapter, getVerseLink());
-		if (PreferenceHelper.getInstance().addModuleToBibleReference()) {
+		if (prefHelper.addModuleToBibleReference()) {
 			result = String.format("%1$s | %2$s", result, module.getID());
 		}
 		return result;

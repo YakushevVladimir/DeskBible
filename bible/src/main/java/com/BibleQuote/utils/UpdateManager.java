@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: UpdateManager.java
  *
- * Created by Vladimir Yakushev at 9/2016
+ * Created by Vladimir Yakushev at 3/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -29,10 +29,8 @@
 package com.BibleQuote.utils;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Environment;
-import android.preference.PreferenceManager;
 import android.util.Xml.Encoding;
 
 import com.BibleQuote.BibleQuoteApp;
@@ -48,7 +46,6 @@ import com.BibleQuote.managers.bookmarks.BookmarksManager;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -67,10 +64,9 @@ public final class UpdateManager {
         throw new InstantiationException("This class is not for instantiation");
     }
 
-    public static void start(Context context) {
+    public static void start(Context context, PreferenceHelper prefHelper) {
 
         Logger.i(TAG, "Start update manager...");
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
 
         String state = Environment.getExternalStorageState();
 
@@ -82,7 +78,7 @@ public final class UpdateManager {
             }
         }
 
-        int currVersionCode = settings.getInt("versionCode", 0);
+        int currVersionCode = prefHelper.getInt("versionCode");
 
         boolean updateModules = false;
         if (currVersionCode < 53 && Environment.MEDIA_MOUNTED.equals(state)) {
@@ -95,7 +91,7 @@ public final class UpdateManager {
         }
 
         if (currVersionCode < 59) {
-            convertBookmarks_59();
+            convertBookmarks_59(prefHelper);
         } else if (currVersionCode < 63) {
             convertBookmarks_63();
         }
@@ -107,14 +103,27 @@ public final class UpdateManager {
 
         if (currVersionCode < 76) {
             ILibraryController libraryController = BibleQuoteApp.getInstance().getLibraryController();
-            libraryController.loadModules();
+            libraryController.reloadModules();
         }
 
         try {
             int versionCode = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode;
-            settings.edit().putInt("versionCode", versionCode).apply();
+            prefHelper.saveInt("versionCode", versionCode);
         } catch (NameNotFoundException e) {
-            settings.edit().putInt("versionCode", 39).apply();
+            prefHelper.saveInt("versionCode", 39);
+        }
+    }
+
+    private static void convertBookmarks_59(PreferenceHelper preferenceHelper) {
+        Logger.d(TAG, "Convert bookmarks to DB version 1");
+        final IBookmarksRepository bookmarksRepo = BibleQuoteApp.getInstance().getBookmarksRepository();
+        BookmarksManager newBM = new BookmarksManager(bookmarksRepo, new dbBookmarksTagsRepository(), new dbTagRepository());
+        ArrayList<Bookmark> bookmarks = new BookmarksManager(
+                new PrefBookmarksRepository(preferenceHelper),
+                new dbBookmarksTagsRepository(),
+                new dbTagRepository()).getAll();
+        for (Bookmark curr : bookmarks) {
+            newBM.add(curr.OSISLink, curr.humanLink);
         }
     }
 
@@ -126,25 +135,6 @@ public final class UpdateManager {
         for (Bookmark currBM : bookmarks) {
             if (currBM.name == null) currBM.name = currBM.humanLink;
             bmManager.add(currBM);
-        }
-    }
-
-    private static void convertBookmarks_59() {
-        Logger.d(TAG, "Convert bookmarks to DB version 1");
-        final IBookmarksRepository bookmarksRepo = BibleQuoteApp.getInstance().getBookmarksRepository();
-        BookmarksManager newBM = new BookmarksManager(bookmarksRepo, new dbBookmarksTagsRepository(), new dbTagRepository());
-        ArrayList<Bookmark> bookmarks = new BookmarksManager(new PrefBookmarksRepository(), new dbBookmarksTagsRepository(), new dbTagRepository()).getAll();
-        for (Bookmark curr : bookmarks) {
-            newBM.add(curr.OSISLink, curr.humanLink);
-        }
-    }
-
-    private static void updateBuiltInModules(Context context) {
-        try {
-            saveBuiltInModule(context, "bible_rst.zip", R.raw.bible_rst);
-            saveBuiltInModule(context, "bible_kjv.zip", R.raw.bible_kjv);
-        } catch (IOException e) {
-            Logger.e(TAG, e.getMessage());
         }
     }
 
@@ -198,8 +188,15 @@ public final class UpdateManager {
             tskBw.flush();
             tskBw.close();
             tskBr.close();
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
             Logger.e(TAG, e.getMessage());
+        }
+    }
+
+    private static void updateBuiltInModules(Context context) {
+        try {
+            saveBuiltInModule(context, "bible_rst.zip", R.raw.bible_rst);
+            saveBuiltInModule(context, "bible_kjv.zip", R.raw.bible_kjv);
         } catch (IOException e) {
             Logger.e(TAG, e.getMessage());
         }
