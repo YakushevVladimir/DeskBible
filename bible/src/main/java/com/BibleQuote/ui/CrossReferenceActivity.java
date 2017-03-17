@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: CrossReferenceActivity.java
  *
- * Created by Vladimir Yakushev at 9/2016
+ * Created by Vladimir Yakushev at 3/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -58,15 +58,12 @@ import java.util.List;
 public class CrossReferenceActivity extends AsyncTaskActivity {
 
     private static final String TAG = CrossReferenceActivity.class.getSimpleName();
-
-	private Librarian myLibrarian;
-	private LinkedHashMap<String, BibleReference> crossReference = new LinkedHashMap<String, BibleReference>();
-	private HashMap<BibleReference, String> crossReferenceContent = new HashMap<BibleReference, String>();
-	private BibleReference bReference;
 	private ListView LV;
-
-	private AdapterView.OnItemClickListener list_OnClick = new AdapterView.OnItemClickListener() {
-		public void onItemClick(AdapterView<?> a, View v, int position, long id) {
+    private BibleReference bReference;
+    private LinkedHashMap<String, BibleReference> crossReference = new LinkedHashMap<>();
+    private HashMap<BibleReference, String> crossReferenceContent = new HashMap<>();
+    private AdapterView.OnItemClickListener list_OnClick = new AdapterView.OnItemClickListener() {
+        public void onItemClick(AdapterView<?> a, View v, int position, long id) {
 			String key = ((TextItem) a.getAdapter().getItem(position)).text;
 			BibleReference ref = crossReference.get(key);
 
@@ -76,6 +73,7 @@ public class CrossReferenceActivity extends AsyncTaskActivity {
 			finish();
 		}
 	};
+    private Librarian myLibrarian;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -112,7 +110,7 @@ public class CrossReferenceActivity extends AsyncTaskActivity {
         super.onStart();
         if (!mAsyncManager.isWorking()) {
             String progressMessage = getString(R.string.messageLoad);
-            mAsyncManager.setupTask(new AsyncCommand(new GetParallesLinks(), progressMessage, false), this);
+            mAsyncManager.setupTask(new AsyncCommand(new GetParallelsLinks(), progressMessage, false), this);
         }
     }
 
@@ -132,9 +130,10 @@ public class CrossReferenceActivity extends AsyncTaskActivity {
 	}
 
 	private void setListAdapter() {
-		List<Item> items = new ArrayList<Item>();
-		for (String link : crossReference.keySet()) {
-            if (PreferenceHelper.getInstance().crossRefViewDetails()) {
+        List<Item> items = new ArrayList<>();
+        PreferenceHelper prefHelper = BibleQuoteApp.getInstance().getPrefHelper();
+        for (String link : crossReference.keySet()) {
+            if (prefHelper.crossRefViewDetails()) {
                 items.add(new SubtextItem(link, crossReferenceContent.get(crossReference.get(link))));
 			} else {
 				items.add(new TextItem(link));
@@ -145,11 +144,13 @@ public class CrossReferenceActivity extends AsyncTaskActivity {
 		LV.setAdapter(adapter);
 	}
 
-	class GetParallesLinks implements ICommand {
-		@Override
+    private class GetParallelsLinks implements ICommand {
+
+        @Override
         public boolean execute() throws Exception {
             crossReference = myLibrarian.getCrossReference(bReference);
-            if (PreferenceHelper.getInstance().crossRefViewDetails()) {
+            PreferenceHelper prefHelper = BibleQuoteApp.getInstance().getPrefHelper();
+            if (prefHelper.crossRefViewDetails()) {
                 crossReferenceContent = myLibrarian.getCrossReferenceContent(crossReference.values());
 			}
             return true;

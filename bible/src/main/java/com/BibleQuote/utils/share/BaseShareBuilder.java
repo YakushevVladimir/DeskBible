@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: BaseShareBuilder.java
  *
- * Created by Vladimir Yakushev at 9/2016
+ * Created by Vladimir Yakushev at 3/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -30,6 +30,7 @@ package com.BibleQuote.utils.share;
 
 import android.content.Context;
 
+import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.domain.entity.Book;
 import com.BibleQuote.domain.entity.Chapter;
 import com.BibleQuote.domain.entity.Module;
@@ -45,25 +46,40 @@ import com.BibleQuote.utils.bibleReferenceFormatter.ShortReferenceFormatter;
 import java.util.LinkedHashMap;
 import java.util.TreeSet;
 
-public abstract class BaseShareBuilder {
-    IShareTextFormatter textFormatter;
-    IBibleReferenceFormatter referenceFormatter;
-
-	Context context;
-	Module module;
+abstract class BaseShareBuilder {
 	Book book;
 	Chapter chapter;
+	Context context;
+	Module module;
+	IBibleReferenceFormatter referenceFormatter;
+	IShareTextFormatter textFormatter;
 	LinkedHashMap<Integer, String> verses;
-    PreferenceHelper preferenceHelper = PreferenceHelper.getInstance();
+	private PreferenceHelper preferenceHelper = BibleQuoteApp.getInstance().getPrefHelper();
 
-	protected void initFormatters() {
-        if (preferenceHelper.divideTheVerses()) {
-            textFormatter = new BreakVerseBibleShareFormatter(verses);
+	public abstract void share();
+
+	String getShareText() {
+		String text = textFormatter.format();
+		if (!preferenceHelper.addReference()) {
+			return text;
+		}
+
+		String reference = referenceFormatter.getLink();
+		if (preferenceHelper.putReferenceInBeginning()) {
+			return String.format("%1$s - %2$s", reference, text);
+		} else {
+			return String.format("%1$s (%2$s)", text, reference);
+		}
+	}
+
+	void initFormatters() {
+		if (preferenceHelper.divideTheVerses()) {
+			textFormatter = new BreakVerseBibleShareFormatter(verses);
         } else {
             textFormatter = new SimpleBibleShareFormatter(verses);
         }
 
-		TreeSet<Integer> verseNumbers = new TreeSet<Integer>();
+		TreeSet<Integer> verseNumbers = new TreeSet<>();
 		for (Integer numb : verses.keySet()) {
 			verseNumbers.add(numb);
 		}
@@ -77,20 +93,4 @@ public abstract class BaseShareBuilder {
 			referenceFormatter = new FullReferenceFormatter(module, book, chapterNumber, verseNumbers);
 		}
 	}
-
-	protected String getShareText() {
-        String text = textFormatter.format();
-        if (!preferenceHelper.addReference()) {
-            return text;
-		}
-
-		String reference = referenceFormatter.getLink();
-        if (preferenceHelper.putReferenceInBeginning()) {
-            return String.format("%1$s - %2$s", reference, text);
-		} else {
-			return String.format("%1$s (%2$s)", text, reference);
-		}
-	}
-
-	public abstract void share();
 }

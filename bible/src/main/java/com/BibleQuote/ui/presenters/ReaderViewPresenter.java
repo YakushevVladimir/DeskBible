@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: ReaderViewPresenter.java
  *
- * Created by Vladimir Yakushev at 10/2016
+ * Created by Vladimir Yakushev at 3/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -33,6 +33,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
 import com.BibleQuote.async.AsyncTaskManager;
 import com.BibleQuote.async.OnTaskCompleteListener;
@@ -70,14 +71,13 @@ public class ReaderViewPresenter implements TTSPlayerFragment.OnTTSStopSpeakList
     private static final String KEY_LAST_READ = "last_read";
     private static final String KEY_LINK_OSIS = "linkOSIS";
     private static final String TAG = ReaderViewPresenter.class.getSimpleName();
-
+    private Librarian librarian;
+    private PreferenceHelper preferenceHelper = BibleQuoteApp.getInstance().getPrefHelper();
     private IReaderView view;
     private WeakReference<Context> weakContext;
-    private Librarian librarian;
-    private PreferenceHelper preferenceHelper = PreferenceHelper.getInstance();
 
     public ReaderViewPresenter(Context context, IReaderView view, Librarian librarian) {
-        this.weakContext = new WeakReference<Context>(context);
+        this.weakContext = new WeakReference<>(context);
         this.librarian = librarian;
         this.view = view;
 

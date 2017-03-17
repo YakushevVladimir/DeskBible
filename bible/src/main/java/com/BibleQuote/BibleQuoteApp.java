@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: BibleQuoteApp.java
  *
- * Created by Vladimir Yakushev at 9/2016
+ * Created by Vladimir Yakushev at 3/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -30,66 +30,50 @@ package com.BibleQuote;
 import android.app.Application;
 
 import com.BibleQuote.async.AsyncManager;
-import com.BibleQuote.dal.repository.FsHistoryRepository;
-import com.BibleQuote.dal.repository.XmlTskRepository;
-import com.BibleQuote.dal.repository.bookmarks.DbBookmarksRepository;
-import com.BibleQuote.domain.controllers.FsLibraryController;
+import com.BibleQuote.di.AppComponent;
+import com.BibleQuote.di.AppModule;
+import com.BibleQuote.di.DaggerAppComponent;
 import com.BibleQuote.domain.controllers.ILibraryController;
-import com.BibleQuote.domain.controllers.TSKController;
 import com.BibleQuote.domain.repository.IBookmarksRepository;
 import com.BibleQuote.managers.Librarian;
-import com.BibleQuote.managers.history.HistoryManager;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
+
+import javax.inject.Inject;
 
 public class BibleQuoteApp extends Application {
 
 	private static BibleQuoteApp instance;
 
-	private Librarian myLibrarian;
-	private AsyncManager mAsyncManager;
-    private ILibraryController libraryController;
+    @Inject AsyncManager asyncManager;
+    @Inject IBookmarksRepository bookmarksRepository;
+    @Inject Librarian librarian;
+    @Inject ILibraryController libraryController;
+    @Inject PreferenceHelper prefHelper;
 
 	public static BibleQuoteApp getInstance() {
 		return instance;
 	}
 
-	@Override
-	public void onCreate() {
-		super.onCreate();
-		instance = this;
-        PreferenceHelper.createInstance(this);
+    public AsyncManager getAsyncManager() {
+        return asyncManager;
     }
 
-    public ILibraryController getLibraryController() {
-        if (libraryController == null) {
-            libraryController = FsLibraryController.getInstance(this);
-            libraryController.getModules();
-        }
-        return libraryController;
+    public IBookmarksRepository getBookmarksRepository() {
+        return bookmarksRepository;
     }
 
     public Librarian getLibrarian() {
-        if (myLibrarian == null) {
-            myLibrarian = new Librarian(
-                    getLibraryController(),
-                    new TSKController(new XmlTskRepository()),
-                    new HistoryManager(new FsHistoryRepository(this),
-                            PreferenceHelper.getInstance().getHistorySize()));
-        }
-        return myLibrarian;
-	}
+        return librarian;
+    }
 
-	public AsyncManager getAsyncManager() {
-		if (mAsyncManager == null) {
-			mAsyncManager = new AsyncManager();
-		}
-		return mAsyncManager;
-	}
+    public ILibraryController getLibraryController() {
+        return libraryController;
+    }
 
-	public IBookmarksRepository getBookmarksRepository() {
-        return new DbBookmarksRepository();
+    public PreferenceHelper getPrefHelper() {
+        return prefHelper;
     }
 
 	public synchronized Tracker getTracker() {
@@ -98,4 +82,14 @@ public class BibleQuoteApp extends Application {
 		tracker.enableAdvertisingIdCollection(true);
 		return tracker;
 	}
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        instance = this;
+        AppComponent appComponent = DaggerAppComponent.builder()
+                .appModule(new AppModule(this))
+                .build();
+        appComponent.inject(this);
+    }
 }

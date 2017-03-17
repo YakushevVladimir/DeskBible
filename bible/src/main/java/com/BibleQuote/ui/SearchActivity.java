@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: SearchActivity.java
  *
- * Created by Vladimir Yakushev at 11/2016
+ * Created by Vladimir Yakushev at 3/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -82,7 +82,7 @@ public class SearchActivity extends AsyncTaskActivity implements TextView.OnEdit
     private static final String KEY_MODULE_ID = "searchModuleID";
     private static final String KEY_SEARCH_POSITION = "changeSearchPosition";
 
-    private final PreferenceHelper preferenceHelper = PreferenceHelper.getInstance();
+    private final PreferenceHelper preferenceHelper = BibleQuoteApp.getInstance().getPrefHelper();
 
     @BindView(R.id.search_list) ListView resultList;
     @BindView(R.id.search_text) EditText searchText;
@@ -91,8 +91,8 @@ public class SearchActivity extends AsyncTaskActivity implements TextView.OnEdit
 
     private Librarian myLibrarian;
     private String progressMessage = "";
-    private ArrayList<Item> searchItems = new ArrayList<Item>();
-    private Map<String, String> searchResults = new LinkedHashMap<String, String>();
+    private ArrayList<Item> searchItems = new ArrayList<>();
+    private Map<String, String> searchResults = new LinkedHashMap<>();
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -244,7 +244,7 @@ public class SearchActivity extends AsyncTaskActivity implements TextView.OnEdit
     }
 
     private void spinnerInit() {
-        ArrayList<ItemList> books = new ArrayList<ItemList>();
+        ArrayList<ItemList> books = new ArrayList<>();
         try {
             books = myLibrarian.getCurrentModuleBooksList();
         } catch (OpenModuleException e) {

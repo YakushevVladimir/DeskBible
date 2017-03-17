@@ -19,31 +19,24 @@
  * under the License.
  *
  * Project: BibleQuote-for-Android
- * File: AsyncRefreshModules.java
+ * File: AppComponent.java
  *
  * Created by Vladimir Yakushev at 3/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
 
-package com.BibleQuote.async.task;
+package com.BibleQuote.di;
 
 import com.BibleQuote.BibleQuoteApp;
-import com.BibleQuote.domain.controllers.ILibraryController;
-import com.BibleQuote.utils.Task;
 
-public class AsyncRefreshModules extends Task {
+import javax.inject.Singleton;
 
-	private ILibraryController libCtrl;
+import dagger.Component;
 
-	public AsyncRefreshModules(String message, Boolean isHidden) {
-		super(message, isHidden);
-		this.libCtrl = BibleQuoteApp.getInstance().getLibraryController();
-	}
+@Component(modules = AppModule.class)
+@Singleton
+public interface AppComponent {
 
-	@Override
-	protected Boolean doInBackground(String... arg0) {
-        libCtrl.reloadModules();
-        return true;
-    }
+    void inject(BibleQuoteApp application);
 }

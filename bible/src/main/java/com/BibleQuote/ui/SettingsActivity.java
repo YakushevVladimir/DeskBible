@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: SettingsActivity.java
  *
- * Created by Vladimir Yakushev at 10/2016
+ * Created by Vladimir Yakushev at 3/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -35,23 +35,24 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
 
+import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
 import com.BibleQuote.utils.PreferenceHelper;
 
 public class SettingsActivity extends PreferenceActivity implements
         OnSharedPreferenceChangeListener {
 
-    private OnPreferenceChangeListener historySizeChangeListener = new OnPreferenceChangeListener() {
-        @Override
-        public boolean onPreferenceChange(Preference preference, Object newValue) {
-            setHistorySummary(preference, (String) newValue);
-            return true;
-        }
-    };
     private OnPreferenceChangeListener fontFamilyChangeListener = new OnPreferenceChangeListener() {
         @Override
         public boolean onPreferenceChange(Preference preference, Object newValue) {
             setFontFamilySummary(preference, (String) newValue);
+            return true;
+        }
+    };
+    private OnPreferenceChangeListener historySizeChangeListener = new OnPreferenceChangeListener() {
+        @Override
+        public boolean onPreferenceChange(Preference preference, Object newValue) {
+            setHistorySummary(preference, (String) newValue);
             return true;
         }
     };
@@ -62,13 +63,15 @@ public class SettingsActivity extends PreferenceActivity implements
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.settings);
 
+        PreferenceHelper prefHelper = BibleQuoteApp.getInstance().getPrefHelper();
+
         Preference historySize = findPreference("HistorySize");
         historySize.setOnPreferenceChangeListener(historySizeChangeListener);
-        setHistorySummary(historySize, Integer.toString(PreferenceHelper.getInstance().getHistorySize()));
+        setHistorySummary(historySize, Integer.toString(prefHelper.getHistorySize()));
 
         Preference fontFamily = findPreference("font_family");
         fontFamily.setOnPreferenceChangeListener(fontFamilyChangeListener);
-        setFontFamilySummary(fontFamily, PreferenceHelper.getInstance().getTextAppearance().getTypeface());
+        setFontFamilySummary(fontFamily, prefHelper.getTextAppearance().getTypeface());
     }
 
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
@@ -98,9 +101,7 @@ public class SettingsActivity extends PreferenceActivity implements
         try {
             String summary = getResources().getString(R.string.category_reader_other_history_size_summary);
             historySize.setSummary(String.format(summary, value));
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        } catch (NotFoundException e) {
+        } catch (NumberFormatException | NotFoundException e) {
             e.printStackTrace();
         }
     }
