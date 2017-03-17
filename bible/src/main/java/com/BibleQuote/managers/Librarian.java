@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: Librarian.java
  *
- * Created by Vladimir Yakushev at 10/2016
+ * Created by Vladimir Yakushev at 3/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -73,15 +73,14 @@ public class Librarian {
     public static final String EMPTY_OBJ = "---";
 
     private static final String TAG = Librarian.class.getSimpleName();
-
-    private ILibraryController libCtrl;
-    private Map<String, String> searchResults = new LinkedHashMap<String, String>();
-    private Module currModule;
     private Book currBook;
     private Chapter currChapter;
     private Integer currChapterNumber = -1;
+    private Module currModule;
     private Integer currVerseNumber = 1;
     private IHistoryManager historyManager;
+    private ILibraryController libCtrl;
+    private Map<String, String> searchResults = new LinkedHashMap<>();
     private ITSKController tskCtrl;
 
     /**
@@ -108,9 +107,9 @@ public class Librarian {
     }
 
     public ArrayList<String> getCleanedVersesText() {
-        ArrayList<String> result = new ArrayList<String>();
+        ArrayList<String> result = new ArrayList<>();
 
-        if (currModule == null) {
+        if (currModule == null || currChapter == null) {
             return result;
         }
 
@@ -171,14 +170,6 @@ public class Librarian {
         }
     }
 
-    public String getModuleName() {
-        if (currModule == null) {
-            return "";
-        } else {
-            return currModule.getName();
-        }
-    }
-
     /**
      * Возвращает список доступных модулей с Библиями, апокрифами, книгами
      *
@@ -186,13 +177,13 @@ public class Librarian {
      */
     public ArrayList<ItemList> getModulesList() {
         // Сначала отсортируем список по наименованием модулей
-        TreeMap<String, Module> tMap = new TreeMap<String, Module>();
+        TreeMap<String, Module> tMap = new TreeMap<>();
         for (Module currModule : libCtrl.getModules().values()) {
             tMap.put(currModule.getName(), currModule);
         }
 
         // Теперь создадим результирующий список на основе отсортированных данных
-        ArrayList<ItemList> moduleList = new ArrayList<ItemList>();
+        ArrayList<ItemList> moduleList = new ArrayList<>();
         for (Module currModule : tMap.values()) {
             moduleList.add(new ItemList(currModule.getID(), currModule.getName()));
         }
@@ -259,8 +250,8 @@ public class Librarian {
     /**
      * Возвращает список глав книги
      *
-     * @throws OpenModuleException
-     * @throws BookNotFoundException
+     * @throws OpenModuleException указанные модуль не найден или произошла ошибка при его открытии
+     * @throws BookNotFoundException указанная книга в модуле не найдена
      */
     public List<String> getChaptersList(String moduleID, String bookID)
             throws BookNotFoundException, OpenModuleException {
@@ -277,7 +268,7 @@ public class Librarian {
     public LinkedHashMap<String, BibleReference> getCrossReference(BibleReference bReference)
             throws TskNotFoundException, BQUniversalException {
 
-        LinkedHashMap<String, BibleReference> result = new LinkedHashMap<String, BibleReference>();
+        LinkedHashMap<String, BibleReference> result = new LinkedHashMap<>();
         for (BibleReference reference : tskCtrl.getLinks(bReference)) {
             Book book;
             try {
@@ -305,7 +296,7 @@ public class Librarian {
         ModuleTextFormatter formatter = new ModuleTextFormatter(currModule, new StripTagsTextFormatter());
         formatter.setVisibleVerseNumbers(false);
 
-        HashMap<BibleReference, String> crossReferenceContent = new HashMap<BibleReference, String>();
+        HashMap<BibleReference, String> crossReferenceContent = new HashMap<>();
         for (BibleReference ref : bReferences) {
             try {
                 int fromVerse = ref.getFromVerse();
@@ -415,7 +406,7 @@ public class Librarian {
 
     public Map<String, String> search(String query, String fromBook, String toBook) throws OpenModuleException, BookNotFoundException {
         if (currModule == null) {
-            searchResults = new LinkedHashMap<String, String>();
+            searchResults = new LinkedHashMap<>();
         } else {
             IModuleController moduleCtrl = Injector.getModuleController(currModule);
             searchResults = moduleCtrl.search(currModule.getBookList(fromBook, toBook), query);
@@ -442,7 +433,7 @@ public class Librarian {
 
     @NonNull
     private ArrayList<ItemList> getBookItemLists(Module module) {
-        ArrayList<ItemList> result = new ArrayList<ItemList>();
+        ArrayList<ItemList> result = new ArrayList<>();
         if (module == null) {
             return result;
         }

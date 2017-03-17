@@ -57,10 +57,10 @@ android {
         }
 
         applicationVariants.all { variant ->
-            if (variant.buildType.name.equals("release")) {
-                variant.outputs.each { output ->
+            variant.outputs.each { output ->
+                if (variant.buildType.name == "release") {
                     def apk = output.outputFile;
-                    def newName = apk.name.replace(".apk", "") + "-" + defaultConfig.versionName + ".apk";
+                    def newName = apk.name.replace(".apk", "-${defaultConfig.versionName}.apk");
                     output.outputFile = new File(apk.parentFile, newName);
                 }
             }
