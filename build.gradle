@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: build.gradle
  *
- * Created by Vladimir Yakushev at 11/2016
+ * Created by Vladimir Yakushev at 3/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -33,10 +33,18 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.2'
+        classpath 'com.android.tools.build:gradle:2.3.0'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.6.3'
+        classpath "io.realm:realm-gradle-plugin:3.0.0"
     }
+}
+
+ext {
+    supportLibVersion = "22.2.1"
+    daggerVersion = "2.8"
+    retrofitVersion = "2.1.0"
+    butterknifeVersion = "8.4.0"
 }
 
 allprojects {
