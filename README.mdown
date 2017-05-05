@@ -2,7 +2,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/YakushevVladimir/BibleQuote-for-Android/badge.svg)](https://coveralls.io/github/YakushevVladimir/BibleQuote-for-Android)
 [![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
-#BibleQuote for Android
+# BibleQuote for Android
 
 [![](http://scripturesoftware.org/wp-content/uploads/2012/06/icon.png)](http://scripturesoftware.org/wp-content/uploads/2012/06/icon.png)
  
@@ -11,11 +11,11 @@ You can also take a tour to the news&support website at <http://scripturesoftwar
 
 A sample application can be downloaded on the [Google Play][google_play]
 
-##Contacts
+## Contacts
 
 Feel free to contact me for any question related to BibleQuote: bug report, questions about the app, etc. I don't have time to provide personal support but I'll try to look at bug reports and important messages.
 
-##Credits
+## Credits
 
 Copyright © Yakushev Vladimir <ru.phoenix@gmail.com>
 
