@@ -19,36 +19,47 @@
  * under the License.
  *
  * Project: BibleQuote-for-Android
- * File: build.gradle
+ * File: ViewHandler.java
  *
  * Created by Vladimir Yakushev at 5/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
 
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+package com.BibleQuote.ui.widget;
 
-buildscript {
-    repositories {
-        jcenter()
+import android.os.Handler;
+import android.os.Message;
+
+import com.BibleQuote.listeners.IReaderViewListener;
+
+import java.lang.ref.WeakReference;
+
+class ViewHandler extends Handler {
+
+    static final int MSG_OTHER = 1;
+    static final int MSG_ON_CLICK_IMAGE = 2;
+
+    private WeakReference<IReaderViewListener> weakListener;
+
+    public void setListener(IReaderViewListener listener) {
+        this.weakListener = new WeakReference<>(listener);
     }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.1'
-        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
-        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.6.3'
-        classpath "io.realm:realm-gradle-plugin:3.0.0"
-    }
-}
 
-ext {
-    supportLibVersion = "22.2.1"
-    daggerVersion = "2.8"
-    retrofitVersion = "2.1.0"
-    butterknifeVersion = "8.4.0"
-}
+    @Override
+    public void handleMessage(Message msg) {
+        IReaderViewListener listener = weakListener.get();
+        if (listener == null) {
+            return;
+        }
 
-allprojects {
-    repositories {
-        jcenter()
+        switch (msg.what) {
+            case MSG_ON_CLICK_IMAGE:
+                listener.onReaderClickImage((String) msg.obj);
+                break;
+            default:
+                listener.onReaderViewChange((IReaderViewListener.ChangeCode) msg.obj);
+        }
+        super.handleMessage(msg);
     }
 }

@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: ReaderWebView.java
  *
- * Created by Vladimir Yakushev at 10/2016
+ * Created by Vladimir Yakushev at 5/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -34,6 +34,7 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.webkit.JavascriptInterface;
@@ -56,38 +57,40 @@ import java.util.TreeSet;
 
 @SuppressLint("SetJavaScriptEnabled")
 public class ReaderWebView extends WebView
-		implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
+        implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
 
+    public static final String TAG = ReaderWebView.class.getSimpleName();
     public static final int MIN_FLING_VELOCITY = 400;
     public static final int MIN_SWIPE_X = 100;
     public static final int MAX_SWIPE_Y = 200;
 
     public boolean mPageLoaded;
-
-    private TreeSet<Integer> selectedVerse = new TreeSet<Integer>();
-    private GestureDetector mGestureScanner;
-	private JavaScriptInterface jsInterface;
-	private Mode currMode = Mode.Read;
     private String baseUrl;
     private String content;
+    private Mode currMode = Mode.Read;
     private int currVerse;
-    private boolean isBible;
-    private int minSwipeX = MIN_SWIPE_X;
-    private int maxSwipeY = MAX_SWIPE_Y;
-    private float minVelocity = MIN_FLING_VELOCITY;
     private ITextFormatter formatter = new StripTagsTextFormatter();
-    private ViewHandler handler;
-    private TextAppearance textApearence;
+    private boolean isBible;
+    private JavaScriptInterface jsInterface;
+    private GestureDetector mGestureScanner;
+    private int maxSwipeY = MAX_SWIPE_Y;
+    private int minSwipeX = MIN_SWIPE_X;
+    private float minVelocity = MIN_FLING_VELOCITY;
+    private TreeSet<Integer> selectedVerse = new TreeSet<>();
+    private ReaderTaskHandler taskHandler;
+    private TextAppearance textAppearance;
+    private ViewHandler viewHandler;
 
     @SuppressLint("AddJavascriptInterface")
     public ReaderWebView(Context mContext, AttributeSet attributeSet) {
-		super(mContext, attributeSet);
+        super(mContext, attributeSet);
 
-        handler = new ViewHandler();
+        viewHandler = new ViewHandler();
+        taskHandler = new ReaderTaskHandler(this);
         if (!isInEditMode()) {
             WebSettings settings = getSettings();
             settings.setJavaScriptEnabled(true);
-            settings.setDomStorageEnabled(true);
+            settings.setDomStorageEnabled(false);
             settings.setNeedInitialFocus(false);
             settings.setBuiltInZoomControls(false);
             settings.setSupportZoom(false);
@@ -139,19 +142,19 @@ public class ReaderWebView extends WebView
     }
 
     public void setOnReaderViewListener(IReaderViewListener listener) {
-        handler.setListener(listener);
+        viewHandler.setListener(listener);
     }
 
-	public void setSelectedVerse(TreeSet<Integer> selectedVerse) {
-		jsInterface.clearSelectedVerse();
-		this.selectedVerse = selectedVerse;
-		for (Integer verse : selectedVerse) {
-			jsInterface.selectVerse(verse);
-		}
-	}
+    public void setSelectedVerse(TreeSet<Integer> selectedVerse) {
+        jsInterface.clearSelectedVerse();
+        this.selectedVerse = selectedVerse;
+        for (Integer verse : selectedVerse) {
+            jsInterface.selectVerse(verse);
+        }
+    }
 
-    public void setTextApearence(TextAppearance textApearence) {
-        this.textApearence = textApearence;
+    public void setTextApearance(TextAppearance textApearence) {
+        this.textAppearance = textApearence;
         update();
     }
 
@@ -167,10 +170,9 @@ public class ReaderWebView extends WebView
     @Override
     public void computeScroll() {
         super.computeScroll();
-        if (mPageLoaded && isScrollToBottom()) {
-            notifyListeners(IReaderViewListener.ChangeCode.onScroll);
+        if (mPageLoaded) {
+            taskHandler.addSingleDelayedMessage(ReaderTaskHandler.MSG_HANDLE_SCROLL, 500);
         }
-        loadUrl("javascript: getCurrentVerse();");
     }
 
     @Override
@@ -185,7 +187,9 @@ public class ReaderWebView extends WebView
 
     @Override
     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-        notifyListeners(IReaderViewListener.ChangeCode.onScroll);
+        if (mPageLoaded) {
+            notifyListeners(IReaderViewListener.ChangeCode.onScroll);
+        }
         return false;
     }
 
@@ -283,25 +287,25 @@ public class ReaderWebView extends WebView
     }
 
     public void update() {
+        Log.d(TAG, "update");
         mPageLoaded = false;
+        taskHandler.removeMessages(ReaderTaskHandler.MSG_HANDLE_SCROLL);
+
         String modStyle = isBible ? "bible_style.css" : "book_style.css";
+        String html = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\r\n" +
+                "<html>\r\n" +
+                "<head>\r\n" +
+                "<meta http-equiv=Content-Type content=\"text/html; charset=UTF-8\">\r\n" +
+                "<script language=\"JavaScript\" src=\"file:///android_asset/reader.js\" type=\"text/javascript\"></script>\r\n" +
+                "<link rel=\"stylesheet\" type=\"text/css\" href=\"file:///android_asset/" + modStyle + "\">\r\n" +
+                getStyle() +
+                "</head>\r\n" +
+                "<body" + (currVerse > 1 ? " onLoad=\"document.location.href='#verse_" + currVerse + "';\"" : "") + ">\r\n" +
+                (content == null ? "" : content) +
+                "</body>\r\n" +
+                "</html>";
 
-        @SuppressWarnings("StringBufferReplaceableByString")
-        StringBuilder html = new StringBuilder();
-        html.append("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\r\n");
-        html.append("<html>\r\n");
-        html.append("<head>\r\n");
-        html.append("<meta http-equiv=Content-Type content=\"text/html; charset=UTF-8\">\r\n");
-        html.append("<script language=\"JavaScript\" src=\"file:///android_asset/reader.js\" type=\"text/javascript\"></script>\r\n");
-        html.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"file:///android_asset/").append(modStyle).append("\">\r\n");
-        html.append(getStyle());
-        html.append("</head>\r\n");
-        html.append("<body").append(currVerse > 1 ? (" onLoad=\"document.location.href='#verse_" + currVerse + "';\"") : "").append(">\r\n");
-        if (content != null) html.append(content);
-        html.append("</body>\r\n");
-        html.append("</html>");
-
-        loadDataWithBaseURL("file://" + baseUrl, html.toString(), "text/html", "UTF-8", "about:config");
+        loadDataWithBaseURL("file://" + baseUrl, html, "text/html", "UTF-8", "about:config");
         jsInterface.clearSelectedVerse();
     }
 
@@ -326,107 +330,118 @@ public class ReaderWebView extends WebView
     private String getStyle() {
         String textColor;
         String backColor;
-		String selTextColor;
-		String selTextBack;
+        String selTextColor;
+        String selTextBack;
 
-        getSettings().setStandardFontFamily(textApearence.getTypeface());
+        getSettings().setStandardFontFamily(textAppearance.getTypeface());
 
-        if (textApearence.isNightMode()) {
+        if (textAppearance.isNightMode()) {
             textColor = "#EEEEEE";
             backColor = "#000000";
-			selTextColor = "#EEEEEE";
-			selTextBack = "#562000";
+            selTextColor = "#EEEEEE";
+            selTextBack = "#562000";
         } else {
-            backColor = textApearence.getBackgroung();
-            textColor = textApearence.getTextColor();
-            selTextColor = textApearence.getSelectedTextColor();
-            selTextBack = textApearence.getSelectedBackgroung();
+            backColor = textAppearance.getBackgroung();
+            textColor = textAppearance.getTextColor();
+            selTextColor = textAppearance.getSelectedTextColor();
+            selTextBack = textAppearance.getSelectedBackgroung();
         }
-        String textSize = textApearence.getTextSize();
+        String textSize = textAppearance.getTextSize();
 
-		StringBuilder style = new StringBuilder();
-		style.append("<style type=\"text/css\">\r\n")
-				.append("body {\r\n")
-                .append("padding-bottom: 50px;\r\n")
-                .append("text-align: ").append(textApearence.getTextAlign()).append(";\r\n")
-                .append("color: ").append(textColor).append(";\r\n")
-                .append("font-size: ").append(textSize).append("pt;\r\n")
-                .append("line-height: 1.25;\r\n")
-				.append("background: ").append(backColor).append(";\r\n")
-				.append("}\r\n")
-				.append(".verse {\r\n")
-				.append("background: ").append(backColor).append(";\r\n")
-				.append("}\r\n")
-				.append(".selectedVerse {\r\n")
-				.append("color: ").append(selTextColor).append(";\r\n")
-				.append("background: ").append(selTextBack).append(";\r\n")
-				.append("}\r\n")
-				.append("img {\r\n")
-				.append("max-width: 100%;\r\n")
-				.append("}\r\n")
-				.append("</style>\r\n");
-
-		return style.toString();
-	}
-
-    private void notifyListeners(IReaderViewListener.ChangeCode code) {
-        Message msg = Message.obtain(handler, ViewHandler.MSG_OTHER, code);
-        handler.sendMessage(msg);
+        return "<style type=\"text/css\">\r\n" +
+                "body {\r\n" +
+                "padding-bottom: 50px;\r\n" +
+                "text-align: " + textAppearance.getTextAlign() + ";\r\n" +
+                "color: " + textColor + ";\r\n" +
+                "font-size: " + textSize + "pt;\r\n" +
+                "line-height: 1.25;\r\n" +
+                "background: " + backColor + ";\r\n" +
+                "}\r\n" +
+                ".verse {\r\n" +
+                "background: " + backColor + ";\r\n" +
+                "}\r\n" +
+                ".selectedVerse {\r\n" +
+                "color: " + selTextColor + ";\r\n" +
+                "background: " + selTextBack + ";\r\n" +
+                "}\r\n" +
+                "img {\r\n" +
+                "max-width: 100%;\r\n" +
+                "}\r\n" +
+                "</style>\r\n";
     }
 
-	public enum Mode {
-		Read, Study, Speak
-	}
+    private void notifyListeners(IReaderViewListener.ChangeCode code) {
+        Message msg = Message.obtain(viewHandler, ViewHandler.MSG_OTHER, code);
+        viewHandler.sendMessage(msg);
+    }
+
+    private void onScrollComplete() {
+        Log.d(TAG, "onScrollComplete");
+        if (isScrollToBottom()) {
+            notifyListeners(IReaderViewListener.ChangeCode.onScroll);
+        }
+        loadUrl("javascript: getCurrentVerse();");
+    }
+
+    public enum Mode {
+        Read, Study, Speak
+    }
 
     private static final class ChromeClient extends WebChromeClient {
+
         public boolean onJsAlert(WebView webView, String url, String message, JsResult result) {
-            if (result != null)
+            if (result != null) {
                 result.confirm();
+            }
             return true;
         }
-	}
+    }
 
-    private static class ViewHandler extends Handler {
+    private static class ReaderTaskHandler extends Handler {
 
-        static final int MSG_OTHER = 1;
-        static final int MSG_ON_CLICK_IMAGE = 2;
+        private static final int MSG_HANDLE_SCROLL = 1;
 
-        private WeakReference<IReaderViewListener> weakListener;
+        private WeakReference<ReaderWebView> reader;
 
-        public void setListener(IReaderViewListener listener) {
-            this.weakListener = new WeakReference<IReaderViewListener>(listener);
+        ReaderTaskHandler(ReaderWebView readerWebView) {
+            this.reader = new WeakReference<>(readerWebView);
         }
 
         @Override
         public void handleMessage(Message msg) {
-            IReaderViewListener listener = weakListener.get();
-            if (listener == null) {
+            ReaderWebView readerWebView = reader.get();
+            if (readerWebView == null) {
                 return;
             }
 
             switch (msg.what) {
-                case MSG_ON_CLICK_IMAGE:
-                    listener.onReaderClickImage((String) msg.obj);
-                    break;
-                default:
-                    listener.onReaderViewChange((IReaderViewListener.ChangeCode) msg.obj);
+                case MSG_HANDLE_SCROLL:
+                    readerWebView.onScrollComplete();
             }
             super.handleMessage(msg);
+        }
+
+        void addSingleDelayedMessage(int what, long delay) {
+            removeMessages(what);
+            sendEmptyMessageDelayed(what, delay);
         }
     }
 
     private final class webClient extends WebViewClient {
-        webClient() {
-        }
 
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             return true;
         }
 
-        public void onPageFinished(WebView paramWebView, String paramString) {
-            super.onPageFinished(paramWebView, paramString);
+        public void onPageFinished(WebView webView, String url) {
+            super.onPageFinished(webView, url);
+            Log.d(TAG, "onPageFinished");
             mPageLoaded = true;
-            handler.sendMessage(Message.obtain(handler, ViewHandler.MSG_OTHER, IReaderViewListener.ChangeCode.onUpdateText));
+            if (currVerse == 1) {
+                loadUrl("javascript: window.scrollTo(0, 0);");
+            }
+            viewHandler.sendMessage(Message.obtain(viewHandler, ViewHandler.MSG_OTHER,
+                    IReaderViewListener.ChangeCode.onUpdateText));
         }
     }
 
@@ -438,6 +453,7 @@ public class ReaderWebView extends WebView
 
         @JavascriptInterface
         public void setCurrentVerse(String id) {
+            Log.d(TAG, "setCurrentVerse " + id);
             if (id.matches("verse_\\d+?")) {
                 try {
                     currVerse = Integer.parseInt(id.split("_")[1]);
@@ -452,16 +468,16 @@ public class ReaderWebView extends WebView
             Message msg = new Message();
             msg.what = ViewHandler.MSG_ON_CLICK_IMAGE;
             msg.obj = path;
-            handler.sendMessage(msg);
+            viewHandler.sendMessage(msg);
         }
 
         @JavascriptInterface
         public void onClickVerse(String id) {
-			if (currMode != Mode.Study || !id.contains("verse")) {
-				return;
-			}
+            if (currMode != Mode.Study || !id.contains("verse")) {
+                return;
+            }
 
-			try {
+            try {
                 Integer verse = Integer.parseInt(id.split("_")[1]);
                 if (selectedVerse.contains(verse)) {
                     selectedVerse.remove(verse);
@@ -470,12 +486,12 @@ public class ReaderWebView extends WebView
                     selectedVerse.add(verse);
                     selectVerse(verse);
                 }
-                final Message msg = Message.obtain(handler, ViewHandler.MSG_OTHER, IReaderViewListener.ChangeCode.onChangeSelection);
-                handler.sendMessage(msg);
+                final Message msg = Message.obtain(viewHandler, ViewHandler.MSG_OTHER, IReaderViewListener.ChangeCode.onChangeSelection);
+                viewHandler.sendMessage(msg);
             } catch (NumberFormatException e) {
                 e.printStackTrace();
             }
-		}
+        }
 
         private void clearSelectedVerse() {
             for (Integer verse : selectedVerse) {
@@ -485,7 +501,7 @@ public class ReaderWebView extends WebView
         }
 
         private void deselectVerse(final Integer verse) {
-            handler.post(new Runnable() {
+            viewHandler.post(new Runnable() {
                 @Override
                 public void run() {
                     loadUrl("javascript: deselectVerse('verse_" + verse + "');");
@@ -494,7 +510,8 @@ public class ReaderWebView extends WebView
         }
 
         private void gotoVerse(final int verse) {
-            handler.post(new Runnable() {
+            Log.d(TAG, "gotoVerse" + verse);
+            viewHandler.post(new Runnable() {
                 @Override
                 public void run() {
                     loadUrl("javascript: gotoVerse(" + verse + ");");
@@ -503,12 +520,12 @@ public class ReaderWebView extends WebView
         }
 
         private void selectVerse(final int verse) {
-            handler.post(new Runnable() {
+            viewHandler.post(new Runnable() {
                 @Override
                 public void run() {
                     loadUrl("javascript: selectVerse('verse_" + verse + "');");
                 }
             });
-		}
-	}
+        }
+    }
 }

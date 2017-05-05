@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: ReaderActivity.java
  *
- * Created by Vladimir Yakushev at 3/2017
+ * Created by Vladimir Yakushev at 5/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -426,7 +426,7 @@ public class ReaderActivity extends AppCompatActivity implements ReaderViewPrese
 
     @Override
     public void setTextAppearance(TextAppearance textAppearance) {
-        readerView.setTextApearence(textAppearance);
+        readerView.setTextApearance(textAppearance);
     }
 
     @Override
