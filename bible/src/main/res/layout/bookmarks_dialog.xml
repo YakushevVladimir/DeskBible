@@ -1,60 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--
-  ~ Copyright (C) 2011 Scripture Software (http://scripturesoftware.org/)
+  ~ Copyright (C) 2011 Scripture Software
   ~
-  ~ Licensed under the Apache License, Version 2.0 (the "License");
-  ~ you may not use this file except in compliance with the License.
-  ~ You may obtain a copy of the License at
+  ~ Licensed to the Apache Software Foundation (ASF) under one
+  ~ or more contributor license agreements.  See the NOTICE file
+  ~ distributed with this work for additional information
+  ~ regarding copyright ownership.  The ASF licenses this file
+  ~ to you under the Apache License, Version 2.0 (the
+  ~ "License"); you may not use this file except in compliance
+  ~ with the License.  You may obtain a copy of the License at
   ~
-  ~       http://www.apache.org/licenses/LICENSE-2.0
+  ~ http://www.apache.org/licenses/LICENSE-2.0
   ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied.  See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  ~
+  ~ Project: BibleQuote-for-Android
+  ~ File: bookmarks_dialog.xml
+  ~
+  ~ Created by Vladimir Yakushev at 8/2017
+  ~ E-mail: ru.phoenix@gmail.com
+  ~ WWW: http://www.scripturesoftware.org
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:orientation="vertical"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent" android:padding="4dp" android:longClickable="false">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:longClickable="false"
+    android:orientation="vertical"
+    android:padding="4dp">
 
-	<RelativeLayout
-		android:layout_width="fill_parent"
-		android:layout_height="36dp" android:padding="2dp" android:gravity="center_vertical">
-		<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="12.10.2013"
-			android:id="@+id/bm_date"
-			android:layout_gravity="center"
-			android:focusableInTouchMode="true"
-			android:layout_alignParentRight="true"
-			android:layout_alignTop="@+id/bm_humanLink"
-			android:textSize="@dimen/text_size_medium"/>
-		<TextView
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:text="Math.12:5"
-			android:id="@+id/bm_humanLink"
-			android:textSize="@dimen/text_size_medium"
-			android:layout_alignParentLeft="true"/>
-	</RelativeLayout>
-	<EditText
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:id="@+id/bm_name"
-		android:hint="@string/bookmark_name"
-		android:soundEffectsEnabled="true"
-		android:inputType="text|textAutoComplete"/>
-	<EditText
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:id="@+id/bm_tags"
-		android:hint="@string/tags_description"
-		android:textSize="@dimen/text_size_small"
-		android:drawableLeft="@drawable/ic_list_tag"
-		android:inputType="text|textAutoComplete"/>
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="36dp"
+        android:gravity="center_vertical"
+        android:padding="2dp">
+
+        <TextView
+            android:id="@+id/bm_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/bm_humanLink"
+            android:layout_gravity="center"
+            android:focusableInTouchMode="true"
+            android:textSize="@dimen/text_size_medium"
+            tools:text="12.10.2013"/>
+
+        <TextView
+            android:id="@+id/bm_humanLink"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@+id/bm_date"
+            android:layout_toStartOf="@+id/bm_date"
+            android:textSize="@dimen/text_size_medium"
+            tools:text="Math.12:5"/>
+    </RelativeLayout>
+
+    <EditText
+        android:id="@+id/bm_name"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/bookmark_name"
+        android:inputType="text|textAutoComplete"
+        android:soundEffectsEnabled="true"/>
+
+    <EditText
+        android:id="@+id/bm_tags"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_list_tag"
+        android:hint="@string/tags_description"
+        android:inputType="text|textAutoComplete"
+        android:textSize="@dimen/text_size_small"/>
 </LinearLayout>

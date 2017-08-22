@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: BreakVerseBibleShareFormatter.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 8/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -29,27 +29,32 @@
 package com.BibleQuote.domain.textFormatters;
 
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class BreakVerseBibleShareFormatter implements IShareTextFormatter {
-	private LinkedHashMap<Integer, String> verses;
 
-	public BreakVerseBibleShareFormatter(LinkedHashMap<Integer, String> verses) {
-		this.verses = verses;
-	}
+    private LinkedHashMap<Integer, String> verses;
 
-	@Override
-	public String format() {
-		StringBuilder shareText = new StringBuilder();
+    public BreakVerseBibleShareFormatter(LinkedHashMap<Integer, String> verses) {
+        this.verses = verses;
+    }
 
-		for (Integer verseNumber : verses.keySet()) {
-			if (shareText.length() != 0) {
-				shareText.append(" ");
-			}
-			shareText.append(String.format("%1$s %2$s", verseNumber,
-					verses.get(verseNumber))).append("\r\n");
-		}
+    @Override
+    public String format() {
+        StringBuilder shareText = new StringBuilder();
+        Integer prevVerseNumber = 0;
+        for (Map.Entry<Integer, String> entry : verses.entrySet()) {
+            if (prevVerseNumber == 0) {
+                prevVerseNumber = entry.getKey();
+            }
 
-		return shareText.toString();
-	}
+            if (entry.getKey() - prevVerseNumber > 1) {
+                shareText.append("...\r\n");
+            }
+            shareText.append(String.format("%1$s %2$s", entry.getKey(), entry.getValue())).append("\r\n");
+            prevVerseNumber = entry.getKey();
+        }
+        return shareText.toString();
+    }
 
 }

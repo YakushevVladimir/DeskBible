@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: PreferenceHelper.java
  *
- * Created by Vladimir Yakushev at 3/2017
+ * Created by Vladimir Yakushev at 8/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -56,13 +56,13 @@ public final class PreferenceHelper {
     private static final String KEY_TEXT_ALIGN_JUSTIFY = "text_align_justify";
     private static final String KEY_ADD_REFERENCE = "add_reference";
 
-    private static final String DEF_TYPEFACE = "sans-serif";
+    private static final String DEF_TYPEFACE = "serif";
     private static final String DEF_HISTORY_SIZE = "50";
-    private static final String DEF_TEXT_BG = "#ffffff";
-    private static final String DEF_TEXT_BG_SEL = "#FEF8C4";
-    private static final String DEF_TEXT_COLOR = "#000000";
-    private static final String DEF_TEXT_COLOR_SEL = "#000000";
-    private static final int DEF_TEXT_SIZE = 12;
+    private static final String DEF_TEXT_BG = "#FFF8E1";
+    private static final String DEF_TEXT_BG_SEL = "#FFECB3";
+    private static final String DEF_TEXT_COLOR = "#51150F";
+    private static final String DEF_TEXT_COLOR_SEL = "#51150F";
+    private static final int DEF_TEXT_SIZE = 13;
 
     private final SharedPreferences preference;
 
@@ -95,7 +95,7 @@ public final class PreferenceHelper {
     }
 
     public boolean crossRefViewDetails() {
-        return preference.getBoolean(KEY_CROSS_REFERENCE_DISPLAY_CONTEXT, false);
+        return preference.getBoolean(KEY_CROSS_REFERENCE_DISPLAY_CONTEXT, true);
     }
 
     public boolean divideTheVerses() {
@@ -117,7 +117,7 @@ public final class PreferenceHelper {
     }
 
     public boolean hideNavButtons() {
-        return preference.getBoolean(KEY_HIDE_NAV_BUTTONS, false);
+        return preference.getBoolean(KEY_HIDE_NAV_BUTTONS, true);
     }
 
     public boolean putReferenceInBeginning() {

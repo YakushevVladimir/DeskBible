@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: BookmarksDialog.java
  *
- * Created by Vladimir Yakushev at 9/2016
+ * Created by Vladimir Yakushev at 8/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -30,7 +30,6 @@ package com.BibleQuote.ui.dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -42,8 +41,8 @@ import android.widget.Toast;
 
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
-import com.BibleQuote.dal.repository.bookmarks.dbBookmarksTagsRepository;
-import com.BibleQuote.dal.repository.bookmarks.dbTagRepository;
+import com.BibleQuote.dal.repository.bookmarks.DbBookmarksTagsRepository;
+import com.BibleQuote.dal.repository.bookmarks.DbTagRepository;
 import com.BibleQuote.domain.entity.Bookmark;
 import com.BibleQuote.domain.repository.IBookmarksRepository;
 import com.BibleQuote.managers.GoogleAnalyticsHelper;
@@ -73,18 +72,8 @@ public class BookmarksDialog extends DialogFragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
                 .setTitle(R.string.bookmarks)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        addBookmarks();
-                    }
-                })
-                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // null
-                    }
-                });
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> addBookmarks())
+                .setNegativeButton(android.R.string.cancel, null);
         View customView = inflater.inflate(R.layout.bookmarks_dialog, null);
         builder.setView(customView);
 
@@ -100,7 +89,7 @@ public class BookmarksDialog extends DialogFragment {
 
     private void addBookmarks() {
         readField();
-        new BookmarksManager(bookmarksRepository, new dbBookmarksTagsRepository(), new dbTagRepository()).add(bookmark, bookmark.tags);
+        new BookmarksManager(bookmarksRepository, new DbBookmarksTagsRepository(), new DbTagRepository()).add(bookmark, bookmark.tags);
 
         GoogleAnalyticsHelper.getInstance().actionSendBookmark(bookmark);
 

@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2011 Scripture Software
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,22 +18,18 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * --------------------------------------------------
- *
  * Project: BibleQuote-for-Android
  * File: TagsFragment.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 8/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
- *
  */
 
 package com.BibleQuote.ui.fragments;
 
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
@@ -43,7 +41,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.BibleQuote.R;
-import com.BibleQuote.dal.repository.bookmarks.dbTagRepository;
+import com.BibleQuote.dal.repository.bookmarks.DbTagRepository;
 import com.BibleQuote.domain.entity.Tag;
 import com.BibleQuote.managers.tags.TagsManager;
 import com.BibleQuote.ui.widget.listview.ItemAdapter;
@@ -53,6 +51,7 @@ import com.BibleQuote.ui.widget.listview.item.TagItem;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * User: Vladimir Yakushev
@@ -61,7 +60,7 @@ import java.util.List;
 public class TagsFragment extends ListFragment implements AdapterView.OnItemLongClickListener {
 
     private final static String TAG = TagsFragment.class.getSimpleName();
-    private final TagsManager tagManager = new TagsManager(new dbTagRepository());
+    private final TagsManager tagManager = new TagsManager(new DbTagRepository());
     private OnTagsChangeListener onTagsChangeListener;
 
     @Override
@@ -83,12 +82,12 @@ public class TagsFragment extends ListFragment implements AdapterView.OnItemLong
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
         try {
-            setOnTagSelectListener((OnTagsChangeListener) activity);
+            setOnTagSelectListener((OnTagsChangeListener) context);
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement onSomeEventListener");
+            throw new ClassCastException(context.toString() + " must implement onSomeEventListener");
         }
     }
 
@@ -128,16 +127,13 @@ public class TagsFragment extends ListFragment implements AdapterView.OnItemLong
     public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
         final Tag currTag = ((TagItem) adapterView.getItemAtPosition(position)).tag;
         AlertDialog.Builder b = new AlertDialog.Builder(getActivity());
-        b.setIcon(R.drawable.icon);
+        b.setIcon(R.mipmap.ic_launcher);
         b.setTitle(currTag.name);
         b.setMessage(R.string.question_del_tag);
-        b.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                tagManager.delete(currTag);
-                setAdapter();
-                onTagsUppdateListenerAlert();
-            }
+        b.setPositiveButton("OK", (dialog, which) -> {
+            tagManager.delete(currTag);
+            setAdapter();
+            onTagsUppdateListenerAlert();
         });
         b.setNegativeButton(R.string.cancel, null);
         b.show();
@@ -145,10 +141,10 @@ public class TagsFragment extends ListFragment implements AdapterView.OnItemLong
     }
 
     private void setAdapter() {
-        List<Item> items = new ArrayList<Item>();
+        List<Item> items = new ArrayList<>();
         LinkedHashMap<Tag, String> tagList = tagManager.getAllWithCount();
-        for (Tag currTag : tagList.keySet()) {
-            items.add(new TagItem(currTag, tagList.get(currTag)));
+        for (Map.Entry<Tag, String> entry : tagList.entrySet()) {
+            items.add(new TagItem(entry.getKey(), entry.getValue()));
         }
         ItemAdapter adapter = new ItemAdapter(getActivity(), items);
         setListAdapter(adapter);

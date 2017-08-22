@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: Logger.java
  *
- * Created by Vladimir Yakushev at 9/2016
+ * Created by Vladimir Yakushev at 8/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -35,10 +35,9 @@ import com.BibleQuote.BuildConfig;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -92,7 +91,7 @@ public final class Logger {
      */
     public static void e(String tag, String text, Exception e) {
         Log.e(tag, text, e);
-        write(tag, String.format("Error: $1$s\r\nMessage: %2$s", text, e.getMessage()));
+        write(tag, String.format("Error: $1$s%nMessage: %2$s", text, e.getMessage()));
     }
 
     /**
@@ -128,19 +127,6 @@ public final class Logger {
         return logFile;
     }
 
-    private static BufferedWriter getWriter() {
-        File log = getLogFile();
-        if (log != null) {
-            try {
-                OutputStreamWriter oWriter = new OutputStreamWriter(new FileOutputStream(log, true));
-                return new BufferedWriter(oWriter);
-            } catch (FileNotFoundException e) {
-                Log.e(TAG, e.getMessage());
-            }
-        }
-        return null;
-    }
-
     private static void write(String text) {
         write(null, text);
     }
@@ -152,17 +138,16 @@ public final class Logger {
      * @param text текст помещаемый в протокол событий
      */
     private static void write(String tag, String text) {
-        BufferedWriter bWriter = getWriter();
-        if (bWriter == null) {
-            return;
-        }
-
-        try {
-            bWriter.write(String.format("%s: %s\r\n", tag != null ? tag : TAG, text));
-            bWriter.flush();
-            bWriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        File log = getLogFile();
+        if (log != null) {
+            try (
+                    OutputStreamWriter oWriter = new OutputStreamWriter(new FileOutputStream(log, true), Charset.forName("UTF-8"));
+                    BufferedWriter writer = new BufferedWriter(oWriter)
+            ) {
+                writer.write(String.format("%s: %s%n", tag != null ? tag : TAG, text));
+            } catch (Exception e) {
+                Log.e(TAG, e.getMessage());
+            }
         }
     }
 }

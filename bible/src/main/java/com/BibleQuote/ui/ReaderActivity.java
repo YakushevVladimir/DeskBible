@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: ReaderActivity.java
  *
- * Created by Vladimir Yakushev at 5/2017
+ * Created by Vladimir Yakushev at 8/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -76,8 +76,12 @@ import butterknife.ButterKnife;
 public class ReaderActivity extends AppCompatActivity implements ReaderViewPresenter.IReaderView, IReaderViewListener {
 
     private static final int VIEW_CHAPTER_NAV_LENGTH = 3000;
+
     @BindView(R.id.chapter_nav) ChapterNavigator chapterNav;
     @BindView(R.id.readerView) ReaderWebView readerView;
+    @BindView(R.id.drawer_layout) DrawerLayout drawerLayout;
+    @BindView(R.id.navigation_view) NavigationView navigationView;
+
     private Handler chapterNavHandler = new Handler();
     private ActionMode currActionMode;
     private boolean exitToBackKey;
@@ -99,15 +103,10 @@ public class ReaderActivity extends AppCompatActivity implements ReaderViewPrese
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        final DrawerLayout drawerLayout = ButterKnife.findById(this, R.id.drawer_layout);
-        final NavigationView navigationView = ButterKnife.findById(this, R.id.navigation_view);
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem menuItem) {
-                menuItem.setChecked(false);
-                drawerLayout.closeDrawers();
-                return presenter.onNavigationItemSelected(menuItem.getItemId());
-            }
+        navigationView.setNavigationItemSelectedListener(menuItem -> {
+            menuItem.setChecked(false);
+            drawerLayout.closeDrawers();
+            return presenter.onNavigationItemSelected(menuItem.getItemId());
         });
 
         ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(
@@ -182,16 +181,12 @@ public class ReaderActivity extends AppCompatActivity implements ReaderViewPrese
     @Override
     public void onBackPressed() {
         if (exitToBackKey) {
+            presenter.onPause();
             super.onBackPressed();
         } else {
             exitToBackKey = true;
             Toast.makeText(this, getString(R.string.press_again_to_exit), Toast.LENGTH_SHORT).show();
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    exitToBackKey = false;
-                }
-            }, 3000);
+            new Handler().postDelayed(() -> exitToBackKey = false, 3000);
         }
     }
 
@@ -204,12 +199,12 @@ public class ReaderActivity extends AppCompatActivity implements ReaderViewPrese
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_VOLUME_UP && presenter.isVolumeButtonsToScroll())
-                || DevicesKeyCodes.KeyCodeUp(keyCode)) {
+                || DevicesKeyCodes.keyCodeUp(keyCode)) {
             readerView.pageUp(false);
             viewChapterNavigator();
             return true;
         } else if ((keyCode == KeyEvent.KEYCODE_VOLUME_DOWN && presenter.isVolumeButtonsToScroll())
-                || DevicesKeyCodes.KeyCodeDown(keyCode)) {
+                || DevicesKeyCodes.keyCodeDown(keyCode)) {
             readerView.pageDown(false);
             viewChapterNavigator();
             return true;
@@ -322,6 +317,8 @@ public class ReaderActivity extends AppCompatActivity implements ReaderViewPrese
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
                 }
                 break;
+            default:
+                // nothing
         }
     }
 
@@ -483,12 +480,7 @@ public class ReaderActivity extends AppCompatActivity implements ReaderViewPrese
             chapterNav.setVisibility(View.VISIBLE);
             if (!readerView.isScrollToBottom()) {
                 chapterNavHandler.postDelayed(
-                        new Runnable() {
-                            @Override
-                            public void run() {
-                                chapterNav.setVisibility(View.GONE);
-                            }
-                        }, VIEW_CHAPTER_NAV_LENGTH);
+                        () -> chapterNav.setVisibility(View.GONE), VIEW_CHAPTER_NAV_LENGTH);
             }
         }
     }

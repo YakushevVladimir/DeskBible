@@ -21,30 +21,31 @@
  * Project: BibleQuote-for-Android
  * File: build.gradle
  *
- * Created by Vladimir Yakushev at 3/2017
+ * Created by Vladimir Yakushev at 8/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
 
 apply plugin: 'com.android.application'
-apply plugin: 'realm-android'
+apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'com.google.gms.google-services'
 apply from: '../jacoco.gradle'
 
 android {
-    compileSdkVersion 22
-    buildToolsVersion "25.0.2"
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
         applicationId "com.BibleQuote"
-        minSdkVersion 16
-        targetSdkVersion 22
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 82
         versionName "1.0.82"
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     buildTypes {
@@ -67,10 +68,6 @@ android {
         }
     }
 
-    lintOptions {
-        lintConfig file("lint.xml")
-    }
-
     testOptions {
         unitTests.all {
             jacoco {
@@ -91,15 +88,11 @@ dependencies {
 
     // Analytics
 
-    compile("com.google.android.gms:play-services-analytics:8.4.0") {
-        exclude group: "com.android.support", module: "support-v4"
-    }
+    compile 'com.google.android.gms:play-services-analytics:9.0.0'
 
     // ButterKnife
 
-    compile("com.jakewharton:butterknife:${rootProject.ext.butterknifeVersion}") {
-        exclude group: "com.android.support", module: "support-annotations"
-    }
+    compile "com.jakewharton:butterknife:${rootProject.ext.butterknifeVersion}"
     annotationProcessor "com.jakewharton:butterknife-compiler:${rootProject.ext.butterknifeVersion}"
 
     // Dagger 2
@@ -120,5 +113,5 @@ dependencies {
 
     testCompile "junit:junit:4.12"
     testCompile "org.robolectric:robolectric:3.1.1"
-    testCompile "org.mockito:mockito-core:2.2.27"
+    testCompile "org.mockito:mockito-core:2.8.47"
 }

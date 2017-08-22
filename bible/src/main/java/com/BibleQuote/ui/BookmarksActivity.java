@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: BookmarksActivity.java
  *
- * Created by Vladimir Yakushev at 10/2016
+ * Created by Vladimir Yakushev at 8/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -36,6 +36,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -62,11 +63,14 @@ public class BookmarksActivity extends AppCompatActivity
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.bookmarks_activity);
+        setContentView(R.layout.activity_bookmarks);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ActionBar supportActionBar = getSupportActionBar();
+        if (supportActionBar != null) {
+            supportActionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         pagerAdapter = new PagerAdapter(getSupportFragmentManager());
         pagerAdapter.addPage(getString(R.string.bookmarks), new BookmarksFragment());
@@ -136,8 +140,8 @@ public class BookmarksActivity extends AppCompatActivity
 
     private static class PagerAdapter extends FragmentPagerAdapter {
 
-        private List<Fragment> pages = new ArrayList<Fragment>();
-        private List<String> titles = new ArrayList<String>();
+        private List<Fragment> pages = new ArrayList<>();
+        private List<String> titles = new ArrayList<>();
 
         PagerAdapter(FragmentManager fm) {
             super(fm);

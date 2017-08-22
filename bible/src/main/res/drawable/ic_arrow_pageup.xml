@@ -21,7 +21,7 @@
   ~ Project: BibleQuote-for-Android
   ~ File: ic_arrow_pageup.xml
   ~
-  ~ Created by Vladimir Yakushev at 9/2016
+  ~ Created by Vladimir Yakushev at 8/2017
   ~ E-mail: ru.phoenix@gmail.com
   ~ WWW: http://www.scripturesoftware.org
   -->
@@ -32,6 +32,6 @@
     android:viewportHeight="24.0"
     android:viewportWidth="24.0">
     <path
-        android:fillColor="@color/dark_gray"
+        android:fillColor="#7e7e7e"
         android:pathData="M8,11h3v10h2V11h3l-4,-4 -4,4zM4,3v2h16V3H4z"/>
 </vector>

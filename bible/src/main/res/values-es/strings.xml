@@ -22,7 +22,7 @@
   ~ Project: BibleQuote-for-Android
   ~ File: strings.xml
   ~
-  ~ Created by Vladimir Yakushev at 11/2016
+  ~ Created by Vladimir Yakushev at 8/2017
   ~ E-mail: ru.phoenix@gmail.com
   ~ WWW: http://www.scripturesoftware.org
   -->
@@ -37,12 +37,8 @@
     <string name="text_color_summary">Seleccione el tamaño de fuente</string>
     <string name="background_summary">Seleccione el color del fondo</string>
     <!-- Miscellaneous -->
-    <string name="find">Buscar</string>
-    <string name="menu">Menú</string>
     <string name="cancel">Cancelar</string>
-    <string name="fav_question_add_favorities">¿Estás seguro que quieres agregar este favorito?</string>
     <string name="fav_question_del_fav">¿Estás seguro que quieres eliminar este favorito?</string>
-    <string name="select_module">Seleccione un módulo</string>
     <string name="added">Añadido</string>
     <string name="removed">Eliminado</string>
     <string name="menu_night_day_mode">Nigth / día de modo de</string>
@@ -53,10 +49,8 @@
     <string name="results">resultados</string>
     <string name="may_need_to_restart">Posible que deba reiniciar</string>
     <string name="fav_delete_all">Eliminar todos los</string>
-    <string name="messageLoadCanceled">Carga cancelado</string>
     <string name="menu_favorites">Marcadores</string>
     <string name="messageSearchCanceled">Buscar cancelado</string>
-    <string name="fav_sort_alphabetically">Tipo</string>
     <string name="messageSearch">Buscar …</string>
     <string name="menu_settings">Configuración</string>
     <string name="menu_search">Búsqueda</string>
@@ -73,10 +67,7 @@
     <string name="app_about_thanks_label">Gracias:</string>
     <string name="about">Sobre</string>
     <string name="messageLoadBooks">Los libros de carga …</string>
-    <string name="category_reports_summary">Crash ajustes informes</string>
-    <string name="messageLoadModules">Los módulos de carga …</string>
     <string name="read_mode_by_default">Modo de lectura de forma predeterminada</string>
-    <string name="category_reader_summary">Lector de configuración de la ventana</string>
     <string name="app_about_dev_label">Desarrolladores:</string>
     <string name="settings">Configuración</string>
     <string name="help">Ayuda</string>
@@ -84,8 +75,6 @@
     <string name="history">Historia</string>
     <string name="bookmarks">Marcadores</string>
     <string name="library">Biblioteca</string>
-    <string name="stop_tts">Stop playing</string>
-    <string name="add">Add</string>
     <string name="add_module_to_reference">Add module name</string>
     <string name="add_module_to_reference_summary">Add the module name to the signature</string>
     <string name="add_reference">Add reference</string>
@@ -93,7 +82,6 @@
     <string name="background_selected">Background color of selected text</string>
     <string name="background_selected_summary">Choose background color of selected text</string>
     <string name="bookmark_name">Bookmark name</string>
-    <string name="category_social">Social functions</string>
     <string name="cross_reference">Cross-reference</string>
     <string name="cross_references_display_context">Display context</string>
     <string name="cross_references_display_context_summary">Display context of the list of references</string>
@@ -109,7 +97,6 @@
     <string name="exception_book_definition">Incorrect attributes of book #%1$d in module %2$s</string>
     <string name="exception_book_not_found">Book %1$s not found in module %2$s</string>
     <string name="exception_books_definition">Incorrect module description in module %1$s: BookQty=%2$d, PathName#=%3$d, FullName#=%4$d, ShortName#=%5$d, ChapterQty#=%6$d</string>
-    <string name="exception_open_module">Incorrect module %1$s(%2$s)</string>
     <string name="exception_open_module_short">Incorrect module %s</string>
     <string name="font_family">Font family</string>
     <string name="menu_history">History</string>
@@ -117,8 +104,6 @@
     <string name="menu_speek">Read…</string>
     <string name="no_tags">No tags</string>
     <string name="preference_screen_cross_references">Cross references</string>
-    <string name="preference_screen_reader">Reading window</string>
-    <string name="preference_screen_reader_summary">Settings window of reading</string>
     <string name="press_again_to_exit">Press again to exit</string>
     <string name="press_color_to_apply">Press to apply</string>
     <string name="put_reference_in_beginning">Put reference in beginning</string>
@@ -146,9 +131,10 @@
     <string name="always_view_verse_numbers_enabled">Todos los textos</string>
     <string name="always_view_verse_numbers_title">Siempre ver los números de verso</string>
     <string name="choice_chapter">Abierto…</string>
-    <string name="donate">Donate</string>
     <string name="menu_tags">Etiquetas</string>
     <string name="search_hint">Lo que hay que encontrar?</string>
     <string name="hide_nav_buttons">Ocultar los botones de navegación</string>
     <string name="image_not_found">" Imagen no encontrada"</string>
+    <string name="retry">Rever</string>
+    <string name="msg_permission_denied">No se requieren permisos para ejecutar la aplicación.</string>
 </resources>

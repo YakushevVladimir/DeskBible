@@ -22,7 +22,7 @@
   ~ Project: BibleQuote-for-Android
   ~ File: strings.xml
   ~
-  ~ Created by Vladimir Yakushev at 11/2016
+  ~ Created by Vladimir Yakushev at 8/2017
   ~ E-mail: ru.phoenix@gmail.com
   ~ WWW: http://www.scripturesoftware.org
   -->
@@ -52,36 +52,26 @@
 	<string name="menu_search">Поиск</string>
 	<string name="menu_help">Справка</string>
 	<string name="menu_settings">Настройки</string>
-	<string name="find">Найти</string>
-	<string name="menu">Меню</string>
 	<string name="cancel">Отмена</string>
-	<string name="select_module">Выберите модуль</string>
 	<string name="added">Добавлена</string>
 	<string name="removed">Удалено</string>
 	<string name="messageLoad">Загрузка…</string>
 	<string name="messageLoadBooks">Загрузка книг…</string>
-	<string name="messageLoadModules">Загрузка модулей…</string>
-	<string name="messageLoadCanceled">Загрузка завершена</string>
 	<string name="messageSearch">Поиск…</string>
 	<string name="messageSearchCanceled">Поиск завершен</string>
 	<string name="results">результатов</string>
 	<string name="share">Поделиться</string>
 	<string name="copy">Копировать</string>
-	<string name="fav_question_add_favorities">Добавить закладку</string>
 	<string name="fav_question_del_fav">Удалить эту закладку?</string>
-	<string name="fav_sort_alphabetically">Сортировка</string>
 	<string name="fav_delete_all">Очистить</string>
 	<string name="fav_delete_all_question">Вы уверены, что хотите удалить все закладки?</string>
 	<string name="about">О программе</string>
 	<string name="app_about_dev_label">Разработчики:</string>
-	<string name="exception_open_module">Некорректный модуль %1$s(%2$s)</string>
 	<string name="messageRefresh">Обновление…</string>
 	<string name="exception_books_definition">Некорректное описание книги в модуле %1$s: BookQty=%2$d, PathName#=%3$d, FullName#=%4$d, ShortName#=%5$d, ChapterQty#=%6$d\n\t</string>
 	<string name="exception_open_module_short">Некорректный модуль %s</string>
 	<string name="exception_book_not_found">Книга %1$s не найден а в модуле %2$s</string>
 	<string name="exception_book_definition">Некорректные параметры книги #%1$d в модуле %2$s</string>
-	<string name="category_reports_summary">Настройки параметров отправки</string>
-	<string name="category_reader_summary">Настройки параметров окна чтения</string>
 	<string name="app_about_design_label">Дизайн:</string>
 	<string name="bookmark_invalid_removed">Недопустимая закладка удалена</string>
 	<string name="app_about_thanks_label">Спасибо:</string>
@@ -97,15 +87,12 @@
 	<string name="cross_references_display_context">Отображать контекст</string>
 	<string name="cross_references_display_context_summary">Отображать контекст в списке ссылок</string>
 	<string name="references">Ссылки</string>
-	<string name="preference_screen_reader_summary">Настройки отображения текста</string>
 	<string name="preference_screen_cross_references">Перекрестные ссылки</string>
-	<string name="preference_screen_reader">Окно чтения</string>
 	<string name="enabled">Включено</string>
 	<string name="volume_butons_to_scroll">Прокрутка кнопками громкости</string>
 	<string name="disabled">Отключено</string>
 	<string name="text_align_justify">Выравнивать текст по ширине</string>
 	<string name="font_family">Шрифт</string>
-	<string name="category_social">Социальные функции</string>
 	<string name="short_reference_summary">Сокращенная ссылка к отрывку</string>
 	<string name="divide_the_verses">Разбивать по стихам</string>
 	<string name="add_module_to_reference_summary">Добавлять имя модуля к ссылке на отрывок</string>
@@ -121,7 +108,6 @@
 	<string name="tags">Метки</string>
 	<string name="tags_description">Укажите метки через запятую</string>
 	<string name="bookmark_name">Имя закладки</string>
-	<string name="add">Добавить</string>
 	<string name="question_del_tag">Удалить метку?</string>
 	<string name="edit">Редактировать</string>
 	<string name="delete">Удалить</string>
@@ -129,7 +115,6 @@
 	<string name="disable_turn_screen_summury">Не отключать подсветку экрана при чтении</string>
 	<string name="press_again_to_exit">Нажмите снова для выхода</string>
 	<string name="menu_history_clear">Очистить</string>
-	<string name="stop_tts">Остановить</string>
 	<string name="menu_library_add">Добавить…</string>
 	<string name="file_not_exist">Файл не найден</string>
 	<string name="file_cant_read">Файл недоступен для чтения</string>
@@ -143,9 +128,10 @@
 	<string name="always_view_verse_numbers_disabled">Только для текстов Библии</string>
 	<string name="always_view_verse_numbers_title">Всегда показывать номера стихов</string>
 	<string name="choice_chapter">Открыть…</string>
-	<string name="donate">Donate</string>
 	<string name="menu_tags">Метки</string>
 	<string name="search_hint">Что найти?</string>
 	<string name="hide_nav_buttons">Скрыть кнопки навигации</string>
 	<string name="image_not_found">Изображение не найдено</string>
+    <string name="retry">Повторить</string>
+    <string name="msg_permission_denied">Отсутствуют разрешения необходимые для работы приложения</string>
 </resources>

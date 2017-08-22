@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: HistoryActivity.java
  *
- * Created by Vladimir Yakushev at 9/2016
+ * Created by Vladimir Yakushev at 8/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -34,8 +34,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
@@ -50,25 +48,22 @@ public class HistoryActivity extends AppCompatActivity {
 
     private ListView vHistoryList;
     private Librarian myLibrarian;
-    private LinkedList<ItemList> list = new LinkedList<ItemList>();
-    private AdapterView.OnItemClickListener OnItemClickListener = new AdapterView.OnItemClickListener() {
-        public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-            Intent intent = new Intent();
-            intent.putExtra("linkOSIS", list.get(position).get(ItemList.ID));
-            setResult(RESULT_OK, intent);
-            finish();
-        }
-    };
+    private LinkedList<ItemList> list = new LinkedList<>();
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.favorits);
+        setContentView(R.layout.activity_history);
 
         BibleQuoteApp app = (BibleQuoteApp) getApplication();
         myLibrarian = app.getLibrarian();
 
         setListAdapter();
-        vHistoryList.setOnItemClickListener(OnItemClickListener);
+        vHistoryList.setOnItemClickListener((a, v, position, id) -> {
+            Intent intent = new Intent();
+            intent.putExtra("linkOSIS", list.get(position).get(ItemList.ID));
+            setResult(RESULT_OK, intent);
+            finish();
+        });
     }
 
     @Override
@@ -99,5 +94,4 @@ public class HistoryActivity extends AppCompatActivity {
                 new String[]{ItemList.ID, ItemList.Name}, new int[]{
                 R.id.id, R.id.name}));
     }
-
 }

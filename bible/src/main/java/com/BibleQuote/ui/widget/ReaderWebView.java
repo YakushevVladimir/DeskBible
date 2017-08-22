@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: ReaderWebView.java
  *
- * Created by Vladimir Yakushev at 5/2017
+ * Created by Vladimir Yakushev at 8/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -40,7 +40,6 @@ import android.view.MotionEvent;
 import android.webkit.JavascriptInterface;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -88,15 +87,7 @@ public class ReaderWebView extends WebView
         viewHandler = new ViewHandler();
         taskHandler = new ReaderTaskHandler(this);
         if (!isInEditMode()) {
-            WebSettings settings = getSettings();
-            settings.setJavaScriptEnabled(true);
-            settings.setDomStorageEnabled(false);
-            settings.setNeedInitialFocus(false);
-            settings.setBuiltInZoomControls(false);
-            settings.setSupportZoom(false);
-
-            setFocusable(true);
-            setFocusableInTouchMode(true);
+            getSettings().setJavaScriptEnabled(true);
             setWebViewClient(new webClient());
             setWebChromeClient(new ChromeClient());
 
@@ -171,7 +162,7 @@ public class ReaderWebView extends WebView
     public void computeScroll() {
         super.computeScroll();
         if (mPageLoaded) {
-            taskHandler.addSingleDelayedMessage(ReaderTaskHandler.MSG_HANDLE_SCROLL, 500);
+            taskHandler.addSingleDelayedMessage(ReaderTaskHandler.MSG_HANDLE_SCROLL, 100);
         }
     }
 
@@ -292,20 +283,24 @@ public class ReaderWebView extends WebView
         taskHandler.removeMessages(ReaderTaskHandler.MSG_HANDLE_SCROLL);
 
         String modStyle = isBible ? "bible_style.css" : "book_style.css";
-        String html = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\r\n" +
-                "<html>\r\n" +
-                "<head>\r\n" +
-                "<meta http-equiv=Content-Type content=\"text/html; charset=UTF-8\">\r\n" +
-                "<script language=\"JavaScript\" src=\"file:///android_asset/reader.js\" type=\"text/javascript\"></script>\r\n" +
-                "<link rel=\"stylesheet\" type=\"text/css\" href=\"file:///android_asset/" + modStyle + "\">\r\n" +
-                getStyle() +
-                "</head>\r\n" +
-                "<body" + (currVerse > 1 ? " onLoad=\"document.location.href='#verse_" + currVerse + "';\"" : "") + ">\r\n" +
-                (content == null ? "" : content) +
-                "</body>\r\n" +
-                "</html>";
+        @SuppressWarnings("StringBufferReplaceableByString")
+        StringBuilder html = new StringBuilder()
+                .append("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\r\n")
+                .append("<html>\r\n")
+                .append("<head>\r\n")
+                .append("<meta http-equiv=Content-Type content=\"text/html; charset=UTF-8\">\r\n")
+                .append("<script language=\"JavaScript\" src=\"file:///android_asset/reader.js\" type=\"text/javascript\"></script>\r\n")
+                .append("<link rel=\"stylesheet\" type=\"text/css\" href=\"file:///android_asset/")
+                .append(modStyle)
+                .append("\">\r\n")
+                .append(getStyle())
+                .append("</head>\r\n")
+                .append("<body>\r\n")
+                .append(content == null ? "" : content)
+                .append("</body>\r\n")
+                .append("</html>");
 
-        loadDataWithBaseURL("file://" + baseUrl, html, "text/html", "UTF-8", "about:config");
+        loadDataWithBaseURL("file://" + baseUrl, html.toString(), "text/html", "UTF-8", "about:config");
         jsInterface.clearSelectedVerse();
     }
 
@@ -350,11 +345,11 @@ public class ReaderWebView extends WebView
 
         return "<style type=\"text/css\">\r\n" +
                 "body {\r\n" +
-                "padding-bottom: 50px;\r\n" +
+                "padding: 5px 5px 50px;\r\n" +
                 "text-align: " + textAppearance.getTextAlign() + ";\r\n" +
                 "color: " + textColor + ";\r\n" +
                 "font-size: " + textSize + "pt;\r\n" +
-                "line-height: 1.25;\r\n" +
+                "line-height: 1.5;\r\n" +
                 "background: " + backColor + ";\r\n" +
                 "}\r\n" +
                 ".verse {\r\n" +
@@ -417,6 +412,9 @@ public class ReaderWebView extends WebView
             switch (msg.what) {
                 case MSG_HANDLE_SCROLL:
                     readerWebView.onScrollComplete();
+                    break;
+                default:
+                    // nothing
             }
             super.handleMessage(msg);
         }
@@ -429,17 +427,23 @@ public class ReaderWebView extends WebView
 
     private final class webClient extends WebViewClient {
 
+        @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             return true;
         }
 
+        @Override
         public void onPageFinished(WebView webView, String url) {
             super.onPageFinished(webView, url);
             Log.d(TAG, "onPageFinished");
-            mPageLoaded = true;
-            if (currVerse == 1) {
-                loadUrl("javascript: window.scrollTo(0, 0);");
+            if (!mPageLoaded) {
+                if (currVerse == 1) {
+                    loadUrl("javascript: window.scrollTo(0, 0);");
+                } else {
+                    gotoVerse(currVerse);
+                }
             }
+            mPageLoaded = true;
             viewHandler.sendMessage(Message.obtain(viewHandler, ViewHandler.MSG_OTHER,
                     IReaderViewListener.ChangeCode.onUpdateText));
         }
@@ -501,31 +505,16 @@ public class ReaderWebView extends WebView
         }
 
         private void deselectVerse(final Integer verse) {
-            viewHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    loadUrl("javascript: deselectVerse('verse_" + verse + "');");
-                }
-            });
+            viewHandler.post(() -> loadUrl("javascript: deselectVerse('verse_" + verse + "');"));
         }
 
         private void gotoVerse(final int verse) {
-            Log.d(TAG, "gotoVerse" + verse);
-            viewHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    loadUrl("javascript: gotoVerse(" + verse + ");");
-                }
-            });
+            Log.d(TAG, "gotoVerse " + verse);
+            viewHandler.post(() -> loadUrl("javascript: gotoVerse(" + verse + ");"));
         }
 
         private void selectVerse(final int verse) {
-            viewHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    loadUrl("javascript: selectVerse('verse_" + verse + "');");
-                }
-            });
+            viewHandler.post(() -> loadUrl("javascript: selectVerse('verse_" + verse + "');"));
         }
     }
 }

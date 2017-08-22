@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2011 Scripture Software
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,20 +18,17 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * --------------------------------------------------
- *
  * Project: BibleQuote-for-Android
  * File: Bookmark.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 8/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
- *
  */
 
 package com.BibleQuote.domain.entity;
 
-import com.BibleQuote.dal.repository.bookmarks.dbBookmarksTagsRepository;
+import com.BibleQuote.dal.repository.bookmarks.DbBookmarksTagsRepository;
 
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -60,8 +59,8 @@ public class Bookmark {
 		this.humanLink = humanLink;
 		this.name = (name == null || name.equals("")) ? humanLink : name ;
 		this.date = date;
-		this.tags = new dbBookmarksTagsRepository().getTags(id);
-	}
+        this.tags = new DbBookmarksTagsRepository().getTags(id);
+    }
 
 	public Bookmark(String OSISLink, String humanLink) {
 		this(0, OSISLink, humanLink, humanLink, DateFormat.getDateInstance(DateFormat.MEDIUM).format(Calendar.getInstance().getTime()));

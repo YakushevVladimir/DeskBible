@@ -22,7 +22,7 @@
   ~ Project: BibleQuote-for-Android
   ~ File: strings.xml
   ~
-  ~ Created by Vladimir Yakushev at 11/2016
+  ~ Created by Vladimir Yakushev at 8/2017
   ~ E-mail: ru.phoenix@gmail.com
   ~ WWW: http://www.scripturesoftware.org
   -->
@@ -48,8 +48,6 @@
     <string name="bookmarks">Bookmarks</string>
     <string name="library">Library</string>
     <string name="cross_reference">Cross-reference</string>
-    <string name="preference_screen_reader">Reading window</string>
-    <string name="preference_screen_reader_summary">Settings window of reading</string>
     <string name="category_reader_appearance">Appearance</string>
     <string name="text_size">Font size</string>
     <string name="current_text_size">Current text size: %1$d</string>
@@ -77,26 +75,19 @@
     <string name="menu_search">Search</string>
     <string name="menu_help">Help</string>
     <string name="menu_settings">Settings</string>
-    <string name="find">Find</string>
-    <string name="menu">Menu</string>
     <string name="cancel">Cancel</string>
-    <string name="select_module">Select a module</string>
     <string name="added">Added</string>
     <string name="removed">Deleted</string>
     <string name="bookmark_invalid_removed">Invalid bookmark removed</string>
     <string name="messageLoad">Load …</string>
-    <string name="messageLoadCanceled">Load canceled</string>
     <string name="messageLoadBooks">Load books …</string>
-    <string name="messageLoadModules">Load modules …</string>
     <string name="messageSearch">Search …</string>
     <string name="messageRefresh">Refresh …</string>
     <string name="messageSearchCanceled">Search canceled</string>
     <string name="results">results</string>
     <string name="share">Share</string>
     <string name="copy">Copy</string>
-    <string name="fav_question_add_favorities">Do you really want to add bookmark</string>
     <string name="fav_question_del_fav">Do you really want to delete this bookmark?</string>
-    <string name="fav_sort_alphabetically">Sort</string>
     <string name="fav_delete_all">Delete all</string>
     <string name="fav_delete_all_question">Are you sure you want to delete all bookmarks?</string>
     <string name="dialog_color_picker">Choose a color</string>
@@ -104,17 +95,13 @@
     <string name="references">References</string>
     <string name="exception_book_definition">Incorrect attributes of book #%1$d in module %2$s</string>
     <string name="exception_book_not_found">Book %1$s not found in module %2$s</string>
-    <string name="exception_open_module">Incorrect module %1$s(%2$s)</string>
     <string name="exception_open_module_short">Incorrect module %s</string>
-    <string name="category_reports_summary">Crash reports settings</string>
-    <string name="category_reader_summary">Reader window settings</string>
     <string name="exception_books_definition">Incorrect module description in module %1$s: BookQty=%2$d, PathName#=%3$d, FullName#=%4$d, ShortName#=%5$d, ChapterQty#=%6$d</string>
     <string name="enabled">Enabled</string>
     <string name="volume_butons_to_scroll">Volume buttons to scroll</string>
     <string name="disabled">Disabled</string>
     <string name="text_align_justify">Align text to the width</string>
     <string name="font_family">Font family</string>
-    <string name="category_social">Social functions</string>
     <string name="share_passage">Share passage</string>
     <string name="divide_the_verses">Divide the verses</string>
     <string name="add_reference">Add reference</string>
@@ -130,13 +117,11 @@
     <string name="tags">Tag\'s</string>
     <string name="tags_description">Enter tags, separated by commas</string>
     <string name="bookmark_name">Bookmark name</string>
-    <string name="add">Add</string>
     <string name="question_del_tag">Delete tag?</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
     <string name="disable_turn_screen">Disable turn screen</string>
     <string name="disable_turn_screen_summury">Do not turn off the screen while reading</string>
-    <string name="stop_tts">Stop playing</string>
     <string name="press_again_to_exit">Press again to exit</string>
     <string name="menu_history_clear">Clear</string>
     <string name="menu_library_add">Add…</string>
@@ -154,14 +139,10 @@
     <string name="openDrawer" translatable="false">drawer_open</string>
     <string name="closeDrawer" translatable="false">drawer_close</string>
     <string name="choice_chapter">Goto…</string>
-    <string name="donate">Donate</string>
     <string name="menu_tags">Tags</string>
     <string name="search_hint">What to find?</string>
     <string name="hide_nav_buttons">Hide navigation buttons</string>
     <string name="image_not_found">Image not found</string>
-    <!--
-	<string name="donate_text1" translatable="false">Я очень рад, что данный продукт позволяет вам читать и изучать Священное Писание. И мне хотелось бы с каждым днём всё больше и больше расширять ваши возможности в этом направлении. И я благодарен вам за то, что вы заглянули на эту страницу для того, чтобы найти возможность поддержать данный проект. На данном этапе я могу предложить лишь несколько вариантов того, как бы вы могли поддержать проект:</string>
-	<string name="donate_text2" translatable="false">- став одним из бета-тестеров для ранних версий приложения\n- став постоянным спонсором данной работы\n- внести единоразовое пожертвование</string>
-	<string name="donate_text3" translatable="false">Если вы готовы поддержать данную работу финансово, то вы можете произвести оплату одним из способов предложенных на нашем сайте. Если ни один из этих вариантов вам не подходит или вы хотите стать бета-тестером, то напишите мне на электронную почту: ru.phoenix@gmail.com</string>
-	-->
+    <string name="retry">Retry</string>
+    <string name="msg_permission_denied">No permissions required to run the application</string>
 </resources>

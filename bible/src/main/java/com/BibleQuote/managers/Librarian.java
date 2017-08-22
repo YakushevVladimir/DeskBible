@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: Librarian.java
  *
- * Created by Vladimir Yakushev at 3/2017
+ * Created by Vladimir Yakushev at 8/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -252,7 +252,7 @@ public class Librarian {
     /**
      * Возвращает список глав книги
      *
-     * @throws OpenModuleException указанные модуль не найден или произошла ошибка при его открытии
+     * @throws OpenModuleException   указанные модуль не найден или произошла ошибка при его открытии
      * @throws BookNotFoundException указанная книга в модуле не найдена
      */
     public List<String> getChaptersList(String moduleID, String bookID)
@@ -388,7 +388,7 @@ public class Librarian {
         }
 
         if (!currChapterNumber.equals(currBook.getFirstChapterNumber())) {
-            currChapterNumber--;
+            currChapterNumber -= 1;
             currVerseNumber = 1;
         } else {
             try {
@@ -425,8 +425,8 @@ public class Librarian {
         formatter.setVisibleVerseNumbers(false);
 
         LinkedHashMap<Integer, String> verses = getCurrChapter().getVerses(selectVerses);
-        for (Integer key : verses.keySet()) {
-            verses.put(key, formatter.format(verses.get(key)));
+        for (Map.Entry<Integer, String> entry : verses.entrySet()) {
+            verses.put(entry.getKey(), formatter.format(entry.getValue()));
         }
 
         ShareBuilder builder = new ShareBuilder(context, currModule, currBook, currChapter, verses);

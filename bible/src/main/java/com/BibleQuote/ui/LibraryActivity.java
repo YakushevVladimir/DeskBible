@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: LibraryActivity.java
  *
- * Created by Vladimir Yakushev at 9/2016
+ * Created by Vladimir Yakushev at 8/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -30,6 +30,7 @@ package com.BibleQuote.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -74,18 +75,16 @@ public class LibraryActivity extends AsyncTaskActivity {
     private ListView modulesList, booksList;
     private GridView chapterList;
     private Button btnModule, btnBook, btnChapter;
-    private ArrayList<ItemList> modules = new ArrayList<ItemList>();
-    private ArrayList<ItemList> books = new ArrayList<ItemList>();
-    private List<String> chapters = new ArrayList<String>();
+    private ArrayList<ItemList> modules = new ArrayList<>();
+    private ArrayList<ItemList> books = new ArrayList<>();
+    private List<String> chapters = new ArrayList<>();
     private int modulePos, bookPos, chapterPos;
     private Librarian myLibrarian;
-    private View.OnClickListener onBtnModuleClick = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            if (moduleID.equals(Librarian.EMPTY_OBJ))
-                return;
-            updateView(MODULE_VIEW);
+    private View.OnClickListener onBtnModuleClick = view -> {
+        if (moduleID.equals(Librarian.EMPTY_OBJ)) {
+            return;
         }
+        updateView(MODULE_VIEW);
     };
     private String messageRefresh;
     private AdapterView.OnItemClickListener modulesList_onClick = new AdapterView.OnItemClickListener() {
@@ -136,27 +135,23 @@ public class LibraryActivity extends AsyncTaskActivity {
             readChapter();
         }
     };
-    private View.OnClickListener onBtnBookClick = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            if (bookID.equals(Librarian.EMPTY_OBJ))
-                return;
-            updateView(BOOK_VIEW);
+    private View.OnClickListener onBtnBookClick = view -> {
+        if (bookID.equals(Librarian.EMPTY_OBJ)) {
+            return;
         }
+        updateView(BOOK_VIEW);
     };
-    private View.OnClickListener onBtnChapterClick = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            if (chapter.equals(Librarian.EMPTY_OBJ))
-                return;
-            updateView(CHAPTER_VIEW);
+    private View.OnClickListener onBtnChapterClick = view -> {
+        if (chapter.equals(Librarian.EMPTY_OBJ)) {
+            return;
         }
+        updateView(CHAPTER_VIEW);
     };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.books);
+        setContentView(R.layout.activity_library);
 
         myLibrarian = BibleQuoteApp.getInstance().getLibrarian();
 
@@ -228,9 +223,12 @@ public class LibraryActivity extends AsyncTaskActivity {
 					String path = data.getData().getPath();
 					getModuleFromFile(path);
 				}
-		}
-		super.onActivityResult(requestCode, resultCode, data);
-	}
+                break;
+            default:
+                Log.e(TAG, "Unknown request code: " + requestCode);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
 	public void onTaskComplete(Task task) {
         if (task != null && !task.isCancelled()) {
@@ -371,7 +369,7 @@ public class LibraryActivity extends AsyncTaskActivity {
     }
 
     private SimpleAdapter getBookAdapter() {
-        books = new ArrayList<ItemList>();
+        books = new ArrayList<>();
         if (!myLibrarian.getModulesList().isEmpty()) {
             try {
                 books = myLibrarian.getModuleBooksList(moduleID);
@@ -397,7 +395,7 @@ public class LibraryActivity extends AsyncTaskActivity {
         } catch (OpenModuleException e) {
             ExceptionHelper.onOpenModuleException(e, this, TAG);
         }
-        return new ArrayAdapter<String>(this, R.layout.chapter_item, R.id.chapter, chapters);
+        return new ArrayAdapter<>(this, R.layout.chapter_item, R.id.chapter, chapters);
     }
 
 	private void getModuleFromFile(String path) {

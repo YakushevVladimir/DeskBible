@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: BQSearchProcessor.java
  *
- * Created by Vladimir Yakushev at 9/2016
+ * Created by Vladimir Yakushev at 8/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -83,7 +83,7 @@ public class BQSearchProcessor {
             e.printStackTrace();
         }
 
-        Map<String, String> searchRes = new LinkedHashMap<String, String>();
+        Map<String, String> searchRes = new LinkedHashMap<>();
         for (String bookID : bookList) {
             searchRes.putAll(results.get(bookID));
         }
@@ -110,7 +110,7 @@ public class BQSearchProcessor {
                 results.put(bookID, repository.searchInBook(module, bookID, query));
             } catch (BookNotFoundException e) {
                 Log.e(TAG, e.getMessage());
-                results.put(bookID, new LinkedHashMap<String, String>());
+                results.put(bookID, new LinkedHashMap<>());
             }
             latch.countDown();
         }

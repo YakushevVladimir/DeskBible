@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: BibleReference.java
  *
- * Created by Vladimir Yakushev at 9/2016
+ * Created by Vladimir Yakushev at 8/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -34,9 +34,8 @@ import com.BibleQuote.entity.modules.BQModule;
 import com.BibleQuote.utils.Logger;
 
 public class BibleReference {
-	public final static String MOD_DATASOURCE_FS = "fs";
-	public final static String MOD_DATASOURCE_DB = "db";
 
+	private static final String MOD_DATASOURCE_FS = "fs";
 	private static final String TAG = "LinkOSIS";
 	private static final String SEP_GROUPS = "\\;";
 	private static final String SEP_VALUES = "\\:";
@@ -257,5 +256,10 @@ public class BibleReference {
 			BibleReference tmp = (BibleReference) obj;
             return this.getPath().equals(tmp.getPath());
 		}
+	}
+
+	@Override
+	public int hashCode() {
+		return toString().hashCode();
 	}
 }

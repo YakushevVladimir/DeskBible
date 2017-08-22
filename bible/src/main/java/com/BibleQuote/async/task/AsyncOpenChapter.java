@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: AsyncOpenChapter.java
  *
- * Created by Vladimir Yakushev at 9/2016
+ * Created by Vladimir Yakushev at 8/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -54,20 +54,13 @@ public class AsyncOpenChapter extends Task {
     protected Boolean doInBackground(String... arg0) {
         try {
             Log.i(TAG, String.format("Open OSIS link %s", link.getPath()));
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    setHidden(false);
-                }
-            }, 500);
+            handler.postDelayed(() -> setHidden(false), 500);
             BibleQuoteApp.getInstance().getLibrarian().openChapter(link);
             handler.removeCallbacksAndMessages(null);
             return true;
-        } catch (OpenModuleException e) {
-			exception = e;
-		} catch (BookNotFoundException e) {
-			exception = e;
-		}
+        } catch (OpenModuleException | BookNotFoundException e) {
+            exception = e;
+        }
         return false;
     }
 

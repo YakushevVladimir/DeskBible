@@ -23,66 +23,52 @@
   ~ Project: BibleQuote-for-Android
   ~ File: themes.xml
   ~
-  ~ Created by Vladimir Yakushev at 10/2016
+  ~ Created by Vladimir Yakushev at 8/2017
   ~ E-mail: ru.phoenix@gmail.com
   ~ WWW: http://www.scripturesoftware.org
   -->
 
 <resources>
 
-    <style name="MaterialTheme" parent="MaterialTheme.Base">
-    </style>
-
-    <style name="MaterialTheme.Base" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="windowNoTitle">true</item>
-        <item name="windowActionBar">false</item>
-        <item name="colorPrimary">@color/primary</item>
-        <item name="colorPrimaryDark">@color/primary_dark</item>
-        <item name="colorAccent">@color/accent</item>
-        <item name="toolbarStyle">@style/MaterialTheme.Base.Toolbar</item>
-        <item name="android:textColorPrimary">@color/black</item>
-        <item name="android:textColorPrimaryInverse">@color/accent</item>
-        <item name="android:textColorSecondaryInverse">@color/white</item>
+    <style name="SplashTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowBackground">@color/primary_dark</item>
     </style>
 
     <style name="Theme.BibleQuote" parent="@style/Theme.AppCompat.Light.DarkActionBar">
-		<item name="colorPrimary">@color/primary</item>
-		<item name="colorPrimaryDark">@color/primary_dark</item>
-		<item name="colorAccent">@color/primary</item>
-		<item name="android:textColorPrimary">@color/black</item>
-		<!-- Action bar -->
-		<item name="actionBarStyle">@style/Widget.ActionBar</item>
-		<item name="actionMenuTextColor">@color/accent</item>
-		<!-- Action mode -->
-		<item name="windowActionModeOverlay">false</item>
-		<item name="actionModeStyle">@style/Widget.ActionMode</item>
-		<item name="actionModeBackground">@color/action_mode_background</item>
-	</style>
-
-	<style name="Theme.BibleQuote.NoActionBar" parent="@style/Theme.AppCompat.Light.NoActionBar">
-		<item name="colorPrimary">@color/primary</item>
-		<item name="colorPrimaryDark">@color/primary_dark</item>
-		<item name="colorAccent">@color/primary</item>
-		<item name="android:textColorPrimary">@color/black</item>
-		<!-- Action bar -->
-		<item name="actionBarStyle">@style/Widget.ActionBar</item>
-		<item name="actionMenuTextColor">@color/accent</item>
-		<!-- Action mode -->
-		<item name="windowActionModeOverlay">true</item>
-		<item name="actionModeStyle">@style/Widget.ActionMode</item>
-		<item name="actionModeBackground">@color/action_mode_background</item>
-	</style>
-
-    <style name="ToolbarTheme" parent="@style/MaterialToolbarTheme.Base">
-        <item name="titleTextAppearance">@style/Widget.ActionBar.TitleText</item>
-        <item name="subtitleTextAppearance">@style/Widget.ActionBar.SubtitleText</item>
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/primary</item>
+        <item name="android:textColorPrimary">@color/black</item>
+        <!-- Action bar -->
+        <item name="actionBarStyle">@style/ActionBar</item>
+        <item name="actionMenuTextColor">@color/accent</item>
+        <!-- Action mode -->
+        <item name="windowActionModeOverlay">false</item>
+        <item name="actionModeStyle">@style/ActionModeStyle</item>
+        <item name="actionModeBackground">@color/action_mode_background</item>
+        <item name="actionModeCloseDrawable">@drawable/ic_close</item>
     </style>
 
-    <style name="MaterialToolbarTheme.Base" parent="@style/Base.ThemeOverlay.AppCompat.ActionBar">
+    <style name="Theme.BibleQuote.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <!-- Action mode -->
+        <item name="windowActionModeOverlay">true</item>
+    </style>
+
+    <style name="ToolbarStyle">
+        <item name="android:theme">@style/ToolbarTheme</item>
+        <item name="popupTheme">@style/ToolbarPopupTheme</item>
         <item name="android:background">@color/primary</item>
+        <item name="titleTextAppearance">@style/TitleText</item>
+        <item name="subtitleTextAppearance">@style/SubtitleText</item>
+    </style>
+
+    <style name="ToolbarTheme">
         <item name="android:textColorPrimary">@color/toolbarTextColor</item>
         <item name="android:textColorSecondary">@color/toolbarTextColor</item>
-        <item name="actionMenuTextColor">@color/toolbarTextColor</item>
+        <!--<item name="colorControlNormal">@color/accent</item>-->
+        <!--<item name="actionMenuTextColor">@color/toolbarTextColor</item>-->
     </style>
 
     <style name="ToolbarPopupTheme" parent="Base.ThemeOverlay.AppCompat.ActionBar">
@@ -90,34 +76,27 @@
         <item name="android:textColorPrimary">@color/primary</item>
     </style>
 
-	<style name="Theme.FullscreenTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
-		<item name="android:windowNoTitle">true</item>
-	</style>
+    <!-- Action mode -->
 
-	<!-- Action mode -->
-
-	<style name="Widget.ActionMode" parent="@style/Widget.AppCompat.ActionMode">
-		<item name="titleTextStyle">@style/Widget.ActionBar.TitleText</item>
-	</style>
-
-	<!-- Action bar -->
-
-	<style name="Widget.ActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid">>
-		<item name="titleTextStyle">@style/Widget.ActionBar.TitleText</item>
-	</style>
-
-	<style name="Widget.ActionBar.TitleText" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">>
-		<item name="android:textColor">@color/accent</item>
+    <style name="ActionModeStyle" parent="Base.Widget.AppCompat.ActionMode">
+        <item name="titleTextStyle">@style/TitleText</item>
+        <item name="subtitleTextStyle">@style/SubtitleText</item>
     </style>
 
-    <style name="Widget.ActionBar.SubtitleText" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle">
-        >
-        <item name="android:textColor">@color/accent</item>
-        <item name="android:textSize">@dimen/text_size_small</item>
-	</style>
+    <!-- Action bar -->
 
-    <style name="MaterialTheme.Base.Toolbar" parent="@style/Widget.AppCompat.Toolbar">
-        <item name="titleTextAppearance">@style/Widget.ActionBar.TitleText</item>
+    <style name="ActionBar" parent="Base.Widget.AppCompat.Light.ActionBar.Solid">>
+        <item name="titleTextStyle">@style/TitleText</item>
+        <item name="subtitleTextStyle">@style/SubtitleText</item>
+    </style>
+
+    <style name="TitleText" parent="Base.TextAppearance.AppCompat.Widget.ActionBar.Title">>
+        <item name="android:textColor">@color/accent</item>
+    </style>
+
+    <style name="SubtitleText" parent="Base.TextAppearance.AppCompat.Widget.ActionBar.Subtitle">
+        <item name="android:textColor">@color/accent</item>
+        <item name="android:textSize">@dimen/text_size_very_small</item>
     </style>
 
 </resources>

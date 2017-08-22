@@ -22,7 +22,7 @@
   ~ Project: BibleQuote-for-Android
   ~ File: lint.xml
   ~
-  ~ Created by Vladimir Yakushev at 3/2017
+  ~ Created by Vladimir Yakushev at 8/2017
   ~ E-mail: ru.phoenix@gmail.com
   ~ WWW: http://www.scripturesoftware.org
   -->
@@ -36,6 +36,8 @@
     <issue id="GoogleAppIndexingWarning" severity="ignore"/>
     <issue id="RtlHardcoded" severity="ignore"/>
     <issue id="DefaultLocale" severity="ignore"/>
+    <issue id="IconColors" severity="ignore"/>
+    <issue id="ContentDescription" severity="ignore"/>
 
     <!-- Ignore false positive until http://b.android.com/77513 is fixed -->
     <issue id="InvalidPackage">

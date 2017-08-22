@@ -22,7 +22,7 @@
   ~ Project: BibleQuote-for-Android
   ~ File: strings.xml
   ~
-  ~ Created by Vladimir Yakushev at 11/2016
+  ~ Created by Vladimir Yakushev at 8/2017
   ~ E-mail: ru.phoenix@gmail.com
   ~ WWW: http://www.scripturesoftware.org
   -->
@@ -40,8 +40,6 @@
     <string name="bookmarks">Закладинки</string>
     <string name="library">Бібліотека</string>
     <string name="cross_reference">Перехресні посилання</string>
-    <string name="preference_screen_reader">Вікно читання</string>
-    <string name="preference_screen_reader_summary">Налаштування вікна читання</string>
     <string name="category_reader_appearance">Зовнішній вигляд</string>
     <string name="text_size">Розмір шрифту</string>
     <string name="current_text_size">Поточний розмір тексту: %1$d</string>
@@ -65,26 +63,19 @@
     <string name="menu_search">Пошук</string>
     <string name="menu_help">Допомога</string>
     <string name="menu_settings">Налаштування</string>
-    <string name="find">Пошук</string>
-    <string name="menu">Меню</string>
     <string name="cancel">Скасувати</string>
-    <string name="select_module">Додати модуль</string>
     <string name="added">Додано</string>
     <string name="removed">Видалено</string>
     <string name="bookmark_invalid_removed">Неприпустиму закладинку видалено</string>
     <string name="messageLoad">Завантаження…</string>
-    <string name="messageLoadCanceled">Завантаження скасовано</string>
     <string name="messageLoadBooks">Завантаження книг…</string>
-    <string name="messageLoadModules">Завантаження модулів…</string>
     <string name="messageSearch">Пошук…</string>
     <string name="messageRefresh">Оновити…</string>
     <string name="messageSearchCanceled">Пошук скасовано</string>
     <string name="results">результ</string>
     <string name="share">Спільний доступ</string>
     <string name="copy">Копіювати</string>
-    <string name="fav_question_add_favorities">Ви дійсно бажаєте додати закладку</string>
     <string name="fav_question_del_fav">Ви дійсно бажаєте видалити закладку?</string>
-    <string name="fav_sort_alphabetically">Сортувати</string>
     <string name="fav_delete_all">Видалити всі</string>
     <string name="fav_delete_all_question">Ви дійсно бажаєте видалити всі закладки?</string>
     <string name="dialog_color_picker">Обрати колір</string>
@@ -92,17 +83,13 @@
     <string name="references">Посилання</string>
     <string name="exception_book_definition">Невірні параметри книги #%1$d в модулі %2$s</string>
     <string name="exception_book_not_found">Книгу %1$s не знайдено в модулі %2$s</string>
-    <string name="exception_open_module">Невірний модуль %1$s(%2$s)</string>
     <string name="exception_open_module_short">Невірний модуль %s</string>
-    <string name="category_reports_summary">Налаштування звітів про збої</string>
-    <string name="category_reader_summary">Налаштування вікна читання</string>
     <string name="exception_books_definition">Невірний опис книги в модулі %1$s: BookQty=%2$d, PathName#=%3$d, FullName#=%4$d, ShortName#=%5$d, ChapterQty#=%6$d</string>
     <string name="enabled">Увімкнено</string>
     <string name="volume_butons_to_scroll">Прокручувати кнопками гучності</string>
     <string name="disabled">Вимкнено</string>
     <string name="text_align_justify">Вирівнювати по ширині</string>
     <string name="font_family">Шрифт</string>
-    <string name="category_social">Соціальні функції</string>
     <string name="share_passage">Поділитися уривком</string>
     <string name="divide_the_verses">Розбивати на вірші</string>
     <string name="add_reference">Додати посилання</string>
@@ -112,8 +99,6 @@
     <string name="short_reference_summary">Стислий заголовок до уривку</string>
     <string name="add_module_to_reference">Додавати назву модуля</string>
     <string name="add_module_to_reference_summary">Додавати назву модуля до підпису на відправку</string>
-    <string name="stop_tts">Остановить</string>
-    <string name="add">Додавати</string>
     <string name="no_tags">Меток нет</string>
     <string name="press_again_to_exit">Нажмите снова для выхода</string>
     <string name="question_del_tag">Удалить метку?</string>
@@ -144,9 +129,10 @@
     <string name="always_view_verse_numbers_enabled">Для всіх текстів</string>
     <string name="always_view_verse_numbers_title">Завжди показувати номери віршів</string>
     <string name="choice_chapter">Відкрити…</string>
-    <string name="donate">Donate</string>
     <string name="menu_tags">Ярлик</string>
     <string name="search_hint">Що знайти?</string>
     <string name="hide_nav_buttons">Приховати кнопки навігації</string>
     <string name="image_not_found">Зображення не знайдено</string>
+    <string name="retry">Спробуйте знову</string>
+    <string name="msg_permission_denied">Для запуску програми не потрібні жодні дозволи</string>
 </resources>

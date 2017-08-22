@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: CrossReferenceActivity.java
  *
- * Created by Vladimir Yakushev at 3/2017
+ * Created by Vladimir Yakushev at 8/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -29,7 +29,6 @@ package com.BibleQuote.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -54,6 +53,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CrossReferenceActivity extends AsyncTaskActivity {
 
@@ -62,18 +62,16 @@ public class CrossReferenceActivity extends AsyncTaskActivity {
     private BibleReference bReference;
     private LinkedHashMap<String, BibleReference> crossReference = new LinkedHashMap<>();
     private HashMap<BibleReference, String> crossReferenceContent = new HashMap<>();
-    private AdapterView.OnItemClickListener list_OnClick = new AdapterView.OnItemClickListener() {
-        public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-			String key = ((TextItem) a.getAdapter().getItem(position)).text;
-			BibleReference ref = crossReference.get(key);
+	private AdapterView.OnItemClickListener list_OnClick = (a, v, position, id) -> {
+		String key = ((TextItem) a.getAdapter().getItem(position)).text;
+		BibleReference ref = crossReference.get(key);
 
-			Intent intent = new Intent();
-			intent.putExtra("linkOSIS", ref.getPath());
-			setResult(RESULT_OK, intent);
-			finish();
-		}
+		Intent intent = new Intent();
+		intent.putExtra("linkOSIS", ref.getPath());
+		setResult(RESULT_OK, intent);
+		finish();
 	};
-    private Librarian myLibrarian;
+	private Librarian myLibrarian;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -132,11 +130,11 @@ public class CrossReferenceActivity extends AsyncTaskActivity {
 	private void setListAdapter() {
         List<Item> items = new ArrayList<>();
         PreferenceHelper prefHelper = BibleQuoteApp.getInstance().getPrefHelper();
-        for (String link : crossReference.keySet()) {
-            if (prefHelper.crossRefViewDetails()) {
-                items.add(new SubtextItem(link, crossReferenceContent.get(crossReference.get(link))));
+		for (Map.Entry<String, BibleReference> entry : crossReference.entrySet()) {
+			if (prefHelper.crossRefViewDetails()) {
+				items.add(new SubtextItem(entry.getKey(), crossReferenceContent.get(entry.getValue())));
 			} else {
-				items.add(new TextItem(link));
+				items.add(new TextItem(entry.getKey()));
 			}
 		}
 

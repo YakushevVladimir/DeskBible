@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: BQModuleController.java
  *
- * Created by Vladimir Yakushev at 9/2016
+ * Created by Vladimir Yakushev at 8/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -29,6 +29,7 @@
 package com.BibleQuote.domain.controllers.modules;
 
 import android.graphics.Bitmap;
+import android.support.annotation.NonNull;
 
 import com.BibleQuote.dal.repository.BQModuleRepository;
 import com.BibleQuote.domain.entity.Book;
@@ -57,9 +58,9 @@ public class BQModuleController implements IModuleController {
     @Override
     public List<Book> getBooks() {
         Map<String, Book> books = module.getBooks();
-        ArrayList<Book> result = new ArrayList<Book>(books.size());
-        for (String bookID : books.keySet()) {
-            result.add(books.get(bookID));
+        ArrayList<Book> result = new ArrayList<>(books.size());
+        for (Map.Entry<String, Book> entry : books.entrySet()) {
+            result.add(books.get(entry.getKey()));
         }
         return result;
     }
@@ -70,6 +71,7 @@ public class BQModuleController implements IModuleController {
     }
 
     @Override
+    @NonNull
     public Book getBookByID(String bookId) throws BookNotFoundException {
         Map<String, Book> books = module.getBooks();
         Book result = books.get(bookId);
@@ -82,10 +84,6 @@ public class BQModuleController implements IModuleController {
     @Override
     public Book getNextBook(String bookId) throws BookNotFoundException {
         Book result = getBookByID(bookId);
-        if (result == null) {
-            throw new BookNotFoundException(module.getID(), bookId);
-        }
-
         List<Book> books = getBooks();
         int pos = books.indexOf(result);
         if (books.size() > ++pos) {
@@ -97,10 +95,6 @@ public class BQModuleController implements IModuleController {
     @Override
     public Book getPrevBook(String bookId) throws BookNotFoundException {
         Book result = getBookByID(bookId);
-        if (result == null) {
-            throw new BookNotFoundException(module.getID(), bookId);
-        }
-
         List<Book> books = getBooks();
         int pos = books.indexOf(result);
         if (pos > 0) {
@@ -111,7 +105,7 @@ public class BQModuleController implements IModuleController {
 
     @Override
     public List<String> getChapterNumbers(String bookId) throws BookNotFoundException {
-        ArrayList<String> result = new ArrayList<String>();
+        ArrayList<String> result = new ArrayList<>();
         Book book = getBookByID(bookId);
         for (int i = 0; i < book.getChapterQty(); i++) {
             result.add("" + (i + (module.isChapterZero() ? 0 : 1)));

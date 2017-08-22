@@ -1,24 +1,42 @@
 /*
- * Copyright (C) 2010 Daniel Nilsson
+ * Copyright (C) 2011 Scripture Software
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ *
+ * Project: BibleQuote-for-Android
+ * File: AlphaPatternDrawable.java
+ *
+ * Created by Vladimir Yakushev at 8/2017
+ * E-mail: ru.phoenix@gmail.com
+ * WWW: http://www.scripturesoftware.org
  */
 
 package com.BibleQuote.ui.widget.ColorPicker;
 
-import android.graphics.*;
+import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
+import android.graphics.Canvas;
+import android.graphics.ColorFilter;
+import android.graphics.Paint;
+import android.graphics.PixelFormat;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 
 /**
  * This drawable that draws a simple white and gray chessboard pattern.
@@ -27,7 +45,7 @@ import android.graphics.drawable.Drawable;
  *
  * @author Daniel Nilsson
  */
-public class AlphaPatternDrawable extends Drawable {
+class AlphaPatternDrawable extends Drawable {
 
 	private int mRectangleSize = 10;
 
@@ -43,20 +61,20 @@ public class AlphaPatternDrawable extends Drawable {
 	 */
 	private Bitmap mBitmap;
 
-	public AlphaPatternDrawable(int rectangleSize) {
+	AlphaPatternDrawable(int rectangleSize) {
 		mRectangleSize = rectangleSize;
 		mPaintWhite.setColor(0xffffffff);
 		mPaintGray.setColor(0xffcbcbcb);
 	}
 
 	@Override
-	public void draw(Canvas canvas) {
+	public void draw(@NonNull Canvas canvas) {
 		canvas.drawBitmap(mBitmap, null, getBounds(), mPaint);
 	}
 
 	@Override
 	public int getOpacity() {
-		return 0;
+		return PixelFormat.UNKNOWN;
 	}
 
 	@Override
@@ -76,8 +94,8 @@ public class AlphaPatternDrawable extends Drawable {
 		int height = bounds.height();
 		int width = bounds.width();
 
-		numRectanglesHorizontal = (int) Math.ceil(width / mRectangleSize);
-		numRectanglesVertical = (int) Math.ceil(height / mRectangleSize);
+		numRectanglesHorizontal = (int) Math.ceil(width / (float) mRectangleSize);
+		numRectanglesVertical = (int) Math.ceil(height / (float) mRectangleSize);
 
 		generatePatternBitmap();
 

@@ -23,11 +23,12 @@
   ~ Project: BibleQuote-for-Android
   ~ File: colors.xml
   ~
-  ~ Created by Vladimir Yakushev at 10/2016
+  ~ Created by Vladimir Yakushev at 8/2017
   ~ E-mail: ru.phoenix@gmail.com
   ~ WWW: http://www.scripturesoftware.org
   -->
 <resources>
+
 	<color name="white">#ffffff</color>
 	<color name="black">#000000</color>
 	<color name="gray">#aaaaaa</color>
@@ -40,12 +41,8 @@
 	<color name="primary">#6E1C14</color>
 	<color name="primary_dark">#51150F</color>
 	<color name="action_mode_background">#ff2f0d0d</color>
-	<color name="primary_light">#F8BBD0</color>
 	<color name="accent">#f5cc99</color>
 	<color name="accent_dark">#c1a078</color>
 	<color name="toolbarTextColor">#f5cc99</color>
-	<color name="primary_text">#212121</color>
-	<color name="secondary_text">#727272</color>
-	<color name="icons">#FFFFFF</color>
-	<color name="divider">#B6B6B6</color>
+
 </resources>

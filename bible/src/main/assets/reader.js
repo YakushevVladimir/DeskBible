@@ -25,7 +25,7 @@ function deselectVerse(id) {
 }
 
 function getCurrentVerse() {
-    var y = 0;
+    var y = 15;
     var element;
     while (element == null && y < 100) {
         element = document.elementFromPoint(100, y);

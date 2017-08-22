@@ -21,17 +21,24 @@
  * Project: BibleQuote-for-Android
  * File: SplashActivity.java
  *
- * Created by Vladimir Yakushev at 3/2017
+ * Created by Vladimir Yakushev at 8/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
 package com.BibleQuote.ui;
 
-import android.app.Activity;
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.PermissionChecker;
+import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
@@ -42,27 +49,43 @@ import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.Task;
 import com.BibleQuote.utils.UpdateManager;
 
-public class SplashActivity extends Activity implements OnTaskCompleteListener {
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+public class SplashActivity extends AppCompatActivity implements OnTaskCompleteListener {
+
+    private static final int REQUEST_PERMISSIONS = 1;
+
+    @BindView(R.id.root_layout) FrameLayout rootLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.main);
+        setContentView(R.layout.activity_splash);
+        ButterKnife.bind(this);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        new AsyncTaskManager(this).setupTask(new AsyncCommand(new AsyncCommand.ICommand() {
-            @Override
-            public boolean execute() throws Exception {
-                PreferenceHelper preferenceHelper = BibleQuoteApp.getInstance().getPrefHelper();
-                UpdateManager.start(SplashActivity.this, preferenceHelper);
-                BibleQuoteApp.getInstance().getLibraryController().init();
-                return true;
+        checkPermissions();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_PERMISSIONS) {
+            for (int result : grantResults) {
+                if (result == PackageManager.PERMISSION_DENIED) {
+                    Snackbar.make(rootLayout, R.string.msg_permission_denied, Snackbar.LENGTH_INDEFINITE)
+                            .setAction(R.string.retry, v -> checkPermissions())
+                            .show();
+                    return;
+                }
             }
-        }, null, true));
+            startUpdateManager();
+        }
     }
 
     @Override
@@ -74,5 +97,26 @@ public class SplashActivity extends Activity implements OnTaskCompleteListener {
     @Override
     public Context getContext() {
         return this;
+    }
+
+    private void checkPermissions() {
+        int state = PermissionChecker.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (state != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                    this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    REQUEST_PERMISSIONS);
+        } else {
+            startUpdateManager();
+        }
+    }
+
+    private void startUpdateManager() {
+        new AsyncTaskManager(this).setupTask(new AsyncCommand(() -> {
+            PreferenceHelper preferenceHelper = BibleQuoteApp.getInstance().getPrefHelper();
+            UpdateManager.start(SplashActivity.this, preferenceHelper);
+            BibleQuoteApp.getInstance().getLibraryController().init();
+            return true;
+        }, null, true));
     }
 }

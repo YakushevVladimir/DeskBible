@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: BibleQuoteApp.java
  *
- * Created by Vladimir Yakushev at 3/2017
+ * Created by Vladimir Yakushev at 8/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -56,6 +56,11 @@ public class BibleQuoteApp extends Application {
 		return instance;
 	}
 
+    public BibleQuoteApp() {
+        super();
+        instance = this;
+    }
+
     public AsyncManager getAsyncManager() {
         return asyncManager;
     }
@@ -86,7 +91,6 @@ public class BibleQuoteApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        instance = this;
         AppComponent appComponent = DaggerAppComponent.builder()
                 .appModule(new AppModule(this))
                 .build();

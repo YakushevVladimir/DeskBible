@@ -22,7 +22,7 @@
   ~ Project: BibleQuote-for-Android
   ~ File: strings.xml
   ~
-  ~ Created by Vladimir Yakushev at 11/2016
+  ~ Created by Vladimir Yakushev at 8/2017
   ~ E-mail: ru.phoenix@gmail.com
   ~ WWW: http://www.scripturesoftware.org
   -->
@@ -34,12 +34,8 @@
     <string name="background">Колер фону</string>
     <string name="text_color_summary">Выберыце памер шрыфта</string>
     <string name="background_summary">Выберыце колер фону</string>
-    <string name="find">Знайсці</string>
-    <string name="menu">Меню</string>
     <string name="cancel">Адмяніць</string>
-    <string name="fav_question_add_favorities">Вы сапраўды жадаеце дадаць закладку?</string>
     <string name="fav_question_del_fav">Вы сапраўды жадаеце выдаліць гэтую закладку?</string>
-    <string name="select_module">Выберыце модуль</string>
     <string name="added">Даданне</string>
     <string name="removed">Выдаленае</string>
     <string name="menu_night_day_mode">Nigth / дзённай рэжым</string>
@@ -50,10 +46,8 @@
     <string name="results">Вынікі</string>
     <string name="may_need_to_restart">Магчыма, спатрэбіцца перазагрузіць</string>
     <string name="fav_delete_all">Выдаліць усе</string>
-    <string name="messageLoadCanceled">Нагрузка адменены</string>
     <string name="menu_favorites">Закладкі</string>
     <string name="messageSearchCanceled">Пошук адменены</string>
-    <string name="fav_sort_alphabetically">Сартаваць</string>
     <string name="messageSearch">Пошук …</string>
     <string name="menu_settings">Налады</string>
     <string name="menu_search">Пошук</string>
@@ -70,10 +64,7 @@
     <string name="app_about_thanks_label">Дзякуй:</string>
     <string name="about">Аб</string>
     <string name="messageLoadBooks">Загрузка кнігі…</string>
-    <string name="category_reports_summary">Справаздачы аб збоях налады</string>
-    <string name="messageLoadModules">Загрузка модуляў…</string>
     <string name="read_mode_by_default">Рэжым чытання па змаўчанні</string>
-    <string name="category_reader_summary">Налады чытання акно</string>
     <string name="app_about_dev_label">Распрацоўнікі:</string>
     <string name="settings">Налады</string>
     <string name="help">Дапамога</string>
@@ -81,16 +72,12 @@
     <string name="history">Гісторыя</string>
     <string name="bookmarks">Закладкі</string>
     <string name="library">Бібліятэка</string>
-    <string name="stop_tts">Stop playing</string>
-    <string name="add">Добавить</string>
     <string name="add_module_to_reference">Добавлять имя модуля</string>
     <string name="add_module_to_reference_summary">Добавлять имя модуля к ссылке на отрывок</string>
     <string name="add_reference">Add reference</string>
     <string name="add_reference_summary">Add a reference to the passage</string>
     <string name="no_tags">Меток нет</string>
     <string name="preference_screen_cross_references">Перекрестные ссылки</string>
-    <string name="preference_screen_reader">Окно чтения</string>
-    <string name="preference_screen_reader_summary">Настройки отображения текста</string>
     <string name="press_again_to_exit">Нажмите снова для выхода</string>
     <string name="press_color_to_apply">Нажмите для выбора</string>
     <string name="put_reference_in_beginning">Помещать ссылку в начало</string>
@@ -112,7 +99,6 @@
     <string name="background_selected">Цвет фона выбранного текста</string>
     <string name="background_selected_summary">Выберите цвет фона выбранного текста</string>
     <string name="bookmark_name">Имя закладки</string>
-    <string name="category_social">Социальные функции</string>
     <string name="cross_reference">Перекрестные ссылки</string>
     <string name="cross_references_display_context">Отображать контекст</string>
     <string name="cross_references_display_context_summary">Отображать контекст в списке ссылок</string>
@@ -128,7 +114,6 @@
     <string name="exception_book_definition">Некорректные параметры книги #%1$d в модуле %2$s</string>
     <string name="exception_book_not_found">Книга %1$s не найден а в модуле %2$s</string>
     <string name="exception_books_definition">Некорректное описание книги в модуле %1$s: BookQty=%2$d, PathName#=%3$d, FullName#=%4$d, ShortName#=%5$d, ChapterQty#=%6$d</string>
-    <string name="exception_open_module">Некорректный модуль %1$s(%2$s)</string>
     <string name="exception_open_module_short">Некорректный модуль %s</string>
     <string name="copy_module_from_file"> Copying a module…</string>
     <string name="error_open_module">Error opening module %1$s from %2$s</string>
@@ -143,9 +128,10 @@
     <string name="always_view_verse_numbers_enabled">Для ўсіх тэкстаў</string>
     <string name="always_view_verse_numbers_title">Заўсёды паказваць нумары вершаў</string>
     <string name="choice_chapter">Адкрыць…</string>
-    <string name="donate">Donate</string>
     <string name="menu_tags">Tags</string>
     <string name="search_hint">Што знайсці?</string>
     <string name="hide_nav_buttons">Схаваць кнопкі навігацыі</string>
     <string name="image_not_found">Малюнак не знойдзена</string>
+    <string name="retry">Паўтарыць</string>
+    <string name="msg_permission_denied">Дазволу не патрабуецца для запуску прыкладання</string>
 </resources>

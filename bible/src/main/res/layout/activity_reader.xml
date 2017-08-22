@@ -21,7 +21,7 @@
   ~ Project: BibleQuote-for-Android
   ~ File: activity_reader.xml
   ~
-  ~ Created by Vladimir Yakushev at 10/2016
+  ~ Created by Vladimir Yakushev at 8/2017
   ~ E-mail: ru.phoenix@gmail.com
   ~ WWW: http://www.scripturesoftware.org
   -->
@@ -47,13 +47,9 @@
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
+                style="@style/ToolbarStyle"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
-                app:popupTheme="@style/ToolbarPopupTheme"
-                app:subtitleTextAppearance="@style/Widget.ActionBar.SubtitleText"
-                app:theme="@style/ToolbarTheme"
-                app:titleTextAppearance="@style/Widget.ActionBar.TitleText"/>
+                android:layout_height="?attr/actionBarSize"/>
 
         </android.support.design.widget.AppBarLayout>
 

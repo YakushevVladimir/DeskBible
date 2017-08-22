@@ -22,7 +22,7 @@
   ~ Project: BibleQuote-for-Android
   ~ File: settings.xml
   ~
-  ~ Created by Vladimir Yakushev at 9/2016
+  ~ Created by Vladimir Yakushev at 8/2017
   ~ E-mail: ru.phoenix@gmail.com
   ~ WWW: http://www.scripturesoftware.org
   -->
@@ -30,32 +30,32 @@
 
 	<PreferenceCategory android:title="@string/category_reader_appearance" >
 		<com.BibleQuote.ui.widget.ColorPicker.ColorPickerPreference
-				android:defaultValue="#000000"
+			android:defaultValue="#51150F"
 				android:key="TextColor"
 				android:persistent="true"
 				android:summary="@string/text_color_summary"
 				android:title="@string/text_color" />
 		<com.BibleQuote.ui.widget.ColorPicker.ColorPickerPreference
-				android:defaultValue="#FFFFFF"
+			android:defaultValue="#faedc1"
 				android:key="TextBG"
 				android:persistent="true"
 				android:summary="@string/background_summary"
 				android:title="@string/background" />
         <com.BibleQuote.ui.widget.ColorPicker.ColorPickerPreference
-                android:defaultValue="#000000"
+			android:defaultValue="#51150F"
                 android:key="TextColorSel"
                 android:persistent="true"
                 android:summary="@string/text_color_selected_summary"
                 android:title="@string/text_color_selected" />
         <com.BibleQuote.ui.widget.ColorPicker.ColorPickerPreference
-                android:defaultValue="#FEF8C4"
+			android:defaultValue="#f9d979"
                 android:key="TextBGSel"
                 android:persistent="true"
                 android:summary="@string/background_selected_summary"
                 android:title="@string/background_selected" />
 
 		<com.BibleQuote.ui.widget.NumberChoiseView
-				android:defaultValue="12"
+			android:defaultValue="13"
 				android:dialogTitle="@string/text_size"
 				android:key="TextSize"
 				android:persistent="true"
@@ -63,7 +63,7 @@
 				android:title="@string/text_size" />
 
 		<ListPreference
-				android:defaultValue="sans-serif"
+			android:defaultValue="serif"
 				android:entries="@array/font_face_txt"
 				android:entryValues="@array/font_face"
 				android:key="font_family"

@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: SimpleBibleShareFormatter.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 8/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -29,6 +29,7 @@
 package com.BibleQuote.domain.textFormatters;
 
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class SimpleBibleShareFormatter implements IShareTextFormatter {
 	private LinkedHashMap<Integer, String> verses;
@@ -42,18 +43,18 @@ public class SimpleBibleShareFormatter implements IShareTextFormatter {
 		StringBuilder shareText = new StringBuilder();
 
 		Integer prevVerseNumber = 0;
-		for (Integer verseNumber : verses.keySet()) {
+		for (Map.Entry<Integer, String> entry : verses.entrySet()) {
 			if (prevVerseNumber == 0) {
-				prevVerseNumber = verseNumber;
+				prevVerseNumber = entry.getKey();
 			}
 
-			if (verseNumber - prevVerseNumber > 1) {
+			if (entry.getKey() - prevVerseNumber > 1) {
 				shareText.append(" ... ");
 			} else if (shareText.length() != 0) {
 				shareText.append(" ");
 			}
-			shareText.append(verses.get(verseNumber).trim());
-			prevVerseNumber = verseNumber;
+			shareText.append(entry.getValue().trim());
+			prevVerseNumber = entry.getKey();
 		}
 
 		return shareText.toString();

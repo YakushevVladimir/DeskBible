@@ -1,0 +1,43 @@
+{
+  "project_info": {
+    "project_number": "17209364540",
+    "project_id": "firebase-biblequote"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:17209364540:android:2bec613f49a4563a",
+        "android_client_info": {
+          "package_name": "com.BibleQuote"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "17209364540-ck2vnkblm7ftdvtqsosv3j8mbbgpnkvt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWzDyJmaTaaxsAL9FeJ0MGcYYO8F-P3DU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 2,
+          "analytics_property": {
+            "tracking_id": "UA-52016919-2"
+          }
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

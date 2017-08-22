@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2011 Scripture Software
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,15 +18,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * --------------------------------------------------
- *
  * Project: BibleQuote-for-Android
  * File: BibleBooksID.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 8/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
- *
  */
 
 package com.BibleQuote.managers;
@@ -32,6 +31,7 @@ package com.BibleQuote.managers;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
 public final class BibleBooksID {
 
@@ -199,11 +199,11 @@ public final class BibleBooksID {
 	}
 
 	private static void qualifierInit() {
-		qualifier = new HashMap<String, String>();
-		for (String key : bookShortNames.keySet()) {
-			String[] bookNames = bookShortNames.get(key);
+		qualifier = new HashMap<>();
+		for (Map.Entry<String, String[]> entry : bookShortNames.entrySet()) {
+			String[] bookNames = entry.getValue();
 			for (String name : bookNames) {
-				qualifier.put(name.toLowerCase(), key);
+				qualifier.put(name.toLowerCase(), entry.getKey());
 			}
 		}
 	}
@@ -215,7 +215,7 @@ public final class BibleBooksID {
 	}
 
 	public static String getID(String shortNames) {
-		ArrayList<String> moduleShortNames = new ArrayList<String>();
+		ArrayList<String> moduleShortNames = new ArrayList<>();
 		Collections.addAll(moduleShortNames, shortNames.split(" "));
 		return getID(moduleShortNames);
 	}

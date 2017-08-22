@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: SearchActivity.java
  *
- * Created by Vladimir Yakushev at 3/2017
+ * Created by Vladimir Yakushev at 8/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -210,11 +210,11 @@ public class SearchActivity extends AsyncTaskActivity implements TextView.OnEdit
      */
     private void setAdapter() {
         searchItems.clear();
-        for (String key : searchResults.keySet()) {
+        for (Map.Entry<String, String> entry : searchResults.entrySet()) {
             String humanLink;
             try {
-                humanLink = LinkConverter.getOSIStoHuman(key, myLibrarian);
-                searchItems.add(new SubtextItem(humanLink, searchResults.get(key)));
+                humanLink = LinkConverter.getOSIStoHuman(entry.getKey(), myLibrarian);
+                searchItems.add(new SubtextItem(humanLink, entry.getValue()));
             } catch (BookNotFoundException e) {
                 ExceptionHelper.onBookNotFoundException(e, this, TAG);
             } catch (OpenModuleException e) {
@@ -259,13 +259,10 @@ public class SearchActivity extends AsyncTaskActivity implements TextView.OnEdit
                 android.R.layout.simple_spinner_item,
                 new String[]{ItemList.Name}, new int[]{android.R.id.text1});
         aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        SimpleAdapter.ViewBinder viewBinder = new SimpleAdapter.ViewBinder() {
-            public boolean setViewValue(View view, Object data,
-                                        String textRepresentation) {
-                TextView textView = (TextView) view;
-                textView.setText(textRepresentation);
-                return true;
-            }
+        SimpleAdapter.ViewBinder viewBinder = (view, data, textRepresentation) -> {
+            TextView textView = (TextView) view;
+            textView.setText(textRepresentation);
+            return true;
         };
         aa.setViewBinder(viewBinder);
 

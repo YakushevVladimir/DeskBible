@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: BaseShareBuilder.java
  *
- * Created by Vladimir Yakushev at 3/2017
+ * Created by Vladimir Yakushev at 8/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -66,7 +66,7 @@ abstract class BaseShareBuilder {
 
 		String reference = referenceFormatter.getLink();
 		if (preferenceHelper.putReferenceInBeginning()) {
-			return String.format("%1$s - %2$s", reference, text);
+			return String.format("%1$s%n%2$s", reference, text);
 		} else {
 			return String.format("%1$s (%2$s)", text, reference);
 		}
@@ -79,11 +79,7 @@ abstract class BaseShareBuilder {
             textFormatter = new SimpleBibleShareFormatter(verses);
         }
 
-		TreeSet<Integer> verseNumbers = new TreeSet<>();
-		for (Integer numb : verses.keySet()) {
-			verseNumbers.add(numb);
-		}
-
+		TreeSet<Integer> verseNumbers = new TreeSet<>(verses.keySet());
 		String chapterNumber = String.valueOf(chapter.getNumber());
         if (!preferenceHelper.addReference()) {
             referenceFormatter = new EmptyReferenceFormatter(module, book, chapterNumber, verseNumbers);

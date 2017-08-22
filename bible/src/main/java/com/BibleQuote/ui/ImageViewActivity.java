@@ -21,18 +21,18 @@
  * Project: BibleQuote-for-Android
  * File: ImageViewActivity.java
  *
- * Created by Vladimir Yakushev at 11/2016
+ * Created by Vladimir Yakushev at 8/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
 
 package com.BibleQuote.ui;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.BibleQuote.BibleQuoteApp;
@@ -43,7 +43,7 @@ import com.BibleQuote.ui.widget.TouchImageView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ImageViewActivity extends Activity {
+public class ImageViewActivity extends AppCompatActivity {
 
     public static final String EXTRA_IMAGE_PATH = "image_path";
 

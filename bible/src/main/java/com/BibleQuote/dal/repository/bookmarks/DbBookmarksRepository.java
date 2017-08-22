@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: DbBookmarksRepository.java
  *
- * Created by Vladimir Yakushev at 3/2017
+ * Created by Vladimir Yakushev at 8/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -32,7 +32,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.BibleQuote.dal.dbLibraryHelper;
+import com.BibleQuote.dal.DbLibraryHelper;
 import com.BibleQuote.domain.entity.Bookmark;
 import com.BibleQuote.domain.entity.Tag;
 import com.BibleQuote.domain.repository.IBookmarksRepository;
@@ -43,13 +43,13 @@ import java.util.ArrayList;
 
 public class DbBookmarksRepository implements IBookmarksRepository {
     private final static String TAG = DbBookmarksRepository.class.getSimpleName();
-    private IBookmarksTagsRepository bmTagRepo = new dbBookmarksTagsRepository();
+    private IBookmarksTagsRepository bmTagRepo = new DbBookmarksTagsRepository();
 
     @Override
     public long add(Bookmark bookmark) {
         Logger.i(TAG, String.format("Add bookmarks %S:%s", bookmark.OSISLink, bookmark.humanLink));
 
-        SQLiteDatabase db = dbLibraryHelper.getLibraryDB();
+        SQLiteDatabase db = DbLibraryHelper.getLibraryDB();
         db.beginTransaction();
         long newID;
         try {
@@ -58,7 +58,7 @@ public class DbBookmarksRepository implements IBookmarksRepository {
         } finally {
             db.endTransaction();
         }
-        dbLibraryHelper.closeDB();
+        DbLibraryHelper.closeDB();
 
         return newID;
     }
@@ -66,37 +66,37 @@ public class DbBookmarksRepository implements IBookmarksRepository {
     @Override
     public void delete(final Bookmark bookmark) {
         Logger.i(TAG, String.format("Delete bookmarks %S:%s", bookmark.OSISLink, bookmark.humanLink));
-        SQLiteDatabase db = dbLibraryHelper.getLibraryDB();
+        SQLiteDatabase db = DbLibraryHelper.getLibraryDB();
         db.beginTransaction();
         try {
-            db.delete(dbLibraryHelper.BOOKMARKS_TABLE, Bookmark.OSIS + "=\"" + bookmark.OSISLink + "\"", null);
+            db.delete(DbLibraryHelper.BOOKMARKS_TABLE, Bookmark.OSIS + "=\"" + bookmark.OSISLink + "\"", null);
             bmTagRepo.deleteBookmarks(db, bookmark);
             db.setTransactionSuccessful();
         } finally {
             db.endTransaction();
         }
-        dbLibraryHelper.closeDB();
+        DbLibraryHelper.closeDB();
     }
 
     @Override
     public void deleteAll() {
         Logger.i(TAG, "Delete all bookmarks");
-        SQLiteDatabase db = dbLibraryHelper.getLibraryDB();
+        SQLiteDatabase db = DbLibraryHelper.getLibraryDB();
         db.beginTransaction();
         try {
-            db.delete(dbLibraryHelper.BOOKMARKS_TABLE, null, null);
+            db.delete(DbLibraryHelper.BOOKMARKS_TABLE, null, null);
             db.setTransactionSuccessful();
         } finally {
             db.endTransaction();
         }
-        dbLibraryHelper.closeDB();
+        DbLibraryHelper.closeDB();
         bmTagRepo.deleteAll();
     }
 
     @Override
     public ArrayList<Bookmark> getAll() {
         Logger.i(TAG, "Get all bookmarks");
-        SQLiteDatabase db = dbLibraryHelper.getLibraryDB();
+        SQLiteDatabase db = DbLibraryHelper.getLibraryDB();
         db.beginTransaction();
         ArrayList<Bookmark> result;
         try {
@@ -105,14 +105,14 @@ public class DbBookmarksRepository implements IBookmarksRepository {
         } finally {
             db.endTransaction();
         }
-        dbLibraryHelper.closeDB();
+        DbLibraryHelper.closeDB();
         return result;
     }
 
     @Override
     public ArrayList<Bookmark> getAll(Tag tag) {
         Logger.i(TAG, "Get all bookmarks to tag: " + tag.name);
-        SQLiteDatabase db = dbLibraryHelper.getLibraryDB();
+        SQLiteDatabase db = DbLibraryHelper.getLibraryDB();
         db.beginTransaction();
         ArrayList<Bookmark> result;
         try {
@@ -121,7 +121,7 @@ public class DbBookmarksRepository implements IBookmarksRepository {
         } finally {
             db.endTransaction();
         }
-        dbLibraryHelper.closeDB();
+        DbLibraryHelper.closeDB();
         return result;
     }
 
@@ -132,21 +132,21 @@ public class DbBookmarksRepository implements IBookmarksRepository {
         values.put(Bookmark.NAME, bookmark.name);
         values.put(Bookmark.DATE, bookmark.date);
 
-        Cursor curr = db.query(true, dbLibraryHelper.BOOKMARKS_TABLE,
+        Cursor curr = db.query(true, DbLibraryHelper.BOOKMARKS_TABLE,
                 null, Bookmark.OSIS + " = \"" + bookmark.OSISLink + "\"", null, null, null, null, null);
         if (curr.moveToFirst()) {
             bookmark.id = curr.getInt(curr.getColumnIndex(Bookmark.KEY_ID));
             values.put(Bookmark.KEY_ID, bookmark.id);
-            db.update(dbLibraryHelper.BOOKMARKS_TABLE, values, Bookmark.KEY_ID + " = \"" + bookmark.id + "\"", null);
+            db.update(DbLibraryHelper.BOOKMARKS_TABLE, values, Bookmark.KEY_ID + " = \"" + bookmark.id + "\"", null);
             curr.close();
             return bookmark.id;
         } else {
-            return db.insert(dbLibraryHelper.BOOKMARKS_TABLE, null, values);
+            return db.insert(DbLibraryHelper.BOOKMARKS_TABLE, null, values);
         }
     }
 
     private ArrayList<Bookmark> getAllRowsToArray(SQLiteDatabase db) {
-        Cursor allRows = db.query(true, dbLibraryHelper.BOOKMARKS_TABLE,
+        Cursor allRows = db.query(true, DbLibraryHelper.BOOKMARKS_TABLE,
                 null, null, null, null, null, Bookmark.KEY_ID + " DESC", null);
         return getBookmarks(allRows);
     }
@@ -154,21 +154,21 @@ public class DbBookmarksRepository implements IBookmarksRepository {
     private ArrayList<Bookmark> getAllRowsToArray(SQLiteDatabase db, Tag tag) {
         Cursor allRows = db.rawQuery(
                 "SELECT "
-                        + dbLibraryHelper.BOOKMARKS_TABLE + "." + Bookmark.KEY_ID + ", "
-                        + dbLibraryHelper.BOOKMARKS_TABLE + "." + Bookmark.OSIS + ", "
-                        + dbLibraryHelper.BOOKMARKS_TABLE + "." + Bookmark.LINK + ", "
-                        + dbLibraryHelper.BOOKMARKS_TABLE + "." + Bookmark.NAME + ", "
-                        + dbLibraryHelper.BOOKMARKS_TABLE + "." + Bookmark.DATE + " "
+                        + DbLibraryHelper.BOOKMARKS_TABLE + "." + Bookmark.KEY_ID + ", "
+                        + DbLibraryHelper.BOOKMARKS_TABLE + "." + Bookmark.OSIS + ", "
+                        + DbLibraryHelper.BOOKMARKS_TABLE + "." + Bookmark.LINK + ", "
+                        + DbLibraryHelper.BOOKMARKS_TABLE + "." + Bookmark.NAME + ", "
+                        + DbLibraryHelper.BOOKMARKS_TABLE + "." + Bookmark.DATE + " "
                         + "FROM "
-                        + dbLibraryHelper.BOOKMARKS_TABLE + ", " + dbLibraryHelper.BOOKMARKSTAGS_TABLE + " "
+                        + DbLibraryHelper.BOOKMARKS_TABLE + ", " + DbLibraryHelper.BOOKMARKSTAGS_TABLE + " "
                         + "WHERE "
-                        + dbLibraryHelper.BOOKMARKS_TABLE + "." + Bookmark.KEY_ID
-                        + " = " + dbLibraryHelper.BOOKMARKSTAGS_TABLE + "." + BookmarksTags.BOOKMARKSTAGS_BM_ID
+                        + DbLibraryHelper.BOOKMARKS_TABLE + "." + Bookmark.KEY_ID
+                        + " = " + DbLibraryHelper.BOOKMARKSTAGS_TABLE + "." + BookmarksTags.BOOKMARKSTAGS_BM_ID
                         + " and "
-                        + dbLibraryHelper.BOOKMARKSTAGS_TABLE + "." + BookmarksTags.BOOKMARKSTAGS_TAG_ID
+                        + DbLibraryHelper.BOOKMARKSTAGS_TABLE + "." + BookmarksTags.BOOKMARKSTAGS_TAG_ID
                         + " = " + tag.id + " "
                         + "ORDER BY "
-                        + dbLibraryHelper.BOOKMARKS_TABLE + "." + Bookmark.KEY_ID + " DESC;",
+                        + DbLibraryHelper.BOOKMARKS_TABLE + "." + Bookmark.KEY_ID + " DESC;",
                 null);
         return getBookmarks(allRows);
     }

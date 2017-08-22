@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: Chapter.java
  *
- * Created by Vladimir Yakushev at 9/2016
+ * Created by Vladimir Yakushev at 8/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -32,80 +32,66 @@ import com.BibleQuote.domain.textFormatters.ITextFormatter;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
 public class Chapter {
 
-	private Integer number;
-	private String text;
-	private TreeMap<Integer, Verse> verses = new TreeMap<Integer, Verse>();
+    private Integer number;
+    private String text;
+    private TreeMap<Integer, Verse> verses = new TreeMap<>();
 
-	public Chapter(Integer number, ArrayList<Verse> verseList) {
-		this.number = number;
-		Integer verseNumber = 1;
-		for (Verse verse : verseList) {
-			verses.put(verseNumber++, verse);
-		}
-	}
+    public Chapter(Integer number, ArrayList<Verse> verseList) {
+        this.number = number;
+        Integer verseNumber = 1;
+        for (Verse verse : verseList) {
+            verses.put(verseNumber++, verse);
+        }
+    }
 
-	public Integer getNumber() {
-		return number;
-	}
+    public Integer getNumber() {
+        return number;
+    }
 
-	public String getText() {
-		if (text == null && !verses.isEmpty()) {
-			StringBuilder buffer = new StringBuilder();
-			for (Integer verseNumber : verses.keySet()) {
-				buffer.append(verses.get(verseNumber).getText());
-			}
-			text = buffer.toString();
-		}
-		return text;
-	}
+    public String getText() {
+        if (text == null && !verses.isEmpty()) {
+            StringBuilder buffer = new StringBuilder();
+            for (Map.Entry<Integer, Verse> entry : verses.entrySet()) {
+                buffer.append(entry.getValue().getText());
+            }
+            text = buffer.toString();
+        }
+        return text;
+    }
 
-	public ArrayList<Verse> getVerseList() {
-		ArrayList<Verse> verseList = new ArrayList<Verse>();
-		for (Integer verse : verses.keySet()) {
-			verseList.add(verses.get(verse));
-		}
-		return verseList;
-	}
+    public ArrayList<Verse> getVerseList() {
+        return new ArrayList<>(verses.values());
+    }
 
-	public String getText(int fromVerse, int toVerse) {
-		StringBuilder buffer = new StringBuilder();
-		for (int verseNumber = fromVerse; verseNumber <= toVerse; verseNumber++) {
-			Verse ver = verses.get(verseNumber);
-			if (ver != null) {
-				buffer.append(ver.getText());
-			}
-		}
-		return buffer.toString();
-	}
+    public String getText(int fromVerse, int toVerse, ITextFormatter formatter) {
+        StringBuilder buffer = new StringBuilder();
+        for (int verseNumber = fromVerse; verseNumber <= toVerse; verseNumber++) {
+            Verse ver = verses.get(verseNumber);
+            if (ver != null) {
+                buffer.append(formatter.format(ver.getText()));
+            }
+        }
+        return buffer.toString();
+    }
 
-	public String getText(int fromVerse, int toVerse, ITextFormatter formatter) {
-		StringBuilder buffer = new StringBuilder();
-		for (int verseNumber = fromVerse; verseNumber <= toVerse; verseNumber++) {
-			Verse ver = verses.get(verseNumber);
-			if (ver != null) {
-				buffer.append(formatter.format(ver.getText()));
-			}
-		}
-		return buffer.toString();
-	}
+    public LinkedHashMap<Integer, String> getVerses(TreeSet<Integer> verses) {
+        LinkedHashMap<Integer, String> result = new LinkedHashMap<>();
+        ArrayList<Verse> versesList = getVerseList();
+        int verseListSize = versesList.size();
+        for (Integer verse : verses) {
+            int verseIndex = verse - 1;
+            if (verseIndex > verseListSize) {
+                break;
+            }
+            result.put(verse, versesList.get(verseIndex).getText());
+        }
 
-	public LinkedHashMap<Integer, String> getVerses(TreeSet<Integer> verses) {
-		LinkedHashMap<Integer, String> result = new LinkedHashMap<Integer, String>();
-		ArrayList<Verse> versesList = getVerseList();
-		int verseListSize = versesList.size();
-		for (Integer verse : verses) {
-			int verseIndex = verse - 1;
-			if (verseIndex > verseListSize) {
-				break;
-			}
-			result.put(verse, versesList.get(verseIndex).getText());
-		}
-
-		return result;
-	}
+        return result;
+    }
 }
