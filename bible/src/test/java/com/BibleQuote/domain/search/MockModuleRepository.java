@@ -19,14 +19,14 @@
  * under the License.
  *
  * Project: BibleQuote-for-Android
- * File: IModuleRepository.java
+ * File: MockModuleRepository.java
  *
  * Created by Vladimir Yakushev at 8/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
 
-package com.BibleQuote.domain.repository;
+package com.BibleQuote.domain.search;
 
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
@@ -37,23 +37,36 @@ import com.BibleQuote.domain.exceptions.BookDefinitionException;
 import com.BibleQuote.domain.exceptions.BookNotFoundException;
 import com.BibleQuote.domain.exceptions.BooksDefinitionException;
 import com.BibleQuote.domain.exceptions.OpenModuleException;
+import com.BibleQuote.domain.repository.IModuleRepository;
 import com.BibleQuote.entity.modules.BQModule;
 
 import java.util.Map;
 
-/**
- *
- */
-public interface IModuleRepository<D, T extends Module> {
+class MockModuleRepository implements IModuleRepository<String, Module> {
 
-    Bitmap getBitmap(BQModule module, String path);
+    @Override
+    public Bitmap getBitmap(BQModule module, String path) {
+        return null;
+    }
 
-    Chapter loadChapter(T module, String bookID, int chapter) throws BookNotFoundException;
+    @Override
+    public Chapter loadChapter(Module module, String bookID, int chapter) throws BookNotFoundException {
+        return null;
+    }
 
-    T loadModule(D path) throws OpenModuleException, BooksDefinitionException, BookDefinitionException;
+    @Override
+    public Module loadModule(String path) throws OpenModuleException, BooksDefinitionException, BookDefinitionException {
+        return null;
+    }
 
-    Map<String, String> searchInBook(T module, String bookID, String regQuery) throws BookNotFoundException;
+    @Override
+    public Map<String, String> searchInBook(Module module, String bookID, String regQuery) throws BookNotFoundException {
+        return null;
+    }
 
     @NonNull
-    String getBookContent(T module, String bookID) throws BookNotFoundException;
+    @Override
+    public String getBookContent(Module module, String bookID) throws BookNotFoundException {
+        return "";
+    }
 }

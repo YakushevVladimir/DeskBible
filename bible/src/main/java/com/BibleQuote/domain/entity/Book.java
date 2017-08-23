@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: Book.java
  *
- * Created by Vladimir Yakushev at 9/2016
+ * Created by Vladimir Yakushev at 8/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -43,7 +43,7 @@ public abstract class Book implements Serializable {
 	private static final long serialVersionUID = -6348188202419079481L;
 
 	private String name;
-	private ArrayList<String> shortNames = new ArrayList<String>();
+    private ArrayList<String> shortNames = new ArrayList<>();
     private String osisId;
     private Integer chapterQty;
     private boolean hasChapterZero;
@@ -110,7 +110,7 @@ public abstract class Book implements Serializable {
     /**
      * Краткое имя книги. являющееся первым в списке кратких имен
      */
-    public ArrayList<String> getShortNames() {
+    private ArrayList<String> getShortNames() {
         return shortNames;
     }
 

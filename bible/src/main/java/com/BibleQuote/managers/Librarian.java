@@ -46,6 +46,7 @@ import com.BibleQuote.domain.exceptions.BookNotFoundException;
 import com.BibleQuote.domain.exceptions.BooksDefinitionException;
 import com.BibleQuote.domain.exceptions.OpenModuleException;
 import com.BibleQuote.domain.exceptions.TskNotFoundException;
+import com.BibleQuote.domain.textFormatters.BacklightTextFormatter;
 import com.BibleQuote.domain.textFormatters.ModuleTextFormatter;
 import com.BibleQuote.domain.textFormatters.StripTagsTextFormatter;
 import com.BibleQuote.entity.ItemList;
@@ -412,6 +413,13 @@ public class Librarian {
         } else {
             IModuleController moduleCtrl = Injector.getModuleController(currModule);
             searchResults = moduleCtrl.search(currModule.getBookList(fromBook, toBook), query);
+
+            ModuleTextFormatter formatter = new ModuleTextFormatter(currModule, new StripTagsTextFormatter());
+            formatter.setVisibleVerseNumbers(false);
+            BacklightTextFormatter textFormatter = new BacklightTextFormatter(formatter, query, "#6b0b0b");
+            for (Map.Entry<String, String> entry : searchResults.entrySet()) {
+                searchResults.put(entry.getKey(), textFormatter.format(entry.getValue()));
+            }
         }
         return searchResults;
     }

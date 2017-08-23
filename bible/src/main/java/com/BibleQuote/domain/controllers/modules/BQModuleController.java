@@ -30,22 +30,26 @@ package com.BibleQuote.domain.controllers.modules;
 
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.BibleQuote.dal.repository.BQModuleRepository;
 import com.BibleQuote.domain.entity.Book;
 import com.BibleQuote.domain.entity.Chapter;
 import com.BibleQuote.domain.exceptions.BookNotFoundException;
+import com.BibleQuote.domain.search.MultiThreadSearchProcessor;
 import com.BibleQuote.entity.modules.BQModule;
-import com.BibleQuote.search.BQSearchProcessor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
  *
  */
 public class BQModuleController implements IModuleController {
+
+    private static final String TAG = BQModuleController.class.getSimpleName();
 
     private BQModule module;
     private BQModuleRepository repository;
@@ -57,12 +61,7 @@ public class BQModuleController implements IModuleController {
 
     @Override
     public List<Book> getBooks() {
-        Map<String, Book> books = module.getBooks();
-        ArrayList<Book> result = new ArrayList<>(books.size());
-        for (Map.Entry<String, Book> entry : books.entrySet()) {
-            result.add(books.get(entry.getKey()));
-        }
-        return result;
+        return new ArrayList<>(module.getBooks().values());
     }
 
     @Override
@@ -120,6 +119,10 @@ public class BQModuleController implements IModuleController {
 
     @Override
     public Map<String, String> search(List<String> bookList, String searchQuery) {
-        return new BQSearchProcessor(repository).search(module, bookList, searchQuery);
+        long searchStart = System.currentTimeMillis();
+        Map<String, String> result = new MultiThreadSearchProcessor<>(repository).search(module, bookList, searchQuery);
+        long searchEnd = System.currentTimeMillis();
+        Log.d(TAG, String.format(Locale.US, "Search '%s' completed in %d ms", searchQuery, searchEnd - searchStart));
+        return result;
     }
 }

@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: BQModuleRepository.java
  *
- * Created by Vladimir Yakushev at 11/2016
+ * Created by Vladimir Yakushev at 8/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -30,7 +30,9 @@ package com.BibleQuote.dal.repository;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.annotation.NonNull;
 import android.util.Base64;
+import android.util.Log;
 
 import com.BibleQuote.domain.entity.BibleReference;
 import com.BibleQuote.domain.entity.Book;
@@ -70,7 +72,7 @@ public class BQModuleRepository implements IModuleRepository<String, BQModule> {
 
     private static final String TAG = BQModuleRepository.class.getSimpleName();
     private static final String INI_FILENAME = "bibleqt.ini";
-    private static final HashMap<String, String> charsets = new HashMap<String, String>();
+    private static final HashMap<String, String> charsets = new HashMap<>();
     private static final Map<String, Chapter> chapterPool = Collections.synchronizedMap(new CachePool<Chapter>());
 
     static {
@@ -151,57 +153,45 @@ public class BQModuleRepository implements IModuleRepository<String, BQModule> {
             return chapterPool.get(chapterID);
         }
 
-        Chapter result = null;
-        BufferedReader reader = null;
-        try {
-            Book book = module.getBook(bookID);
-            if (book == null) {
-                throw new BookNotFoundException(module.getID(), bookID);
-            }
-            reader = getReader(module, book.getDataSourceID());
-            result = loadChapter(module, book, chapter, reader);
+        Book book = module.getBook(bookID);
+        if (book == null) {
+            throw new BookNotFoundException(module.getID(), bookID);
+        }
+
+        try (BufferedReader reader = getReader(module, book.getDataSourceID())) {
+            Chapter result = loadChapter(module, book, chapter, reader);
             chapterPool.put(chapterID, result);
-        } catch (DataAccessException e) {
+            return result;
+        } catch (DataAccessException | IOException e) {
             Logger.e(TAG, "Can't load chapters of book with ID = " + bookID, e);
             throw new BookNotFoundException(module.getID(), bookID);
-
-        } finally {
-            try {
-                if (reader != null) {
-                    reader.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
-        return result;
     }
 
     @Override
     public Map<String, String> searchInBook(BQModule module, String bookID, String regQuery) throws BookNotFoundException {
+        return searchInBook(module, bookID, regQuery, getBookContent(module, bookID));
+    }
+
+    @Override
+    @NonNull
+    public String getBookContent(BQModule module, String bookID) throws BookNotFoundException {
         BQBook book = (BQBook) module.getBook(bookID);
         if (book == null) {
             throw new BookNotFoundException(module.getID(), bookID);
         }
 
-        LinkedHashMap<String, String> searchRes = null;
-        BufferedReader bReader = null;
-        try {
-            bReader = getReader(module, book.getDataSourceID());
-            searchRes = searchInBook(module, bookID, regQuery, bReader);
-        } catch (DataAccessException e) {
-            throw new BookNotFoundException(module.getID(), bookID);
-
-        } finally {
-            try {
-                if (bReader != null) {
-                    bReader.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+        StringBuilder bookContent = new StringBuilder(1000);
+        try (BufferedReader bReader = getReader(module, book.getDataSourceID())) {
+            String str;
+            while ((str = bReader.readLine()) != null) {
+                bookContent.append(str);
             }
+        } catch (IOException | DataAccessException e) {
+            e.printStackTrace();
         }
-        return searchRes;
+
+        return bookContent.toString();
     }
 
     private boolean contains(String text, String query) {
@@ -215,10 +205,10 @@ public class BQModuleRepository implements IModuleRepository<String, BQModule> {
         }
 
         String str, htmlFilter = "", key, value;
-        ArrayList<String> fullNames = new ArrayList<String>();
-        ArrayList<String> pathNames = new ArrayList<String>();
-        ArrayList<String> shortNames = new ArrayList<String>();
-        ArrayList<Integer> chapterQty = new ArrayList<Integer>();
+        ArrayList<String> fullNames = new ArrayList<>();
+        ArrayList<String> pathNames = new ArrayList<>();
+        ArrayList<String> shortNames = new ArrayList<>();
+        ArrayList<Integer> chapterQty = new ArrayList<>();
         int pos;
         try {
             while ((str = bReader.readLine()) != null) {
@@ -241,39 +231,54 @@ public class BQModuleRepository implements IModuleRepository<String, BQModule> {
                 value = delimiterPos >= str.length() ? "" : str.substring(
                         delimiterPos, str.length()).trim();
 
-                if (key.equals("biblename")) {
-                    module.setName(value);
-                } else if (key.equals("bibleshortname")) {
-                    module.setShortName(value.replaceAll("\\.", ""));
-                } else if (key.equals("chaptersign")) {
-                    module.setChapterSign(value.toLowerCase());
-                } else if (key.equals("chapterzero")) {
-                    module.setChapterZero(value.toLowerCase().contains("y"));
-                } else if (key.equals("versesign")) {
-                    module.setVerseSign(value.toLowerCase());
-                } else if (key.equals("htmlfilter")) {
-                    htmlFilter = value;
-                } else if (key.equals("bible")) {
-                    module.setBible(value.toLowerCase().contains("y"));
-                } else if (key.equals("strongnumbers")) {
-                    module.setContainsStrong(value.toLowerCase().contains("y"));
-                } else if (key.equals("language")) {
-                    module.setLanguage(LanguageConvertor.getISOLanguage(value));
-                } else if (key.equals("desiredfontname")) {
-                    module.setFontName(value);
-                    module.setFontPath(value + ".ttf");
-                } else if (key.equals("pathname")) {
-                    pathNames.add(value);
-                } else if (key.equals("fullname")) {
-                    fullNames.add(value);
-                } else if (key.equals("shortname")) {
-                    shortNames.add(value.replaceAll("\\.", ""));
-                } else if (key.equals("chapterqty")) {
-                    try {
-                        chapterQty.add(Integer.valueOf(value));
-                    } catch (NumberFormatException e) {
-                        chapterQty.add(0);
-                    }
+                switch (key) {
+                    case "biblename":
+                        module.setName(value);
+                        break;
+                    case "bibleshortname":
+                        module.setShortName(value.replaceAll("\\.", ""));
+                        break;
+                    case "chaptersign":
+                        module.setChapterSign(value.toLowerCase());
+                        break;
+                    case "chapterzero":
+                        module.setChapterZero(value.toLowerCase().contains("y"));
+                        break;
+                    case "versesign":
+                        module.setVerseSign(value.toLowerCase());
+                        break;
+                    case "htmlfilter":
+                        htmlFilter = value;
+                        break;
+                    case "bible":
+                        module.setBible(value.toLowerCase().contains("y"));
+                        break;
+                    case "strongnumbers":
+                        module.setContainsStrong(value.toLowerCase().contains("y"));
+                        break;
+                    case "language":
+                        module.setLanguage(LanguageConvertor.getISOLanguage(value));
+                        break;
+                    case "desiredfontname":
+                        module.setFontName(value);
+                        module.setFontPath(value + ".ttf");
+                        break;
+                    case "pathname":
+                        pathNames.add(value);
+                        break;
+                    case "fullname":
+                        fullNames.add(value);
+                        break;
+                    case "shortname":
+                        shortNames.add(value.replaceAll("\\.", ""));
+                        break;
+                    case "chapterqty":
+                        try {
+                            chapterQty.add(Integer.valueOf(value));
+                        } catch (NumberFormatException e) {
+                            chapterQty.add(0);
+                        }
+                        break;
                 }
             }
         } catch (IOException e) {
@@ -289,7 +294,7 @@ public class BQModuleRepository implements IModuleRepository<String, BQModule> {
         }
 
         String tagFilter[] = {"p", "b", "i", "em", "strong", "q", "big", "sub", "sup", "h1", "h2", "h3", "h4"};
-        ArrayList<String> tagArray = new ArrayList<String>();
+        ArrayList<String> tagArray = new ArrayList<>();
         Collections.addAll(tagArray, tagFilter);
 
         if (!htmlFilter.equals("")) {
@@ -445,7 +450,7 @@ public class BQModuleRepository implements IModuleRepository<String, BQModule> {
 
     private Chapter loadChapter(Module module, Book book, Integer chapterNumber, BufferedReader bReader) {
 
-        ArrayList<String> lines = new ArrayList<String>();
+        ArrayList<String> lines = new ArrayList<>();
         try {
             String str;
             int currentChapter = book.getFirstChapterNumber();
@@ -481,7 +486,7 @@ public class BQModuleRepository implements IModuleRepository<String, BQModule> {
             return null;
         }
 
-        ArrayList<Verse> verseList = new ArrayList<Verse>();
+        ArrayList<Verse> verseList = new ArrayList<>();
         String verseSign = module.getVerseSign();
         int i = -1;
         for (String currLine : lines) {
@@ -496,8 +501,8 @@ public class BQModuleRepository implements IModuleRepository<String, BQModule> {
         return new Chapter(chapterNumber, verseList);
     }
 
-    private LinkedHashMap<String, String> searchInBook(Module module, String bookID, String query, BufferedReader bReader) {
-        LinkedHashMap<String, String> searchRes = new LinkedHashMap<String, String>();
+    private LinkedHashMap<String, String> searchInBook(Module module, String bookID, String query, String bookContent) {
+        LinkedHashMap<String, String> searchRes = new LinkedHashMap<>();
 
         // Подготовим регулярное выражение для поиска
         String searchQuery = getSearchQuery(query);
@@ -505,30 +510,18 @@ public class BQModuleRepository implements IModuleRepository<String, BQModule> {
             return searchRes;
         }
 
-        String str;
-        StringBuilder bookContent = new StringBuilder(1000);
-        try {
-            while ((str = bReader.readLine()) != null) {
-                bookContent.append(str);
-            }
-        } catch (IOException e) {
-            android.util.Log.e(TAG, String.format("searchInBook(%1$s, %2$s, %3$s)", module.getID(), bookID, searchQuery), e);
-            e.printStackTrace();
-        }
-
-        String content = bookContent.toString();
-        if (!contains(content, searchQuery)) {
+        if (!contains(bookContent, searchQuery)) {
             return searchRes;
         }
 
-        android.util.Log.i(TAG, " - Start search in book " + bookID);
+        Log.i(TAG, " - Start search in book " + bookID);
 
         ModuleTextFormatter formatter = new ModuleTextFormatter(module);
         formatter.setVisibleVerseNumbers(false);
 
         int chapterDev = module.isChapterZero() ? -1 : 0;
         int patternFlags = Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE;
-        String[] chapters = Pattern.compile(module.getChapterSign(), patternFlags).split(content);
+        String[] chapters = Pattern.compile(module.getChapterSign(), patternFlags).split(bookContent);
         String chapter, verse;
         for (int chapterNumber = 0; chapterNumber < chapters.length; chapterNumber++) {
             chapter = module.getChapterSign() + chapters[chapterNumber];
@@ -543,7 +536,7 @@ public class BQModuleRepository implements IModuleRepository<String, BQModule> {
             }
         }
 
-        android.util.Log.i(TAG, " - Cancel search in book " + bookID);
+        Log.i(TAG, " - Cancel search in book " + bookID);
 
         return searchRes;
     }

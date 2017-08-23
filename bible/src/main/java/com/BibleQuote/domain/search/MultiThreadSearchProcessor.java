@@ -19,42 +19,38 @@
  * under the License.
  *
  * Project: BibleQuote-for-Android
- * File: BQSearchProcessor.java
+ * File: MultiThreadSearchProcessor.java
  *
  * Created by Vladimir Yakushev at 8/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
 
-package com.BibleQuote.search;
+package com.BibleQuote.domain.search;
 
-import android.util.Log;
-
-import com.BibleQuote.dal.repository.BQModuleRepository;
 import com.BibleQuote.domain.entity.BibleReference;
+import com.BibleQuote.domain.entity.Module;
 import com.BibleQuote.domain.exceptions.BookNotFoundException;
-import com.BibleQuote.entity.modules.BQModule;
+import com.BibleQuote.domain.repository.IModuleRepository;
 
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
-public class BQSearchProcessor {
+public class MultiThreadSearchProcessor<D, T extends Module> {
 
     private static final int CPU_COUNT = Runtime.getRuntime().availableProcessors();
     private static final int POOL_SIZE = CPU_COUNT * 2 + 1;
-    private static final String TAG = BQSearchProcessor.class.getSimpleName();
 
-    private final BQModuleRepository repository;
-    private Map<String, Map<String, String>> results = Collections.synchronizedMap(new HashMap<String, Map<String, String>>());
+    private final IModuleRepository<D, T> repository;
     private ExecutorService executor;
 
-    public BQSearchProcessor(BQModuleRepository repository) {
+    public MultiThreadSearchProcessor(IModuleRepository<D, T> repository) {
         this.repository = repository;
         this.executor = Executors.newFixedThreadPool(POOL_SIZE);
     }
@@ -66,53 +62,47 @@ public class BQSearchProcessor {
      * @param module      модуль, в котором необходимо произвести поиск
      * @param bookList    список id книг модуля
      * @param searchQuery искомый текст в виде регулярного выражения
+     *
      * @return возвращает словарь, в котором ключами являются ссылки на место в модуле
      * (см. {@linkplain BibleReference}), а значениями полный текст данного места
      */
-    public Map<String, String> search(BQModule module, List<String> bookList, String searchQuery) {
-        CountDownLatch latch = new CountDownLatch(bookList.size());
+    public Map<String, String> search(T module, List<String> bookList, String searchQuery) {
+        Map<String, Future<Map<String, String>>> taskPool = new LinkedHashMap<>();
         for (String bookID : bookList) {
-            SearchThread thread = new SearchThread(latch, module, bookID, searchQuery);
-            executor.execute(thread);
-        }
-        executor.shutdown();
-
-        try {
-            latch.await();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+            BookSearchProcessor<D, T> searchProcessor = new BookSearchProcessor<>(repository, module, bookID, searchQuery);
+            SearchThread<D, T> thread = new SearchThread<>(searchProcessor);
+            taskPool.put(bookID, executor.submit(thread));
         }
 
         Map<String, String> searchRes = new LinkedHashMap<>();
-        for (String bookID : bookList) {
-            searchRes.putAll(results.get(bookID));
+        for (Map.Entry<String, Future<Map<String, String>>> entry : taskPool.entrySet()) {
+            try {
+                searchRes.putAll(entry.getValue().get());
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
         }
+
+        executor.shutdown();
 
         return searchRes;
     }
 
-    private class SearchThread implements Runnable {
-        private CountDownLatch latch;
-        private BQModule module;
-        private String bookID;
-        private String query;
+    private static class SearchThread<D, T extends Module> implements Callable<Map<String, String>> {
 
-        private SearchThread(CountDownLatch latch, BQModule module, String bookID, String query) {
-            this.latch = latch;
-            this.module = module;
-            this.bookID = bookID;
-            this.query = query;
+        private final BookSearchProcessor<D, T> searchProcessor;
+
+        private SearchThread(BookSearchProcessor<D, T> searchProcessor) {
+            this.searchProcessor = searchProcessor;
         }
 
         @Override
-        public void run() {
+        public Map<String, String> call() {
             try {
-                results.put(bookID, repository.searchInBook(module, bookID, query));
+                return searchProcessor.search();
             } catch (BookNotFoundException e) {
-                Log.e(TAG, e.getMessage());
-                results.put(bookID, new LinkedHashMap<>());
+                return new LinkedHashMap<>();
             }
-            latch.countDown();
         }
     }
 }
