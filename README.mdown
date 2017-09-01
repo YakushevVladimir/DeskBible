@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/YakushevVladimir/BibleQuote-for-Android.svg?branch=develop)](https://travis-ci.org/YakushevVladimir/BibleQuote-for-Android)
-[![Coverage Status](https://coveralls.io/repos/github/YakushevVladimir/BibleQuote-for-Android/badge.svg)](https://coveralls.io/github/YakushevVladimir/BibleQuote-for-Android)
+[![Coverage Status](https://coveralls.io/repos/github/YakushevVladimir/BibleQuote-for-Android/badge.svg?branch=develop)](https://coveralls.io/github/YakushevVladimir/BibleQuote-for-Android?branch=develop)
 [![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
 # BibleQuote for Android
