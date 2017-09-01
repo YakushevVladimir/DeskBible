@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: Logger.java
  *
- * Created by Vladimir Yakushev at 8/2017
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -111,7 +111,7 @@ public final class Logger {
      */
     private static File getLogFile() {
         if (logFile == null && Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-            logFile = new File(DataConstants.FS_APP_DIR_NAME, "log.txt");
+            logFile = new File(DataConstants.getFsAppDirName(), "log.txt");
             if (logFile.exists() && !logFile.delete()) {
                 return null;
             }

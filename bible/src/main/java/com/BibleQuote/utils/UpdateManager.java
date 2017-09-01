@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: UpdateManager.java
  *
- * Created by Vladimir Yakushev at 8/2017
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -38,7 +38,7 @@ import com.BibleQuote.R;
 import com.BibleQuote.dal.repository.bookmarks.DbBookmarksTagsRepository;
 import com.BibleQuote.dal.repository.bookmarks.DbTagRepository;
 import com.BibleQuote.dal.repository.bookmarks.PrefBookmarksRepository;
-import com.BibleQuote.domain.controllers.ILibraryController;
+import com.BibleQuote.domain.controller.ILibraryController;
 import com.BibleQuote.domain.entity.Bookmark;
 import com.BibleQuote.domain.repository.IBookmarksRepository;
 import com.BibleQuote.managers.bookmarks.BookmarksManager;
@@ -72,7 +72,7 @@ public final class UpdateManager {
         String state = Environment.getExternalStorageState();
 
         if (Environment.MEDIA_MOUNTED.equals(state)) {
-            File dirModules = new File(DataConstants.FS_EXTERNAL_DATA_PATH);
+            File dirModules = new File(DataConstants.getFsExternalDataPath());
             if (!dirModules.exists() && !dirModules.mkdirs()) {
                 Logger.i(TAG, String.format("Fail create module directory %1$s", dirModules));
                 return;
@@ -142,7 +142,7 @@ public final class UpdateManager {
     }
 
     private static void saveBuiltInModule(Context context, String fileName, int rawId) {
-        File moduleDir = new File(DataConstants.FS_EXTERNAL_DATA_PATH);
+        File moduleDir = new File(DataConstants.getFsExternalDataPath());
         try (
                 InputStream moduleStream = context.getResources().openRawResource(rawId);
                 OutputStream newModule = new FileOutputStream(new File(moduleDir, fileName))
@@ -183,7 +183,7 @@ public final class UpdateManager {
             }
             tskBr = new BufferedReader(isReader);
 
-            File tskFile = new File(DataConstants.FS_APP_DIR_NAME, "tsk.xml");
+            File tskFile = new File(DataConstants.getFsAppDirName(), "tsk.xml");
             if (tskFile.exists() && !tskFile.delete()) {
                 Logger.e(TAG, "Can't delete TSK-file");
                 return;

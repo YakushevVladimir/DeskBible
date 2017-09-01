@@ -21,12 +21,12 @@
  * Project: BibleQuote-for-Android
  * File: ILibraryController.java
  *
- * Created by Vladimir Yakushev at 3/2017
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
 
-package com.BibleQuote.domain.controllers;
+package com.BibleQuote.domain.controller;
 
 import com.BibleQuote.domain.entity.Module;
 import com.BibleQuote.domain.exceptions.BookDefinitionException;
@@ -44,6 +44,7 @@ public interface ILibraryController {
      * @return Возвращает коллекцию модулей с ключом по Module.ShortName
      */
     Map<String, Module> getModules();
+
     /**
      * Получение модуля из коллекции по его ShortName.
      *
@@ -52,10 +53,12 @@ public interface ILibraryController {
      * @throws com.BibleQuote.domain.exceptions.OpenModuleException - указанный ShortName отсутствует в коллекции
      */
     Module getModuleByID(String moduleID) throws OpenModuleException;
+
     /**
      * Инициализация библиотеки
      */
     void init();
+
     /**
      * Загружает из хранилища модуль по его пути\
      *
@@ -63,6 +66,7 @@ public interface ILibraryController {
      * @throws OpenModuleException по указанному пути модуль не найден
      */
     void loadModule(String path) throws OpenModuleException, BooksDefinitionException, BookDefinitionException;
+
     /**
      * Загружает из хранилища список модулей без загрузки их данных. Для каждого из модулей
      * установлен флаг isClosed = true.

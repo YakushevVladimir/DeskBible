@@ -19,24 +19,24 @@
  * under the License.
  *
  * Project: BibleQuote-for-Android
- * File: ITSKController.java
+ * File: ICacheModuleController.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
 
-package com.BibleQuote.domain.controllers;
+package com.BibleQuote.domain.controller;
 
-import com.BibleQuote.domain.entity.BibleReference;
-import com.BibleQuote.domain.exceptions.BQUniversalException;
-import com.BibleQuote.domain.exceptions.TskNotFoundException;
-
-import java.util.Set;
+import com.BibleQuote.domain.entity.ModuleList;
 
 /**
  *
  */
-public interface ITSKController {
-    Set<BibleReference> getLinks(BibleReference reference) throws TskNotFoundException, BQUniversalException;
+public interface ICacheModuleController {
+    ModuleList getModuleList();
+
+    boolean isCacheExist();
+
+    void saveModuleList(ModuleList moduleList);
 }

@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: LibraryActivity.java
  *
- * Created by Vladimir Yakushev at 8/2017
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -29,13 +29,13 @@ package com.BibleQuote.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.GridView;
@@ -57,123 +57,50 @@ import com.BibleQuote.domain.exceptions.OpenModuleException;
 import com.BibleQuote.entity.ItemList;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.ui.base.AsyncTaskActivity;
+import com.BibleQuote.utils.FilenameUtils;
+import com.BibleQuote.utils.NotifyDialog;
 import com.BibleQuote.utils.Task;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.OnItemClick;
+
 public class LibraryActivity extends AsyncTaskActivity {
 
     private static final int ACTION_CODE_GET_FILE = 1;
-    private static final String TAG = "LibraryActivity";
     private static final int MODULE_VIEW = 1, BOOK_VIEW = 2, CHAPTER_VIEW = 3;
+    private static final String TAG = LibraryActivity.class.getSimpleName();
 
-    private String moduleID = Librarian.EMPTY_OBJ;
+    @BindView(R.id.books) ListView booksList;
+    @BindView(R.id.btnBook) Button btnBook;
+    @BindView(R.id.btnChapter) Button btnChapter;
+    @BindView(R.id.btnModule) Button btnModule;
+    @BindView(R.id.chapterChoose) GridView chapterList;
+    @BindView(R.id.modules) ListView modulesList;
+
     private String bookID = Librarian.EMPTY_OBJ;
-    private String chapter = Librarian.EMPTY_OBJ;
-    private int viewMode = 1;
-    private ListView modulesList, booksList;
-    private GridView chapterList;
-    private Button btnModule, btnBook, btnChapter;
-    private ArrayList<ItemList> modules = new ArrayList<>();
     private ArrayList<ItemList> books = new ArrayList<>();
+    private String chapter = Librarian.EMPTY_OBJ;
     private List<String> chapters = new ArrayList<>();
-    private int modulePos, bookPos, chapterPos;
-    private Librarian myLibrarian;
-    private View.OnClickListener onBtnModuleClick = view -> {
-        if (moduleID.equals(Librarian.EMPTY_OBJ)) {
-            return;
-        }
-        updateView(MODULE_VIEW);
-    };
     private String messageRefresh;
-    private AdapterView.OnItemClickListener modulesList_onClick = new AdapterView.OnItemClickListener() {
-        public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-            modules = myLibrarian.getModulesList();
-            if (modules.size() <= position) {
-                updateView(MODULE_VIEW);
-                return;
-            }
-            modulePos = position;
-            moduleID = modules.get(modulePos).get(ItemList.ID);
-            bookPos = 0;
-            chapterPos = 0;
-
-            String message = getResources().getString(R.string.messageLoadBooks);
-            BibleReference currentOSISLink = myLibrarian.getCurrentOSISLink();
-            BibleReference osisLink = new BibleReference(
-                    currentOSISLink.getModuleDatasource(),
-                    null,
-                    moduleID,
-                    currentOSISLink.getBookID(),
-                    currentOSISLink.getChapter(),
-                    currentOSISLink.getFromVerse());
-
-            mAsyncManager.setupTask(new AsyncOpenModule(message, false, osisLink), LibraryActivity.this);
-        }
-    };
-    private AdapterView.OnItemClickListener booksList_onClick = new AdapterView.OnItemClickListener() {
-        public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-            bookPos = position;
-            bookID = books.get(bookPos).get("ID");
-            chapterPos = 0;
-
-            updateView(CHAPTER_VIEW);
-            setButtonText();
-
-            if (chapters.size() == 1) {
-                chapter = chapters.get(0);
-                readChapter();
-            }
-        }
-    };
-    private AdapterView.OnItemClickListener chapterList_onClick = new AdapterView.OnItemClickListener() {
-        public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-            chapterPos = position;
-            chapter = chapters.get(position);
-            setButtonText();
-            readChapter();
-        }
-    };
-    private View.OnClickListener onBtnBookClick = view -> {
-        if (bookID.equals(Librarian.EMPTY_OBJ)) {
-            return;
-        }
-        updateView(BOOK_VIEW);
-    };
-    private View.OnClickListener onBtnChapterClick = view -> {
-        if (chapter.equals(Librarian.EMPTY_OBJ)) {
-            return;
-        }
-        updateView(CHAPTER_VIEW);
-    };
+    private String moduleID = Librarian.EMPTY_OBJ;
+    private int modulePos, bookPos, chapterPos;
+    private ArrayList<ItemList> modules = new ArrayList<>();
+    private Librarian myLibrarian;
+    private int viewMode = 1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_library);
+        ButterKnife.bind(this);
 
         myLibrarian = BibleQuoteApp.getInstance().getLibrarian();
-
         messageRefresh = getResources().getString(R.string.messageRefresh);
-
-        btnModule = (Button) findViewById(R.id.btnModule);
-        btnModule.setOnClickListener(onBtnModuleClick);
-
-        btnBook = (Button) findViewById(R.id.btnBook);
-        btnBook.setOnClickListener(onBtnBookClick);
-
-        btnChapter = (Button) findViewById(R.id.btnChapter);
-        btnChapter.setOnClickListener(onBtnChapterClick);
-
-        modulesList = (ListView) findViewById(R.id.modules);
-        modulesList.setOnItemClickListener(modulesList_onClick);
-
-        booksList = (ListView) findViewById(R.id.books);
-        booksList.setOnItemClickListener(booksList_onClick);
-
-        chapterList = (GridView) findViewById(R.id.chapterChoose);
-        chapterList.setOnItemClickListener(chapterList_onClick);
 
         BibleReference osisLink = myLibrarian.getCurrentOSISLink();
         if (myLibrarian.isOSISLinkValid(osisLink)) {
@@ -203,7 +130,7 @@ public class LibraryActivity extends AsyncTaskActivity {
                 return true;
             case R.id.menu_library_add:
                 choiceModuleFromFile();
-				return true;
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -215,14 +142,15 @@ public class LibraryActivity extends AsyncTaskActivity {
         updateView(viewMode);
     }
 
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		switch (requestCode) {
-			case ACTION_CODE_GET_FILE:
-				if (resultCode == RESULT_OK) {
-					String path = data.getData().getPath();
-					getModuleFromFile(path);
-				}
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case ACTION_CODE_GET_FILE:
+                if (resultCode == RESULT_OK) {
+                    Uri uri = data.getData();
+                    String path = FilenameUtils.getPath(this, uri);
+                    getModuleFromFile(path);
+                }
                 break;
             default:
                 Log.e(TAG, "Unknown request code: " + requestCode);
@@ -230,13 +158,18 @@ public class LibraryActivity extends AsyncTaskActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-	public void onTaskComplete(Task task) {
-        if (task != null && !task.isCancelled()) {
-			if (task instanceof AsyncOpenModule) {
-				onAsyncOpenModuleComplete((AsyncOpenModule) task);
-			} else {
-                updateView(MODULE_VIEW);
-            }
+    @Override
+    public void onTaskComplete(Task task) {
+        if (task == null || task.isCancelled()) {
+            return;
+        }
+
+        if (task instanceof AsyncOpenModule) {
+            onOpenModuleComplete((AsyncOpenModule) task);
+        } else if (task instanceof LoadModuleFromFile) {
+            onLoadModuleComplete((LoadModuleFromFile) task);
+        } else {
+            updateView(MODULE_VIEW);
         }
     }
 
@@ -245,127 +178,78 @@ public class LibraryActivity extends AsyncTaskActivity {
         return this;
     }
 
+    @OnItemClick(R.id.books)
+    void onClickBookItem(int position) {
+        bookPos = position;
+        bookID = books.get(bookPos).get("ID");
+        chapterPos = 0;
+
+        updateView(CHAPTER_VIEW);
+        setButtonText();
+
+        if (chapters.size() == 1) {
+            chapter = chapters.get(0);
+            readChapter();
+        }
+    }
+
+    @OnItemClick(R.id.chapterChoose)
+    void onClickChapterItem(int position) {
+        chapterPos = position;
+        chapter = chapters.get(position);
+        setButtonText();
+        readChapter();
+    }
+
+    @OnItemClick(R.id.modules)
+    void onClickModuleItem(int position2) {
+        modules = myLibrarian.getModulesList();
+        if (modules.size() <= position2) {
+            updateView(MODULE_VIEW);
+            return;
+        }
+        modulePos = position2;
+        moduleID = modules.get(modulePos).get(ItemList.ID);
+        bookPos = 0;
+        chapterPos = 0;
+
+        String message = getResources().getString(R.string.messageLoadBooks);
+        BibleReference currentOSISLink = myLibrarian.getCurrentOSISLink();
+        BibleReference osisLink1 = new BibleReference(
+                currentOSISLink.getModuleDatasource(),
+                null,
+                moduleID,
+                currentOSISLink.getBookID(),
+                currentOSISLink.getChapter(),
+                currentOSISLink.getFromVerse());
+
+        mAsyncManager.setupTask(new AsyncOpenModule(message, false, osisLink1), LibraryActivity.this);
+    }
+
+    @OnClick({R.id.btnBook, R.id.btnChapter, R.id.btnModule})
+    void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.btnBook:
+                onClickBook();
+                break;
+            case R.id.btnChapter:
+                onClickChapter();
+                break;
+            case R.id.btnModule:
+                onClickModule();
+                break;
+        }
+    }
+
     private void choiceModuleFromFile() {
         final Intent target = new Intent(Intent.ACTION_GET_CONTENT)
-                .setType("file/*")
+                .setType("application/zip")
                 .addCategory(Intent.CATEGORY_OPENABLE);
         if (target.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(target, ACTION_CODE_GET_FILE);
         } else {
             Toast.makeText(this, R.string.exception_add_module_from_file, Toast.LENGTH_LONG).show();
         }
-    }
-
-    private void readChapter() {
-        Intent intent = new Intent();
-        intent.putExtra("linkOSIS", moduleID + "." + bookID + "." + chapter);
-        setResult(RESULT_OK, intent);
-        finish();
-    }
-
-    private void setButtonText() {
-
-        String bookShortName = Librarian.EMPTY_OBJ;
-        if (!moduleID.equals(Librarian.EMPTY_OBJ) && !bookID.equals(Librarian.EMPTY_OBJ)) {
-            try {
-                bookShortName = myLibrarian.getBookShortName(moduleID, bookID);
-                List<String> chList = myLibrarian.getChaptersList(moduleID, bookID);
-                if (!chList.isEmpty()) {
-                    chapter = chList.contains(chapter) ? chapter : chList.get(0);
-                } else {
-                    chapter = Librarian.EMPTY_OBJ;
-                }
-            } catch (OpenModuleException e) {
-                ExceptionHelper.onOpenModuleException(e, this, TAG);
-                moduleID = Librarian.EMPTY_OBJ;
-                bookID = Librarian.EMPTY_OBJ;
-                chapter = Librarian.EMPTY_OBJ;
-            } catch (BookNotFoundException e) {
-                ExceptionHelper.onBookNotFoundException(e, this, TAG);
-                bookID = Librarian.EMPTY_OBJ;
-                chapter = Librarian.EMPTY_OBJ;
-            }
-        }
-
-        btnModule.setText(moduleID);
-        btnBook.setText(bookShortName);
-        btnChapter.setText(chapter);
-    }
-
-    private void updateView(int viewMode) {
-
-        this.viewMode = viewMode;
-
-        switch (viewMode) {
-            case MODULE_VIEW:
-                btnModule.setEnabled(false);
-                btnBook.setEnabled(true);
-                btnChapter.setEnabled(true);
-
-                modulesList.setVisibility(View.VISIBLE);
-                booksList.setVisibility(View.GONE);
-                chapterList.setVisibility(View.GONE);
-
-                modulesList.setAdapter(getModuleAdapter());
-
-                modulePos = modules.indexOf(new ItemList(moduleID, myLibrarian.getModuleFullName()));
-                if (modulePos >= 0) {
-                    modulesList.setSelection(modulePos);
-                }
-                break;
-
-            case BOOK_VIEW:
-                btnModule.setEnabled(true);
-                btnBook.setEnabled(false);
-                btnChapter.setEnabled(true);
-
-                modulesList.setVisibility(View.GONE);
-                booksList.setVisibility(View.VISIBLE);
-                chapterList.setVisibility(View.GONE);
-
-                booksList.setAdapter(getBookAdapter());
-
-                ItemList itemBook;
-                try {
-                    itemBook = new ItemList(bookID, myLibrarian.getBookFullName(moduleID, bookID));
-                    bookPos = books.indexOf(itemBook);
-                    if (bookPos >= 0) {
-                        booksList.setSelection(bookPos);
-                    }
-                } catch (OpenModuleException e) {
-                    ExceptionHelper.onOpenModuleException(e, this, TAG);
-                }
-                break;
-
-            case CHAPTER_VIEW:
-                btnModule.setEnabled(true);
-                btnBook.setEnabled(true);
-                btnChapter.setEnabled(false);
-
-                modulesList.setVisibility(View.GONE);
-                booksList.setVisibility(View.GONE);
-                chapterList.setVisibility(View.VISIBLE);
-
-                chapterList.setAdapter(getChapterAdapter());
-
-                chapterPos = chapters.indexOf(chapter);
-                if (chapterPos >= 0) {
-                    chapterList.setSelection(chapterPos);
-                }
-
-                break;
-
-            default:
-                break;
-        }
-    }
-
-    private SimpleAdapter getModuleAdapter() {
-        modules = myLibrarian.getModulesList();
-        return new SimpleAdapter(this, modules,
-                R.layout.item_list,
-                new String[]{ItemList.ID, ItemList.Name}, new int[]{
-                R.id.id, R.id.name});
     }
 
     private SimpleAdapter getBookAdapter() {
@@ -398,11 +282,66 @@ public class LibraryActivity extends AsyncTaskActivity {
         return new ArrayAdapter<>(this, R.layout.chapter_item, R.id.chapter, chapters);
     }
 
-	private void getModuleFromFile(String path) {
-		mAsyncManager.setupTask(new LoadModuleFromFile(getString(R.string.copy_module_from_file), false, this, path), this);
-	}
+    private SimpleAdapter getModuleAdapter() {
+        modules = myLibrarian.getModulesList();
+        return new SimpleAdapter(this, modules,
+                R.layout.item_list,
+                new String[]{ItemList.ID, ItemList.Name}, new int[]{
+                R.id.id, R.id.name});
+    }
 
-    private void onAsyncOpenModuleComplete(AsyncOpenModule task) {
+    private void getModuleFromFile(String path) {
+        mAsyncManager.setupTask(new LoadModuleFromFile(getString(R.string.copy_module_from_file), path,
+                BibleQuoteApp.getInstance().getLibraryController()), this);
+    }
+
+    private void onClickBook() {
+        if (bookID.equals(Librarian.EMPTY_OBJ)) {
+            return;
+        }
+        updateView(BOOK_VIEW);
+    }
+
+    private void onClickChapter() {
+        if (chapter.equals(Librarian.EMPTY_OBJ)) {
+            return;
+        }
+        updateView(CHAPTER_VIEW);
+    }
+
+    private void onClickModule() {
+        if (moduleID.equals(Librarian.EMPTY_OBJ)) {
+            return;
+        }
+        updateView(MODULE_VIEW);
+    }
+
+    private void onLoadModuleComplete(LoadModuleFromFile task) {
+        LoadModuleFromFile.StatusCode statusCode = task.getStatusCode();
+        String errorMessage;
+        switch (statusCode) {
+            case Success:
+                updateView(MODULE_VIEW);
+                return;
+            case FileNotExist:
+                errorMessage = getString(R.string.file_not_exist);
+                break;
+            case ReadFailed:
+                errorMessage = getString(R.string.file_cant_read);
+                break;
+            case FileNotSupported:
+                errorMessage = getString(R.string.file_not_supported);
+                break;
+            case MoveFailed:
+                errorMessage = getString(R.string.file_not_moved);
+                break;
+            default:
+                errorMessage = getString(R.string.err_load_module_unknown);
+        }
+        new NotifyDialog(errorMessage, this).show();
+    }
+
+    private void onOpenModuleComplete(AsyncOpenModule task) {
         Exception e = task.getException();
         if (e == null) {
             moduleID = task.getModule().getID();
@@ -419,6 +358,95 @@ public class LibraryActivity extends AsyncTaskActivity {
                 ExceptionHelper.onBookDefinitionException((BookDefinitionException) e, this, TAG);
             }
             updateView(MODULE_VIEW);
+        }
+    }
+
+    private void readChapter() {
+        setResult(RESULT_OK, new Intent().putExtra("linkOSIS", String.format("%s.%s.%s", moduleID, bookID, chapter)));
+        finish();
+    }
+
+    private void setButtonText() {
+        String bookShortName = Librarian.EMPTY_OBJ;
+        if (!moduleID.equals(Librarian.EMPTY_OBJ) && !bookID.equals(Librarian.EMPTY_OBJ)) {
+            try {
+                bookShortName = myLibrarian.getBookShortName(moduleID, bookID);
+                List<String> chList = myLibrarian.getChaptersList(moduleID, bookID);
+                if (!chList.isEmpty()) {
+                    chapter = chList.contains(chapter) ? chapter : chList.get(0);
+                } else {
+                    chapter = Librarian.EMPTY_OBJ;
+                }
+            } catch (OpenModuleException e) {
+                ExceptionHelper.onOpenModuleException(e, this, TAG);
+                moduleID = Librarian.EMPTY_OBJ;
+                bookID = Librarian.EMPTY_OBJ;
+                chapter = Librarian.EMPTY_OBJ;
+            } catch (BookNotFoundException e) {
+                ExceptionHelper.onBookNotFoundException(e, this, TAG);
+                bookID = Librarian.EMPTY_OBJ;
+                chapter = Librarian.EMPTY_OBJ;
+            }
+        }
+
+        btnModule.setText(moduleID);
+        btnBook.setText(bookShortName);
+        btnChapter.setText(chapter);
+    }
+
+    private void updateView(int viewMode) {
+        this.viewMode = viewMode;
+
+        btnModule.setEnabled(viewMode != MODULE_VIEW);
+        btnBook.setEnabled(viewMode != BOOK_VIEW);
+        btnChapter.setEnabled(viewMode != CHAPTER_VIEW);
+
+        modulesList.setVisibility(viewMode == MODULE_VIEW ? View.VISIBLE : View.GONE);
+        booksList.setVisibility(viewMode == BOOK_VIEW ? View.VISIBLE : View.GONE);
+        chapterList.setVisibility(viewMode == CHAPTER_VIEW ? View.VISIBLE : View.GONE);
+
+        switch (viewMode) {
+            case MODULE_VIEW:
+                viewModeModule();
+                break;
+            case BOOK_VIEW:
+                viewModeBook();
+                break;
+            case CHAPTER_VIEW:
+                viewModeChapter();
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void viewModeBook() {
+        booksList.setAdapter(getBookAdapter());
+        ItemList itemBook;
+        try {
+            itemBook = new ItemList(bookID, myLibrarian.getBookFullName(moduleID, bookID));
+            bookPos = books.indexOf(itemBook);
+            if (bookPos >= 0) {
+                booksList.setSelection(bookPos);
+            }
+        } catch (OpenModuleException e) {
+            ExceptionHelper.onOpenModuleException(e, this, TAG);
+        }
+    }
+
+    private void viewModeChapter() {
+        chapterList.setAdapter(getChapterAdapter());
+        chapterPos = chapters.indexOf(chapter);
+        if (chapterPos >= 0) {
+            chapterList.setSelection(chapterPos);
+        }
+    }
+
+    private void viewModeModule() {
+        modulesList.setAdapter(getModuleAdapter());
+        modulePos = modules.indexOf(new ItemList(moduleID, myLibrarian.getModuleFullName()));
+        if (modulePos >= 0) {
+            modulesList.setSelection(modulePos);
         }
     }
 }

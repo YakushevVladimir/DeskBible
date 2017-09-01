@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: BibleQuoteApp.java
  *
- * Created by Vladimir Yakushev at 8/2017
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -33,7 +33,7 @@ import com.BibleQuote.async.AsyncManager;
 import com.BibleQuote.di.AppComponent;
 import com.BibleQuote.di.AppModule;
 import com.BibleQuote.di.DaggerAppComponent;
-import com.BibleQuote.domain.controllers.ILibraryController;
+import com.BibleQuote.domain.controller.ILibraryController;
 import com.BibleQuote.domain.repository.IBookmarksRepository;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.utils.PreferenceHelper;

@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: AsyncRefreshModules.java
  *
- * Created by Vladimir Yakushev at 3/2017
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -29,7 +29,7 @@
 package com.BibleQuote.async.task;
 
 import com.BibleQuote.BibleQuoteApp;
-import com.BibleQuote.domain.controllers.ILibraryController;
+import com.BibleQuote.domain.controller.ILibraryController;
 import com.BibleQuote.utils.Task;
 
 public class AsyncRefreshModules extends Task {

@@ -19,26 +19,28 @@
  * under the License.
  *
  * Project: BibleQuote-for-Android
- * File: FsCacheModuleController.java
+ * File: CacheModuleControllerImpl.java
  *
- * Created by Vladimir Yakushev at 9/2016
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
 
-package com.BibleQuote.domain.controllers.cache;
+package com.BibleQuote.dal.controller;
 
+import com.BibleQuote.domain.controller.ICacheModuleController;
 import com.BibleQuote.domain.entity.ModuleList;
 import com.BibleQuote.domain.exceptions.DataAccessException;
 import com.BibleQuote.domain.repository.ICacheRepository;
 import com.BibleQuote.utils.Logger;
 
-public class FsCacheModuleController implements ICacheModuleController {
+public class CacheModuleControllerImpl implements ICacheModuleController {
+
     private static final String TAG = "FsCacheRepository";
 
     private ICacheRepository cacheRepository;
 
-    public FsCacheModuleController(ICacheRepository cacheRepository) {
+    public CacheModuleControllerImpl(ICacheRepository cacheRepository) {
         this.cacheRepository = cacheRepository;
     }
 

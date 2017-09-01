@@ -21,16 +21,17 @@
  * Project: BibleQuote-for-Android
  * File: FsLibraryController.java
  *
- * Created by Vladimir Yakushev at 3/2017
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
 
-package com.BibleQuote.domain.controllers;
+package com.BibleQuote.dal.controller;
 
 import android.util.Log;
 
-import com.BibleQuote.domain.controllers.cache.ICacheModuleController;
+import com.BibleQuote.domain.controller.ICacheModuleController;
+import com.BibleQuote.domain.controller.ILibraryController;
 import com.BibleQuote.domain.entity.Module;
 import com.BibleQuote.domain.entity.ModuleList;
 import com.BibleQuote.domain.exceptions.BookDefinitionException;
@@ -46,11 +47,11 @@ public class FsLibraryController implements ILibraryController {
 
     private static final String TAG = FsLibraryController.class.getSimpleName();
     private ICacheModuleController cache;
-    private ILibraryRepository<? extends Module> mRepository;
+    private ILibraryRepository<? extends Module> libraryRepository;
     private Map<String, Module> moduleSet = Collections.synchronizedMap(new TreeMap<String, Module>());
 
     public FsLibraryController(ILibraryRepository<? extends Module> repository, ICacheModuleController cacheModuleController) {
-        this.mRepository = repository;
+        this.libraryRepository = repository;
         this.cache = cacheModuleController;
     }
 
@@ -68,8 +69,8 @@ public class FsLibraryController implements ILibraryController {
     @Override
     public Map<String, Module> reloadModules() {
         moduleSet.clear();
-        moduleSet.putAll(mRepository.loadFileModules());
-        cache.saveModuleList(getModuleList(moduleSet));
+        moduleSet.putAll(libraryRepository.loadFileModules());
+        cache.saveModuleList(new ModuleList(moduleSet.values()));
         return moduleSet;
     }
 
@@ -92,16 +93,8 @@ public class FsLibraryController implements ILibraryController {
 
     @Override
     public void loadModule(String path) throws OpenModuleException, BooksDefinitionException, BookDefinitionException {
-        Module module = mRepository.loadModule(path);
+        Module module = libraryRepository.loadModule(path);
         moduleSet.put(module.getID(), module);
-    }
-
-    private ModuleList getModuleList(Map<String, Module> moduleSet) {
-        ModuleList result = new ModuleList();
-        for (Module currModule : moduleSet.values()) {
-            result.add(currModule);
-        }
-        return result;
     }
 
     private void loadCachedModules() {

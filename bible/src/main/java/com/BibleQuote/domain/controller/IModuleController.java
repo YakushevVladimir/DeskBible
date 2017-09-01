@@ -19,24 +19,42 @@
  * under the License.
  *
  * Project: BibleQuote-for-Android
- * File: ICacheModuleController.java
+ * File: IModuleController.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
 
-package com.BibleQuote.domain.controllers.cache;
+package com.BibleQuote.domain.controller;
 
-import com.BibleQuote.domain.entity.ModuleList;
+import android.graphics.Bitmap;
+
+import com.BibleQuote.domain.entity.Book;
+import com.BibleQuote.domain.entity.Chapter;
+import com.BibleQuote.domain.exceptions.BookNotFoundException;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  *
  */
-public interface ICacheModuleController {
-    ModuleList getModuleList();
+public interface IModuleController {
 
-    boolean isCacheExist();
+    List<Book> getBooks();
 
-    void saveModuleList(ModuleList moduleList);
+    Bitmap getBitmap(String path);
+
+    Book getBookByID(String bookId) throws BookNotFoundException;
+
+    Book getNextBook(String bookId) throws BookNotFoundException;
+
+    Book getPrevBook(String bookId) throws BookNotFoundException;
+
+    List<String> getChapterNumbers(String bookId) throws BookNotFoundException;
+
+    Chapter getChapter(String bookId, int chapter) throws BookNotFoundException;
+
+    Map<String, String> search(List<String> bookList, String searchQuery);
 }

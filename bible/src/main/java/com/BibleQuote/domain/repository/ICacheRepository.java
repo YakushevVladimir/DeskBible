@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: ICacheRepository.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -35,6 +35,7 @@ import com.BibleQuote.domain.exceptions.DataAccessException;
  *
  */
 public interface ICacheRepository {
+
     ModuleList getData() throws DataAccessException;
 
     boolean isCacheExist();

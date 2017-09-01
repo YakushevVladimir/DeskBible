@@ -21,25 +21,25 @@
  * Project: BibleQuote-for-Android
  * File: Injector.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
 
 package com.BibleQuote.managers;
 
+import com.BibleQuote.dal.controller.BQModuleController;
 import com.BibleQuote.dal.repository.BQModuleRepository;
-import com.BibleQuote.domain.controllers.modules.BQModuleController;
-import com.BibleQuote.domain.controllers.modules.IModuleController;
+import com.BibleQuote.domain.controller.IModuleController;
 import com.BibleQuote.domain.entity.Module;
 import com.BibleQuote.entity.modules.BQModule;
 
 /**
  *
  */
-public final class Injector {
+final class Injector {
 
-    public static IModuleController getModuleController(Module module) {
+    static IModuleController getModuleController(Module module) {
         if (module instanceof BQModule) {
             return new BQModuleController((BQModule) module, new BQModuleRepository());
         }

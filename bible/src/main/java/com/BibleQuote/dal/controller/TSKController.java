@@ -21,12 +21,13 @@
  * Project: BibleQuote-for-Android
  * File: TSKController.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
-package com.BibleQuote.domain.controllers;
+package com.BibleQuote.dal.controller;
 
+import com.BibleQuote.domain.controller.ITSKController;
 import com.BibleQuote.domain.entity.BibleReference;
 import com.BibleQuote.domain.exceptions.BQUniversalException;
 import com.BibleQuote.domain.exceptions.TskNotFoundException;

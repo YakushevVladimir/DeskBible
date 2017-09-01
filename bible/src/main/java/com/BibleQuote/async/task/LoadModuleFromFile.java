@@ -21,18 +21,18 @@
  * Project: BibleQuote-for-Android
  * File: LoadModuleFromFile.java
  *
- * Created by Vladimir Yakushev at 9/2016
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
 
 package com.BibleQuote.async.task;
 
-import android.content.Context;
-
-import com.BibleQuote.utils.FsUtils;
-import com.BibleQuote.utils.NotifyDialog;
+import com.BibleQuote.domain.controller.ILibraryController;
+import com.BibleQuote.utils.DataConstants;
 import com.BibleQuote.utils.Task;
+
+import java.io.File;
 
 /**
  * @author ru_phoenix
@@ -40,32 +40,50 @@ import com.BibleQuote.utils.Task;
  */
 public class LoadModuleFromFile extends Task {
 
-	private Context context;
-	private String errorMessage = "";
-	private String path;
+    public enum StatusCode {Success, Unknown, FileNotExist, ReadFailed, FileNotSupported, MoveFailed}
 
-	public LoadModuleFromFile(String message, Boolean isHidden, Context context, String path) {
-		super(message, isHidden);
-		this.context = context;
-		this.path = path;
-	}
+    private final ILibraryController libraryController;
+    private String path;
+    private StatusCode statusCode = StatusCode.Success;
 
-	@Override
-	protected Boolean doInBackground(String... arg0) {
-		try {
-			FsUtils.addModuleFromFile(context, path);
-		} catch (Exception e) {
-			errorMessage = e.getMessage();
-			return false;
-		}
-		return true;
-	}
+    public LoadModuleFromFile(String message, String path, ILibraryController libraryController) {
+        super(message, false);
+        this.path = path;
+        this.libraryController = libraryController;
+    }
 
-	@Override
-	protected void onPostExecute(Boolean result) {
-		super.onPostExecute(result);
-		if (!result) {
-			new NotifyDialog(errorMessage, context).show();
-		}
-	}
+    @Override
+    protected Boolean doInBackground(String... arg0) {
+        try {
+            File source = new File(path);
+            if (!source.exists()) {
+                statusCode = StatusCode.FileNotExist;
+                return false;
+            } else if (!source.canRead()) {
+                statusCode = StatusCode.ReadFailed;
+                return false;
+            } else if (!source.getName().endsWith("zip")) {
+                statusCode = StatusCode.FileNotSupported;
+                return false;
+            }
+
+            File libraryDir = new File(DataConstants.getLibraryPath());
+            File target = new File(libraryDir, source.getName());
+            if (!source.renameTo(target)) {
+                statusCode = StatusCode.MoveFailed;
+                return false;
+            }
+
+            libraryController.loadModule(target.getAbsolutePath());
+        } catch (Exception e) {
+            statusCode = StatusCode.Unknown;
+            return false;
+        }
+
+        return true;
+    }
+
+    public StatusCode getStatusCode() {
+        return statusCode;
+    }
 }

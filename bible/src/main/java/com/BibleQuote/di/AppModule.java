@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: AppModule.java
  *
- * Created by Vladimir Yakushev at 3/2017
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -31,17 +31,16 @@ package com.BibleQuote.di;
 import android.content.Context;
 
 import com.BibleQuote.async.AsyncManager;
+import com.BibleQuote.dal.controller.CacheModuleControllerImpl;
+import com.BibleQuote.dal.controller.FsLibraryController;
+import com.BibleQuote.dal.controller.TSKController;
 import com.BibleQuote.dal.repository.FsCacheRepository;
 import com.BibleQuote.dal.repository.FsHistoryRepository;
 import com.BibleQuote.dal.repository.FsLibraryRepository;
 import com.BibleQuote.dal.repository.XmlTskRepository;
 import com.BibleQuote.dal.repository.bookmarks.DbBookmarksRepository;
-import com.BibleQuote.domain.controllers.FsLibraryController;
-import com.BibleQuote.domain.controllers.ILibraryController;
-import com.BibleQuote.domain.controllers.ITSKController;
-import com.BibleQuote.domain.controllers.TSKController;
-import com.BibleQuote.domain.controllers.cache.FsCacheModuleController;
-import com.BibleQuote.domain.controllers.cache.ICacheModuleController;
+import com.BibleQuote.domain.controller.ILibraryController;
+import com.BibleQuote.domain.controller.ITSKController;
 import com.BibleQuote.domain.entity.Module;
 import com.BibleQuote.domain.repository.IBookmarksRepository;
 import com.BibleQuote.domain.repository.ICacheRepository;
@@ -51,6 +50,7 @@ import com.BibleQuote.domain.repository.ITskRepository;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.managers.history.HistoryManager;
 import com.BibleQuote.managers.history.IHistoryManager;
+import com.BibleQuote.utils.DataConstants;
 import com.BibleQuote.utils.PreferenceHelper;
 
 import javax.inject.Singleton;
@@ -84,16 +84,6 @@ public class AppModule {
     }
 
     @Provides
-    ICacheModuleController getCacheModuleController(ICacheRepository repository) {
-        return new FsCacheModuleController(repository);
-    }
-
-    @Provides
-    ICacheRepository getCacheRepository(Context context) {
-        return new FsCacheRepository(context);
-    }
-
-    @Provides
     IHistoryManager getHistoryManager(IHistoryRepository repository, PreferenceHelper prefHelper) {
         return new HistoryManager(repository, prefHelper.getHistorySize());
     }
@@ -113,8 +103,9 @@ public class AppModule {
 
     @Provides
     @Singleton
-    ILibraryController getLibraryController(ILibraryRepository<? extends Module> repository, ICacheModuleController cache) {
-        return new FsLibraryController(repository, cache);
+    ILibraryController getLibraryController(Context context, ILibraryRepository<? extends Module> repository) {
+        ICacheRepository cacheRepository = new FsCacheRepository(context.getFilesDir(), DataConstants.getLibraryCache());
+        return new FsLibraryController(repository, new CacheModuleControllerImpl(cacheRepository));
     }
 
     @Provides

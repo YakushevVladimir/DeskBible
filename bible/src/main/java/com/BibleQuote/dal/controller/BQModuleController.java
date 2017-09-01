@@ -21,18 +21,19 @@
  * Project: BibleQuote-for-Android
  * File: BQModuleController.java
  *
- * Created by Vladimir Yakushev at 8/2017
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
 
-package com.BibleQuote.domain.controllers.modules;
+package com.BibleQuote.dal.controller;
 
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.BibleQuote.dal.repository.BQModuleRepository;
+import com.BibleQuote.domain.controller.IModuleController;
 import com.BibleQuote.domain.entity.Book;
 import com.BibleQuote.domain.entity.Chapter;
 import com.BibleQuote.domain.exceptions.BookNotFoundException;

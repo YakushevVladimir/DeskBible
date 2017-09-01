@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: Librarian.java
  *
- * Created by Vladimir Yakushev at 8/2017
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -32,9 +32,9 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 
-import com.BibleQuote.domain.controllers.ILibraryController;
-import com.BibleQuote.domain.controllers.ITSKController;
-import com.BibleQuote.domain.controllers.modules.IModuleController;
+import com.BibleQuote.domain.controller.ILibraryController;
+import com.BibleQuote.domain.controller.IModuleController;
+import com.BibleQuote.domain.controller.ITSKController;
 import com.BibleQuote.domain.entity.BibleReference;
 import com.BibleQuote.domain.entity.Book;
 import com.BibleQuote.domain.entity.Chapter;

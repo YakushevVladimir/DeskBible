@@ -21,19 +21,16 @@
  * Project: BibleQuote-for-Android
  * File: FsCacheRepository.java
  *
- * Created by Vladimir Yakushev at 9/2016
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
 
 package com.BibleQuote.dal.repository;
 
-import android.content.Context;
-
 import com.BibleQuote.domain.entity.ModuleList;
 import com.BibleQuote.domain.exceptions.DataAccessException;
 import com.BibleQuote.domain.repository.ICacheRepository;
-import com.BibleQuote.utils.DataConstants;
 import com.BibleQuote.utils.Logger;
 
 import java.io.File;
@@ -50,12 +47,9 @@ public class FsCacheRepository implements ICacheRepository {
     private File cacheDir;
     private String cacheName;
 
-    public FsCacheRepository(Context context) {
-        this.cacheDir = context.getExternalCacheDir();
-        if (this.cacheDir == null || !this.cacheDir.exists()) {
-            this.cacheDir = context.getCacheDir();
-        }
-        this.cacheName = DataConstants.LIBRARY_CACHE;
+    public FsCacheRepository(File cacheDir, String cacheName) {
+        this.cacheDir = cacheDir;
+        this.cacheName = cacheName;
     }
 
     @Override

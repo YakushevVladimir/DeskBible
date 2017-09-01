@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: ModuleList.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -29,9 +29,18 @@
 package com.BibleQuote.domain.entity;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  *
  */
 public class ModuleList extends ArrayList<Module> {
+
+    public ModuleList() {
+        super();
+    }
+
+    public ModuleList(Collection<Module> values) {
+        super(values);
+    }
 }

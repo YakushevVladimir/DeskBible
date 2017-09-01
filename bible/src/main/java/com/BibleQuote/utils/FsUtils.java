@@ -21,22 +21,16 @@
  * Project: BibleQuote-for-Android
  * File: FsUtils.java
  *
- * Created by Vladimir Yakushev at 8/2017
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
 package com.BibleQuote.utils;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.util.Log;
 
-import com.BibleQuote.BibleQuoteApp;
-import com.BibleQuote.R;
-import com.BibleQuote.domain.exceptions.BookDefinitionException;
-import com.BibleQuote.domain.exceptions.BooksDefinitionException;
 import com.BibleQuote.domain.exceptions.DataAccessException;
-import com.BibleQuote.domain.exceptions.OpenModuleException;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -51,7 +45,6 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-
 
 public final class FsUtils {
 
@@ -165,38 +158,6 @@ public final class FsUtils {
 
     }
 
-    //	public static boolean loadContentFromURL(String fromURL, String toFile) {
-    //		try {
-    //			URL url = new URL("http://bible-desktop.com/xml" + fromURL);
-    //			File file = new File(toFile);
-    //
-    //			/* Open a connection to that URL. */
-    //			URLConnection ucon = url.openConnection();
-    //
-    //			/* Define InputStreams to read from the URLConnection */
-    //			InputStream is = ucon.getInputStream();
-    //			BufferedInputStream bis = new BufferedInputStream(is);
-    //
-    //			/* Read bytes to the Buffer until there is nothing more to read(-1) */
-    //			ByteArrayBuffer baf = new ByteArrayBuffer(50);
-    //			int current;
-    //			while ((current = bis.read()) != -1) {
-    //				baf.append((byte) current);
-    //			}
-    //
-    //			/* Convert the Bytes read to a String. */
-    //			FileOutputStream fos = new FileOutputStream(file);
-    //			fos.write(baf.toByteArray());
-    //			fos.close();
-    //
-    //		} catch (IOException e) {
-    //			Logger.e(TAG, String.format("loadContentFromURL(%1$s, %2$s)", fromURL, toFile), e);
-    //			return false;
-    //		}
-    //
-    //		return true;
-    //	}
-
     private static BufferedReader openFile(File file, String encoding) {
         Log.i(TAG, "FileUtilities.OpenFile(" + file + ", " + encoding + ")");
 
@@ -216,11 +177,6 @@ public final class FsUtils {
         return bReader;
     }
 
-    public static InputStream getAssetStream(Context context, String paramString)
-            throws IOException {
-        return context.getResources().getAssets().open(paramString);
-    }
-
     public static String getAssetString(Context context, String fileName) {
         try (
                 InputStream assetIS = context.getResources().getAssets().open(fileName);
@@ -237,23 +193,4 @@ public final class FsUtils {
         }
     }
 
-    public static void addModuleFromFile(Context context, String path) throws OpenModuleException, DataAccessException, BooksDefinitionException, BookDefinitionException {
-        File source = new File(path);
-        Resources resources = context.getResources();
-        if (!source.exists()) {
-            throw new DataAccessException(resources.getString(R.string.file_not_exist));
-        } else if (!source.canRead()) {
-            throw new DataAccessException(resources.getString(R.string.file_cant_read));
-        } else if (!source.getName().endsWith("zip")) {
-            throw new DataAccessException(resources.getString(R.string.file_not_supported));
-        }
-
-        File libraryDir = new File(DataConstants.getLibraryPath());
-        File target = new File(libraryDir, source.getName());
-        if (!source.renameTo(target)) {
-            throw new DataAccessException(resources.getString(R.string.file_not_moved));
-        }
-
-        BibleQuoteApp.getInstance().getLibraryController().loadModule(target.getAbsolutePath());
-    }
 }

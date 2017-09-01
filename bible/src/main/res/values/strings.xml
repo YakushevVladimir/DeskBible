@@ -22,7 +22,7 @@
   ~ Project: BibleQuote-for-Android
   ~ File: strings.xml
   ~
-  ~ Created by Vladimir Yakushev at 8/2017
+  ~ Created by Vladimir Yakushev at 9/2017
   ~ E-mail: ru.phoenix@gmail.com
   ~ WWW: http://www.scripturesoftware.org
   -->
@@ -145,4 +145,5 @@
     <string name="image_not_found">Image not found</string>
     <string name="retry">Retry</string>
     <string name="msg_permission_denied">No permissions required to run the application</string>
+    <string name="err_load_module_unknown">Unexpected error when adding a module. Try again later or select another module.</string>
 </resources>

@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: DbLibraryHelper.java
  *
- * Created by Vladimir Yakushev at 8/2017
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -68,8 +68,8 @@ public final class DbLibraryHelper {
                     + ");"
     };
     private static final String DB_DIR_PATH = Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)
-            ? DataConstants.DB_EXTERNAL_DATA_PATH
-            : DataConstants.DB_DATA_PATH;
+            ? DataConstants.getDbExternalDataPath()
+            : DataConstants.getDbDataPath();
     private final static String TAG = DbLibraryHelper.class.getSimpleName();
     private static int version = 2;
     private static SQLiteDatabase db;
@@ -95,7 +95,7 @@ public final class DbLibraryHelper {
         if (!dbDir.exists() && !dbDir.mkdir()) {
             dbDir = BibleQuoteApp.getInstance().getFilesDir();
         }
-        SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(new File(dbDir, DataConstants.DB_LIBRARY_NAME), null);
+        SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(new File(dbDir, DataConstants.getDbLibraryName()), null);
 
         if (db.getVersion() != version) {
             db.beginTransaction();

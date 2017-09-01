@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: AsyncOpenModule.java
  *
- * Created by Vladimir Yakushev at 9/2016
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -31,7 +31,7 @@ package com.BibleQuote.async.task;
 import android.util.Log;
 
 import com.BibleQuote.BibleQuoteApp;
-import com.BibleQuote.domain.controllers.ILibraryController;
+import com.BibleQuote.domain.controller.ILibraryController;
 import com.BibleQuote.domain.entity.BibleReference;
 import com.BibleQuote.domain.entity.Module;
 import com.BibleQuote.domain.exceptions.OpenModuleException;
