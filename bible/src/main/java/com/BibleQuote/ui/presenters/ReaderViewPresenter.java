@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: ReaderViewPresenter.java
  *
- * Created by Vladimir Yakushev at 3/2017
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -91,6 +91,7 @@ public class ReaderViewPresenter implements TTSPlayerFragment.OnTTSStopSpeakList
     public void setOSISLink(BibleReference osisLink) {
         if (osisLink == null) {
             osisLink = new BibleReference(preferenceHelper.getString(KEY_LAST_READ));
+            Logger.i(this, "Open from last read: " + osisLink);
         }
 
         if (!librarian.isOSISLinkValid(osisLink)) {

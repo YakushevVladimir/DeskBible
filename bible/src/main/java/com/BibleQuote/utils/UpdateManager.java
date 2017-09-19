@@ -87,7 +87,6 @@ public final class UpdateManager {
         }
 
         if (currVersionCode < 39) {
-            Logger.i(TAG, "Update to version 0.05.02");
             saveTSK(context);
         }
 
@@ -98,7 +97,6 @@ public final class UpdateManager {
         }
 
         if (updateModules) {
-            Logger.i(TAG, "Update built-in modules on external storage");
             updateBuiltInModules(context);
         }
 
@@ -113,6 +111,7 @@ public final class UpdateManager {
         } catch (NameNotFoundException e) {
             prefHelper.saveInt("versionCode", 39);
         }
+        Logger.i(TAG, "Update success");
     }
 
     private static void convertBookmarks_59(PreferenceHelper preferenceHelper) {
@@ -160,6 +159,7 @@ public final class UpdateManager {
     }
 
     private static void saveTSK(Context context) {
+        Logger.i(TAG, "Save TSK file");
         BufferedWriter tskBw = null;
         BufferedReader tskBr = null;
         try {
@@ -219,6 +219,7 @@ public final class UpdateManager {
     }
 
     private static void updateBuiltInModules(Context context) {
+        Logger.i(TAG, "Update built-in modules on external storage");
         saveBuiltInModule(context, "bible_rst.zip", R.raw.bible_rst);
         saveBuiltInModule(context, "bible_kjv.zip", R.raw.bible_kjv);
     }

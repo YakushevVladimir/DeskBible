@@ -39,7 +39,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 /**
@@ -52,6 +52,7 @@ import java.util.Locale;
 public final class Logger {
 
     private static final String TAG = Logger.class.getSimpleName();
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.US);
     private static File logFile;
 
     private Logger() throws InstantiationException {
@@ -64,10 +65,10 @@ public final class Logger {
      * @param tag     имя класса-инициатора события
      * @param message текст помещаемый в протокол событий
      */
-    public static void d(String tag, String message) {
-        Log.i(tag, message);
+    public static void d(Object tag, String message) {
+        Log.d(getTag(tag), message);
         if (BuildConfig.DEBUG) {
-            write(tag, message);
+            write(getTag(tag), message);
         }
     }
 
@@ -77,9 +78,9 @@ public final class Logger {
      * @param tag  имя класса-инициатора события
      * @param text текст помещаемый в протокол событий
      */
-    public static void e(String tag, String text) {
-        Log.e(tag, text);
-        write(tag, "Error: " + text);
+    public static void e(Object tag, String text) {
+        Log.e(getTag(tag), text);
+        write(getTag(tag), "Error: " + text);
     }
 
     /**
@@ -89,9 +90,9 @@ public final class Logger {
      * @param text текст помещаемый в протокол событий
      * @param e    ссылка на полученный Exception
      */
-    public static void e(String tag, String text, Exception e) {
-        Log.e(tag, text, e);
-        write(tag, String.format("Error: $1$s%nMessage: %2$s", text, e.getMessage()));
+    public static void e(Object tag, String text, Exception e) {
+        Log.e(getTag(tag), text, e);
+        write(getTag(tag), String.format("Error: %s%n%s", text, Log.getStackTraceString(e)));
     }
 
     /**
@@ -100,9 +101,17 @@ public final class Logger {
      * @param tag  имя класса-инициатора события
      * @param info текст помещаемый в протокол событий
      */
-    public static void i(String tag, String info) {
-        Log.i(tag, info);
-        write(tag, info);
+    public static void i(Object tag, String info) {
+        Log.i(getTag(tag), info);
+        write(getTag(tag), info);
+    }
+
+    private static String getTag(Object src) {
+        if (src instanceof String) {
+            return (String) src;
+        } else {
+            return src.getClass().getSimpleName();
+        }
     }
 
     /**
@@ -112,17 +121,16 @@ public final class Logger {
     private static File getLogFile() {
         if (logFile == null && Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
             logFile = new File(DataConstants.getFsAppDirName(), "log.txt");
-            if (logFile.exists() && !logFile.delete()) {
+            if (logFile.exists() && !logFile.canWrite()) {
                 return null;
             }
 
-            write("Logger " + new SimpleDateFormat("dd-MMM-yy G hh:mm aaa", Locale.getDefault()).format(Calendar.getInstance().getTime()));
-            write("Current version package: " + BuildConfig.VERSION_NAME);
-            write("Default language: " + Locale.getDefault().getDisplayLanguage());
-            write("Device model: " + Build.BRAND + " " + Build.MODEL);
-            write("Device display: " + Build.BRAND + " " + Build.DISPLAY);
-            write("Android OS: " + Build.VERSION.RELEASE);
             write("====================================");
+            write("Application version: " + BuildConfig.VERSION_NAME);
+            write("Default language: " + Locale.getDefault().getDisplayLanguage());
+            write("Device model: " + Build.MODEL);
+            write("Android OS: " + Build.VERSION.RELEASE);
+            write("------------------------------------");
         }
         return logFile;
     }
@@ -139,15 +147,17 @@ public final class Logger {
      */
     private static void write(String tag, String text) {
         File log = getLogFile();
-        if (log != null) {
-            try (
-                    OutputStreamWriter oWriter = new OutputStreamWriter(new FileOutputStream(log, true), Charset.forName("UTF-8"));
-                    BufferedWriter writer = new BufferedWriter(oWriter)
-            ) {
-                writer.write(String.format("%s: %s%n", tag != null ? tag : TAG, text));
-            } catch (Exception e) {
-                Log.e(TAG, e.getMessage());
-            }
+        if (log == null) {
+            return;
+        }
+
+        try (
+                OutputStreamWriter oWriter = new OutputStreamWriter(new FileOutputStream(log, true), Charset.forName("UTF-8"));
+                BufferedWriter writer = new BufferedWriter(oWriter)
+        ) {
+            writer.write(String.format("%s %s %s%n", dateFormat.format(new Date()), tag != null ? tag : TAG, text));
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
         }
     }
 }

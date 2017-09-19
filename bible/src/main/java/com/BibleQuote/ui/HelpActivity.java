@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: HelpActivity.java
  *
- * Created by Vladimir Yakushev at 9/2016
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -29,13 +29,13 @@
 package com.BibleQuote.ui;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.webkit.WebView;
 
 import com.BibleQuote.R;
+import com.BibleQuote.ui.base.BaseActivity;
 import com.BibleQuote.utils.FsUtils;
 
-public class HelpActivity extends AppCompatActivity {
+public class HelpActivity extends BaseActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

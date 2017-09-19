@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: ReaderActivity.java
  *
- * Created by Vladimir Yakushev at 8/2017
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -41,7 +41,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
 import android.view.Display;
@@ -60,6 +59,7 @@ import com.BibleQuote.domain.entity.Chapter;
 import com.BibleQuote.domain.textFormatters.ITextFormatter;
 import com.BibleQuote.entity.TextAppearance;
 import com.BibleQuote.listeners.IReaderViewListener;
+import com.BibleQuote.ui.base.BaseActivity;
 import com.BibleQuote.ui.fragments.TTSPlayerFragment;
 import com.BibleQuote.ui.handlers.SelectTextHandler;
 import com.BibleQuote.ui.presenters.ReaderViewPresenter;
@@ -73,7 +73,7 @@ import java.util.TreeSet;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ReaderActivity extends AppCompatActivity implements ReaderViewPresenter.IReaderView, IReaderViewListener {
+public class ReaderActivity extends BaseActivity implements ReaderViewPresenter.IReaderView, IReaderViewListener {
 
     private static final int VIEW_CHAPTER_NAV_LENGTH = 3000;
 

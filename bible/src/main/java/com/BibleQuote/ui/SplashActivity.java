@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: SplashActivity.java
  *
- * Created by Vladimir Yakushev at 8/2017
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -36,7 +36,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.PermissionChecker;
-import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
@@ -45,6 +44,7 @@ import com.BibleQuote.R;
 import com.BibleQuote.async.AsyncTaskManager;
 import com.BibleQuote.async.OnTaskCompleteListener;
 import com.BibleQuote.async.task.command.AsyncCommand;
+import com.BibleQuote.ui.base.BaseActivity;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.Task;
 import com.BibleQuote.utils.UpdateManager;
@@ -52,7 +52,7 @@ import com.BibleQuote.utils.UpdateManager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SplashActivity extends AppCompatActivity implements OnTaskCompleteListener {
+public class SplashActivity extends BaseActivity implements OnTaskCompleteListener {
 
     private static final int REQUEST_PERMISSIONS = 1;
 

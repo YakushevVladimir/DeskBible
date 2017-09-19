@@ -28,6 +28,7 @@
 package com.BibleQuote;
 
 import android.app.Application;
+import android.util.Log;
 
 import com.BibleQuote.async.AsyncManager;
 import com.BibleQuote.di.AppComponent;
@@ -36,13 +37,14 @@ import com.BibleQuote.di.DaggerAppComponent;
 import com.BibleQuote.domain.controller.ILibraryController;
 import com.BibleQuote.domain.repository.IBookmarksRepository;
 import com.BibleQuote.managers.Librarian;
+import com.BibleQuote.utils.Logger;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 
 import javax.inject.Inject;
 
-public class BibleQuoteApp extends Application {
+public class BibleQuoteApp extends Application implements Thread.UncaughtExceptionHandler {
 
 	private static BibleQuoteApp instance;
 
@@ -52,6 +54,8 @@ public class BibleQuoteApp extends Application {
     @Inject ILibraryController libraryController;
     @Inject PreferenceHelper prefHelper;
 
+    private Thread.UncaughtExceptionHandler exceptionHandler;
+
 	public static BibleQuoteApp getInstance() {
 		return instance;
 	}
@@ -59,6 +63,7 @@ public class BibleQuoteApp extends Application {
     public BibleQuoteApp() {
         super();
         instance = this;
+        exceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
     }
 
     public AsyncManager getAsyncManager() {
@@ -95,5 +100,15 @@ public class BibleQuoteApp extends Application {
                 .appModule(new AppModule(this))
                 .build();
         appComponent.inject(this);
+    }
+
+    @Override
+    public void uncaughtException(Thread thread, Throwable ex) {
+        Logger.e(thread.getName(), Log.getStackTraceString(ex));
+        if (exceptionHandler != null) {
+            exceptionHandler.uncaughtException(thread, ex);
+        } else {
+            System.exit(2);
+        }
     }
 }

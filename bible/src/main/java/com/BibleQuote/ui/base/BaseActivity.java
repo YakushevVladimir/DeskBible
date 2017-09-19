@@ -19,31 +19,39 @@
  * under the License.
  *
  * Project: BibleQuote-for-Android
- * File: AboutActivity.java
+ * File: BaseActivity.java
  *
  * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
-package com.BibleQuote.ui;
+
+package com.BibleQuote.ui.base;
 
 import android.os.Bundle;
-import android.widget.TextView;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 
-import com.BibleQuote.BuildConfig;
-import com.BibleQuote.R;
-import com.BibleQuote.ui.base.BaseActivity;
+import com.BibleQuote.utils.Logger;
 
-public class AboutActivity extends BaseActivity {
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.about);
+public class BaseActivity extends AppCompatActivity {
 
-		TextView tvApp = (TextView) findViewById(R.id.about_name);
-		tvApp.setText(String.format(
-				getResources().getText(R.string.app_about_name).toString(),
-				BuildConfig.VERSION_NAME));
-	}
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Logger.d(this, "Create activity");
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Logger.d(this, "Start activity");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Logger.d(this, "Stop activity");
+    }
 }

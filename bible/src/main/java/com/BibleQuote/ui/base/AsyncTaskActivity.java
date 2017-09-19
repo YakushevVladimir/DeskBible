@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: AsyncTaskActivity.java
  *
- * Created by Vladimir Yakushev at 9/2016
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -31,7 +31,6 @@ package com.BibleQuote.ui.base;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.async.AsyncManager;
@@ -42,7 +41,7 @@ import com.BibleQuote.utils.Task;
  * @author Vladimir Yakushev
  * @version 1.0
  */
-public abstract class AsyncTaskActivity extends AppCompatActivity implements OnTaskCompleteListener {
+public abstract class AsyncTaskActivity extends BaseActivity implements OnTaskCompleteListener {
 
     protected AsyncManager mAsyncManager;
 
