@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: ReaderViewPresenter.java
  *
- * Created by Vladimir Yakushev at 3/2017
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -33,7 +33,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
 import com.BibleQuote.async.AsyncTaskManager;
 import com.BibleQuote.async.OnTaskCompleteListener;
@@ -72,14 +71,15 @@ public class ReaderViewPresenter implements TTSPlayerFragment.OnTTSStopSpeakList
     private static final String KEY_LINK_OSIS = "linkOSIS";
     private static final String TAG = ReaderViewPresenter.class.getSimpleName();
     private Librarian librarian;
-    private PreferenceHelper preferenceHelper = BibleQuoteApp.getInstance().getPrefHelper();
+    private PreferenceHelper preferenceHelper;
     private IReaderView view;
     private WeakReference<Context> weakContext;
 
-    public ReaderViewPresenter(Context context, IReaderView view, Librarian librarian) {
+    public ReaderViewPresenter(Context context, IReaderView view, Librarian librarian, PreferenceHelper prefHelper) {
         this.weakContext = new WeakReference<>(context);
         this.librarian = librarian;
         this.view = view;
+        this.preferenceHelper = prefHelper;
 
         initView();
     }
@@ -91,6 +91,7 @@ public class ReaderViewPresenter implements TTSPlayerFragment.OnTTSStopSpeakList
     public void setOSISLink(BibleReference osisLink) {
         if (osisLink == null) {
             osisLink = new BibleReference(preferenceHelper.getString(KEY_LAST_READ));
+            Logger.i(this, "Open from last read: " + osisLink);
         }
 
         if (!librarian.isOSISLinkValid(osisLink)) {
@@ -216,6 +217,7 @@ public class ReaderViewPresenter implements TTSPlayerFragment.OnTTSStopSpeakList
     }
 
     private void openChapterFromLink(BibleReference osisLink) {
+        // TODO: 19.09.17 Переделать этот ужас (((
         final Context context = weakContext.get();
         if (librarian.isOSISLinkValid(osisLink)) {
             new AsyncTaskManager(new OnTaskCompleteListener() {
@@ -245,7 +247,7 @@ public class ReaderViewPresenter implements TTSPlayerFragment.OnTTSStopSpeakList
 
                 @Override
                 public Context getContext() {
-                    return context;
+                    return weakContext.get();
                 }
             }).setupTask(new AsyncOpenChapter(osisLink, context.getString(R.string.messageLoad)));
         }

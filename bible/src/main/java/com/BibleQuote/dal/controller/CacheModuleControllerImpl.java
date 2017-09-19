@@ -50,6 +50,7 @@ public class CacheModuleControllerImpl implements ICacheModuleController {
         try {
             return cacheRepository.getData();
         } catch (DataAccessException e) {
+            Logger.e(TAG, "Get module list failure", e);
             return new ModuleList();
         }
     }

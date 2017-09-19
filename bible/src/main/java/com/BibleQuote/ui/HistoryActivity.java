@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: HistoryActivity.java
  *
- * Created by Vladimir Yakushev at 8/2017
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -30,7 +30,6 @@ package com.BibleQuote.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -41,10 +40,11 @@ import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
 import com.BibleQuote.entity.ItemList;
 import com.BibleQuote.managers.Librarian;
+import com.BibleQuote.ui.base.BaseActivity;
 
 import java.util.LinkedList;
 
-public class HistoryActivity extends AppCompatActivity {
+public class HistoryActivity extends BaseActivity {
 
     private ListView vHistoryList;
     private Librarian myLibrarian;

@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: PreferenceHelper.java
  *
- * Created by Vladimir Yakushev at 8/2017
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -34,7 +34,7 @@ import android.support.annotation.NonNull;
 
 import com.BibleQuote.entity.TextAppearance;
 
-public final class PreferenceHelper {
+public class PreferenceHelper {
 
     private static final String KEY_NIGHT_MODE = "nightMode";
     private static final String KEY_VIEW_BOOK_VERSE = "always_view_verse_numbers";

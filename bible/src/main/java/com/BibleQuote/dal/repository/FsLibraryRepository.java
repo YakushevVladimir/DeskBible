@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: FsLibraryRepository.java
  *
- * Created by Vladimir Yakushev at 3/2017
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -46,6 +46,7 @@ import com.BibleQuote.utils.OnlyBQZipIni;
 import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -74,35 +75,36 @@ public class FsLibraryRepository implements ILibraryRepository<BQModule> {
 
     @Override
     public synchronized Map<String, Module> loadFileModules() {
-
         Logger.i(TAG, "Load modules from sd-card:");
 
-        Map<String, Module> newModuleSet = new TreeMap<>();
+        Map<String, Module> result = new TreeMap<>();
 
 		// Load zip-compressed BQ-modules
-        ArrayList<String> bqZipIniFiles = searchModules(new OnlyBQZipIni());
+        Logger.i(TAG, "Search zip-modules");
+        List<String> bqZipIniFiles = searchModules(new OnlyBQZipIni());
         for (String bqZipIniFile : bqZipIniFiles) {
             try {
                 Module module = loadFileModule(getZipDataSourceId(bqZipIniFile));
-                newModuleSet.put(module.getID(), module);
+                result.put(module.getID(), module);
             } catch (OpenModuleException | BookDefinitionException | BooksDefinitionException e) {
                 e.printStackTrace();
             }
         }
 
 		// Load standard BQ-modules
-        ArrayList<String> bqIniFiles = searchModules(new OnlyBQIni());
+        Logger.i(TAG, "Search standard modules");
+        List<String> bqIniFiles = searchModules(new OnlyBQIni());
         for (String moduleDataSourceId : bqIniFiles) {
             try {
                 Module module = loadFileModule(moduleDataSourceId);
-                newModuleSet.put(module.getID(), module);
+                result.put(module.getID(), module);
             } catch (OpenModuleException | BookDefinitionException | BooksDefinitionException e) {
                 e.printStackTrace();
             }
         }
 
-		return newModuleSet;
-	}
+        return result;
+    }
 
 	@Override
     public Module loadModule(String path) throws OpenModuleException, BooksDefinitionException, BookDefinitionException {
@@ -130,9 +132,7 @@ public class FsLibraryRepository implements ILibraryRepository<BQModule> {
      *
      * @return Возвращает ArrayList со списком ini-файлов модулей
      */
-    private ArrayList<String> searchModules(FileFilter filter) {
-        Logger.i(TAG, "searchModules()");
-
+    private List<String> searchModules(FileFilter filter) {
         ArrayList<String> iniFiles = new ArrayList<>();
         if (!isLibraryExist()) {
             return iniFiles;
@@ -143,7 +143,6 @@ public class FsLibraryRepository implements ILibraryRepository<BQModule> {
             FsUtils.searchByFilter(libraryDir, iniFiles, filter);
         } catch (Exception e) {
             Logger.e(TAG, "searchModules()", e);
-            return iniFiles;
         }
 
         return iniFiles;

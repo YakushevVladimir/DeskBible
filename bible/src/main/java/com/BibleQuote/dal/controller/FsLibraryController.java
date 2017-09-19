@@ -28,8 +28,6 @@
 
 package com.BibleQuote.dal.controller;
 
-import android.util.Log;
-
 import com.BibleQuote.domain.controller.ICacheModuleController;
 import com.BibleQuote.domain.controller.ILibraryController;
 import com.BibleQuote.domain.entity.Module;
@@ -38,6 +36,7 @@ import com.BibleQuote.domain.exceptions.BookDefinitionException;
 import com.BibleQuote.domain.exceptions.BooksDefinitionException;
 import com.BibleQuote.domain.exceptions.OpenModuleException;
 import com.BibleQuote.domain.repository.ILibraryRepository;
+import com.BibleQuote.utils.Logger;
 
 import java.util.Collections;
 import java.util.Map;
@@ -57,8 +56,8 @@ public class FsLibraryController implements ILibraryController {
 
     @Override
     public void init() {
+        Logger.i(TAG, "Init");
         if (moduleSet.isEmpty() && cache.isCacheExist()) {
-            Log.i(TAG, "....Load modules from cache");
             loadCachedModules();
         }
         if (moduleSet.isEmpty()) {
@@ -68,6 +67,7 @@ public class FsLibraryController implements ILibraryController {
 
     @Override
     public Map<String, Module> reloadModules() {
+        Logger.i(TAG, "Reload modules");
         moduleSet.clear();
         moduleSet.putAll(libraryRepository.loadFileModules());
         cache.saveModuleList(new ModuleList(moduleSet.values()));
@@ -93,11 +93,14 @@ public class FsLibraryController implements ILibraryController {
 
     @Override
     public void loadModule(String path) throws OpenModuleException, BooksDefinitionException, BookDefinitionException {
+        Logger.i(TAG, "Load module from " + path);
         Module module = libraryRepository.loadModule(path);
         moduleSet.put(module.getID(), module);
+        cache.saveModuleList(new ModuleList(moduleSet.values()));
     }
 
     private void loadCachedModules() {
+        Logger.i(TAG, "Load modules from cache");
         ModuleList moduleList = cache.getModuleList();
         moduleSet.clear();
         for (Module fsModule : moduleList) {

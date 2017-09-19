@@ -135,9 +135,7 @@ public final class FsUtils {
         return bReader;
     }
 
-    public static void searchByFilter(File currentFile, ArrayList<String> resultFiles, FileFilter filter)
-            throws IOException {
-
+    public static void searchByFilter(File currentFile, ArrayList<String> resultFiles, FileFilter filter) throws IOException {
         try {
             File[] files = currentFile.listFiles(filter);
             if (files == null) {
@@ -145,8 +143,10 @@ public final class FsUtils {
             }
             for (File file : files) {
                 if (file.isDirectory()) {
+                    Logger.i(TAG, "Search in " + file.getAbsolutePath());
                     searchByFilter(file, resultFiles, filter);
                 } else if (file.canRead()) {
+                    Logger.i(TAG, "Add file " + file.getAbsolutePath());
                     resultFiles.add(file.getAbsolutePath());
                 }
             }

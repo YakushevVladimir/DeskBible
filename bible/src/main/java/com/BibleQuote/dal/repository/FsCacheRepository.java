@@ -43,35 +43,32 @@ import java.io.ObjectOutputStream;
 public class FsCacheRepository implements ICacheRepository {
 
     private static final String TAG = "FsCacheRepository";
-
-    private File cacheDir;
-    private String cacheName;
+    private File cache;
 
     public FsCacheRepository(File cacheDir, String cacheName) {
-        this.cacheDir = cacheDir;
-        this.cacheName = cacheName;
+        this.cache = new File(cacheDir, cacheName);
     }
 
     @Override
     public ModuleList getData() throws DataAccessException {
         Logger.i(TAG, "Loading data from a file system cache.");
         ModuleList result;
-        try {
-            FileInputStream fStr = new FileInputStream(new File(cacheDir, cacheName));
-            ObjectInputStream out = new ObjectInputStream(fStr);
+        try (
+                FileInputStream fStr = new FileInputStream(cache);
+                ObjectInputStream out = new ObjectInputStream(fStr)
+        ) {
             result = (ModuleList) out.readObject();
-            out.close();
         } catch (ClassNotFoundException e) {
-            String message = String.format("Unexpected data format in the cache %1$s%2$s: %3$s",
-                    cacheDir, cacheName, e.getMessage());
+            String message = String.format("Unexpected data format in the cache %s: %s",
+                    cache.getAbsolutePath(), e.getMessage());
             throw new DataAccessException(message);
         } catch (IOException e) {
-            String message = String.format("Data isn't loaded from the cache %1$s%2$s: %3$s",
-                    cacheDir, cacheName, e.getMessage());
+            String message = String.format("Data isn't loaded from the cache %s: %s",
+                    cache.getAbsolutePath(), e.getMessage());
             throw new DataAccessException(message);
         } catch (ClassCastException e) {
-            String message = String.format("Data isn't cast to ModuleList from the cache %1$s%2$s: %3$s",
-                    cacheDir, cacheName, e.getMessage());
+            String message = String.format("Data isn't cast to ModuleList from the cache %s: %s",
+                    cache.getAbsolutePath(), e.getMessage());
             throw new DataAccessException(message);
         }
 
@@ -81,21 +78,24 @@ public class FsCacheRepository implements ICacheRepository {
     @Override
     public void saveData(ModuleList data) throws DataAccessException {
         Logger.i(TAG, "Save modules to a file system cache.");
-        try {
-            FileOutputStream fStr = new FileOutputStream(new File(cacheDir, cacheName));
-            ObjectOutputStream out = new ObjectOutputStream(fStr);
+        try (
+                FileOutputStream fStr = new FileOutputStream(cache);
+                ObjectOutputStream out = new ObjectOutputStream(fStr)
+        ) {
             out.writeObject(data);
-            out.close();
         } catch (IOException e) {
-            String message = String.format("Data isn't stored in the cache %1$s%2$s: %3$s",
-                    cacheDir, cacheName, e.getMessage());
+            String message = String.format("Data isn't stored in the cache %s: %s",
+                    cache.getAbsolutePath(), e.getMessage());
             throw new DataAccessException(message);
         }
     }
 
     @Override
     public boolean isCacheExist() {
-        File cache = new File(cacheDir, cacheName);
-        return cache.exists();
+        boolean exists = cache.exists();
+        if (!exists) {
+            Logger.i(TAG, "Modules list cache not found");
+        }
+        return exists;
     }
 }

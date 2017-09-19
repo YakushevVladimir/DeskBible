@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: ReaderViewPresenterTest.java
  *
- * Created by Vladimir Yakushev at 10/2016
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -34,12 +34,18 @@ import com.BibleQuote.domain.entity.BibleReference;
 import com.BibleQuote.entity.TextAppearance;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.ui.widget.ReaderWebView;
+import com.BibleQuote.utils.PreferenceHelper;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyInt;
@@ -49,17 +55,21 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
+@Config(manifest = Config.NONE)
 public class ReaderViewPresenterTest {
 
-    private ReaderViewPresenter.IReaderView view;
-    private Context context;
-    private Librarian librarian;
+    @Mock PreferenceHelper prefHelper;
+    @Mock ReaderViewPresenter.IReaderView view;
+    @Mock Context context;
+    @Mock Librarian librarian;
 
     @Before
     public void setUp() throws Exception {
-        view = mock(ReaderViewPresenter.IReaderView.class);
-        context = mock(Context.class);
-        librarian = mock(Librarian.class);
+        MockitoAnnotations.initMocks(this);
+
+        when(prefHelper.getTextAppearance()).thenReturn(mock(TextAppearance.class));
+        when(prefHelper.isReadModeByDefault()).thenReturn(true);
+        when(prefHelper.getBoolean(anyString())).thenReturn(true);
     }
 
     @Test
@@ -69,9 +79,9 @@ public class ReaderViewPresenterTest {
 
     @Test
     public void testInitView() throws Exception {
-        new ReaderViewPresenter(context, view, librarian);
+        new ReaderViewPresenter(context, view, librarian, prefHelper);
         verify(view, times(1)).setTextAppearance(any(TextAppearance.class));
-        verify(view, times(1)).setReaderMode(any(ReaderWebView.Mode.class));
+        verify(view, times(1)).setReaderMode(eq(ReaderWebView.Mode.Read));
         verify(view, times(1)).setKeepScreen(anyBoolean());
         verify(view, times(1)).setCurrentOrientation(anyBoolean());
         verify(view, times(1)).updateActivityMode();
@@ -134,7 +144,7 @@ public class ReaderViewPresenterTest {
 
     @Test
     public void testSetOSISLink_invalidLink() throws Exception {
-        ReaderViewPresenter presenter = new ReaderViewPresenter(context, view, librarian);
+        ReaderViewPresenter presenter = new ReaderViewPresenter(context, view, librarian, prefHelper);
         when(librarian.isOSISLinkValid(any(BibleReference.class))).thenReturn(false);
         BibleReference ref = mock(BibleReference.class);
         when(ref.getPath()).thenReturn("RST:Gen.1.1");

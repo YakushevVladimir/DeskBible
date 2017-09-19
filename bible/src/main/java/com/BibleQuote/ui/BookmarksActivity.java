@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: BookmarksActivity.java
  *
- * Created by Vladimir Yakushev at 8/2017
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -37,20 +37,20 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.BibleQuote.R;
 import com.BibleQuote.domain.entity.Bookmark;
 import com.BibleQuote.domain.entity.Tag;
+import com.BibleQuote.ui.base.BaseActivity;
 import com.BibleQuote.ui.fragments.BookmarksFragment;
 import com.BibleQuote.ui.fragments.TagsFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class BookmarksActivity extends AppCompatActivity
+public class BookmarksActivity extends BaseActivity
         implements BookmarksFragment.OnBookmarksChangeListener, TagsFragment.OnTagsChangeListener {
 
     public static final String EXTRA_MODE = "extra_mode";
