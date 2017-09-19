@@ -96,7 +96,7 @@
     <string name="edit">Bearbeiten</string>
     <string name="empty">Leer</string>
     <string name="enabled">Aktiviert</string>
-    <string name="exception_book_definition">Falsche Attribute des Buches #% 1 $ d im Modul% 2 $s</string>
+    <string name="exception_book_definition">Falsche Attribute des Buches #%1$d im Modul %2$s</string>
     <string name="exception_book_not_found">Buch %1$s im Modul %2$s nicht gefunden</string>
     <string name="exception_books_definition">Falsche Modulbeschreibung im Modul %1$s: BookQty=%2$d, PathName#=%3$d, FullName#=%4$d, ShortName#=%5$d, ChapterQty#=%6$d</string>
     <string name="exception_open_module_short">Falsches Modul %s</string>
