@@ -123,7 +123,8 @@ public class ReaderActivity extends BaseActivity implements ReaderViewPresenter.
         };
         actionBarDrawerToggle.syncState();
 
-        presenter = new ReaderViewPresenter(this, this, BibleQuoteApp.getInstance().getLibrarian());
+        presenter = new ReaderViewPresenter(this, this,
+                BibleQuoteApp.getInstance().getLibrarian(), BibleQuoteApp.getInstance().getPrefHelper());
 
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
         readerView.setOnReaderViewListener(this);
