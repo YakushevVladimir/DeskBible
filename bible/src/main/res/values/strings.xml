@@ -91,7 +91,6 @@
     <string name="fav_delete_all">Delete all</string>
     <string name="fav_delete_all_question">Are you sure you want to delete all bookmarks?</string>
     <string name="dialog_color_picker">Choose a color</string>
-    <string name="press_color_to_apply">Press to apply</string>
     <string name="references">References</string>
     <string name="exception_book_definition">Incorrect attributes of book #%1$d in module %2$s</string>
     <string name="exception_book_not_found">Book %1$s not found in module %2$s</string>

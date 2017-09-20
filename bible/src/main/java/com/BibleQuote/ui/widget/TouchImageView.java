@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: TouchImageView.java
  *
- * Created by Vladimir Yakushev at 8/2017
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -993,7 +993,7 @@ public class TouchImageView extends ImageView {
             //
             // indicate event was handled
             //
-            return true;
+            return v.performClick();
         }
     }
 

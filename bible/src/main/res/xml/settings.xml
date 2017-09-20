@@ -36,25 +36,29 @@
             android:key="text_color"
             android:persistent="true"
             android:summary="@string/text_color_summary"
-            android:title="@string/text_color"/>
+            android:title="@string/text_color"
+            app:cpv_dialogTitle="@string/dialog_color_picker"/>
         <com.jrummyapps.android.colorpicker.ColorPreference
             android:defaultValue="@color/def_background"
             android:key="background"
             android:persistent="true"
             android:summary="@string/background_summary"
-            android:title="@string/background"/>
+            android:title="@string/background"
+            app:cpv_dialogTitle="@string/dialog_color_picker"/>
         <com.jrummyapps.android.colorpicker.ColorPreference
             android:defaultValue="@color/def_sel_text_color"
             android:key="sel_text_color"
             android:persistent="true"
             android:summary="@string/text_color_selected_summary"
-            android:title="@string/text_color_selected"/>
+            android:title="@string/text_color_selected"
+            app:cpv_dialogTitle="@string/dialog_color_picker"/>
         <com.jrummyapps.android.colorpicker.ColorPreference
             android:defaultValue="@color/def_sel_background"
             android:key="sel_background"
             android:persistent="true"
             android:summary="@string/background_selected_summary"
-            android:title="@string/background_selected"/>
+            android:title="@string/background_selected"
+            app:cpv_dialogTitle="@string/dialog_color_picker"/>
 
         <com.BibleQuote.ui.widget.NumberChoiseView
             android:defaultValue="13"

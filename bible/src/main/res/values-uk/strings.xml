@@ -79,7 +79,6 @@
     <string name="fav_delete_all">Видалити всі</string>
     <string name="fav_delete_all_question">Ви дійсно бажаєте видалити всі закладки?</string>
     <string name="dialog_color_picker">Обрати колір</string>
-    <string name="press_color_to_apply">Натисніть для застосування</string>
     <string name="references">Посилання</string>
     <string name="exception_book_definition">Невірні параметри книги #%1$d в модулі %2$s</string>
     <string name="exception_book_not_found">Книгу %1$s не знайдено в модулі %2$s</string>
