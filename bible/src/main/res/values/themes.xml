@@ -23,7 +23,7 @@
   ~ Project: BibleQuote-for-Android
   ~ File: themes.xml
   ~
-  ~ Created by Vladimir Yakushev at 8/2017
+  ~ Created by Vladimir Yakushev at 9/2017
   ~ E-mail: ru.phoenix@gmail.com
   ~ WWW: http://www.scripturesoftware.org
   -->
@@ -47,6 +47,7 @@
         <item name="actionModeStyle">@style/ActionModeStyle</item>
         <item name="actionModeBackground">@color/action_mode_background</item>
         <item name="actionModeCloseDrawable">@drawable/ic_close</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
     </style>
 
     <style name="Theme.BibleQuote.NoActionBar">

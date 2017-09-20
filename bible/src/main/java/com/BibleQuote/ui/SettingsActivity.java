@@ -21,88 +21,25 @@
  * Project: BibleQuote-for-Android
  * File: SettingsActivity.java
  *
- * Created by Vladimir Yakushev at 3/2017
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
 package com.BibleQuote.ui;
 
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.content.res.Resources.NotFoundException;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.preference.Preference;
-import android.preference.Preference.OnPreferenceChangeListener;
-import android.preference.PreferenceActivity;
 
-import com.BibleQuote.BibleQuoteApp;
-import com.BibleQuote.R;
-import com.BibleQuote.utils.PreferenceHelper;
+import com.BibleQuote.ui.base.BaseActivity;
+import com.BibleQuote.ui.fragments.SettingsFragment;
 
-public class SettingsActivity extends PreferenceActivity implements
-        OnSharedPreferenceChangeListener {
+public class SettingsActivity extends BaseActivity {
 
-    private OnPreferenceChangeListener fontFamilyChangeListener = new OnPreferenceChangeListener() {
-        @Override
-        public boolean onPreferenceChange(Preference preference, Object newValue) {
-            setFontFamilySummary(preference, (String) newValue);
-            return true;
-        }
-    };
-    private OnPreferenceChangeListener historySizeChangeListener = new OnPreferenceChangeListener() {
-        @Override
-        public boolean onPreferenceChange(Preference preference, Object newValue) {
-            setHistorySummary(preference, (String) newValue);
-            return true;
-        }
-    };
-
-    @SuppressWarnings("deprecation")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.xml.settings);
-
-        PreferenceHelper prefHelper = BibleQuoteApp.getInstance().getPrefHelper();
-
-        Preference historySize = findPreference("HistorySize");
-        historySize.setOnPreferenceChangeListener(historySizeChangeListener);
-        setHistorySummary(historySize, Integer.toString(prefHelper.getHistorySize()));
-
-        Preference fontFamily = findPreference("font_family");
-        fontFamily.setOnPreferenceChangeListener(fontFamilyChangeListener);
-        setFontFamilySummary(fontFamily, prefHelper.getTextAppearance().getTypeface());
-    }
-
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-    }
-
-    @SuppressWarnings("deprecation")
-    @Override
-    protected void onDestroy() {
-        getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
-        super.onDestroy();
-    }
-
-    private void setFontFamilySummary(Preference fontFamily, String newValue) {
-        String summary;
-        if (newValue.equalsIgnoreCase("serif")) {
-            summary = "Droid Serif";
-        } else if (newValue.equalsIgnoreCase("monospace")) {
-            summary = "Droid Sans Mono";
-        } else {
-            summary = "Droid Sans";
-        }
-
-        fontFamily.setSummary(summary);
-    }
-
-    private void setHistorySummary(Preference historySize, String value) {
-        try {
-            String summary = getResources().getString(R.string.category_reader_other_history_size_summary);
-            historySize.setSummary(String.format(summary, value));
-        } catch (NumberFormatException | NotFoundException e) {
-            e.printStackTrace();
-        }
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(android.R.id.content, new SettingsFragment());
+        transaction.commit();
     }
 }

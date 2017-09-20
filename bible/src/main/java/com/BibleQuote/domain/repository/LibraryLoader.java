@@ -19,9 +19,9 @@
  * under the License.
  *
  * Project: BibleQuote-for-Android
- * File: ILibraryRepository.java
+ * File: LibraryLoader.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -35,7 +35,7 @@ import com.BibleQuote.domain.exceptions.OpenModuleException;
 
 import java.util.Map;
 
-public interface ILibraryRepository<T extends Module> {
+public interface LibraryLoader<T extends Module> {
 
 	/**
 	 * Загрузка списка модулей из хранилища без чтения данных.

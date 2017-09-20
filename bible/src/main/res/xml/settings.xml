@@ -22,149 +22,161 @@
   ~ Project: BibleQuote-for-Android
   ~ File: settings.xml
   ~
-  ~ Created by Vladimir Yakushev at 8/2017
+  ~ Created by Vladimir Yakushev at 9/2017
   ~ E-mail: ru.phoenix@gmail.com
   ~ WWW: http://www.scripturesoftware.org
   -->
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-	<PreferenceCategory android:title="@string/category_reader_appearance" >
-		<com.BibleQuote.ui.widget.ColorPicker.ColorPickerPreference
-			android:defaultValue="#51150F"
-				android:key="TextColor"
-				android:persistent="true"
-				android:summary="@string/text_color_summary"
-				android:title="@string/text_color" />
-		<com.BibleQuote.ui.widget.ColorPicker.ColorPickerPreference
-			android:defaultValue="#faedc1"
-				android:key="TextBG"
-				android:persistent="true"
-				android:summary="@string/background_summary"
-				android:title="@string/background" />
-        <com.BibleQuote.ui.widget.ColorPicker.ColorPickerPreference
-			android:defaultValue="#51150F"
-                android:key="TextColorSel"
-                android:persistent="true"
-                android:summary="@string/text_color_selected_summary"
-                android:title="@string/text_color_selected" />
-        <com.BibleQuote.ui.widget.ColorPicker.ColorPickerPreference
-			android:defaultValue="#f9d979"
-                android:key="TextBGSel"
-                android:persistent="true"
-                android:summary="@string/background_selected_summary"
-                android:title="@string/background_selected" />
+    <PreferenceCategory android:title="@string/category_reader_appearance">
+        <com.jrummyapps.android.colorpicker.ColorPreference
+            android:defaultValue="@color/def_text_color"
+            android:key="text_color"
+            android:persistent="true"
+            android:summary="@string/text_color_summary"
+            android:title="@string/text_color"/>
+        <com.jrummyapps.android.colorpicker.ColorPreference
+            android:defaultValue="@color/def_background"
+            android:key="background"
+            android:persistent="true"
+            android:summary="@string/background_summary"
+            android:title="@string/background"/>
+        <com.jrummyapps.android.colorpicker.ColorPreference
+            android:defaultValue="@color/def_sel_text_color"
+            android:key="sel_text_color"
+            android:persistent="true"
+            android:summary="@string/text_color_selected_summary"
+            android:title="@string/text_color_selected"/>
+        <com.jrummyapps.android.colorpicker.ColorPreference
+            android:defaultValue="@color/def_sel_background"
+            android:key="sel_background"
+            android:persistent="true"
+            android:summary="@string/background_selected_summary"
+            android:title="@string/background_selected"/>
 
-		<com.BibleQuote.ui.widget.NumberChoiseView
-			android:defaultValue="13"
-				android:dialogTitle="@string/text_size"
-				android:key="TextSize"
-				android:persistent="true"
-				android:summary="@string/current_text_size"
-				android:title="@string/text_size" />
+        <com.BibleQuote.ui.widget.NumberChoiseView
+            android:defaultValue="13"
+            android:dialogTitle="@string/text_size"
+            android:key="TextSize"
+            android:persistent="true"
+            android:summary="@string/current_text_size"
+            android:title="@string/text_size"/>
 
-		<ListPreference
-			android:defaultValue="serif"
-				android:entries="@array/font_face_txt"
-				android:entryValues="@array/font_face"
-				android:key="font_family"
-				android:persistent="true"
-				android:title="@string/font_family" />
-	</PreferenceCategory>
+        <com.BibleQuote.ui.widget.NumberChoiseView
+            android:defaultValue="150"
+            android:dialogTitle="@string/line_spacing_title"
+            android:key="line_spacing"
+            android:persistent="true"
+            android:summary="@string/line_spacing_summary"
+            android:title="@string/line_spacing_title"
+            app:maxValue="200"
+            app:minValue="100"/>
 
-	<PreferenceCategory android:title="@string/category_reader_other" >
-		<CheckBoxPreference
-				android:defaultValue="false"
-				android:key="ReadModeByDefault"
-				android:persistent="true"
-				android:summary="@string/read_mode_by_default_summary"
-				android:title="@string/read_mode_by_default" />
-		<CheckBoxPreference
-			android:defaultValue="false"
-			android:key="DisableAutoScreenRotation"
-			android:persistent="true"
-			android:summary="@string/may_need_to_restart"
-			android:title="@string/disable_auto_screen_rotation" />
-		<CheckBoxPreference
-			android:defaultValue="true"
-			android:key="DisableTurnScreen"
-			android:persistent="true"
-			android:summary="@string/disable_turn_screen_summury"
-			android:title="@string/disable_turn_screen" />
+        <ListPreference
+            android:defaultValue="serif"
+            android:entries="@array/font_face_txt"
+            android:entryValues="@array/font_face"
+            android:key="font_family"
+            android:persistent="true"
+            android:title="@string/font_family"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/category_reader_other">
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="ReadModeByDefault"
+            android:persistent="true"
+            android:summary="@string/read_mode_by_default_summary"
+            android:title="@string/read_mode_by_default"/>
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="DisableAutoScreenRotation"
+            android:persistent="true"
+            android:summary="@string/may_need_to_restart"
+            android:title="@string/disable_auto_screen_rotation"/>
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="DisableTurnScreen"
+            android:persistent="true"
+            android:summary="@string/disable_turn_screen_summury"
+            android:title="@string/disable_turn_screen"/>
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="hide_nav_buttons"
             android:persistent="true"
             android:title="@string/hide_nav_buttons"/>
 
-		<ListPreference
-				android:defaultValue="10"
-				android:entries="@array/history_size"
-				android:entryValues="@array/history_size"
-				android:key="HistorySize"
-				android:persistent="true"
-				android:summary="@string/category_reader_other_history_size_summary"
-				android:title="@string/category_reader_other_history_size" />
+        <ListPreference
+            android:defaultValue="10"
+            android:entries="@array/history_size"
+            android:entryValues="@array/history_size"
+            android:key="HistorySize"
+            android:persistent="true"
+            android:summary="@string/category_reader_other_history_size_summary"
+            android:title="@string/category_reader_other_history_size"/>
 
-		<CheckBoxPreference
-				android:defaultValue="false"
-				android:key="volume_butons_to_scroll"
-				android:summaryOff="@string/disabled"
-				android:summaryOn="@string/enabled"
-				android:title="@string/volume_butons_to_scroll" />
-		<CheckBoxPreference
-				android:key="text_align_justify"
-				android:summaryOff="@string/disabled"
-				android:summaryOn="@string/enabled"
-				android:title="@string/text_align_justify" />
-		<CheckBoxPreference
-				android:key="always_view_verse_numbers"
-				android:summaryOff="@string/always_view_verse_numbers_disabled"
-				android:summaryOn="@string/always_view_verse_numbers_enabled"
-				android:title="@string/always_view_verse_numbers_title" />
-	</PreferenceCategory>
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="volume_butons_to_scroll"
+            android:summaryOff="@string/disabled"
+            android:summaryOn="@string/enabled"
+            android:title="@string/volume_butons_to_scroll"/>
+        <CheckBoxPreference
+            android:key="text_align_justify"
+            android:summaryOff="@string/disabled"
+            android:summaryOn="@string/enabled"
+            android:title="@string/text_align_justify"/>
+        <CheckBoxPreference
+            android:key="always_view_verse_numbers"
+            android:summaryOff="@string/always_view_verse_numbers_disabled"
+            android:summaryOn="@string/always_view_verse_numbers_enabled"
+            android:title="@string/always_view_verse_numbers_title"/>
+    </PreferenceCategory>
 
-	<PreferenceCategory android:title="@string/share_passage" >
-		<CheckBoxPreference
-				android:defaultValue="false"
-				android:key="divide_the_verses"
-				android:persistent="true"
-				android:title="@string/divide_the_verses" />
-		<CheckBoxPreference
-				android:defaultValue="true"
-				android:key="add_reference"
-				android:persistent="true"
-				android:summary="@string/add_reference_summary"
-				android:title="@string/add_reference" />
-		<CheckBoxPreference
-				android:defaultValue="false"
-				android:dependency="add_reference"
-				android:key="put_reference_in_beginning"
-				android:persistent="true"
-				android:title="@string/put_reference_in_beginning" />
-		<CheckBoxPreference
-				android:defaultValue="false"
-				android:dependency="add_reference"
-				android:key="short_reference"
-				android:persistent="true"
-				android:summary="@string/short_reference_summary"
-				android:title="@string/short_reference" />
-		<CheckBoxPreference
-				android:defaultValue="true"
-				android:dependency="add_reference"
-				android:key="add_module_to_reference"
-				android:persistent="true"
-				android:summary="@string/add_module_to_reference_summary"
-				android:title="@string/add_module_to_reference" />
-	</PreferenceCategory>
+    <PreferenceCategory android:title="@string/share_passage">
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="divide_the_verses"
+            android:persistent="true"
+            android:title="@string/divide_the_verses"/>
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="add_reference"
+            android:persistent="true"
+            android:summary="@string/add_reference_summary"
+            android:title="@string/add_reference"/>
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:dependency="add_reference"
+            android:key="put_reference_in_beginning"
+            android:persistent="true"
+            android:title="@string/put_reference_in_beginning"/>
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:dependency="add_reference"
+            android:key="short_reference"
+            android:persistent="true"
+            android:summary="@string/short_reference_summary"
+            android:title="@string/short_reference"/>
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:dependency="add_reference"
+            android:key="add_module_to_reference"
+            android:persistent="true"
+            android:summary="@string/add_module_to_reference_summary"
+            android:title="@string/add_module_to_reference"/>
+    </PreferenceCategory>
 
-	<PreferenceCategory android:title="@string/preference_screen_cross_references" >
-		<CheckBoxPreference
-				android:defaultValue="false"
-				android:enabled="true"
-				android:key="cross_reference_display_context"
-				android:persistent="true"
-				android:summary="@string/cross_references_display_context_summary"
-				android:title="@string/cross_references_display_context" />
-	</PreferenceCategory>
+    <PreferenceCategory android:title="@string/preference_screen_cross_references">
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:enabled="true"
+            android:key="cross_reference_display_context"
+            android:persistent="true"
+            android:summary="@string/cross_references_display_context_summary"
+            android:title="@string/cross_references_display_context"/>
+    </PreferenceCategory>
 
 </PreferenceScreen>

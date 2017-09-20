@@ -19,7 +19,7 @@
  * under the License.
  *
  * Project: BibleQuote-for-Android
- * File: FsLibraryRepository.java
+ * File: FsLibraryLoader.java
  *
  * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
@@ -35,7 +35,7 @@ import com.BibleQuote.domain.entity.Module;
 import com.BibleQuote.domain.exceptions.BookDefinitionException;
 import com.BibleQuote.domain.exceptions.BooksDefinitionException;
 import com.BibleQuote.domain.exceptions.OpenModuleException;
-import com.BibleQuote.domain.repository.ILibraryRepository;
+import com.BibleQuote.domain.repository.LibraryLoader;
 import com.BibleQuote.entity.modules.BQModule;
 import com.BibleQuote.utils.DataConstants;
 import com.BibleQuote.utils.FsUtils;
@@ -50,13 +50,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class FsLibraryRepository implements ILibraryRepository<BQModule> {
+public class FsLibraryLoader implements LibraryLoader<BQModule> {
 
-    private static final String TAG = FsLibraryRepository.class.getSimpleName();
+    private static final String TAG = FsLibraryLoader.class.getSimpleName();
     private File libraryDir;
     private BQModuleRepository repository;
 
-    public FsLibraryRepository() {
+    public FsLibraryLoader() {
         this.libraryDir = getLibraryDir();
         this.repository = new BQModuleRepository();
     }

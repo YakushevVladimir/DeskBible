@@ -52,6 +52,7 @@ import java.util.Locale;
 public final class Logger {
 
     private static final String TAG = Logger.class.getSimpleName();
+    private static final long MAX_LOG_SIZE = 1048576;
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.US);
     private static File logFile;
 
@@ -88,11 +89,11 @@ public final class Logger {
      *
      * @param tag  имя класса-инициатора события
      * @param text текст помещаемый в протокол событий
-     * @param e    ссылка на полученный Exception
+     * @param th   ссылка на полученный Exception
      */
-    public static void e(Object tag, String text, Exception e) {
-        Log.e(getTag(tag), text, e);
-        write(getTag(tag), String.format("Error: %s%n%s", text, Log.getStackTraceString(e)));
+    public static void e(Object tag, String text, Throwable th) {
+        Log.e(getTag(tag), text, th);
+        write(getTag(tag), String.format("Error: %s%n%s", text, Log.getStackTraceString(th)));
     }
 
     /**
@@ -110,7 +111,7 @@ public final class Logger {
         if (src instanceof String) {
             return (String) src;
         } else {
-            return src.getClass().getSimpleName();
+            return String.format("%s (%d)", src.getClass().getSimpleName(), src.hashCode());
         }
     }
 
@@ -122,7 +123,10 @@ public final class Logger {
         if (logFile == null && Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
             logFile = new File(DataConstants.getFsAppDirName(), "log.txt");
             if (logFile.exists() && !logFile.canWrite()) {
+                logFile = null;
                 return null;
+            } else if (logFile.getTotalSpace() > MAX_LOG_SIZE && !logFile.delete()) {
+                write("Не удалось очистить лог-файл");
             }
 
             write("====================================");
@@ -136,7 +140,7 @@ public final class Logger {
     }
 
     private static void write(String text) {
-        write(null, text);
+        write(TAG, text);
     }
 
     /**
@@ -155,7 +159,7 @@ public final class Logger {
                 OutputStreamWriter oWriter = new OutputStreamWriter(new FileOutputStream(log, true), Charset.forName("UTF-8"));
                 BufferedWriter writer = new BufferedWriter(oWriter)
         ) {
-            writer.write(String.format("%s %s %s%n", dateFormat.format(new Date()), tag != null ? tag : TAG, text));
+            writer.write(String.format("%s %s %s%n", dateFormat.format(new Date()), tag, text));
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
         }

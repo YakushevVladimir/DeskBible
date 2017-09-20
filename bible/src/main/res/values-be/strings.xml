@@ -135,4 +135,5 @@
     <string name="retry">Паўтарыць</string>
     <string name="msg_permission_denied">Дазволу не патрабуецца для запуску прыкладання</string>
     <string name="err_load_module_unknown">Unexpected error when adding a module. Try again later or select another module.</string>
+    <string name="line_spacing_title">Міжрадковы інтэрвал</string>
 </resources>

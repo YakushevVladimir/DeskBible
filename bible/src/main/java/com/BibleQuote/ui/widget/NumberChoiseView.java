@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: NumberChoiseView.java
  *
- * Created by Vladimir Yakushev at 8/2017
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -40,8 +40,7 @@ import com.BibleQuote.R;
 
 import java.util.Locale;
 
-public final class NumberChoiseView extends DialogPreference implements
-		OnSeekBarChangeListener {
+public final class NumberChoiseView extends DialogPreference implements OnSeekBarChangeListener {
 
 	private static final String ANDROID_NS = "http://schemas.android.com/apk/res/android";
 	// Attribute names
@@ -53,7 +52,7 @@ public final class NumberChoiseView extends DialogPreference implements
 	private static final int DEFAULT_MAX_VALUE = 36;
 	private static final int DEFAULT_MIN_VALUE = 9;
 	// Namespaces to read attributes
-	private static final String PREFERENCE_NS = "http://schemas.android.com/apk/res/com.BibleQuote.controls";
+	private static final String PREFERENCE_NS = "http://schemas.android.com/apk/res-auto";
 	// Real defaults
 	private final int mDefaultValue;
 	private final int mMaxValue;

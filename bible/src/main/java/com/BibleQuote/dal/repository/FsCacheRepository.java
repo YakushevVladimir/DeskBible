@@ -42,7 +42,6 @@ import java.io.ObjectOutputStream;
 
 public class FsCacheRepository implements ICacheRepository {
 
-    private static final String TAG = "FsCacheRepository";
     private File cache;
 
     public FsCacheRepository(File cacheDir, String cacheName) {
@@ -51,7 +50,7 @@ public class FsCacheRepository implements ICacheRepository {
 
     @Override
     public ModuleList getData() throws DataAccessException {
-        Logger.i(TAG, "Loading data from a file system cache.");
+        Logger.i(this, "Loading data from a file system cache.");
         ModuleList result;
         try (
                 FileInputStream fStr = new FileInputStream(cache);
@@ -77,7 +76,7 @@ public class FsCacheRepository implements ICacheRepository {
 
     @Override
     public void saveData(ModuleList data) throws DataAccessException {
-        Logger.i(TAG, "Save modules to a file system cache.");
+        Logger.i(this, "Save modules to a file system cache.");
         try (
                 FileOutputStream fStr = new FileOutputStream(cache);
                 ObjectOutputStream out = new ObjectOutputStream(fStr)
@@ -94,7 +93,7 @@ public class FsCacheRepository implements ICacheRepository {
     public boolean isCacheExist() {
         boolean exists = cache.exists();
         if (!exists) {
-            Logger.i(TAG, "Modules list cache not found");
+            Logger.i(this, "Modules list cache not found");
         }
         return exists;
     }

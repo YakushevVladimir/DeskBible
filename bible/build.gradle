@@ -39,8 +39,8 @@ android {
         applicationId "com.BibleQuote"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 83
-        versionName "1.1.83"
+        versionCode 84
+        versionName "1.1.84"
     }
 
     compileOptions {
@@ -82,6 +82,7 @@ dependencies {
     // Android support libraries
 
     compile "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
+    compile "com.android.support:preference-v7:${rootProject.ext.supportLibVersion}"
     compile "com.android.support:design:${rootProject.ext.supportLibVersion}"
     compile "com.android.support:gridlayout-v7:${rootProject.ext.supportLibVersion}"
     compile "com.android.support:support-annotations:${rootProject.ext.supportLibVersion}"
@@ -105,9 +106,14 @@ dependencies {
     compile "com.squareup.retrofit2:retrofit:${rootProject.ext.retrofitVersion}"
     compile "com.squareup.retrofit2:converter-gson:${rootProject.ext.retrofitVersion}"
 
+    // AutoValue
+
+    annotationProcessor 'com.google.auto.value:auto-value:1.5'
+    provided 'com.jakewharton.auto.value:auto-value-annotations:1.5'
+
     // Others
 
-    compile "com.github.danielnilsson9:color-picker-view:1.4.0@aar"
+    compile 'com.jrummyapps:colorpicker:2.1.6'
 
     // Test dependencies
 

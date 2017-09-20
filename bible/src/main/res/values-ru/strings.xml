@@ -135,4 +135,5 @@
     <string name="retry">Повторить</string>
     <string name="msg_permission_denied">Отсутствуют разрешения необходимые для работы приложения</string>
 	<string name="err_load_module_unknown">Не удалось загрузить модуль. Попробуйте ещё раз или используйте другой модуль</string>
+    <string name="line_spacing_title">Межстрочный интервал</string>
 </resources>

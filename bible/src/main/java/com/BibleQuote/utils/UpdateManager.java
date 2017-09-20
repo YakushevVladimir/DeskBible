@@ -29,8 +29,10 @@
 package com.BibleQuote.utils;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.util.Xml.Encoding;
 
 import com.BibleQuote.BibleQuoteApp;
@@ -105,6 +107,10 @@ public final class UpdateManager {
             libraryController.reloadModules();
         }
 
+        if (currVersionCode < 84) {
+            updatePreferences_84(context);
+        }
+
         try {
             int versionCode = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode;
             prefHelper.saveInt("versionCode", versionCode);
@@ -112,6 +118,21 @@ public final class UpdateManager {
             prefHelper.saveInt("versionCode", 39);
         }
         Logger.i(TAG, "Update success");
+    }
+
+    private static void updatePreferences_84(Context context) {
+        SharedPreferences preference = PreferenceManager.getDefaultSharedPreferences(context);
+        try {
+            preference.edit()
+                    .putInt("text_color", ColorUtils.toInt(preference.getString("TextColor", "#51150F")))
+                    .putInt("sel_text_color", ColorUtils.toInt(preference.getString("TextColorSel", "#51150F")))
+                    .putInt("background", ColorUtils.toInt(preference.getString("TextBG", "#faedc1")))
+                    .putInt("sel_background", ColorUtils.toInt(preference.getString("TextBGSel", "#f9d979")))
+                    .apply();
+        } catch (Exception ex) {
+            Logger.e(TAG, "updatePreferences_84 failed", ex);
+        }
+
     }
 
     private static void convertBookmarks_59(PreferenceHelper preferenceHelper) {

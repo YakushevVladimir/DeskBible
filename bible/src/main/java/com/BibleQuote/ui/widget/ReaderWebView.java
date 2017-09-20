@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: ReaderWebView.java
  *
- * Created by Vladimir Yakushev at 8/2017
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -336,12 +336,13 @@ public class ReaderWebView extends WebView
             selTextColor = "#EEEEEE";
             selTextBack = "#562000";
         } else {
-            backColor = textAppearance.getBackgroung();
+            backColor = textAppearance.getBackground();
             textColor = textAppearance.getTextColor();
             selTextColor = textAppearance.getSelectedTextColor();
             selTextBack = textAppearance.getSelectedBackgroung();
         }
         String textSize = textAppearance.getTextSize();
+        int lineSpacing = textAppearance.getLineSpacing();
 
         return "<style type=\"text/css\">\r\n" +
                 "body {\r\n" +
@@ -349,7 +350,7 @@ public class ReaderWebView extends WebView
                 "text-align: " + textAppearance.getTextAlign() + ";\r\n" +
                 "color: " + textColor + ";\r\n" +
                 "font-size: " + textSize + "pt;\r\n" +
-                "line-height: 1.5;\r\n" +
+                "line-height: " + lineSpacing + "%;\r\n" +
                 "background: " + backColor + ";\r\n" +
                 "}\r\n" +
                 ".verse {\r\n" +

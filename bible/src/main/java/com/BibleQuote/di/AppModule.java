@@ -31,12 +31,12 @@ package com.BibleQuote.di;
 import android.content.Context;
 
 import com.BibleQuote.async.AsyncManager;
-import com.BibleQuote.dal.controller.CacheModuleControllerImpl;
+import com.BibleQuote.dal.controller.CachedLibraryRepository;
 import com.BibleQuote.dal.controller.FsLibraryController;
 import com.BibleQuote.dal.controller.TSKController;
 import com.BibleQuote.dal.repository.FsCacheRepository;
 import com.BibleQuote.dal.repository.FsHistoryRepository;
-import com.BibleQuote.dal.repository.FsLibraryRepository;
+import com.BibleQuote.dal.repository.FsLibraryLoader;
 import com.BibleQuote.dal.repository.XmlTskRepository;
 import com.BibleQuote.dal.repository.bookmarks.DbBookmarksRepository;
 import com.BibleQuote.domain.controller.ILibraryController;
@@ -45,8 +45,8 @@ import com.BibleQuote.domain.entity.Module;
 import com.BibleQuote.domain.repository.IBookmarksRepository;
 import com.BibleQuote.domain.repository.ICacheRepository;
 import com.BibleQuote.domain.repository.IHistoryRepository;
-import com.BibleQuote.domain.repository.ILibraryRepository;
 import com.BibleQuote.domain.repository.ITskRepository;
+import com.BibleQuote.domain.repository.LibraryLoader;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.managers.history.HistoryManager;
 import com.BibleQuote.managers.history.IHistoryManager;
@@ -103,14 +103,14 @@ public class AppModule {
 
     @Provides
     @Singleton
-    ILibraryController getLibraryController(Context context, ILibraryRepository<? extends Module> repository) {
+    ILibraryController getLibraryController(Context context, LibraryLoader<? extends Module> repository) {
         ICacheRepository cacheRepository = new FsCacheRepository(context.getFilesDir(), DataConstants.getLibraryCache());
-        return new FsLibraryController(repository, new CacheModuleControllerImpl(cacheRepository));
+        return new FsLibraryController(repository, new CachedLibraryRepository(cacheRepository));
     }
 
     @Provides
-    ILibraryRepository<? extends Module> getLibraryRepository() {
-        return new FsLibraryRepository();
+    LibraryLoader<? extends Module> getLibraryLoader() {
+        return new FsLibraryLoader();
     }
 
     @Provides

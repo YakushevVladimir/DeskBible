@@ -28,55 +28,51 @@
 
 package com.BibleQuote.dal.controller;
 
-import com.BibleQuote.domain.controller.ICacheModuleController;
 import com.BibleQuote.domain.controller.ILibraryController;
+import com.BibleQuote.domain.controller.LibraryRepository;
 import com.BibleQuote.domain.entity.Module;
-import com.BibleQuote.domain.entity.ModuleList;
 import com.BibleQuote.domain.exceptions.BookDefinitionException;
 import com.BibleQuote.domain.exceptions.BooksDefinitionException;
 import com.BibleQuote.domain.exceptions.OpenModuleException;
-import com.BibleQuote.domain.repository.ILibraryRepository;
+import com.BibleQuote.domain.repository.LibraryLoader;
 import com.BibleQuote.utils.Logger;
 
-import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
 
 public class FsLibraryController implements ILibraryController {
 
-    private static final String TAG = FsLibraryController.class.getSimpleName();
-    private ICacheModuleController cache;
-    private ILibraryRepository<? extends Module> libraryRepository;
-    private Map<String, Module> moduleSet = Collections.synchronizedMap(new TreeMap<String, Module>());
+    private LibraryRepository libraryRepository;
+    private LibraryLoader<? extends Module> libraryLoader;
 
-    public FsLibraryController(ILibraryRepository<? extends Module> repository, ICacheModuleController cacheModuleController) {
-        this.libraryRepository = repository;
-        this.cache = cacheModuleController;
+    public FsLibraryController(LibraryLoader<? extends Module> libraryLoader, LibraryRepository libraryRepository) {
+        this.libraryLoader = libraryLoader;
+        this.libraryRepository = libraryRepository;
     }
 
     @Override
     public void init() {
-        Logger.i(TAG, "Init");
-        if (moduleSet.isEmpty() && cache.isCacheExist()) {
-            loadCachedModules();
-        }
-        if (moduleSet.isEmpty()) {
+        Logger.i(this, "Init");
+        Map<String, Module> modules = getModules();
+        if (modules.isEmpty()) {
             reloadModules();
         }
     }
 
     @Override
     public Map<String, Module> reloadModules() {
-        Logger.i(TAG, "Reload modules");
-        moduleSet.clear();
-        moduleSet.putAll(libraryRepository.loadFileModules());
-        cache.saveModuleList(new ModuleList(moduleSet.values()));
-        return moduleSet;
+        Map<String, Module> modules = libraryLoader.loadFileModules();
+        libraryRepository.replace(modules.values());
+        return modules;
     }
 
     @Override
     public Map<String, Module> getModules() {
-        return moduleSet;
+        Map<String, Module> result = new TreeMap<>();
+        for (Module module : libraryRepository.modules()) {
+            result.put(module.getID(), module);
+        }
+        return result;
     }
 
     @Override
@@ -84,7 +80,8 @@ public class FsLibraryController implements ILibraryController {
         if (moduleID == null) {
             return null;
         }
-        Module module = moduleSet.get(moduleID);
+
+        Module module = getModules().get(moduleID);
         if (module == null) {
             throw new OpenModuleException(moduleID, null);
         }
@@ -93,18 +90,7 @@ public class FsLibraryController implements ILibraryController {
 
     @Override
     public void loadModule(String path) throws OpenModuleException, BooksDefinitionException, BookDefinitionException {
-        Logger.i(TAG, "Load module from " + path);
-        Module module = libraryRepository.loadModule(path);
-        moduleSet.put(module.getID(), module);
-        cache.saveModuleList(new ModuleList(moduleSet.values()));
-    }
-
-    private void loadCachedModules() {
-        Logger.i(TAG, "Load modules from cache");
-        ModuleList moduleList = cache.getModuleList();
-        moduleSet.clear();
-        for (Module fsModule : moduleList) {
-            moduleSet.put(fsModule.getID(), fsModule);
-        }
+        Logger.i(this, "Load module from " + path);
+        libraryRepository.add(libraryLoader.loadModule(path));
     }
 }

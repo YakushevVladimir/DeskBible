@@ -21,68 +21,49 @@
  * Project: BibleQuote-for-Android
  * File: TextAppearance.java
  *
- * Created by Vladimir Yakushev at 10/2016
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
 
 package com.BibleQuote.entity;
 
+import com.google.auto.value.AutoValue;
+
 /**
  * @author Vladimir Yakushev (ru.phoenix@gmail.com)
  */
 
-public class TextAppearance {
+@AutoValue
+public abstract class TextAppearance {
 
-    private String typeface;
-    private String textColor;
-    private String selectedTextColor;
-    private String backgroung;
-    private String selectedBackgroung;
-    private String textSize;
-    private String textAlign;
-    private boolean nightMode;
+    public abstract String getBackground();
+    public abstract int getLineSpacing();
+    public abstract String getSelectedBackgroung();
+    public abstract String getSelectedTextColor();
+    public abstract String getTextAlign();
+    public abstract String getTextColor();
+    public abstract String getTextSize();
+    public abstract String getTypeface();
+    public abstract boolean isNightMode();
 
-    public TextAppearance(String typeface, String textSize, String textColor, String backgroung, String selectedTextColor, String selectedBackgroung, String textAlign, boolean nightMode) {
-        this.typeface = typeface;
-        this.textSize = textSize;
-        this.textColor = textColor;
-        this.backgroung = backgroung;
-        this.selectedTextColor = selectedTextColor;
-        this.selectedBackgroung = selectedBackgroung;
-        this.textAlign = textAlign;
-        this.nightMode = nightMode;
+    public static Builder builder() {
+        return new AutoValue_TextAppearance.Builder();
     }
 
-    public String getBackgroung() {
-        return backgroung;
-    }
+    @SuppressWarnings("WeakerAccess")
+    @AutoValue.Builder
+    public abstract static class Builder {
 
-    public String getSelectedBackgroung() {
-        return selectedBackgroung;
-    }
-
-    public String getSelectedTextColor() {
-        return selectedTextColor;
-    }
-
-    public String getTextAlign() {
-        return textAlign;
-    }
-
-    public String getTextColor() {
-        return textColor;
-    }
-
-    public String getTextSize() {
-        return textSize;
-    }
-
-    public String getTypeface() {
-        return typeface;
-    }
-
-    public boolean isNightMode() {
-        return nightMode;
+        public abstract Builder background(String value);
+        public abstract Builder lineSpacing(int value);
+        public abstract Builder selectedBackgroung(String value);
+        public abstract Builder selectedTextColor(String value);
+        public abstract Builder textAlign(String value);
+        public abstract Builder textColor(String value);
+        public abstract Builder textSize(String value);
+        public abstract Builder typeface(String value);
+        public abstract Builder nightMode(boolean value);
+        public abstract TextAppearance build();
     }
 }

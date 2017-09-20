@@ -1,5 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
-
 <!--
   ~ Copyright (C) 2011 Scripture Software
   ~
@@ -21,33 +19,19 @@
   ~ under the License.
   ~
   ~ Project: BibleQuote-for-Android
-  ~ File: colors.xml
+  ~ File: ic_person.xml
   ~
   ~ Created by Vladimir Yakushev at 9/2017
   ~ E-mail: ru.phoenix@gmail.com
   ~ WWW: http://www.scripturesoftware.org
   -->
-<resources>
 
-	<color name="white">#ffffff</color>
-	<color name="black">#000000</color>
-	<color name="gray">#aaaaaa</color>
-	<color name="light_gray">#dadada</color>
-	<color name="dark_gray">#7e7e7e</color>
-	<color name="button_gray">#e7e7e7</color>
-	<color name="button_darkgray">#c9c9c9</color>
-	<color name="button_border">#9d9d9d</color>
-
-	<color name="primary">#6E1C14</color>
-	<color name="primary_dark">#51150F</color>
-	<color name="action_mode_background">#ff2f0d0d</color>
-	<color name="accent">#f5cc99</color>
-	<color name="accent_dark">#c1a078</color>
-	<color name="toolbarTextColor">#f5cc99</color>
-
-	<color name="def_text_color">#51150F</color>
-	<color name="def_background">#faedc1</color>
-	<color name="def_sel_text_color">#51150F</color>
-	<color name="def_sel_background">#f9d979</color>
-
-</resources>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24.0"
+    android:viewportHeight="24.0">
+    <path
+        android:fillColor="#CC000000"
+        android:pathData="M12,5.9c1.16,0 2.1,0.94 2.1,2.1s-0.94,2.1 -2.1,2.1S9.9,9.16 9.9,8s0.94,-2.1 2.1,-2.1m0,9c2.97,0 6.1,1.46 6.1,2.1v1.1L5.9,18.1L5.9,17c0,-0.64 3.13,-2.1 6.1,-2.1M12,4C9.79,4 8,5.79 8,8s1.79,4 4,4 4,-1.79 4,-4 -1.79,-4 -4,-4zM12,13c-2.67,0 -8,1.34 -8,4v3h16v-3c0,-2.66 -5.33,-4 -8,-4z"/>
+</vector>

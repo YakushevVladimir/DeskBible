@@ -19,7 +19,7 @@
  * under the License.
  *
  * Project: BibleQuote-for-Android
- * File: CacheModuleControllerImpl.java
+ * File: CachedLibraryRepository.java
  *
  * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
@@ -28,45 +28,60 @@
 
 package com.BibleQuote.dal.controller;
 
-import com.BibleQuote.domain.controller.ICacheModuleController;
+import com.BibleQuote.domain.controller.LibraryRepository;
+import com.BibleQuote.domain.entity.Module;
 import com.BibleQuote.domain.entity.ModuleList;
 import com.BibleQuote.domain.exceptions.DataAccessException;
 import com.BibleQuote.domain.repository.ICacheRepository;
 import com.BibleQuote.utils.Logger;
 
-public class CacheModuleControllerImpl implements ICacheModuleController {
+import java.util.Collection;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
-    private static final String TAG = "FsCacheRepository";
+public class CachedLibraryRepository implements LibraryRepository {
 
     private ICacheRepository cacheRepository;
+    private CopyOnWriteArrayList<Module> modules = new CopyOnWriteArrayList<>();
 
-    public CacheModuleControllerImpl(ICacheRepository cacheRepository) {
+    public CachedLibraryRepository(ICacheRepository cacheRepository) {
         this.cacheRepository = cacheRepository;
     }
 
     @Override
-    public ModuleList getModuleList() {
-        Logger.i(TAG, "Get module list");
-        try {
-            return cacheRepository.getData();
-        } catch (DataAccessException e) {
-            Logger.e(TAG, "Get module list failure", e);
-            return new ModuleList();
+    public List<Module> modules() {
+        Logger.i(this, "Get module list");
+        if (modules.isEmpty() && cacheRepository.isCacheExist()) {
+            try {
+                modules.addAll(cacheRepository.getData());
+            } catch (DataAccessException e) {
+                Logger.e(this, "Get module list failure", e);
+            }
         }
+
+        return modules;
     }
 
     @Override
-    public void saveModuleList(ModuleList moduleList) {
-        Logger.i(TAG, "Save modules list to cache");
-        try {
-            cacheRepository.saveData(moduleList);
-        } catch (DataAccessException e) {
-            Logger.e(TAG, "Can't save modules to a cache.", e);
-        }
+    public void replace(Collection<Module> list) {
+        Logger.i(this, "Replacing modules in the cache");
+        modules.clear();
+        modules.addAll(list);
+        cacheModulesList();
     }
 
     @Override
-    public boolean isCacheExist() {
-        return cacheRepository.isCacheExist();
+    public void add(Module module) {
+        Logger.i(this, "Adding a module to the cache");
+        modules.add(module);
+        cacheModulesList();
+    }
+
+    private void cacheModulesList() {
+        try {
+            cacheRepository.saveData(new ModuleList(modules));
+        } catch (DataAccessException e) {
+            Logger.e(this, "Can't save modules to a cache.", e);
+        }
     }
 }

@@ -19,7 +19,7 @@
  * under the License.
  *
  * Project: BibleQuote-for-Android
- * File: ICacheModuleController.java
+ * File: LibraryRepository.java
  *
  * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
@@ -28,15 +28,17 @@
 
 package com.BibleQuote.domain.controller;
 
-import com.BibleQuote.domain.entity.ModuleList;
+import com.BibleQuote.domain.entity.Module;
+
+import java.util.Collection;
+import java.util.List;
 
 /**
  *
  */
-public interface ICacheModuleController {
-    ModuleList getModuleList();
+public interface LibraryRepository {
 
-    boolean isCacheExist();
-
-    void saveModuleList(ModuleList moduleList);
+    void add(Module module);
+    List<Module> modules();
+    void replace(Collection<Module> modules);
 }
