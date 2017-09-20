@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: IModuleRepository.java
  *
- * Created by Vladimir Yakushev at 8/2017
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -39,8 +39,6 @@ import com.BibleQuote.domain.exceptions.BooksDefinitionException;
 import com.BibleQuote.domain.exceptions.OpenModuleException;
 import com.BibleQuote.entity.modules.BQModule;
 
-import java.util.Map;
-
 /**
  *
  */
@@ -51,8 +49,6 @@ public interface IModuleRepository<D, T extends Module> {
     Chapter loadChapter(T module, String bookID, int chapter) throws BookNotFoundException;
 
     T loadModule(D path) throws OpenModuleException, BooksDefinitionException, BookDefinitionException;
-
-    Map<String, String> searchInBook(T module, String bookID, String regQuery) throws BookNotFoundException;
 
     @NonNull
     String getBookContent(T module, String bookID) throws BookNotFoundException;

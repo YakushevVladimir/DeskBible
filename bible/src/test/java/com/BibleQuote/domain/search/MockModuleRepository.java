@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: MockModuleRepository.java
  *
- * Created by Vladimir Yakushev at 8/2017
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -40,8 +40,6 @@ import com.BibleQuote.domain.exceptions.OpenModuleException;
 import com.BibleQuote.domain.repository.IModuleRepository;
 import com.BibleQuote.entity.modules.BQModule;
 
-import java.util.Map;
-
 class MockModuleRepository implements IModuleRepository<String, Module> {
 
     @Override
@@ -56,11 +54,6 @@ class MockModuleRepository implements IModuleRepository<String, Module> {
 
     @Override
     public Module loadModule(String path) throws OpenModuleException, BooksDefinitionException, BookDefinitionException {
-        return null;
-    }
-
-    @Override
-    public Map<String, String> searchInBook(Module module, String bookID, String regQuery) throws BookNotFoundException {
         return null;
     }
 

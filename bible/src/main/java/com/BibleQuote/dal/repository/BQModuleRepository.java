@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: BQModuleRepository.java
  *
- * Created by Vladimir Yakushev at 8/2017
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -32,9 +32,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.util.Base64;
-import android.util.Log;
 
-import com.BibleQuote.domain.entity.BibleReference;
 import com.BibleQuote.domain.entity.Book;
 import com.BibleQuote.domain.entity.Chapter;
 import com.BibleQuote.domain.entity.Module;
@@ -45,7 +43,8 @@ import com.BibleQuote.domain.exceptions.BooksDefinitionException;
 import com.BibleQuote.domain.exceptions.DataAccessException;
 import com.BibleQuote.domain.exceptions.OpenModuleException;
 import com.BibleQuote.domain.repository.IModuleRepository;
-import com.BibleQuote.domain.textFormatters.ModuleTextFormatter;
+import com.BibleQuote.domain.search.algorithm.BoyerMoorAlgorithm;
+import com.BibleQuote.domain.search.algorithm.SearchAlgorithm;
 import com.BibleQuote.entity.modules.BQBook;
 import com.BibleQuote.entity.modules.BQModule;
 import com.BibleQuote.utils.CachePool;
@@ -60,10 +59,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  *
@@ -169,11 +165,6 @@ public class BQModuleRepository implements IModuleRepository<String, BQModule> {
     }
 
     @Override
-    public Map<String, String> searchInBook(BQModule module, String bookID, String regQuery) throws BookNotFoundException {
-        return searchInBook(module, bookID, regQuery, getBookContent(module, bookID));
-    }
-
-    @Override
     @NonNull
     public String getBookContent(BQModule module, String bookID) throws BookNotFoundException {
         BQBook book = (BQBook) module.getBook(bookID);
@@ -192,10 +183,6 @@ public class BQModuleRepository implements IModuleRepository<String, BQModule> {
         }
 
         return bookContent.toString();
-    }
-
-    private boolean contains(String text, String query) {
-        return Pattern.matches(query, text);
     }
 
     private void fillModule(BQModule module, BufferedReader bReader)
@@ -308,10 +295,15 @@ public class BQModuleRepository implements IModuleRepository<String, BQModule> {
         }
 
         String separator = "";
+        StringBuilder htmlFilterBuilder = new StringBuilder(module.getHtmlFilter());
         for (String tag : tagArray) {
-            module.setHtmlFilter(module.getHtmlFilter() + separator + "(" + tag + ")|(/" + tag + ")" + "|(" + tag.toUpperCase() + ")|(/" + tag.toUpperCase() + ")");
+            htmlFilterBuilder
+                    .append(separator)
+                    .append("(").append(tag).append(")|(/").append(tag).append(")")
+                    .append("|(").append(tag.toUpperCase()).append(")|(/").append(tag.toUpperCase()).append(")");
             separator = "|";
         }
+        module.setHtmlFilter(htmlFilterBuilder.toString());
 
         for (int i = 0; i < pathNames.size(); i++) {
             String path, fullName, shortName;
@@ -415,54 +407,23 @@ public class BQModuleRepository implements IModuleRepository<String, BQModule> {
                 : FsUtils.getTextFileReader(module.modulePath, dataSourceID, module.getDefaultEncoding());
     }
 
-    private String getSearchQuery(String query) {
-        StringBuilder result = new StringBuilder();
-        if (query.trim().equals("")) {
-            return result.toString();
-        }
-
-        String[] words = query.toLowerCase().replaceAll("[^\\s\\w]", "").split("\\s+");
-        for (String currWord : words) {
-            if (result.length() != 0) {
-                result.append("(.)*?");
-            }
-            result.append(currWord);
-        }
-        return "((?ui).*?" + result.toString() + ".*?)"; // любые символы в начале и конце
-    }
-
-    // ToDo: убрать во внешний обработчик
-    private String highlightWords(String query, String verse) {
-        String[] words = query.toLowerCase().replaceAll("[^\\s\\w]", "").split("\\s+");
-        StringBuilder pattern = new StringBuilder(query.length() + words.length);
-        for (String word : words) {
-            if (pattern.length() != 0) {
-                pattern.append("|");
-            }
-            pattern.append(word);
-        }
-
-        Pattern regex = Pattern.compile("((?ui)" + pattern.toString() + ")");
-        Matcher regexMatcher = regex.matcher(verse);
-        verse = regexMatcher.replaceAll("<b><font color=\"#6b0b0b\">$1</font></b>");
-        return verse;
-    }
-
-    private Chapter loadChapter(Module module, Book book, Integer chapterNumber, BufferedReader bReader) {
+    private Chapter loadChapter(BQModule module, Book book, Integer chapterNumber, BufferedReader bReader) {
 
         ArrayList<String> lines = new ArrayList<>();
         try {
             String str;
             int currentChapter = book.getFirstChapterNumber();
             String chapterSign = module.getChapterSign();
+            SearchAlgorithm chapterSearch = new BoyerMoorAlgorithm(chapterSign);
             boolean chapterFind = false;
             while ((str = bReader.readLine()) != null) {
-                if (str.toLowerCase().contains(chapterSign)) {
+                int chapterPos = chapterSearch.indexOf(str);
+                if (chapterPos >= 0) {
                     if (chapterFind) {
                         // Тег начала главы может быть не вначале строки.
                         // Возьмем то, что есть до теги начала главы и добавим
                         // к найденным строкам
-                        str = str.substring(0, str.toLowerCase().indexOf(chapterSign));
+                        str = str.substring(0, chapterPos);
                         if (str.trim().length() > 0) {
                             lines.add(str);
                         }
@@ -472,14 +433,13 @@ public class BQModuleRepository implements IModuleRepository<String, BQModule> {
                         // Тег начала главы может быть не вначале строки.
                         // Обрежем все, что есть до теги начала главы и добавим
                         // к найденным строкам
-                        str = str.substring(str.toLowerCase().indexOf(chapterSign));
+                        str = str.substring(chapterPos);
                     }
                 }
-                if (!chapterFind) {
-                    continue;
-                }
 
-                lines.add(str);
+                if (chapterFind) {
+                    lines.add(str);
+                }
             }
         } catch (IOException e) {
             android.util.Log.e(TAG, String.format("loadChapter(%1$s, %2$s)", book.getID(), chapterNumber), e);
@@ -488,56 +448,19 @@ public class BQModuleRepository implements IModuleRepository<String, BQModule> {
 
         ArrayList<Verse> verseList = new ArrayList<>();
         String verseSign = module.getVerseSign();
+        SearchAlgorithm verseSearch = new BoyerMoorAlgorithm(verseSign);
         int i = -1;
         for (String currLine : lines) {
-            if (currLine.toLowerCase().contains(verseSign)) {
+            int versePos = verseSearch.indexOf(currLine);
+            if (versePos >= 0) {
                 i++;
                 verseList.add(new Verse(i, currLine));
             } else if (verseList.size() > 0) {
+                // стих может занимать несколько строк
                 verseList.set(i, new Verse(i, verseList.get(i).getText() + " " + currLine));
             }
         }
 
         return new Chapter(chapterNumber, verseList);
-    }
-
-    private LinkedHashMap<String, String> searchInBook(Module module, String bookID, String query, String bookContent) {
-        LinkedHashMap<String, String> searchRes = new LinkedHashMap<>();
-
-        // Подготовим регулярное выражение для поиска
-        String searchQuery = getSearchQuery(query);
-        if (searchQuery.equals("")) {
-            return searchRes;
-        }
-
-        if (!contains(bookContent, searchQuery)) {
-            return searchRes;
-        }
-
-        Log.i(TAG, " - Start search in book " + bookID);
-
-        ModuleTextFormatter formatter = new ModuleTextFormatter(module);
-        formatter.setVisibleVerseNumbers(false);
-
-        int chapterDev = module.isChapterZero() ? -1 : 0;
-        int patternFlags = Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE;
-        String[] chapters = Pattern.compile(module.getChapterSign(), patternFlags).split(bookContent);
-        String chapter, verse;
-        for (int chapterNumber = 0; chapterNumber < chapters.length; chapterNumber++) {
-            chapter = module.getChapterSign() + chapters[chapterNumber];
-            if (!contains(chapter, searchQuery)) continue;
-            String[] verses = Pattern.compile(module.getVerseSign(), patternFlags).split(chapter);
-            for (int verseNumber = 0; verseNumber < verses.length; verseNumber++) {
-                verse = module.getVerseSign() + verses[verseNumber];
-                if (!contains(verse, searchQuery)) continue;
-                searchRes.put(
-                        new BibleReference(module.getID(), bookID, chapterNumber - chapterDev, verseNumber).getPath(),
-                        highlightWords(query, formatter.format(verse)));
-            }
-        }
-
-        Log.i(TAG, " - Cancel search in book " + bookID);
-
-        return searchRes;
     }
 }
