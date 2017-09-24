@@ -32,7 +32,9 @@ import android.util.Log;
 
 import com.BibleQuote.domain.exceptions.DataAccessException;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
@@ -48,6 +50,7 @@ import java.util.zip.ZipInputStream;
 
 public final class FsUtils {
 
+    private static final int BUFFER_SIZE = 1024 * 4;
     private static final String TAG = "FsUtils";
 
     private FsUtils() throws InstantiationException {
@@ -73,6 +76,22 @@ public final class FsUtils {
             Log.e(TAG, message);
         }
         return null;
+    }
+
+    public static byte[] getBytes(InputStream stream) {
+        try (
+                ByteArrayOutputStream out = new ByteArrayOutputStream(BUFFER_SIZE);
+                BufferedInputStream in = new BufferedInputStream(stream)
+        ) {
+            byte[] buffer = new byte[BUFFER_SIZE];
+            int length;
+            while ((length = in.read(buffer, 0, buffer.length)) != -1) {
+                out.write(buffer, 0, length);
+            }
+            return out.toByteArray();
+        } catch (IOException ex) {
+            return null;
+        }
     }
 
     public static InputStream getStream(String path, String fileName) {

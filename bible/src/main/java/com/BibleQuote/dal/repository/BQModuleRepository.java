@@ -48,6 +48,7 @@ import com.BibleQuote.domain.search.algorithm.SearchAlgorithm;
 import com.BibleQuote.entity.modules.BQBook;
 import com.BibleQuote.entity.modules.BQModule;
 import com.BibleQuote.utils.CachePool;
+import com.BibleQuote.utils.FilenameUtils;
 import com.BibleQuote.utils.FsUtils;
 import com.BibleQuote.utils.Logger;
 import com.BibleQuote.utils.modules.LanguageConvertor;
@@ -59,7 +60,10 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -104,9 +108,6 @@ public class BQModuleRepository implements IModuleRepository<String, BQModule> {
         charsets.put("238", "cp1250"); // Eastern European
         charsets.put("254", "cp437"); // PC 437
         charsets.put("255", "cp850"); // OEM
-    }
-
-    public BQModuleRepository() {
     }
 
     @Override
@@ -206,7 +207,9 @@ public class BQModuleRepository implements IModuleRepository<String, BQModule> {
                     str = str.substring(str.toLowerCase().indexOf("language"));
                     pos = str.indexOf("//");
                 }
-                if (pos >= 0) str = str.substring(0, pos);
+                if (pos >= 0) {
+                    str = str.substring(0, pos);
+                }
 
                 int delimiterPos = str.indexOf("=");
                 if (delimiterPos == -1) {
@@ -342,6 +345,7 @@ public class BQModuleRepository implements IModuleRepository<String, BQModule> {
      * @param module  ссылка на модуль
      * @param bookID  id книги в модуле
      * @param chapter номер главы в книге
+     *
      * @return внутреннее представление ссылки на главу
      */
     private String getChapterID(Module module, String bookID, int chapter) {
@@ -367,8 +371,9 @@ public class BQModuleRepository implements IModuleRepository<String, BQModule> {
         try {
             while ((str = bReader.readLine()) != null) {
                 int pos = str.indexOf("//");
-                if (pos >= 0)
+                if (pos >= 0) {
                     str = str.substring(0, pos);
+                }
 
                 int delimiterPos = str.indexOf("=");
                 if (delimiterPos == -1) {
@@ -451,6 +456,7 @@ public class BQModuleRepository implements IModuleRepository<String, BQModule> {
         SearchAlgorithm verseSearch = new BoyerMoorAlgorithm(verseSign);
         int i = -1;
         for (String currLine : lines) {
+            currLine = cacheFileFromArchive(module, currLine);
             int versePos = verseSearch.indexOf(currLine);
             if (versePos >= 0) {
                 i++;
@@ -462,5 +468,42 @@ public class BQModuleRepository implements IModuleRepository<String, BQModule> {
         }
 
         return new Chapter(chapterNumber, verseList);
+    }
+
+    String cacheFileFromArchive(BQModule module, String currLine) {
+        if (!module.isArchive()) {
+            return currLine;
+        }
+
+        Pattern pattern = Pattern.compile("<img.+?src\\s*?=\\s*['\"](.+?)[\"']>", Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(currLine);
+        if (!matcher.find() && matcher.groupCount() < 2) {
+            return currLine;
+        }
+
+        StringBuilder result = new StringBuilder(currLine);
+        for (int i = 1; i < matcher.groupCount() + 1; i++) {
+            String path = matcher.group(i);
+            if (path == null || path.isEmpty()) {
+                continue;
+            }
+
+            try (InputStream imageStream = getImageReader(module, path)) {
+                byte[] bytes = FsUtils.getBytes(imageStream);
+                if (bytes == null) {
+                    continue;
+                }
+
+                String data = Base64.encodeToString(bytes, Base64.NO_WRAP);
+                String ext = FilenameUtils.getExtension(path);
+                result.replace(matcher.start(i), matcher.end(i),
+                        String.format(Locale.US, "data:image/%s;base64,%s", ext, data));
+            } catch (Exception ex) {
+                Logger.e(this, "", ex);
+                return currLine;
+            }
+        }
+
+        return result.toString();
     }
 }

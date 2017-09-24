@@ -90,6 +90,20 @@ public class FilenameUtils {
         return null;
     }
 
+    public static String getExtension(String path) {
+        if (path == null || path.isEmpty()) {
+            return null;
+        }
+
+        int dotPos = path.lastIndexOf(".");
+        int dirPos = path.lastIndexOf("/");
+        if (dirPos > dotPos || dotPos == -1) {
+            return null;
+        } else {
+            return path.substring(dotPos + 1);
+        }
+    }
+
     private static String getDataColumn(Context context, Uri uri, String selection, String[] selectionArgs) {
         Cursor cursor = null;
         final String column = "_data";
