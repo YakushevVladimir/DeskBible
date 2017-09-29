@@ -137,16 +137,15 @@ public class BQModuleRepository implements IModuleRepository<String, BQModule> {
             path = path + File.separator + INI_FILENAME;
         }
 
-        BQModule result = null;
+        BQModule result = new BQModule(path);
         try {
-            result = new BQModule(path);
             result.setDefaultEncoding(getModuleEncoding(getReader(result, result.iniFileName)));
             fillModule(result, getReader(result, result.iniFileName));
-        } catch (DataAccessException e) {
-            Logger.i(TAG, "!!!..Error open module from " + path);
+            return result;
+        } catch (DataAccessException | IllegalArgumentException e) {
+            Logger.e(TAG, "Error open module from " + path, e);
             throw new OpenModuleException(path, result.modulePath);
         }
-        return result;
     }
 
     @Override
