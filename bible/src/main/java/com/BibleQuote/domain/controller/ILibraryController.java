@@ -28,7 +28,7 @@
 
 package com.BibleQuote.domain.controller;
 
-import com.BibleQuote.domain.entity.Module;
+import com.BibleQuote.domain.entity.BaseModule;
 import com.BibleQuote.domain.exceptions.BookDefinitionException;
 import com.BibleQuote.domain.exceptions.BooksDefinitionException;
 import com.BibleQuote.domain.exceptions.OpenModuleException;
@@ -43,7 +43,7 @@ public interface ILibraryController {
     /**
      * @return Возвращает коллекцию модулей с ключом по Module.ShortName
      */
-    Map<String, Module> getModules();
+    Map<String, BaseModule> getModules();
 
     /**
      * Получение модуля из коллекции по его ShortName.
@@ -52,7 +52,7 @@ public interface ILibraryController {
      * @return найденный модуль
      * @throws com.BibleQuote.domain.exceptions.OpenModuleException - указанный ShortName отсутствует в коллекции
      */
-    Module getModuleByID(String moduleID) throws OpenModuleException;
+    BaseModule getModuleByID(String moduleID) throws OpenModuleException;
 
     /**
      * Инициализация библиотеки
@@ -74,5 +74,5 @@ public interface ILibraryController {
      * @return Возвращает TreeMap, где в качестве ключа путь к модулю, а в качестве значения
      * closed-модуль
      */
-    Map<String, Module> reloadModules();
+    Map<String, BaseModule> reloadModules();
 }

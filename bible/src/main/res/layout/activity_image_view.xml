@@ -22,7 +22,7 @@
   ~ Project: BibleQuote-for-Android
   ~ File: activity_image_view.xml
   ~
-  ~ Created by Vladimir Yakushev at 11/2016
+  ~ Created by Vladimir Yakushev at 9/2017
   ~ E-mail: ru.phoenix@gmail.com
   ~ WWW: http://www.scripturesoftware.org
   -->
@@ -32,7 +32,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.BibleQuote.ui.ImageViewActivity">
+    tools:context=".presentation.activity.imagepreview.ImagePreviewActivity">
 
     <com.BibleQuote.ui.widget.TouchImageView
         android:id="@+id/image"

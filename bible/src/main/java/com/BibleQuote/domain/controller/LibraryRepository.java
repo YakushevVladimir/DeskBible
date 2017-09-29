@@ -28,7 +28,7 @@
 
 package com.BibleQuote.domain.controller;
 
-import com.BibleQuote.domain.entity.Module;
+import com.BibleQuote.domain.entity.BaseModule;
 
 import java.util.Collection;
 import java.util.List;
@@ -38,7 +38,7 @@ import java.util.List;
  */
 public interface LibraryRepository {
 
-    void add(Module module);
-    List<Module> modules();
-    void replace(Collection<Module> modules);
+    void add(BaseModule module);
+    List<BaseModule> modules();
+    void replace(Collection<BaseModule> modules);
 }

@@ -22,7 +22,7 @@
   ~ Project: BibleQuote-for-Android
   ~ File: AndroidManifest.xml
   ~
-  ~ Created by Vladimir Yakushev at 8/2017
+  ~ Created by Vladimir Yakushev at 9/2017
   ~ E-mail: ru.phoenix@gmail.com
   ~ WWW: http://www.scripturesoftware.org
   -->
@@ -51,7 +51,7 @@
         android:fullBackupContent="@xml/backup_content"
         android:supportsRtl="true">
         <activity
-            android:name=".ui.SplashActivity"
+            android:name=".presentation.activity.splash.SplashActivity"
             android:label="@string/app_name"
             android:theme="@style/SplashTheme">
             <intent-filter>
@@ -62,30 +62,30 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.LibraryActivity"
+            android:name=".presentation.activity.library.LibraryActivity"
             android:label="@string/library"/>
         <activity
-            android:name=".ui.BookmarksActivity"
+            android:name=".presentation.activity.bookmarks.BookmarksActivity"
             android:label="@string/bookmarks"
-            android:parentActivityName=".ui.ReaderActivity"
+            android:parentActivityName=".presentation.activity.reader.ReaderActivity"
             android:theme="@style/Theme.BibleQuote.NoActionBar"/>
         <activity
-            android:name=".ui.HistoryActivity"
+            android:name=".presentation.activity.history.HistoryActivity"
             android:label="@string/history"/>
         <activity
-            android:name=".ui.SearchActivity"
+            android:name=".presentation.activity.search.SearchActivity"
             android:label="@string/search"/>
         <activity
-            android:name=".ui.SettingsActivity"
+            android:name=".presentation.activity.settings.SettingsActivity"
             android:label="@string/settings"/>
         <activity
-            android:name=".ui.AboutActivity"
+            android:name=".presentation.activity.about.AboutActivity"
             android:label="@string/about"/>
         <activity
-            android:name=".ui.HelpActivity"
+            android:name=".presentation.activity.help.HelpActivity"
             android:label="@string/help"/>
         <activity
-            android:name=".ui.ReaderActivity"
+            android:name=".presentation.activity.reader.ReaderActivity"
             android:configChanges="keyboardHidden|orientation"
             android:theme="@style/Theme.BibleQuote.NoActionBar">
             <intent-filter>
@@ -106,7 +106,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.CrossReferenceActivity"
+            android:name=".presentation.activity.crossreference.CrossReferenceActivity"
             android:label="@string/cross_reference">
             <intent-filter>
                 <action android:name="org.scripturesoftware.intent.action.VIEW_REFERENCE"/>
@@ -115,7 +115,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.ImageViewActivity"
+            android:name=".presentation.activity.imagepreview.ImagePreviewActivity"
             android:theme="@style/Theme.BibleQuote.NoActionBar"/>
 
         <uses-library

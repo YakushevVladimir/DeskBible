@@ -31,7 +31,7 @@ package com.BibleQuote.managers;
 import com.BibleQuote.dal.controller.BQModuleController;
 import com.BibleQuote.dal.repository.BQModuleRepository;
 import com.BibleQuote.domain.controller.IModuleController;
-import com.BibleQuote.domain.entity.Module;
+import com.BibleQuote.domain.entity.BaseModule;
 import com.BibleQuote.entity.modules.BQModule;
 import com.BibleQuote.utils.FsUtilsWrapper;
 
@@ -40,7 +40,7 @@ import com.BibleQuote.utils.FsUtilsWrapper;
  */
 final class Injector {
 
-    static IModuleController getModuleController(Module module) {
+    static IModuleController getModuleController(BaseModule module) {
         if (module instanceof BQModule) {
             return new BQModuleController((BQModule) module, new BQModuleRepository(new FsUtilsWrapper()));
         }

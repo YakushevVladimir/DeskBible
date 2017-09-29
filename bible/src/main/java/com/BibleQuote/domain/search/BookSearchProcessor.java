@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: BookSearchProcessor.java
  *
- * Created by Vladimir Yakushev at 8/2017
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -30,8 +30,8 @@ package com.BibleQuote.domain.search;
 
 import android.support.annotation.NonNull;
 
+import com.BibleQuote.domain.entity.BaseModule;
 import com.BibleQuote.domain.entity.BibleReference;
-import com.BibleQuote.domain.entity.Module;
 import com.BibleQuote.domain.exceptions.BookNotFoundException;
 import com.BibleQuote.domain.repository.IModuleRepository;
 import com.BibleQuote.domain.search.algorithm.BoyerMoorAlgorithm;
@@ -41,7 +41,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-class BookSearchProcessor<D, T extends Module> {
+class BookSearchProcessor<D, T extends BaseModule> {
 
     private final Map<String, String> result = new LinkedHashMap<>();
     private final IModuleRepository<D, T> repository;

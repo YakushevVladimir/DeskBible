@@ -31,8 +31,8 @@ package com.BibleQuote.domain.repository;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 
+import com.BibleQuote.domain.entity.BaseModule;
 import com.BibleQuote.domain.entity.Chapter;
-import com.BibleQuote.domain.entity.Module;
 import com.BibleQuote.domain.exceptions.BookDefinitionException;
 import com.BibleQuote.domain.exceptions.BookNotFoundException;
 import com.BibleQuote.domain.exceptions.BooksDefinitionException;
@@ -42,7 +42,7 @@ import com.BibleQuote.entity.modules.BQModule;
 /**
  *
  */
-public interface IModuleRepository<D, T extends Module> {
+public interface IModuleRepository<D, T extends BaseModule> {
 
     Bitmap getBitmap(BQModule module, String path);
 

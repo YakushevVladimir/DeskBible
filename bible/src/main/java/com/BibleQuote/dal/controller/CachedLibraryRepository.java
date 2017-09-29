@@ -29,7 +29,7 @@
 package com.BibleQuote.dal.controller;
 
 import com.BibleQuote.domain.controller.LibraryRepository;
-import com.BibleQuote.domain.entity.Module;
+import com.BibleQuote.domain.entity.BaseModule;
 import com.BibleQuote.domain.entity.ModuleList;
 import com.BibleQuote.domain.exceptions.DataAccessException;
 import com.BibleQuote.domain.repository.ICacheRepository;
@@ -42,14 +42,14 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class CachedLibraryRepository implements LibraryRepository {
 
     private ICacheRepository cacheRepository;
-    private CopyOnWriteArrayList<Module> modules = new CopyOnWriteArrayList<>();
+    private CopyOnWriteArrayList<BaseModule> modules = new CopyOnWriteArrayList<>();
 
     public CachedLibraryRepository(ICacheRepository cacheRepository) {
         this.cacheRepository = cacheRepository;
     }
 
     @Override
-    public List<Module> modules() {
+    public List<BaseModule> modules() {
         Logger.i(this, "Get module list");
         if (modules.isEmpty() && cacheRepository.isCacheExist()) {
             try {
@@ -63,7 +63,7 @@ public class CachedLibraryRepository implements LibraryRepository {
     }
 
     @Override
-    public void replace(Collection<Module> list) {
+    public void replace(Collection<BaseModule> list) {
         Logger.i(this, "Replacing modules in the cache");
         modules.clear();
         modules.addAll(list);
@@ -71,7 +71,7 @@ public class CachedLibraryRepository implements LibraryRepository {
     }
 
     @Override
-    public void add(Module module) {
+    public void add(BaseModule module) {
         Logger.i(this, "Adding a module to the cache");
         modules.add(module);
         cacheModulesList();

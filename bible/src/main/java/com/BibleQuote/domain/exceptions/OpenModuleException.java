@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: OpenModuleException.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -31,35 +31,35 @@ import android.content.res.Resources;
 
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
-import com.BibleQuote.domain.entity.Module;
+import com.BibleQuote.domain.entity.BaseModule;
 
 public class OpenModuleException extends Exception {
 
 	private static final long serialVersionUID = -941193264792260938L;
-	private String moduleId;
 	private String moduleDatasourceId;
+	private String moduleId;
 
 	public OpenModuleException(String moduleId, String moduleDatasourceId) {
 		this.moduleId = moduleId;
 		this.moduleDatasourceId = moduleDatasourceId;
     }
 
-    public OpenModuleException(Module module) {
-        this.moduleId = module.getID();
-        this.moduleDatasourceId = module.getDataSourceID();
+	public OpenModuleException(BaseModule module) {
+		this.moduleId = module.getID();
+		this.moduleDatasourceId = module.getDataSourceID();
     }
-
-	public String getModuleId() {
-		return moduleId;
-	}
-
-	public String getModuleDatasourceId() {
-		return moduleDatasourceId;
-	}
 
 	@Override
 	public String getMessage() {
 		Resources resources = BibleQuoteApp.getInstance().getApplicationContext().getResources();
 		return String.format(resources.getString(R.string.error_open_module), moduleId, moduleDatasourceId);
+	}
+
+	String getModuleDatasourceId() {
+		return moduleDatasourceId;
+	}
+
+	String getModuleId() {
+		return moduleId;
 	}
 }

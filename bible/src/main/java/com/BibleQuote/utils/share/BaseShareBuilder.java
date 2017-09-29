@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: BaseShareBuilder.java
  *
- * Created by Vladimir Yakushev at 8/2017
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -31,9 +31,9 @@ package com.BibleQuote.utils.share;
 import android.content.Context;
 
 import com.BibleQuote.BibleQuoteApp;
+import com.BibleQuote.domain.entity.BaseModule;
 import com.BibleQuote.domain.entity.Book;
 import com.BibleQuote.domain.entity.Chapter;
-import com.BibleQuote.domain.entity.Module;
 import com.BibleQuote.domain.textFormatters.BreakVerseBibleShareFormatter;
 import com.BibleQuote.domain.textFormatters.IShareTextFormatter;
 import com.BibleQuote.domain.textFormatters.SimpleBibleShareFormatter;
@@ -50,10 +50,10 @@ abstract class BaseShareBuilder {
 	Book book;
 	Chapter chapter;
 	Context context;
-	Module module;
-	IBibleReferenceFormatter referenceFormatter;
-	IShareTextFormatter textFormatter;
-	LinkedHashMap<Integer, String> verses;
+    BaseModule module;
+    IBibleReferenceFormatter referenceFormatter;
+    IShareTextFormatter textFormatter;
+    LinkedHashMap<Integer, String> verses;
 	private PreferenceHelper preferenceHelper = BibleQuoteApp.getInstance().getPrefHelper();
 
 	public abstract void share();

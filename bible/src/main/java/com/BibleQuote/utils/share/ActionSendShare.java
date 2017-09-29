@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: ActionSendShare.java
  *
- * Created by Vladimir Yakushev at 9/2016
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -32,16 +32,16 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.BibleQuote.R;
+import com.BibleQuote.domain.entity.BaseModule;
 import com.BibleQuote.domain.entity.Book;
 import com.BibleQuote.domain.entity.Chapter;
-import com.BibleQuote.domain.entity.Module;
 
 import java.util.LinkedHashMap;
 
-public class ActionSendShare extends BaseShareBuilder {
+class ActionSendShare extends BaseShareBuilder {
 
-	public ActionSendShare(Context context, Module module, Book book,
-						   Chapter chapter, LinkedHashMap<Integer, String> verses) {
+	ActionSendShare(Context context, BaseModule module, Book book,
+			Chapter chapter, LinkedHashMap<Integer, String> verses) {
 		this.context = context;
 		this.module = module;
 		this.book = book;

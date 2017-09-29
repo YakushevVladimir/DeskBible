@@ -28,21 +28,21 @@
 
 package com.BibleQuote.domain.repository;
 
-import com.BibleQuote.domain.entity.Module;
+import com.BibleQuote.domain.entity.BaseModule;
 import com.BibleQuote.domain.exceptions.BookDefinitionException;
 import com.BibleQuote.domain.exceptions.BooksDefinitionException;
 import com.BibleQuote.domain.exceptions.OpenModuleException;
 
 import java.util.Map;
 
-public interface LibraryLoader<T extends Module> {
+public interface LibraryLoader<T extends BaseModule> {
 
 	/**
 	 * Загрузка списка модулей из хранилища без чтения данных.
 	 * Модулям устанавливается флаг isClosed=true
 	 * <br><font color='red'>Производится полная перезапись в кэш коллекции модулей.</font><br>
 	 */
-	Map<String, Module> loadFileModules();
+    Map<String, BaseModule> loadFileModules();
 
-	Module loadModule(String path) throws OpenModuleException, BooksDefinitionException, BookDefinitionException;
+    BaseModule loadModule(String path) throws OpenModuleException, BooksDefinitionException, BookDefinitionException;
 }

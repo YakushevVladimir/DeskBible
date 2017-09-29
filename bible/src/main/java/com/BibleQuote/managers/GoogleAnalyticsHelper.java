@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: GoogleAnalyticsHelper.java
  *
- * Created by Vladimir Yakushev at 9/2016
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -29,6 +29,7 @@
 package com.BibleQuote.managers;
 
 import com.BibleQuote.BibleQuoteApp;
+import com.BibleQuote.domain.AnalyticsHelper;
 import com.BibleQuote.domain.entity.BibleReference;
 import com.BibleQuote.domain.entity.Bookmark;
 import com.google.android.gms.analytics.HitBuilders;
@@ -37,7 +38,7 @@ import com.google.android.gms.analytics.HitBuilders;
  * @author Vladimir Yakushev
  * @version 1.0
  */
-public final class GoogleAnalyticsHelper {
+public final class GoogleAnalyticsHelper implements AnalyticsHelper {
 
     private static final String CATEGORY_BOOKMARKS = "bookmarks";
     private static final String CATEGORY_MODULES = "modules";
@@ -62,6 +63,7 @@ public final class GoogleAnalyticsHelper {
         return instance;
     }
 
+    @Override
     public void actionOpenLink(BibleReference reference) {
         createEvent(CATEGORY_MODULES, ACTION_OPEN_MODULE, reference.getModuleID());
         createEvent(CATEGORY_MODULES, ACTION_OPEN_BOOK, reference.getBookID());

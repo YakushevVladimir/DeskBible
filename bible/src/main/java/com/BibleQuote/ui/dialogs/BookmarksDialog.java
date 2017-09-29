@@ -47,7 +47,7 @@ import com.BibleQuote.domain.entity.Bookmark;
 import com.BibleQuote.domain.repository.IBookmarksRepository;
 import com.BibleQuote.managers.GoogleAnalyticsHelper;
 import com.BibleQuote.managers.bookmarks.BookmarksManager;
-import com.BibleQuote.ui.BookmarksActivity;
+import com.BibleQuote.presentation.activity.bookmarks.BookmarksActivity;
 
 public class BookmarksDialog extends DialogFragment {
 

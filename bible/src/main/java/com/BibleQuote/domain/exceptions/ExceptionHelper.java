@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: ExceptionHelper.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -40,7 +40,7 @@ public final class ExceptionHelper {
         throw new InstantiationException("This class is not for instantiation");
     }
 
-    public static void onException(Exception ex, Context context, String tag) {
+    public static void onException(Throwable ex, Context context, String tag) {
         String message = ex.getMessage();
         if (message == null) {
             return;

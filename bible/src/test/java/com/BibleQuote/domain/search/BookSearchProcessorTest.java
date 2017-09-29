@@ -21,14 +21,14 @@
  * Project: BibleQuote-for-Android
  * File: BookSearchProcessorTest.java
  *
- * Created by Vladimir Yakushev at 8/2017
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
 
 package com.BibleQuote.domain.search;
 
-import com.BibleQuote.domain.entity.Module;
+import com.BibleQuote.domain.entity.BaseModule;
 import com.BibleQuote.domain.repository.IModuleRepository;
 
 import org.junit.Before;
@@ -47,8 +47,8 @@ import static org.mockito.Mockito.when;
 
 public class BookSearchProcessorTest {
 
-    private IModuleRepository<String, Module> repository;
-    private Module module;
+    private IModuleRepository<String, BaseModule> repository;
+    private BaseModule module;
     private String testContent = "<h4>1</h4>\n" +
             "<p><sup>1</sup> В начале сотворил Бог небо и землю.\n" +
             "<p><sup>2</sup> Земля же была безвидна и пуста, и тьма над бездною, и Дух Божий носился над водою.\n" +
@@ -164,7 +164,7 @@ public class BookSearchProcessorTest {
     public void setUp() throws Exception {
         repository = mock(MockModuleRepository.class);
         when(repository.getBookContent(any(), any())).thenReturn(testContent);
-        module = mock(Module.class);
+        module = mock(BaseModule.class);
         when(module.getChapterSign()).thenReturn("<h4>");
         when(module.getVerseSign()).thenReturn("<p>");
         when(module.isChapterZero()).thenReturn(false);
@@ -173,7 +173,7 @@ public class BookSearchProcessorTest {
 
     @Test
     public void searchOneWord() throws Exception {
-        BookSearchProcessor<String, Module> searchProcessor = new BookSearchProcessor<>(repository, module, "Gen", "авель");
+        BookSearchProcessor<String, BaseModule> searchProcessor = new BookSearchProcessor<>(repository, module, "Gen", "авель");
         Map<String, String> results = searchProcessor.search();
 
         assertThat(results.size(), equalTo(3));
@@ -186,7 +186,7 @@ public class BookSearchProcessorTest {
 
     @Test
     public void searchTwoWord() throws Exception {
-        BookSearchProcessor<String, Module> searchProcessor = new BookSearchProcessor<>(repository, module, "Gen", "авел каин");
+        BookSearchProcessor<String, BaseModule> searchProcessor = new BookSearchProcessor<>(repository, module, "Gen", "авел каин");
         Map<String, String> results = searchProcessor.search();
 
         assertThat(results.size(), equalTo(3));
@@ -199,7 +199,7 @@ public class BookSearchProcessorTest {
 
     @Test
     public void searchWithEmptyQuery() throws Exception {
-        BookSearchProcessor<String, Module> searchProcessor = new BookSearchProcessor<>(repository, module, "Gen", "");
+        BookSearchProcessor<String, BaseModule> searchProcessor = new BookSearchProcessor<>(repository, module, "Gen", "");
         Map<String, String> results = searchProcessor.search();
         assertNotNull(results);
         assertThat(results.size(), equalTo(0));

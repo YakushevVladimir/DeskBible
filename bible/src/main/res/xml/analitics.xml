@@ -22,7 +22,7 @@
   ~ Project: BibleQuote-for-Android
   ~ File: analitics.xml
   ~
-  ~ Created by Vladimir Yakushev at 9/2016
+  ~ Created by Vladimir Yakushev at 9/2017
   ~ E-mail: ru.phoenix@gmail.com
   ~ WWW: http://www.scripturesoftware.org
   -->
@@ -36,14 +36,15 @@
     <bool name="ga_autoActivityTracking">true</bool>
 
     <!-- The screen names that will appear in reports -->
-    <screenName name="com.BibleQuote.ui.AboutActivity">About</screenName>
-    <screenName name="com.BibleQuote.ui.BookmarksActivity">Bookmarks</screenName>
-    <screenName name="com.BibleQuote.ui.CrossReferenceActivity">CrossReference</screenName>
-    <screenName name="com.BibleQuote.ui.HelpActivity">Help Screen</screenName>
-    <screenName name="com.BibleQuote.ui.HistoryActivity">History</screenName>
-    <screenName name="com.BibleQuote.ui.LibraryActivity">Library</screenName>
-    <screenName name="com.BibleQuote.ui.ReaderActivity">Reader</screenName>
-    <screenName name="com.BibleQuote.ui.SearchActivity">Search</screenName>
+    <screenName name="com.BibleQuote.presentation.activity.about.AboutActivity">About</screenName>
+    <screenName name="com.BibleQuote.presentation.activity.bookmarks.BookmarksActivity">Bookmarks</screenName>
+    <screenName name="com.BibleQuote.presentation.activity.crossreference.CrossReferenceActivity">CrossReference
+    </screenName>
+    <screenName name="com.BibleQuote.presentation.activity.help.HelpActivity">Help Screen</screenName>
+    <screenName name="com.BibleQuote.presentation.activity.history.HistoryActivity">History</screenName>
+    <screenName name="com.BibleQuote.presentation.activity.library.LibraryActivity">Library</screenName>
+    <screenName name="com.BibleQuote.presentation.activity.reader.ReaderActivity">Reader</screenName>
+    <screenName name="com.BibleQuote.presentation.activity.search.SearchActivity">Search</screenName>
 
     <!--Enable automatic exception tracking-->
     <bool name="ga_reportUncaughtExceptions">true</bool>

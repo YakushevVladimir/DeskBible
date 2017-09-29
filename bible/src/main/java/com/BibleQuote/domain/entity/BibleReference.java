@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: BibleReference.java
  *
- * Created by Vladimir Yakushev at 8/2017
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -110,11 +110,11 @@ public class BibleReference {
 		this.toVerse = verseNumber;
 	}
 
-	public BibleReference(Module module, Book book, Integer chapterNumber, Integer verseNumber) {
+	public BibleReference(BaseModule module, Book book, Integer chapterNumber, Integer verseNumber) {
 		this(module, book, chapterNumber, verseNumber, verseNumber);
 	}
 
-	public BibleReference(Module module, Book book, Integer chapterNumber, Integer fromVerse, Integer toVerse) {
+	public BibleReference(BaseModule module, Book book, Integer chapterNumber, Integer fromVerse, Integer toVerse) {
 		if (module instanceof BQModule) {
 			this.moduleDatasource = MOD_DATASOURCE_FS;
 		} else {

@@ -21,35 +21,37 @@
  * Project: BibleQuote-for-Android
  * File: ModuleTextFormatterTest.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
 
 package com.BibleQuote.domain.textFormatters;
 
-import android.os.Build;
-
-import com.BibleQuote.BuildConfig;
-import com.BibleQuote.domain.entity.Module;
+import com.BibleQuote.domain.entity.BaseModule;
 import com.BibleQuote.entity.modules.BQModule;
+import com.BibleQuote.utils.PreferenceHelper;
 
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static org.mockito.Mockito.when;
+
 @RunWith(RobolectricTestRunner.class)
-@Config(sdk = Build.VERSION_CODES.JELLY_BEAN,
-        manifest = "src/main/AndroidManifest.xml",
-        constants = BuildConfig.class)
+@Config(manifest = Config.NONE)
 public class ModuleTextFormatterTest {
+
+    @Mock PreferenceHelper prefHelper;
 
     private String testVerses =
             "<p>12 Услышав же Иисус, что Иоанн отдан <I>под</I> <I>стражу,</I> удалился в Галилею\n" +
@@ -59,10 +61,13 @@ public class ModuleTextFormatterTest {
             "<p>12 Услышав же Иисус G1234 G59, что Иоанн отдан <I>под</I> <I>стражу,</I> удалился в Галилею\n" +
             "<p>13 и, оставив Назарет, пришел 1234 59 и поселился в Капернауме приморском, в пределах Завулоновых и Неффалимовых,";
 
-    private Module mModule;
+    private BaseModule mModule;
 
     @Before
     public void testBefore() {
+        MockitoAnnotations.initMocks(this);
+        when(prefHelper.viewBookVerse()).thenReturn(true);
+
         mModule = new BQModule("base/biblequote.ini");
         mModule.setContainsStrong(false);
         mModule.setBible(true);
@@ -87,7 +92,7 @@ public class ModuleTextFormatterTest {
 
     @Test
     public void testSetVisibleVerseNumbers() throws Exception {
-        ModuleTextFormatter formatter = new ModuleTextFormatter(mModule);
+        ModuleTextFormatter formatter = new ModuleTextFormatter(mModule, prefHelper);
         formatter.setVisibleVerseNumbers(false);
 
         String result = formatter.format(testVerses);
@@ -97,7 +102,7 @@ public class ModuleTextFormatterTest {
 
     @Test
     public void testFormatCleanTags() throws Exception {
-        ModuleTextFormatter formatter = new ModuleTextFormatter(mModule);
+        ModuleTextFormatter formatter = new ModuleTextFormatter(mModule, prefHelper);
 
         String result = formatter.format(testVerses);
         Assert.assertTrue(result.contains("<I>"));
@@ -107,7 +112,7 @@ public class ModuleTextFormatterTest {
     @Test
     public void testFormatModuleWithStrong() throws Exception {
         mModule.setContainsStrong(true);
-        ModuleTextFormatter formatter = new ModuleTextFormatter(mModule);
+        ModuleTextFormatter formatter = new ModuleTextFormatter(mModule, prefHelper);
 
         String result = formatter.format(testVersesWithStrong);
         Assert.assertFalse(result.contains("G1234"));
@@ -123,7 +128,7 @@ public class ModuleTextFormatterTest {
     @Test
     public void testFormatModuleWithoutStrong() throws Exception {
         mModule.setContainsStrong(false);
-        ModuleTextFormatter formatter = new ModuleTextFormatter(mModule);
+        ModuleTextFormatter formatter = new ModuleTextFormatter(mModule, prefHelper);
 
         String result = formatter.format(testVersesWithStrong);
         Assert.assertTrue(result.contains("G1234"));

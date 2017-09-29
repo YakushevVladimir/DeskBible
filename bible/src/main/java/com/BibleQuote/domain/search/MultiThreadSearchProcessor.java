@@ -21,15 +21,15 @@
  * Project: BibleQuote-for-Android
  * File: MultiThreadSearchProcessor.java
  *
- * Created by Vladimir Yakushev at 8/2017
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
 
 package com.BibleQuote.domain.search;
 
+import com.BibleQuote.domain.entity.BaseModule;
 import com.BibleQuote.domain.entity.BibleReference;
-import com.BibleQuote.domain.entity.Module;
 import com.BibleQuote.domain.exceptions.BookNotFoundException;
 import com.BibleQuote.domain.repository.IModuleRepository;
 
@@ -42,7 +42,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public class MultiThreadSearchProcessor<D, T extends Module> {
+public class MultiThreadSearchProcessor<D, T extends BaseModule> {
 
     private static final int CPU_COUNT = Runtime.getRuntime().availableProcessors();
     private static final int POOL_SIZE = CPU_COUNT * 2 + 1;
@@ -88,7 +88,7 @@ public class MultiThreadSearchProcessor<D, T extends Module> {
         return searchRes;
     }
 
-    private static class SearchThread<D, T extends Module> implements Callable<Map<String, String>> {
+    private static class SearchThread<D, T extends BaseModule> implements Callable<Map<String, String>> {
 
         private final BookSearchProcessor<D, T> searchProcessor;
 

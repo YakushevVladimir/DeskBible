@@ -35,10 +35,10 @@ import android.support.annotation.NonNull;
 import com.BibleQuote.domain.controller.ILibraryController;
 import com.BibleQuote.domain.controller.IModuleController;
 import com.BibleQuote.domain.controller.ITSKController;
+import com.BibleQuote.domain.entity.BaseModule;
 import com.BibleQuote.domain.entity.BibleReference;
 import com.BibleQuote.domain.entity.Book;
 import com.BibleQuote.domain.entity.Chapter;
-import com.BibleQuote.domain.entity.Module;
 import com.BibleQuote.domain.entity.Verse;
 import com.BibleQuote.domain.exceptions.BQUniversalException;
 import com.BibleQuote.domain.exceptions.BookDefinitionException;
@@ -76,7 +76,7 @@ public class Librarian {
     private Book currBook;
     private Chapter currChapter;
     private Integer currChapterNumber = -1;
-    private Module currModule;
+    private BaseModule currModule;
     private Integer currVerseNumber = 1;
     private IHistoryManager historyManager;
     private ILibraryController libCtrl;
@@ -126,11 +126,7 @@ public class Librarian {
         return result;
     }
 
-    public Chapter getCurrChapter() {
-        return currChapter;
-    }
-
-    public Module getCurrModule() {
+    public BaseModule getCurrModule() {
         return currModule;
     }
 
@@ -180,14 +176,14 @@ public class Librarian {
      */
     public ArrayList<ItemList> getModulesList() {
         // Сначала отсортируем список по наименованием модулей
-        TreeMap<String, Module> tMap = new TreeMap<>();
-        for (Module currModule : libCtrl.getModules().values()) {
+        TreeMap<String, BaseModule> tMap = new TreeMap<>();
+        for (BaseModule currModule : libCtrl.getModules().values()) {
             tMap.put(currModule.getName(), currModule);
         }
 
         // Теперь создадим результирующий список на основе отсортированных данных
         ArrayList<ItemList> moduleList = new ArrayList<>();
-        for (Module currModule : tMap.values()) {
+        for (BaseModule currModule : tMap.values()) {
             moduleList.add(new ItemList(currModule.getID(), currModule.getName()));
         }
 
@@ -200,7 +196,7 @@ public class Librarian {
 
     public Locale getTextLocale() {
         return currModule == null
-                ? new Locale(Module.DEFAULT_LANGUAGE)
+                ? new Locale(BaseModule.DEFAULT_LANGUAGE)
                 : new Locale(currModule.getLanguage());
     }
 
@@ -217,14 +213,14 @@ public class Librarian {
         historyManager.clearLinks();
     }
 
-    public Book getBookByID(Module module, String bookID) throws BookNotFoundException, OpenModuleException {
+    public Book getBookByID(BaseModule module, String bookID) throws BookNotFoundException, OpenModuleException {
         IModuleController modCtrl = Injector.getModuleController(module);
         return modCtrl.getBookByID(bookID);
     }
 
     public String getBookFullName(String moduleID, String bookID) throws OpenModuleException {
         try {
-            Module module = libCtrl.getModuleByID(moduleID);
+            BaseModule module = libCtrl.getModuleByID(moduleID);
             IModuleController modCtrl = Injector.getModuleController(module);
             Book book = modCtrl.getBookByID(bookID);
             return book.getName();
@@ -238,7 +234,7 @@ public class Librarian {
 
     public String getBookShortName(String moduleID, String bookID) {
         try {
-            Module module = libCtrl.getModuleByID(moduleID);
+            BaseModule module = libCtrl.getModuleByID(moduleID);
             IModuleController modCtrl = Injector.getModuleController(module);
             Book book = modCtrl.getBookByID(bookID);
             return book.getShortName();
@@ -259,14 +255,10 @@ public class Librarian {
     public List<String> getChaptersList(String moduleID, String bookID)
             throws BookNotFoundException, OpenModuleException {
         // Получим модуль по его ID
-        Module module = libCtrl.getModuleByID(moduleID);
+        BaseModule module = libCtrl.getModuleByID(moduleID);
         IModuleController modCtrl = Injector.getModuleController(module);
         return modCtrl.getChapterNumbers(bookID);
     }
-
-
-    ///////////////////////////////////////////////////////////////////////////
-    // SHARE
 
     public LinkedHashMap<String, BibleReference> getCrossReference(BibleReference bReference)
             throws TskNotFoundException, BQUniversalException {
@@ -295,6 +287,10 @@ public class Librarian {
         return result;
     }
 
+
+    ///////////////////////////////////////////////////////////////////////////
+    // SHARE
+
     public HashMap<BibleReference, String> getCrossReferenceContent(Collection<BibleReference> bReferences) {
         ModuleTextFormatter formatter = new ModuleTextFormatter(currModule, new StripTagsTextFormatter());
         formatter.setVisibleVerseNumbers(false);
@@ -314,7 +310,7 @@ public class Librarian {
     }
 
     public ArrayList<ItemList> getModuleBooksList(String moduleID) throws OpenModuleException, BooksDefinitionException, BookDefinitionException {
-        Module module = libCtrl.getModuleByID(moduleID);
+        BaseModule module = libCtrl.getModuleByID(moduleID);
         return getBookItemLists(module);
     }
 
@@ -325,10 +321,6 @@ public class Librarian {
 
         IModuleController modCtrl = Injector.getModuleController(currModule);
         return modCtrl.getBitmap(path);
-    }
-
-    public Boolean isBible() {
-        return currModule != null && currModule.isBible();
     }
 
     public Boolean isOSISLinkValid(BibleReference link) {
@@ -442,7 +434,7 @@ public class Librarian {
     }
 
     @NonNull
-    private ArrayList<ItemList> getBookItemLists(Module module) {
+    private ArrayList<ItemList> getBookItemLists(BaseModule module) {
         ArrayList<ItemList> result = new ArrayList<>();
         if (module == null) {
             return result;
@@ -458,5 +450,9 @@ public class Librarian {
     private Chapter getChapterByNumber(Book book, Integer chapterNumber) throws BookNotFoundException {
         IModuleController modCtrl = Injector.getModuleController(currModule);
         return modCtrl.getChapter(book.getID(), chapterNumber);
+    }
+
+    private Chapter getCurrChapter() {
+        return currChapter;
     }
 }

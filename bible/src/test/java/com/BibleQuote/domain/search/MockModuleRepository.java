@@ -31,8 +31,8 @@ package com.BibleQuote.domain.search;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 
+import com.BibleQuote.domain.entity.BaseModule;
 import com.BibleQuote.domain.entity.Chapter;
-import com.BibleQuote.domain.entity.Module;
 import com.BibleQuote.domain.exceptions.BookDefinitionException;
 import com.BibleQuote.domain.exceptions.BookNotFoundException;
 import com.BibleQuote.domain.exceptions.BooksDefinitionException;
@@ -40,7 +40,7 @@ import com.BibleQuote.domain.exceptions.OpenModuleException;
 import com.BibleQuote.domain.repository.IModuleRepository;
 import com.BibleQuote.entity.modules.BQModule;
 
-class MockModuleRepository implements IModuleRepository<String, Module> {
+class MockModuleRepository implements IModuleRepository<String, BaseModule> {
 
     @Override
     public Bitmap getBitmap(BQModule module, String path) {
@@ -48,18 +48,18 @@ class MockModuleRepository implements IModuleRepository<String, Module> {
     }
 
     @Override
-    public Chapter loadChapter(Module module, String bookID, int chapter) throws BookNotFoundException {
+    public Chapter loadChapter(BaseModule module, String bookID, int chapter) throws BookNotFoundException {
         return null;
     }
 
     @Override
-    public Module loadModule(String path) throws OpenModuleException, BooksDefinitionException, BookDefinitionException {
+    public BaseModule loadModule(String path) throws OpenModuleException, BooksDefinitionException, BookDefinitionException {
         return null;
     }
 
     @NonNull
     @Override
-    public String getBookContent(Module module, String bookID) throws BookNotFoundException {
+    public String getBookContent(BaseModule module, String bookID) throws BookNotFoundException {
         return "";
     }
 }
