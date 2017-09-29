@@ -41,6 +41,7 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 84
         versionName "1.1.84"
+        resConfigs("en", "ru", "be", "de", "es", "no", "sv", "uk")
     }
 
     compileOptions {
@@ -53,7 +54,8 @@ android {
             testCoverageEnabled true
         }
         release {
-            minifyEnabled false
+            shrinkResources true
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
