@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2011 Scripture Software
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -19,11 +21,9 @@
  * Project: BibleQuote-for-Android
  * File: SelectTextHandler.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
- *
- *
  */
 
 package com.BibleQuote.ui.handlers;
@@ -39,9 +39,8 @@ import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
 import com.BibleQuote.domain.entity.Bookmark;
 import com.BibleQuote.managers.Librarian;
-import com.BibleQuote.ui.ReaderActivity;
+import com.BibleQuote.presentation.activity.reader.ReaderActivity;
 import com.BibleQuote.ui.dialogs.BookmarksDialog;
-import com.BibleQuote.ui.presenters.ReaderViewPresenter;
 import com.BibleQuote.ui.widget.ReaderWebView;
 import com.BibleQuote.utils.share.ShareBuilder;
 
@@ -103,7 +102,7 @@ public final class SelectTextHandler implements ActionMode.Callback {
                 myLibrarian.setCurrentVerseNumber(selVerses.first());
                 Intent intParallels = new Intent(VIEW_REFERENCE);
                 intParallels.putExtra("linkOSIS", myLibrarian.getCurrentOSISLink().getPath());
-                readerActivity.startActivityForResult(intParallels, ReaderViewPresenter.ID_PARALLELS);
+                readerActivity.startActivityForResult(intParallels, ReaderActivity.ID_PARALLELS);
                 break;
 
             default:

@@ -21,14 +21,14 @@
  * Project: BibleQuote-for-Android
  * File: MultiThreadSearchProcessorTest.java
  *
- * Created by Vladimir Yakushev at 8/2017
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
 
 package com.BibleQuote.domain.search;
 
-import com.BibleQuote.domain.entity.Module;
+import com.BibleQuote.domain.entity.BaseModule;
 import com.BibleQuote.domain.exceptions.BookNotFoundException;
 import com.BibleQuote.domain.repository.IModuleRepository;
 
@@ -49,8 +49,8 @@ import static org.mockito.Mockito.when;
 
 public class MultiThreadSearchProcessorTest {
 
-    private MultiThreadSearchProcessor<String, Module> searchProcessor;
-    private Module module;
+    private MultiThreadSearchProcessor<String, BaseModule> searchProcessor;
+    private BaseModule module;
     private final String testContentGen = "<h4>1</h4>\n" +
             "<p><sup>1</sup> В начале сотворил Бог небо и землю.\n" +
             "<p><sup>2</sup> Земля же была безвидна и пуста, и тьма над бездною, и Дух Божий носился над водою.\n" +
@@ -268,12 +268,12 @@ public class MultiThreadSearchProcessorTest {
 
     @Before
     public void setUp() throws Exception {
-        IModuleRepository<String, Module> repository = mock(MockModuleRepository.class);
+        IModuleRepository<String, BaseModule> repository = mock(MockModuleRepository.class);
         when(repository.getBookContent(any(), eq("Gen"))).thenReturn(testContentGen);
         when(repository.getBookContent(any(), eq("Exo"))).thenReturn(testContentExo);
         when(repository.getBookContent(any(), eq("Sam"))).thenThrow(BookNotFoundException.class);
 
-        module = mock(Module.class);
+        module = mock(BaseModule.class);
         when(module.getChapterSign()).thenReturn("<h4>");
         when(module.getVerseSign()).thenReturn("<p>");
         when(module.isChapterZero()).thenReturn(false);

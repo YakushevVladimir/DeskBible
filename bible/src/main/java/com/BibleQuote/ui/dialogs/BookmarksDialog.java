@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: BookmarksDialog.java
  *
- * Created by Vladimir Yakushev at 8/2017
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -47,7 +47,7 @@ import com.BibleQuote.domain.entity.Bookmark;
 import com.BibleQuote.domain.repository.IBookmarksRepository;
 import com.BibleQuote.managers.GoogleAnalyticsHelper;
 import com.BibleQuote.managers.bookmarks.BookmarksManager;
-import com.BibleQuote.ui.BookmarksActivity;
+import com.BibleQuote.presentation.activity.bookmarks.BookmarksActivity;
 
 public class BookmarksDialog extends DialogFragment {
     private Bookmark bookmark;

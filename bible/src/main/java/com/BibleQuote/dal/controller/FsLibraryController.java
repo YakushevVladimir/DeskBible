@@ -30,7 +30,7 @@ package com.BibleQuote.dal.controller;
 
 import com.BibleQuote.domain.controller.ILibraryController;
 import com.BibleQuote.domain.controller.LibraryRepository;
-import com.BibleQuote.domain.entity.Module;
+import com.BibleQuote.domain.entity.BaseModule;
 import com.BibleQuote.domain.exceptions.BookDefinitionException;
 import com.BibleQuote.domain.exceptions.BooksDefinitionException;
 import com.BibleQuote.domain.exceptions.OpenModuleException;
@@ -43,9 +43,9 @@ import java.util.TreeMap;
 public class FsLibraryController implements ILibraryController {
 
     private LibraryRepository libraryRepository;
-    private LibraryLoader<? extends Module> libraryLoader;
+    private LibraryLoader<? extends BaseModule> libraryLoader;
 
-    public FsLibraryController(LibraryLoader<? extends Module> libraryLoader, LibraryRepository libraryRepository) {
+    public FsLibraryController(LibraryLoader<? extends BaseModule> libraryLoader, LibraryRepository libraryRepository) {
         this.libraryLoader = libraryLoader;
         this.libraryRepository = libraryRepository;
     }
@@ -53,35 +53,35 @@ public class FsLibraryController implements ILibraryController {
     @Override
     public void init() {
         Logger.i(this, "Init");
-        Map<String, Module> modules = getModules();
+        Map<String, BaseModule> modules = getModules();
         if (modules.isEmpty()) {
             reloadModules();
         }
     }
 
     @Override
-    public Map<String, Module> reloadModules() {
-        Map<String, Module> modules = libraryLoader.loadFileModules();
+    public Map<String, BaseModule> reloadModules() {
+        Map<String, BaseModule> modules = libraryLoader.loadFileModules();
         libraryRepository.replace(modules.values());
         return modules;
     }
 
     @Override
-    public Map<String, Module> getModules() {
-        Map<String, Module> result = new TreeMap<>();
-        for (Module module : libraryRepository.modules()) {
+    public Map<String, BaseModule> getModules() {
+        Map<String, BaseModule> result = new TreeMap<>();
+        for (BaseModule module : libraryRepository.modules()) {
             result.put(module.getID(), module);
         }
         return result;
     }
 
     @Override
-    public Module getModuleByID(String moduleID) throws OpenModuleException {
+    public BaseModule getModuleByID(String moduleID) throws OpenModuleException {
         if (moduleID == null) {
             return null;
         }
 
-        Module module = getModules().get(moduleID);
+        BaseModule module = getModules().get(moduleID);
         if (module == null) {
             throw new OpenModuleException(moduleID, null);
         }

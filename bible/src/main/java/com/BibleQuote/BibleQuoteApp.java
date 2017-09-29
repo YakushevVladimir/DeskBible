@@ -28,12 +28,13 @@
 package com.BibleQuote;
 
 import android.app.Application;
+import android.content.Context;
 import android.util.Log;
 
 import com.BibleQuote.async.AsyncManager;
-import com.BibleQuote.di.AppComponent;
-import com.BibleQuote.di.AppModule;
-import com.BibleQuote.di.DaggerAppComponent;
+import com.BibleQuote.di.component.AppComponent;
+import com.BibleQuote.di.component.DaggerAppComponent;
+import com.BibleQuote.di.module.AppModule;
 import com.BibleQuote.domain.controller.ILibraryController;
 import com.BibleQuote.domain.repository.IBookmarksRepository;
 import com.BibleQuote.managers.Librarian;
@@ -46,24 +47,33 @@ import javax.inject.Inject;
 
 public class BibleQuoteApp extends Application implements Thread.UncaughtExceptionHandler {
 
-	private static BibleQuoteApp instance;
+    private static BibleQuoteApp instance;
 
     @Inject AsyncManager asyncManager;
     @Inject IBookmarksRepository bookmarksRepository;
     @Inject Librarian librarian;
     @Inject ILibraryController libraryController;
     @Inject PreferenceHelper prefHelper;
+    private AppComponent appComponent;
 
     private Thread.UncaughtExceptionHandler exceptionHandler;
-
-	public static BibleQuoteApp getInstance() {
-		return instance;
-	}
 
     public BibleQuoteApp() {
         super();
         instance = this;
         exceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
+    }
+
+    public static BibleQuoteApp getInstance() {
+        return instance;
+    }
+
+    public static BibleQuoteApp instance(Context context) {
+        return (BibleQuoteApp) context.getApplicationContext();
+    }
+
+    public AppComponent getAppComponent() {
+        return appComponent;
     }
 
     public AsyncManager getAsyncManager() {
@@ -86,17 +96,17 @@ public class BibleQuoteApp extends Application implements Thread.UncaughtExcepti
         return prefHelper;
     }
 
-	public synchronized Tracker getTracker() {
-		GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
-		Tracker tracker = analytics.newTracker(R.xml.analitics);
-		tracker.enableAdvertisingIdCollection(true);
-		return tracker;
-	}
+    public synchronized Tracker getTracker() {
+        GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
+        Tracker tracker = analytics.newTracker(R.xml.analitics);
+        tracker.enableAdvertisingIdCollection(true);
+        return tracker;
+    }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        AppComponent appComponent = DaggerAppComponent.builder()
+        appComponent = DaggerAppComponent.builder()
                 .appModule(new AppModule(this))
                 .build();
         appComponent.inject(this);

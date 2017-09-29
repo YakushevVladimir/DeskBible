@@ -21,15 +21,14 @@
  * Project: BibleQuote-for-Android
  * File: ModuleTextFormatter.java
  *
- * Created by Vladimir Yakushev at 3/2017
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
 
 package com.BibleQuote.domain.textFormatters;
 
-import com.BibleQuote.BibleQuoteApp;
-import com.BibleQuote.domain.entity.Module;
+import com.BibleQuote.domain.entity.BaseModule;
 import com.BibleQuote.utils.PreferenceHelper;
 
 import java.util.ArrayList;
@@ -45,8 +44,7 @@ public class ModuleTextFormatter implements ITextFormatter {
     private ArrayList<ITextFormatter> formatters = new ArrayList<>();
     private boolean visibleVerseNumbers;
 
-    public ModuleTextFormatter(Module module) {
-        PreferenceHelper prefHelper = BibleQuoteApp.getInstance().getPrefHelper();
+    public ModuleTextFormatter(BaseModule module, PreferenceHelper prefHelper) {
         this.visibleVerseNumbers = module.isBible() || prefHelper.viewBookVerse();
         if (module.isContainsStrong()) {
             formatters.add(new NoStrongTextFormatter());
@@ -54,7 +52,7 @@ public class ModuleTextFormatter implements ITextFormatter {
         formatters.add(new StripTagsTextFormatter("<(?!" + module.getHtmlFilter() + ")(.)*?>"));
     }
 
-    public ModuleTextFormatter(Module module, ITextFormatter formatter) {
+    public ModuleTextFormatter(BaseModule module, ITextFormatter formatter) {
         this.visibleVerseNumbers = module.isBible();
         if (module.isContainsStrong()) {
             formatters.add(new NoStrongTextFormatter());

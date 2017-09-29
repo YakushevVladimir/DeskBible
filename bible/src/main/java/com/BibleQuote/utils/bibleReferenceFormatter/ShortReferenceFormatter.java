@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: ShortReferenceFormatter.java
  *
- * Created by Vladimir Yakushev at 3/2017
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -29,18 +29,18 @@
 package com.BibleQuote.utils.bibleReferenceFormatter;
 
 import com.BibleQuote.BibleQuoteApp;
+import com.BibleQuote.domain.entity.BaseModule;
 import com.BibleQuote.domain.entity.Book;
-import com.BibleQuote.domain.entity.Module;
 import com.BibleQuote.utils.PreferenceHelper;
 
 import java.util.TreeSet;
 
 public class ShortReferenceFormatter extends ReferenceFormatter implements IBibleReferenceFormatter {
 
-	public ShortReferenceFormatter(Module module, Book book, String chapter,
-								   TreeSet<Integer> verses) {
-		super(module, book, chapter, verses);
-	}
+    public ShortReferenceFormatter(BaseModule module, Book book, String chapter,
+            TreeSet<Integer> verses) {
+        super(module, book, chapter, verses);
+    }
 
 	@Override
 	public String getLink() {

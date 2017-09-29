@@ -62,6 +62,7 @@ public class PreferenceHelper {
     private static final String KEY_TEXT_SIZE = "TextSize";
     private static final String KEY_VIEW_BOOK_VERSE = "always_view_verse_numbers";
     private static final String KEY_VOLUME_BUTTONS_TO_SCROLL = "volume_butons_to_scroll";
+    private static final String KEY_LAST_READ = "last_read";
 
     private final SharedPreferences preference;
     private Context context;
@@ -87,6 +88,10 @@ public class PreferenceHelper {
                 .nightMode(getNightMode())
                 .lineSpacing(getLineSpacing())
                 .build();
+    }
+
+    public String getLastRead() {
+        return preference.getString(KEY_LAST_READ, "");
     }
 
     public boolean isReadModeByDefault() {
@@ -167,21 +172,25 @@ public class PreferenceHelper {
         preference.edit().putBoolean(KEY_NIGHT_MODE, nightMode).apply();
     }
 
+    @SuppressWarnings("deprecation")
     private String getTextBackground() {
         int color = preference.getInt(KEY_TEXT_BG, context.getResources().getColor(R.color.def_background));
         return ColorUtils.toWeb(color);
     }
 
+    @SuppressWarnings("deprecation")
     private String getTextBackgroundSelected() {
         int color = preference.getInt(KEY_TEXT_BG_SEL, context.getResources().getColor(R.color.def_sel_background));
         return ColorUtils.toWeb(color);
     }
 
+    @SuppressWarnings("deprecation")
     private String getTextColor() {
         int color = preference.getInt(KEY_TEXT_COLOR, context.getResources().getColor(R.color.def_text_color));
         return ColorUtils.toWeb(color);
     }
 
+    @SuppressWarnings("deprecation")
     private String getTextColorSelected() {
         int color = preference.getInt(KEY_TEXT_COLOR_SEL, context.getResources().getColor(R.color.def_sel_text_color));
         return ColorUtils.toWeb(color);

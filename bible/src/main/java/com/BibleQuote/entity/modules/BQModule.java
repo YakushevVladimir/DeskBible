@@ -21,20 +21,20 @@
  * Project: BibleQuote-for-Android
  * File: BQModule.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
 package com.BibleQuote.entity.modules;
 
-import com.BibleQuote.domain.entity.Module;
+import com.BibleQuote.domain.entity.BaseModule;
 
 import java.io.File;
 
 /**
  * @author Yakushev Vladimir, Sergey Ursul
  */
-public class BQModule extends Module {
+public class BQModule extends BaseModule {
 
 	private static final long serialVersionUID = -660821372799486761L;
 	/**

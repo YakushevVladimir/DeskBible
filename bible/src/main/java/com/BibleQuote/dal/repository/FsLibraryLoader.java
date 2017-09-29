@@ -31,7 +31,7 @@ package com.BibleQuote.dal.repository;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.BibleQuote.domain.entity.Module;
+import com.BibleQuote.domain.entity.BaseModule;
 import com.BibleQuote.domain.exceptions.BookDefinitionException;
 import com.BibleQuote.domain.exceptions.BooksDefinitionException;
 import com.BibleQuote.domain.exceptions.OpenModuleException;
@@ -75,17 +75,17 @@ public class FsLibraryLoader implements LibraryLoader<BQModule> {
     }
 
     @Override
-    public synchronized Map<String, Module> loadFileModules() {
+    public synchronized Map<String, BaseModule> loadFileModules() {
         Logger.i(TAG, "Load modules from sd-card:");
 
-        Map<String, Module> result = new TreeMap<>();
+        Map<String, BaseModule> result = new TreeMap<>();
 
 		// Load zip-compressed BQ-modules
         Logger.i(TAG, "Search zip-modules");
         List<String> bqZipIniFiles = searchModules(new OnlyBQZipIni());
         for (String bqZipIniFile : bqZipIniFiles) {
             try {
-                Module module = loadFileModule(getZipDataSourceId(bqZipIniFile));
+                BaseModule module = loadFileModule(getZipDataSourceId(bqZipIniFile));
                 result.put(module.getID(), module);
             } catch (OpenModuleException | BookDefinitionException | BooksDefinitionException e) {
                 e.printStackTrace();
@@ -97,7 +97,7 @@ public class FsLibraryLoader implements LibraryLoader<BQModule> {
         List<String> bqIniFiles = searchModules(new OnlyBQIni());
         for (String moduleDataSourceId : bqIniFiles) {
             try {
-                Module module = loadFileModule(moduleDataSourceId);
+                BaseModule module = loadFileModule(moduleDataSourceId);
                 result.put(module.getID(), module);
             } catch (OpenModuleException | BookDefinitionException | BooksDefinitionException e) {
                 e.printStackTrace();
@@ -108,7 +108,7 @@ public class FsLibraryLoader implements LibraryLoader<BQModule> {
     }
 
 	@Override
-    public Module loadModule(String path) throws OpenModuleException, BooksDefinitionException, BookDefinitionException {
+    public BaseModule loadModule(String path) throws OpenModuleException, BooksDefinitionException, BookDefinitionException {
         if (path.endsWith("zip")) {
             path = getZipDataSourceId(path);
 		}
@@ -123,7 +123,7 @@ public class FsLibraryLoader implements LibraryLoader<BQModule> {
         return libraryDir != null && libraryDir.exists();
     }
 
-    private Module loadFileModule(String moduleDataSourceId)
+    private BaseModule loadFileModule(String moduleDataSourceId)
             throws OpenModuleException, BooksDefinitionException, BookDefinitionException {
         return repository.loadModule(moduleDataSourceId);
     }

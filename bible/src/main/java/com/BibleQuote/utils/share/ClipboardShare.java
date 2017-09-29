@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: ClipboardShare.java
  *
- * Created by Vladimir Yakushev at 9/2016
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -31,16 +31,16 @@ package com.BibleQuote.utils.share;
 import android.content.Context;
 import android.text.ClipboardManager;
 
+import com.BibleQuote.domain.entity.BaseModule;
 import com.BibleQuote.domain.entity.Book;
 import com.BibleQuote.domain.entity.Chapter;
-import com.BibleQuote.domain.entity.Module;
 
 import java.util.LinkedHashMap;
 
-public class ClipboardShare extends BaseShareBuilder {
+class ClipboardShare extends BaseShareBuilder {
 
-	public ClipboardShare(Context context, Module module, Book book,
-						  Chapter chapter, LinkedHashMap<Integer, String> verses) {
+	ClipboardShare(Context context, BaseModule module, Book book,
+			Chapter chapter, LinkedHashMap<Integer, String> verses) {
 		this.context = context;
 		this.module = module;
 		this.book = book;

@@ -32,8 +32,8 @@ import android.util.Log;
 
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.domain.controller.ILibraryController;
+import com.BibleQuote.domain.entity.BaseModule;
 import com.BibleQuote.domain.entity.BibleReference;
-import com.BibleQuote.domain.entity.Module;
 import com.BibleQuote.domain.exceptions.OpenModuleException;
 import com.BibleQuote.utils.Task;
 
@@ -42,8 +42,8 @@ public class AsyncOpenModule extends Task {
 
 	private BibleReference link;
 	private Exception exception;
-	private Module module;
-	private ILibraryController libCtrl;
+    private BaseModule module;
+    private ILibraryController libCtrl;
 
 	public AsyncOpenModule(String message, Boolean isHidden, BibleReference link) {
 		super(message, isHidden);
@@ -73,7 +73,7 @@ public class AsyncOpenModule extends Task {
 		return exception;
 	}
 
-	public Module getModule() {
-		return module;
-	}
+    public BaseModule getModule() {
+        return module;
+    }
 }

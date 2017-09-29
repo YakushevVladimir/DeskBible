@@ -33,9 +33,9 @@ import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.util.Base64;
 
+import com.BibleQuote.domain.entity.BaseModule;
 import com.BibleQuote.domain.entity.Book;
 import com.BibleQuote.domain.entity.Chapter;
-import com.BibleQuote.domain.entity.Module;
 import com.BibleQuote.domain.entity.Verse;
 import com.BibleQuote.domain.exceptions.BookDefinitionException;
 import com.BibleQuote.domain.exceptions.BookNotFoundException;
@@ -354,7 +354,7 @@ public class BQModuleRepository implements IModuleRepository<String, BQModule> {
      *
      * @return внутреннее представление ссылки на главу
      */
-    private String getChapterID(Module module, String bookID, int chapter) {
+    private String getChapterID(BaseModule module, String bookID, int chapter) {
         return String.format("%s:%s:%s", module.getID(), bookID, chapter);
     }
 

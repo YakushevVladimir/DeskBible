@@ -34,13 +34,13 @@ import java.util.Collection;
 /**
  *
  */
-public class ModuleList extends ArrayList<Module> {
+public class ModuleList extends ArrayList<BaseModule> {
 
     public ModuleList() {
         super();
     }
 
-    public ModuleList(Collection<Module> values) {
+    public ModuleList(Collection<BaseModule> values) {
         super(values);
     }
 }

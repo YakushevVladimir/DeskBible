@@ -30,9 +30,9 @@ package com.BibleQuote.utils.modules;
 
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.domain.controller.ILibraryController;
+import com.BibleQuote.domain.entity.BaseModule;
 import com.BibleQuote.domain.entity.BibleReference;
 import com.BibleQuote.domain.entity.Book;
-import com.BibleQuote.domain.entity.Module;
 import com.BibleQuote.domain.exceptions.BookNotFoundException;
 import com.BibleQuote.domain.exceptions.OpenModuleException;
 import com.BibleQuote.managers.BibleBooksID;
@@ -103,10 +103,10 @@ public final class LinkConverter {
 		String bookID = param[1];
 		String chapter = param[2];
 
-		Module currModule;
-		try {
-			final ILibraryController libCtrl = BibleQuoteApp.getInstance().getLibraryController();
-			currModule = libCtrl.getModuleByID(moduleID);
+        BaseModule currModule;
+        try {
+            final ILibraryController libCtrl = BibleQuoteApp.getInstance().getLibraryController();
+            currModule = libCtrl.getModuleByID(moduleID);
 		} catch (OpenModuleException e) {
 			return "";
 		}

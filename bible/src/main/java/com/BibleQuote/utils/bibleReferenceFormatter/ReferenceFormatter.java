@@ -21,26 +21,27 @@
  * Project: BibleQuote-for-Android
  * File: ReferenceFormatter.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
 
 package com.BibleQuote.utils.bibleReferenceFormatter;
 
+import com.BibleQuote.domain.entity.BaseModule;
 import com.BibleQuote.domain.entity.Book;
-import com.BibleQuote.domain.entity.Module;
 
 import java.util.TreeSet;
 
-public abstract class ReferenceFormatter implements IBibleReferenceFormatter {
-	protected Module module;
+abstract class ReferenceFormatter implements IBibleReferenceFormatter {
+
+	protected BaseModule module;
 	protected Book book;
 	protected String chapter;
 	protected TreeSet<Integer> verses;
 
-	public ReferenceFormatter(Module module, Book book, String chapter,
-							  TreeSet<Integer> verses) {
+	ReferenceFormatter(BaseModule module, Book book, String chapter,
+			TreeSet<Integer> verses) {
 		super();
 		this.module = module;
 		this.book = book;
@@ -48,14 +49,14 @@ public abstract class ReferenceFormatter implements IBibleReferenceFormatter {
 		this.verses = verses;
 	}
 
-	protected String getOnLineBibleLink() {
+	String getOnLineBibleLink() {
 		return "http://b-bq.eu/"
 				+ book.getOSIS_ID() + "/" + chapter + "_" + getVerseLink()
 				+ "/" + module.getShortName();
 
 	}
 
-	protected String getVerseLink() {
+	String getVerseLink() {
 		StringBuilder verseLink = new StringBuilder();
 		Integer fromVerse = 0;
 		Integer toVerse = 0;
