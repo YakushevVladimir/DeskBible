@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: TTSPlayerFragment.java
  *
- * Created by Vladimir Yakushev at 11/2016
+ * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -108,16 +108,20 @@ public class TTSPlayerFragment extends Fragment implements PlayerView.OnClickLis
 
     @Override
     public void onEvent(TTSPlayerController.Event ev) {
+        if (ttsController == null) {
+            return;
+        }
+
         if (ev == TTSPlayerController.Event.Error) {
             Toast.makeText(getActivity(), ttsController.getError().getMessage(), Toast.LENGTH_LONG).show();
         } else if (ev == TTSPlayerController.Event.ChangeTextIndex) {
             int nextTextIndex = ttsController.getCurrText();
-            TreeSet<Integer> selected = new TreeSet<Integer>();
+            TreeSet<Integer> selected = new TreeSet<>();
             selected.add((++nextTextIndex));
             webView.setSelectedVerse(selected);
             webView.gotoVerse(nextTextIndex);
         } else if (ev == TTSPlayerController.Event.PauseSpeak) {
-            TreeSet<Integer> selected = new TreeSet<Integer>();
+            TreeSet<Integer> selected = new TreeSet<>();
             webView.setSelectedVerse(selected);
             player.viewPlayButton();
         }

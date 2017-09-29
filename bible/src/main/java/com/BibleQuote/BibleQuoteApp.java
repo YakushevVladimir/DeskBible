@@ -117,8 +117,6 @@ public class BibleQuoteApp extends Application implements Thread.UncaughtExcepti
         Logger.e(thread.getName(), Log.getStackTraceString(ex));
         if (exceptionHandler != null) {
             exceptionHandler.uncaughtException(thread, ex);
-        } else {
-            System.exit(2);
         }
     }
 }

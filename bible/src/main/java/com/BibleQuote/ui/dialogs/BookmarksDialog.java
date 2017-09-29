@@ -50,12 +50,14 @@ import com.BibleQuote.managers.bookmarks.BookmarksManager;
 import com.BibleQuote.presentation.activity.bookmarks.BookmarksActivity;
 
 public class BookmarksDialog extends DialogFragment {
+
     private Bookmark bookmark;
     private TextView tvDate, tvHumanLink;
     private EditText tvName, tvTags;
     private IBookmarksRepository bookmarksRepository;
 
     public static BookmarksDialog newInstance(Bookmark bookmark) {
+        // TODO: 29.09.17 переделать на Bundle
         BookmarksDialog result = new BookmarksDialog();
         result.setBookmark(bookmark);
         return result;
@@ -103,17 +105,21 @@ public class BookmarksDialog extends DialogFragment {
     }
 
     private void fillField() {
-        tvDate.setText(bookmark.date);
-        tvHumanLink.setText(bookmark.humanLink);
-        tvName.setText(bookmark.name);
-        tvTags.setText(bookmark.tags);
+        if (bookmark != null) {
+            tvDate.setText(bookmark.date);
+            tvHumanLink.setText(bookmark.humanLink);
+            tvName.setText(bookmark.name);
+            tvTags.setText(bookmark.tags);
+        }
     }
 
     private void readField() {
-        bookmark.humanLink = tvHumanLink.getText().toString();
-        bookmark.name = tvName.getText().toString();
-        bookmark.date = tvDate.getText().toString();
-        bookmark.tags = tvTags.getText().toString();
+        if (bookmark != null) {
+            bookmark.humanLink = tvHumanLink.getText().toString();
+            bookmark.name = tvName.getText().toString();
+            bookmark.date = tvDate.getText().toString();
+            bookmark.tags = tvTags.getText().toString();
+        }
     }
 
     public void setBookmark(Bookmark bookmark) {
