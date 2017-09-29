@@ -18,12 +18,6 @@ script:
   - echo "Travis branch is in pull request $TRAVIS_PULL+REQUEST"
   - ./gradlew clean assembleDebug testDebugUnitTestCoverage coveralls
 
-branches:
-  only:
-    - master
-    - develop
-    - release
-
 before_cache:
   - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
 

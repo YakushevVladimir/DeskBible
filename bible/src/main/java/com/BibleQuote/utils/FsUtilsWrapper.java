@@ -19,31 +19,39 @@
  * under the License.
  *
  * Project: BibleQuote-for-Android
- * File: Injector.java
+ * File: FsUtilsWrapper.java
  *
  * Created by Vladimir Yakushev at 9/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
 
-package com.BibleQuote.managers;
+package com.BibleQuote.utils;
 
-import com.BibleQuote.dal.controller.BQModuleController;
-import com.BibleQuote.dal.repository.BQModuleRepository;
-import com.BibleQuote.domain.controller.IModuleController;
-import com.BibleQuote.domain.entity.Module;
-import com.BibleQuote.entity.modules.BQModule;
-import com.BibleQuote.utils.FsUtilsWrapper;
+import com.BibleQuote.domain.exceptions.DataAccessException;
 
-/**
- *
- */
-final class Injector {
+import java.io.BufferedReader;
+import java.io.InputStream;
 
-    static IModuleController getModuleController(Module module) {
-        if (module instanceof BQModule) {
-            return new BQModuleController((BQModule) module, new BQModuleRepository(new FsUtilsWrapper()));
-        }
-        return null;
+public class FsUtilsWrapper {
+
+    public byte[] getBytes(InputStream stream) {
+        return FsUtils.getBytes(stream);
+    }
+
+    public InputStream getStreamFromZip(String path, String fileName) {
+        return FsUtils.getStreamFromZip(path, fileName);
+    }
+
+    public InputStream getStream(String path, String fileName) {
+        return FsUtils.getStream(path, fileName);
+    }
+
+    public BufferedReader getTextFileReader(String path, String dataSourceID, String encoding) throws DataAccessException {
+        return FsUtils.getTextFileReader(path, dataSourceID, encoding);
+    }
+
+    public BufferedReader getTextFileReaderFromZipArchive(String path, String dataSourceID, String encoding) throws DataAccessException {
+        return FsUtils.getTextFileReaderFromZipArchive(path, dataSourceID, encoding);
     }
 }

@@ -51,6 +51,7 @@ import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.managers.history.HistoryManager;
 import com.BibleQuote.managers.history.IHistoryManager;
 import com.BibleQuote.utils.DataConstants;
+import com.BibleQuote.utils.FsUtilsWrapper;
 import com.BibleQuote.utils.PreferenceHelper;
 
 import javax.inject.Singleton;
@@ -110,7 +111,7 @@ public class AppModule {
 
     @Provides
     LibraryLoader<? extends Module> getLibraryLoader() {
-        return new FsLibraryLoader();
+        return new FsLibraryLoader(new FsUtilsWrapper());
     }
 
     @Provides

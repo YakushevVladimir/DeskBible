@@ -28,10 +28,10 @@
 
 package com.BibleQuote.ui;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.BibleQuote.BibleQuoteApp;
@@ -45,7 +45,7 @@ import butterknife.ButterKnife;
 
 public class ImageViewActivity extends BaseActivity {
 
-    public static final String EXTRA_IMAGE_PATH = "image_path";
+    public static String IMAGE_PATH;
 
     @BindView(R.id.image) TouchImageView imageView;
 
@@ -57,16 +57,23 @@ public class ImageViewActivity extends BaseActivity {
 
         imageView.setMaxZoom(10);
 
-        Intent intent = getIntent();
-        if (intent.hasExtra(EXTRA_IMAGE_PATH)) {
-            String imagePath = intent.getStringExtra(EXTRA_IMAGE_PATH);
-            Librarian librarian = BibleQuoteApp.getInstance().getLibrarian();
-            Bitmap image = librarian.getModuleImage(imagePath);
-            if (image == null) {
-                Toast.makeText(this, R.string.image_not_found, Toast.LENGTH_LONG).show();
-            } else {
-                imageView.setImageDrawable(new BitmapDrawable(getResources(), image));
-            }
+        if (TextUtils.isEmpty(IMAGE_PATH)) {
+            finish();
         }
+
+        Librarian librarian = BibleQuoteApp.getInstance().getLibrarian();
+        Bitmap image = librarian.getModuleImage(IMAGE_PATH);
+        if (image == null) {
+            Toast.makeText(this, R.string.image_not_found, Toast.LENGTH_LONG).show();
+            finish();
+        } else {
+            imageView.setImageDrawable(new BitmapDrawable(getResources(), image));
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        IMAGE_PATH = null;
+        super.onDestroy();
     }
 }

@@ -49,7 +49,7 @@ import com.BibleQuote.entity.modules.BQBook;
 import com.BibleQuote.entity.modules.BQModule;
 import com.BibleQuote.utils.CachePool;
 import com.BibleQuote.utils.FilenameUtils;
-import com.BibleQuote.utils.FsUtils;
+import com.BibleQuote.utils.FsUtilsWrapper;
 import com.BibleQuote.utils.Logger;
 import com.BibleQuote.utils.modules.LanguageConvertor;
 
@@ -74,6 +74,8 @@ public class BQModuleRepository implements IModuleRepository<String, BQModule> {
     private static final String INI_FILENAME = "bibleqt.ini";
     private static final HashMap<String, String> charsets = new HashMap<>();
     private static final Map<String, Chapter> chapterPool = Collections.synchronizedMap(new CachePool<Chapter>());
+
+    private FsUtilsWrapper fsUtils;
 
     static {
         charsets.put("0", "ISO-8859-1"); // ANSI charset
@@ -108,6 +110,10 @@ public class BQModuleRepository implements IModuleRepository<String, BQModule> {
         charsets.put("238", "cp1250"); // Eastern European
         charsets.put("254", "cp437"); // PC 437
         charsets.put("255", "cp850"); // OEM
+    }
+
+    public BQModuleRepository(FsUtilsWrapper fsUtils) {
+        this.fsUtils = fsUtils;
     }
 
     @Override
@@ -354,9 +360,9 @@ public class BQModuleRepository implements IModuleRepository<String, BQModule> {
 
     private InputStream getImageReader(BQModule module, String path) {
         if (module.isArchive()) {
-            return FsUtils.getStreamFromZip(module.getModulePath(), path);
+            return fsUtils.getStreamFromZip(module.getModulePath(), path);
         } else {
-            return FsUtils.getStream(module.getModulePath(), path);
+            return fsUtils.getStream(module.getModulePath(), path);
         }
     }
 
@@ -408,8 +414,8 @@ public class BQModuleRepository implements IModuleRepository<String, BQModule> {
 
     private BufferedReader getReader(BQModule module, String dataSourceID) throws DataAccessException {
         return module.isArchive()
-                ? FsUtils.getTextFileReaderFromZipArchive(module.modulePath, dataSourceID, module.getDefaultEncoding())
-                : FsUtils.getTextFileReader(module.modulePath, dataSourceID, module.getDefaultEncoding());
+                ? fsUtils.getTextFileReaderFromZipArchive(module.modulePath, dataSourceID, module.getDefaultEncoding())
+                : fsUtils.getTextFileReader(module.modulePath, dataSourceID, module.getDefaultEncoding());
     }
 
     private Chapter loadChapter(BQModule module, Book book, Integer chapterNumber, BufferedReader bReader) {
@@ -489,7 +495,7 @@ public class BQModuleRepository implements IModuleRepository<String, BQModule> {
             }
 
             try (InputStream imageStream = getImageReader(module, path)) {
-                byte[] bytes = FsUtils.getBytes(imageStream);
+                byte[] bytes = fsUtils.getBytes(imageStream);
                 if (bytes == null) {
                     continue;
                 }

@@ -345,9 +345,8 @@ public class ReaderActivity extends BaseActivity implements ReaderViewPresenter.
 
     @Override
     public void openImageViewActivity(String imagePath) {
-        Intent intent = new Intent(this, ImageViewActivity.class);
-        intent.putExtra(ImageViewActivity.EXTRA_IMAGE_PATH, imagePath);
-        startActivity(intent);
+        ImageViewActivity.IMAGE_PATH = imagePath;
+        startActivity(new Intent(this, ImageViewActivity.class));
     }
 
     @Override

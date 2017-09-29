@@ -39,6 +39,7 @@ import com.BibleQuote.domain.repository.LibraryLoader;
 import com.BibleQuote.entity.modules.BQModule;
 import com.BibleQuote.utils.DataConstants;
 import com.BibleQuote.utils.FsUtils;
+import com.BibleQuote.utils.FsUtilsWrapper;
 import com.BibleQuote.utils.Logger;
 import com.BibleQuote.utils.OnlyBQIni;
 import com.BibleQuote.utils.OnlyBQZipIni;
@@ -56,9 +57,9 @@ public class FsLibraryLoader implements LibraryLoader<BQModule> {
     private File libraryDir;
     private BQModuleRepository repository;
 
-    public FsLibraryLoader() {
+    public FsLibraryLoader(FsUtilsWrapper fsUtils) {
         this.libraryDir = getLibraryDir();
-        this.repository = new BQModuleRepository();
+        this.repository = new BQModuleRepository(fsUtils);
     }
 
     @NonNull
