@@ -36,7 +36,6 @@ import com.BibleQuote.dal.repository.bookmarks.BookmarksTags;
 import com.BibleQuote.domain.entity.Bookmark;
 import com.BibleQuote.domain.entity.Tag;
 import com.BibleQuote.utils.DataConstants;
-import com.BibleQuote.utils.Logger;
 
 import java.io.File;
 
@@ -123,7 +122,6 @@ public final class DbLibraryHelper {
 
     private static void onUpgrade(SQLiteDatabase db, int currVersion) {
         if (currVersion == 1 && version == 2) {
-            Logger.i(TAG, "Upgrade DB to version 2");
             db.execSQL("ALTER TABLE " + BOOKMARKS_TABLE + " ADD COLUMN " + Bookmark.NAME + " TEXT;");
             db.setVersion(version);
         }

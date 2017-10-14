@@ -31,14 +31,16 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
+import android.util.Log;
 
 import com.BibleQuote.utils.IProgressTracker;
-import com.BibleQuote.utils.Logger;
 import com.BibleQuote.utils.Task;
 
 import java.lang.ref.WeakReference;
 
 public final class AsyncTaskManager implements IProgressTracker, OnCancelListener {
+
+    private static final String TAG = AsyncTaskManager.class.getSimpleName();
 
     private Task mAsyncTask;
     private ProgressDialog mProgressDialog;
@@ -96,7 +98,7 @@ public final class AsyncTaskManager implements IProgressTracker, OnCancelListene
         try {
             mProgressDialog.cancel();
         } catch (IllegalArgumentException e) {
-            Logger.e(this, "View not attached to window manager");
+            Log.e(TAG, "View not attached to window manager");
         }
 
         // Reset task

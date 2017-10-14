@@ -38,6 +38,7 @@ import android.widget.SimpleAdapter;
 
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
+import com.BibleQuote.di.component.ActivityComponent;
 import com.BibleQuote.entity.ItemList;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.presentation.activity.base.BQActivity;
@@ -64,6 +65,11 @@ public class HistoryActivity extends BQActivity {
             setResult(RESULT_OK, intent);
             finish();
         });
+    }
+
+    @Override
+    protected void inject(ActivityComponent component) {
+        component.inject(this);
     }
 
     @Override

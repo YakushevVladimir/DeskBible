@@ -19,33 +19,50 @@
  * under the License.
  *
  * Project: BibleQuote-for-Android
- * File: SettingsActivity.java
+ * File: CompositeLogger.java
  *
- * Created by Vladimir Yakushev at 9/2017
+ * Created by Vladimir Yakushev at 10/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
-package com.BibleQuote.presentation.activity.settings;
 
-import android.app.FragmentTransaction;
-import android.os.Bundle;
+package com.BibleQuote.domain.logger;
 
-import com.BibleQuote.di.component.ActivityComponent;
-import com.BibleQuote.presentation.activity.base.BQActivity;
-import com.BibleQuote.ui.fragments.SettingsFragment;
+import java.util.List;
 
-public class SettingsActivity extends BQActivity {
+public class CompositeLogger extends Logger {
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(android.R.id.content, new SettingsFragment());
-        transaction.commit();
+    private List<Logger> loggerList;
+
+    public CompositeLogger(List<Logger> loggerList) {
+        this.loggerList = loggerList;
     }
 
     @Override
-    protected void inject(ActivityComponent component) {
-        component.inject(this);
+    public void debug(Object tag, String message) {
+        for (Logger logger : loggerList) {
+            logger.debug(tag, message);
+        }
+    }
+
+    @Override
+    public void error(Object tag, String message) {
+        for (Logger logger : loggerList) {
+            logger.error(tag, message);
+        }
+    }
+
+    @Override
+    public void error(Object tag, String message, Throwable th) {
+        for (Logger logger : loggerList) {
+            logger.error(tag, message, th);
+        }
+    }
+
+    @Override
+    public void info(Object tag, String message) {
+        for (Logger logger : loggerList) {
+            logger.info(tag, message);
+        }
     }
 }

@@ -44,11 +44,15 @@ import com.BibleQuote.R;
 import com.BibleQuote.async.AsyncTaskManager;
 import com.BibleQuote.async.OnTaskCompleteListener;
 import com.BibleQuote.async.task.command.AsyncCommand;
+import com.BibleQuote.di.component.ActivityComponent;
+import com.BibleQuote.domain.logger.Logger;
 import com.BibleQuote.presentation.activity.base.BQActivity;
 import com.BibleQuote.presentation.activity.reader.ReaderActivity;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.Task;
 import com.BibleQuote.utils.UpdateManager;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -58,6 +62,8 @@ public class SplashActivity extends BQActivity implements OnTaskCompleteListener
     private static final int REQUEST_PERMISSIONS = 1;
 
     @BindView(R.id.root_layout) FrameLayout rootLayout;
+
+    @Inject Logger logger;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -74,6 +80,11 @@ public class SplashActivity extends BQActivity implements OnTaskCompleteListener
     }
 
     @Override
+    protected void inject(ActivityComponent component) {
+        component.inject(this);
+    }
+
+    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQUEST_PERMISSIONS) {
@@ -82,9 +93,11 @@ public class SplashActivity extends BQActivity implements OnTaskCompleteListener
                     Snackbar.make(rootLayout, R.string.msg_permission_denied, Snackbar.LENGTH_INDEFINITE)
                             .setAction(R.string.retry, v -> checkPermissions())
                             .show();
+                    logger.info(this, "Permissions denied");
                     return;
                 }
             }
+            logger.info(this, "Permissions granted");
             startUpdateManager();
         }
     }
@@ -108,6 +121,7 @@ public class SplashActivity extends BQActivity implements OnTaskCompleteListener
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                     REQUEST_PERMISSIONS);
         } else {
+            logger.info(this, "Permissions granted");
             startUpdateManager();
         }
     }
@@ -115,7 +129,7 @@ public class SplashActivity extends BQActivity implements OnTaskCompleteListener
     private void startUpdateManager() {
         new AsyncTaskManager(this).setupTask(new AsyncCommand(() -> {
             PreferenceHelper preferenceHelper = BibleQuoteApp.getInstance().getPrefHelper();
-            UpdateManager.start(SplashActivity.this, preferenceHelper);
+            UpdateManager.start(SplashActivity.this, preferenceHelper, logger);
             BibleQuoteApp.getInstance().getLibraryController().init();
             return true;
         }, null, true));

@@ -37,6 +37,7 @@ import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
 import com.BibleQuote.async.task.command.AsyncCommand;
 import com.BibleQuote.async.task.command.AsyncCommand.ICommand;
+import com.BibleQuote.di.component.ActivityComponent;
 import com.BibleQuote.domain.entity.BibleReference;
 import com.BibleQuote.domain.exceptions.ExceptionHelper;
 import com.BibleQuote.domain.exceptions.OpenModuleException;
@@ -112,7 +113,12 @@ public class CrossReferenceActivity extends AsyncTaskActivity {
         }
     }
 
-	@Override
+    @Override
+    protected void inject(ActivityComponent component) {
+		component.inject(this);
+    }
+
+    @Override
 	public void onTaskComplete(Task task) {
 		if (task != null && !task.isCancelled()) {
 			if (task instanceof AsyncCommand) {

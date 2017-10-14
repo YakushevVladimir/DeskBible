@@ -41,6 +41,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.BibleQuote.R;
+import com.BibleQuote.di.component.ActivityComponent;
 import com.BibleQuote.domain.entity.Bookmark;
 import com.BibleQuote.domain.entity.Tag;
 import com.BibleQuote.presentation.activity.base.BQActivity;
@@ -89,6 +90,11 @@ public class BookmarksActivity extends BQActivity
         } else if (savedInstanceState != null) {
             viewPager.setCurrentItem(savedInstanceState.getInt(KEY_TAB));
         }
+    }
+
+    @Override
+    protected void inject(ActivityComponent component) {
+        component.inject(this);
     }
 
     @Override

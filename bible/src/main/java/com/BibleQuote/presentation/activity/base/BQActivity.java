@@ -36,27 +36,30 @@ import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.di.component.ActivityComponent;
 import com.BibleQuote.di.component.AppComponent;
 import com.BibleQuote.di.module.ActivityModule;
-import com.BibleQuote.utils.Logger;
+import com.BibleQuote.domain.logger.StaticLogger;
 
-public class BQActivity extends AppCompatActivity {
+public abstract class BQActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Logger.d(this, "Create activity");
+        inject(getActivityComponent());
+        StaticLogger.info(this, "Create activity");
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        Logger.d(this, "Start activity");
+        StaticLogger.info(this, "Start activity");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        Logger.d(this, "Stop activity");
+        StaticLogger.info(this, "Stop activity");
     }
+
+    protected abstract void inject(ActivityComponent component);
 
     protected ActivityComponent getActivityComponent() {
         AppComponent appComponent = BibleQuoteApp.instance(this).getAppComponent();

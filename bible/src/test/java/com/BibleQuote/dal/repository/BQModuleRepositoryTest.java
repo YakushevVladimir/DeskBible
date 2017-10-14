@@ -28,6 +28,7 @@
 
 package com.BibleQuote.dal.repository;
 
+import com.BibleQuote.domain.logger.Logger;
 import com.BibleQuote.entity.modules.BQModule;
 import com.BibleQuote.utils.FsUtils;
 import com.BibleQuote.utils.FsUtilsWrapper;
@@ -54,6 +55,8 @@ public class BQModuleRepositoryTest {
 
     @Mock FsUtilsWrapper fsUtilsWrapper;
     @Mock BQModule module;
+    @Mock Logger logger;
+
     private BQModuleRepository repository;
 
     @Test

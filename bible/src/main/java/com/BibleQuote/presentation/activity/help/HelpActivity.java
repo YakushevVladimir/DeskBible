@@ -32,6 +32,7 @@ import android.os.Bundle;
 import android.webkit.WebView;
 
 import com.BibleQuote.R;
+import com.BibleQuote.di.component.ActivityComponent;
 import com.BibleQuote.presentation.activity.base.BQActivity;
 import com.BibleQuote.utils.FsUtils;
 
@@ -46,4 +47,9 @@ public class HelpActivity extends BQActivity {
 		WebView vWeb = (WebView) findViewById(R.id.helpView);
 		vWeb.loadDataWithBaseURL("file:///url_initial_load", helpText, "text/html", "UTF-8", "about:config");
 	}
+
+    @Override
+    protected void inject(ActivityComponent component) {
+		component.inject(this);
+    }
 }

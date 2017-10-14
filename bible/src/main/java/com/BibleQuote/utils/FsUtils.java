@@ -31,6 +31,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.BibleQuote.domain.exceptions.DataAccessException;
+import com.BibleQuote.domain.logger.StaticLogger;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -162,15 +163,15 @@ public final class FsUtils {
             }
             for (File file : files) {
                 if (file.isDirectory()) {
-                    Logger.i(TAG, "Search in " + file.getAbsolutePath());
+                    StaticLogger.info(TAG, "Search in " + file.getAbsolutePath());
                     searchByFilter(file, resultFiles, filter);
                 } else if (file.canRead()) {
-                    Logger.i(TAG, "Add file " + file.getAbsolutePath());
+                    StaticLogger.info(TAG, "Add file " + file.getAbsolutePath());
                     resultFiles.add(file.getAbsolutePath());
                 }
             }
         } catch (Exception e) {
-            Log.e(TAG,
+            StaticLogger.error(TAG,
                     String.format("SearchByFilter(%1$s, %2$s)",
                             currentFile.getName(), filter.toString()), e);
         }

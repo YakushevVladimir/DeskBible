@@ -48,6 +48,7 @@ import com.BibleQuote.R;
 import com.BibleQuote.async.task.AsyncOpenModule;
 import com.BibleQuote.async.task.AsyncRefreshModules;
 import com.BibleQuote.async.task.LoadModuleFromFile;
+import com.BibleQuote.di.component.ActivityComponent;
 import com.BibleQuote.domain.entity.BaseModule;
 import com.BibleQuote.domain.entity.BibleReference;
 import com.BibleQuote.domain.entity.Book;
@@ -106,7 +107,6 @@ public class LibraryActivity extends AsyncTaskActivity {
         setContentView(R.layout.activity_library);
         ButterKnife.bind(this);
 
-        getActivityComponent().inject(this);
         messageRefresh = getResources().getString(R.string.messageRefresh);
 
         BibleReference osisLink = librarian.getCurrentOSISLink();
@@ -119,6 +119,11 @@ public class LibraryActivity extends AsyncTaskActivity {
             updateView(MODULE_VIEW);
         }
         setButtonText();
+    }
+
+    @Override
+    protected void inject(ActivityComponent component) {
+        component.inject(this);
     }
 
     @Override

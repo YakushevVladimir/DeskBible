@@ -35,10 +35,11 @@ import com.BibleQuote.async.AsyncManager;
 import com.BibleQuote.di.component.AppComponent;
 import com.BibleQuote.di.component.DaggerAppComponent;
 import com.BibleQuote.di.module.AppModule;
+import com.BibleQuote.domain.logger.Logger;
 import com.BibleQuote.domain.controller.ILibraryController;
+import com.BibleQuote.domain.logger.StaticLogger;
 import com.BibleQuote.domain.repository.IBookmarksRepository;
 import com.BibleQuote.managers.Librarian;
-import com.BibleQuote.utils.Logger;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
@@ -54,6 +55,8 @@ public class BibleQuoteApp extends Application implements Thread.UncaughtExcepti
     @Inject Librarian librarian;
     @Inject ILibraryController libraryController;
     @Inject PreferenceHelper prefHelper;
+    @Inject Logger logger;
+
     private AppComponent appComponent;
 
     private Thread.UncaughtExceptionHandler exceptionHandler;
@@ -110,11 +113,12 @@ public class BibleQuoteApp extends Application implements Thread.UncaughtExcepti
                 .appModule(new AppModule(this))
                 .build();
         appComponent.inject(this);
+        StaticLogger.init(logger);
     }
 
     @Override
     public void uncaughtException(Thread thread, Throwable ex) {
-        Logger.e(thread.getName(), Log.getStackTraceString(ex));
+        logger.error(thread.getName(), Log.getStackTraceString(ex));
         if (exceptionHandler != null) {
             exceptionHandler.uncaughtException(thread, ex);
         }

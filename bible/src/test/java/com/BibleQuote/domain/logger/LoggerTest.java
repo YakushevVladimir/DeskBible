@@ -19,33 +19,52 @@
  * under the License.
  *
  * Project: BibleQuote-for-Android
- * File: SettingsActivity.java
+ * File: LoggerTest.java
  *
- * Created by Vladimir Yakushev at 9/2017
+ * Created by Vladimir Yakushev at 10/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
-package com.BibleQuote.presentation.activity.settings;
 
-import android.app.FragmentTransaction;
-import android.os.Bundle;
+package com.BibleQuote.domain.logger;
 
-import com.BibleQuote.di.component.ActivityComponent;
-import com.BibleQuote.presentation.activity.base.BQActivity;
-import com.BibleQuote.ui.fragments.SettingsFragment;
+import org.junit.Test;
 
-public class SettingsActivity extends BQActivity {
+import java.util.Date;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(android.R.id.content, new SettingsFragment());
-        transaction.commit();
+import static org.junit.Assert.assertEquals;
+
+public class LoggerTest {
+
+    private final TestLogger logger = new TestLogger();
+
+    @Test
+    public void getTag() throws Exception {
+        Date test = new Date();
+        assertEquals(String.format("%s (%d)", test.getClass().getSimpleName(), test.hashCode()), logger.getTag(test));
+        assertEquals("test", logger.getTag("test"));
     }
 
-    @Override
-    protected void inject(ActivityComponent component) {
-        component.inject(this);
+    private static class TestLogger extends Logger {
+
+        @Override
+        public void debug(Object tag, String message) {
+
+        }
+
+        @Override
+        public void error(Object tag, String message) {
+
+        }
+
+        @Override
+        public void error(Object tag, String message, Throwable th) {
+
+        }
+
+        @Override
+        public void info(Object tag, String message) {
+
+        }
     }
 }

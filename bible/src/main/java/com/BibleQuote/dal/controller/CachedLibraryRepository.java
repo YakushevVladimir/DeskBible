@@ -32,8 +32,8 @@ import com.BibleQuote.domain.controller.LibraryRepository;
 import com.BibleQuote.domain.entity.BaseModule;
 import com.BibleQuote.domain.entity.ModuleList;
 import com.BibleQuote.domain.exceptions.DataAccessException;
+import com.BibleQuote.domain.logger.StaticLogger;
 import com.BibleQuote.domain.repository.ICacheRepository;
-import com.BibleQuote.utils.Logger;
 
 import java.util.Collection;
 import java.util.List;
@@ -50,12 +50,12 @@ public class CachedLibraryRepository implements LibraryRepository {
 
     @Override
     public List<BaseModule> modules() {
-        Logger.i(this, "Get module list");
+        StaticLogger.info(this, "Get module list");
         if (modules.isEmpty() && cacheRepository.isCacheExist()) {
             try {
                 modules.addAll(cacheRepository.getData());
             } catch (DataAccessException e) {
-                Logger.e(this, "Get module list failure", e);
+                StaticLogger.error(this, "Get module list failure", e);
             }
         }
 
@@ -64,7 +64,7 @@ public class CachedLibraryRepository implements LibraryRepository {
 
     @Override
     public void replace(Collection<BaseModule> list) {
-        Logger.i(this, "Replacing modules in the cache");
+        StaticLogger.info(this, "Replacing modules in the cache");
         modules.clear();
         modules.addAll(list);
         cacheModulesList();
@@ -72,7 +72,7 @@ public class CachedLibraryRepository implements LibraryRepository {
 
     @Override
     public void add(BaseModule module) {
-        Logger.i(this, "Adding a module to the cache");
+        StaticLogger.info(this, "Adding a module to the cache");
         modules.add(module);
         cacheModulesList();
     }
@@ -81,7 +81,7 @@ public class CachedLibraryRepository implements LibraryRepository {
         try {
             cacheRepository.saveData(new ModuleList(modules));
         } catch (DataAccessException e) {
-            Logger.e(this, "Can't save modules to a cache.", e);
+            StaticLogger.error(this, "Can't save modules to a cache.", e);
         }
     }
 }

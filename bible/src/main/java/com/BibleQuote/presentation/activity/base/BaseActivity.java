@@ -57,8 +57,6 @@ public abstract class BaseActivity<T extends BasePresenter> extends BQActivity i
         super.onCreate(savedInstanceState);
         setContentView(getRootLayout());
         ButterKnife.bind(this);
-
-        inject(getActivityComponent());
         attachView();
     }
 

@@ -31,7 +31,6 @@ package com.BibleQuote.domain.entity;
 import android.net.Uri;
 
 import com.BibleQuote.entity.modules.BQModule;
-import com.BibleQuote.utils.Logger;
 
 public class BibleReference {
 
@@ -76,7 +75,7 @@ public class BibleReference {
                     e.printStackTrace();
                 }
             } catch (Exception e) {
-				Logger.e(TAG, String.format("OSISLink(%1$s)", bibleLinkPath), e);
+				e.printStackTrace();
 			}
 
         } else {

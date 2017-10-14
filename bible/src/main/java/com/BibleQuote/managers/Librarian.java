@@ -46,12 +46,12 @@ import com.BibleQuote.domain.exceptions.BookNotFoundException;
 import com.BibleQuote.domain.exceptions.BooksDefinitionException;
 import com.BibleQuote.domain.exceptions.OpenModuleException;
 import com.BibleQuote.domain.exceptions.TskNotFoundException;
+import com.BibleQuote.domain.logger.StaticLogger;
 import com.BibleQuote.domain.textFormatters.BacklightTextFormatter;
 import com.BibleQuote.domain.textFormatters.ModuleTextFormatter;
 import com.BibleQuote.domain.textFormatters.StripTagsTextFormatter;
 import com.BibleQuote.entity.ItemList;
 import com.BibleQuote.managers.history.IHistoryManager;
-import com.BibleQuote.utils.Logger;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.BibleQuote.utils.modules.LinkConverter;
 import com.BibleQuote.utils.share.ShareBuilder;
@@ -68,11 +68,14 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+@Singleton
 public class Librarian {
 
     public static final String EMPTY_OBJ = "---";
 
-    private static final String TAG = Librarian.class.getSimpleName();
     private Book currBook;
     private Chapter currChapter;
     private Integer currChapterNumber = -1;
@@ -88,8 +91,9 @@ public class Librarian {
      * Инициализация контроллеров библиотеки, модулей, книг и глав.
      * Подписка на событие ChangeBooksEvent
      */
-    public Librarian(@NonNull ILibraryController libCtrl, @NonNull ITSKController tskCtrl,
-            @NonNull IHistoryManager historyManager, @NonNull PreferenceHelper preferenceHelper) {
+    @Inject
+    public Librarian(ILibraryController libCtrl, ITSKController tskCtrl, IHistoryManager historyManager,
+            PreferenceHelper preferenceHelper) {
         this.libCtrl = libCtrl;
         this.tskCtrl = tskCtrl;
         this.historyManager = historyManager;
@@ -203,9 +207,9 @@ public class Librarian {
     public void setCurrentVerseNumber(int verse) {
         if (currModule != null && currBook != null && currChapter != null) {
             this.currVerseNumber = verse;
-            preferenceHelper.saveString("last_read",
-                    new BibleReference(currModule, currBook, currChapter.getNumber(), currVerseNumber)
-                            .getExtendedPath());
+            BibleReference reference = new BibleReference(currModule, currBook, currChapter.getNumber(), currVerseNumber);
+            preferenceHelper.saveString("last_read", reference.getExtendedPath());
+            StaticLogger.info(this, "Store last read " + reference);
         }
     }
 
@@ -214,20 +218,20 @@ public class Librarian {
     }
 
     public Book getBookByID(BaseModule module, String bookID) throws BookNotFoundException, OpenModuleException {
-        IModuleController modCtrl = Injector.getModuleController(module);
+        IModuleController modCtrl = getModuleController(module);
         return modCtrl.getBookByID(bookID);
     }
 
     public String getBookFullName(String moduleID, String bookID) throws OpenModuleException {
         try {
             BaseModule module = libCtrl.getModuleByID(moduleID);
-            IModuleController modCtrl = Injector.getModuleController(module);
+            IModuleController modCtrl = getModuleController(module);
             Book book = modCtrl.getBookByID(bookID);
             return book.getName();
         } catch (OpenModuleException e) {
-            Logger.e(TAG, e.getMessage());
+            StaticLogger.error(this, e.getMessage());
         } catch (BookNotFoundException e) {
-            Logger.e(TAG, e.getMessage());
+            StaticLogger.error(this, e.getMessage());
         }
         return EMPTY_OBJ;
     }
@@ -235,13 +239,13 @@ public class Librarian {
     public String getBookShortName(String moduleID, String bookID) {
         try {
             BaseModule module = libCtrl.getModuleByID(moduleID);
-            IModuleController modCtrl = Injector.getModuleController(module);
+            IModuleController modCtrl = getModuleController(module);
             Book book = modCtrl.getBookByID(bookID);
             return book.getShortName();
         } catch (BookNotFoundException e) {
-            Logger.e(TAG, e.getMessage());
+            StaticLogger.error(this, e.getMessage());
         } catch (OpenModuleException e) {
-            Logger.e(TAG, e.getMessage());
+            StaticLogger.error(this, e.getMessage());
         }
         return EMPTY_OBJ;
     }
@@ -256,7 +260,7 @@ public class Librarian {
             throws BookNotFoundException, OpenModuleException {
         // Получим модуль по его ID
         BaseModule module = libCtrl.getModuleByID(moduleID);
-        IModuleController modCtrl = Injector.getModuleController(module);
+        IModuleController modCtrl = getModuleController(module);
         return modCtrl.getChapterNumbers(bookID);
     }
 
@@ -269,11 +273,11 @@ public class Librarian {
             try {
                 book = getBookByID(currModule, reference.getBookID());
             } catch (OpenModuleException e) {
-                Logger.e(TAG, String.format("Error open module %1$s for link %2$s",
+                StaticLogger.error(this, String.format("Error open module %1$s for link %2$s",
                         reference.getModuleID(), reference.getBookID()));
                 continue;
             } catch (BookNotFoundException e) {
-                Logger.e(TAG, String.format("Not found book %1$s in module %2$s",
+                StaticLogger.error(this, String.format("Not found book %1$s in module %2$s",
                         reference.getBookID(), reference.getModuleID()));
                 continue;
             }
@@ -287,10 +291,6 @@ public class Librarian {
         return result;
     }
 
-
-    ///////////////////////////////////////////////////////////////////////////
-    // SHARE
-
     public HashMap<BibleReference, String> getCrossReferenceContent(Collection<BibleReference> bReferences) {
         ModuleTextFormatter formatter = new ModuleTextFormatter(currModule, new StripTagsTextFormatter());
         formatter.setVisibleVerseNumbers(false);
@@ -303,11 +303,15 @@ public class Librarian {
                 Chapter chapter = getChapterByNumber(getBookByID(currModule, ref.getBookID()), ref.getChapter());
                 crossReferenceContent.put(ref, chapter.getText(fromVerse, toVerse, formatter));
             } catch (Exception e) {
-                Logger.e(TAG, e.getMessage());
+                StaticLogger.error(this, e.getMessage());
             }
         }
         return crossReferenceContent;
     }
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    // SHARE
 
     public ArrayList<ItemList> getModuleBooksList(String moduleID) throws OpenModuleException, BooksDefinitionException, BookDefinitionException {
         BaseModule module = libCtrl.getModuleByID(moduleID);
@@ -319,7 +323,7 @@ public class Librarian {
             return null;
         }
 
-        IModuleController modCtrl = Injector.getModuleController(currModule);
+        IModuleController modCtrl = getModuleController(currModule);
         return modCtrl.getBitmap(path);
     }
 
@@ -345,7 +349,7 @@ public class Librarian {
             currChapterNumber++;
             currVerseNumber = 1;
         } else {
-            IModuleController modCtrl = Injector.getModuleController(currModule);
+            IModuleController modCtrl = getModuleController(currModule);
             try {
                 Book nextBook = modCtrl.getNextBook(currBook.getID());
                 if (nextBook != null) {
@@ -355,14 +359,15 @@ public class Librarian {
                     currVerseNumber = 1;
                 }
             } catch (BookNotFoundException e) {
-                Logger.e(TAG, e.getMessage());
+                StaticLogger.error(this, e.getMessage());
             }
         }
     }
 
     public Chapter openChapter(BibleReference link) throws BookNotFoundException, OpenModuleException {
+        StaticLogger.info(this, "Open link " + link.getPath());
         currModule = libCtrl.getModuleByID(link.getModuleID());
-        IModuleController modCtrl = Injector.getModuleController(currModule);
+        IModuleController modCtrl = getModuleController(currModule);
         currBook = modCtrl.getBookByID(link.getBookID());
         currChapter = modCtrl.getChapter(link.getBookID(), link.getChapter());
         currChapterNumber = link.getChapter();
@@ -385,7 +390,7 @@ public class Librarian {
             currVerseNumber = 1;
         } else {
             try {
-                IModuleController modCtrl = Injector.getModuleController(currModule);
+                IModuleController modCtrl = getModuleController(currModule);
                 Book nextBook = modCtrl.getPrevBook(currBook.getID());
                 if (nextBook != null) {
                     currBook = nextBook;
@@ -394,7 +399,7 @@ public class Librarian {
                     currVerseNumber = 1;
                 }
             } catch (BookNotFoundException e) {
-                Logger.e(TAG, e.getMessage());
+                StaticLogger.error(this, e.getMessage());
             }
         }
     }
@@ -403,7 +408,8 @@ public class Librarian {
         if (currModule == null) {
             searchResults = new LinkedHashMap<>();
         } else {
-            IModuleController moduleCtrl = Injector.getModuleController(currModule);
+            StaticLogger.info(this, String.format("Search '%s' in %s.%s-%s", query, currModule.getID(), fromBook, toBook));
+            IModuleController moduleCtrl = getModuleController(currModule);
             searchResults = moduleCtrl.search(currModule.getBookList(fromBook, toBook), query);
 
             ModuleTextFormatter formatter = new ModuleTextFormatter(currModule, new StripTagsTextFormatter());
@@ -440,7 +446,7 @@ public class Librarian {
             return result;
         }
 
-        IModuleController modCtrl = Injector.getModuleController(module);
+        IModuleController modCtrl = getModuleController(module);
         for (Book book : modCtrl.getBooks()) {
             result.add(new ItemList(book.getID(), book.getName()));
         }
@@ -448,11 +454,15 @@ public class Librarian {
     }
 
     private Chapter getChapterByNumber(Book book, Integer chapterNumber) throws BookNotFoundException {
-        IModuleController modCtrl = Injector.getModuleController(currModule);
+        IModuleController modCtrl = getModuleController(currModule);
         return modCtrl.getChapter(book.getID(), chapterNumber);
     }
 
     private Chapter getCurrChapter() {
         return currChapter;
+    }
+
+    private IModuleController getModuleController(BaseModule module) {
+        return Injector.getModuleController(module);
     }
 }

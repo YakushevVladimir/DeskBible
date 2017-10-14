@@ -35,19 +35,19 @@ import android.database.sqlite.SQLiteDatabase;
 import com.BibleQuote.dal.DbLibraryHelper;
 import com.BibleQuote.domain.entity.Bookmark;
 import com.BibleQuote.domain.entity.Tag;
+import com.BibleQuote.domain.logger.StaticLogger;
 import com.BibleQuote.domain.repository.IBookmarksRepository;
 import com.BibleQuote.domain.repository.IBookmarksTagsRepository;
-import com.BibleQuote.utils.Logger;
 
 import java.util.ArrayList;
 
 public class DbBookmarksRepository implements IBookmarksRepository {
-    private final static String TAG = DbBookmarksRepository.class.getSimpleName();
+    
     private IBookmarksTagsRepository bmTagRepo = new DbBookmarksTagsRepository();
 
     @Override
     public long add(Bookmark bookmark) {
-        Logger.i(TAG, String.format("Add bookmarks %S:%s", bookmark.OSISLink, bookmark.humanLink));
+        StaticLogger.info(this, String.format("Add bookmarks %S:%s", bookmark.OSISLink, bookmark.humanLink));
 
         SQLiteDatabase db = DbLibraryHelper.getLibraryDB();
         db.beginTransaction();
@@ -65,7 +65,7 @@ public class DbBookmarksRepository implements IBookmarksRepository {
 
     @Override
     public void delete(final Bookmark bookmark) {
-        Logger.i(TAG, String.format("Delete bookmarks %S:%s", bookmark.OSISLink, bookmark.humanLink));
+        StaticLogger.info(this, String.format("Delete bookmarks %S:%s", bookmark.OSISLink, bookmark.humanLink));
         SQLiteDatabase db = DbLibraryHelper.getLibraryDB();
         db.beginTransaction();
         try {
@@ -80,7 +80,7 @@ public class DbBookmarksRepository implements IBookmarksRepository {
 
     @Override
     public void deleteAll() {
-        Logger.i(TAG, "Delete all bookmarks");
+        StaticLogger.info(this, "Delete all bookmarks");
         SQLiteDatabase db = DbLibraryHelper.getLibraryDB();
         db.beginTransaction();
         try {
@@ -95,7 +95,7 @@ public class DbBookmarksRepository implements IBookmarksRepository {
 
     @Override
     public ArrayList<Bookmark> getAll() {
-        Logger.i(TAG, "Get all bookmarks");
+        StaticLogger.info(this, "Get all bookmarks");
         SQLiteDatabase db = DbLibraryHelper.getLibraryDB();
         db.beginTransaction();
         ArrayList<Bookmark> result;
@@ -111,7 +111,7 @@ public class DbBookmarksRepository implements IBookmarksRepository {
 
     @Override
     public ArrayList<Bookmark> getAll(Tag tag) {
-        Logger.i(TAG, "Get all bookmarks to tag: " + tag.name);
+        StaticLogger.info(this, "Get all bookmarks to tag: " + tag.name);
         SQLiteDatabase db = DbLibraryHelper.getLibraryDB();
         db.beginTransaction();
         ArrayList<Bookmark> result;

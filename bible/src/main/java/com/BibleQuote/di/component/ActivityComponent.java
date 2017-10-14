@@ -30,9 +30,16 @@ package com.BibleQuote.di.component;
 
 import com.BibleQuote.di.module.ActivityModule;
 import com.BibleQuote.di.scope.PerActivity;
+import com.BibleQuote.presentation.activity.bookmarks.BookmarksActivity;
+import com.BibleQuote.presentation.activity.crossreference.CrossReferenceActivity;
+import com.BibleQuote.presentation.activity.help.HelpActivity;
+import com.BibleQuote.presentation.activity.history.HistoryActivity;
 import com.BibleQuote.presentation.activity.imagepreview.ImagePreviewActivity;
 import com.BibleQuote.presentation.activity.library.LibraryActivity;
 import com.BibleQuote.presentation.activity.reader.ReaderActivity;
+import com.BibleQuote.presentation.activity.search.SearchActivity;
+import com.BibleQuote.presentation.activity.settings.SettingsActivity;
+import com.BibleQuote.presentation.activity.splash.SplashActivity;
 
 import dagger.Subcomponent;
 
@@ -43,4 +50,11 @@ public interface ActivityComponent {
     void inject(ImagePreviewActivity activity);
     void inject(ReaderActivity activity);
     void inject(LibraryActivity activity);
+    void inject(SplashActivity activity);
+    void inject(SettingsActivity activity);
+    void inject(SearchActivity activity);
+    void inject(HistoryActivity activity);
+    void inject(HelpActivity activity);
+    void inject(CrossReferenceActivity activity);
+    void inject(BookmarksActivity activity);
 }

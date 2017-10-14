@@ -32,6 +32,7 @@ import android.widget.TextView;
 
 import com.BibleQuote.BuildConfig;
 import com.BibleQuote.R;
+import com.BibleQuote.di.component.ActivityComponent;
 import com.BibleQuote.presentation.activity.base.BQActivity;
 
 public class AboutActivity extends BQActivity {
@@ -46,4 +47,9 @@ public class AboutActivity extends BQActivity {
 				getResources().getText(R.string.app_about_name).toString(),
 				BuildConfig.VERSION_NAME));
 	}
+
+    @Override
+    protected void inject(ActivityComponent component) {
+
+    }
 }

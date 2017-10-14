@@ -42,6 +42,7 @@ import com.BibleQuote.domain.exceptions.BookNotFoundException;
 import com.BibleQuote.domain.exceptions.BooksDefinitionException;
 import com.BibleQuote.domain.exceptions.DataAccessException;
 import com.BibleQuote.domain.exceptions.OpenModuleException;
+import com.BibleQuote.domain.logger.StaticLogger;
 import com.BibleQuote.domain.repository.IModuleRepository;
 import com.BibleQuote.domain.search.algorithm.BoyerMoorAlgorithm;
 import com.BibleQuote.domain.search.algorithm.SearchAlgorithm;
@@ -50,7 +51,6 @@ import com.BibleQuote.entity.modules.BQModule;
 import com.BibleQuote.utils.CachePool;
 import com.BibleQuote.utils.FilenameUtils;
 import com.BibleQuote.utils.FsUtilsWrapper;
-import com.BibleQuote.utils.Logger;
 import com.BibleQuote.utils.modules.LanguageConvertor;
 
 import java.io.BufferedReader;
@@ -143,7 +143,7 @@ public class BQModuleRepository implements IModuleRepository<String, BQModule> {
             fillModule(result, getReader(result, result.iniFileName));
             return result;
         } catch (DataAccessException | IllegalArgumentException e) {
-            Logger.e(TAG, "Error open module from " + path, e);
+            StaticLogger.error(TAG, "Error open module from " + path, e);
             throw new OpenModuleException(path, result.modulePath);
         }
     }
@@ -165,7 +165,7 @@ public class BQModuleRepository implements IModuleRepository<String, BQModule> {
             chapterPool.put(chapterID, result);
             return result;
         } catch (DataAccessException | IOException e) {
-            Logger.e(TAG, "Can't load chapters of book with ID = " + bookID, e);
+            StaticLogger.error(TAG, "Can't load chapters of book with ID = " + bookID, e);
             throw new BookNotFoundException(module.getID(), bookID);
         }
     }
@@ -504,7 +504,7 @@ public class BQModuleRepository implements IModuleRepository<String, BQModule> {
                 result.replace(matcher.start(i), matcher.end(i),
                         String.format(Locale.US, "data:image/%s;base64,%s", ext, data));
             } catch (Exception ex) {
-                Logger.e(this, "", ex);
+                StaticLogger.error(this, "", ex);
                 return currLine;
             }
         }

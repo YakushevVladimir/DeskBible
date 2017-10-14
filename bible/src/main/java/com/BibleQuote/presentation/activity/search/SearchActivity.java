@@ -50,6 +50,7 @@ import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
 import com.BibleQuote.async.task.command.AsyncCommand;
 import com.BibleQuote.async.task.command.StartSearch;
+import com.BibleQuote.di.component.ActivityComponent;
 import com.BibleQuote.domain.exceptions.BookDefinitionException;
 import com.BibleQuote.domain.exceptions.BookNotFoundException;
 import com.BibleQuote.domain.exceptions.BooksDefinitionException;
@@ -116,6 +117,11 @@ public class SearchActivity extends AsyncTaskActivity implements TextView.OnEdit
 
         setAdapter();
         spinnerInit();
+    }
+
+    @Override
+    protected void inject(ActivityComponent component) {
+        component.inject(this);
     }
 
     @Override

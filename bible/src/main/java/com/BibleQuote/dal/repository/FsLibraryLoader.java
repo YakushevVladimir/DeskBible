@@ -29,18 +29,17 @@
 package com.BibleQuote.dal.repository;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.BibleQuote.domain.entity.BaseModule;
 import com.BibleQuote.domain.exceptions.BookDefinitionException;
 import com.BibleQuote.domain.exceptions.BooksDefinitionException;
 import com.BibleQuote.domain.exceptions.OpenModuleException;
+import com.BibleQuote.domain.logger.StaticLogger;
 import com.BibleQuote.domain.repository.LibraryLoader;
 import com.BibleQuote.entity.modules.BQModule;
 import com.BibleQuote.utils.DataConstants;
 import com.BibleQuote.utils.FsUtils;
 import com.BibleQuote.utils.FsUtilsWrapper;
-import com.BibleQuote.utils.Logger;
 import com.BibleQuote.utils.OnlyBQIni;
 import com.BibleQuote.utils.OnlyBQZipIni;
 
@@ -53,7 +52,6 @@ import java.util.TreeMap;
 
 public class FsLibraryLoader implements LibraryLoader<BQModule> {
 
-    private static final String TAG = FsLibraryLoader.class.getSimpleName();
     private File libraryDir;
     private BQModuleRepository repository;
 
@@ -63,12 +61,12 @@ public class FsLibraryLoader implements LibraryLoader<BQModule> {
     }
 
     @NonNull
-    private static File getLibraryDir() {
+    private File getLibraryDir() {
         File result = new File(DataConstants.getLibraryPath());
         if (!result.exists()) {
             boolean deleted = result.mkdir();
             if (!deleted) {
-                Log.e(TAG, "Don't remove library directory");
+                StaticLogger.error(this, "Don't remove library directory");
             }
         }
         return result;
@@ -76,12 +74,12 @@ public class FsLibraryLoader implements LibraryLoader<BQModule> {
 
     @Override
     public synchronized Map<String, BaseModule> loadFileModules() {
-        Logger.i(TAG, "Load modules from sd-card:");
+        StaticLogger.info(this, "Load modules from sd-card:");
 
         Map<String, BaseModule> result = new TreeMap<>();
 
 		// Load zip-compressed BQ-modules
-        Logger.i(TAG, "Search zip-modules");
+        StaticLogger.info(this, "Search zip-modules");
         List<String> bqZipIniFiles = searchModules(new OnlyBQZipIni());
         for (String bqZipIniFile : bqZipIniFiles) {
             try {
@@ -93,7 +91,7 @@ public class FsLibraryLoader implements LibraryLoader<BQModule> {
         }
 
 		// Load standard BQ-modules
-        Logger.i(TAG, "Search standard modules");
+        StaticLogger.info(this, "Search standard modules");
         List<String> bqIniFiles = searchModules(new OnlyBQIni());
         for (String moduleDataSourceId : bqIniFiles) {
             try {
@@ -143,7 +141,7 @@ public class FsLibraryLoader implements LibraryLoader<BQModule> {
             // Рекурсивная функция проходит по всем каталогам в поисках ini-файлов Цитаты
             FsUtils.searchByFilter(libraryDir, iniFiles, filter);
         } catch (Exception e) {
-            Logger.e(TAG, "searchModules()", e);
+            StaticLogger.error(this, "searchModules()", e);
         }
 
         return iniFiles;

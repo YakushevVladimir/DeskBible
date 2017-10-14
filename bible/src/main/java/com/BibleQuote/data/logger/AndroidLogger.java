@@ -19,33 +19,38 @@
  * under the License.
  *
  * Project: BibleQuote-for-Android
- * File: SettingsActivity.java
+ * File: AndroidLogger.java
  *
- * Created by Vladimir Yakushev at 9/2017
+ * Created by Vladimir Yakushev at 10/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
-package com.BibleQuote.presentation.activity.settings;
 
-import android.app.FragmentTransaction;
-import android.os.Bundle;
+package com.BibleQuote.data.logger;
 
-import com.BibleQuote.di.component.ActivityComponent;
-import com.BibleQuote.presentation.activity.base.BQActivity;
-import com.BibleQuote.ui.fragments.SettingsFragment;
+import android.util.Log;
 
-public class SettingsActivity extends BQActivity {
+import com.BibleQuote.domain.logger.Logger;
+
+public class AndroidLogger extends Logger {
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(android.R.id.content, new SettingsFragment());
-        transaction.commit();
+    public void debug(Object tag, String message) {
+        Log.d(getTag(tag), message);
     }
 
     @Override
-    protected void inject(ActivityComponent component) {
-        component.inject(this);
+    public void error(Object tag, String message) {
+        Log.e(getTag(tag), message);
+    }
+
+    @Override
+    public void error(Object tag, String message, Throwable th) {
+        Log.e(getTag(tag), message, th);
+    }
+
+    @Override
+    public void info(Object tag, String message) {
+        Log.i(getTag(tag), message);
     }
 }

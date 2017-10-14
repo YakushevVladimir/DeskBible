@@ -30,8 +30,8 @@ package com.BibleQuote.dal.repository;
 
 import com.BibleQuote.domain.entity.ModuleList;
 import com.BibleQuote.domain.exceptions.DataAccessException;
+import com.BibleQuote.domain.logger.StaticLogger;
 import com.BibleQuote.domain.repository.ICacheRepository;
-import com.BibleQuote.utils.Logger;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -50,7 +50,7 @@ public class FsCacheRepository implements ICacheRepository {
 
     @Override
     public ModuleList getData() throws DataAccessException {
-        Logger.i(this, "Loading data from a file system cache.");
+        StaticLogger.info(this, "Loading data from a file system cache.");
         ModuleList result;
         try (
                 FileInputStream fStr = new FileInputStream(cache);
@@ -76,7 +76,7 @@ public class FsCacheRepository implements ICacheRepository {
 
     @Override
     public void saveData(ModuleList data) throws DataAccessException {
-        Logger.i(this, "Save modules to a file system cache.");
+        StaticLogger.info(this, "Save modules to a file system cache.");
         try (
                 FileOutputStream fStr = new FileOutputStream(cache);
                 ObjectOutputStream out = new ObjectOutputStream(fStr)
@@ -93,7 +93,7 @@ public class FsCacheRepository implements ICacheRepository {
     public boolean isCacheExist() {
         boolean exists = cache.exists();
         if (!exists) {
-            Logger.i(this, "Modules list cache not found");
+            StaticLogger.info(this, "Modules list cache not found");
         }
         return exists;
     }

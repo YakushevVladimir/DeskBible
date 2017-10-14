@@ -40,6 +40,7 @@ import com.BibleQuote.dal.repository.FsLibraryLoader;
 import com.BibleQuote.dal.repository.XmlTskRepository;
 import com.BibleQuote.dal.repository.bookmarks.DbBookmarksRepository;
 import com.BibleQuote.domain.AnalyticsHelper;
+import com.BibleQuote.domain.logger.Logger;
 import com.BibleQuote.domain.controller.ILibraryController;
 import com.BibleQuote.domain.controller.ITSKController;
 import com.BibleQuote.domain.entity.BaseModule;
@@ -49,12 +50,16 @@ import com.BibleQuote.domain.repository.IHistoryRepository;
 import com.BibleQuote.domain.repository.ITskRepository;
 import com.BibleQuote.domain.repository.LibraryLoader;
 import com.BibleQuote.managers.GoogleAnalyticsHelper;
-import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.managers.history.HistoryManager;
 import com.BibleQuote.managers.history.IHistoryManager;
 import com.BibleQuote.utils.DataConstants;
 import com.BibleQuote.utils.FsUtilsWrapper;
 import com.BibleQuote.utils.PreferenceHelper;
+import com.BibleQuote.data.logger.AndroidLogger;
+import com.BibleQuote.domain.logger.CompositeLogger;
+import com.BibleQuote.data.logger.FileLogger;
+
+import java.util.Arrays;
 
 import javax.inject.Singleton;
 
@@ -99,14 +104,6 @@ public class AppModule {
 
     @Provides
     @Singleton
-    Librarian getLibrarian(
-            ILibraryController libraryController, ITSKController tskController,
-            IHistoryManager historyManager, PreferenceHelper preferenceHelper) {
-        return new Librarian(libraryController, tskController, historyManager, preferenceHelper);
-    }
-
-    @Provides
-    @Singleton
     ILibraryController getLibraryController(Context context, LibraryLoader<? extends BaseModule> repository) {
         ICacheRepository cacheRepository = new FsCacheRepository(context.getFilesDir(), DataConstants.getLibraryCache());
         return new FsLibraryController(repository, new CachedLibraryRepository(cacheRepository));
@@ -136,5 +133,10 @@ public class AppModule {
     @Singleton
     AnalyticsHelper analyticsHelper() {
         return GoogleAnalyticsHelper.getInstance();
+    }
+
+    @Provides
+    @Singleton Logger provideLogger() {
+        return new CompositeLogger(Arrays.asList(new AndroidLogger(), new FileLogger()));
     }
 }

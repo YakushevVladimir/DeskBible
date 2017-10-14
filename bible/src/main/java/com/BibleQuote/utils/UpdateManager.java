@@ -40,6 +40,7 @@ import com.BibleQuote.R;
 import com.BibleQuote.dal.repository.bookmarks.DbBookmarksTagsRepository;
 import com.BibleQuote.dal.repository.bookmarks.DbTagRepository;
 import com.BibleQuote.dal.repository.bookmarks.PrefBookmarksRepository;
+import com.BibleQuote.domain.logger.Logger;
 import com.BibleQuote.domain.controller.ILibraryController;
 import com.BibleQuote.domain.entity.Bookmark;
 import com.BibleQuote.domain.repository.IBookmarksRepository;
@@ -67,16 +68,16 @@ public final class UpdateManager {
         throw new InstantiationException("This class is not for instantiation");
     }
 
-    public static void start(Context context, PreferenceHelper prefHelper) {
+    public static void start(Context context, PreferenceHelper prefHelper, Logger logger) {
 
-        Logger.i(TAG, "Start update manager...");
+        logger.info(TAG, "Start update manager...");
 
         String state = Environment.getExternalStorageState();
 
         if (Environment.MEDIA_MOUNTED.equals(state)) {
             File dirModules = new File(DataConstants.getFsExternalDataPath());
             if (!dirModules.exists() && !dirModules.mkdirs()) {
-                Logger.i(TAG, String.format("Fail create module directory %1$s", dirModules));
+                logger.info(TAG, String.format("Fail create module directory %1$s", dirModules));
                 return;
             }
         }
@@ -89,17 +90,17 @@ public final class UpdateManager {
         }
 
         if (currVersionCode < 39) {
-            saveTSK(context);
+            saveTSK(context, logger);
         }
 
         if (currVersionCode < 59) {
-            convertBookmarks_59(prefHelper);
+            convertBookmarks_59(prefHelper, logger);
         } else if (currVersionCode < 63) {
-            convertBookmarks_63();
+            convertBookmarks_63(logger);
         }
 
         if (updateModules) {
-            updateBuiltInModules(context);
+            updateBuiltInModules(context, logger);
         }
 
         if (currVersionCode < 76) {
@@ -108,7 +109,7 @@ public final class UpdateManager {
         }
 
         if (currVersionCode < 84) {
-            updatePreferences_84(context);
+            updatePreferences_84(context, logger);
         }
 
         try {
@@ -117,10 +118,10 @@ public final class UpdateManager {
         } catch (NameNotFoundException e) {
             prefHelper.saveInt("versionCode", 39);
         }
-        Logger.i(TAG, "Update success");
+        logger.info(TAG, "Update success");
     }
 
-    private static void updatePreferences_84(Context context) {
+    private static void updatePreferences_84(Context context, Logger logger) {
         SharedPreferences preference = PreferenceManager.getDefaultSharedPreferences(context);
         try {
             preference.edit()
@@ -130,13 +131,13 @@ public final class UpdateManager {
                     .putInt("sel_background", ColorUtils.toInt(preference.getString("TextBGSel", "#f9d979")))
                     .apply();
         } catch (Exception ex) {
-            Logger.e(TAG, "updatePreferences_84 failed", ex);
+            logger.error(TAG, "updatePreferences_84 failed", ex);
         }
 
     }
 
-    private static void convertBookmarks_59(PreferenceHelper preferenceHelper) {
-        Logger.d(TAG, "Convert bookmarks to DB version 1");
+    private static void convertBookmarks_59(PreferenceHelper preferenceHelper, Logger logger) {
+        logger.info(TAG, "Convert bookmarks to DB version 1");
         final IBookmarksRepository bookmarksRepo = BibleQuoteApp.getInstance().getBookmarksRepository();
         BookmarksManager newBM = new BookmarksManager(bookmarksRepo, new DbBookmarksTagsRepository(), new DbTagRepository());
         ArrayList<Bookmark> bookmarks = new BookmarksManager(
@@ -148,8 +149,8 @@ public final class UpdateManager {
         }
     }
 
-    private static void convertBookmarks_63() {
-        Logger.d(TAG, "Convert bookmarks to DB version 2");
+    private static void convertBookmarks_63(Logger logger) {
+        logger.info(TAG, "Convert bookmarks to DB version 2");
         final IBookmarksRepository bookmarksRepo = BibleQuoteApp.getInstance().getBookmarksRepository();
         BookmarksManager bmManager = new BookmarksManager(bookmarksRepo, new DbBookmarksTagsRepository(), new DbTagRepository());
         ArrayList<Bookmark> bookmarks = bmManager.getAll();
@@ -179,8 +180,8 @@ public final class UpdateManager {
         }
     }
 
-    private static void saveTSK(Context context) {
-        Logger.i(TAG, "Save TSK file");
+    private static void saveTSK(Context context, Logger logger) {
+        logger.info(TAG, "Save TSK file");
         BufferedWriter tskBw = null;
         BufferedReader tskBr = null;
         try {
@@ -206,7 +207,7 @@ public final class UpdateManager {
 
             File tskFile = new File(DataConstants.getFsAppDirName(), "tsk.xml");
             if (tskFile.exists() && !tskFile.delete()) {
-                Logger.e(TAG, "Can't delete TSK-file");
+                logger.error(TAG, "Can't delete TSK-file");
                 return;
             }
             tskBw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(tskFile), Charset.forName("UTF-8")));
@@ -220,27 +221,27 @@ public final class UpdateManager {
             tskBw.close();
             tskBr.close();
         } catch (IOException e) {
-            Logger.e(TAG, e.getMessage());
+            logger.error(TAG, e.getMessage());
         } finally {
             if (tskBr != null) {
                 try {
                     tskBr.close();
                 } catch (IOException e) {
-                    Logger.e(TAG, e.getMessage());
+                    logger.error(TAG, e.getMessage());
                 }
             }
             if (tskBw != null) {
                 try {
                     tskBw.close();
                 } catch (IOException e) {
-                    Logger.e(TAG, e.getMessage());
+                    logger.error(TAG, e.getMessage());
                 }
             }
         }
     }
 
-    private static void updateBuiltInModules(Context context) {
-        Logger.i(TAG, "Update built-in modules on external storage");
+    private static void updateBuiltInModules(Context context, Logger logger) {
+        logger.info(TAG, "Update built-in modules on external storage");
         saveBuiltInModule(context, "bible_rst.zip", R.raw.bible_rst);
         saveBuiltInModule(context, "bible_kjv.zip", R.raw.bible_kjv);
     }

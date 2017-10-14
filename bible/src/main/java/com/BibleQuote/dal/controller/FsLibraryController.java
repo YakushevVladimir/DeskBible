@@ -34,8 +34,8 @@ import com.BibleQuote.domain.entity.BaseModule;
 import com.BibleQuote.domain.exceptions.BookDefinitionException;
 import com.BibleQuote.domain.exceptions.BooksDefinitionException;
 import com.BibleQuote.domain.exceptions.OpenModuleException;
+import com.BibleQuote.domain.logger.StaticLogger;
 import com.BibleQuote.domain.repository.LibraryLoader;
-import com.BibleQuote.utils.Logger;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -52,7 +52,7 @@ public class FsLibraryController implements ILibraryController {
 
     @Override
     public void init() {
-        Logger.i(this, "Init");
+        StaticLogger.info(this, "Init");
         Map<String, BaseModule> modules = getModules();
         if (modules.isEmpty()) {
             reloadModules();
@@ -90,7 +90,7 @@ public class FsLibraryController implements ILibraryController {
 
     @Override
     public void loadModule(String path) throws OpenModuleException, BooksDefinitionException, BookDefinitionException {
-        Logger.i(this, "Load module from " + path);
+        StaticLogger.info(this, "Load module from " + path);
         libraryRepository.add(libraryLoader.loadModule(path));
     }
 }
