@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: ReaderActivity.java
  *
- * Created by Vladimir Yakushev at 9/2017
+ * Created by Vladimir Yakushev at 10/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -62,6 +62,7 @@ import com.BibleQuote.domain.exceptions.OpenModuleException;
 import com.BibleQuote.domain.textFormatters.ITextFormatter;
 import com.BibleQuote.entity.TextAppearance;
 import com.BibleQuote.listeners.IReaderViewListener;
+import com.BibleQuote.managers.GoogleAnalyticsHelper;
 import com.BibleQuote.presentation.activity.about.AboutActivity;
 import com.BibleQuote.presentation.activity.base.BaseActivity;
 import com.BibleQuote.presentation.activity.bookmarks.BookmarksActivity;
@@ -206,18 +207,23 @@ public class ReaderActivity extends BaseActivity<ReaderViewPresenter> implements
         switch (item.getItemId()) {
             case R.id.action_bar_chooseCh:
                 openLibraryActivity();
+                GoogleAnalyticsHelper.getInstance().addClickEvent("choose_ch");
                 break;
             case R.id.action_bar_search:
                 openSearchActivity();
+                GoogleAnalyticsHelper.getInstance().addClickEvent("search");
                 break;
             case R.id.NightDayMode:
                 presenter.inverseNightMode();
+                GoogleAnalyticsHelper.getInstance().addClickEvent("night_mode");
                 break;
             case R.id.action_bar_history:
                 openHistoryActivity();
+                GoogleAnalyticsHelper.getInstance().addClickEvent("history");
                 break;
-            case R.id.action_speek:
+            case R.id.action_speak:
                 viewTTSPlayer();
+                GoogleAnalyticsHelper.getInstance().addClickEvent("speak");
                 break;
             default:
                 return false;

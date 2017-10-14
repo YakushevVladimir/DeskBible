@@ -21,7 +21,7 @@
   ~ Project: BibleQuote-for-Android
   ~ File: menu_reader.xml
   ~
-  ~ Created by Vladimir Yakushev at 11/2016
+  ~ Created by Vladimir Yakushev at 10/2017
   ~ E-mail: ru.phoenix@gmail.com
   ~ WWW: http://www.scripturesoftware.org
   -->
@@ -52,7 +52,7 @@
         android:title="@string/menu_night_day_mode"
         app:showAsAction="never" />
     <item
-        android:id="@+id/action_speek"
+        android:id="@+id/action_speak"
         android:orderInCategory="5"
         android:title="@string/menu_speek"
         app:showAsAction="never" />

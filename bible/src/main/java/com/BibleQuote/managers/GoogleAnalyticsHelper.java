@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: GoogleAnalyticsHelper.java
  *
- * Created by Vladimir Yakushev at 9/2017
+ * Created by Vladimir Yakushev at 10/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -43,6 +43,7 @@ public final class GoogleAnalyticsHelper implements AnalyticsHelper {
     private static final String CATEGORY_BOOKMARKS = "bookmarks";
     private static final String CATEGORY_MODULES = "modules";
     private static final String CATEGORY_SEARCH = "search";
+    private static final String CATEGORY_CLICK = "click";
 
     private static final String ACTION_OPEN_MODULE = "open_module";
     private static final String ACTION_OPEN_BOOK = "open_book";
@@ -80,6 +81,10 @@ public final class GoogleAnalyticsHelper implements AnalyticsHelper {
             }
         }
         createEvent(CATEGORY_BOOKMARKS, "bookmark", bookmark.OSISLink);
+    }
+
+    public void addClickEvent(String action) {
+        createEvent(CATEGORY_CLICK, action, "");
     }
 
     private void createEvent(String category, String action, String label) {
