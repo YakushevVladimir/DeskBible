@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: BaseActivity.java
  *
- * Created by Vladimir Yakushev at 9/2017
+ * Created by Vladimir Yakushev at 10/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -35,6 +35,7 @@ import android.support.annotation.Nullable;
 
 import com.BibleQuote.R;
 import com.BibleQuote.di.component.ActivityComponent;
+import com.BibleQuote.domain.AnalyticsHelper;
 
 import javax.inject.Inject;
 
@@ -48,6 +49,7 @@ public abstract class BaseActivity<T extends BasePresenter> extends BQActivity i
     private static final int DELAY_SHOW_PROGRESS = 500;
 
     @Inject protected T presenter;
+    @Inject protected AnalyticsHelper analyticsHelper;
 
     private ProgressDialog progressDialog;
     private Handler progressHandler = new Handler();

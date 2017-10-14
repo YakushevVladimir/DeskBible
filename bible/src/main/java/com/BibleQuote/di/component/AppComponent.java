@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: AppComponent.java
  *
- * Created by Vladimir Yakushev at 9/2017
+ * Created by Vladimir Yakushev at 10/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -31,6 +31,7 @@ package com.BibleQuote.di.component;
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.di.module.ActivityModule;
 import com.BibleQuote.di.module.AppModule;
+import com.BibleQuote.di.module.FragmentModule;
 
 import javax.inject.Singleton;
 
@@ -41,6 +42,7 @@ import dagger.Component;
 public interface AppComponent {
 
     ActivityComponent activityComponent(ActivityModule module);
+    FragmentComponent fragmentComponent(FragmentModule module);
 
     void inject(BibleQuoteApp application);
 }

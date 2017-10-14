@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: BookmarksDialog.java
  *
- * Created by Vladimir Yakushev at 9/2017
+ * Created by Vladimir Yakushev at 10/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -32,6 +32,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,18 +44,25 @@ import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
 import com.BibleQuote.dal.repository.bookmarks.DbBookmarksTagsRepository;
 import com.BibleQuote.dal.repository.bookmarks.DbTagRepository;
+import com.BibleQuote.di.component.AppComponent;
+import com.BibleQuote.di.component.FragmentComponent;
+import com.BibleQuote.di.module.FragmentModule;
+import com.BibleQuote.domain.AnalyticsHelper;
 import com.BibleQuote.domain.entity.Bookmark;
 import com.BibleQuote.domain.repository.IBookmarksRepository;
-import com.BibleQuote.managers.GoogleAnalyticsHelper;
 import com.BibleQuote.managers.bookmarks.BookmarksManager;
 import com.BibleQuote.presentation.activity.bookmarks.BookmarksActivity;
+
+import javax.inject.Inject;
 
 public class BookmarksDialog extends DialogFragment {
 
     private Bookmark bookmark;
     private TextView tvDate, tvHumanLink;
     private EditText tvName, tvTags;
-    private IBookmarksRepository bookmarksRepository;
+
+    @Inject IBookmarksRepository bookmarksRepository;
+    @Inject AnalyticsHelper analyticsHelper;
 
     public static BookmarksDialog newInstance(Bookmark bookmark) {
         // TODO: 29.09.17 переделать на Bundle
@@ -63,9 +71,15 @@ public class BookmarksDialog extends DialogFragment {
         return result;
     }
 
-    public BookmarksDialog() {
-        super();
-        bookmarksRepository = BibleQuoteApp.getInstance().getBookmarksRepository();
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getFragmentComponent().inject(this);
+    }
+
+    private FragmentComponent getFragmentComponent() {
+        AppComponent appComponent = BibleQuoteApp.instance(getContext()).getAppComponent();
+        return appComponent.fragmentComponent(new FragmentModule());
     }
 
     @NonNull
@@ -93,7 +107,7 @@ public class BookmarksDialog extends DialogFragment {
         readField();
         new BookmarksManager(bookmarksRepository, new DbBookmarksTagsRepository(), new DbTagRepository()).add(bookmark, bookmark.tags);
 
-        GoogleAnalyticsHelper.getInstance().actionSendBookmark(bookmark);
+        analyticsHelper.bookmarkEvent(bookmark);
 
         if (getActivity() instanceof BookmarksActivity) {
             ((BookmarksActivity) getActivity()).onBookmarksUpdate();

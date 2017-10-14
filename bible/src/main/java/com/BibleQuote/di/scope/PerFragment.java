@@ -19,22 +19,26 @@
  * under the License.
  *
  * Project: BibleQuote-for-Android
- * File: AnalyticsHelper.java
+ * File: PerFragment.java
  *
  * Created by Vladimir Yakushev at 10/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
 
-package com.BibleQuote.domain;
+package com.BibleQuote.di.scope;
 
-import com.BibleQuote.domain.entity.BibleReference;
-import com.BibleQuote.domain.entity.Bookmark;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
-public interface AnalyticsHelper {
+import javax.inject.Scope;
 
-    void moduleEvent(BibleReference link);
-    void bookmarkEvent(Bookmark bookmark);
-    void clickEvent(String action, String label);
-    void searchEvent(String query, String module);
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
+@Scope
+@Retention(RUNTIME)
+@Target({ElementType.METHOD, ElementType.TYPE})
+public @interface PerFragment {
+
 }

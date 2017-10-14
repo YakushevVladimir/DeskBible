@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: AppModule.java
  *
- * Created by Vladimir Yakushev at 9/2017
+ * Created by Vladimir Yakushev at 10/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -30,6 +30,7 @@ package com.BibleQuote.di.module;
 
 import android.content.Context;
 
+import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.async.AsyncManager;
 import com.BibleQuote.dal.controller.CachedLibraryRepository;
 import com.BibleQuote.dal.controller.FsLibraryController;
@@ -39,11 +40,14 @@ import com.BibleQuote.dal.repository.FsHistoryRepository;
 import com.BibleQuote.dal.repository.FsLibraryLoader;
 import com.BibleQuote.dal.repository.XmlTskRepository;
 import com.BibleQuote.dal.repository.bookmarks.DbBookmarksRepository;
+import com.BibleQuote.data.logger.AndroidLogger;
+import com.BibleQuote.data.logger.FileLogger;
 import com.BibleQuote.domain.AnalyticsHelper;
-import com.BibleQuote.domain.logger.Logger;
 import com.BibleQuote.domain.controller.ILibraryController;
 import com.BibleQuote.domain.controller.ITSKController;
 import com.BibleQuote.domain.entity.BaseModule;
+import com.BibleQuote.domain.logger.CompositeLogger;
+import com.BibleQuote.domain.logger.Logger;
 import com.BibleQuote.domain.repository.IBookmarksRepository;
 import com.BibleQuote.domain.repository.ICacheRepository;
 import com.BibleQuote.domain.repository.IHistoryRepository;
@@ -55,9 +59,6 @@ import com.BibleQuote.managers.history.IHistoryManager;
 import com.BibleQuote.utils.DataConstants;
 import com.BibleQuote.utils.FsUtilsWrapper;
 import com.BibleQuote.utils.PreferenceHelper;
-import com.BibleQuote.data.logger.AndroidLogger;
-import com.BibleQuote.domain.logger.CompositeLogger;
-import com.BibleQuote.data.logger.FileLogger;
 
 import java.util.Arrays;
 
@@ -69,15 +70,15 @@ import dagger.Provides;
 @Module
 public class AppModule {
 
-    private Context appContext;
+    private BibleQuoteApp application;
 
-    public AppModule(Context appContext) {
-        this.appContext = appContext.getApplicationContext();
+    public AppModule(BibleQuoteApp application) {
+        this.application = application;
     }
 
     @Provides
     Context getAppContext() {
-        return appContext;
+        return application.getApplicationContext();
     }
 
     @Provides
@@ -130,9 +131,8 @@ public class AppModule {
     }
 
     @Provides
-    @Singleton
     AnalyticsHelper analyticsHelper() {
-        return GoogleAnalyticsHelper.getInstance();
+        return new GoogleAnalyticsHelper(application.getTracker());
     }
 
     @Provides

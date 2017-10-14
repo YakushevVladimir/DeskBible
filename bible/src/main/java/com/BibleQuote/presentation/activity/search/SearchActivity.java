@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: SearchActivity.java
  *
- * Created by Vladimir Yakushev at 9/2017
+ * Created by Vladimir Yakushev at 10/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -51,13 +51,13 @@ import com.BibleQuote.R;
 import com.BibleQuote.async.task.command.AsyncCommand;
 import com.BibleQuote.async.task.command.StartSearch;
 import com.BibleQuote.di.component.ActivityComponent;
+import com.BibleQuote.domain.AnalyticsHelper;
 import com.BibleQuote.domain.exceptions.BookDefinitionException;
 import com.BibleQuote.domain.exceptions.BookNotFoundException;
 import com.BibleQuote.domain.exceptions.BooksDefinitionException;
 import com.BibleQuote.domain.exceptions.ExceptionHelper;
 import com.BibleQuote.domain.exceptions.OpenModuleException;
 import com.BibleQuote.entity.ItemList;
-import com.BibleQuote.managers.GoogleAnalyticsHelper;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.presentation.activity.base.AsyncTaskActivity;
 import com.BibleQuote.ui.widget.listview.ItemAdapter;
@@ -71,6 +71,8 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -90,6 +92,8 @@ public class SearchActivity extends AsyncTaskActivity implements TextView.OnEdit
     @BindView(R.id.search_text) EditText searchText;
     @BindView(R.id.from_book) Spinner spinnerFrom;
     @BindView(R.id.to_book) Spinner spinnerTo;
+
+    @Inject AnalyticsHelper analyticsHelper;
 
     private Librarian myLibrarian;
     private String progressMessage = "";
@@ -170,7 +174,7 @@ public class SearchActivity extends AsyncTaskActivity implements TextView.OnEdit
     void startSearch() {
         String query = searchText.getText().toString().trim();
 
-        GoogleAnalyticsHelper.getInstance().actionSearch(myLibrarian.getModuleID(), query);
+        analyticsHelper.searchEvent(query, myLibrarian.getModuleID());
 
         int posFrom = spinnerFrom.getSelectedItemPosition();
         int posTo = spinnerTo.getSelectedItemPosition();

@@ -19,22 +19,24 @@
  * under the License.
  *
  * Project: BibleQuote-for-Android
- * File: AnalyticsHelper.java
+ * File: FragmentComponent.java
  *
  * Created by Vladimir Yakushev at 10/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
 
-package com.BibleQuote.domain;
+package com.BibleQuote.di.component;
 
-import com.BibleQuote.domain.entity.BibleReference;
-import com.BibleQuote.domain.entity.Bookmark;
+import com.BibleQuote.di.module.FragmentModule;
+import com.BibleQuote.di.scope.PerFragment;
+import com.BibleQuote.ui.dialogs.BookmarksDialog;
 
-public interface AnalyticsHelper {
+import dagger.Subcomponent;
 
-    void moduleEvent(BibleReference link);
-    void bookmarkEvent(Bookmark bookmark);
-    void clickEvent(String action, String label);
-    void searchEvent(String query, String module);
+@PerFragment
+@Subcomponent(modules = {FragmentModule.class})
+public interface FragmentComponent {
+
+    void inject(BookmarksDialog fragment);
 }

@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: ReaderViewPresenter.java
  *
- * Created by Vladimir Yakushev at 9/2017
+ * Created by Vladimir Yakushev at 10/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -141,7 +141,7 @@ public class ReaderViewPresenter extends BasePresenter<ReaderView> implements TT
             return;
         }
 
-        analyticsHelper.actionOpenLink(osisLink);
+        analyticsHelper.moduleEvent(osisLink);
         getView().showProgress(false);
         Disposable subscription = Single.just(osisLink)
                 .subscribeOn(getView().backgroundThread())

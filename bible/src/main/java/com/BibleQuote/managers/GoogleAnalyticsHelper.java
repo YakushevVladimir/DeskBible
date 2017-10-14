@@ -28,11 +28,11 @@
 
 package com.BibleQuote.managers;
 
-import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.domain.AnalyticsHelper;
 import com.BibleQuote.domain.entity.BibleReference;
 import com.BibleQuote.domain.entity.Bookmark;
 import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 
 /**
  * @author Vladimir Yakushev
@@ -40,42 +40,29 @@ import com.google.android.gms.analytics.HitBuilders;
  */
 public final class GoogleAnalyticsHelper implements AnalyticsHelper {
 
+    private static final String ACTION_OPEN_BOOK = "open_book";
+    private static final String ACTION_OPEN_MODULE = "open_module";
+
     private static final String CATEGORY_BOOKMARKS = "bookmarks";
+    private static final String CATEGORY_CLICK = "click";
     private static final String CATEGORY_MODULES = "modules";
     private static final String CATEGORY_SEARCH = "search";
-    private static final String CATEGORY_CLICK = "click";
 
-    private static final String ACTION_OPEN_MODULE = "open_module";
-    private static final String ACTION_OPEN_BOOK = "open_book";
+    private final Tracker tracker;
 
-    private static volatile GoogleAnalyticsHelper instance;
-
-    private GoogleAnalyticsHelper() {
-    }
-
-    public static GoogleAnalyticsHelper getInstance() {
-        if (instance == null) {
-            synchronized (GoogleAnalyticsHelper.class) {
-                if (instance == null) {
-                    instance = new GoogleAnalyticsHelper();
-                }
-            }
-        }
-        return instance;
+    public GoogleAnalyticsHelper(Tracker tracker) {
+        this.tracker = tracker;
     }
 
     @Override
-    public void actionOpenLink(BibleReference reference) {
+    public void moduleEvent(BibleReference reference) {
         createEvent(CATEGORY_MODULES, ACTION_OPEN_MODULE, reference.getModuleID());
         createEvent(CATEGORY_MODULES, ACTION_OPEN_BOOK, reference.getBookID());
     }
 
-    public void actionSearch(String moduleID, String query) {
-        createEvent(CATEGORY_SEARCH, moduleID, query);
-    }
-
-    public void actionSendBookmark(Bookmark bookmark) {
-        for(String tag : bookmark.tags.split(",")) {
+    @Override
+    public void bookmarkEvent(Bookmark bookmark) {
+        for (String tag : bookmark.tags.split(",")) {
             if (!"".equals(tag)) {
                 createEvent(CATEGORY_BOOKMARKS, "tags", tag, bookmark.OSISLink);
             }
@@ -83,12 +70,18 @@ public final class GoogleAnalyticsHelper implements AnalyticsHelper {
         createEvent(CATEGORY_BOOKMARKS, "bookmark", bookmark.OSISLink);
     }
 
-    public void addClickEvent(String action) {
-        createEvent(CATEGORY_CLICK, action, "");
+    @Override
+    public void clickEvent(String action, String label) {
+        createEvent(CATEGORY_CLICK, action, label);
+    }
+
+    @Override
+    public void searchEvent(String query, String module) {
+        createEvent(CATEGORY_SEARCH, query, module);
     }
 
     private void createEvent(String category, String action, String label) {
-        BibleQuoteApp.getInstance().getTracker().send(new HitBuilders.EventBuilder()
+        tracker.send(new HitBuilders.EventBuilder()
                 .setCategory(category)
                 .setAction(action)
                 .setLabel(label)
@@ -96,7 +89,7 @@ public final class GoogleAnalyticsHelper implements AnalyticsHelper {
     }
 
     private void createEvent(String category, String action, String label, String dimension1) {
-        BibleQuoteApp.getInstance().getTracker().send(new HitBuilders.EventBuilder()
+        tracker.send(new HitBuilders.EventBuilder()
                 .setCategory(category)
                 .setAction(action)
                 .setLabel(label)
