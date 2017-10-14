@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: HistoryManager.java
  *
- * Created by Vladimir Yakushev at 9/2016
+ * Created by Vladimir Yakushev at 10/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -68,13 +68,13 @@ public class HistoryManager implements IHistoryManager {
 		try {
 			return repository.load();
 		} catch (DataAccessException e) {
-			return new LinkedList<ItemList>();
+			return new LinkedList<>();
 		}
 	}
 
 	@Override
 	public void clearLinks() {
-		LinkedList<ItemList> history = new LinkedList<ItemList>();
+		LinkedList<ItemList> history = new LinkedList<>();
 		repository.save(history);
 	}
 }

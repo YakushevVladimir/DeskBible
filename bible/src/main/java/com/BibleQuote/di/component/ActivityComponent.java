@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: ActivityComponent.java
  *
- * Created by Vladimir Yakushev at 9/2017
+ * Created by Vladimir Yakushev at 10/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -30,16 +30,16 @@ package com.BibleQuote.di.component;
 
 import com.BibleQuote.di.module.ActivityModule;
 import com.BibleQuote.di.scope.PerActivity;
-import com.BibleQuote.presentation.activity.bookmarks.BookmarksActivity;
-import com.BibleQuote.presentation.activity.crossreference.CrossReferenceActivity;
-import com.BibleQuote.presentation.activity.help.HelpActivity;
-import com.BibleQuote.presentation.activity.history.HistoryActivity;
-import com.BibleQuote.presentation.activity.imagepreview.ImagePreviewActivity;
-import com.BibleQuote.presentation.activity.library.LibraryActivity;
-import com.BibleQuote.presentation.activity.reader.ReaderActivity;
-import com.BibleQuote.presentation.activity.search.SearchActivity;
-import com.BibleQuote.presentation.activity.settings.SettingsActivity;
-import com.BibleQuote.presentation.activity.splash.SplashActivity;
+import com.BibleQuote.presentation.ui.bookmarks.BookmarksActivity;
+import com.BibleQuote.presentation.ui.crossreference.CrossReferenceActivity;
+import com.BibleQuote.presentation.ui.help.HelpActivity;
+import com.BibleQuote.presentation.ui.history.HistoryActivity;
+import com.BibleQuote.presentation.ui.imagepreview.ImagePreviewActivity;
+import com.BibleQuote.presentation.ui.library.LibraryActivity;
+import com.BibleQuote.presentation.ui.reader.ReaderActivity;
+import com.BibleQuote.presentation.ui.search.SearchActivity;
+import com.BibleQuote.presentation.ui.settings.SettingsActivity;
+import com.BibleQuote.presentation.ui.splash.SplashActivity;
 
 import dagger.Subcomponent;
 

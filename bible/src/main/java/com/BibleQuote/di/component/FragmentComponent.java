@@ -30,7 +30,7 @@ package com.BibleQuote.di.component;
 
 import com.BibleQuote.di.module.FragmentModule;
 import com.BibleQuote.di.scope.PerFragment;
-import com.BibleQuote.ui.dialogs.BookmarksDialog;
+import com.BibleQuote.presentation.dialogs.BookmarksDialog;
 
 import dagger.Subcomponent;
 

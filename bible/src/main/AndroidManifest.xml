@@ -22,7 +22,7 @@
   ~ Project: BibleQuote-for-Android
   ~ File: AndroidManifest.xml
   ~
-  ~ Created by Vladimir Yakushev at 9/2017
+  ~ Created by Vladimir Yakushev at 10/2017
   ~ E-mail: ru.phoenix@gmail.com
   ~ WWW: http://www.scripturesoftware.org
   -->
@@ -34,6 +34,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
     <supports-screens
         android:anyDensity="true"
@@ -51,7 +52,7 @@
         android:fullBackupContent="@xml/backup_content"
         android:supportsRtl="true">
         <activity
-            android:name=".presentation.activity.splash.SplashActivity"
+            android:name=".presentation.ui.splash.SplashActivity"
             android:label="@string/app_name"
             android:theme="@style/SplashTheme">
             <intent-filter>
@@ -62,30 +63,30 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".presentation.activity.library.LibraryActivity"
+            android:name=".presentation.ui.library.LibraryActivity"
             android:label="@string/library"/>
         <activity
-            android:name=".presentation.activity.bookmarks.BookmarksActivity"
+            android:name=".presentation.ui.bookmarks.BookmarksActivity"
             android:label="@string/bookmarks"
-            android:parentActivityName=".presentation.activity.reader.ReaderActivity"
+            android:parentActivityName=".presentation.ui.reader.ReaderActivity"
             android:theme="@style/Theme.BibleQuote.NoActionBar"/>
         <activity
-            android:name=".presentation.activity.history.HistoryActivity"
+            android:name=".presentation.ui.history.HistoryActivity"
             android:label="@string/history"/>
         <activity
-            android:name=".presentation.activity.search.SearchActivity"
+            android:name=".presentation.ui.search.SearchActivity"
             android:label="@string/search"/>
         <activity
-            android:name=".presentation.activity.settings.SettingsActivity"
+            android:name=".presentation.ui.settings.SettingsActivity"
             android:label="@string/settings"/>
         <activity
-            android:name=".presentation.activity.about.AboutActivity"
+            android:name=".presentation.ui.about.AboutActivity"
             android:label="@string/about"/>
         <activity
-            android:name=".presentation.activity.help.HelpActivity"
+            android:name=".presentation.ui.help.HelpActivity"
             android:label="@string/help"/>
         <activity
-            android:name=".presentation.activity.reader.ReaderActivity"
+            android:name=".presentation.ui.reader.ReaderActivity"
             android:configChanges="keyboardHidden|orientation"
             android:theme="@style/Theme.BibleQuote.NoActionBar">
             <intent-filter>
@@ -106,7 +107,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".presentation.activity.crossreference.CrossReferenceActivity"
+            android:name=".presentation.ui.crossreference.CrossReferenceActivity"
             android:label="@string/cross_reference">
             <intent-filter>
                 <action android:name="org.scripturesoftware.intent.action.VIEW_REFERENCE"/>
@@ -115,7 +116,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".presentation.activity.imagepreview.ImagePreviewActivity"
+            android:name=".presentation.ui.imagepreview.ImagePreviewActivity"
             android:theme="@style/Theme.BibleQuote.NoActionBar"/>
 
         <uses-library
@@ -137,6 +138,20 @@
         <meta-data
             android:name="com.sec.android.multiwindow.MINIMUM_SIZE_H"
             android:resource="@dimen/app_minimumsize_h"/>
+
+        <!-- Google Analytics -->
+
+        <receiver
+            android:name="com.google.android.gms.analytics.AnalyticsReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="com.google.android.gms.analytics.ANALYTICS_DISPATCH"/>
+            </intent-filter>
+        </receiver>
+        <service
+            android:name="com.google.android.gms.analytics.AnalyticsService"
+            android:enabled="true"
+            android:exported="false"/>
 
     </application>
 

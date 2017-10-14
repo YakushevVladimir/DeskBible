@@ -22,7 +22,7 @@
   ~ Project: BibleQuote-for-Android
   ~ File: settings.xml
   ~
-  ~ Created by Vladimir Yakushev at 9/2017
+  ~ Created by Vladimir Yakushev at 10/2017
   ~ E-mail: ru.phoenix@gmail.com
   ~ WWW: http://www.scripturesoftware.org
   -->
@@ -60,7 +60,7 @@
             android:title="@string/background_selected"
             app:cpv_dialogTitle="@string/dialog_color_picker"/>
 
-        <com.BibleQuote.ui.widget.NumberChoiseView
+        <com.BibleQuote.presentation.widget.NumberChoiseView
             android:defaultValue="13"
             android:dialogTitle="@string/text_size"
             android:key="TextSize"
@@ -68,7 +68,7 @@
             android:summary="@string/current_text_size"
             android:title="@string/text_size"/>
 
-        <com.BibleQuote.ui.widget.NumberChoiseView
+        <com.BibleQuote.presentation.widget.NumberChoiseView
             android:defaultValue="150"
             android:dialogTitle="@string/line_spacing_title"
             android:key="line_spacing"

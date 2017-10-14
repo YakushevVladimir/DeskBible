@@ -22,12 +22,12 @@
   ~ Project: BibleQuote-for-Android
   ~ File: bookmark_item_view.xml
   ~
-  ~ Created by Vladimir Yakushev at 8/2017
+  ~ Created by Vladimir Yakushev at 10/2017
   ~ E-mail: ru.phoenix@gmail.com
   ~ WWW: http://www.scripturesoftware.org
   -->
 
-<com.BibleQuote.ui.widget.listview.itemview.BookmarkItemView
+<com.BibleQuote.presentation.widget.listview.itemview.BookmarkItemView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
@@ -106,4 +106,4 @@
         android:textColor="#6e6e6e"
         android:textSize="@dimen/text_size_very_small"/>
 
-</com.BibleQuote.ui.widget.listview.itemview.BookmarkItemView>
+</com.BibleQuote.presentation.widget.listview.itemview.BookmarkItemView>

@@ -22,12 +22,12 @@
   ~ Project: BibleQuote-for-Android
   ~ File: text_item_view.xml
   ~
-  ~ Created by Vladimir Yakushev at 8/2017
+  ~ Created by Vladimir Yakushev at 10/2017
   ~ E-mail: ru.phoenix@gmail.com
   ~ WWW: http://www.scripturesoftware.org
   -->
 
-<com.BibleQuote.ui.widget.listview.itemview.TextItemView
+<com.BibleQuote.presentation.widget.listview.itemview.TextItemView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
@@ -45,4 +45,4 @@
         android:textColor="@android:color/black"
         android:textSize="@dimen/text_size_large"/>
 
-</com.BibleQuote.ui.widget.listview.itemview.TextItemView>
+</com.BibleQuote.presentation.widget.listview.itemview.TextItemView>

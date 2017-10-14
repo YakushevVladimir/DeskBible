@@ -22,12 +22,12 @@
   ~ Project: BibleQuote-for-Android
   ~ File: tag_item_view.xml
   ~
-  ~ Created by Vladimir Yakushev at 8/2017
+  ~ Created by Vladimir Yakushev at 10/2017
   ~ E-mail: ru.phoenix@gmail.com
   ~ WWW: http://www.scripturesoftware.org
   -->
 
-<com.BibleQuote.ui.widget.listview.itemview.TagItemView
+<com.BibleQuote.presentation.widget.listview.itemview.TagItemView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
@@ -84,4 +84,4 @@
 
     </RelativeLayout>
 
-</com.BibleQuote.ui.widget.listview.itemview.TagItemView>
+</com.BibleQuote.presentation.widget.listview.itemview.TagItemView>
