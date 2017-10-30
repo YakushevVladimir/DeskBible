@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: ColorUtils.java
  *
- * Created by Vladimir Yakushev at 9/2017
+ * Created by Vladimir Yakushev at 10/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -89,7 +89,7 @@ public class ColorUtils {
             argb = argb.replace("#", "");
         }
 
-        int alpha = -1, red = -1, green = -1, blue = -1;
+        int alpha = 255, red = 0, green = 0, blue = 0;
 
         if (argb.length() == 8) {
             alpha = Integer.parseInt(argb.substring(0, 2), 16);
