@@ -50,7 +50,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BookmarksActivity extends BQActivity
-        implements BookmarksFragment.OnBookmarksChangeListener, TagsFragment.OnTagsChangeListener {
+        implements OnBookmarksChangeListener, TagsFragment.OnTagsChangeListener {
 
     public static final String EXTRA_MODE = "extra_mode";
     public static final String MODE_TAGS = "tags";
@@ -139,7 +139,7 @@ public class BookmarksActivity extends BQActivity
 
     @Override
     public void onTagsUpdate() {
-        ((BookmarksFragment) pagerAdapter.getItem(0)).updateBookmarks();
+        ((BookmarksFragment) pagerAdapter.getItem(0)).refreshBookmarks();
     }
 
     private static class PagerAdapter extends FragmentPagerAdapter {

@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2011 Scripture Software
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,15 +18,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * --------------------------------------------------
- *
  * Project: BibleQuote-for-Android
  * File: BookmarksManager.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 10/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
- *
  */
 
 package com.BibleQuote.managers.bookmarks;
@@ -37,10 +36,11 @@ import com.BibleQuote.domain.repository.IBookmarksTagsRepository;
 import com.BibleQuote.domain.repository.ITagRepository;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class BookmarksManager {
 
-	public static final String TAGS_DELIMETER = ",";
+    private static final String TAGS_DELIMETER = ",";
 
     private IBookmarksTagsRepository bookmarksTagsRepository;
     private IBookmarksRepository bmRepo;
@@ -52,62 +52,65 @@ public class BookmarksManager {
         this.tagRepo = tagRepo;
     }
 
-	public void add(BibleReference ref) {
-		add(ref.getPath(), ref.toString());
-	}
+    public void add(BibleReference ref) {
+        add(ref.getPath(), ref.toString());
+    }
 
-	public long add(String osisLink, String link) {
-		return bmRepo.add(new Bookmark(osisLink, link));
-	}
+    public long add(String osisLink, String link) {
+        return bmRepo.add(new Bookmark(osisLink, link));
+    }
 
-	public long add(BibleReference ref, String tags) {
-		return add(ref.getPath(), ref.toString(), tags);
-	}
+    public long add(BibleReference ref, String tags) {
+        return add(ref.getPath(), ref.toString(), tags);
+    }
 
-	public long add(Bookmark bookmark, String tags) {
-		long bmID = add(bookmark);
-		ArrayList<Long> tagIDs = getTagsIDs(tags);
-        bookmarksTagsRepository.add(bmID, tagIDs);
+    public long add(Bookmark bookmark) {
+        long bmID = bmRepo.add(bookmark);
+
+        // Если добавляем закладку на тот же место в модуле, то она пересоздаётся и надо удалить старые теги
         tagRepo.deleteEmptyTags();
-		return bmID;
-	}
 
-	public long add(Bookmark bookmark) {
-		long bmID = bmRepo.add(bookmark);
-		tagRepo.deleteEmptyTags();
-		return bmID;
-	}
+        // Добавляем новые теги
+        if (bookmark.tags != null && !bookmark.tags.isEmpty()) {
+            ArrayList<Long> tagIDs = getTagsIDs(bookmark.tags);
+            bookmarksTagsRepository.add(bmID, tagIDs);
+        }
 
-	public long add(String osisLink, String link, String tags) {
-		long bmID = add(osisLink, link);
-		ArrayList<Long> tagIDs = getTagsIDs(tags);
+        return bmID;
+    }
+
+    public long add(String osisLink, String link, String tags) {
+        long bmID = add(osisLink, link);
+        ArrayList<Long> tagIDs = getTagsIDs(tags);
         bookmarksTagsRepository.add(bmID, tagIDs);
         return bmID;
-	}
+    }
 
-	public void delete(Bookmark bookmark) {
-		bmRepo.delete(bookmark);
-		tagRepo.deleteEmptyTags();
-	}
+    public void delete(Bookmark bookmark) {
+        bmRepo.delete(bookmark);
+        tagRepo.deleteEmptyTags();
+    }
 
-	public ArrayList<Bookmark> getAll() {
-		return bmRepo.getAll();
-	}
+    public List<Bookmark> getAll() {
+        return bmRepo.getAll(null);
+    }
 
-	public ArrayList<Bookmark> getAll(Tag tag) {
-		return bmRepo.getAll(tag);
-	}
+    public List<Bookmark> getAll(Tag tag) {
+        return bmRepo.getAll(tag);
+    }
 
-	public void deleteAll() {
-		bmRepo.deleteAll();
-		tagRepo.deleteEmptyTags();
-	}
+    public void deleteAll() {
+        bmRepo.deleteAll();
+        tagRepo.deleteEmptyTags();
+    }
 
-	private ArrayList<Long> getTagsIDs(String tags) {
-		ArrayList<Long> result = new ArrayList<Long>();
-		for (String tag : tags.split(TAGS_DELIMETER)) {
-			if (!tag.trim().equals("")) result.add(tagRepo.add(tag.trim()));
-		}
-		return result;
-	}
+    private ArrayList<Long> getTagsIDs(String tags) {
+        ArrayList<Long> result = new ArrayList<>();
+        for (String tag : tags.split(TAGS_DELIMETER)) {
+            if (!tag.trim().equals("")) {
+                result.add(tagRepo.add(tag.trim()));
+            }
+        }
+        return result;
+    }
 }

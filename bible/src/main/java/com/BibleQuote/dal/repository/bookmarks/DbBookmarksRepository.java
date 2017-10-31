@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: DbBookmarksRepository.java
  *
- * Created by Vladimir Yakushev at 8/2017
+ * Created by Vladimir Yakushev at 10/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -31,6 +31,7 @@ package com.BibleQuote.dal.repository.bookmarks;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.Nullable;
 
 import com.BibleQuote.dal.DbLibraryHelper;
 import com.BibleQuote.domain.entity.Bookmark;
@@ -94,29 +95,16 @@ public class DbBookmarksRepository implements IBookmarksRepository {
     }
 
     @Override
-    public ArrayList<Bookmark> getAll() {
-        StaticLogger.info(this, "Get all bookmarks");
+    public ArrayList<Bookmark> getAll(@Nullable Tag tag) {
         SQLiteDatabase db = DbLibraryHelper.getLibraryDB();
         db.beginTransaction();
         ArrayList<Bookmark> result;
         try {
-            result = getAllRowsToArray(db);
-            db.setTransactionSuccessful();
-        } finally {
-            db.endTransaction();
-        }
-        DbLibraryHelper.closeDB();
-        return result;
-    }
-
-    @Override
-    public ArrayList<Bookmark> getAll(Tag tag) {
-        StaticLogger.info(this, "Get all bookmarks to tag: " + tag.name);
-        SQLiteDatabase db = DbLibraryHelper.getLibraryDB();
-        db.beginTransaction();
-        ArrayList<Bookmark> result;
-        try {
-            result = getAllRowsToArray(db, tag);
+            if (tag != null) {
+                result = getAllRowsToArray(db, tag);
+            } else {
+                result = getAllRowsToArray(db);
+            }
             db.setTransactionSuccessful();
         } finally {
             db.endTransaction();
@@ -135,7 +123,7 @@ public class DbBookmarksRepository implements IBookmarksRepository {
         Cursor curr = db.query(true, DbLibraryHelper.BOOKMARKS_TABLE,
                 null, Bookmark.OSIS + " = \"" + bookmark.OSISLink + "\"", null, null, null, null, null);
         if (curr.moveToFirst()) {
-            bookmark.id = curr.getInt(curr.getColumnIndex(Bookmark.KEY_ID));
+            bookmark.id = curr.getLong(curr.getColumnIndex(Bookmark.KEY_ID));
             values.put(Bookmark.KEY_ID, bookmark.id);
             db.update(DbLibraryHelper.BOOKMARKS_TABLE, values, Bookmark.KEY_ID + " = \"" + bookmark.id + "\"", null);
             curr.close();
@@ -146,12 +134,14 @@ public class DbBookmarksRepository implements IBookmarksRepository {
     }
 
     private ArrayList<Bookmark> getAllRowsToArray(SQLiteDatabase db) {
+        StaticLogger.info(this, "Get all bookmarks");
         Cursor allRows = db.query(true, DbLibraryHelper.BOOKMARKS_TABLE,
                 null, null, null, null, null, Bookmark.KEY_ID + " DESC", null);
         return getBookmarks(allRows);
     }
 
     private ArrayList<Bookmark> getAllRowsToArray(SQLiteDatabase db, Tag tag) {
+        StaticLogger.info(this, "Get all bookmarks to tag: " + tag.name);
         Cursor allRows = db.rawQuery(
                 "SELECT "
                         + DbLibraryHelper.BOOKMARKS_TABLE + "." + Bookmark.KEY_ID + ", "
@@ -178,10 +168,9 @@ public class DbBookmarksRepository implements IBookmarksRepository {
         if (allRows.moveToFirst()) {
             do {
                 Bookmark bm = new Bookmark(
-                        allRows.getInt(allRows.getColumnIndex(Bookmark.KEY_ID)),
-                        allRows.getString(allRows.getColumnIndex(Bookmark.OSIS)),
+                        allRows.getLong(allRows.getColumnIndex(Bookmark.KEY_ID)),
+                        allRows.getString(allRows.getColumnIndex(Bookmark.NAME)), allRows.getString(allRows.getColumnIndex(Bookmark.OSIS)),
                         allRows.getString(allRows.getColumnIndex(Bookmark.LINK)),
-                        allRows.getString(allRows.getColumnIndex(Bookmark.NAME)),
                         allRows.getString(allRows.getColumnIndex(Bookmark.DATE)));
                 bm.tags = bmTagRepo.getTags(bm.id);
                 result.add(bm);

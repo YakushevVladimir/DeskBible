@@ -115,7 +115,7 @@
     <string name="empty">Empty</string>
     <string name="tags">Tag\'s</string>
     <string name="tags_description">Enter tags, separated by commas</string>
-    <string name="bookmark_name">Bookmark name</string>
+    <string name="bookmark_name">Bookmark name (optional)</string>
     <string name="question_del_tag">Delete tag?</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>

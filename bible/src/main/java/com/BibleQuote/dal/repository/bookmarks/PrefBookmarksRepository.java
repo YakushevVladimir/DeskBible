@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: PrefBookmarksRepository.java
  *
- * Created by Vladimir Yakushev at 3/2017
+ * Created by Vladimir Yakushev at 10/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -71,25 +71,8 @@ public class PrefBookmarksRepository implements IBookmarksRepository {
         preferenceHelper.saveString(KEY_FAVORITS, "");
     }
 
-	@Override
-	public ArrayList<Bookmark> getAll() {
-		ArrayList<Bookmark> result = new ArrayList<>();
-
-        String fav = preferenceHelper.getString(KEY_FAVORITS);
-        if (fav.equals("")) {
-            return result;
-		}
-
-		String[] favs = fav.split(BOOKMARK_DELIMITER.toString());
-		for (String currFav : favs) {
-			String[] parts = currFav.split(BOOKMARK_PATH_DELIMITER.toString());
-			if (parts.length == 2) result.add(new Bookmark(parts[1], parts[0]));
-		}
-		return result;
-	}
-
-	@Override
-	public ArrayList<Bookmark> getAll(Tag tag) {
-		return new ArrayList<>();
+    @Override
+    public ArrayList<Bookmark> getAll(Tag tag) {
+        return new ArrayList<>();
 	}
 }

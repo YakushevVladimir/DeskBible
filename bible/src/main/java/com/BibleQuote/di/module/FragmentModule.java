@@ -28,9 +28,20 @@
 
 package com.BibleQuote.di.module;
 
+import com.BibleQuote.domain.repository.IBookmarksRepository;
+import com.BibleQuote.domain.repository.IBookmarksTagsRepository;
+import com.BibleQuote.domain.repository.ITagRepository;
+import com.BibleQuote.managers.bookmarks.BookmarksManager;
+
 import dagger.Module;
+import dagger.Provides;
 
 @Module
 public class FragmentModule {
 
+    @Provides
+    BookmarksManager provideBookmarksManager(IBookmarksRepository bmRepo, IBookmarksTagsRepository bmtRepo,
+            ITagRepository tagRepo) {
+        return new BookmarksManager(bmRepo, bmtRepo, tagRepo);
+    }
 }

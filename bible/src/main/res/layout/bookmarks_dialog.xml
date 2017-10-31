@@ -23,7 +23,7 @@
   ~ Project: BibleQuote-for-Android
   ~ File: bookmarks_dialog.xml
   ~
-  ~ Created by Vladimir Yakushev at 8/2017
+  ~ Created by Vladimir Yakushev at 10/2017
   ~ E-mail: ru.phoenix@gmail.com
   ~ WWW: http://www.scripturesoftware.org
   -->
@@ -31,16 +31,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:longClickable="false"
     android:orientation="vertical"
-    android:padding="4dp">
+    android:padding="@dimen/default_margin">
 
     <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="36dp"
-        android:gravity="center_vertical"
-        android:padding="2dp">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical">
 
         <TextView
             android:id="@+id/bm_date"
@@ -49,35 +48,35 @@
             android:layout_alignParentRight="true"
             android:layout_alignTop="@+id/bm_humanLink"
             android:layout_gravity="center"
-            android:focusableInTouchMode="true"
-            android:textSize="@dimen/text_size_medium"
+            android:textAppearance="@style/TextAppearance.AppCompat"
             tools:text="12.10.2013"/>
 
         <TextView
             android:id="@+id/bm_humanLink"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_toLeftOf="@+id/bm_date"
             android:layout_toStartOf="@+id/bm_date"
-            android:textSize="@dimen/text_size_medium"
+            android:textAppearance="@style/TextAppearance.AppCompat"
             tools:text="Math.12:5"/>
     </RelativeLayout>
 
     <EditText
         android:id="@+id/bm_name"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/bookmark_name"
         android:inputType="text|textAutoComplete"
-        android:soundEffectsEnabled="true"/>
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
 
     <EditText
         android:id="@+id/bm_tags"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:drawableLeft="@drawable/ic_list_tag"
+        android:drawablePadding="@dimen/default_margin_min"
         android:hint="@string/tags_description"
         android:inputType="text|textAutoComplete"
-        android:textSize="@dimen/text_size_small"/>
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
 </LinearLayout>

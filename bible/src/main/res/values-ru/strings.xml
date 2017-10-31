@@ -22,7 +22,7 @@
   ~ Project: BibleQuote-for-Android
   ~ File: strings.xml
   ~
-  ~ Created by Vladimir Yakushev at 9/2017
+  ~ Created by Vladimir Yakushev at 10/2017
   ~ E-mail: ru.phoenix@gmail.com
   ~ WWW: http://www.scripturesoftware.org
   -->
@@ -106,7 +106,7 @@
 	<string name="empty">Нет данных</string>
 	<string name="tags">Метки</string>
 	<string name="tags_description">Укажите метки через запятую</string>
-	<string name="bookmark_name">Имя закладки</string>
+    <string name="bookmark_name">Имя закладки (необязательно)</string>
 	<string name="question_del_tag">Удалить метку?</string>
 	<string name="edit">Редактировать</string>
 	<string name="delete">Удалить</string>

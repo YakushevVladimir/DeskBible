@@ -19,28 +19,20 @@
  * under the License.
  *
  * Project: BibleQuote-for-Android
- * File: IBookmarksRepository.java
+ * File: OnBookmarksChangeListener.java
  *
  * Created by Vladimir Yakushev at 10/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
 
-package com.BibleQuote.domain.repository;
+package com.BibleQuote.presentation.ui.bookmarks;
 
 import com.BibleQuote.domain.entity.Bookmark;
-import com.BibleQuote.domain.entity.Tag;
 
-import java.util.ArrayList;
+interface OnBookmarksChangeListener {
 
-/**
- * User: Vladimir
- * Date: 09.04.13
- * Time: 1:25
- */
-public interface IBookmarksRepository {
-	long add(Bookmark bookmark);
-	void delete(Bookmark bookmark);
-	void deleteAll();
-	ArrayList<Bookmark> getAll(Tag tag);
+    void onBookmarksSelect(Bookmark osisLink);
+
+    void onBookmarksUpdate();
 }

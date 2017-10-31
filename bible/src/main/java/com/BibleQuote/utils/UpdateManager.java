@@ -56,7 +56,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -145,7 +145,7 @@ public class UpdateManager {
         StaticLogger.info(this, "Convert bookmarks to DB version 1");
         final IBookmarksRepository bookmarksRepo = BibleQuoteApp.getInstance().getBookmarksRepository();
         BookmarksManager newBM = new BookmarksManager(bookmarksRepo, new DbBookmarksTagsRepository(), new DbTagRepository());
-        ArrayList<Bookmark> bookmarks = new BookmarksManager(
+        List<Bookmark> bookmarks = new BookmarksManager(
                 new PrefBookmarksRepository(preferenceHelper),
                 new DbBookmarksTagsRepository(),
                 new DbTagRepository()).getAll();
@@ -158,7 +158,7 @@ public class UpdateManager {
         StaticLogger.info(this, "Convert bookmarks to DB version 2");
         final IBookmarksRepository bookmarksRepo = BibleQuoteApp.getInstance().getBookmarksRepository();
         BookmarksManager bmManager = new BookmarksManager(bookmarksRepo, new DbBookmarksTagsRepository(), new DbTagRepository());
-        ArrayList<Bookmark> bookmarks = bmManager.getAll();
+        List<Bookmark> bookmarks = bmManager.getAll();
         for (Bookmark currBM : bookmarks) {
             if (currBM.name == null) {
                 currBM.name = currBM.humanLink;

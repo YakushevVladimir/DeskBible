@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: BibleReferenceTest.java
  *
- * Created by Vladimir Yakushev at 9/2016
+ * Created by Vladimir Yakushev at 10/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -29,9 +29,6 @@
 package com.BibleQuote.domain.entity;
 
 import android.net.Uri;
-import android.os.Build;
-
-import com.BibleQuote.BuildConfig;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -40,9 +37,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(sdk = Build.VERSION_CODES.JELLY_BEAN,
-        manifest = "src/main/AndroidManifest.xml",
-        constants = BuildConfig.class)
+@Config(manifest = Config.NONE)
 public class BibleReferenceTest {
 
     @Test

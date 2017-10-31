@@ -36,7 +36,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-import com.BibleQuote.presentation.widget.listview.item.BookmarkItem;
 import com.BibleQuote.presentation.widget.listview.item.Item;
 import com.BibleQuote.presentation.widget.listview.item.SubtextItem;
 import com.BibleQuote.presentation.widget.listview.item.SubtitleItem;
@@ -358,8 +357,6 @@ public class ItemAdapter extends BaseAdapter {
 				item = new SubtitleItem();
 			} else if (name.equals("subtext-item")) {
 				item = new SubtextItem();
-			} else if (name.equals("bookmark-item")) {
-				item = new BookmarkItem();
 			} else {
 				throw new XmlPullParserException(parser.getPositionDescription() + ": invalid item tag " + name);
 			}

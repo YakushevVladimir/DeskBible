@@ -19,28 +19,33 @@
  * under the License.
  *
  * Project: BibleQuote-for-Android
- * File: IBookmarksRepository.java
+ * File: BookmarksView.java
  *
  * Created by Vladimir Yakushev at 10/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
 
-package com.BibleQuote.domain.repository;
+package com.BibleQuote.presentation.ui.bookmarks;
 
 import com.BibleQuote.domain.entity.Bookmark;
 import com.BibleQuote.domain.entity.Tag;
+import com.BibleQuote.presentation.ui.base.BaseView;
 
-import java.util.ArrayList;
+import java.util.List;
 
-/**
- * User: Vladimir
- * Date: 09.04.13
- * Time: 1:25
- */
-public interface IBookmarksRepository {
-	long add(Bookmark bookmark);
-	void delete(Bookmark bookmark);
-	void deleteAll();
-	ArrayList<Bookmark> getAll(Tag tag);
+
+public interface BookmarksView extends BaseView {
+
+    void openBookmarkDialog(Bookmark bookmark);
+
+    void updateBookmarks(List<Bookmark> bookmarks);
+
+    void openBookmark(Bookmark bookmark);
+
+    void setTagFilter(Tag tag);
+
+    void startBookmarkAction(String title);
+
+    void refreshBookmarks();
 }

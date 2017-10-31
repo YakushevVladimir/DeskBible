@@ -40,6 +40,8 @@ import com.BibleQuote.dal.repository.FsHistoryRepository;
 import com.BibleQuote.dal.repository.FsLibraryLoader;
 import com.BibleQuote.dal.repository.XmlTskRepository;
 import com.BibleQuote.dal.repository.bookmarks.DbBookmarksRepository;
+import com.BibleQuote.dal.repository.bookmarks.DbBookmarksTagsRepository;
+import com.BibleQuote.dal.repository.bookmarks.DbTagRepository;
 import com.BibleQuote.data.analytics.GoogleAnalyticsHelper;
 import com.BibleQuote.data.logger.AndroidLogger;
 import com.BibleQuote.data.logger.FileLogger;
@@ -50,8 +52,10 @@ import com.BibleQuote.domain.entity.BaseModule;
 import com.BibleQuote.domain.logger.CompositeLogger;
 import com.BibleQuote.domain.logger.Logger;
 import com.BibleQuote.domain.repository.IBookmarksRepository;
+import com.BibleQuote.domain.repository.IBookmarksTagsRepository;
 import com.BibleQuote.domain.repository.ICacheRepository;
 import com.BibleQuote.domain.repository.IHistoryRepository;
+import com.BibleQuote.domain.repository.ITagRepository;
 import com.BibleQuote.domain.repository.ITskRepository;
 import com.BibleQuote.domain.repository.LibraryLoader;
 import com.BibleQuote.managers.history.HistoryManager;
@@ -91,6 +95,18 @@ public class AppModule {
     @Singleton
     IBookmarksRepository getBookmarksRepository() {
         return new DbBookmarksRepository();
+    }
+
+    @Provides
+    @Singleton
+    IBookmarksTagsRepository getBookmarksTagsRepository() {
+        return new DbBookmarksTagsRepository();
+    }
+
+    @Provides
+    @Singleton
+    ITagRepository getTagsRepository() {
+        return new DbTagRepository();
     }
 
     @Provides

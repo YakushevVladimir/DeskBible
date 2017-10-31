@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: jacoco.gradle
  *
- * Created by Vladimir Yakushev at 11/2016
+ * Created by Vladimir Yakushev at 10/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -71,15 +71,17 @@ project.afterEvaluate {
                 classDirectories = fileTree(
                         dir: "${project.buildDir}/intermediates/classes/${sourcePath}",
                         excludes: [
-                                '**/R.class',
-                                '**/R$*.class',
-                                '**/BuildConfig.*',
-                                '**/*$ViewInjector*.*',
-                                '**/*$ViewBinder*.*',
-                                '**/Dagger*.*',
-                                '**/ClientAppModule_*.*',
-                                '**/*_Factory.*',
-                                '**/*_MembersInjector.*',
+                                '**/BuildConfig.class', // Android build config class
+                                '**/R.class', // Android generated classes
+                                '**/R$*.class', // Android generated classes
+                                '**/*Dagger*.*', // Dagger auto-generated code.
+                                '**/*MembersInjector*.*', // Dagger auto-generated code.
+                                '**/*_Factory.*', // Dagger auto-generated code.
+                                '**/*_Provide*Factory*.*', // Dagger auto-generated code.
+                                '**/*_ViewBinding*.*', // Butterknife auto-generated code.
+                                '**/AutoValue_*.*', // AutoValue auto-generated code.
+                                '**/R2.class', // Butterknife auto-generated code.
+                                '**/R2$*.class', // Butterknife auto-generated code.
                                 '**/Manifest*.*',
                                 '**/*Test*.*',
                                 'android/**/*.*'

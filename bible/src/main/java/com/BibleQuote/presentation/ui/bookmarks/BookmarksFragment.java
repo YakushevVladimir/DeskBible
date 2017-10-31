@@ -28,79 +28,81 @@
 
 package com.BibleQuote.presentation.ui.bookmarks;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.ListFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
-import android.util.Log;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.Toast;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
-import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
-import com.BibleQuote.dal.repository.bookmarks.DbBookmarksTagsRepository;
-import com.BibleQuote.dal.repository.bookmarks.DbTagRepository;
-import com.BibleQuote.domain.entity.BibleReference;
+import com.BibleQuote.di.component.FragmentComponent;
 import com.BibleQuote.domain.entity.Bookmark;
 import com.BibleQuote.domain.entity.Tag;
+import com.BibleQuote.domain.logger.StaticLogger;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.managers.bookmarks.BookmarksManager;
 import com.BibleQuote.presentation.dialogs.BookmarksDialog;
-import com.BibleQuote.presentation.widget.listview.ItemAdapter;
-import com.BibleQuote.presentation.widget.listview.item.BookmarkItem;
-import com.BibleQuote.presentation.widget.listview.item.Item;
+import com.BibleQuote.presentation.ui.base.BaseFragment;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * User: Vladimir Yakushev
  * Date: 14.05.13
  */
-public class BookmarksFragment extends ListFragment implements AdapterView.OnItemLongClickListener {
-    private final static String TAG = BookmarksFragment.class.getSimpleName();
+public class BookmarksFragment extends BaseFragment<BookmarksPresenter> implements BookmarksView {
 
-    private Librarian myLibrarian;
-    private Bookmark currBookmark;
-    private DialogInterface.OnClickListener positiveButton_OnClick = new DialogInterface.OnClickListener() {
-        public void onClick(DialogInterface dialog, int which) {
-            Log.i(TAG, "Delete bookmark: " + currBookmark);
-            getBookmarksManager().delete(currBookmark);
-            setAdapter();
-            onBookmarksUpdateAlertListener();
-            Toast.makeText(getActivity(), R.string.removed, Toast.LENGTH_LONG).show();
-        }
-    };
-    private ActionMode currActionMode;
+    @Inject BookmarksManager bookmarksManager;
+    @Inject Librarian myLibrarian;
+
+    @BindView(R.id.list_bookmarks) RecyclerView viewBookmarksList;
+
     private OnBookmarksChangeListener onBookmarksListener;
+    private Unbinder unbinder;
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        setHasOptionsMenu(true);
-        setEmptyText(getResources().getText(R.string.empty));
-
-        BibleQuoteApp app = (BibleQuoteApp) getActivity().getApplication();
-        myLibrarian = app.getLibrarian();
-
-        ListView lw = getListView();
-        lw.setOnItemLongClickListener(this);
-
-        setAdapter();
+    public void setBookmarksListener(OnBookmarksChangeListener listener) {
+        StaticLogger.info(this, "Set bookmarks onBookmarksListener");
+        this.onBookmarksListener = listener;
     }
 
-    private BookmarksManager getBookmarksManager() {
-        BibleQuoteApp app = (BibleQuoteApp) getActivity().getApplication();
-        return new BookmarksManager(app.getBookmarksRepository(), new DbBookmarksTagsRepository(), new DbTagRepository());
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_bookmarks, container, false);
+        unbinder = ButterKnife.bind(this, view);
+
+        setHasOptionsMenu(true);
+
+        viewBookmarksList.setLayoutManager(new LinearLayoutManager(getContext()));
+        viewBookmarksList.setHasFixedSize(true);
+        viewBookmarksList.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayout.VERTICAL));
+
+        presenter.onViewCreated();
+
+        return view;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 
     @Override
@@ -115,7 +117,7 @@ public class BookmarksFragment extends ListFragment implements AdapterView.OnIte
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        Log.i(TAG, "onCreateOptionsMenu");
+        StaticLogger.info(this, "onCreateOptionsMenu");
         inflater.inflate(R.menu.menu_bookmarks, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -133,22 +135,13 @@ public class BookmarksFragment extends ListFragment implements AdapterView.OnIte
                 builder.setIcon(R.mipmap.ic_launcher);
                 builder.setTitle(R.string.bookmarks);
                 builder.setMessage(R.string.fav_delete_all_question);
-                builder.setPositiveButton("OK", (dialog, which) -> {
-                    ItemAdapter adapter = (ItemAdapter) getListView().getAdapter();
-                    BookmarksManager bManager = getBookmarksManager();
-                    for (int i = 0; i < adapter.getCount(); i++) {
-                        Bookmark bookmark = ((BookmarkItem) adapter.getItem(i)).bookmark;
-                        bManager.delete(bookmark);
-                    }
-                    setAdapter();
-                    onBookmarksUpdateAlertListener();
-                });
+                builder.setPositiveButton("OK", (dialog, which) -> presenter.removeBookmarks());
                 builder.setNegativeButton(R.string.cancel, null);
                 builder.show();
                 break;
 
             case R.id.action_bar_refresh:
-                setAdapter();
+                presenter.onRefresh();
                 break;
 
             default:
@@ -159,87 +152,72 @@ public class BookmarksFragment extends ListFragment implements AdapterView.OnIte
     }
 
     @Override
-    public void onListItemClick(ListView lv, View v, int position, long id) {
-        currBookmark = ((BookmarkItem) lv.getAdapter().getItem(position)).bookmark;
-        Log.i(TAG, "Select bookmark: " + currBookmark.humanLink + " (OSIS link = " + currBookmark.OSISLink + ")");
+    protected void inject(FragmentComponent component) {
+        component.inject(this);
+    }
 
-        BibleReference osisLink = new BibleReference(currBookmark.OSISLink);
-        if (!myLibrarian.isOSISLinkValid(osisLink)) {
-            Log.i(TAG, "Delete invalid bookmark: " + currBookmark);
-            getBookmarksManager().delete(currBookmark);
-            setAdapter();
-            Toast.makeText(getActivity(), R.string.bookmark_invalid_removed, Toast.LENGTH_LONG).show();
-        } else {
-            alertListener(currBookmark);
+    @Override
+    protected void attachView() {
+        presenter.attachView(this);
+    }
+
+    @Override
+    public void setTagFilter(Tag tag) {
+        presenter.onSetTag(tag);
+    }
+
+    @Override
+    public void startBookmarkAction(String title) {
+        ActionMode currActionMode = ((AppCompatActivity) getActivity())
+                .startSupportActionMode(new BookmarksSelectAction(getActivity(), presenter));
+        if (currActionMode != null) {
+            currActionMode.setTitle(title);
         }
     }
 
     @Override
-    public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
-        currBookmark = ((BookmarkItem) adapterView.getItemAtPosition(position)).bookmark;
-        currActionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(new BookmarksSelectAction());
-        if (currActionMode != null) {
-            currActionMode.setTitle(currBookmark.name);
+    public void openBookmarkDialog(Bookmark bookmark) {
+        DialogFragment bmDial = BookmarksDialog.newInstance(bookmark);
+        bmDial.show(getActivity().getSupportFragmentManager(), "bookmark");
+    }
+
+    @Override
+    public void updateBookmarks(final List<Bookmark> bookmarks) {
+        viewBookmarksList.setAdapter(new BookmarksAdapter(bookmarks, v -> {
+            int position = viewBookmarksList.getChildAdapterPosition(v);
+            presenter.onClickBookmarkOpen(position);
+        }, v -> {
+            int position = viewBookmarksList.getChildAdapterPosition(v);
+            presenter.onSelectBookmark(position);
+            return true;
+        }));
+        onBookmarksListener.onBookmarksUpdate();
+    }
+
+    @Override
+    public void openBookmark(Bookmark bookmark) {
+        onBookmarksListener.onBookmarksSelect(bookmark);
+    }
+
+    @Override
+    public void refreshBookmarks() {
+        presenter.onRefresh();
+    }
+
+    private static class BookmarksSelectAction implements ActionMode.Callback {
+
+        private Context context;
+        private BookmarksPresenter presenter;
+        private MenuInflater menuInflater;
+
+        BookmarksSelectAction(Activity activity, BookmarksPresenter presenter) {
+            this.presenter = presenter;
+            this.context = activity;
+            this.menuInflater = activity.getMenuInflater();
         }
-        return true;
-    }
-
-    private void setAdapter() {
-        List<Item> items = new ArrayList<>();
-        for (Bookmark curr : getBookmarksManager().getAll()) {
-            items.add(new BookmarkItem(curr));
-        }
-        ItemAdapter adapter = new ItemAdapter(getActivity(), items);
-        setListAdapter(adapter);
-    }
-
-    private void setAdapter(Tag tag) {
-        List<Item> items = new ArrayList<>();
-        for (Bookmark curr : getBookmarksManager().getAll(tag)) {
-            items.add(new BookmarkItem(curr));
-        }
-        ItemAdapter adapter = new ItemAdapter(getActivity(), items);
-        setListAdapter(adapter);
-    }
-
-    public void setTagFilter(Tag tag) {
-        setAdapter(tag);
-    }
-
-    public void updateBookmarks() {
-        if (currActionMode != null) {
-            currActionMode.finish();
-            currActionMode = null;
-        }
-        setAdapter();
-    }
-
-    public void setBookmarksListener(OnBookmarksChangeListener listener) {
-        Log.i(TAG, "Set bookmarks onBookmarksListener");
-        this.onBookmarksListener = listener;
-    }
-
-    private void alertListener(Bookmark osisLink) {
-        if (onBookmarksListener != null) {
-            onBookmarksListener.onBookmarksSelect(osisLink);
-        }
-    }
-
-    private void onBookmarksUpdateAlertListener() {
-        if (onBookmarksListener != null) onBookmarksListener.onBookmarksUpdate();
-    }
-
-    interface OnBookmarksChangeListener {
-        void onBookmarksSelect(Bookmark osisLink);
-
-        void onBookmarksUpdate();
-    }
-
-    private final class BookmarksSelectAction implements ActionMode.Callback {
 
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            MenuInflater infl = getActivity().getMenuInflater();
-            infl.inflate(R.menu.menu_action_bookmark_select, menu);
+            menuInflater.inflate(R.menu.menu_action_bookmark_select, menu);
             return true;
         }
 
@@ -250,25 +228,17 @@ public class BookmarksFragment extends ListFragment implements AdapterView.OnIte
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.action_edit:
-                    DialogFragment bmDial = BookmarksDialog.newInstance(
-                            new Bookmark(currBookmark.id, currBookmark.OSISLink, currBookmark.humanLink,
-                                    currBookmark.name, currBookmark.date));
-                    bmDial.show(getActivity().getSupportFragmentManager(), "bookmark");
+                    presenter.onClickBookmarkEdit();
                     break;
-
                 case R.id.action_delete:
-                    AlertDialog.Builder b = new AlertDialog.Builder(getActivity());
-                    b.setIcon(R.mipmap.ic_launcher);
-                    b.setTitle(currBookmark.humanLink);
-                    b.setMessage(R.string.fav_question_del_fav);
-                    b.setPositiveButton("OK", positiveButton_OnClick);
-                    b.setNegativeButton(R.string.cancel, null);
-                    b.show();
-
-                    setAdapter();
-                    onBookmarksUpdateAlertListener();
+                    new AlertDialog.Builder(context)
+                            .setIcon(R.mipmap.ic_launcher)
+                            .setTitle(R.string.app_name)
+                            .setMessage(R.string.fav_question_del_fav)
+                            .setPositiveButton("OK", (dialog, which) -> presenter.onClickBookmarkDelete())
+                            .setNegativeButton(R.string.cancel, null)
+                            .show();
                     break;
-
                 default:
                     return false;
             }
@@ -278,7 +248,6 @@ public class BookmarksFragment extends ListFragment implements AdapterView.OnIte
         }
 
         public void onDestroyActionMode(ActionMode mode) {
-            currActionMode = null;
         }
     }
 }

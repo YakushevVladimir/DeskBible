@@ -20,90 +20,74 @@
   ~ under the License.
   ~
   ~ Project: BibleQuote-for-Android
-  ~ File: bookmark_item_view.xml
+  ~ File: item_bookmark.xml
   ~
   ~ Created by Vladimir Yakushev at 10/2017
   ~ E-mail: ru.phoenix@gmail.com
   ~ WWW: http://www.scripturesoftware.org
   -->
 
-<com.BibleQuote.presentation.widget.listview.itemview.BookmarkItemView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@android:drawable/list_selector_background"
     android:orientation="vertical"
-    android:paddingBottom="2dp"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
-    android:paddingTop="2dp">
+    android:padding="@dimen/default_margin">
 
     <RelativeLayout
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="28dp">
 
         <TextView
-            android:id="@+id/date"
+            android:id="@+id/bookmark_date"
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:ellipsize="end"
             android:gravity="center_vertical|right"
-            android:padding="2dp"
-            android:shadowColor="#ffffffff"
-            android:shadowDx="0"
-            android:shadowDy="1"
-            android:shadowRadius="0.1"
             android:maxLines="1"
-            android:textColor="#6e6e6e"
-            android:textSize="@dimen/text_size_very_small"
+            android:paddingLeft="4dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             tools:text="2 May, 2013"/>
 
         <TextView
-            android:id="@+id/name"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:id="@+id/bookmark_link"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_toLeftOf="@id/date"
+            android:layout_toLeftOf="@+id/bookmark_date"
             android:ellipsize="end"
             android:gravity="center_vertical|left"
             android:maxLines="1"
-            android:textColor="@android:color/black"
-            android:textSize="@dimen/text_size_medium"
-            tools:text="Bookmark name"/>
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            tools:text="KJV:1Samuel 3:1"/>
 
     </RelativeLayout>
 
     <TextView
-        android:id="@+id/link"
-        android:layout_width="fill_parent"
+        android:id="@+id/bookmark_title"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical|left"
-        android:paddingBottom="2dp"
-        android:paddingTop="2dp"
         android:maxLines="1"
-        android:textColor="@android:color/black"
-        android:textSize="@dimen/text_size_small"
-        tools:text="KJV:1Samuel 3:1"/>
+        android:paddingBottom="4dp"
+        android:paddingTop="4dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        tools:text="Bookmark name"/>
 
     <TextView
-        android:id="@+id/tags"
-        android:layout_width="fill_parent"
-        android:layout_height="18dp"
+        android:id="@+id/bookmark_tags"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|left"
         android:drawableLeft="@drawable/ic_list_tag"
-        android:drawablePadding="4dip"
+        android:drawablePadding="4dp"
         android:gravity="center_vertical|left"
-        android:paddingBottom="2dp"
-        android:paddingTop="2dp"
-        android:shadowColor="#ffffffff"
-        android:shadowDx="0"
-        android:shadowDy="1"
-        android:shadowRadius="0.1"
         android:maxLines="1"
+        android:paddingBottom="4dp"
+        android:paddingTop="4dp"
         android:text="@string/no_tags"
-        android:textColor="#6e6e6e"
-        android:textSize="@dimen/text_size_very_small"/>
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption"/>
 
-</com.BibleQuote.presentation.widget.listview.itemview.BookmarkItemView>
+</LinearLayout>

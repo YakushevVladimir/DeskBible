@@ -21,16 +21,12 @@
  * Project: BibleQuote-for-Android
  * File: StripTagsTextFormatterTest.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 10/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
 
 package com.BibleQuote.domain.textFormatters;
-
-import android.os.Build;
-
-import com.BibleQuote.BuildConfig;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -39,12 +35,10 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(sdk = Build.VERSION_CODES.JELLY_BEAN,
-        manifest = "src/main/AndroidManifest.xml",
-        constants = BuildConfig.class)
+@Config(manifest = Config.NONE)
 public class StripTagsTextFormatterTest {
 
-    private String testVerses =
+    private static final String testVerses =
             "<p>12 Услышав же Иисус, что Иоанн отдан <I>под</I> <I>стражу,</I> удалился в Галилею\n" +
             "<p>13 и, оставив Назарет, пришел и поселился в Капернауме приморском, в пределах Завулоновых и Неффалимовых,";
 

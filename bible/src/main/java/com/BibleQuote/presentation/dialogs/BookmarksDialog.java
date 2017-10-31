@@ -28,12 +28,13 @@
 
 package com.BibleQuote.presentation.dialogs;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -42,14 +43,11 @@ import android.widget.Toast;
 
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
-import com.BibleQuote.dal.repository.bookmarks.DbBookmarksTagsRepository;
-import com.BibleQuote.dal.repository.bookmarks.DbTagRepository;
 import com.BibleQuote.di.component.AppComponent;
 import com.BibleQuote.di.component.FragmentComponent;
 import com.BibleQuote.di.module.FragmentModule;
 import com.BibleQuote.domain.AnalyticsHelper;
 import com.BibleQuote.domain.entity.Bookmark;
-import com.BibleQuote.domain.repository.IBookmarksRepository;
 import com.BibleQuote.managers.bookmarks.BookmarksManager;
 import com.BibleQuote.presentation.ui.bookmarks.BookmarksActivity;
 
@@ -61,8 +59,8 @@ public class BookmarksDialog extends DialogFragment {
     private TextView tvDate, tvHumanLink;
     private EditText tvName, tvTags;
 
-    @Inject IBookmarksRepository bookmarksRepository;
     @Inject AnalyticsHelper analyticsHelper;
+    @Inject BookmarksManager bookmarksManager;
 
     public static BookmarksDialog newInstance(Bookmark bookmark) {
         // TODO: 29.09.17 переделать на Bundle
@@ -87,6 +85,7 @@ public class BookmarksDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
+                .setIcon(R.mipmap.ic_launcher)
                 .setTitle(R.string.bookmarks)
                 .setPositiveButton(android.R.string.ok, (dialog, which) -> addBookmarks())
                 .setNegativeButton(android.R.string.cancel, null);
@@ -105,8 +104,7 @@ public class BookmarksDialog extends DialogFragment {
 
     private void addBookmarks() {
         readField();
-        new BookmarksManager(bookmarksRepository, new DbBookmarksTagsRepository(), new DbTagRepository()).add(bookmark, bookmark.tags);
-
+        bookmarksManager.add(bookmark);
         analyticsHelper.bookmarkEvent(bookmark);
 
         if (getActivity() instanceof BookmarksActivity) {
@@ -133,6 +131,10 @@ public class BookmarksDialog extends DialogFragment {
             bookmark.name = tvName.getText().toString();
             bookmark.date = tvDate.getText().toString();
             bookmark.tags = tvTags.getText().toString();
+
+            if (TextUtils.isEmpty(bookmark.name)) {
+                bookmark.name = bookmark.humanLink;
+            }
         }
     }
 
