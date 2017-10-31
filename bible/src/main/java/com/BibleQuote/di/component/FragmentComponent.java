@@ -32,6 +32,7 @@ import com.BibleQuote.di.module.FragmentModule;
 import com.BibleQuote.di.scope.PerFragment;
 import com.BibleQuote.presentation.dialogs.BookmarksDialog;
 import com.BibleQuote.presentation.ui.bookmarks.BookmarksFragment;
+import com.BibleQuote.presentation.ui.bookmarks.TagsFragment;
 
 import dagger.Subcomponent;
 
@@ -42,4 +43,6 @@ public interface FragmentComponent {
     void inject(BookmarksDialog fragment);
 
     void inject(BookmarksFragment fragment);
+
+    void inject(TagsFragment fragment);
 }

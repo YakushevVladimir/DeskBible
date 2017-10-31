@@ -22,7 +22,7 @@
   ~ Project: BibleQuote-for-Android
   ~ File: activity_bookmarks.xml
   ~
-  ~ Created by Vladimir Yakushev at 8/2017
+  ~ Created by Vladimir Yakushev at 10/2017
   ~ E-mail: ru.phoenix@gmail.com
   ~ WWW: http://www.scripturesoftware.org
   -->
@@ -53,7 +53,8 @@
             app:tabGravity="fill"
             app:tabMode="fixed"
             app:tabSelectedTextColor="@color/accent"
-            app:tabTextColor="@color/accent_dark"/>
+            app:tabTextColor="@color/accent_dark"
+            app:tabIndicatorColor="@color/accent"/>
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.view.ViewPager

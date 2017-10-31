@@ -19,7 +19,7 @@
  * under the License.
  *
  * Project: BibleQuote-for-Android
- * File: BookmarksView.java
+ * File: TagsView.java
  *
  * Created by Vladimir Yakushev at 10/2017
  * E-mail: ru.phoenix@gmail.com
@@ -28,24 +28,15 @@
 
 package com.BibleQuote.presentation.ui.bookmarks;
 
-import android.support.annotation.NonNull;
-
-import com.BibleQuote.domain.entity.Bookmark;
-import com.BibleQuote.domain.entity.Tag;
+import com.BibleQuote.domain.entity.TagWithCount;
 import com.BibleQuote.presentation.ui.base.BaseView;
 
 import java.util.List;
 
 
-public interface BookmarksView extends BaseView {
+public interface TagsView extends BaseView {
 
-    void openBookmarkDialog(Bookmark bookmark);
+    void updateTags(List<TagWithCount> items);
 
-    void updateBookmarks(@NonNull List<Bookmark> bookmarks);
-
-    void setTagFilter(Tag tag);
-
-    void startBookmarkAction(String title);
-
-    void refreshBookmarks();
+    void refreshTags();
 }

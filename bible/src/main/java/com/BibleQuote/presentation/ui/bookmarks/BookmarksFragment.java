@@ -32,6 +32,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
@@ -51,14 +52,12 @@ import com.BibleQuote.di.component.FragmentComponent;
 import com.BibleQuote.domain.entity.Bookmark;
 import com.BibleQuote.domain.entity.Tag;
 import com.BibleQuote.domain.logger.StaticLogger;
-import com.BibleQuote.managers.Librarian;
-import com.BibleQuote.managers.bookmarks.BookmarksManager;
 import com.BibleQuote.presentation.dialogs.BookmarksDialog;
 import com.BibleQuote.presentation.ui.base.BaseFragment;
+import com.BibleQuote.presentation.ui.bookmarks.adapter.BookmarkAdapter;
+import com.BibleQuote.presentation.ui.bookmarks.adapter.ClickableListAdapter;
 
 import java.util.List;
-
-import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -70,18 +69,9 @@ import butterknife.Unbinder;
  */
 public class BookmarksFragment extends BaseFragment<BookmarksPresenter> implements BookmarksView {
 
-    @Inject BookmarksManager bookmarksManager;
-    @Inject Librarian myLibrarian;
-
     @BindView(R.id.list_bookmarks) RecyclerView viewBookmarksList;
 
-    private OnBookmarksChangeListener onBookmarksListener;
     private Unbinder unbinder;
-
-    public void setBookmarksListener(OnBookmarksChangeListener listener) {
-        StaticLogger.info(this, "Set bookmarks onBookmarksListener");
-        this.onBookmarksListener = listener;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -94,7 +84,11 @@ public class BookmarksFragment extends BaseFragment<BookmarksPresenter> implemen
         viewBookmarksList.setHasFixedSize(true);
         viewBookmarksList.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayout.VERTICAL));
 
-        presenter.onViewCreated();
+        try {
+            presenter.setChangeListener((OnBookmarksChangeListener) getActivity());
+        } catch (ClassCastException e) {
+            throw new ClassCastException(getActivity().toString() + " must implement OnBookmarksChangeListener");
+        }
 
         return view;
     }
@@ -103,16 +97,6 @@ public class BookmarksFragment extends BaseFragment<BookmarksPresenter> implemen
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        try {
-            setBookmarksListener((OnBookmarksChangeListener) context);
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + " must implement OnBookmarksChangeListener");
-        }
     }
 
     @Override
@@ -182,21 +166,20 @@ public class BookmarksFragment extends BaseFragment<BookmarksPresenter> implemen
     }
 
     @Override
-    public void updateBookmarks(final List<Bookmark> bookmarks) {
-        viewBookmarksList.setAdapter(new BookmarksAdapter(bookmarks, v -> {
-            int position = viewBookmarksList.getChildAdapterPosition(v);
-            presenter.onClickBookmarkOpen(position);
-        }, v -> {
-            int position = viewBookmarksList.getChildAdapterPosition(v);
-            presenter.onSelectBookmark(position);
-            return true;
-        }));
-        onBookmarksListener.onBookmarksUpdate();
-    }
+    public void updateBookmarks(@NonNull final List<Bookmark> bookmarks) {
+        viewBookmarksList.setAdapter(new BookmarkAdapter(bookmarks, new ClickableListAdapter.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int position = viewBookmarksList.getChildAdapterPosition(v);
+                presenter.onClickBookmarkOpen(position);
+            }
 
-    @Override
-    public void openBookmark(Bookmark bookmark) {
-        onBookmarksListener.onBookmarksSelect(bookmark);
+            @Override
+            public void onLongClick(View v) {
+                int position = viewBookmarksList.getChildAdapterPosition(v);
+                presenter.onSelectBookmark(position);
+            }
+        }));
     }
 
     @Override

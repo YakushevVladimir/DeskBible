@@ -89,7 +89,7 @@
     <string name="copy">Copy</string>
     <string name="fav_question_del_fav">Do you really want to delete this bookmark?</string>
     <string name="fav_delete_all">Delete all</string>
-    <string name="fav_delete_all_question">Are you sure you want to delete all bookmarks?</string>
+    <string name="fav_delete_all_question">Are you sure you want to delete all items?</string>
     <string name="dialog_color_picker">Choose a color</string>
     <string name="references">References</string>
     <string name="exception_book_definition">Incorrect attributes of book #%1$d in module %2$s</string>

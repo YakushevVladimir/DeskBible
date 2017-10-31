@@ -45,6 +45,7 @@ public class BookmarksPresenter extends BasePresenter<BookmarksView> {
 
     private List<Bookmark> bookmarks;
     private BookmarksManager bookmarksManager;
+    private OnBookmarksChangeListener changeListener;
     private Bookmark currBookmark;
     private Librarian myLibrarian;
 
@@ -54,13 +55,16 @@ public class BookmarksPresenter extends BasePresenter<BookmarksView> {
         this.myLibrarian = myLibrarian;
     }
 
-    @Override
-    public void onViewCreated() {
-        updateBookmarks(null);
+    void setChangeListener(OnBookmarksChangeListener changeListener) {
+        this.changeListener = changeListener;
     }
 
-    void onSetTag(Tag tag) {
-        updateBookmarks(tag);
+    @Override
+    public void onViewCreated() {
+        if (changeListener == null) {
+            throw new IllegalStateException("OnBookmarksChangeListener is not specified");
+        }
+        updateBookmarks(null);
     }
 
     void onClickBookmarkDelete() {
@@ -69,9 +73,8 @@ public class BookmarksPresenter extends BasePresenter<BookmarksView> {
         }
 
         StaticLogger.info(this, "Delete bookmark: " + currBookmark);
-        bookmarksManager.delete(currBookmark);
         getView().showToast(R.string.removed);
-        updateBookmarks(null);
+        deleteBookmarkAndRefresh(currBookmark);
     }
 
     void onClickBookmarkEdit() {
@@ -90,11 +93,14 @@ public class BookmarksPresenter extends BasePresenter<BookmarksView> {
         if (!myLibrarian.isOSISLinkValid(osisLink)) { // модуль был удален и закладка больше не актуальна
             StaticLogger.info(this, "Delete invalid bookmark: " + position);
             getView().showToast(R.string.bookmark_invalid_removed);
-            bookmarksManager.delete(bookmark);
-            updateBookmarks(null);
+            deleteBookmarkAndRefresh(bookmark);
         } else {
-            getView().openBookmark(bookmark);
+            changeListener.onBookmarksSelect(bookmark);
         }
+    }
+
+    void onRefresh() {
+        updateBookmarks(null);
     }
 
     void onSelectBookmark(int position) {
@@ -104,8 +110,8 @@ public class BookmarksPresenter extends BasePresenter<BookmarksView> {
         }
     }
 
-    void onRefresh() {
-        updateBookmarks(null);
+    void onSetTag(Tag tag) {
+        updateBookmarks(tag);
     }
 
     void removeBookmarks() {
@@ -113,6 +119,13 @@ public class BookmarksPresenter extends BasePresenter<BookmarksView> {
             bookmarksManager.delete(bookmark);
         }
         updateBookmarks(null);
+        changeListener.onBookmarksUpdate();
+    }
+
+    private void deleteBookmarkAndRefresh(Bookmark bookmark) {
+        bookmarksManager.delete(bookmark);
+        updateBookmarks(null);
+        changeListener.onBookmarksUpdate();
     }
 
     private void updateBookmarks(Tag tag) {

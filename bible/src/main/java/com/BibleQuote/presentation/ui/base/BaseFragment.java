@@ -55,6 +55,12 @@ public abstract class BaseFragment<T extends BasePresenter> extends Fragment imp
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        presenter.onViewCreated();
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
         detachView();

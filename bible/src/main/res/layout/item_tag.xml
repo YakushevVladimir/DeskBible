@@ -20,31 +20,35 @@
   ~ under the License.
   ~
   ~ Project: BibleQuote-for-Android
-  ~ File: attrs.xml
+  ~ File: item_tag.xml
   ~
   ~ Created by Vladimir Yakushev at 10/2017
   ~ E-mail: ru.phoenix@gmail.com
   ~ WWW: http://www.scripturesoftware.org
   -->
-<resources>
-	<declare-styleable name="NumberChoiseView">
-		<attr name="minValue" format="integer"/>
-		<attr name="maxValue" format="integer"/>
-		<attr name="totalValue" format="integer"/>
-	</declare-styleable>
 
-	<!-- List items related attributes -->
-	<declare-styleable name="Item">
-		<attr name="enabled" format="boolean" />
-	</declare-styleable>
-	<declare-styleable name="TextItem">
-		<attr name="text" format="string" />
-	</declare-styleable>
-	<declare-styleable name="SubtitleItem">
-		<attr name="subtitletext" format="string" />
-	</declare-styleable>
-	<declare-styleable name="SubtextItem">
-		<attr name="subtext" format="string" />
-	</declare-styleable>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/default_margin">
 
-</resources>
+    <TextView
+        android:id="@+id/tag_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:paddingLeft="@dimen/default_margin_min"
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+        tools:text="10"/>
+
+    <TextView
+        android:id="@+id/tag_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/tag_count"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        tools:text="abraham"/>
+</RelativeLayout>

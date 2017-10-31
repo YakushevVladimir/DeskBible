@@ -19,46 +19,20 @@
  * under the License.
  *
  * Project: BibleQuote-for-Android
- * File: TagItemView.java
+ * File: OnTagsChangeListener.java
  *
  * Created by Vladimir Yakushev at 10/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
 
-package com.BibleQuote.presentation.widget.listview.itemview;
+package com.BibleQuote.presentation.ui.bookmarks;
 
-import android.content.Context;
-import android.util.AttributeSet;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import com.BibleQuote.domain.entity.Tag;
 
-import com.BibleQuote.R;
-import com.BibleQuote.presentation.widget.listview.item.Item;
-import com.BibleQuote.presentation.widget.listview.item.TagItem;
+interface OnTagsChangeListener {
 
-public class TagItemView extends LinearLayout implements ItemView {
+    void onTagSelect(Tag tag);
 
-	private TextView mName;
-	private TextView mCount;
-
-	public TagItemView(Context context) {
-		this(context, null);
-	}
-
-	public TagItemView(Context context, AttributeSet attrs) {
-		super(context, attrs);
-	}
-
-	public void prepareItemView() {
-		mName = (TextView) findViewById(R.id.tagName);
-		mCount = (TextView) findViewById(R.id.count);
-	}
-
-	public void setObject(Item object) {
-		final TagItem item = (TagItem) object;
-		mName.setText(item.name);
-		mCount.setText(item.count);
-	}
-
+    void onTagsUpdate();
 }

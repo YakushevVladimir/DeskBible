@@ -78,5 +78,5 @@
         android:drawablePadding="@dimen/default_margin_min"
         android:hint="@string/tags_description"
         android:inputType="text|textAutoComplete"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+        android:textAppearance="@style/TextAppearance.AppCompat"/>
 </LinearLayout>

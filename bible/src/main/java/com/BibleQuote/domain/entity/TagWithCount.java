@@ -19,33 +19,35 @@
  * under the License.
  *
  * Project: BibleQuote-for-Android
- * File: BookmarksView.java
+ * File: TagWithCount.java
  *
  * Created by Vladimir Yakushev at 10/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
 
-package com.BibleQuote.presentation.ui.bookmarks;
+package com.BibleQuote.domain.entity;
 
-import android.support.annotation.NonNull;
+import com.google.auto.value.AutoValue;
 
-import com.BibleQuote.domain.entity.Bookmark;
-import com.BibleQuote.domain.entity.Tag;
-import com.BibleQuote.presentation.ui.base.BaseView;
-
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+@AutoValue
+public abstract class TagWithCount {
 
-public interface BookmarksView extends BaseView {
+    public abstract Tag tag();
 
-    void openBookmarkDialog(Bookmark bookmark);
+    public abstract String count();
 
-    void updateBookmarks(@NonNull List<Bookmark> bookmarks);
+    public static TagWithCount create(Tag tag, String count) {
+        return new AutoValue_TagWithCount(tag, count);
+    }
 
-    void setTagFilter(Tag tag);
-
-    void startBookmarkAction(String title);
-
-    void refreshBookmarks();
+    public static List<TagWithCount> create(Map<Tag, String> tags) {
+        List<TagWithCount> result = new ArrayList<>();
+        tags.forEach((tag, count) -> result.add(create(tag, count)));
+        return result;
+    }
 }

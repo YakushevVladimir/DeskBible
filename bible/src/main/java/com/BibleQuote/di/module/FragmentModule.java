@@ -32,6 +32,7 @@ import com.BibleQuote.domain.repository.IBookmarksRepository;
 import com.BibleQuote.domain.repository.IBookmarksTagsRepository;
 import com.BibleQuote.domain.repository.ITagRepository;
 import com.BibleQuote.managers.bookmarks.BookmarksManager;
+import com.BibleQuote.managers.tags.TagsManager;
 
 import dagger.Module;
 import dagger.Provides;
@@ -43,5 +44,10 @@ public class FragmentModule {
     BookmarksManager provideBookmarksManager(IBookmarksRepository bmRepo, IBookmarksTagsRepository bmtRepo,
             ITagRepository tagRepo) {
         return new BookmarksManager(bmRepo, bmtRepo, tagRepo);
+    }
+
+    @Provides
+    TagsManager provideTagsManager(ITagRepository tagRepository) {
+        return new TagsManager(tagRepository);
     }
 }

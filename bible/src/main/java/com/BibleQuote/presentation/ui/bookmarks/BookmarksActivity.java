@@ -49,22 +49,29 @@ import com.BibleQuote.presentation.ui.base.BQActivity;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class BookmarksActivity extends BQActivity
-        implements OnBookmarksChangeListener, TagsFragment.OnTagsChangeListener {
+        implements OnBookmarksChangeListener, OnTagsChangeListener {
 
     public static final String EXTRA_MODE = "extra_mode";
     public static final String MODE_TAGS = "tags";
     public static final String MODE_BOOKMARKS = "bookmarks";
 
     private static final String KEY_TAB = "tab";
-    private ViewPager viewPager;
+
+    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.pager) ViewPager viewPager;
+    @BindView(R.id.tab_layout) TabLayout tabLayout;
+
     private PagerAdapter pagerAdapter;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bookmarks);
+        ButterKnife.bind(this);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar supportActionBar = getSupportActionBar();
         if (supportActionBar != null) {
@@ -74,11 +81,7 @@ public class BookmarksActivity extends BQActivity
         pagerAdapter = new PagerAdapter(getSupportFragmentManager());
         pagerAdapter.addPage(getString(R.string.bookmarks), new BookmarksFragment());
         pagerAdapter.addPage(getString(R.string.tags), new TagsFragment());
-
-        viewPager = (ViewPager) findViewById(R.id.pager);
         viewPager.setAdapter(pagerAdapter);
-
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
 
         Intent intent = getIntent();
@@ -128,7 +131,7 @@ public class BookmarksActivity extends BQActivity
 
     @Override
     public void onBookmarksUpdate() {
-        ((TagsFragment) pagerAdapter.getItem(1)).updateTags();
+        ((TagsFragment) pagerAdapter.getItem(1)).refreshTags();
     }
 
     @Override

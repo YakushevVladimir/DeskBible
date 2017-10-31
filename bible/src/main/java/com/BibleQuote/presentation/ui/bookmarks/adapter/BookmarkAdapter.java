@@ -19,18 +19,17 @@
  * under the License.
  *
  * Project: BibleQuote-for-Android
- * File: BookmarksAdapter.java
+ * File: BookmarkAdapter.java
  *
  * Created by Vladimir Yakushev at 10/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
 
-package com.BibleQuote.presentation.ui.bookmarks;
+package com.BibleQuote.presentation.ui.bookmarks.adapter;
 
-import android.support.v7.widget.RecyclerView;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -43,37 +42,19 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class BookmarksAdapter extends RecyclerView.Adapter<BookmarksAdapter.BookmarkViewHolder> {
+public class BookmarkAdapter extends ClickableListAdapter<Bookmark> {
 
-    private List<Bookmark> bookmarks;
-    private View.OnClickListener clickListener;
-    private View.OnLongClickListener longClickListener;
-
-    BookmarksAdapter(List<Bookmark> bookmarks, View.OnClickListener clickListener, View.OnLongClickListener longClickListener) {
-        this.bookmarks = bookmarks;
-        this.clickListener = clickListener;
-        this.longClickListener = longClickListener;
+    public BookmarkAdapter(@NonNull List<Bookmark> items, @NonNull ClickableListAdapter.OnClickListener clickListener) {
+        super(items, clickListener);
     }
 
     @Override
-    public BookmarkViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_bookmark, parent, false);
-        view.setOnClickListener(clickListener);
-        view.setOnLongClickListener(longClickListener);
+    public ListViewHolder<Bookmark> onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = getView(parent, R.layout.item_bookmark);
         return new BookmarkViewHolder(view);
     }
 
-    @Override
-    public void onBindViewHolder(BookmarkViewHolder holder, int position) {
-        holder.bind(bookmarks.get(position));
-    }
-
-    @Override
-    public int getItemCount() {
-        return bookmarks.size();
-    }
-
-    static class BookmarkViewHolder extends RecyclerView.ViewHolder {
+    public static class BookmarkViewHolder extends ListViewHolder<Bookmark> {
 
         @BindView(R.id.bookmark_link) TextView viewLink;
         @BindView(R.id.bookmark_date) TextView viewDate;
@@ -85,7 +66,8 @@ public class BookmarksAdapter extends RecyclerView.Adapter<BookmarksAdapter.Book
             ButterKnife.bind(this, itemView);
         }
 
-        void bind(Bookmark bookmark) {
+        @Override
+        public void bind(Bookmark bookmark) {
             if (bookmark != null) {
                 viewLink.setText(bookmark.humanLink);
                 viewDate.setText(bookmark.date);

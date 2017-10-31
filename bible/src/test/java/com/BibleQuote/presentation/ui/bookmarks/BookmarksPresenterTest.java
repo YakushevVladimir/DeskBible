@@ -64,6 +64,7 @@ public class BookmarksPresenterTest {
     @Mock BookmarksManager bookmarksManager;
     @Mock Librarian librarian;
     @Mock BookmarksView view;
+    @Mock OnBookmarksChangeListener changeListener;
 
     private List<Bookmark> bookmarksWithoutTag;
     private List<Bookmark> bookmarksWithTag;
@@ -92,8 +93,14 @@ public class BookmarksPresenterTest {
         when(bookmarksManager.getAll(any(Tag.class))).thenReturn(bookmarksWithTag);
     }
 
+    @Test(expected = IllegalStateException.class)
+    public void onViewCreatedWithoutChangeListener() throws Exception {
+        presenter.onViewCreated();
+    }
+
     @Test
     public void onViewCreated() throws Exception {
+        presenter.setChangeListener(changeListener);
         presenter.onViewCreated();
 
         verify(bookmarksManager).getAll(isNull());
@@ -131,6 +138,7 @@ public class BookmarksPresenterTest {
 
     @Test
     public void onClickBookmarkDelete() throws Exception {
+        presenter.setChangeListener(changeListener);
         presenter.onRefresh(); // заполняем презентер списком закладок
         Mockito.reset(view); // сбрасываем обращения к view
 
@@ -138,6 +146,7 @@ public class BookmarksPresenterTest {
         presenter.onClickBookmarkDelete();
 
         verify(bookmarksManager).delete(eq(bookmarksWithoutTag.get(0)));
+        verify(changeListener).onBookmarksUpdate();
         verify(view).updateBookmarks(anyList());
     }
 
@@ -169,7 +178,7 @@ public class BookmarksPresenterTest {
 
         presenter.onClickBookmarkOpen(bookmarksWithoutTag.size());
 
-        verify(view, never()).openBookmark(any(Bookmark.class));
+        verify(changeListener, never()).onBookmarksSelect(any(Bookmark.class));
         verify(view, never()).updateBookmarks(anyList());
     }
 
@@ -177,22 +186,25 @@ public class BookmarksPresenterTest {
     public void onClickBookmarkOpen() throws Exception {
         when(librarian.isOSISLinkValid(any())).thenReturn(true);
 
+        presenter.setChangeListener(changeListener);
         presenter.onRefresh();
         presenter.onClickBookmarkOpen(0);
 
-        verify(view).openBookmark(eq(bookmarksWithoutTag.get(0)));
+        verify(changeListener).onBookmarksSelect(eq(bookmarksWithoutTag.get(0)));
     }
 
     @Test
     public void onClickBookmarkOpenWithIncorrectBookmark() throws Exception {
         when(librarian.isOSISLinkValid(any())).thenReturn(false);
 
+        presenter.setChangeListener(changeListener);
         presenter.onRefresh(); // заполняем презентер списком закладок
         Mockito.reset(view); // сбрасываем обращения к view
 
         presenter.onClickBookmarkOpen(0);
 
-        verify(view, never()).openBookmark(any(Bookmark.class));
+        verify(changeListener).onBookmarksUpdate();
+        verify(changeListener, never()).onBookmarksSelect(any(Bookmark.class));
         verify(view).updateBookmarks(anyList());
         verify(view).showToast(anyInt());
         verify(bookmarksManager).delete(any(Bookmark.class));
@@ -230,12 +242,14 @@ public class BookmarksPresenterTest {
             return null;
         }).when(bookmarksManager).delete(any(Bookmark.class));
 
+        presenter.setChangeListener(changeListener);
         presenter.onRefresh(); // заполняем презентер списком закладок
         Mockito.reset(view); // сбрасываем обращения к view
 
         presenter.removeBookmarks();
 
         verify(view).updateBookmarks(bmCaptor.capture());
+        verify(changeListener).onBookmarksUpdate();
 
         List<Bookmark> bookmarks = bmCaptor.getValue();
         assertNotNull(bookmarks);

@@ -29,71 +29,66 @@
 package com.BibleQuote.presentation.ui.bookmarks;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
-import android.util.Log;
+import android.support.annotation.Nullable;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.BibleQuote.R;
-import com.BibleQuote.dal.repository.bookmarks.DbTagRepository;
-import com.BibleQuote.domain.entity.Tag;
-import com.BibleQuote.managers.tags.TagsManager;
-import com.BibleQuote.presentation.widget.listview.ItemAdapter;
-import com.BibleQuote.presentation.widget.listview.item.Item;
-import com.BibleQuote.presentation.widget.listview.item.TagItem;
+import com.BibleQuote.di.component.FragmentComponent;
+import com.BibleQuote.domain.entity.TagWithCount;
+import com.BibleQuote.presentation.ui.base.BaseFragment;
+import com.BibleQuote.presentation.ui.bookmarks.adapter.ClickableListAdapter;
+import com.BibleQuote.presentation.ui.bookmarks.adapter.TagsAdapter;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
-/**
- * User: Vladimir Yakushev
- * Date: 14.05.13
- */
-public class TagsFragment extends ListFragment implements AdapterView.OnItemLongClickListener {
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
-    private final static String TAG = TagsFragment.class.getSimpleName();
-    private final TagsManager tagManager = new TagsManager(new DbTagRepository());
-    private OnTagsChangeListener onTagsChangeListener;
+public class TagsFragment extends BaseFragment<TagsPresenter> implements TagsView {
 
+    @BindView(R.id.tags_list) RecyclerView viewTagsList;
+    private Unbinder unbinder;
+
+    @Nullable
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_tags, container, false);
+
+        unbinder = ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
-        setEmptyText(getResources().getText(R.string.empty));
 
-        ListView lw = getListView();
-        lw.setLongClickable(true);
-        lw.setOnItemLongClickListener(this);
+        viewTagsList.setLayoutManager(new LinearLayoutManager(getContext()));
+        viewTagsList.setHasFixedSize(true);
+        viewTagsList.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayout.VERTICAL));
 
-        setAdapter();
-    }
-
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
         try {
-            setOnTagSelectListener((OnTagsChangeListener) context);
+            presenter.setChangeListener((OnTagsChangeListener) getActivity());
         } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + " must implement onSomeEventListener");
+            throw new ClassCastException(getActivity().toString() + " must implement OnTagsChangeListener");
         }
+
+        return view;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        Log.i(TAG, "onCreateOptionsMenu");
         inflater.inflate(R.menu.menu_tags, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -107,9 +102,8 @@ public class TagsFragment extends ListFragment implements AdapterView.OnItemLong
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_bar_refresh:
-                setAdapter();
+                presenter.refreshTags();
                 break;
-
             default:
                 break;
         }
@@ -118,61 +112,44 @@ public class TagsFragment extends ListFragment implements AdapterView.OnItemLong
     }
 
     @Override
-    public void onListItemClick(ListView lv, View v, int position, long id) {
-        final Tag currTag = ((TagItem) lv.getAdapter().getItem(position)).tag;
-        onTagSelectListenerAlert(currTag);
+    public void updateTags(List<TagWithCount> items) {
+        if (viewTagsList == null) {
+            return;
+        }
+
+        viewTagsList.setAdapter(new TagsAdapter(items, new ClickableListAdapter.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int pos = viewTagsList.getChildAdapterPosition(v);
+                presenter.onTagSelected(pos);
+            }
+
+            @Override
+            public void onLongClick(View v) {
+                int pos = viewTagsList.getChildAdapterPosition(v);
+                new AlertDialog.Builder(getActivity())
+                        .setIcon(R.mipmap.ic_launcher)
+                        .setTitle(R.string.app_name)
+                        .setMessage(R.string.question_del_tag)
+                        .setPositiveButton("OK", (dialog, which) -> presenter.onDeleteTag(pos))
+                        .setNegativeButton(R.string.cancel, null)
+                        .show();
+            }
+        }));
     }
 
     @Override
-    public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
-        final Tag currTag = ((TagItem) adapterView.getItemAtPosition(position)).tag;
-        AlertDialog.Builder b = new AlertDialog.Builder(getActivity());
-        b.setIcon(R.mipmap.ic_launcher);
-        b.setTitle(currTag.name);
-        b.setMessage(R.string.question_del_tag);
-        b.setPositiveButton("OK", (dialog, which) -> {
-            tagManager.delete(currTag);
-            setAdapter();
-            onTagsUppdateListenerAlert();
-        });
-        b.setNegativeButton(R.string.cancel, null);
-        b.show();
-        return true;
+    public void refreshTags() {
+        presenter.refreshTags();
     }
 
-    private void setAdapter() {
-        List<Item> items = new ArrayList<>();
-        LinkedHashMap<Tag, String> tagList = tagManager.getAllWithCount();
-        for (Map.Entry<Tag, String> entry : tagList.entrySet()) {
-            items.add(new TagItem(entry.getKey(), entry.getValue()));
-        }
-        ItemAdapter adapter = new ItemAdapter(getActivity(), items);
-        setListAdapter(adapter);
+    @Override
+    protected void inject(FragmentComponent component) {
+        component.inject(this);
     }
 
-    public void updateTags() {
-        setAdapter();
-    }
-
-    public void setOnTagSelectListener(OnTagsChangeListener listener) {
-        this.onTagsChangeListener = listener;
-    }
-
-    private void onTagSelectListenerAlert(Tag tag) {
-        if (this.onTagsChangeListener != null) {
-            this.onTagsChangeListener.onTagSelect(tag);
-        }
-    }
-
-    private void onTagsUppdateListenerAlert() {
-        if (this.onTagsChangeListener != null) {
-            this.onTagsChangeListener.onTagsUpdate();
-        }
-    }
-
-    interface OnTagsChangeListener {
-        void onTagSelect(Tag tag);
-
-        void onTagsUpdate();
+    @Override
+    protected void attachView() {
+        presenter.attachView(this);
     }
 }

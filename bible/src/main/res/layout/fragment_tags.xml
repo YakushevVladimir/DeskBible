@@ -20,31 +20,16 @@
   ~ under the License.
   ~
   ~ Project: BibleQuote-for-Android
-  ~ File: attrs.xml
+  ~ File: fragment_tags.xml
   ~
   ~ Created by Vladimir Yakushev at 10/2017
   ~ E-mail: ru.phoenix@gmail.com
   ~ WWW: http://www.scripturesoftware.org
   -->
-<resources>
-	<declare-styleable name="NumberChoiseView">
-		<attr name="minValue" format="integer"/>
-		<attr name="maxValue" format="integer"/>
-		<attr name="totalValue" format="integer"/>
-	</declare-styleable>
 
-	<!-- List items related attributes -->
-	<declare-styleable name="Item">
-		<attr name="enabled" format="boolean" />
-	</declare-styleable>
-	<declare-styleable name="TextItem">
-		<attr name="text" format="string" />
-	</declare-styleable>
-	<declare-styleable name="SubtitleItem">
-		<attr name="subtitletext" format="string" />
-	</declare-styleable>
-	<declare-styleable name="SubtextItem">
-		<attr name="subtext" format="string" />
-	</declare-styleable>
-
-</resources>
+<android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tags_list"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:listitem="@layout/item_tag"/>
