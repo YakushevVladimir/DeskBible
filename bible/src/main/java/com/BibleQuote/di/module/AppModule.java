@@ -36,11 +36,7 @@ import com.BibleQuote.dal.controller.CachedLibraryRepository;
 import com.BibleQuote.dal.controller.FsLibraryController;
 import com.BibleQuote.dal.controller.TSKController;
 import com.BibleQuote.dal.repository.FsCacheRepository;
-import com.BibleQuote.dal.repository.FsHistoryRepository;
 import com.BibleQuote.dal.repository.FsLibraryLoader;
-import com.BibleQuote.dal.repository.XmlTskRepository;
-import com.BibleQuote.dal.repository.bookmarks.DbBookmarksRepository;
-import com.BibleQuote.dal.repository.bookmarks.DbTagsRepository;
 import com.BibleQuote.data.analytics.GoogleAnalyticsHelper;
 import com.BibleQuote.data.logger.AndroidLogger;
 import com.BibleQuote.data.logger.FileLogger;
@@ -50,10 +46,8 @@ import com.BibleQuote.domain.controller.ITSKController;
 import com.BibleQuote.domain.entity.BaseModule;
 import com.BibleQuote.domain.logger.CompositeLogger;
 import com.BibleQuote.domain.logger.Logger;
-import com.BibleQuote.domain.repository.IBookmarksRepository;
 import com.BibleQuote.domain.repository.ICacheRepository;
 import com.BibleQuote.domain.repository.IHistoryRepository;
-import com.BibleQuote.domain.repository.ITagsRepository;
 import com.BibleQuote.domain.repository.ITskRepository;
 import com.BibleQuote.domain.repository.LibraryLoader;
 import com.BibleQuote.managers.history.HistoryManager;
@@ -69,7 +63,7 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 
-@Module
+@Module(includes = {DataModule.class})
 public class AppModule {
 
     private BibleQuoteApp application;
@@ -90,25 +84,8 @@ public class AppModule {
     }
 
     @Provides
-    @Singleton
-    IBookmarksRepository getBookmarksRepository() {
-        return new DbBookmarksRepository();
-    }
-
-    @Provides
-    @Singleton
-    ITagsRepository getBookmarksTagsRepository() {
-        return new DbTagsRepository();
-    }
-
-    @Provides
     IHistoryManager getHistoryManager(IHistoryRepository repository, PreferenceHelper prefHelper) {
         return new HistoryManager(repository, prefHelper.getHistorySize());
-    }
-
-    @Provides
-    IHistoryRepository getHistoryRepository(Context context) {
-        return new FsHistoryRepository(context);
     }
 
     @Provides
@@ -131,11 +108,6 @@ public class AppModule {
     @Provides
     ITSKController getTskController(ITskRepository repository) {
         return new TSKController(repository);
-    }
-
-    @Provides
-    ITskRepository getTskRepository() {
-        return new XmlTskRepository();
     }
 
     @Provides
