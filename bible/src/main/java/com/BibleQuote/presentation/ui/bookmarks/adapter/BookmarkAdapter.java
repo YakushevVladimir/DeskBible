@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: BookmarkAdapter.java
  *
- * Created by Vladimir Yakushev at 10/2017
+ * Created by Vladimir Yakushev at 11/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -37,6 +37,7 @@ import android.widget.TextView;
 import com.BibleQuote.R;
 import com.BibleQuote.domain.entity.Bookmark;
 
+import java.text.DateFormat;
 import java.util.List;
 
 import butterknife.BindView;
@@ -57,7 +58,7 @@ public class BookmarkAdapter extends ClickableListAdapter<Bookmark> {
     public static class BookmarkViewHolder extends ListViewHolder<Bookmark> {
 
         @BindView(R.id.bookmark_link) TextView viewLink;
-        @BindView(R.id.bookmark_date) TextView viewDate;
+        @BindView(R.id.bookmark_time) TextView viewTime;
         @BindView(R.id.bookmark_title) TextView viewTitle;
         @BindView(R.id.bookmark_tags) TextView viewTags;
 
@@ -70,7 +71,7 @@ public class BookmarkAdapter extends ClickableListAdapter<Bookmark> {
         public void bind(Bookmark bookmark) {
             if (bookmark != null) {
                 viewLink.setText(bookmark.humanLink);
-                viewDate.setText(bookmark.date);
+                viewTime.setText(DateFormat.getDateInstance(DateFormat.MEDIUM).format(bookmark.time));
                 viewTitle.setText(bookmark.name);
                 if (!TextUtils.isEmpty(bookmark.tags)) {
                     viewTags.setText(bookmark.tags);

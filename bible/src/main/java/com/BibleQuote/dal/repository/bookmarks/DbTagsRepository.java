@@ -44,20 +44,19 @@ import java.util.List;
 public class DbTagsRepository implements ITagsRepository {
 
     @Override
-    public boolean addTags(long bookmarkIDs, String tags) {
+    public void addTags(long bookmarkIDs, String tags) {
         if (tags == null || tags.isEmpty()) {
-            return false;
+            return;
         }
 
         SQLiteDatabase db = DbLibraryHelper.getLibraryDB();
         db.beginTransaction();
         try {
-            for (String value : tags.split("\\s?,\\s?")) {
-                if (value.isEmpty()) {
+            for (String value : tags.split(",")) {
+                String tag = value.trim().toLowerCase(); // храним все теги записанные строчными буквами
+                if (tag.isEmpty()) {
                     continue;
                 }
-
-                String tag = value.toLowerCase(); // храним все теги записанные строчными буквами
 
                 long tagIDs;
                 Cursor cur = db.rawQuery(
@@ -79,10 +78,8 @@ public class DbTagsRepository implements ITagsRepository {
                 db.insert(DbLibraryHelper.BOOKMARKSTAGS_TABLE, null, values);
             }
             db.setTransactionSuccessful();
-            return true;
         } catch (Exception ex) {
             StaticLogger.error(this, "Failed add tags: " + tags, ex);
-            return false;
         } finally {
             db.endTransaction();
             DbLibraryHelper.closeDB();
@@ -94,15 +91,9 @@ public class DbTagsRepository implements ITagsRepository {
         SQLiteDatabase db = DbLibraryHelper.getLibraryDB();
         db.beginTransaction();
         try {
-            db.execSQL(String.format( // создаем представление и кладем туда идентификатор тега
-                    "CREATE TEMP VIEW temp_view AS SELECT %1$s AS tag_id FROM %2$s WHERE %2$s.%3$s='%4$s'",
-                    Tag.KEY_ID, DbLibraryHelper.TAGS_TABLE, Tag.NAME, tag));
-            db.execSQL(String.format( // удаляем теги с найденными идентификаторами
-                    "DELETE FROM %1$s WHERE %2$s IN (SELECT tag_id FROM temp_view)",
-                    DbLibraryHelper.TAGS_TABLE, Tag.KEY_ID));
-            db.execSQL(String.format( // удаляем ссылки на тег
-                    "DELETE FROM %1$s WHERE %2$s IN (SELECT tag_id FROM temp_view)",
-                    DbLibraryHelper.BOOKMARKSTAGS_TABLE, BookmarksTags.BOOKMARKSTAGS_TAG_ID));
+            db.execSQL(String.format("DELETE FROM %1$s WHERE %2$s=?",
+                    DbLibraryHelper.TAGS_TABLE, Tag.NAME),
+                    new String[]{tag});
             db.setTransactionSuccessful();
         } catch (Exception ex) {
             StaticLogger.error(this, "Failed delete tag: " + tag, ex);
@@ -112,27 +103,6 @@ public class DbTagsRepository implements ITagsRepository {
             DbLibraryHelper.closeDB();
         }
         return true;
-    }
-
-    @SuppressWarnings("StringBufferReplaceableByString")
-    @Override
-    public void deleteTags(long bookmarkIDs) {
-        SQLiteDatabase db = DbLibraryHelper.getLibraryDB();
-        db.beginTransaction();
-        try {
-            db.execSQL(String.format("DELETE FROM %s WHERE %s=?",
-                    DbLibraryHelper.BOOKMARKSTAGS_TABLE, BookmarksTags.BOOKMARKSTAGS_BM_ID),
-                    new Long[]{bookmarkIDs});
-            db.execSQL(String.format("DELETE FROM %s WHERE NOT %s IN (SELECT %s FROM %s)",
-                    DbLibraryHelper.TAGS_TABLE, Tag.KEY_ID,
-                    BookmarksTags.BOOKMARKSTAGS_TAG_ID, DbLibraryHelper.BOOKMARKSTAGS_TABLE));
-            db.setTransactionSuccessful();
-        } catch (Exception ex) {
-            StaticLogger.error(this, "Failed delete bookmark tags", ex);
-        } finally {
-            db.endTransaction();
-        }
-        DbLibraryHelper.closeDB();
     }
 
     @Override

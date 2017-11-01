@@ -65,8 +65,8 @@ public class DbBookmarksRepository implements IBookmarksRepository {
         try (Cursor curr = db.rawQuery(query, args)) {
             db.beginTransaction();
             if (curr.moveToFirst()) {
-                db.update(DbLibraryHelper.BOOKMARKS_TABLE, values, Bookmark.OSIS + "=?", args);
                 result = curr.getLong(curr.getColumnIndex(Bookmark.KEY_ID));
+                db.update(DbLibraryHelper.BOOKMARKS_TABLE, values, Bookmark.OSIS + "=?", args);
             } else {
                 result = db.insert(DbLibraryHelper.BOOKMARKS_TABLE, null, values);
             }
@@ -104,15 +104,15 @@ public class DbBookmarksRepository implements IBookmarksRepository {
             if (tag != null) {
                 String query = String.format("SELECT * FROM %1$s WHERE %4$s IN " +
                                 "(SELECT %6$s FROM %3$s " +
-                                "JOIN %2$s ON %2$s.%8$s=%3$s.%7$s AND %2$s.%5$s=?) ORDER BY %4$s DESC",
+                                "JOIN %2$s ON %2$s.%8$s=%3$s.%7$s AND %2$s.%5$s=?) ORDER BY %9$s DESC",
                         DbLibraryHelper.BOOKMARKS_TABLE, DbLibraryHelper.TAGS_TABLE,
                         DbLibraryHelper.BOOKMARKSTAGS_TABLE, Bookmark.KEY_ID, Tag.NAME,
                         BookmarksTags.BOOKMARKSTAGS_BM_ID, BookmarksTags.BOOKMARKSTAGS_TAG_ID,
-                        Tag.KEY_ID);
+                        Tag.KEY_ID, Bookmark.TIME);
                 cursorB = db.rawQuery(query, new String[]{tag.name});
             } else {
                 cursorB = db.rawQuery(String.format("SELECT * FROM %s ORDER BY %s DESC",
-                        DbLibraryHelper.BOOKMARKS_TABLE, Bookmark.KEY_ID), null);
+                        DbLibraryHelper.BOOKMARKS_TABLE, Bookmark.TIME), null);
             }
 
             if (!cursorB.moveToFirst()) {
@@ -121,7 +121,7 @@ public class DbBookmarksRepository implements IBookmarksRepository {
             }
 
             do {
-                Bookmark bookmark = getBookmark(cursorB);
+                Bookmark bookmark = Bookmark.fromCursor(cursorB);
                 bookmark.tags = getTags(db, bookmark.id);
                 result.add(bookmark);
             } while (cursorB.moveToNext());
@@ -135,31 +135,17 @@ public class DbBookmarksRepository implements IBookmarksRepository {
     @NonNull
     private String getTags(SQLiteDatabase db, long bookmarkIDs) {
         StringBuilder result = new StringBuilder();
-        Cursor cur = db.rawQuery(String.format("SELECT %1$s FROM %2$s WHERE %3$s IN " +
-                        "(SELECT %4$s FROM %5$s WHERE %6$s=?) ORDER BY %1$s",
-                Tag.NAME, DbLibraryHelper.TAGS_TABLE, Tag.KEY_ID,
-                BookmarksTags.BOOKMARKSTAGS_TAG_ID, DbLibraryHelper.BOOKMARKSTAGS_TABLE,
-                BookmarksTags.BOOKMARKSTAGS_BM_ID),
+        Cursor cur = db.rawQuery(
+                "SELECT bm_tags.tag_name FROM bm_tags WHERE bm_tags.bm_id=?",
                 new String[]{String.valueOf(bookmarkIDs)});
         if (cur.moveToFirst()) {
-            do {
-                if (result.length() != 0) {
-                    result.append(", ");
-                }
+            result.append(cur.getString(0));
+            while (cur.moveToNext()) {
+                result.append(", ");
                 result.append(cur.getString(0));
-            } while (cur.moveToNext());
+            }
         }
         cur.close();
         return result.toString();
-    }
-
-    @NonNull
-    private Bookmark getBookmark(Cursor cursor) {
-        return new Bookmark(
-                cursor.getLong(cursor.getColumnIndex(Bookmark.KEY_ID)),
-                cursor.getString(cursor.getColumnIndex(Bookmark.NAME)),
-                cursor.getString(cursor.getColumnIndex(Bookmark.OSIS)),
-                cursor.getString(cursor.getColumnIndex(Bookmark.LINK)),
-                cursor.getString(cursor.getColumnIndex(Bookmark.DATE)));
     }
 }

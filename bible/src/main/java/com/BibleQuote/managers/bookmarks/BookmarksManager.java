@@ -50,14 +50,12 @@ public class BookmarksManager {
         if (bmID == -1) { // при добавлении закладки получили ошибку
             return false;
         }
-        tagsRepository.deleteTags(bmID); // удаляем старые теги
         tagsRepository.addTags(bmID, bookmark.tags); // записываем новые
         return true;
     }
 
     public void delete(Bookmark bookmark) {
         bookmarksRepository.delete(bookmark);
-        tagsRepository.deleteTags(bookmark.id);
     }
 
     public List<Bookmark> getAll() {

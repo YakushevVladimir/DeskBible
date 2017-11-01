@@ -37,11 +37,9 @@ import java.util.List;
  */
 public interface ITagsRepository {
 
-    boolean addTags(long bookmarkIDs, String tags);
+    void addTags(long bookmarkIDs, String tags);
 
     boolean deleteTag(String tag);
-
-    void deleteTags(long bookmarkIDs);
 
     List<TagWithCount> getTagsWithCount();
 }

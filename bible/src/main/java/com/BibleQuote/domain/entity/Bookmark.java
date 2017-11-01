@@ -28,8 +28,12 @@
 
 package com.BibleQuote.domain.entity;
 
+import android.database.Cursor;
+import android.support.annotation.NonNull;
+
 import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * User: Vladimir Yakushev
@@ -43,12 +47,15 @@ public class Bookmark {
     public static final String LINK = "link";
     public static final String NAME = "name";
     public static final String DATE = "date";
+    public static final String TIME = "time";
+
     public String OSISLink;
     public String date;
     public String humanLink;
     public Long id;
     public String name;
     public String tags;
+    public long time;
 
     public Bookmark(BibleReference ref) {
         this(ref.getPath(), ref.toString());
@@ -64,11 +71,32 @@ public class Bookmark {
 
     public Bookmark(Long id, String name, String OSISLink, String humanLink, String date, String tags) {
         this.id = id;
+        this.name = name;
         this.OSISLink = OSISLink;
         this.humanLink = humanLink;
-        this.name = name;
         this.date = date;
         this.tags = tags;
+        this.time = new Date().getTime();
+    }
+
+    public Bookmark(long id, String name, String OSISLink, String humanLink, String date, long time) {
+        this.id = id;
+        this.name = name;
+        this.OSISLink = OSISLink;
+        this.humanLink = humanLink;
+        this.date = date;
+        this.time = time;
+    }
+
+    @NonNull
+    public static Bookmark fromCursor(Cursor cursor) {
+        return new Bookmark(
+                cursor.getLong(cursor.getColumnIndex(KEY_ID)),
+                cursor.getString(cursor.getColumnIndex(NAME)),
+                cursor.getString(cursor.getColumnIndex(OSIS)),
+                cursor.getString(cursor.getColumnIndex(LINK)),
+                cursor.getString(cursor.getColumnIndex(DATE)),
+                cursor.getLong(cursor.getColumnIndex(TIME)));
     }
 
     private static String getBookmarkDate() {
