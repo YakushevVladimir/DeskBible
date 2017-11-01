@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2011 Scripture Software
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,37 +18,30 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * --------------------------------------------------
- *
  * Project: BibleQuote-for-Android
- * File: IBookmarksTagsRepository.java
+ * File: ITagsRepository.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 11/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
- *
  */
 
 package com.BibleQuote.domain.repository;
 
-import android.database.sqlite.SQLiteDatabase;
+import com.BibleQuote.domain.entity.TagWithCount;
 
-import com.BibleQuote.domain.entity.Bookmark;
-import com.BibleQuote.domain.entity.Tag;
-
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  */
-public interface IBookmarksTagsRepository {
-    void add(long bmID, ArrayList<Long> tagIDs);
+public interface ITagsRepository {
 
-    void deleteAll();
+    boolean addTags(long bookmarkIDs, String tags);
 
-    void deleteBookmarks(SQLiteDatabase db, Bookmark bm);
+    boolean deleteTag(String tag);
 
-    void deleteTag(SQLiteDatabase db, Tag tag);
+    void deleteTags(long bookmarkIDs);
 
-    String getTags(long bmID);
+    List<TagWithCount> getTagsWithCount();
 }

@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2011 Scripture Software
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,34 +18,31 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * --------------------------------------------------
- *
  * Project: BibleQuote-for-Android
  * File: Tag.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 11/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
- *
  */
 
 package com.BibleQuote.domain.entity;
 
 public class Tag {
 
-	public static final String KEY_ID = "_id";
-	public static final String NAME = "name";
+    public static final String KEY_ID = "_id";
+    public static final String NAME = "name";
 
-	public long id;
-	public String name;
+    public long id;
+    public String name;
 
-	public Tag(int id, String name)	{
-		this.id = id;
-		this.name = name.trim().toLowerCase();
-	}
+    public Tag(int id, String name) {
+        this.id = id;
+        this.name = name.trim().toLowerCase();
+    }
 
-	@Override
-	public String toString() {
-		return name;
-	}
+    @Override
+    public String toString() {
+        return name;
+    }
 }

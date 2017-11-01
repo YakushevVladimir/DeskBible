@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: FragmentModule.java
  *
- * Created by Vladimir Yakushev at 10/2017
+ * Created by Vladimir Yakushev at 11/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -29,8 +29,7 @@
 package com.BibleQuote.di.module;
 
 import com.BibleQuote.domain.repository.IBookmarksRepository;
-import com.BibleQuote.domain.repository.IBookmarksTagsRepository;
-import com.BibleQuote.domain.repository.ITagRepository;
+import com.BibleQuote.domain.repository.ITagsRepository;
 import com.BibleQuote.managers.bookmarks.BookmarksManager;
 import com.BibleQuote.managers.tags.TagsManager;
 
@@ -41,13 +40,12 @@ import dagger.Provides;
 public class FragmentModule {
 
     @Provides
-    BookmarksManager provideBookmarksManager(IBookmarksRepository bmRepo, IBookmarksTagsRepository bmtRepo,
-            ITagRepository tagRepo) {
-        return new BookmarksManager(bmRepo, bmtRepo, tagRepo);
+    BookmarksManager provideBookmarksManager(IBookmarksRepository bmRepo, ITagsRepository bmtRepo) {
+        return new BookmarksManager(bmRepo, bmtRepo);
     }
 
     @Provides
-    TagsManager provideTagsManager(ITagRepository tagRepository) {
-        return new TagsManager(tagRepository);
+    TagsManager provideTagsManager(ITagsRepository bmtRepo) {
+        return new TagsManager(bmtRepo);
     }
 }

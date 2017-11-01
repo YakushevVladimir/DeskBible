@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: UpdateManager.java
  *
- * Created by Vladimir Yakushev at 10/2017
+ * Created by Vladimir Yakushev at 11/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -37,8 +37,7 @@ import android.util.Xml.Encoding;
 
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
-import com.BibleQuote.dal.repository.bookmarks.DbBookmarksTagsRepository;
-import com.BibleQuote.dal.repository.bookmarks.DbTagRepository;
+import com.BibleQuote.dal.repository.bookmarks.DbTagsRepository;
 import com.BibleQuote.dal.repository.bookmarks.PrefBookmarksRepository;
 import com.BibleQuote.domain.controller.ILibraryController;
 import com.BibleQuote.domain.entity.Bookmark;
@@ -144,20 +143,19 @@ public class UpdateManager {
     private void convertBookmarks_59(PreferenceHelper preferenceHelper) {
         StaticLogger.info(this, "Convert bookmarks to DB version 1");
         final IBookmarksRepository bookmarksRepo = BibleQuoteApp.getInstance().getBookmarksRepository();
-        BookmarksManager newBM = new BookmarksManager(bookmarksRepo, new DbBookmarksTagsRepository(), new DbTagRepository());
+        BookmarksManager newBM = new BookmarksManager(bookmarksRepo, new DbTagsRepository());
         List<Bookmark> bookmarks = new BookmarksManager(
                 new PrefBookmarksRepository(preferenceHelper),
-                new DbBookmarksTagsRepository(),
-                new DbTagRepository()).getAll();
+                new DbTagsRepository()).getAll();
         for (Bookmark curr : bookmarks) {
-            newBM.add(curr.OSISLink, curr.humanLink);
+            newBM.add(curr);
         }
     }
 
     private void convertBookmarks_63() {
         StaticLogger.info(this, "Convert bookmarks to DB version 2");
         final IBookmarksRepository bookmarksRepo = BibleQuoteApp.getInstance().getBookmarksRepository();
-        BookmarksManager bmManager = new BookmarksManager(bookmarksRepo, new DbBookmarksTagsRepository(), new DbTagRepository());
+        BookmarksManager bmManager = new BookmarksManager(bookmarksRepo, new DbTagsRepository());
         List<Bookmark> bookmarks = bmManager.getAll();
         for (Bookmark currBM : bookmarks) {
             if (currBM.name == null) {

@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: TagsPresenter.java
  *
- * Created by Vladimir Yakushev at 10/2017
+ * Created by Vladimir Yakushev at 11/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -75,7 +75,7 @@ public class TagsPresenter extends BasePresenter<TagsView> {
     }
 
     void refreshTags() {
-        tags = TagWithCount.create(tagsManager.getAllWithCount());
+        tags = tagsManager.getAllWithCount();
         getView().updateTags(tags);
     }
 }

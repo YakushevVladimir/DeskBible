@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: Bookmark.java
  *
- * Created by Vladimir Yakushev at 10/2017
+ * Created by Vladimir Yakushev at 11/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -43,12 +43,11 @@ public class Bookmark {
     public static final String LINK = "link";
     public static final String NAME = "name";
     public static final String DATE = "date";
-
+    public String OSISLink;
+    public String date;
+    public String humanLink;
     public Long id;
     public String name;
-    public String OSISLink;
-    public String humanLink;
-    public String date;
     public String tags;
 
     public Bookmark(BibleReference ref) {
@@ -56,7 +55,7 @@ public class Bookmark {
     }
 
     public Bookmark(String OSISLink, String humanLink) {
-        this(null, "", OSISLink, humanLink, DateFormat.getDateInstance(DateFormat.MEDIUM).format(Calendar.getInstance().getTime()));
+        this(null, "", OSISLink, humanLink, getBookmarkDate());
     }
 
     public Bookmark(Long id, String name, String osisLink, String humanLink, String date) {
@@ -72,9 +71,13 @@ public class Bookmark {
         this.tags = tags;
     }
 
+    private static String getBookmarkDate() {
+        return DateFormat.getDateInstance(DateFormat.MEDIUM).format(Calendar.getInstance().getTime());
+    }
+
     @Override
-    public String toString() {
-        return humanLink;
+    public int hashCode() {
+        return this.id.hashCode();
     }
 
     @Override
@@ -89,7 +92,7 @@ public class Bookmark {
     }
 
     @Override
-    public int hashCode() {
-        return this.id.hashCode();
+    public String toString() {
+        return humanLink;
     }
 }

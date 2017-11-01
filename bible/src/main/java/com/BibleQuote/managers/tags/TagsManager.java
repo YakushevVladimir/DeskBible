@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2011 Scripture Software
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,24 +18,21 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * --------------------------------------------------
- *
  * Project: BibleQuote-for-Android
  * File: TagsManager.java
  *
- * Created by Vladimir Yakushev at 8/2016
+ * Created by Vladimir Yakushev at 11/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
- *
  */
 
 package com.BibleQuote.managers.tags;
 
 import com.BibleQuote.domain.entity.Tag;
-import com.BibleQuote.domain.repository.ITagRepository;
+import com.BibleQuote.domain.entity.TagWithCount;
+import com.BibleQuote.domain.repository.ITagsRepository;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * User: Vladimir
@@ -41,33 +40,17 @@ import java.util.LinkedHashMap;
  */
 public class TagsManager {
 
-	private ITagRepository tagRepo;
+	private ITagsRepository tagsRepository;
 
-	public TagsManager(ITagRepository tagRepo) {
-		this.tagRepo = tagRepo;
+	public TagsManager(ITagsRepository tagsRepository) {
+		this.tagsRepository = tagsRepository;
 	}
 
-	public long add(String tag) {
-		return tagRepo.add(tag.trim().toLowerCase());
+	public boolean delete(Tag tag) {
+		return tagsRepository.deleteTag(tag.name);
 	}
 
-	public int upadate(Tag tag) {
-		return tagRepo.update(tag);
-	}
-
-	public int delete(Tag tag) {
-		return tagRepo.delete(tag);
-	}
-
-	public ArrayList<Tag> getAll() {
-		return tagRepo.getAll();
-	}
-
-	public LinkedHashMap<Tag, String> getAllWithCount() {
-		return tagRepo.getAllWithCount();
-	}
-
-	public int deleteAll() {
-		return tagRepo.deleteAll();
+	public List<TagWithCount> getAllWithCount() {
+		return tagsRepository.getTagsWithCount();
 	}
 }

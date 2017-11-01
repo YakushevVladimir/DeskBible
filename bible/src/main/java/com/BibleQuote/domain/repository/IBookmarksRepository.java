@@ -21,26 +21,32 @@
  * Project: BibleQuote-for-Android
  * File: IBookmarksRepository.java
  *
- * Created by Vladimir Yakushev at 10/2017
+ * Created by Vladimir Yakushev at 11/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
 
 package com.BibleQuote.domain.repository;
 
+import android.support.annotation.Nullable;
+
 import com.BibleQuote.domain.entity.Bookmark;
 import com.BibleQuote.domain.entity.Tag;
 
-import java.util.ArrayList;
+import java.util.List;
 
-/**
- * User: Vladimir
- * Date: 09.04.13
- * Time: 1:25
- */
 public interface IBookmarksRepository {
-	long add(Bookmark bookmark);
-	void delete(Bookmark bookmark);
-	void deleteAll();
-	ArrayList<Bookmark> getAll(Tag tag);
+
+    /**
+     * Добавляет новую закладку или обновляет существующую.
+     *
+     * @param bookmark закладка для добавления
+     *
+     * @return уникальный идентификатор добавленной закладки
+     */
+    long add(Bookmark bookmark);
+
+    void delete(Bookmark bookmark);
+
+    List<Bookmark> getAll(@Nullable Tag tag);
 }

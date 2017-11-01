@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: TagsPresenterTest.java
  *
- * Created by Vladimir Yakushev at 10/2017
+ * Created by Vladimir Yakushev at 11/2017
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -29,6 +29,7 @@
 package com.BibleQuote.presentation.ui.bookmarks;
 
 import com.BibleQuote.domain.entity.Tag;
+import com.BibleQuote.domain.entity.TagWithCount;
 import com.BibleQuote.managers.tags.TagsManager;
 
 import org.junit.Before;
@@ -37,7 +38,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import java.util.LinkedHashMap;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
@@ -45,6 +47,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@SuppressWarnings("WeakerAccess")
 public class TagsPresenterTest {
 
     @Mock TagsManager tagsManager;
@@ -52,7 +55,7 @@ public class TagsPresenterTest {
     @Mock OnTagsChangeListener changeListener;
 
     private TagsPresenter presenter;
-    private LinkedHashMap<Tag, String> tags;
+    private List<TagWithCount> tags;
 
     @Before
     public void setUp() throws Exception {
@@ -60,9 +63,9 @@ public class TagsPresenterTest {
         presenter = new TagsPresenter(tagsManager);
         presenter.attachView(view);
 
-        tags = new LinkedHashMap<>();
-        tags.put(new Tag(1, "abraham"), "2");
-        tags.put(new Tag(2, "God"), "3");
+        tags = Arrays.asList(
+                TagWithCount.create(new Tag(1, "abraham"), "2"),
+                TagWithCount.create(new Tag(2, "God"), "3"));
         when(tagsManager.getAllWithCount()).thenReturn(tags);
     }
 
