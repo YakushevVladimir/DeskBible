@@ -22,7 +22,7 @@
   ~ Project: BibleQuote-for-Android
   ~ File: strings.xml
   ~
-  ~ Created by Vladimir Yakushev at 9/2017
+  ~ Created by Vladimir Yakushev at 4/2018
   ~ E-mail: ru.phoenix@gmail.com
   ~ WWW: http://www.scripturesoftware.org
   -->
@@ -140,4 +140,9 @@
     <string name="msg_permission_denied">Keine Berechtigungen zum Ausführen der Anwendung erforderlich</string>
     <string name="err_load_module_unknown">Unerwarteter Fehler beim hinzufügen des Moduls. Versuchen Sie es später erneut oder wählen Sie ein anderes Modul</string>
     <string name="line_spacing_title">Zeilenabstand</string>
+    <string name="update_error_fail_create_module_dir">Fehler beim Erstellen eines Ordners für Module</string>
+    <string name="update_tsk">Aktualisieren Sie TSK…</string>
+    <string name="update_reload_modules">Bibliothek aktualisieren…</string>
+    <string name="update_builtin_modules">Aktualisieren Sie die integrierten Module…</string>
+    <string name="update_preferences">Einstellungen werden aktualisiert…</string>
 </resources>

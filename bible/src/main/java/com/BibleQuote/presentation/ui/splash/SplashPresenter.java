@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: SplashPresenter.java
  *
- * Created by Vladimir Yakushev at 10/2017
+ * Created by Vladimir Yakushev at 4/2018
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -32,9 +32,11 @@ import com.BibleQuote.R;
 import com.BibleQuote.domain.controller.ILibraryController;
 import com.BibleQuote.domain.logger.StaticLogger;
 import com.BibleQuote.presentation.ui.base.BasePresenter;
-import com.BibleQuote.utils.UpdateManager;
+import com.BibleQuote.utils.update.UpdateManager;
 
 import javax.inject.Inject;
+
+import io.reactivex.Completable;
 
 class SplashPresenter extends BasePresenter<SplashView> {
 
@@ -53,21 +55,43 @@ class SplashPresenter extends BasePresenter<SplashView> {
     }
 
     void update() {
-        addSubscription(new AppInitTask(getView(), updateManager, libraryController)
+        addSubscription(updateManager.update()
                 .subscribeOn(getView().backgroundThread())
                 .observeOn(getView().mainThread())
-                .subscribe(context -> {
-                    SplashView view = getView();
-                    if (view != null) {
-                        view.gotoReaderActivity();
-                    }
-                }, throwable -> {
-                    StaticLogger.error(this, "Update error", throwable);
-                    SplashView view = getView();
-                    if (view != null) {
-                        view.showToast(R.string.error_initialization_failed);
-                        view.gotoReaderActivity();
-                    }
-                }));
+                .subscribe(
+                        message -> {
+                            SplashView view = getView();
+                            if (view != null) {
+                                view.showUpdateMessage(message);
+                            }
+                        },
+                        this::handleError,
+                        this::initLibrary
+                )
+        );
+    }
+
+    private void handleError(Throwable throwable) {
+        StaticLogger.error(this, "Update error", throwable);
+        SplashView view = getView();
+        if (view != null) {
+            view.showToast(R.string.error_initialization_failed);
+            view.gotoReaderActivity();
+        }
+    }
+
+    private void initLibrary() {
+        addSubscription(Completable.fromRunnable(libraryController::init)
+                .subscribeOn(getView().backgroundThread())
+                .observeOn(getView().mainThread())
+                .subscribe(
+                        () -> {
+                            SplashView view = getView();
+                            if (view != null) {
+                                view.gotoReaderActivity();
+                            }
+                        }, this::handleError
+                )
+        );
     }
 }

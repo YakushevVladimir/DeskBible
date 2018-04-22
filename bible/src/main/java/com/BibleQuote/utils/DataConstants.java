@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: DataConstants.java
  *
- * Created by Vladimir Yakushev at 9/2017
+ * Created by Vladimir Yakushev at 4/2018
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -29,6 +29,8 @@
 package com.BibleQuote.utils;
 
 import android.os.Environment;
+
+import com.BibleQuote.BuildConfig;
 
 import java.io.File;
 
@@ -38,7 +40,6 @@ public final class DataConstants {
     private static final String APP_PACKAGE_NAME = "com.BibleQuote";
     private static final String DB_DATA_DIR_NAME = "data";
     private static final String DB_LIBRARY_NAME = "library.db";
-    private static final String FS_DATA_DIR_NAME = "modules";
     private static final String LIBRARY_CACHE = "library.cache";
 
     private DataConstants() {
@@ -74,11 +75,12 @@ public final class DataConstants {
 
     private static String getFsDataPath() {
         return Environment.getDataDirectory() + File.separator
-                + "data" + File.separator + DataConstants.APP_PACKAGE_NAME + File.separator + FS_DATA_DIR_NAME;
+                + "data" + File.separator + DataConstants.APP_PACKAGE_NAME
+                + File.separator + BuildConfig.MODULE_DIR_NAME;
     }
 
-    static String getFsExternalDataPath() {
+    private static String getFsExternalDataPath() {
         return Environment.getExternalStorageDirectory() + File.separator
-                + APP_DIR_NAME + File.separator + DataConstants.FS_DATA_DIR_NAME;
+                + APP_DIR_NAME + File.separator + BuildConfig.MODULE_DIR_NAME;
     }
 }

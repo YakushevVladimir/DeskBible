@@ -21,14 +21,12 @@
  * Project: BibleQuote-for-Android
  * File: FsLibraryLoader.java
  *
- * Created by Vladimir Yakushev at 10/2017
+ * Created by Vladimir Yakushev at 4/2018
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
 
 package com.BibleQuote.dal.repository;
-
-import android.support.annotation.NonNull;
 
 import com.BibleQuote.domain.entity.BaseModule;
 import com.BibleQuote.domain.exceptions.BookDefinitionException;
@@ -37,7 +35,6 @@ import com.BibleQuote.domain.exceptions.OpenModuleException;
 import com.BibleQuote.domain.logger.StaticLogger;
 import com.BibleQuote.domain.repository.LibraryLoader;
 import com.BibleQuote.entity.modules.BQModule;
-import com.BibleQuote.utils.DataConstants;
 import com.BibleQuote.utils.FsUtils;
 import com.BibleQuote.utils.FsUtilsWrapper;
 import com.BibleQuote.utils.OnlyBQIni;
@@ -52,24 +49,12 @@ import java.util.TreeMap;
 
 public class FsLibraryLoader implements LibraryLoader<BQModule> {
 
-    private File libraryDir;
+    private List<File> libraryDir;
     private BQModuleRepository repository;
 
-    public FsLibraryLoader(FsUtilsWrapper fsUtils) {
-        this.libraryDir = getLibraryDir();
+    public FsLibraryLoader(FsUtilsWrapper fsUtils, List<File> libraryDirs) {
+        this.libraryDir = prepareLibraryDirs(libraryDirs);
         this.repository = new BQModuleRepository(fsUtils);
-    }
-
-    @NonNull
-    private File getLibraryDir() {
-        File result = new File(DataConstants.getLibraryPath());
-        if (!result.exists()) {
-            boolean deleted = result.mkdir();
-            if (!deleted) {
-                StaticLogger.error(this, "Don't remove library directory");
-            }
-        }
-        return result;
     }
 
     @Override
@@ -78,7 +63,7 @@ public class FsLibraryLoader implements LibraryLoader<BQModule> {
 
         Map<String, BaseModule> result = new TreeMap<>();
 
-		// Load zip-compressed BQ-modules
+        // Load zip-compressed BQ-modules
         StaticLogger.info(this, "Search zip-modules");
         List<String> bqZipIniFiles = searchModules(new OnlyBQZipIni());
         for (String bqZipIniFile : bqZipIniFiles) {
@@ -90,7 +75,7 @@ public class FsLibraryLoader implements LibraryLoader<BQModule> {
             }
         }
 
-		// Load standard BQ-modules
+        // Load standard BQ-modules
         StaticLogger.info(this, "Search standard modules");
         List<String> bqIniFiles = searchModules(new OnlyBQIni());
         for (String moduleDataSourceId : bqIniFiles) {
@@ -105,11 +90,12 @@ public class FsLibraryLoader implements LibraryLoader<BQModule> {
         return result;
     }
 
-	@Override
-    public BaseModule loadModule(String path) throws OpenModuleException, BooksDefinitionException, BookDefinitionException {
+    @Override
+    public BaseModule loadModule(String path) throws OpenModuleException, BooksDefinitionException,
+            BookDefinitionException {
         if (path.endsWith("zip")) {
             path = getZipDataSourceId(path);
-		}
+        }
         return loadFileModule(path);
     }
 
@@ -117,13 +103,21 @@ public class FsLibraryLoader implements LibraryLoader<BQModule> {
         return path + File.separator + "bibleqt.ini";
     }
 
-    private boolean isLibraryExist() {
-        return libraryDir != null && libraryDir.exists();
-    }
-
     private BaseModule loadFileModule(String moduleDataSourceId)
             throws OpenModuleException, BooksDefinitionException, BookDefinitionException {
         return repository.loadModule(moduleDataSourceId);
+    }
+
+    private List<File> prepareLibraryDirs(List<File> libraryDirs) {
+        List<File> result = new ArrayList<>();
+        for (File item : libraryDirs) {
+            if (item.exists() || item.mkdirs()) {
+                result.add(item);
+            } else {
+                StaticLogger.error(this, "Library directory inaccessible: " + item.getAbsolutePath());
+            }
+        }
+        return result;
     }
 
     /**
@@ -133,16 +127,18 @@ public class FsLibraryLoader implements LibraryLoader<BQModule> {
      */
     private List<String> searchModules(FileFilter filter) {
         ArrayList<String> iniFiles = new ArrayList<>();
-        if (!isLibraryExist()) {
+        if (libraryDir.size() == 0) {
             StaticLogger.error(this, "Module library folder not found");
             return iniFiles;
         }
 
-        try {
-            // Рекурсивная функция проходит по всем каталогам в поисках ini-файлов Цитаты
-            FsUtils.searchByFilter(libraryDir, iniFiles, filter);
-        } catch (Exception e) {
-            StaticLogger.error(this, "searchModules()", e);
+        for (File item : libraryDir) {
+            try {
+                // Рекурсивная функция проходит по всем каталогам в поисках ini-файлов Цитаты
+                FsUtils.searchByFilter(item, iniFiles, filter);
+            } catch (Exception e) {
+                StaticLogger.error(this, "searchModules()", e);
+            }
         }
 
         return iniFiles;

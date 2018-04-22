@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: AppModule.java
  *
- * Created by Vladimir Yakushev at 11/2017
+ * Created by Vladimir Yakushev at 4/2018
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -31,6 +31,7 @@ package com.BibleQuote.di.module;
 import android.content.Context;
 
 import com.BibleQuote.BibleQuoteApp;
+import com.BibleQuote.BuildConfig;
 import com.BibleQuote.async.AsyncManager;
 import com.BibleQuote.dal.controller.CachedLibraryRepository;
 import com.BibleQuote.dal.controller.FsLibraryController;
@@ -56,7 +57,9 @@ import com.BibleQuote.utils.DataConstants;
 import com.BibleQuote.utils.FsUtilsWrapper;
 import com.BibleQuote.utils.PreferenceHelper;
 
+import java.io.File;
 import java.util.Arrays;
+import java.util.List;
 
 import javax.inject.Singleton;
 
@@ -96,8 +99,11 @@ public class AppModule {
     }
 
     @Provides
-    LibraryLoader<? extends BaseModule> getLibraryLoader() {
-        return new FsLibraryLoader(new FsUtilsWrapper());
+    LibraryLoader<? extends BaseModule> getLibraryLoader(Context context) {
+        List<File> libraryDirs = Arrays.asList(
+                new File(context.getFilesDir(), BuildConfig.MODULE_DIR_NAME),
+                new File(DataConstants.getLibraryPath()));
+        return new FsLibraryLoader(new FsUtilsWrapper(), libraryDirs);
     }
 
     @Provides

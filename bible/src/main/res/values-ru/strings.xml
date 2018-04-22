@@ -22,7 +22,7 @@
   ~ Project: BibleQuote-for-Android
   ~ File: strings.xml
   ~
-  ~ Created by Vladimir Yakushev at 10/2017
+  ~ Created by Vladimir Yakushev at 4/2018
   ~ E-mail: ru.phoenix@gmail.com
   ~ WWW: http://www.scripturesoftware.org
   -->
@@ -135,4 +135,9 @@
     <string name="msg_permission_denied">Отсутствуют разрешения необходимые для работы приложения</string>
 	<string name="err_load_module_unknown">Не удалось загрузить модуль. Попробуйте ещё раз или используйте другой модуль</string>
     <string name="line_spacing_title">Межстрочный интервал</string>
+	<string name="update_error_fail_create_module_dir">Не удалось создать папку для модулей</string>
+	<string name="update_tsk">Обновление TSK…</string>
+	<string name="update_reload_modules">Обновление библиотеки модулей…</string>
+	<string name="update_builtin_modules">Обновление встроенных модулей…</string>
+	<string name="update_preferences">Обновление настроек…</string>
 </resources>

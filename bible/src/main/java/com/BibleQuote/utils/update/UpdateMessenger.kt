@@ -19,21 +19,24 @@
  * under the License.
  *
  * Project: BibleQuote-for-Android
- * File: SplashView.java
+ * File: UpdateMessenger.kt
  *
  * Created by Vladimir Yakushev at 4/2018
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
 
-package com.BibleQuote.presentation.ui.splash;
+package com.BibleQuote.utils.update
 
-import com.BibleQuote.presentation.ui.base.BaseView;
+import io.reactivex.Emitter
 
+class UpdateMessenger(
+        private val emitter: Emitter<String>
+) {
 
-interface SplashView extends BaseView {
-
-    void gotoReaderActivity();
-
-    void showUpdateMessage(String message);
+    fun sendMessage(message: String?) {
+        message?.let {
+            emitter.onNext(it)
+        }
+    }
 }

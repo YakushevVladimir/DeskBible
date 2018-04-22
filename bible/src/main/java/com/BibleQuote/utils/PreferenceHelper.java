@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: PreferenceHelper.java
  *
- * Created by Vladimir Yakushev at 9/2017
+ * Created by Vladimir Yakushev at 4/2018
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -34,6 +34,8 @@ import android.support.annotation.NonNull;
 
 import com.BibleQuote.R;
 import com.BibleQuote.entity.TextAppearance;
+
+import org.jetbrains.annotations.NotNull;
 
 public class PreferenceHelper {
 
@@ -74,6 +76,11 @@ public class PreferenceHelper {
 
     public Integer getHistorySize() {
         return Integer.parseInt(preference.getString(KEY_HISTORY_SIZE, DEF_HISTORY_SIZE));
+    }
+
+    @NotNull
+    public String getString(@NotNull String key, @NotNull String defaultValue) {
+        return preference.getString(key, defaultValue);
     }
 
     public TextAppearance getTextAppearance() {
@@ -130,6 +137,10 @@ public class PreferenceHelper {
 
     public boolean hideNavButtons() {
         return preference.getBoolean(KEY_HIDE_NAV_BUTTONS, true);
+    }
+
+    public void putInt(@NotNull String key, int value) {
+        preference.edit().putInt(key, value).apply();
     }
 
     public boolean putReferenceInBeginning() {

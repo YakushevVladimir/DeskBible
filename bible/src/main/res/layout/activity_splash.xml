@@ -22,21 +22,37 @@
   ~ Project: BibleQuote-for-Android
   ~ File: activity_splash.xml
   ~
-  ~ Created by Vladimir Yakushev at 8/2017
+  ~ Created by Vladimir Yakushev at 4/2018
   ~ E-mail: ru.phoenix@gmail.com
   ~ WWW: http://www.scripturesoftware.org
   -->
-<FrameLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <ImageView
-        android:layout_gravity="center_horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
         android:paddingTop="40dp"
-        android:src="@drawable/bible"
-        android:scaleType="centerInside"/>
-</FrameLayout>
+        android:scaleType="centerInside"
+        android:src="@drawable/bible"/>
+
+    <TextView
+        android:id="@+id/update_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="@dimen/default_margin"
+        android:layout_marginRight="@dimen/default_margin"
+        android:layout_marginBottom="@dimen/update_description_bottom_margin"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="1"
+        android:textColor="@color/accent"
+        android:textSize="@dimen/text_size_medium"
+        tools:text="Update modules…"/>
+</RelativeLayout>

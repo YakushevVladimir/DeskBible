@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: SplashActivity.java
  *
- * Created by Vladimir Yakushev at 10/2017
+ * Created by Vladimir Yakushev at 4/2018
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -36,7 +36,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.PermissionChecker;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.BibleQuote.R;
 import com.BibleQuote.di.component.ActivityComponent;
@@ -50,7 +51,8 @@ public class SplashActivity extends BaseActivity<SplashPresenter> implements Spl
 
     private static final int REQUEST_PERMISSIONS = 1;
 
-    @BindView(R.id.root_layout) FrameLayout rootLayout;
+    @BindView(R.id.root_layout) RelativeLayout rootLayout;
+    @BindView(R.id.update_description) TextView updateDescriptionView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -101,6 +103,11 @@ public class SplashActivity extends BaseActivity<SplashPresenter> implements Spl
     public void gotoReaderActivity() {
         startActivity(new Intent(this, ReaderActivity.class));
         finish();
+    }
+
+    @Override
+    public void showUpdateMessage(String message) {
+        updateDescriptionView.setText(message);
     }
 
     private void checkPermissions() {

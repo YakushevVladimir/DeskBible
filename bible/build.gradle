@@ -39,9 +39,10 @@ android {
         applicationId "com.BibleQuote"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 84
-        versionName "1.1.84"
+        versionCode 85
+        versionName "1.1.85"
         resConfigs("en", "ru", "be", "de", "es", "no", "sv", "uk")
+        buildConfigField("String", "MODULE_DIR_NAME", "\"modules\"")
     }
 
     compileOptions {
@@ -127,6 +128,7 @@ dependencies {
     // Test dependencies
 
     testImplementation "junit:junit:4.12"
-    testImplementation "org.robolectric:robolectric:3.1.1"
-    testImplementation "org.mockito:mockito-core:2.8.47"
+    testImplementation "org.robolectric:robolectric:3.8"
+    testImplementation "org.mockito:mockito-core:2.18.3"
+    testImplementation "org.mockito:mockito-inline:2.18.0"
 }

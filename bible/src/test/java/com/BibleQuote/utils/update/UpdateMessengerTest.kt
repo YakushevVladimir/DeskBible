@@ -19,21 +19,50 @@
  * under the License.
  *
  * Project: BibleQuote-for-Android
- * File: SplashView.java
+ * File: UpdateMessengerTest.kt
  *
  * Created by Vladimir Yakushev at 4/2018
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
 
-package com.BibleQuote.presentation.ui.splash;
+package com.BibleQuote.utils.update
 
-import com.BibleQuote.presentation.ui.base.BaseView;
+import io.reactivex.Emitter
+import org.junit.Before
+import org.junit.Test
+import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchers.eq
+import org.mockito.Mock
+import org.mockito.Mockito.never
+import org.mockito.Mockito.verify
+import org.mockito.MockitoAnnotations
 
+class UpdateMessengerTest {
 
-interface SplashView extends BaseView {
+    @Mock
+    lateinit var emitter: Emitter<String>
+    lateinit var messenger: UpdateMessenger
 
-    void gotoReaderActivity();
+    @Before
+    fun setUp() {
+        MockitoAnnotations.initMocks(this)
+        messenger = UpdateMessenger(emitter)
+    }
 
-    void showUpdateMessage(String message);
+    @Test
+    fun sendMessage() {
+        messenger.sendMessage(MESSAGE)
+        verify(emitter).onNext(eq(MESSAGE))
+    }
+
+    @Test
+    fun sendNullMessage() {
+        messenger.sendMessage(null)
+        verify(emitter, never()).onNext(any())
+    }
+
+    companion object {
+        const val MESSAGE = "hello"
+    }
 }

@@ -22,7 +22,7 @@
   ~ Project: BibleQuote-for-Android
   ~ File: dimens.xml
   ~
-  ~ Created by Vladimir Yakushev at 10/2017
+  ~ Created by Vladimir Yakushev at 4/2018
   ~ E-mail: ru.phoenix@gmail.com
   ~ WWW: http://www.scripturesoftware.org
   -->
@@ -30,6 +30,7 @@
 
     <dimen name="default_margin">16dp</dimen>
     <dimen name="default_margin_min">8dp</dimen>
+    <dimen name="update_description_bottom_margin">64dp</dimen>
 
     <dimen name="text_size_very_small">10sp</dimen>
     <dimen name="text_size_small">12sp</dimen>

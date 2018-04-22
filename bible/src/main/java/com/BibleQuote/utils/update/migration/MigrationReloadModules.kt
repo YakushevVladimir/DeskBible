@@ -19,21 +19,30 @@
  * under the License.
  *
  * Project: BibleQuote-for-Android
- * File: SplashView.java
+ * File: MigrationReloadModules.kt
  *
  * Created by Vladimir Yakushev at 4/2018
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
 
-package com.BibleQuote.presentation.ui.splash;
+package com.BibleQuote.utils.update.migration
 
-import com.BibleQuote.presentation.ui.base.BaseView;
+import android.content.Context
+import com.BibleQuote.R
+import com.BibleQuote.domain.controller.ILibraryController
+import com.BibleQuote.utils.update.Migration
 
+class MigrationReloadModules(
+        version: Int,
+        private val libraryController: ILibraryController
+) : Migration(version) {
 
-interface SplashView extends BaseView {
+    override fun doMigrate(context: Context) {
+        libraryController.reloadModules()
+    }
 
-    void gotoReaderActivity();
-
-    void showUpdateMessage(String message);
+    override fun getInfoMessage(context: Context): String {
+        return context.getString(R.string.update_reload_modules)
+    }
 }

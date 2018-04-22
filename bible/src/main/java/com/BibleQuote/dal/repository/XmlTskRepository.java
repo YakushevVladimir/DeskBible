@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: XmlTskRepository.java
  *
- * Created by Vladimir Yakushev at 9/2017
+ * Created by Vladimir Yakushev at 4/2018
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -34,7 +34,6 @@ import android.util.Xml;
 import com.BibleQuote.domain.exceptions.BQUniversalException;
 import com.BibleQuote.domain.exceptions.TskNotFoundException;
 import com.BibleQuote.domain.repository.ITskRepository;
-import com.BibleQuote.utils.DataConstants;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -55,6 +54,11 @@ public class XmlTskRepository implements ITskRepository {
 	private static final String BOOK = "book";
 	private static final String CHAPTER = "chapter";
 	private static final String VERSE = "verse";
+	private final File tskDir;
+
+	public XmlTskRepository(File tskDir) {
+		this.tskDir = tskDir;
+	}
 
 	@Override
 	public String getReferences(String book, String chapter, String verse) throws TskNotFoundException, BQUniversalException {
@@ -128,10 +132,7 @@ public class XmlTskRepository implements ITskRepository {
 	}
 
 	private XmlPullParser getParser() throws XmlPullParserException, UnsupportedEncodingException, TskNotFoundException {
-
-		File tskDir = new File(DataConstants.getFsAppDirName());
 		File tsk = new File(tskDir, "tsk.xml");
-
 		InputStreamReader iReader;
 		try {
 			iReader = new InputStreamReader(new FileInputStream(tsk), "UTF-8");

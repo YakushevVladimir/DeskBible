@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: SplashPresenterTest.java
  *
- * Created by Vladimir Yakushev at 10/2017
+ * Created by Vladimir Yakushev at 4/2018
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -29,24 +29,29 @@
 package com.BibleQuote.presentation.ui.splash;
 
 import com.BibleQuote.domain.controller.ILibraryController;
-import com.BibleQuote.utils.UpdateManager;
+import com.BibleQuote.utils.update.UpdateManager;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.io.IOException;
+
+import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
 
-import static org.mockito.Mockito.doAnswer;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class SplashPresenterTest {
 
-    @Mock ILibraryController libraryController;
-    @Mock UpdateManager updateManager;
-    @Mock SplashView view;
+    @Mock private ILibraryController libraryController;
+    @Mock private UpdateManager updateManager;
+    @Mock private SplashView view;
 
     private SplashPresenter presenter;
 
@@ -63,19 +68,18 @@ public class SplashPresenterTest {
 
     @Test
     public void update() throws Exception {
+        when(updateManager.update()).thenReturn(Observable.fromArray("message_1", "message_2", "message_3"));
         presenter.update();
-        verify(updateManager).start();
+        verify(view, times(3)).showUpdateMessage(anyString());
         verify(libraryController).init();
         verify(view).gotoReaderActivity();
     }
 
     @Test
     public void updateWithError() throws Exception {
-        doAnswer(invocation -> {
-            throw new RuntimeException();
-        }).when(updateManager).start();
-
+        when(updateManager.update()).thenReturn(Observable.error(new IOException("abort")));
         presenter.update();
+        verify(view).showToast(anyInt());
         verify(view).gotoReaderActivity();
     }
 }

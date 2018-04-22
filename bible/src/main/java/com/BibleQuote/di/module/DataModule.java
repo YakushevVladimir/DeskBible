@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: DataModule.java
  *
- * Created by Vladimir Yakushev at 11/2017
+ * Created by Vladimir Yakushev at 4/2018
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -60,8 +60,8 @@ public class DataModule {
     }
 
     @Provides
-    ITskRepository getTskRepository() {
-        return new XmlTskRepository();
+    ITskRepository getTskRepository(Context context) {
+        return new XmlTskRepository(context.getFilesDir());
     }
 
     @Provides
