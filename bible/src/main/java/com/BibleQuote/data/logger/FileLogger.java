@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: FileLogger.java
  *
- * Created by Vladimir Yakushev at 10/2017
+ * Created by Vladimir Yakushev at 4/2018
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -53,12 +53,12 @@ import java.util.Locale;
 public final class FileLogger extends Logger {
 
     private static final String DATE_PATTERN = "yyyy-MM-dd HH:mm:ss.SSS";
-    private static final long MAX_LOG_SIZE = 1048576;
+    private static final long MAX_LOG_SIZE = 10 * 1024 * 1024;
     private static final String TAG = FileLogger.class.getSimpleName();
     private File logFile;
 
     public FileLogger() {
-        this.logFile = createLogFile();
+        createLogFile();
     }
 
     @Override
@@ -87,25 +87,27 @@ public final class FileLogger extends Logger {
      * Подготовка файла-протокола событий. Создание нового файла,
      * запись текущей даты, версии программы, языка системы
      */
-    private File createLogFile() {
-        File result = null;
-        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-            String tag = getTag(this);
-            result = new File(DataConstants.getFsAppDirName(), "log.txt");
-            if (result.exists() && !result.canWrite()) {
-                return null;
-            } else if (result.getTotalSpace() > MAX_LOG_SIZE && !result.delete()) {
+    private void createLogFile() {
+        if (!Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
+            return;
+        }
+
+        String tag = getTag(this);
+        logFile = new File(DataConstants.getFsAppDirName(), "log.txt");
+        if (logFile.exists() && !logFile.canWrite()) {
+            return;
+        } else if (logFile.length() > MAX_LOG_SIZE) {
+            if (!logFile.delete()) {
                 write(tag, "Не удалось очистить лог-файл");
             }
-
-            write(tag, "====================================");
-            write(tag, "Application version: " + BuildConfig.VERSION_NAME);
-            write(tag, "Default language: " + Locale.getDefault().getDisplayLanguage());
-            write(tag, "Device model: " + Build.MODEL);
-            write(tag, "Android OS: " + Build.VERSION.RELEASE);
-            write(tag, "------------------------------------");
         }
-        return result;
+
+        write(tag, "====================================");
+        write(tag, "Application version: " + BuildConfig.VERSION_NAME);
+        write(tag, "Default language: " + Locale.getDefault().getDisplayLanguage());
+        write(tag, "Device model: " + Build.MODEL);
+        write(tag, "Android OS: " + Build.VERSION.RELEASE);
+        write(tag, "------------------------------------");
     }
 
     /**
@@ -121,7 +123,7 @@ public final class FileLogger extends Logger {
 
         try (
                 OutputStreamWriter writer = new OutputStreamWriter(
-                        new FileOutputStream(logFile, true), Charset.forName("UTF-8"));
+                        new FileOutputStream(logFile, true), Charset.forName("UTF-8"))
         ) {
             writer.write(String.format("%s %s %s%n",
                     new SimpleDateFormat(DATE_PATTERN, Locale.US).format(new Date()), tag, text));

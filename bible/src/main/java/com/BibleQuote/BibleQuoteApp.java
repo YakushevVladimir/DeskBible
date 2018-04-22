@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: BibleQuoteApp.java
  *
- * Created by Vladimir Yakushev at 9/2017
+ * Created by Vladimir Yakushev at 4/2018
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -35,8 +35,8 @@ import com.BibleQuote.async.AsyncManager;
 import com.BibleQuote.di.component.AppComponent;
 import com.BibleQuote.di.component.DaggerAppComponent;
 import com.BibleQuote.di.module.AppModule;
-import com.BibleQuote.domain.logger.Logger;
 import com.BibleQuote.domain.controller.ILibraryController;
+import com.BibleQuote.domain.logger.Logger;
 import com.BibleQuote.domain.logger.StaticLogger;
 import com.BibleQuote.domain.repository.IBookmarksRepository;
 import com.BibleQuote.managers.Librarian;
@@ -83,10 +83,6 @@ public class BibleQuoteApp extends Application implements Thread.UncaughtExcepti
         return asyncManager;
     }
 
-    public IBookmarksRepository getBookmarksRepository() {
-        return bookmarksRepository;
-    }
-
     public Librarian getLibrarian() {
         return librarian;
     }
@@ -114,6 +110,7 @@ public class BibleQuoteApp extends Application implements Thread.UncaughtExcepti
                 .build();
         appComponent.inject(this);
         StaticLogger.init(logger);
+        Thread.setDefaultUncaughtExceptionHandler(this);
     }
 
     @Override
