@@ -21,12 +21,13 @@
  * Project: BibleQuote-for-Android
  * File: build.gradle
  *
- * Created by Vladimir Yakushev at 10/2017
+ * Created by Vladimir Yakushev at 4/2018
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
 
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 apply plugin: 'com.google.gms.google-services'
 apply from: '../jacoco.gradle'
 
@@ -80,11 +81,15 @@ dependencies {
 
     // Android support libraries
 
-    implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
-    implementation "com.android.support:preference-v7:${rootProject.ext.supportLibVersion}"
-    implementation "com.android.support:design:${rootProject.ext.supportLibVersion}"
-    implementation "com.android.support:gridlayout-v7:${rootProject.ext.supportLibVersion}"
-    implementation "com.android.support:support-annotations:${rootProject.ext.supportLibVersion}"
+    implementation "com.android.support:appcompat-v7:$supportLibVersion"
+    implementation "com.android.support:preference-v7:$supportLibVersion"
+    implementation "com.android.support:design:$supportLibVersion"
+    implementation "com.android.support:gridlayout-v7:$supportLibVersion"
+    implementation "com.android.support:support-annotations:$supportLibVersion"
+
+    // Kotlin
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     // Analytics
 
@@ -92,18 +97,18 @@ dependencies {
 
     // ButterKnife
 
-    implementation "com.jakewharton:butterknife:${rootProject.ext.butterknifeVersion}"
-    annotationProcessor "com.jakewharton:butterknife-compiler:${rootProject.ext.butterknifeVersion}"
+    implementation "com.jakewharton:butterknife:$butterknifeVersion"
+    annotationProcessor "com.jakewharton:butterknife-compiler:$butterknifeVersion"
 
     // Dagger 2
 
-    implementation "com.google.dagger:dagger:${rootProject.ext.daggerVersion}"
-    annotationProcessor "com.google.dagger:dagger-compiler:${rootProject.ext.daggerVersion}"
+    implementation "com.google.dagger:dagger:$daggerVersion"
+    annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
 
     // Retrofit
 
-    implementation "com.squareup.retrofit2:retrofit:${rootProject.ext.retrofitVersion}"
-    implementation "com.squareup.retrofit2:converter-gson:${rootProject.ext.retrofitVersion}"
+    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
 
     // AutoValue
 
