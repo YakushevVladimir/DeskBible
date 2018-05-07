@@ -47,6 +47,13 @@ public class DbBookmarksRepository implements IBookmarksRepository {
 
     private static final String TABLE_NAME = DbLibraryHelper.BOOKMARKS_TABLE;
 
+    @NonNull
+    private final DbLibraryHelper dbLibraryHelper;
+
+    public DbBookmarksRepository(@NonNull DbLibraryHelper dbLibraryHelper) {
+        this.dbLibraryHelper = dbLibraryHelper;
+    }
+
     @Override
     public long add(Bookmark bookmark) {
         StaticLogger.info(this, String.format("Add bookmarks %S:%s", bookmark.OSISLink, bookmark.humanLink));
@@ -62,7 +69,7 @@ public class DbBookmarksRepository implements IBookmarksRepository {
         String[] args = {bookmark.OSISLink};
 
         long result = -1;
-        SQLiteDatabase db = DbLibraryHelper.getLibraryDB();
+        SQLiteDatabase db = dbLibraryHelper.getDatabase();
         try (Cursor curr = db.rawQuery(query, args)) {
             db.beginTransaction();
             if (curr.moveToFirst()) {
@@ -76,7 +83,6 @@ public class DbBookmarksRepository implements IBookmarksRepository {
             StaticLogger.error(this, "Add bookmark failed", ex);
         } finally {
             db.endTransaction();
-            DbLibraryHelper.closeDB();
         }
 
         return result;
@@ -85,7 +91,7 @@ public class DbBookmarksRepository implements IBookmarksRepository {
     @Override
     public void delete(final Bookmark bookmark) {
         StaticLogger.info(this, String.format("Delete bookmarks %S:%s", bookmark.OSISLink, bookmark.humanLink));
-        SQLiteDatabase db = DbLibraryHelper.getLibraryDB();
+        SQLiteDatabase db = dbLibraryHelper.getDatabase();
         db.beginTransaction();
         try {
             db.delete(TABLE_NAME, Bookmark.OSIS + "=?", new String[]{bookmark.OSISLink});
@@ -93,15 +99,14 @@ public class DbBookmarksRepository implements IBookmarksRepository {
         } finally {
             db.endTransaction();
         }
-        DbLibraryHelper.closeDB();
     }
 
     @Override
     public List<Bookmark> getAll(@Nullable Tag tag) {
-        SQLiteDatabase db = DbLibraryHelper.getLibraryDB();
+        SQLiteDatabase db = dbLibraryHelper.getDatabase();
         List<Bookmark> result = new ArrayList<>();
+        Cursor cursorB = null;
         try {
-            Cursor cursorB;
             if (tag != null) {
                 String query = String.format("SELECT * FROM %1$s WHERE %4$s IN " +
                                 "(SELECT %6$s FROM %3$s " +
@@ -128,7 +133,9 @@ public class DbBookmarksRepository implements IBookmarksRepository {
             } while (cursorB.moveToNext());
 
         } finally {
-            DbLibraryHelper.closeDB();
+            if (cursorB != null) {
+                cursorB.close();
+            }
         }
         return result;
     }
@@ -136,17 +143,17 @@ public class DbBookmarksRepository implements IBookmarksRepository {
     @NonNull
     private String getTags(SQLiteDatabase db, long bookmarkIDs) {
         StringBuilder result = new StringBuilder();
-        Cursor cur = db.rawQuery(
+        try (Cursor cur = db.rawQuery(
                 "SELECT bm_tags.tag_name FROM bm_tags WHERE bm_tags.bm_id=?",
-                new String[]{String.valueOf(bookmarkIDs)});
-        if (cur.moveToFirst()) {
-            result.append(cur.getString(0));
-            while (cur.moveToNext()) {
-                result.append(", ");
+                new String[]{String.valueOf(bookmarkIDs)})) {
+            if (cur.moveToFirst()) {
                 result.append(cur.getString(0));
+                while (cur.moveToNext()) {
+                    result.append(", ");
+                    result.append(cur.getString(0));
+                }
             }
         }
-        cur.close();
         return result.toString();
     }
 }

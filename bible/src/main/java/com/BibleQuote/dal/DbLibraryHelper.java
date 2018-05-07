@@ -28,11 +28,11 @@
 
 package com.BibleQuote.dal;
 
+import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 
-import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.dal.repository.bookmarks.BookmarksTags;
 import com.BibleQuote.dal.repository.migration.Migration;
 import com.BibleQuote.dal.repository.migration.Migration_1_2;
@@ -47,14 +47,16 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * User: Vladimir Yakushev
- * Date: 02.05.13
+ * @author Yakushev V.V. / ru.phoenix@gmail.com
+ * @since 02.05.13
  */
 public final class DbLibraryHelper {
 
     public static final String TAGS_TABLE = "tags";
     public static final String BOOKMARKS_TAGS_TABLE = "bookmarks_tags";
     public static final String BOOKMARKS_TABLE = "bookmarks";
+
+    private static final String DB_NAME = "library.db";
 
     private static final String[] CREATE_DATABASE = new String[]{
             "create table " + BOOKMARKS_TABLE + " ("
@@ -75,41 +77,39 @@ public final class DbLibraryHelper {
     };
     private static final List<Migration> MIGRATIONS = Arrays.asList(new Migration_1_2(), new Migration_2_3());
     private static final int VERSION = 3;
-    private static SQLiteDatabase db;
 
-    private DbLibraryHelper() throws InstantiationException {
-        throw new InstantiationException("This class is not for instantiation");
+    private final Context appContext;
+    private SQLiteDatabase database;
+
+    public DbLibraryHelper(Context context) {
+        appContext = context.getApplicationContext();
     }
 
-    public static void closeDB() {
-        db.close();
-        db = null;
-    }
-
-    public static SQLiteDatabase getLibraryDB() {
-        if (db == null) {
-            db = getDB();
+    public SQLiteDatabase getDatabase() {
+        if (database == null) {
+            database = openOrCreateDatabase();
         }
-        return db;
+        return database;
     }
 
-    private static SQLiteDatabase getDB() {
+    private SQLiteDatabase openOrCreateDatabase() {
         File dbDir = new File(getDbDirPath());
         if (!dbDir.exists() && !dbDir.mkdir()) {
-            dbDir = BibleQuoteApp.getInstance().getFilesDir();
+            dbDir = appContext.getFilesDir();
         }
-        File dbFile = new File(dbDir, DataConstants.getDbLibraryName());
+        File dbFile = new File(dbDir, DB_NAME);
         SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbFile, null);
 
-        if (db.getVersion() < VERSION) {
+        int oldVersion = db.getVersion();
+        if (oldVersion < VERSION) {
             db.beginTransaction();
             try {
-                int oldVersion = db.getVersion();
                 if (oldVersion == 0) {
                     onCreate(db);
                     oldVersion = 1;
                 }
                 onUpgrade(db, oldVersion, VERSION);
+                db.setVersion(VERSION);
                 db.setTransactionSuccessful();
             } finally {
                 db.endTransaction();
@@ -126,14 +126,15 @@ public final class DbLibraryHelper {
                 : DataConstants.getDbDataPath();
     }
 
-    private static void onCreate(SQLiteDatabase db) {
+    private void onCreate(SQLiteDatabase db) {
         for (String command : CREATE_DATABASE) {
             db.execSQL(command);
         }
     }
 
-    private static void onUpgrade(SQLiteDatabase db, final int oldVersion, final int newVersion) {
+    private void onUpgrade(SQLiteDatabase db, final int oldVersion, final int newVersion) {
         if (oldVersion == newVersion) {
+            // миграция не требуется
             return;
         }
 
@@ -154,8 +155,6 @@ public final class DbLibraryHelper {
                 break;
             }
         }
-
-        db.setVersion(newVersion);
     }
 }
 

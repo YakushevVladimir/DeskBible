@@ -31,6 +31,7 @@ package com.BibleQuote.dal.repository.bookmarks;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.NonNull;
 
 import com.BibleQuote.dal.DbLibraryHelper;
 import com.BibleQuote.domain.entity.Tag;
@@ -43,13 +44,20 @@ import java.util.List;
 
 public class DbTagsRepository implements ITagsRepository {
 
+    @NonNull
+    private final DbLibraryHelper dbLibraryHelper;
+
+    public DbTagsRepository(@NonNull DbLibraryHelper dbLibraryHelper) {
+        this.dbLibraryHelper = dbLibraryHelper;
+    }
+
     @Override
     public void addTags(long bookmarkIDs, String tags) {
         if (tags == null || tags.isEmpty()) {
             return;
         }
 
-        SQLiteDatabase db = DbLibraryHelper.getLibraryDB();
+        SQLiteDatabase db = dbLibraryHelper.getDatabase();
         db.beginTransaction();
         try {
             for (String value : tags.split(",")) {
@@ -82,13 +90,12 @@ public class DbTagsRepository implements ITagsRepository {
             StaticLogger.error(this, "Failed add tags: " + tags, ex);
         } finally {
             db.endTransaction();
-            DbLibraryHelper.closeDB();
         }
     }
 
     @Override
     public boolean deleteTag(String tag) {
-        SQLiteDatabase db = DbLibraryHelper.getLibraryDB();
+        SQLiteDatabase db = dbLibraryHelper.getDatabase();
         db.beginTransaction();
         try {
             db.execSQL(String.format("DELETE FROM %1$s WHERE %2$s=?",
@@ -100,14 +107,13 @@ public class DbTagsRepository implements ITagsRepository {
             return false;
         } finally {
             db.endTransaction();
-            DbLibraryHelper.closeDB();
         }
         return true;
     }
 
     @Override
     public List<TagWithCount> getTagsWithCount() {
-        SQLiteDatabase db = DbLibraryHelper.getLibraryDB();
+        SQLiteDatabase db = dbLibraryHelper.getDatabase();
         db.beginTransaction();
         List<TagWithCount> result = new ArrayList<>();
         try {
@@ -129,7 +135,6 @@ public class DbTagsRepository implements ITagsRepository {
         } finally {
             db.endTransaction();
         }
-        DbLibraryHelper.closeDB();
 
         return result;
     }

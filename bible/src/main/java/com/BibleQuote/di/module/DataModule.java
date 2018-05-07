@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: DataModule.java
  *
- * Created by Vladimir Yakushev at 4/2018
+ * Created by Vladimir Yakushev at 5/2018
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -30,6 +30,7 @@ package com.BibleQuote.di.module;
 
 import android.content.Context;
 
+import com.BibleQuote.dal.DbLibraryHelper;
 import com.BibleQuote.dal.repository.FsHistoryRepository;
 import com.BibleQuote.dal.repository.XmlTskRepository;
 import com.BibleQuote.dal.repository.bookmarks.DbBookmarksRepository;
@@ -49,24 +50,30 @@ public class DataModule {
 
     @Provides
     @Singleton
-    IBookmarksRepository getBookmarksRepository() {
-        return new DbBookmarksRepository();
+    IBookmarksRepository getBookmarksRepository(DbLibraryHelper dbLibraryHelper) {
+        return new DbBookmarksRepository(dbLibraryHelper);
     }
 
     @Provides
     @Singleton
-    ITagsRepository getBookmarksTagsRepository() {
-        return new DbTagsRepository();
+    ITagsRepository getBookmarksTagsRepository(DbLibraryHelper dbLibraryHelper) {
+        return new DbTagsRepository(dbLibraryHelper);
     }
 
     @Provides
-    ITskRepository getTskRepository(Context context) {
-        return new XmlTskRepository(context.getFilesDir());
+    @Singleton
+    DbLibraryHelper getDbLibraryHelper(Context context) {
+        return new DbLibraryHelper(context);
     }
 
     @Provides
     IHistoryRepository getHistoryRepository(Context context) {
         return new FsHistoryRepository(context);
+    }
+
+    @Provides
+    ITskRepository getTskRepository(Context context) {
+        return new XmlTskRepository(context.getFilesDir());
     }
 
 }
