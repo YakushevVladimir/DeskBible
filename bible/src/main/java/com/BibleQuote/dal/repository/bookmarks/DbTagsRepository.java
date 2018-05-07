@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: DbTagsRepository.java
  *
- * Created by Vladimir Yakushev at 11/2017
+ * Created by Vladimir Yakushev at 5/2018
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -75,7 +75,7 @@ public class DbTagsRepository implements ITagsRepository {
                 ContentValues values = new ContentValues(2);
                 values.put(BookmarksTags.BOOKMARKSTAGS_BM_ID, bookmarkIDs);
                 values.put(BookmarksTags.BOOKMARKSTAGS_TAG_ID, tagIDs);
-                db.insert(DbLibraryHelper.BOOKMARKSTAGS_TABLE, null, values);
+                db.insert(DbLibraryHelper.BOOKMARKS_TAGS_TABLE, null, values);
             }
             db.setTransactionSuccessful();
         } catch (Exception ex) {
@@ -115,7 +115,7 @@ public class DbTagsRepository implements ITagsRepository {
                     String.format(
                             "SELECT %1$s.%3$s, %1$s.%4$s, COUNT(%2$s.%5$s) AS count FROM %1$s " +
                                     "LEFT JOIN %2$s ON %1$s.%3$s = %2$s.%5$s GROUP BY %2$s.%5$s ORDER BY %1$s.%4$s",
-                            DbLibraryHelper.TAGS_TABLE, DbLibraryHelper.BOOKMARKSTAGS_TABLE,
+                            DbLibraryHelper.TAGS_TABLE, DbLibraryHelper.BOOKMARKS_TAGS_TABLE,
                             Tag.KEY_ID, Tag.NAME, BookmarksTags.BOOKMARKSTAGS_TAG_ID), null);
             db.setTransactionSuccessful();
             if (cursor.moveToFirst()) {

@@ -21,29 +21,30 @@
  * Project: BibleQuote-for-Android
  * File: DbLibraryHelper.java
  *
- * Created by Vladimir Yakushev at 4/2018
+ * Created by Vladimir Yakushev at 5/2018
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
 
 package com.BibleQuote.dal;
 
-import android.content.ContentValues;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.dal.repository.bookmarks.BookmarksTags;
+import com.BibleQuote.dal.repository.migration.Migration;
+import com.BibleQuote.dal.repository.migration.Migration_1_2;
+import com.BibleQuote.dal.repository.migration.Migration_2_3;
 import com.BibleQuote.domain.entity.Bookmark;
 import com.BibleQuote.domain.entity.Tag;
-import com.BibleQuote.domain.logger.StaticLogger;
 import com.BibleQuote.utils.DataConstants;
 
 import java.io.File;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.util.Date;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * User: Vladimir Yakushev
@@ -52,7 +53,7 @@ import java.util.Date;
 public final class DbLibraryHelper {
 
     public static final String TAGS_TABLE = "tags";
-    public static final String BOOKMARKSTAGS_TABLE = "bookmarks_tags";
+    public static final String BOOKMARKS_TAGS_TABLE = "bookmarks_tags";
     public static final String BOOKMARKS_TABLE = "bookmarks";
 
     private static final String[] CREATE_DATABASE = new String[]{
@@ -60,10 +61,9 @@ public final class DbLibraryHelper {
                     + Bookmark.KEY_ID + " integer primary key autoincrement, "
                     + Bookmark.OSIS + " text unique not null, "
                     + Bookmark.LINK + " text not null, "
-                    + Bookmark.NAME + " text not null, "
                     + Bookmark.DATE + " text not null"
                     + ");",
-            "create table " + BOOKMARKSTAGS_TABLE + " ("
+            "create table " + BOOKMARKS_TAGS_TABLE + " ("
                     + BookmarksTags.BOOKMARKSTAGS_KEY_ID + " integer primary key autoincrement, "
                     + BookmarksTags.BOOKMARKSTAGS_BM_ID + " integer not null, "
                     + BookmarksTags.BOOKMARKSTAGS_TAG_ID + " integer not null"
@@ -73,13 +73,8 @@ public final class DbLibraryHelper {
                     + Tag.NAME + " text unique not null"
                     + ");"
     };
-    private static final String DB_DIR_PATH = Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)
-            ? DataConstants.getDbExternalDataPath()
-            : DataConstants.getDbDataPath();
-
-    private static final Object TAG = DbLibraryHelper.class.getSimpleName();
-
-    private static int version = 3;
+    private static final List<Migration> MIGRATIONS = Arrays.asList(new Migration_1_2(), new Migration_2_3());
+    private static final int VERSION = 3;
     private static SQLiteDatabase db;
 
     private DbLibraryHelper() throws InstantiationException {
@@ -99,21 +94,22 @@ public final class DbLibraryHelper {
     }
 
     private static SQLiteDatabase getDB() {
-        File dbDir = new File(DB_DIR_PATH);
+        File dbDir = new File(getDbDirPath());
         if (!dbDir.exists() && !dbDir.mkdir()) {
             dbDir = BibleQuoteApp.getInstance().getFilesDir();
         }
-        SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(new File(dbDir, DataConstants.getDbLibraryName()), null);
+        File dbFile = new File(dbDir, DataConstants.getDbLibraryName());
+        SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbFile, null);
 
-        if (db.getVersion() < version) {
+        if (db.getVersion() < VERSION) {
             db.beginTransaction();
             try {
-                int currVersion = db.getVersion();
-                if (currVersion == 0) {
+                int oldVersion = db.getVersion();
+                if (oldVersion == 0) {
                     onCreate(db);
+                    oldVersion = 1;
                 }
-                onUpgrade(db, currVersion);
-                db.setVersion(version);
+                onUpgrade(db, oldVersion, VERSION);
                 db.setTransactionSuccessful();
             } finally {
                 db.endTransaction();
@@ -123,80 +119,43 @@ public final class DbLibraryHelper {
         return db;
     }
 
+    @NonNull
+    private static String getDbDirPath() {
+        return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)
+                ? DataConstants.getDbExternalDataPath()
+                : DataConstants.getDbDataPath();
+    }
+
     private static void onCreate(SQLiteDatabase db) {
         for (String command : CREATE_DATABASE) {
             db.execSQL(command);
         }
     }
 
-    @SuppressWarnings("UnusedAssignment")
-    private static void onUpgrade(SQLiteDatabase db, int currVersion) {
-        if (currVersion == 1) {
-            db.execSQL("ALTER TABLE bookmarks ADD COLUMN name TEXT;");
-            currVersion++;
+    private static void onUpgrade(SQLiteDatabase db, final int oldVersion, final int newVersion) {
+        if (oldVersion == newVersion) {
+            return;
         }
 
-        if (currVersion == 2) {
-            onUpgradeTo_v3(db);
-            currVersion++;
+        Collections.sort(MIGRATIONS);
+        int currVersion = oldVersion;
+        for (Migration migration : MIGRATIONS) {
+            // ищем миграцию для текущей версии БД
+            if (migration.oldVersion != currVersion) {
+                continue;
+            }
+
+            // выполняем миграцию и обновляем текущую версию
+            migration.migrate(db);
+            currVersion = migration.newVersion;
+
+            // если достигли требуемой версии БД, то прерываем миграцию
+            if (currVersion == newVersion) {
+                break;
+            }
         }
-    }
 
-    private static void onUpgradeTo_v3(SQLiteDatabase db) {
-
-        // обновляем таблицу закладок (обязательно до триггеров)
-
-        db.execSQL("ALTER TABLE bookmarks ADD COLUMN time INTEGER NOT NULL DEFAULT 0;");
-        Cursor cursor = db.rawQuery("SELECT * FROM bookmarks", null);
-        if (cursor.moveToFirst()) {
-            DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
-            String date;
-            do {
-                date = cursor.getString(cursor.getColumnIndex(Bookmark.DATE));
-                ContentValues cv = new ContentValues(1);
-                try {
-                    cv.put(Bookmark.TIME, dateFormat.parse(date).getTime());
-                } catch (ParseException ex) {
-                    StaticLogger.error(TAG, "Failure update time", ex);
-                    cv.put(Bookmark.TIME, new Date().getTime());
-                }
-                String id = cursor.getString(cursor.getColumnIndex("_id"));
-                db.update("bookmarks", cv, "_id=?", new String[]{id});
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-
-        // Добавляем триггеры
-
-        db.execSQL(// удаляем ссылки на теги при удалении закладки
-                "CREATE TRIGGER delete_bookmark AFTER DELETE ON bookmarks FOR EACH ROW " +
-                        "BEGIN " +
-                        "DELETE FROM bookmarks_tags WHERE OLD._id=bookmarks_tags.bm_id; " +
-                        "END");
-        db.execSQL( // при удалении ссылок на теги удаляем непривязанные теги
-                "CREATE TRIGGER delete_bookmark_tags AFTER DELETE ON bookmarks_tags " +
-                        "BEGIN " +
-                        "DELETE FROM tags WHERE tags._id NOT IN (SELECT DISTINCT bookmarks_tags.tag_id FROM bookmarks_tags); " +
-                        "END");
-        db.execSQL( // при обновлении закладки удаляем все ссылки на теги (теги надо добавить заново)
-                "CREATE TRIGGER update_bookmark AFTER UPDATE ON bookmarks FOR EACH ROW " +
-                        "BEGIN " +
-                        "DELETE FROM bookmarks_tags WHERE OLD._id=bookmarks_tags.bm_id; " +
-                        "END");
-        db.execSQL( // при удалении тега удаляем ссылки на него
-                "CREATE TRIGGER delete_tag AFTER DELETE ON tags FOR EACH ROW " +
-                        "BEGIN " +
-                        "DELETE FROM bookmarks_tags WHERE OLD._id=bookmarks_tags.tag_id; " +
-                        "END");
-
-        // Добавляем представления
-
-        db.execSQL(
-                "CREATE VIEW bm_tags AS " +
-                        "SELECT bookmarks_tags.bm_id AS bm_id, tags._id AS tag_id, tags.name AS tag_name " +
-                        "FROM bookmarks_tags " +
-                        "JOIN tags ON bookmarks_tags.tag_id=tags._id " +
-                        "ORDER BY bookmarks_tags.bm_id;");
+        db.setVersion(newVersion);
     }
 }
 

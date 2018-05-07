@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: DbBookmarksRepository.java
  *
- * Created by Vladimir Yakushev at 11/2017
+ * Created by Vladimir Yakushev at 5/2018
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -56,6 +56,7 @@ public class DbBookmarksRepository implements IBookmarksRepository {
         values.put(Bookmark.OSIS, bookmark.OSISLink);
         values.put(Bookmark.NAME, bookmark.name);
         values.put(Bookmark.DATE, bookmark.date);
+        values.put(Bookmark.TIME, bookmark.time);
 
         String query = String.format("SELECT * FROM %s WHERE %s=?", DbLibraryHelper.BOOKMARKS_TABLE, Bookmark.OSIS);
         String[] args = {bookmark.OSISLink};
@@ -106,7 +107,7 @@ public class DbBookmarksRepository implements IBookmarksRepository {
                                 "(SELECT %6$s FROM %3$s " +
                                 "JOIN %2$s ON %2$s.%8$s=%3$s.%7$s AND %2$s.%5$s=?) ORDER BY %9$s DESC",
                         DbLibraryHelper.BOOKMARKS_TABLE, DbLibraryHelper.TAGS_TABLE,
-                        DbLibraryHelper.BOOKMARKSTAGS_TABLE, Bookmark.KEY_ID, Tag.NAME,
+                        DbLibraryHelper.BOOKMARKS_TAGS_TABLE, Bookmark.KEY_ID, Tag.NAME,
                         BookmarksTags.BOOKMARKSTAGS_BM_ID, BookmarksTags.BOOKMARKSTAGS_TAG_ID,
                         Tag.KEY_ID, Bookmark.TIME);
                 cursorB = db.rawQuery(query, new String[]{tag.name});

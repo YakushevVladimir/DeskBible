@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: build.gradle
  *
- * Created by Vladimir Yakushev at 4/2018
+ * Created by Vladimir Yakushev at 5/2018
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -70,9 +70,12 @@ android {
     }
 
     testOptions {
-        unitTests.all {
-            jacoco {
-                includeNoLocationClasses = true
+        unitTests {
+            returnDefaultValues = true
+            all {
+                jacoco {
+                    includeNoLocationClasses = true
+                }
             }
         }
     }
