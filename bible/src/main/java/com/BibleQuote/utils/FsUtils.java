@@ -21,13 +21,14 @@
  * Project: BibleQuote-for-Android
  * File: FsUtils.java
  *
- * Created by Vladimir Yakushev at 9/2017
+ * Created by Vladimir Yakushev at 5/2018
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
 package com.BibleQuote.utils;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.BibleQuote.domain.exceptions.DataAccessException;
@@ -213,4 +214,26 @@ public final class FsUtils {
         }
     }
 
+    /**
+     * Осуществляет поиск файла в списке директорий.
+     *
+     * @param name имя искомого файла
+     * @param dirs список директорий, в которых осуществляется поиск
+     *
+     * @return найденный файл или {@code null}
+     */
+    @Nullable
+    public static File findFile(String name, File... dirs) {
+        for (File dir : dirs) {
+            if (!dir.exists()) {
+                continue;
+            }
+
+            File result = new File(dir, name);
+            if (result.exists() && result.canWrite()) {
+                return result;
+            }
+        }
+        return null;
+    }
 }

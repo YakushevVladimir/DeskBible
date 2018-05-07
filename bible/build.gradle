@@ -39,8 +39,8 @@ android {
         applicationId "com.BibleQuote"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 85
-        versionName "1.1.85"
+        versionCode 86
+        versionName "1.1.86"
         resConfigs("en", "ru", "be", "de", "es", "no", "sv", "uk")
         buildConfigField("String", "MODULE_DIR_NAME", "\"modules\"")
     }

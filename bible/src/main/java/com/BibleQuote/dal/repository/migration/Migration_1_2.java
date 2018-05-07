@@ -30,6 +30,8 @@ package com.BibleQuote.dal.repository.migration;
 
 import android.database.sqlite.SQLiteDatabase;
 
+import com.BibleQuote.domain.logger.StaticLogger;
+
 public class Migration_1_2 extends Migration {
 
     public Migration_1_2() {
@@ -38,6 +40,7 @@ public class Migration_1_2 extends Migration {
 
     @Override
     public void migrate(SQLiteDatabase database) {
+        StaticLogger.info(this, String.format("Обновление БД (%d -> %d)", oldVersion, newVersion));
         database.execSQL("ALTER TABLE bookmarks ADD COLUMN name TEXT;");
     }
 }

@@ -31,7 +31,6 @@ package com.BibleQuote.dal;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
-import android.support.annotation.NonNull;
 
 import com.BibleQuote.dal.repository.bookmarks.BookmarksTags;
 import com.BibleQuote.dal.repository.migration.Migration;
@@ -40,6 +39,7 @@ import com.BibleQuote.dal.repository.migration.Migration_2_3;
 import com.BibleQuote.domain.entity.Bookmark;
 import com.BibleQuote.domain.entity.Tag;
 import com.BibleQuote.utils.DataConstants;
+import com.BibleQuote.utils.FsUtils;
 
 import java.io.File;
 import java.util.Arrays;
@@ -52,11 +52,10 @@ import java.util.List;
  */
 public final class DbLibraryHelper {
 
+    public static final String DB_NAME = "library.db";
     public static final String TAGS_TABLE = "tags";
     public static final String BOOKMARKS_TAGS_TABLE = "bookmarks_tags";
     public static final String BOOKMARKS_TABLE = "bookmarks";
-
-    private static final String DB_NAME = "library.db";
 
     private static final String[] CREATE_DATABASE = new String[]{
             "create table " + BOOKMARKS_TABLE + " ("
@@ -92,38 +91,29 @@ public final class DbLibraryHelper {
         return database;
     }
 
-    private SQLiteDatabase openOrCreateDatabase() {
-        File dbDir = new File(getDbDirPath());
-        if (!dbDir.exists() && !dbDir.mkdir()) {
-            dbDir = appContext.getFilesDir();
+    public void closeDatabase() {
+        if (database != null && database.isOpen()) {
+            database.close();
         }
-        File dbFile = new File(dbDir, DB_NAME);
-        SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbFile, null);
-
-        int oldVersion = db.getVersion();
-        if (oldVersion < VERSION) {
-            db.beginTransaction();
-            try {
-                if (oldVersion == 0) {
-                    onCreate(db);
-                    oldVersion = 1;
-                }
-                onUpgrade(db, oldVersion, VERSION);
-                db.setVersion(VERSION);
-                db.setTransactionSuccessful();
-            } finally {
-                db.endTransaction();
-            }
-        }
-
-        return db;
+        database = null;
     }
 
-    @NonNull
-    private static String getDbDirPath() {
-        return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)
-                ? DataConstants.getDbExternalDataPath()
-                : DataConstants.getDbDataPath();
+    private File getDatabaseFile() {
+        File dbExternalDir = new File(DataConstants.getDbExternalDataPath());
+        File dbFile = FsUtils.findFile(DB_NAME,
+                dbExternalDir,
+                new File(DataConstants.getDbDataPath()),
+                appContext.getFilesDir());
+        if (dbFile == null) {
+            if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+                if (!dbExternalDir.exists() && !dbExternalDir.mkdir()) {
+                    dbFile = appContext.getDatabasePath(DB_NAME);
+                } else {
+                    dbFile = new File(dbExternalDir, DB_NAME);
+                }
+            }
+        }
+        return dbFile;
     }
 
     private void onCreate(SQLiteDatabase db) {
@@ -155,6 +145,27 @@ public final class DbLibraryHelper {
                 break;
             }
         }
+    }
+
+    private SQLiteDatabase openOrCreateDatabase() {
+        SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(getDatabaseFile(), null);
+        int oldVersion = db.getVersion();
+        if (oldVersion < VERSION) {
+            db.beginTransaction();
+            try {
+                if (oldVersion == 0) {
+                    onCreate(db);
+                    oldVersion = 1;
+                }
+                onUpgrade(db, oldVersion, VERSION);
+                db.setVersion(VERSION);
+                db.setTransactionSuccessful();
+            } finally {
+                db.endTransaction();
+            }
+        }
+
+        return db;
     }
 }
 

@@ -49,25 +49,10 @@ public class Migration_2_3 extends Migration {
 
     @Override
     public void migrate(SQLiteDatabase db) {
+        StaticLogger.info(this, String.format("Обновление БД (%d -> %d)", oldVersion, newVersion));
+
         db.execSQL("ALTER TABLE bookmarks ADD COLUMN time INTEGER NOT NULL DEFAULT 0;");
-        Cursor cursor = db.rawQuery("SELECT * FROM bookmarks", null);
-        if (cursor.moveToFirst()) {
-            DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
-            String date;
-            do {
-                date = cursor.getString(cursor.getColumnIndex(Bookmark.DATE));
-                ContentValues cv = new ContentValues(1);
-                try {
-                    cv.put(Bookmark.TIME, dateFormat.parse(date).getTime());
-                } catch (ParseException ex) {
-                    StaticLogger.error(TAG, "Failure update time", ex);
-                    cv.put(Bookmark.TIME, new Date().getTime());
-                }
-                String id = cursor.getString(cursor.getColumnIndex("_id"));
-                db.update("bookmarks", cv, "_id=?", new String[]{id});
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
+        setBookmarksTime(db);
 
         // Добавляем триггеры
 
@@ -100,5 +85,28 @@ public class Migration_2_3 extends Migration {
                         "FROM bookmarks_tags " +
                         "JOIN tags ON bookmarks_tags.tag_id=tags._id " +
                         "ORDER BY bookmarks_tags.bm_id;");
+    }
+
+    public static void setBookmarksTime(SQLiteDatabase database) {
+        try (Cursor cursor = database.rawQuery("SELECT * FROM bookmarks", null)) {
+            if (!cursor.moveToFirst()) {
+                return;
+            }
+
+            DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
+            String date;
+            do {
+                date = cursor.getString(cursor.getColumnIndex(Bookmark.DATE));
+                ContentValues cv = new ContentValues(1);
+                try {
+                    cv.put(Bookmark.TIME, dateFormat.parse(date).getTime());
+                } catch (ParseException ex) {
+                    StaticLogger.error(TAG, "Failure update time", ex);
+                    cv.put(Bookmark.TIME, new Date().getTime());
+                }
+                String id = cursor.getString(cursor.getColumnIndex(Bookmark.KEY_ID));
+                database.update("bookmarks", cv, "_id=?", new String[]{id});
+            } while (cursor.moveToNext());
+        }
     }
 }

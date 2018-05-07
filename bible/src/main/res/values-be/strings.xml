@@ -22,7 +22,7 @@
   ~ Project: BibleQuote-for-Android
   ~ File: strings.xml
   ~
-  ~ Created by Vladimir Yakushev at 4/2018
+  ~ Created by Vladimir Yakushev at 5/2018
   ~ E-mail: ru.phoenix@gmail.com
   ~ WWW: http://www.scripturesoftware.org
   -->
@@ -140,4 +140,5 @@
     <string name="update_reload_modules">Абнаўленне бібліятэкі модуляў…</string>
     <string name="update_builtin_modules">Абнаўленне ўбудаваных модуляў…</string>
     <string name="update_preferences">Абнаўленне налад…</string>
+    <string name="upgrade_database">Абнаўленне базы дадзеных…</string>
 </resources>

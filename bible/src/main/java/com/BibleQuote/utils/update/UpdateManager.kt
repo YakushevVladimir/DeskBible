@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: UpdateManager.kt
  *
- * Created by Vladimir Yakushev at 4/2018
+ * Created by Vladimir Yakushev at 5/2018
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -30,6 +30,7 @@ package com.BibleQuote.utils.update
 
 import android.content.Context
 import com.BibleQuote.BuildConfig
+import com.BibleQuote.dal.DbLibraryHelper
 import com.BibleQuote.domain.controller.ILibraryController
 import com.BibleQuote.domain.logger.StaticLogger
 import com.BibleQuote.utils.PreferenceHelper
@@ -43,7 +44,8 @@ import javax.inject.Inject
 class UpdateManager @Inject constructor(
         context: Context,
         private val prefHelper: PreferenceHelper,
-        libraryController: ILibraryController
+        libraryController: ILibraryController,
+        dbLibraryHelper: DbLibraryHelper
 ) {
 
     private val appContext: Context = context.applicationContext
@@ -51,7 +53,8 @@ class UpdateManager @Inject constructor(
             MigrationPreferenceColor(84, prefHelper),
             MigrationTSKSource(85),
             MigrationUpdateBuiltinModules(85),
-            MigrationReloadModules(85, libraryController)
+            MigrationReloadModules(85, libraryController),
+            Migration86(dbLibraryHelper)
     )
 
     fun update(): Observable<String> {

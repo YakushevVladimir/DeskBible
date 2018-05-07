@@ -21,7 +21,7 @@
  * Project: BibleQuote-for-Android
  * File: Migration.kt
  *
- * Created by Vladimir Yakushev at 4/2018
+ * Created by Vladimir Yakushev at 5/2018
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
@@ -38,7 +38,7 @@ abstract class Migration(
         /**
          * Версия приложения, начиная с которой должна выполняться миграция
          */
-        private val migrationVersion: Int
+        val migrationVersion: Int
 ) {
 
     /**
