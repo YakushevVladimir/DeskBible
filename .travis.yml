@@ -7,15 +7,17 @@ android:
     - tools
     - platform-tools
     - tools
-    - build-tools-26.0.2
-    - android-25
+    - build-tools-28.0.3
+    - android-26
     - extra-android-m2repository
     - extra-google-m2repository
     - extra-android-support
+  licenses:
+      - 'android-sdk-preview-license-52d11cd2'
+      - 'android-sdk-license-.+'
+      - 'google-gdk-license-.+'
 
 script:
-  - echo "Travis branch is $TRAVIS_BRANCH"
-  - echo "Travis branch is in pull request $TRAVIS_PULL+REQUEST"
   - ./gradlew clean assembleDebug testDebugUnitTestCoverage coveralls
 
 before_cache:
