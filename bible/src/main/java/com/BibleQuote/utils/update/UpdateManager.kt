@@ -49,8 +49,8 @@ class UpdateManager @Inject constructor(
     private val migrationList = listOf(
             MigrationPreferenceColor(84, prefHelper),
             MigrationTSKSource(85),
-            MigrationUpdateBuiltinModules(85),
-            MigrationReloadModules(85, libraryController),
+            MigrationUpdateBuiltinModules(87),
+            MigrationReloadModules(87, libraryController),
             Migration86(dbLibraryHelper)
     )
 

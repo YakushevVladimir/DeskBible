@@ -70,7 +70,7 @@
 	<string name="messageRefresh">Обновление…</string>
 	<string name="exception_books_definition">Некорректное описание книги в модуле %1$s: BookQty=%2$d, PathName#=%3$d, FullName#=%4$d, ShortName#=%5$d, ChapterQty#=%6$d\n\t</string>
 	<string name="exception_open_module_short">Некорректный модуль %s</string>
-	<string name="exception_book_not_found">Книга %1$s не найден а в модуле %2$s</string>
+	<string name="exception_book_not_found">Книга %1$s не найдена в модуле %2$s</string>
 	<string name="exception_book_definition">Некорректные параметры книги #%1$d в модуле %2$s</string>
 	<string name="app_about_design_label">Дизайн:</string>
 	<string name="bookmark_invalid_removed">Недопустимая закладка удалена</string>

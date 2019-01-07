@@ -37,6 +37,7 @@ import java.io.File
 import java.io.FileOutputStream
 
 private const val RST_FILE_NAME = "bible_rst.zip"
+private const val UBIO_FILE_NAME = "bible_ubio.zip"
 private const val KJV_FILE_NAME = "bible_kjv.zip"
 
 /**
@@ -50,7 +51,11 @@ class MigrationUpdateBuiltinModules(versionCode: Int) : Migration(versionCode) {
     override fun doMigrate(context: Context) {
         FsUtils.getLibraryDir(context)?.let { libraryDir ->
             StaticLogger.info(this, "Update built-in modules into $libraryDir")
-            mapOf(R.raw.bible_rst to RST_FILE_NAME, R.raw.bible_kjv to KJV_FILE_NAME)
+            mapOf(
+                    R.raw.bible_rst to RST_FILE_NAME,
+                    R.raw.bible_ubio to UBIO_FILE_NAME,
+                    R.raw.bible_kjv to KJV_FILE_NAME
+            )
                     .entries
                     .forEach { (resId, moduleFile) ->
                         val outputStream = FileOutputStream(File(libraryDir, moduleFile))
