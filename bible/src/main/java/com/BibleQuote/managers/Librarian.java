@@ -181,7 +181,8 @@ public class Librarian {
     public ArrayList<ItemList> getModulesList() {
         // Сначала отсортируем список по наименованием модулей
         TreeMap<String, BaseModule> tMap = new TreeMap<>();
-        for (BaseModule currModule : libCtrl.getModules().values()) {
+        final Collection<BaseModule> baseModules = libCtrl.getModules().values();
+        for (BaseModule currModule : baseModules) {
             tMap.put(currModule.getName(), currModule);
         }
 

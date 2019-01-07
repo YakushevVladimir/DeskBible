@@ -37,6 +37,7 @@ import com.BibleQuote.domain.exceptions.OpenModuleException;
 import com.BibleQuote.domain.logger.StaticLogger;
 import com.BibleQuote.domain.repository.LibraryLoader;
 
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -69,7 +70,8 @@ public class FsLibraryController implements ILibraryController {
     @Override
     public Map<String, BaseModule> getModules() {
         Map<String, BaseModule> result = new TreeMap<>();
-        for (BaseModule module : libraryRepository.modules()) {
+        final List<BaseModule> modules = libraryRepository.modules();
+        for (BaseModule module : modules) {
             result.put(module.getID(), module);
         }
         return result;
