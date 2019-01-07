@@ -41,8 +41,6 @@ import com.BibleQuote.domain.logger.StaticLogger;
 import com.BibleQuote.domain.repository.IBookmarksRepository;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.utils.PreferenceHelper;
-import com.google.android.gms.analytics.GoogleAnalytics;
-import com.google.android.gms.analytics.Tracker;
 
 import javax.inject.Inject;
 
@@ -93,13 +91,6 @@ public class BibleQuoteApp extends Application implements Thread.UncaughtExcepti
 
     public PreferenceHelper getPrefHelper() {
         return prefHelper;
-    }
-
-    public synchronized Tracker getTracker() {
-        GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
-        Tracker tracker = analytics.newTracker(R.xml.analitics);
-        tracker.enableAdvertisingIdCollection(true);
-        return tracker;
     }
 
     @Override

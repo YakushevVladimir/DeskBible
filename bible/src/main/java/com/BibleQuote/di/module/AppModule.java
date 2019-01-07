@@ -38,10 +38,10 @@ import com.BibleQuote.dal.controller.FsLibraryController;
 import com.BibleQuote.dal.controller.TSKController;
 import com.BibleQuote.dal.repository.FsCacheRepository;
 import com.BibleQuote.dal.repository.FsLibraryLoader;
-import com.BibleQuote.data.analytics.GoogleAnalyticsHelper;
 import com.BibleQuote.data.logger.AndroidLogger;
 import com.BibleQuote.data.logger.FileLogger;
 import com.BibleQuote.domain.AnalyticsHelper;
+import com.BibleQuote.domain.analytics.EmptyAnalyticsHelper;
 import com.BibleQuote.domain.controller.ILibraryController;
 import com.BibleQuote.domain.controller.ITSKController;
 import com.BibleQuote.domain.entity.BaseModule;
@@ -118,7 +118,7 @@ public class AppModule {
 
     @Provides
     AnalyticsHelper analyticsHelper() {
-        return new GoogleAnalyticsHelper(application.getTracker());
+        return new EmptyAnalyticsHelper();
     }
 
     @Provides
