@@ -58,24 +58,24 @@ public final class FileLogger extends Logger {
     }
 
     @Override
-    public void debug(Object tag, String message) {
+    public void debug(@NonNull Object tag, @NonNull String message) {
         if (BuildConfig.DEBUG) {
             write(getTag(tag), message);
         }
     }
 
     @Override
-    public void error(Object tag, String message) {
+    public void error(@NonNull Object tag, @NonNull String message) {
         write(getTag(tag), "Error: " + message);
     }
 
     @Override
-    public void error(Object tag, String message, Throwable th) {
+    public void error(@NonNull Object tag, @NonNull String message, @NonNull Throwable th) {
         write(getTag(tag), String.format("Error: %s%n%s", message, Log.getStackTraceString(th)));
     }
 
     @Override
-    public void info(Object tag, String message) {
+    public void info(@NonNull Object tag, @NonNull String message) {
         write(getTag(tag), message);
     }
 

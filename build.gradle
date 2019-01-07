@@ -33,20 +33,23 @@ buildscript {
     repositories {
         jcenter()
         google()
+        maven { url 'https://maven.fabric.io/public' }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.2.1'
+        classpath 'com.google.gms:google-services:4.2.0'
+        classpath 'io.fabric.tools:gradle:1.26.1'
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.6.3'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 
 ext {
-    compileSdkVersion = 28
+    compileSdkVersion = 26
     buildToolsVersion = "28.0.3"
     minSdkVersion = 16
-    targetSdkVersion = 28
-    supportLibVersion = "28.0.0"
+    targetSdkVersion = 26
+    supportLibVersion = "26.1.0"
     daggerVersion = "2.11"
     retrofitVersion = "2.5.0"
     butterknifeVersion = "8.8.1"
@@ -57,5 +60,6 @@ allprojects {
         jcenter()
         google()
         mavenCentral()
+        maven { url 'https://maven.fabric.io/public' }
     }
 }

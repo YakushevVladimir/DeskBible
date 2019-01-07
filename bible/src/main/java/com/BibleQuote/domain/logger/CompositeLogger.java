@@ -28,6 +28,8 @@
 
 package com.BibleQuote.domain.logger;
 
+import android.support.annotation.NonNull;
+
 import java.util.List;
 
 public class CompositeLogger extends Logger {
@@ -39,28 +41,28 @@ public class CompositeLogger extends Logger {
     }
 
     @Override
-    public void debug(Object tag, String message) {
+    public void debug(@NonNull Object tag, @NonNull String message) {
         for (Logger logger : loggerList) {
             logger.debug(tag, message);
         }
     }
 
     @Override
-    public void error(Object tag, String message) {
+    public void error(@NonNull Object tag, @NonNull String message) {
         for (Logger logger : loggerList) {
             logger.error(tag, message);
         }
     }
 
     @Override
-    public void error(Object tag, String message, Throwable th) {
+    public void error(@NonNull Object tag, @NonNull String message, @NonNull Throwable th) {
         for (Logger logger : loggerList) {
             logger.error(tag, message, th);
         }
     }
 
     @Override
-    public void info(Object tag, String message) {
+    public void info(@NonNull Object tag, @NonNull String message) {
         for (Logger logger : loggerList) {
             logger.info(tag, message);
         }

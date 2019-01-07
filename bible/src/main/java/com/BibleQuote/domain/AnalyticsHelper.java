@@ -28,13 +28,52 @@
 
 package com.BibleQuote.domain;
 
+import android.support.annotation.NonNull;
+
 import com.BibleQuote.domain.entity.BibleReference;
 import com.BibleQuote.domain.entity.Bookmark;
 
 public interface AnalyticsHelper {
 
-    void moduleEvent(BibleReference link);
-    void bookmarkEvent(Bookmark bookmark);
-    void clickEvent(String action, String label);
-    void searchEvent(String query, String module);
+    String ATTR_ACTION = "action";
+    String ATTR_BOOK = "book";
+    String ATTR_MODULE = "module";
+    String ATTR_OPEN_TAG = "tags";
+    String ATTR_LINK = "link";
+    String ATTR_QUERY = "query";
+
+    String CATEGORY_ADD_TAGS = "add_tags";
+    String CATEGORY_ADD_BOOKMARK = "add_bookmark";
+    String CATEGORY_CLICK = "click";
+    String CATEGORY_MODULES = "modules";
+    String CATEGORY_SEARCH = "search";
+
+    /**
+     * Событие открытия места в модуле
+     *
+     * @param link ссылка на место
+     */
+    void moduleEvent(@NonNull BibleReference link);
+
+    /**
+     * Событие создания закладки на место в модуле
+     *
+     * @param bookmark созданная закладка
+     */
+    void bookmarkEvent(@NonNull Bookmark bookmark);
+
+    /**
+     * Событие выбора функционала приложения
+     *
+     * @param action имя выбранного функционала
+     */
+    void clickEvent(@NonNull String action);
+
+    /**
+     * Событие поиска по модулю
+     *
+     * @param query  поисковый запрос
+     * @param module модуль, в котором осуществляется поиск
+     */
+    void searchEvent(@NonNull String query, String module);
 }

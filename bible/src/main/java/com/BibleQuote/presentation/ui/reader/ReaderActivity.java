@@ -108,7 +108,7 @@ public class ReaderActivity extends BaseActivity<ReaderViewPresenter> implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         ActionBar actionBar = getSupportActionBar();
@@ -139,22 +139,19 @@ public class ReaderActivity extends BaseActivity<ReaderViewPresenter> implements
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
         readerView.setOnReaderViewListener(this);
 
-        chapterNav.setOnClickListener(new ChapterNavigator.OnClickListener() {
-            @Override
-            public void onClick(ChapterNavigator.ClickedButton btn) {
-                switch (btn) {
-                    case DOWN:
-                        readerView.pageDown(false);
-                        break;
-                    case UP:
-                        readerView.pageUp(false);
-                        break;
-                    case PREV:
-                        presenter.prevChapter();
-                        break;
-                    case NEXT:
-                        presenter.nextChapter();
-                }
+        chapterNav.setOnClickListener((ChapterNavigator.OnClickListener) btn -> {
+            switch (btn) {
+                case DOWN:
+                    readerView.pageDown(false);
+                    break;
+                case UP:
+                    readerView.pageUp(false);
+                    break;
+                case PREV:
+                    presenter.prevChapter();
+                    break;
+                case NEXT:
+                    presenter.nextChapter();
             }
         });
 
@@ -204,23 +201,23 @@ public class ReaderActivity extends BaseActivity<ReaderViewPresenter> implements
         switch (item.getItemId()) {
             case R.id.action_bar_chooseCh:
                 openLibraryActivity();
-                analyticsHelper.clickEvent("choose_ch", "");
+                analyticsHelper.clickEvent("choose_ch");
                 break;
             case R.id.action_bar_search:
                 openSearchActivity();
-                analyticsHelper.clickEvent("search", "");
+                analyticsHelper.clickEvent("search");
                 break;
             case R.id.NightDayMode:
                 presenter.inverseNightMode();
-                analyticsHelper.clickEvent("night_mode", "");
+                analyticsHelper.clickEvent("night_mode");
                 break;
             case R.id.action_bar_history:
                 openHistoryActivity();
-                analyticsHelper.clickEvent("history", "");
+                analyticsHelper.clickEvent("history");
                 break;
             case R.id.action_speak:
                 viewTTSPlayer();
-                analyticsHelper.clickEvent("speak", "");
+                analyticsHelper.clickEvent("speak");
                 break;
             default:
                 return false;

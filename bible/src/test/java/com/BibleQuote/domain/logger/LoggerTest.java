@@ -28,6 +28,8 @@
 
 package com.BibleQuote.domain.logger;
 
+import android.support.annotation.NonNull;
+
 import org.junit.Test;
 
 import java.util.Date;
@@ -39,7 +41,7 @@ public class LoggerTest {
     private final TestLogger logger = new TestLogger();
 
     @Test
-    public void getTag() throws Exception {
+    public void getTag() {
         Date test = new Date();
         assertEquals(String.format("%s (%d)", test.getClass().getSimpleName(), test.hashCode()), logger.getTag(test));
         assertEquals("test", logger.getTag("test"));
@@ -48,22 +50,22 @@ public class LoggerTest {
     private static class TestLogger extends Logger {
 
         @Override
-        public void debug(Object tag, String message) {
+        public void debug(@NonNull Object tag, @NonNull String message) {
 
         }
 
         @Override
-        public void error(Object tag, String message) {
+        public void error(@NonNull Object tag, @NonNull String message) {
 
         }
 
         @Override
-        public void error(Object tag, String message, Throwable th) {
+        public void error(@NonNull Object tag, @NonNull String message, @NonNull Throwable th) {
 
         }
 
         @Override
-        public void info(Object tag, String message) {
+        public void info(@NonNull Object tag, @NonNull String message) {
 
         }
     }

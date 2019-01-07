@@ -31,6 +31,7 @@ package com.BibleQuote.di.module;
 import android.content.Context;
 
 import com.BibleQuote.BibleQuoteApp;
+import com.BibleQuote.BuildConfig;
 import com.BibleQuote.async.AsyncManager;
 import com.BibleQuote.dal.controller.CachedLibraryRepository;
 import com.BibleQuote.dal.controller.FsLibraryController;
@@ -39,9 +40,12 @@ import com.BibleQuote.dal.repository.BQModuleRepository;
 import com.BibleQuote.dal.repository.FsCacheRepository;
 import com.BibleQuote.dal.repository.FsLibraryLoader;
 import com.BibleQuote.data.logger.AndroidLogger;
+import com.BibleQuote.data.logger.CrashlyticsLogger;
 import com.BibleQuote.data.logger.file.FileLogger;
 import com.BibleQuote.domain.AnalyticsHelper;
-import com.BibleQuote.domain.analytics.EmptyAnalyticsHelper;
+import com.BibleQuote.domain.analytics.AnswersAnalyticsHelper;
+import com.BibleQuote.domain.analytics.CompositeAnalyticsHelper;
+import com.BibleQuote.domain.analytics.FirebaseAnalyticsHelper;
 import com.BibleQuote.domain.controller.ILibraryController;
 import com.BibleQuote.domain.controller.ITSKController;
 import com.BibleQuote.domain.entity.BaseModule;
@@ -56,8 +60,10 @@ import com.BibleQuote.managers.history.IHistoryManager;
 import com.BibleQuote.utils.DataConstants;
 import com.BibleQuote.utils.FsUtilsWrapper;
 import com.BibleQuote.utils.PreferenceHelper;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -119,13 +125,22 @@ public class AppModule {
     }
 
     @Provides
-    AnalyticsHelper analyticsHelper() {
-        return new EmptyAnalyticsHelper();
+    AnalyticsHelper analyticsHelper(Context context) {
+        return new CompositeAnalyticsHelper(Arrays.asList(
+                new FirebaseAnalyticsHelper(FirebaseAnalytics.getInstance(context.getApplicationContext())),
+                new AnswersAnalyticsHelper()));
     }
 
     @Provides
     @Singleton
     Logger provideLogger() {
-        return new CompositeLogger(Arrays.asList(new AndroidLogger(), new FileLogger()));
+        final List<Logger> loggers = new ArrayList<>();
+        loggers.add(new FileLogger());
+        loggers.add(new CrashlyticsLogger());
+        if (BuildConfig.DEBUG) {
+            loggers.add(new AndroidLogger());
+        }
+
+        return new CompositeLogger(loggers);
     }
 }

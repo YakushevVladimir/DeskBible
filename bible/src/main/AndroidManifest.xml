@@ -139,6 +139,10 @@
             android:name="com.sec.android.multiwindow.MINIMUM_SIZE_H"
             android:resource="@dimen/app_minimumsize_h"/>
 
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="9badc90554ae964801ed956b106459f4909de025" />
+
     </application>
 
 </manifest>

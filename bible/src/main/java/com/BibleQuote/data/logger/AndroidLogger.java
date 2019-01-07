@@ -28,6 +28,7 @@
 
 package com.BibleQuote.data.logger;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.BibleQuote.domain.logger.Logger;
@@ -35,22 +36,22 @@ import com.BibleQuote.domain.logger.Logger;
 public class AndroidLogger extends Logger {
 
     @Override
-    public void debug(Object tag, String message) {
+    public void debug(@NonNull Object tag, @NonNull String message) {
         Log.d(getTag(tag), message);
     }
 
     @Override
-    public void error(Object tag, String message) {
+    public void error(@NonNull Object tag, @NonNull String message) {
         Log.e(getTag(tag), message);
     }
 
     @Override
-    public void error(Object tag, String message, Throwable th) {
+    public void error(@NonNull Object tag, @NonNull String message, @NonNull Throwable th) {
         Log.e(getTag(tag), message, th);
     }
 
     @Override
-    public void info(Object tag, String message) {
+    public void info(@NonNull Object tag, @NonNull String message) {
         Log.i(getTag(tag), message);
     }
 }

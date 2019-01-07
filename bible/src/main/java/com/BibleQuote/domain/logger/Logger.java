@@ -28,6 +28,8 @@
 
 package com.BibleQuote.domain.logger;
 
+import android.support.annotation.NonNull;
+
 public abstract class Logger {
 
     /**
@@ -36,34 +38,34 @@ public abstract class Logger {
      * @param tag     имя класса-инициатора события
      * @param message текст помещаемый в протокол событий
      */
-    public abstract void debug(Object tag, String message);
+    public abstract void debug(@NonNull Object tag, @NonNull String message);
 
     /**
      * Запись в протокол событий сообщения об ошибке
      *
-     * @param tag  имя класса-инициатора события
+     * @param tag     имя класса-инициатора события
      * @param message текст помещаемый в протокол событий
      */
-    public abstract void error(Object tag, String message);
+    public abstract void error(@NonNull Object tag, @NonNull String message);
 
     /**
      * Запись в протокол событий сообщения об ошибке
      *
-     * @param tag  имя класса-инициатора события
+     * @param tag     имя класса-инициатора события
      * @param message текст помещаемый в протокол событий
-     * @param th   ссылка на полученный Exception
+     * @param th      ссылка на полученный Exception
      */
-    public abstract void error(Object tag, String message, Throwable th);
+    public abstract void error(@NonNull Object tag, @NonNull String message, @NonNull Throwable th);
 
     /**
      * Запись в протокол событий информационного сообщения
      *
-     * @param tag  имя класса-инициатора события
+     * @param tag     имя класса-инициатора события
      * @param message текст помещаемый в протокол событий
      */
-    public abstract void info(Object tag, String message);
+    public abstract void info(@NonNull Object tag, @NonNull String message);
 
-    protected String getTag(Object src) {
+    protected String getTag(@NonNull Object src) {
         if (src instanceof String) {
             return (String) src;
         } else {
