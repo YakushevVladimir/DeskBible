@@ -31,15 +31,15 @@ package com.BibleQuote.di.module;
 import android.content.Context;
 
 import com.BibleQuote.BibleQuoteApp;
-import com.BibleQuote.BuildConfig;
 import com.BibleQuote.async.AsyncManager;
 import com.BibleQuote.dal.controller.CachedLibraryRepository;
 import com.BibleQuote.dal.controller.FsLibraryController;
 import com.BibleQuote.dal.controller.TSKController;
+import com.BibleQuote.dal.repository.BQModuleRepository;
 import com.BibleQuote.dal.repository.FsCacheRepository;
 import com.BibleQuote.dal.repository.FsLibraryLoader;
 import com.BibleQuote.data.logger.AndroidLogger;
-import com.BibleQuote.data.logger.FileLogger;
+import com.BibleQuote.data.logger.file.FileLogger;
 import com.BibleQuote.domain.AnalyticsHelper;
 import com.BibleQuote.domain.analytics.EmptyAnalyticsHelper;
 import com.BibleQuote.domain.controller.ILibraryController;
@@ -101,9 +101,11 @@ public class AppModule {
     @Provides
     LibraryLoader<? extends BaseModule> getLibraryLoader(Context context) {
         List<File> libraryDirs = Arrays.asList(
-                new File(context.getFilesDir(), BuildConfig.MODULE_DIR_NAME),
-                new File(DataConstants.getLibraryPath()));
-        return new FsLibraryLoader(new FsUtilsWrapper(), libraryDirs);
+                DataConstants.getExternalLibraryPath(),
+                DataConstants.getLibraryPath(context)
+        );
+        final FsUtilsWrapper fsUtils = new FsUtilsWrapper();
+        return new FsLibraryLoader(libraryDirs, new BQModuleRepository(fsUtils));
     }
 
     @Provides
@@ -122,7 +124,8 @@ public class AppModule {
     }
 
     @Provides
-    @Singleton Logger provideLogger() {
+    @Singleton
+    Logger provideLogger() {
         return new CompositeLogger(Arrays.asList(new AndroidLogger(), new FileLogger()));
     }
 }

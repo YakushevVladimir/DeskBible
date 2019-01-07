@@ -33,11 +33,10 @@ import com.BibleQuote.domain.logger.StaticLogger
 
 /**
  * Описывает интерфейс классов миграции приложения.
+ *
+ * @param migrationVersion версия приложения, начиная с которой должна выполняться миграция
  */
 abstract class Migration(
-        /**
-         * Версия приложения, начиная с которой должна выполняться миграция
-         */
         val migrationVersion: Int
 ) {
 
@@ -59,8 +58,19 @@ abstract class Migration(
         }
     }
 
+    /**
+     * Выполнение процедуры обновления
+     *
+     * @param context контекст приложения
+     */
     protected abstract fun doMigrate(context: Context)
 
+    /**
+     * Получение описания выполняемого обновления
+     *
+     * @param context контекст приложения
+     * @return строка с описания выполняемого обновления
+     */
     protected abstract fun getInfoMessage(context: Context): String
 
     private fun sendMessage(messenger: UpdateMessenger, message: String) {

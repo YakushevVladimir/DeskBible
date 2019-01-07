@@ -28,6 +28,7 @@
 package com.BibleQuote.utils;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -47,6 +48,8 @@ import java.io.InputStreamReader;
 import java.io.UTFDataFormatException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -59,7 +62,7 @@ public final class FsUtils {
         throw new InstantiationException("This class is not for instantiation");
     }
 
-    public static InputStream getStreamFromZip(String path, String fileName) {
+    static InputStream getStreamFromZip(String path, String fileName) {
         try {
             FileInputStream fis = new FileInputStream(new File(path));
             ZipInputStream zis = new ZipInputStream(fis);
@@ -96,7 +99,7 @@ public final class FsUtils {
         }
     }
 
-    public static InputStream getStream(String path, String fileName) {
+    static InputStream getStream(String path, String fileName) {
         File streamFile = new File(path, fileName);
         try {
             return new FileInputStream(streamFile);
@@ -107,8 +110,8 @@ public final class FsUtils {
         return null;
     }
 
-    public static BufferedReader getTextFileReaderFromZipArchive(String archivePath, String searchFileName,
-            String encoding) throws DataAccessException {
+    static BufferedReader getTextFileReaderFromZipArchive(String archivePath, String searchFileName,
+                                                          String encoding) throws DataAccessException {
         File zipFile = new File(archivePath);
         try {
             InputStream moduleStream = new FileInputStream(zipFile);
@@ -142,7 +145,7 @@ public final class FsUtils {
         }
     }
 
-    public static BufferedReader getTextFileReader(String dir, String fileName, String textFileEncoding) throws DataAccessException {
+    static BufferedReader getTextFileReader(String dir, String fileName, String textFileEncoding) throws DataAccessException {
         BufferedReader bReader;
         try {
             File file = new File(dir, fileName);
@@ -156,25 +159,25 @@ public final class FsUtils {
         return bReader;
     }
 
-    public static void searchByFilter(File currentFile, ArrayList<String> resultFiles, FileFilter filter) throws IOException {
+    public static void searchByFilter(File currentFile, ArrayList<String> resultFiles, FileFilter filter) {
+        StaticLogger.info(TAG, "Search modules into " + currentFile.getAbsolutePath());
+
         try {
             File[] files = currentFile.listFiles(filter);
             if (files == null) {
                 return;
             }
+
             for (File file : files) {
                 if (file.isDirectory()) {
-                    StaticLogger.info(TAG, "Search in " + file.getAbsolutePath());
                     searchByFilter(file, resultFiles, filter);
                 } else if (file.canRead()) {
-                    StaticLogger.info(TAG, "Add file " + file.getAbsolutePath());
+                    StaticLogger.info(TAG, "\t- add file " + file.getAbsolutePath());
                     resultFiles.add(file.getAbsolutePath());
                 }
             }
         } catch (Exception e) {
-            StaticLogger.error(TAG,
-                    String.format("SearchByFilter(%1$s, %2$s)",
-                            currentFile.getName(), filter.toString()), e);
+            StaticLogger.error(TAG, String.format("SearchByFilter(%1$s, %2$s)", currentFile.getName(), filter.toString()), e);
         }
 
     }
@@ -215,11 +218,29 @@ public final class FsUtils {
     }
 
     /**
+     * Получение директории с модулями
+     *
+     * @param context контекст приложения
+     * @return директория для хранения модулей или {@code null}
+     */
+    @Nullable
+    public static File getLibraryDir(@NonNull Context context) {
+        final List<File> paths = Arrays.asList(DataConstants.getExternalLibraryPath(), DataConstants.getLibraryPath(context));
+        for (File file : paths) {
+            if (file.exists() || file.mkdirs()) {
+                return file;
+            }
+        }
+
+        StaticLogger.error(TAG, "Can't create library dir");
+        return null;
+    }
+
+    /**
      * Осуществляет поиск файла в списке директорий.
      *
      * @param name имя искомого файла
      * @param dirs список директорий, в которых осуществляется поиск
-     *
      * @return найденный файл или {@code null}
      */
     @Nullable

@@ -25,40 +25,36 @@
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
-package com.BibleQuote.data.logger;
+package com.BibleQuote.data.logger.file;
 
-import android.os.Build;
-import android.os.Environment;
+import android.os.HandlerThread;
+import android.os.Message;
+import android.os.Process;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.BibleQuote.BuildConfig;
 import com.BibleQuote.domain.logger.Logger;
-import com.BibleQuote.utils.DataConstants;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
-import java.nio.charset.Charset;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 
 /**
  * Класс отвечающий за запись протокола событий приложения.
  * Записывает отладочную информация в файл log.txt,
  * находящийся в корне съемного диска устройства
  *
- * @author Владимир Якушев (ru.phoenix@gmail.com)
+ * @author Vladimir Yakushev <ru.phoenix@gmail.com>
  */
 public final class FileLogger extends Logger {
 
-    private static final String DATE_PATTERN = "yyyy-MM-dd HH:mm:ss.SSS";
-    private static final long MAX_LOG_SIZE = 10 * 1024 * 1024;
     private static final String TAG = FileLogger.class.getSimpleName();
-    private File logFile;
+
+    @NonNull
+    private final LoggerHandler mLoggerHandler;
+    private final HandlerThread mHandlerThread;
 
     public FileLogger() {
-        createLogFile();
+        mHandlerThread = new HandlerThread(TAG, Process.THREAD_PRIORITY_LOWEST);
+        mHandlerThread.start();
+        mLoggerHandler = new LoggerHandler(mHandlerThread.getLooper(), TAG);
     }
 
     @Override
@@ -83,31 +79,10 @@ public final class FileLogger extends Logger {
         write(getTag(tag), message);
     }
 
-    /**
-     * Подготовка файла-протокола событий. Создание нового файла,
-     * запись текущей даты, версии программы, языка системы
-     */
-    private void createLogFile() {
-        if (!Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-            return;
-        }
-
-        String tag = getTag(this);
-        logFile = new File(DataConstants.getFsAppDirName(), "log.txt");
-        if (logFile.exists() && !logFile.canWrite()) {
-            return;
-        } else if (logFile.length() > MAX_LOG_SIZE) {
-            if (!logFile.delete()) {
-                write(tag, "Не удалось очистить лог-файл");
-            }
-        }
-
-        write(tag, "====================================");
-        write(tag, "Application version: " + BuildConfig.VERSION_NAME);
-        write(tag, "Default language: " + Locale.getDefault().getDisplayLanguage());
-        write(tag, "Device model: " + Build.MODEL);
-        write(tag, "Android OS: " + Build.VERSION.RELEASE);
-        write(tag, "------------------------------------");
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
+        mHandlerThread.quitSafely();
     }
 
     /**
@@ -117,18 +92,6 @@ public final class FileLogger extends Logger {
      * @param text текст помещаемый в протокол событий
      */
     private void write(String tag, String text) {
-        if (logFile == null) {
-            return;
-        }
-
-        try (
-                OutputStreamWriter writer = new OutputStreamWriter(
-                        new FileOutputStream(logFile, true), Charset.forName("UTF-8"))
-        ) {
-            writer.write(String.format("%s %s %s%n",
-                    new SimpleDateFormat(DATE_PATTERN, Locale.US).format(new Date()), tag, text));
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
-        }
+        mLoggerHandler.sendMessage(Message.obtain(mLoggerHandler, LoggerHandler.ACTION_WRITE, new LogMessage(tag, text)));
     }
 }

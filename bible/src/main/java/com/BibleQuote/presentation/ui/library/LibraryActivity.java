@@ -303,7 +303,7 @@ public class LibraryActivity extends AsyncTaskActivity {
     }
 
     private void getModuleFromFile(String path) {
-        mAsyncManager.setupTask(new LoadModuleFromFile(getString(R.string.copy_module_from_file), path,
+        mAsyncManager.setupTask(new LoadModuleFromFile(this, getString(R.string.copy_module_from_file), path,
                 BibleQuoteApp.getInstance().getLibraryController()), this);
     }
 
@@ -335,6 +335,9 @@ public class LibraryActivity extends AsyncTaskActivity {
             case Success:
                 updateView(MODULE_VIEW);
                 return;
+            case Unknown:
+                errorMessage = getString(R.string.file_not_moved);
+                break;
             case FileNotExist:
                 errorMessage = getString(R.string.file_not_exist);
                 break;
@@ -345,6 +348,9 @@ public class LibraryActivity extends AsyncTaskActivity {
                 errorMessage = getString(R.string.file_not_supported);
                 break;
             case MoveFailed:
+                errorMessage = getString(R.string.file_not_moved);
+                break;
+            case LibraryNotFound:
                 errorMessage = getString(R.string.file_not_moved);
                 break;
             default:

@@ -28,6 +28,8 @@
 
 package com.BibleQuote.domain.repository;
 
+import android.support.annotation.NonNull;
+
 import com.BibleQuote.domain.entity.BaseModule;
 import com.BibleQuote.domain.exceptions.BookDefinitionException;
 import com.BibleQuote.domain.exceptions.BooksDefinitionException;
@@ -42,6 +44,7 @@ public interface LibraryLoader<T extends BaseModule> {
 	 * Модулям устанавливается флаг isClosed=true
 	 * <br><font color='red'>Производится полная перезапись в кэш коллекции модулей.</font><br>
 	 */
+	@NonNull
     Map<String, BaseModule> loadFileModules();
 
     BaseModule loadModule(String path) throws OpenModuleException, BooksDefinitionException, BookDefinitionException;

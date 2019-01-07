@@ -28,8 +28,13 @@
 
 package com.BibleQuote.async.task;
 
+import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import com.BibleQuote.domain.controller.ILibraryController;
-import com.BibleQuote.utils.DataConstants;
+import com.BibleQuote.domain.logger.StaticLogger;
+import com.BibleQuote.utils.FsUtils;
 import com.BibleQuote.utils.Task;
 
 import java.io.File;
@@ -40,43 +45,58 @@ import java.io.File;
  */
 public class LoadModuleFromFile extends Task {
 
-    public enum StatusCode {Success, Unknown, FileNotExist, ReadFailed, FileNotSupported, MoveFailed}
+    @Nullable
+    private final File mLibraryDir;
+    @NonNull
+    private final ILibraryController mLibraryController;
+    @NonNull
+    private final String mPath;
+    private StatusCode mStatusCode = StatusCode.Success;
 
-    private final ILibraryController libraryController;
-    private String path;
-    private StatusCode statusCode = StatusCode.Success;
-
-    public LoadModuleFromFile(String message, String path, ILibraryController libraryController) {
+    public LoadModuleFromFile(@NonNull Context context, String message, @NonNull String path, @NonNull ILibraryController libraryController) {
         super(message, false);
-        this.path = path;
-        this.libraryController = libraryController;
+        mPath = path;
+        mLibraryController = libraryController;
+        mLibraryDir = FsUtils.getLibraryDir(context);
     }
 
     @Override
     protected Boolean doInBackground(String... arg0) {
+        StaticLogger.info(this, "Load module from " + mPath);
+
+        if (mLibraryDir == null) {
+            mStatusCode = StatusCode.LibraryNotFound;
+            StaticLogger.error(this, "Library directory not found");
+            return false;
+        }
+
         try {
-            File source = new File(path);
+            File source = new File(mPath);
             if (!source.exists()) {
-                statusCode = StatusCode.FileNotExist;
+                StaticLogger.error(this, "Module file not found");
+                mStatusCode = StatusCode.FileNotExist;
                 return false;
             } else if (!source.canRead()) {
-                statusCode = StatusCode.ReadFailed;
+                StaticLogger.error(this, "File not readable");
+                mStatusCode = StatusCode.ReadFailed;
                 return false;
             } else if (!source.getName().endsWith("zip")) {
-                statusCode = StatusCode.FileNotSupported;
+                StaticLogger.error(this, "Unsupported module type");
+                mStatusCode = StatusCode.FileNotSupported;
                 return false;
             }
 
-            File libraryDir = new File(DataConstants.getLibraryPath());
-            File target = new File(libraryDir, source.getName());
+            File target = new File(mLibraryDir, source.getName());
             if (!source.renameTo(target)) {
-                statusCode = StatusCode.MoveFailed;
+                StaticLogger.error(this, "Unable to move file to module directory");
+                mStatusCode = StatusCode.MoveFailed;
                 return false;
             }
 
-            libraryController.loadModule(target.getAbsolutePath());
+            mLibraryController.loadModule(target.getAbsolutePath());
         } catch (Exception e) {
-            statusCode = StatusCode.Unknown;
+            StaticLogger.error(this, e.getMessage(), e);
+            mStatusCode = StatusCode.Unknown;
             return false;
         }
 
@@ -84,6 +104,8 @@ public class LoadModuleFromFile extends Task {
     }
 
     public StatusCode getStatusCode() {
-        return statusCode;
+        return mStatusCode;
     }
+
+    public enum StatusCode {Success, Unknown, FileNotExist, ReadFailed, FileNotSupported, MoveFailed, LibraryNotFound}
 }

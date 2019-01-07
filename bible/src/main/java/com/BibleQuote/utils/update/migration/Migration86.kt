@@ -26,7 +26,7 @@
  * WWW: http://www.scripturesoftware.org
  */
 
-package com.BibleQuote.utils.update
+package com.BibleQuote.utils.update.migration
 
 import android.content.Context
 import android.os.Environment
@@ -37,6 +37,7 @@ import com.BibleQuote.domain.entity.Bookmark
 import com.BibleQuote.domain.logger.StaticLogger
 import com.BibleQuote.utils.DataConstants
 import com.BibleQuote.utils.FsUtils
+import com.BibleQuote.utils.update.Migration
 import java.io.File
 import java.io.IOException
 
@@ -62,7 +63,7 @@ class Migration86(private val dbLibraryHelper: DbLibraryHelper) : Migration(86) 
         val filesDir = context.filesDir
         val dbFile = FsUtils.findFile(DbLibraryHelper.DB_NAME, dbDataPathFile, filesDir)
         if (dbFile == null) {
-            StaticLogger.error(this, "Файл БД в приватных папках приложения не найден")
+            StaticLogger.info(this, "Файл БД в приватных папках приложения не найден")
             return
         }
 

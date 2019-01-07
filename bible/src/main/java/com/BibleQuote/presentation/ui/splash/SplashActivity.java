@@ -34,6 +34,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.PermissionChecker;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
@@ -111,7 +112,7 @@ public class SplashActivity extends BaseActivity<SplashPresenter> implements Spl
     }
 
     private void checkPermissions() {
-        int state = PermissionChecker.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        int state = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         if (state != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(
                     this,

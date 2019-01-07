@@ -34,10 +34,7 @@ import com.BibleQuote.dal.DbLibraryHelper
 import com.BibleQuote.domain.controller.ILibraryController
 import com.BibleQuote.domain.logger.StaticLogger
 import com.BibleQuote.utils.PreferenceHelper
-import com.BibleQuote.utils.update.migration.MigrationPreferenceColor
-import com.BibleQuote.utils.update.migration.MigrationReloadModules
-import com.BibleQuote.utils.update.migration.MigrationTSKSource
-import com.BibleQuote.utils.update.migration.MigrationUpdateBuiltinModules
+import com.BibleQuote.utils.update.migration.*
 import io.reactivex.Observable
 import javax.inject.Inject
 

@@ -29,27 +29,34 @@
 package com.BibleQuote.utils.update.migration
 
 import android.content.Context
-import com.BibleQuote.BuildConfig
 import com.BibleQuote.R
 import com.BibleQuote.domain.logger.StaticLogger
+import com.BibleQuote.utils.FsUtils
 import com.BibleQuote.utils.update.Migration
 import java.io.File
 import java.io.FileOutputStream
 
+private const val RST_FILE_NAME = "bible_rst.zip"
+private const val KJV_FILE_NAME = "bible_kjv.zip"
+
+/**
+ * Класс для обновления встроенных модулей приложения
+ *
+ * @author Vladimir Yakushev <ru.phoenix@gmail.com>
+ * @since 07/01/2019
+ */
 class MigrationUpdateBuiltinModules(versionCode: Int) : Migration(versionCode) {
 
     override fun doMigrate(context: Context) {
-        val dir = File(context.filesDir, BuildConfig.MODULE_DIR_NAME)
-        if (!dir.exists() && !dir.mkdir()) {
-            StaticLogger.error(this, "Create module dir failure")
-            return
+        FsUtils.getLibraryDir(context)?.let { libraryDir ->
+            StaticLogger.info(this, "Update built-in modules into $libraryDir")
+            mapOf(R.raw.bible_rst to RST_FILE_NAME, R.raw.bible_kjv to KJV_FILE_NAME)
+                    .entries
+                    .forEach { (resId, moduleFile) ->
+                        val outputStream = FileOutputStream(File(libraryDir, moduleFile))
+                        context.resources.openRawResource(resId).copyTo(outputStream)
+                    }
         }
-
-        mapOf(R.raw.bible_rst to "bible_rst.zip", R.raw.bible_kjv to "bible_kjv.zip")
-                .entries
-                .forEach { (resId, moduleFile) ->
-                    context.resources.openRawResource(resId).copyTo(FileOutputStream(File(dir, moduleFile)))
-                }
     }
 
     override fun getInfoMessage(context: Context): String {

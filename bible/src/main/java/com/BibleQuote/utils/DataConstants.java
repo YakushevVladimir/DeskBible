@@ -28,7 +28,9 @@
 
 package com.BibleQuote.utils;
 
+import android.content.Context;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 
 import com.BibleQuote.BuildConfig;
 
@@ -62,20 +64,13 @@ public final class DataConstants {
         return LIBRARY_CACHE;
     }
 
-    public static String getLibraryPath() {
-        return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)
-                ? getFsExternalDataPath()
-                : getFsDataPath();
+    @NonNull
+    public static File getExternalLibraryPath() {
+        return new File(getFsAppDirName(), BuildConfig.MODULE_DIR_NAME);
     }
 
-    private static String getFsDataPath() {
-        return Environment.getDataDirectory() + File.separator
-                + "data" + File.separator + DataConstants.APP_PACKAGE_NAME
-                + File.separator + BuildConfig.MODULE_DIR_NAME;
-    }
-
-    private static String getFsExternalDataPath() {
-        return Environment.getExternalStorageDirectory() + File.separator
-                + APP_DIR_NAME + File.separator + BuildConfig.MODULE_DIR_NAME;
+    @NonNull
+    public static File getLibraryPath(@NonNull Context context) {
+        return new File(context.getFilesDir(), BuildConfig.MODULE_DIR_NAME);
     }
 }
