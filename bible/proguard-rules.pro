@@ -17,31 +17,41 @@
 #}
 
 -dontobfuscate
--dontwarn ru.datakrat.**
+-dontwarn org.BibleQoute.**
 
--keep class ru.datakrat.** { *; }
--keepclassmembers class ru.datakrat.** { *; }
+# JSR 305 annotations are for embedding nullability information.
+-dontwarn javax.annotation.**
 
-
-##---------- Retrolambda ----------
-
--dontwarn java.lang.invoke.*
--dontwarn **$$Lambda$*
-
+-keep class org.BibleQoute.** { *; }
+-keepclassmembers class org.BibleQoute.** { *; }
 
 ##---------- Retrofit ----------
 
-# Platform calls Class.forName on types which do not exist on Android to determine platform.
--dontnote retrofit2.Platform
-# Platform used when running on RoboVM on iOS. Will not be used at runtime.
--dontnote retrofit2.Platform$IOS$MainThreadExecutor
-# Platform used when running on Java 8 VMs. Will not be used at runtime.
--dontwarn retrofit2.Platform$Java8
-# Retain generic type information for use by reflection by converters and adapters.
--keepattributes Signature
-# Retain declared checked exceptions for use by a Proxy instance.
--keepattributes Exceptions
+# Retrofit does reflection on generic parameters. InnerClasses is required to use Signature and
+# EnclosingMethod is required to use InnerClasses.
+-keepattributes Signature, InnerClasses, EnclosingMethod
 
--dontwarn okio.**
--dontwarn javax.annotation.**
--dontnote okhttp3.**
+# Retain service method parameters when optimizing.
+-keepclassmembers,allowshrinking,allowobfuscation interface * {
+    @retrofit2.http.* <methods>;
+}
+
+# Ignore annotation used for build tooling.
+-dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
+
+# Guarded by a NoClassDefFoundError try/catch and only used when on the classpath.
+-dontwarn kotlin.Unit
+
+# Top-level functions that can only be used by Kotlin.
+-dontwarn retrofit2.-KotlinExtensions
+
+##---------- OkHttp3 ----------
+
+# A resource is loaded with a relative path so the package of this class must be preserved.
+-keepnames class okhttp3.internal.publicsuffix.PublicSuffixDatabase
+
+# Animal Sniffer compileOnly dependency to ensure APIs are compatible with older versions of Java.
+-dontwarn org.codehaus.mojo.animal_sniffer.*
+
+# OkHttp platform used only on JVM and when Conscrypt dependency is available.
+-dontwarn okhttp3.internal.platform.ConscryptPlatform
