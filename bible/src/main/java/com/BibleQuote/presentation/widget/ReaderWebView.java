@@ -31,9 +31,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.NonNull;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -43,12 +41,16 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import androidx.annotation.NonNull;
+
 import com.BibleQuote.domain.entity.Chapter;
 import com.BibleQuote.domain.entity.Verse;
 import com.BibleQuote.domain.textFormatters.ITextFormatter;
 import com.BibleQuote.domain.textFormatters.StripTagsTextFormatter;
 import com.BibleQuote.entity.TextAppearance;
 import com.BibleQuote.presentation.ui.reader.IReaderViewListener;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -59,9 +61,6 @@ public class ReaderWebView extends WebView
         implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
 
     public static final String TAG = ReaderWebView.class.getSimpleName();
-    public static final int MIN_FLING_VELOCITY = 400;
-    public static final int MIN_SWIPE_X = 100;
-    public static final int MAX_SWIPE_Y = 200;
 
     public boolean mPageLoaded;
     private String baseUrl;
@@ -72,13 +71,10 @@ public class ReaderWebView extends WebView
     private boolean isBible;
     private JavaScriptInterface jsInterface;
     private GestureDetector mGestureScanner;
-    private int maxSwipeY = MAX_SWIPE_Y;
-    private int minSwipeX = MIN_SWIPE_X;
-    private float minVelocity = MIN_FLING_VELOCITY;
     private TreeSet<Integer> selectedVerse = new TreeSet<>();
-    private ReaderTaskHandler taskHandler;
+    private final ReaderTaskHandler taskHandler;
     private TextAppearance textAppearance;
-    private ViewHandler viewHandler;
+    private final ViewHandler viewHandler;
 
     @SuppressLint("AddJavascriptInterface")
     public ReaderWebView(Context mContext, AttributeSet attributeSet) {
@@ -114,12 +110,6 @@ public class ReaderWebView extends WebView
         return this.selectedVerse;
     }
 
-    public boolean isScrollToBottom() {
-        int scrollPos = getScrollY() + computeVerticalScrollExtent();
-        final int scrollRange = computeVerticalScrollRange();
-        return (scrollPos >= (scrollRange - 10));
-    }
-
     public void setFormatter(@NonNull ITextFormatter formatter) {
         this.formatter = formatter;
     }
@@ -144,28 +134,20 @@ public class ReaderWebView extends WebView
         }
     }
 
-    public void setTextApearance(TextAppearance textApearence) {
+    public void setTextAppearance(TextAppearance textApearence) {
         this.textAppearance = textApearence;
         update();
-    }
-
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        DisplayMetrics metrics = getContext().getResources().getDisplayMetrics();
-        minSwipeX = metrics.widthPixels / 3;
-        maxSwipeY = metrics.heightPixels / 3;
-        minVelocity = MIN_FLING_VELOCITY * metrics.density;
     }
 
     @Override
     public void computeScroll() {
         super.computeScroll();
         if (mPageLoaded) {
-            taskHandler.addSingleDelayedMessage(ReaderTaskHandler.MSG_HANDLE_SCROLL, 100);
+            taskHandler.addSingleDelayedMessage();
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         return mGestureScanner.onTouchEvent(event) || (event != null && super.onTouchEvent(event));
@@ -178,9 +160,6 @@ public class ReaderWebView extends WebView
 
     @Override
     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-        if (mPageLoaded) {
-            notifyListeners(IReaderViewListener.ChangeCode.onScroll);
-        }
         return false;
     }
 
@@ -221,8 +200,7 @@ public class ReaderWebView extends WebView
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
         float dx = e1.getX() - e2.getX();
         float dy = e1.getY() - e2.getY();
-        if (Math.abs(dy) < maxSwipeY && Math.abs(dx) > minSwipeX
-                && Math.abs(velocityX) > minVelocity) {
+        if (Math.abs(dx) > Math.abs(dy)) {
             if (dx < 0) {
                 notifyListeners(IReaderViewListener.ChangeCode.onLeftNavigation);
             } else {
@@ -373,9 +351,6 @@ public class ReaderWebView extends WebView
 
     private void onScrollComplete() {
         Log.d(TAG, "onScrollComplete");
-        if (isScrollToBottom()) {
-            notifyListeners(IReaderViewListener.ChangeCode.onScroll);
-        }
         loadUrl("javascript: getCurrentVerse();");
     }
 
@@ -397,32 +372,28 @@ public class ReaderWebView extends WebView
 
         private static final int MSG_HANDLE_SCROLL = 1;
 
-        private WeakReference<ReaderWebView> reader;
+        private final WeakReference<ReaderWebView> reader;
 
         ReaderTaskHandler(ReaderWebView readerWebView) {
             this.reader = new WeakReference<>(readerWebView);
         }
 
         @Override
-        public void handleMessage(Message msg) {
+        public void handleMessage(@NotNull Message msg) {
             ReaderWebView readerWebView = reader.get();
             if (readerWebView == null) {
                 return;
             }
 
-            switch (msg.what) {
-                case MSG_HANDLE_SCROLL:
-                    readerWebView.onScrollComplete();
-                    break;
-                default:
-                    // nothing
+            if (msg.what == MSG_HANDLE_SCROLL) {
+                readerWebView.onScrollComplete();
             }
             super.handleMessage(msg);
         }
 
-        void addSingleDelayedMessage(int what, long delay) {
-            removeMessages(what);
-            sendEmptyMessageDelayed(what, delay);
+        void addSingleDelayedMessage() {
+            removeMessages(ReaderTaskHandler.MSG_HANDLE_SCROLL);
+            sendEmptyMessageDelayed(ReaderTaskHandler.MSG_HANDLE_SCROLL, 100);
         }
     }
 
@@ -445,8 +416,6 @@ public class ReaderWebView extends WebView
                 }
             }
             mPageLoaded = true;
-            viewHandler.sendMessage(Message.obtain(viewHandler, ViewHandler.MSG_OTHER,
-                    IReaderViewListener.ChangeCode.onUpdateText));
         }
     }
 

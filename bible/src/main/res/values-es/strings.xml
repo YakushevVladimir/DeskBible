@@ -92,7 +92,6 @@
     <string name="disabled">Disabled</string>
     <string name="divide_the_verses">Divide the verses</string>
     <string name="edit">Edit</string>
-    <string name="empty">Empty</string>
     <string name="enabled">Enabled</string>
     <string name="exception_book_definition">Incorrect attributes of book #%1$d in module %2$s</string>
     <string name="exception_book_not_found">Book %1$s not found in module %2$s</string>
@@ -132,13 +131,11 @@
     <string name="choice_chapter">Abierto…</string>
     <string name="menu_tags">Etiquetas</string>
     <string name="search_hint">Lo que hay que encontrar?</string>
-    <string name="hide_nav_buttons">Ocultar los botones de navegación</string>
     <string name="image_not_found">" Imagen no encontrada"</string>
     <string name="retry">Rever</string>
     <string name="msg_permission_denied">No se requieren permisos para ejecutar la aplicación.</string>
     <string name="err_load_module_unknown">Unexpected error when adding a module. Try again later or select another module.</string>
     <string name="line_spacing_title">Espaciado de línea</string>
-    <string name="update_error_fail_create_module_dir">Error al crear una carpeta para módulos</string>
     <string name="update_tsk">Actualizando TSK…</string>
     <string name="update_reload_modules">Biblioteca de actualización…</string>
     <string name="update_builtin_modules">Actualizar módulos incorporados…</string>

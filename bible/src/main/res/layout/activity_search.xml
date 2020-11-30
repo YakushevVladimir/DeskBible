@@ -49,10 +49,10 @@
             android:hint="@string/search_hint"
             android:imeOptions="actionSearch"
 			android:inputType="textAutoComplete|text"
-			android:maxLines="1"/>
-		<LinearLayout 
-			android:id="@+id/LinearLayout02"
-			android:layout_width="fill_parent" 
+			android:maxLines="1"
+			android:importantForAutofill="no" />
+		<LinearLayout
+            android:layout_width="fill_parent"
 			android:layout_height="41dip"
 			android:orientation="horizontal">
 

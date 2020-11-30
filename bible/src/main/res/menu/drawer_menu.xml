@@ -38,9 +38,7 @@
             android:icon="@drawable/ic_menu_tag"
             android:title="@string/menu_tags"/>
     </group>
-    <item
-        android:id="@+id/settings"
-        android:title="">
+    <item android:title="">
         <menu>
             <item
                 android:id="@+id/drawer_settings"

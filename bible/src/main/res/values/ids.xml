@@ -18,20 +18,11 @@
 -->
 <resources>
 
-	<item type="id" name="action_bar_view_info" />
-	<item type="id" name="action_bar_more" />
-	
-	<!-- Reader -->
+    <!-- Reader -->
 	<item type="id" name="action_bar_chooseCh" />
-	<item type="id" name="action_bar_prevCh" />
-	<item type="id" name="action_bar_nextCh" />
-	<item type="id" name="action_bar_search" />
-	<item type="id" name="action_bar_bookmarks" />
-	<item type="id" name="action_bar_settings" />
-	<item type="id" name="action_bar_refresh" />
-	<item type="id" name="view_chapter_nav" />
-	<item type="id" name="action_bar_history" />
+    <item type="id" name="action_bar_search" />
+    <item type="id" name="action_bar_refresh" />
+    <item type="id" name="action_bar_history" />
 	<item type="id" name="action_bar_history_clear" />
-	<item type="id" name="action_bar_parallels" />
-			
+
 </resources>

@@ -34,10 +34,8 @@ public interface IReaderViewListener {
 	void onReaderViewChange(ChangeCode code);
 
 	enum ChangeCode {
-		onUpdateText,
 		onChangeSelection,
 		onLongPress,
-		onScroll,
 		onChangeReaderMode,
 		onUpNavigation,
 		onDownNavigation,

@@ -94,7 +94,6 @@
     <string name="disabled">Deaktiviert</string>
     <string name="divide_the_verses">Teilen Sie die Verse</string>
     <string name="edit">Bearbeiten</string>
-    <string name="empty">Leer</string>
     <string name="enabled">Aktiviert</string>
     <string name="exception_book_definition">Falsche Attribute des Buches #%1$d im Modul %2$s</string>
     <string name="exception_book_not_found">Buch %1$s im Modul %2$s nicht gefunden</string>
@@ -134,13 +133,11 @@
     <string name="choice_chapter">Offen…</string>
     <string name="menu_tags">Tags</string>
     <string name="search_hint">Was zu finden?</string>
-    <string name="hide_nav_buttons">Blenden Sie die Navigationstasten </string>
     <string name="image_not_found">Bild nicht gefunden</string>
     <string name="retry">Wiederholen</string>
     <string name="msg_permission_denied">Keine Berechtigungen zum Ausführen der Anwendung erforderlich</string>
     <string name="err_load_module_unknown">Unerwarteter Fehler beim hinzufügen des Moduls. Versuchen Sie es später erneut oder wählen Sie ein anderes Modul</string>
     <string name="line_spacing_title">Zeilenabstand</string>
-    <string name="update_error_fail_create_module_dir">Fehler beim Erstellen eines Ordners für Module</string>
     <string name="update_tsk">Aktualisieren Sie TSK…</string>
     <string name="update_reload_modules">Bibliothek aktualisieren…</string>
     <string name="update_builtin_modules">Aktualisieren Sie die integrierten Module…</string>

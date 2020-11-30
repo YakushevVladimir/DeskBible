@@ -35,14 +35,6 @@ import android.graphics.Point;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.annotation.NonNull;
-import com.google.android.material.navigation.NavigationView;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.view.ActionMode;
-import androidx.appcompat.widget.Toolbar;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -52,7 +44,14 @@ import android.view.Surface;
 import android.view.View;
 import android.widget.Toast;
 
-import com.BibleQuote.BibleQuoteApp;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.view.ActionMode;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.BibleQuote.R;
 import com.BibleQuote.di.component.ActivityComponent;
 import com.BibleQuote.domain.entity.Chapter;
@@ -71,10 +70,11 @@ import com.BibleQuote.presentation.ui.library.LibraryActivity;
 import com.BibleQuote.presentation.ui.reader.tts.TTSPlayerFragment;
 import com.BibleQuote.presentation.ui.search.SearchActivity;
 import com.BibleQuote.presentation.ui.settings.SettingsActivity;
-import com.BibleQuote.presentation.widget.ChapterNavigator;
 import com.BibleQuote.presentation.widget.ReaderWebView;
 import com.BibleQuote.utils.DevicesKeyCodes;
-import com.BibleQuote.utils.PreferenceHelper;
+import com.google.android.material.navigation.NavigationView;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.TreeSet;
 
@@ -91,14 +91,11 @@ public class ReaderActivity extends BaseActivity<ReaderViewPresenter> implements
 
     private static final String KEY_LINK_OSIS = "linkOSIS";
     private static final String TAG = ReaderActivity.class.getSimpleName();
-    private static final int VIEW_CHAPTER_NAV_LENGTH = 3000;
 
-    @BindView(R.id.chapter_nav) ChapterNavigator chapterNav;
     @BindView(R.id.drawer_layout) DrawerLayout drawerLayout;
     @BindView(R.id.navigation_view) NavigationView navigationView;
     @BindView(R.id.readerView) ReaderWebView readerView;
 
-    private Handler chapterNavHandler = new Handler();
     private ActionMode currActionMode;
     private boolean exitToBackKey;
     private ReaderWebView.Mode oldMode;
@@ -139,22 +136,6 @@ public class ReaderActivity extends BaseActivity<ReaderViewPresenter> implements
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
         readerView.setOnReaderViewListener(this);
 
-        chapterNav.setOnClickListener((ChapterNavigator.OnClickListener) btn -> {
-            switch (btn) {
-                case DOWN:
-                    readerView.pageDown(false);
-                    break;
-                case UP:
-                    readerView.pageUp(false);
-                    break;
-                case PREV:
-                    presenter.prevChapter();
-                    break;
-                case NEXT:
-                    presenter.nextChapter();
-            }
-        });
-
         Intent intent = getIntent();
         if (intent != null && intent.getData() != null) {
             presenter.openLink(intent.getData());
@@ -184,7 +165,7 @@ public class ReaderActivity extends BaseActivity<ReaderViewPresenter> implements
     }
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
+    public void onConfigurationChanged(@NotNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
     }
 
@@ -268,12 +249,10 @@ public class ReaderActivity extends BaseActivity<ReaderViewPresenter> implements
         if ((keyCode == KeyEvent.KEYCODE_VOLUME_UP && presenter.isVolumeButtonsToScroll())
                 || DevicesKeyCodes.keyCodeUp(keyCode)) {
             readerView.pageUp(false);
-            viewChapterNavigator();
             return true;
         } else if ((keyCode == KeyEvent.KEYCODE_VOLUME_DOWN && presenter.isVolumeButtonsToScroll())
                 || DevicesKeyCodes.keyCodeDown(keyCode)) {
             readerView.pageDown(false);
-            viewChapterNavigator();
             return true;
         } else {
             return super.onKeyDown(keyCode, event);
@@ -295,14 +274,8 @@ public class ReaderActivity extends BaseActivity<ReaderViewPresenter> implements
     @Override
     public void onReaderViewChange(ChangeCode code) {
         switch (code) {
-            case onScroll:
-                viewChapterNavigator();
-                break;
             case onChangeReaderMode:
                 updateActivityMode();
-                break;
-            case onUpdateText:
-                viewChapterNavigator();
                 break;
             case onChangeSelection:
                 TreeSet<Integer> selVerses = readerView.getSelectedVerses();
@@ -313,7 +286,6 @@ public class ReaderActivity extends BaseActivity<ReaderViewPresenter> implements
                 }
                 break;
             case onLongPress:
-                viewChapterNavigator();
                 if (readerView.getReaderMode() == ReaderWebView.Mode.Read) {
                     openLibraryActivity();
                 }
@@ -451,7 +423,7 @@ public class ReaderActivity extends BaseActivity<ReaderViewPresenter> implements
 
     @Override
     public void setTextAppearance(TextAppearance textAppearance) {
-        readerView.setTextApearance(textAppearance);
+        readerView.setTextAppearance(textAppearance);
     }
 
     @Override
@@ -473,7 +445,6 @@ public class ReaderActivity extends BaseActivity<ReaderViewPresenter> implements
                 actionBar.show();
             }
         }
-        viewChapterNavigator();
     }
 
     @Override
@@ -563,19 +534,5 @@ public class ReaderActivity extends BaseActivity<ReaderViewPresenter> implements
                 .setClass(this, BookmarksActivity.class)
                 .putExtra(BookmarksActivity.EXTRA_MODE, BookmarksActivity.MODE_TAGS);
         startActivityForResult(intentBookmarks, ID_BOOKMARKS);
-    }
-
-    private void viewChapterNavigator() {
-        chapterNavHandler.removeCallbacksAndMessages(null);
-        PreferenceHelper prefHelper = BibleQuoteApp.getInstance().getPrefHelper();
-        if (readerView.getReaderMode() != ReaderWebView.Mode.Study || prefHelper.hideNavButtons()) {
-            chapterNav.setVisibility(View.GONE);
-        } else {
-            chapterNav.setVisibility(View.VISIBLE);
-            if (!readerView.isScrollToBottom()) {
-                chapterNavHandler.postDelayed(
-                        () -> chapterNav.setVisibility(View.GONE), VIEW_CHAPTER_NAV_LENGTH);
-            }
-        }
     }
 }

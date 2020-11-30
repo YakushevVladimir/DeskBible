@@ -54,7 +54,6 @@
         </com.google.android.material.appbar.AppBarLayout>
 
         <RelativeLayout
-            android:id="@+id/reader"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:orientation="vertical">
@@ -63,14 +62,6 @@
                 android:id="@+id/readerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
-
-            <com.BibleQuote.presentation.widget.ChapterNavigator
-                android:id="@+id/chapter_nav"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
-                android:visibility="gone"/>
 
             <FrameLayout
                 android:id="@+id/tts_player_frame"

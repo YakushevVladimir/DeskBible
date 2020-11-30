@@ -112,7 +112,6 @@
     <string name="add_module_to_reference_summary">Add the module name to the signature</string>
     <string name="menu_speek">Read…</string>
     <string name="no_tags">No tags</string>
-    <string name="empty">Empty</string>
     <string name="tags">Tag\'s</string>
     <string name="tags_description">Enter tags, separated by commas</string>
     <string name="bookmark_name">Bookmark name (optional)</string>
@@ -140,7 +139,6 @@
     <string name="choice_chapter">Goto…</string>
     <string name="menu_tags">Tags</string>
     <string name="search_hint">What to find?</string>
-    <string name="hide_nav_buttons">Hide navigation buttons</string>
     <string name="image_not_found">Image not found</string>
     <string name="retry">Retry</string>
     <string name="msg_permission_denied">No permissions required to run the application</string>
@@ -148,7 +146,6 @@
     <string name="line_spacing_title">Line spacing</string>
     <string name="line_spacing_summary" translatable="false">%d%%</string>
     <string name="error_initialization_failed" translatable="false">Initialization failed</string>
-    <string name="update_error_fail_create_module_dir">Failed to create a folder for modules</string>
     <string name="update_preferences">Updating settings…</string>
     <string name="update_tsk">Update TSK…</string>
     <string name="update_reload_modules">Update library…</string>

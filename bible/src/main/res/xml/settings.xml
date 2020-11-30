@@ -106,11 +106,6 @@
             android:persistent="true"
             android:summary="@string/disable_turn_screen_summury"
             android:title="@string/disable_turn_screen"/>
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="hide_nav_buttons"
-            android:persistent="true"
-            android:title="@string/hide_nav_buttons"/>
 
         <ListPreference
             android:defaultValue="10"

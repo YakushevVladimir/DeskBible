@@ -49,7 +49,6 @@ public class PreferenceHelper {
     private static final String KEY_CROSS_REFERENCE_DISPLAY_CONTEXT = "cross_reference_display_context";
     private static final String KEY_DIVIDE_THE_VERSES = "divide_the_verses";
     private static final String KEY_FONT_FAMILY = "font_family";
-    private static final String KEY_HIDE_NAV_BUTTONS = "hide_nav_buttons";
     private static final String KEY_HISTORY_SIZE = "HistorySize";
     private static final String KEY_LINE_SPACING = "line_spacing";
     private static final String KEY_NIGHT_MODE = "nightMode";
@@ -67,7 +66,7 @@ public class PreferenceHelper {
     private static final String KEY_LAST_READ = "last_read";
 
     private final SharedPreferences preference;
-    private Context context;
+    private final Context context;
 
     public PreferenceHelper(Context context) {
         preference = PreferenceManager.getDefaultSharedPreferences(context);
@@ -133,10 +132,6 @@ public class PreferenceHelper {
     @NonNull
     public String getString(String key) {
         return preference.getString(key, "");
-    }
-
-    public boolean hideNavButtons() {
-        return preference.getBoolean(KEY_HIDE_NAV_BUTTONS, true);
     }
 
     public void putInt(@NotNull String key, int value) {

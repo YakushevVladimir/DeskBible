@@ -35,8 +35,7 @@
 	<color name="light_gray">#dadada</color>
 	<color name="dark_gray">#7e7e7e</color>
 	<color name="button_gray">#e7e7e7</color>
-	<color name="button_darkgray">#c9c9c9</color>
-	<color name="button_border">#9d9d9d</color>
+    <color name="button_border">#9d9d9d</color>
 
 	<color name="primary">#6E1C14</color>
 	<color name="primary_dark">#51150F</color>

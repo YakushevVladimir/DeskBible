@@ -52,12 +52,4 @@
         <item name="android:padding">4dp</item>
     </style>
 
-	<style name="TextAppearance.Large">
-		<item name="android:textSize">26sp</item>
-	</style>
-
-	<style name="TextAppearanceLarge" parent="@style/TextAppearance.Large">
-        <item name="android:textSize">@dimen/text_size_large</item>
-    </style>
-
 </resources>

@@ -103,7 +103,6 @@
 	<string name="add_reference">Добавлять ссылку</string>
 	<string name="menu_speek">Читать…</string>
 	<string name="no_tags">Меток нет</string>
-	<string name="empty">Нет данных</string>
 	<string name="tags">Метки</string>
 	<string name="tags_description">Укажите метки через запятую</string>
     <string name="bookmark_name">Имя закладки (необязательно)</string>
@@ -129,13 +128,11 @@
 	<string name="choice_chapter">Открыть…</string>
 	<string name="menu_tags">Метки</string>
 	<string name="search_hint">Что найти?</string>
-	<string name="hide_nav_buttons">Скрыть кнопки навигации</string>
-	<string name="image_not_found">Изображение не найдено</string>
+    <string name="image_not_found">Изображение не найдено</string>
     <string name="retry">Повторить</string>
     <string name="msg_permission_denied">Отсутствуют разрешения необходимые для работы приложения</string>
 	<string name="err_load_module_unknown">Не удалось загрузить модуль. Попробуйте ещё раз или используйте другой модуль</string>
     <string name="line_spacing_title">Межстрочный интервал</string>
-	<string name="update_error_fail_create_module_dir">Не удалось создать папку для модулей</string>
 	<string name="update_tsk">Обновление TSK…</string>
 	<string name="update_reload_modules">Обновление библиотеки модулей…</string>
 	<string name="update_builtin_modules">Обновление встроенных модулей…</string>
