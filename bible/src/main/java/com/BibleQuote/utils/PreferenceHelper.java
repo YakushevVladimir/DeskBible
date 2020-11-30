@@ -30,7 +30,7 @@ package com.BibleQuote.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.BibleQuote.R;
 import com.BibleQuote.entity.TextAppearance;

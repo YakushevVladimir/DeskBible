@@ -28,7 +28,7 @@
 
 package com.BibleQuote.domain.repository;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.BibleQuote.domain.entity.Bookmark;
 import com.BibleQuote.domain.entity.Tag;

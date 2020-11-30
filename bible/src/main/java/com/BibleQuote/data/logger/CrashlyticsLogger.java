@@ -1,10 +1,10 @@
 package com.BibleQuote.data.logger;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.Log;
 
 import com.BibleQuote.domain.logger.Logger;
-import com.crashlytics.android.Crashlytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 /**
  * Логгирование событий в Crashlytics
@@ -14,24 +14,25 @@ import com.crashlytics.android.Crashlytics;
  */
 public class CrashlyticsLogger extends Logger {
 
+    private final FirebaseCrashlytics mCrashlytics = FirebaseCrashlytics.getInstance();
+
     @Override
     public void debug(@NonNull Object tag, @NonNull String message) {
-        Crashlytics.log(Log.DEBUG, getTag(tag), message);
+        mCrashlytics.log(message);
     }
 
     @Override
     public void error(@NonNull Object tag, @NonNull String message) {
-        Crashlytics.log(Log.ERROR, getTag(tag), message);
+        mCrashlytics.log(message);
     }
 
     @Override
     public void error(@NonNull Object tag, @NonNull String message, @NonNull Throwable th) {
-        String logMessage = message + "\n" + Log.getStackTraceString(th);
-        Crashlytics.log(Log.ERROR, getTag(tag), logMessage);
+        mCrashlytics.recordException(th);
     }
 
     @Override
     public void info(@NonNull Object tag, @NonNull String message) {
-        Crashlytics.log(Log.INFO, getTag(tag), message);
+        mCrashlytics.log(message);
     }
 }

@@ -29,7 +29,7 @@
 package com.BibleQuote.dal.controller;
 
 import android.graphics.Bitmap;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.Log;
 
 import com.BibleQuote.dal.repository.BQModuleRepository;

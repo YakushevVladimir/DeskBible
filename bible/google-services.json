@@ -1,39 +1,45 @@
 {
   "project_info": {
-    "project_number": "729780781653",
-    "firebase_url": "https://biblequote-android.firebaseio.com",
-    "project_id": "biblequote-android",
-    "storage_bucket": "biblequote-android.appspot.com"
+    "project_number": "724406199442",
+    "firebase_url": "https://churchtools-e812d.firebaseio.com",
+    "project_id": "churchtools-e812d",
+    "storage_bucket": "churchtools-e812d.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:729780781653:android:2bec613f49a4563a",
+        "mobilesdk_app_id": "1:724406199442:android:2c6e98fa15059b7c84324b",
         "android_client_info": {
-          "package_name": "com.BibleQuote"
+          "package_name": "ru.churchtools.deskbible"
         }
       },
       "oauth_client": [
         {
-          "client_id": "729780781653-ses86uukmcg6n78b3skeck531l2mhtnd.apps.googleusercontent.com",
+          "client_id": "724406199442-posfm8jmnrpf2nmb2btgi3b23b62of7a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ru.churchtools.deskbible",
+            "certificate_hash": "82a661163f18ad822e7ef084fe3f6c885139214d"
+          }
+        },
+        {
+          "client_id": "724406199442-grcfauvgh68beolvovqpmak2bsne9con.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDZnQbnuGMvIT49ZLUYTAFWCXGEZo0CAiE"
+          "current_key": "AIzaSyBqFuSFLfXW6Y_3QP7CnPs1uULJz18EV38"
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
+          "other_platform_oauth_client": [
+            {
+              "client_id": "724406199442-grcfauvgh68beolvovqpmak2bsne9con.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

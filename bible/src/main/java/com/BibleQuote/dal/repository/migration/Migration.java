@@ -29,7 +29,7 @@
 package com.BibleQuote.dal.repository.migration;
 
 import android.database.sqlite.SQLiteDatabase;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 /**
  * Базовый класс для выполнения миграции БД

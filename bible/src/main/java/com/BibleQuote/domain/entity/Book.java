@@ -28,7 +28,7 @@
 
 package com.BibleQuote.domain.entity;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.BibleQuote.managers.BibleBooksID;
 

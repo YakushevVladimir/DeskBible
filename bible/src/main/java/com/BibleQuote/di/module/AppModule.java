@@ -43,8 +43,6 @@ import com.BibleQuote.data.logger.AndroidLogger;
 import com.BibleQuote.data.logger.CrashlyticsLogger;
 import com.BibleQuote.data.logger.file.FileLogger;
 import com.BibleQuote.domain.AnalyticsHelper;
-import com.BibleQuote.domain.analytics.AnswersAnalyticsHelper;
-import com.BibleQuote.domain.analytics.CompositeAnalyticsHelper;
 import com.BibleQuote.domain.analytics.FirebaseAnalyticsHelper;
 import com.BibleQuote.domain.controller.ILibraryController;
 import com.BibleQuote.domain.controller.ITSKController;
@@ -75,7 +73,7 @@ import dagger.Provides;
 @Module(includes = {DataModule.class})
 public class AppModule {
 
-    private BibleQuoteApp application;
+    private final BibleQuoteApp application;
 
     public AppModule(BibleQuoteApp application) {
         this.application = application;
@@ -126,9 +124,7 @@ public class AppModule {
 
     @Provides
     AnalyticsHelper analyticsHelper(Context context) {
-        return new CompositeAnalyticsHelper(Arrays.asList(
-                new FirebaseAnalyticsHelper(FirebaseAnalytics.getInstance(context.getApplicationContext())),
-                new AnswersAnalyticsHelper()));
+        return new FirebaseAnalyticsHelper(FirebaseAnalytics.getInstance(context.getApplicationContext()));
     }
 
     @Provides

@@ -29,7 +29,7 @@
 package com.BibleQuote.domain.search;
 
 import android.graphics.Bitmap;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.BibleQuote.domain.entity.BaseModule;
 import com.BibleQuote.domain.entity.Chapter;

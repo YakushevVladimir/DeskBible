@@ -28,7 +28,7 @@
 
 package com.BibleQuote.domain.logger;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 public abstract class Logger {
 

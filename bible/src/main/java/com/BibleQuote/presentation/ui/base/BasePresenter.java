@@ -36,7 +36,7 @@ import io.reactivex.disposables.Disposable;
 @SuppressWarnings("WeakerAccess")
 public abstract class BasePresenter<T extends BaseView> {
 
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private WeakReference<T> viewRef;
 
     public void attachView(T view) {

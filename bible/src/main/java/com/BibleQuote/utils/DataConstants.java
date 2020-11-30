@@ -30,7 +30,7 @@ package com.BibleQuote.utils;
 
 import android.content.Context;
 import android.os.Environment;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.BibleQuote.BuildConfig;
 

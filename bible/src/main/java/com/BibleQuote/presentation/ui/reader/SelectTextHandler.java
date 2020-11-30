@@ -29,8 +29,8 @@
 package com.BibleQuote.presentation.ui.reader;
 
 import android.content.Intent;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.view.ActionMode;
+import androidx.fragment.app.DialogFragment;
+import androidx.appcompat.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;

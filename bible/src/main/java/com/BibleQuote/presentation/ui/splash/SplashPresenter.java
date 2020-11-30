@@ -38,7 +38,7 @@ import javax.inject.Inject;
 
 import io.reactivex.Completable;
 
-class SplashPresenter extends BasePresenter<SplashView> {
+public class SplashPresenter extends BasePresenter<SplashView> {
 
     private final ILibraryController libraryController;
     private final UpdateManager updateManager;

@@ -30,7 +30,7 @@ package com.BibleQuote.data.logger.file;
 import android.os.HandlerThread;
 import android.os.Message;
 import android.os.Process;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.Log;
 
 import com.BibleQuote.BuildConfig;

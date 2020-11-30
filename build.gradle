@@ -29,30 +29,29 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    ext.kotlin_version = '1.2.71'
+    ext.kotlin_version = '1.3.72'
     repositories {
         jcenter()
         google()
-        maven { url 'https://maven.fabric.io/public' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.1'
-        classpath 'com.google.gms:google-services:4.2.0'
-        classpath 'io.fabric.tools:gradle:1.26.1'
-        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.6.3'
+        classpath 'com.android.tools.build:gradle:4.1.1'
+        classpath 'com.google.gms:google-services:4.3.4'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.4.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 
 ext {
-    compileSdkVersion = 26
-    buildToolsVersion = "28.0.3"
-    minSdkVersion = 16
-    targetSdkVersion = 26
-    supportLibVersion = "26.1.0"
-    daggerVersion = "2.11"
-    retrofitVersion = "2.5.0"
-    butterknifeVersion = "8.8.1"
+    compileSdkVersion = 29
+    buildToolsVersion = "29.0.3"
+    minSdkVersion = 21
+    targetSdkVersion = 29
+
+    androidx_version = '1.1.0'
+    daggerVersion = "2.30.1"
+    retrofitVersion = "2.9.0"
+    butterknifeVersion = "10.2.3"
 }
 
 allprojects {
@@ -60,6 +59,5 @@ allprojects {
         jcenter()
         google()
         mavenCentral()
-        maven { url 'https://maven.fabric.io/public' }
     }
 }

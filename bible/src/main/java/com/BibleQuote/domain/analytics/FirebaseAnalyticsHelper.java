@@ -1,7 +1,7 @@
 package com.BibleQuote.domain.analytics;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.BibleQuote.domain.AnalyticsHelper;
 import com.BibleQuote.domain.entity.BibleReference;

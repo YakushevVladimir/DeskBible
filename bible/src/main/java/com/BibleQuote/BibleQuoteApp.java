@@ -41,14 +41,8 @@ import com.BibleQuote.domain.logger.StaticLogger;
 import com.BibleQuote.domain.repository.IBookmarksRepository;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.utils.PreferenceHelper;
-import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.core.CrashlyticsCore;
 
 import javax.inject.Inject;
-
-import io.fabric.sdk.android.Fabric;
-import io.fabric.sdk.android.SilentLogger;
 
 public class BibleQuoteApp extends Application implements Thread.UncaughtExceptionHandler {
 
@@ -102,7 +96,6 @@ public class BibleQuoteApp extends Application implements Thread.UncaughtExcepti
     @Override
     public void onCreate() {
         super.onCreate();
-        initCrashlytics();
 
         appComponent = DaggerAppComponent.builder()
                 .appModule(new AppModule(this))
@@ -119,16 +112,5 @@ public class BibleQuoteApp extends Application implements Thread.UncaughtExcepti
         if (exceptionHandler != null) {
             exceptionHandler.uncaughtException(thread, ex);
         }
-    }
-
-    private void initCrashlytics() {
-        CrashlyticsCore crashlyticsCore = new CrashlyticsCore.Builder()
-                .disabled(BuildConfig.DEBUG)
-                .build();
-        final Fabric fabric = new Fabric.Builder(this)
-                .kits(new Crashlytics.Builder().core(crashlyticsCore).build(), new Answers())
-                .logger(new SilentLogger())
-                .build();
-        Fabric.with(fabric);
     }
 }

@@ -30,7 +30,7 @@ package com.BibleQuote.dal.repository;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.Base64;
 
 import com.BibleQuote.domain.entity.BaseModule;

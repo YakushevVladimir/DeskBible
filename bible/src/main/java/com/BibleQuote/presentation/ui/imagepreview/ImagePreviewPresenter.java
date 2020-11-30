@@ -37,7 +37,7 @@ import com.BibleQuote.presentation.ui.base.BasePresenter;
 import javax.inject.Inject;
 
 @PerActivity
-class ImagePreviewPresenter extends BasePresenter<ImagePreviewView> {
+public class ImagePreviewPresenter extends BasePresenter<ImagePreviewView> {
 
     private Librarian librarian;
     private String imagePath;
