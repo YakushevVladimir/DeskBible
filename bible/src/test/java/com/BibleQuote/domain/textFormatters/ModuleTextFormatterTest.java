@@ -42,6 +42,7 @@ import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -68,7 +69,7 @@ public class ModuleTextFormatterTest {
         MockitoAnnotations.initMocks(this);
         when(prefHelper.viewBookVerse()).thenReturn(true);
 
-        mModule = new BQModule("base/biblequote.ini");
+        mModule = new BQModule("base" + File.separator + "biblequote.ini");
         mModule.setContainsStrong(false);
         mModule.setBible(true);
     }

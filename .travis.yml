@@ -18,7 +18,7 @@ android:
       - 'google-gdk-license-.+'
 
 script:
-  - ./gradlew clean assembleDebug testDebugUnitTestCoverage coveralls
+  - ./gradlew clean assembleDebug testDebugUnitTest
 
 before_cache:
   - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
