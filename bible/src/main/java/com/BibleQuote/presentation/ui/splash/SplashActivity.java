@@ -31,20 +31,20 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
-import com.google.android.material.snackbar.Snackbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
-import android.view.WindowManager;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.BibleQuote.R;
 import com.BibleQuote.di.component.ActivityComponent;
 import com.BibleQuote.domain.logger.StaticLogger;
 import com.BibleQuote.presentation.ui.base.BaseActivity;
 import com.BibleQuote.presentation.ui.reader.ReaderActivity;
+import com.google.android.material.snackbar.Snackbar;
 
 import butterknife.BindView;
 
@@ -52,8 +52,10 @@ public class SplashActivity extends BaseActivity<SplashPresenter> implements Spl
 
     private static final int REQUEST_PERMISSIONS = 1;
 
-    @BindView(R.id.root_layout) RelativeLayout rootLayout;
-    @BindView(R.id.update_description) TextView updateDescriptionView;
+    @BindView(R.id.root_layout)
+    ViewGroup rootLayout;
+    @BindView(R.id.update_description)
+    TextView updateDescriptionView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

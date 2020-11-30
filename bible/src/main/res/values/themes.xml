@@ -31,7 +31,7 @@
 <resources>
 
     <style name="SplashTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
-        <item name="android:windowBackground">@color/primary_dark</item>
+        <item name="android:windowBackground">@color/splash_background</item>
     </style>
 
     <style name="Theme.BibleQuote" parent="@style/Theme.AppCompat.Light.DarkActionBar">

@@ -29,7 +29,7 @@
   -->
 <resources>
 
-	<color name="white">#ffffff</color>
+	<color name="white">#dddddd</color>
 	<color name="black">#000000</color>
 	<color name="gray">#aaaaaa</color>
 	<color name="light_gray">#dadada</color>
@@ -43,10 +43,11 @@
 	<color name="accent">#f5cc99</color>
 	<color name="accent_dark">#c1a078</color>
 	<color name="toolbarTextColor">#f5cc99</color>
+	<color name="splash_background">#b49574</color>
 
-	<color name="def_text_color">#51150F</color>
-	<color name="def_background">#faedc1</color>
-	<color name="def_sel_text_color">#51150F</color>
-	<color name="def_sel_background">#f9d979</color>
+	<color name="def_text_color">@color/primary_dark</color>
+	<color name="def_background">#f3dca6</color>
+	<color name="def_sel_text_color">@color/primary_dark</color>
+	<color name="def_sel_background">#F9CB5E</color>
 
 </resources>
