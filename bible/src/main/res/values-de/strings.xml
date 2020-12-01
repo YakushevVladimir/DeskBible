@@ -27,7 +27,6 @@
   ~ WWW: http://www.scripturesoftware.org
   -->
 <resources>
-    <string name="app_name">Bibel</string>
     <!-- Tab's -->
     <!-- Settings -->
     <string name="text_size">Schriftgröße</string>

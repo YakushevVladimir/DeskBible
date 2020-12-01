@@ -63,7 +63,7 @@ android {
         applicationVariants.all { variant ->
             variant.outputs.all { output ->
                 if (variant.buildType.name == "release") {
-                    outputFileName = "bible-release-${defaultConfig.versionName}.apk"
+                    outputFileName = "deskbible-release-${defaultConfig.versionName}.${defaultConfig.versionCode}.apk"
                 }
             }
         }

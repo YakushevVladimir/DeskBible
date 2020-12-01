@@ -28,7 +28,6 @@
   -->
 
 <resources>
-    <string name="app_name">Біблія</string>
     <string name="about">Про програму</string>
     <string name="app_about_dev_label">Розробники:</string>
     <string name="app_about_design_label">Дизайн:</string>

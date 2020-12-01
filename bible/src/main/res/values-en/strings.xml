@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!--
+  ~ Copyright (C) 2011 Scripture Software
+  ~
+  ~ Licensed to the Apache Software Foundation (ASF) under one
+  ~ or more contributor license agreements.  See the NOTICE file
+  ~ distributed with this work for additional information
+  ~ regarding copyright ownership.  The ASF licenses this file
+  ~ to you under the Apache License, Version 2.0 (the
+  ~ "License"); you may not use this file except in compliance
+  ~ with the License.  You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied.  See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  ~
+  ~ Project: BibleQuote-for-Android
+  ~ File: strings.xml
+  ~
+  ~ Created by Vladimir Yakushev at 5/2018
+  ~ E-mail: ru.phoenix@gmail.com
+  ~ WWW: http://www.scripturesoftware.org
+  -->
+<resources>
+    <string name="about">About</string>
+    <string name="app_about_dev_label">Developers:</string>
+    <string name="app_about_design_label">Design:</string>
+    <string name="app_about_thanks_label">Thanks:</string>
+    <string name="settings">Settings</string>
+    <string name="help">Help</string>
+    <string name="search">Search</string>
+    <string name="history">History</string>
+    <string name="bookmarks">Bookmarks</string>
+    <string name="library">Library</string>
+    <string name="cross_reference">Cross-reference</string>
+    <string name="category_reader_appearance">Appearance</string>
+    <string name="text_size">Font size</string>
+    <string name="current_text_size">Current text size: %1$d</string>
+    <string name="text_color">Text color</string>
+    <string name="text_color_summary">Choose font color</string>
+    <string name="background">Background color</string>
+    <string name="background_summary">Choose background color</string>
+    <string name="text_color_selected">Text color of selected text</string>
+    <string name="text_color_selected_summary">Choose text color of selected text</string>
+    <string name="background_selected">Background color of selected text</string>
+    <string name="background_selected_summary">Choose background color of selected text</string>
+    <string name="category_reader_other">Other</string>
+    <string name="category_reader_other_history_size">History size</string>
+    <string name="category_reader_other_history_size_summary">Current history size: %1$s</string>
+    <string name="disable_auto_screen_rotation">Disable auto-screen rotation</string>
+    <string name="may_need_to_restart">May need to restart</string>
+    <string name="read_mode_by_default">Read mode by default</string>
+    <string name="read_mode_by_default_summary">Use the default read mode</string>
+    <string name="preference_screen_cross_references">Cross references</string>
+    <string name="cross_references_display_context">Display context</string>
+    <string name="cross_references_display_context_summary">Display context of the list of references</string>
+    <string name="menu_night_day_mode">Nigth / Day mode</string>
+    <string name="menu_favorites">Bookmarks</string>
+    <string name="menu_history">History</string>
+    <string name="menu_search">Search</string>
+    <string name="menu_help">Help</string>
+    <string name="menu_settings">Settings</string>
+    <string name="cancel">Cancel</string>
+    <string name="added">Added</string>
+    <string name="removed">Deleted</string>
+    <string name="bookmark_invalid_removed">Invalid bookmark removed</string>
+    <string name="messageLoad">Load …</string>
+    <string name="messageLoadBooks">Load books …</string>
+    <string name="messageSearch">Search …</string>
+    <string name="messageRefresh">Refresh …</string>
+    <string name="messageSearchCanceled">Search canceled</string>
+    <string name="results">results</string>
+    <string name="share">Share</string>
+    <string name="copy">Copy</string>
+    <string name="fav_question_del_fav">Do you really want to delete this bookmark?</string>
+    <string name="fav_delete_all">Delete all</string>
+    <string name="fav_delete_all_question">Are you sure you want to delete all items?</string>
+    <string name="dialog_color_picker">Choose a color</string>
+    <string name="references">References</string>
+    <string name="exception_book_definition">Incorrect attributes of book #%1$d in module %2$s</string>
+    <string name="exception_book_not_found">Book %1$s not found in module %2$s</string>
+    <string name="exception_open_module_short">Incorrect module %s</string>
+    <string name="exception_books_definition">Incorrect module description in module %1$s: BookQty=%2$d, PathName#=%3$d, FullName#=%4$d, ShortName#=%5$d, ChapterQty#=%6$d</string>
+    <string name="enabled">Enabled</string>
+    <string name="volume_butons_to_scroll">Volume buttons to scroll</string>
+    <string name="disabled">Disabled</string>
+    <string name="text_align_justify">Align text to the width</string>
+    <string name="font_family">Font family</string>
+    <string name="share_passage">Share passage</string>
+    <string name="divide_the_verses">Divide the verses</string>
+    <string name="add_reference">Add reference</string>
+    <string name="add_reference_summary">Add a reference to the passage</string>
+    <string name="put_reference_in_beginning">Put reference in beginning</string>
+    <string name="short_reference">Short reference</string>
+    <string name="short_reference_summary">Short caption to passage</string>
+    <string name="add_module_to_reference">Add module name</string>
+    <string name="add_module_to_reference_summary">Add the module name to the signature</string>
+    <string name="menu_speek">Read…</string>
+    <string name="no_tags">No tags</string>
+    <string name="tags">Tag\'s</string>
+    <string name="tags_description">Enter tags, separated by commas</string>
+    <string name="bookmark_name">Bookmark name (optional)</string>
+    <string name="question_del_tag">Delete tag?</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="disable_turn_screen">Disable turn screen</string>
+    <string name="disable_turn_screen_summury">Do not turn off the screen while reading</string>
+    <string name="press_again_to_exit">Press again to exit</string>
+    <string name="menu_history_clear">Clear</string>
+    <string name="menu_library_add">Add…</string>
+    <string name="file_not_exist">File not found</string>
+    <string name="file_cant_read">The file is not readable</string>
+    <string name="file_not_supported">The file is not supported</string>
+    <string name="file_not_moved">Operation failed</string>
+    <string name="error_open_module">Error opening module %1$s from %2$s</string>
+    <string name="copy_module_from_file"> Copying a module…</string>
+    <string name="exception_add_module_from_file">This feature is not available! Install a file manager.</string>
+    <string name="notify_dialog_title">Error</string>
+    <string name="always_view_verse_numbers_disabled">Don\'t display verse numbers in books</string>
+    <string name="always_view_verse_numbers_enabled">All texts</string>
+    <string name="always_view_verse_numbers_title">Verse numbers in books</string>
+    <string name="choice_chapter">Goto…</string>
+    <string name="menu_tags">Tags</string>
+    <string name="search_hint">What to find?</string>
+    <string name="image_not_found">Image not found</string>
+    <string name="retry">Retry</string>
+    <string name="msg_permission_denied">No permissions required to run the application</string>
+    <string name="err_load_module_unknown">Unexpected error when adding a module. Try again later or select another module.</string>
+    <string name="line_spacing_title">Line spacing</string>
+    <string name="update_preferences">Updating settings…</string>
+    <string name="update_tsk">Update TSK…</string>
+    <string name="update_reload_modules">Update library…</string>
+    <string name="update_builtin_modules">Update built-in modules…</string>
+    <string name="upgrade_database">Upgrade database…</string>
+</resources>
