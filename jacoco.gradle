@@ -55,7 +55,7 @@ project.afterEvaluate {
                         '**/*Dagger*.*', // Dagger auto-generated code.
                         '**/*MembersInjector*.*', // Dagger auto-generated code.
                         '**/*_Factory.*', // Dagger auto-generated code.
-                        '**/*_Provide*Factory*.*', // Dagger auto-generated code.
+                        '**/*_*Factory*.*', // Dagger auto-generated code.
                         '**/*_ViewBinding*.*', // Butterknife auto-generated code.
                         '**/AutoValue_*.*'
                 ]
