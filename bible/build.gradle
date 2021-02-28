@@ -30,6 +30,13 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
+apply from: '../jacoco.gradle'
+
+jacoco {
+    toolVersion = '0.8.6'
+    def reportsDirPath = "${project.rootDir}/build/reports/jacoco/${project.name}"
+    reportsDir = file(reportsDirPath)
+}
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion

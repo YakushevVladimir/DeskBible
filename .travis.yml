@@ -17,7 +17,7 @@ android:
       - 'google-gdk-license-.+'
 
 script:
-  - ./gradlew assembleDebug testDebugUnitTest
+  - ./gradlew clean assembleDebug testDebugUnitTestCoverage coveralls
 
 cache:
   directories:
