@@ -108,7 +108,7 @@
             android:title="@string/disable_turn_screen"/>
 
         <ListPreference
-            android:defaultValue="10"
+            android:defaultValue="50"
             android:entries="@array/history_size"
             android:entryValues="@array/history_size"
             android:key="HistorySize"
@@ -141,7 +141,7 @@
             android:persistent="true"
             android:title="@string/divide_the_verses"/>
         <CheckBoxPreference
-            android:defaultValue="true"
+            android:defaultValue="false"
             android:key="add_reference"
             android:persistent="true"
             android:summary="@string/add_reference_summary"
@@ -170,7 +170,7 @@
 
     <PreferenceCategory android:title="@string/preference_screen_cross_references">
         <CheckBoxPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:enabled="true"
             android:key="cross_reference_display_context"
             android:persistent="true"

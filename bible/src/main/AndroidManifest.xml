@@ -108,13 +108,7 @@
         </activity>
         <activity
             android:name=".presentation.ui.crossreference.CrossReferenceActivity"
-            android:label="@string/cross_reference">
-            <intent-filter>
-                <action android:name="org.scripturesoftware.intent.action.VIEW_REFERENCE"/>
-
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
-        </activity>
+            android:label="@string/cross_reference" />
         <activity
             android:name=".presentation.ui.imagepreview.ImagePreviewActivity"
             android:theme="@style/Theme.BibleQuote.NoActionBar"/>

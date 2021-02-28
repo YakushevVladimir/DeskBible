@@ -40,6 +40,7 @@ import com.BibleQuote.R;
 import com.BibleQuote.domain.entity.Bookmark;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.presentation.dialogs.BookmarksDialog;
+import com.BibleQuote.presentation.ui.crossreference.CrossReferenceActivity;
 import com.BibleQuote.presentation.widget.ReaderWebView;
 import com.BibleQuote.utils.share.ShareBuilder;
 
@@ -51,10 +52,8 @@ import java.util.TreeSet;
  */
 final class SelectTextHandler implements ActionMode.Callback {
 
-    private static final String VIEW_REFERENCE = "org.scripturesoftware.intent.action.VIEW_REFERENCE";
-
-    private ReaderActivity readerActivity;
-    private ReaderWebView webView;
+    private final ReaderActivity readerActivity;
+    private final ReaderWebView webView;
 
     SelectTextHandler(ReaderActivity readerActivity, ReaderWebView webView) {
         this.readerActivity = readerActivity;
@@ -99,7 +98,7 @@ final class SelectTextHandler implements ActionMode.Callback {
 
             case R.id.action_references:
                 myLibrarian.setCurrentVerseNumber(selVerses.first());
-                Intent intParallels = new Intent(VIEW_REFERENCE);
+                Intent intParallels = new Intent(readerActivity, CrossReferenceActivity.class);
                 intParallels.putExtra("linkOSIS", myLibrarian.getCurrentOSISLink().getPath());
                 readerActivity.startActivityForResult(intParallels, ReaderActivity.ID_PARALLELS);
                 break;

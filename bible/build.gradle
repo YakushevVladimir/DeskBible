@@ -39,8 +39,8 @@ android {
         applicationId "ru.churchtools.deskbible"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "2.0"
+        versionCode 3
+        versionName "1.0"
         resConfigs("en", "ru", "be", "de", "es", "no", "sv", "uk")
         buildConfigField("String", "MODULE_DIR_NAME", "\"modules\"")
     }
@@ -62,9 +62,7 @@ android {
 
         applicationVariants.all { variant ->
             variant.outputs.all { output ->
-                if (variant.buildType.name == "release") {
-                    outputFileName = "deskbible-release-${defaultConfig.versionName}.${defaultConfig.versionCode}.apk"
-                }
+                outputFileName = "deskbible-${variant.name}-${defaultConfig.versionName}.${defaultConfig.versionCode}.apk"
             }
         }
     }

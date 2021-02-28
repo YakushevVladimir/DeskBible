@@ -27,7 +27,7 @@
   ~ WWW: http://www.scripturesoftware.org
   -->
 <resources>
-	<string name="app_name">DeskBible</string>
+	<string name="app_name" translatable="false">DeskBible</string>
 	<string name="app_about_name" translatable="false">DeskBible %1$s</string>
 	<string name="app_about_license" translatable="false">Apache License Version 2.0</string>
 	<string name="app_about_dev" translatable="false">Vladimir Yakushev\nSergey Ursul</string>
