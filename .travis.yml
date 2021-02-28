@@ -1,6 +1,5 @@
 language: android
 jdk: oraclejdk8
-sudo: false
 
 android:
   components:
@@ -19,10 +18,7 @@ android:
 
 script:
   - echo 24333f8a63b6825ea9c5514f83c2829b004d1fee > /usr/local/android-sdk/licenses/android-sdk-license
-  - ./gradlew clean assembleDebug testDebugUnitTest
-
-before_cache:
-  - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+  - ./gradlew assembleDebug testDebugUnitTest
 
 cache:
   directories:
