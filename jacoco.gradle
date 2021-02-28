@@ -36,10 +36,8 @@ project.afterEvaluate {
                 description = "Generate Jacoco coverage reports"
 
                 reports {
-                    xml {
-                        enabled = true
-                        destination = "${buildDir}/reports/jacoco/test/jacocoTestReport.xml"
-                    }
+                    xml.enabled = true
+                    xml.destination = file("${buildDir}/reports/jacoco/test/jacocoTestReport.xml")
                     html.enabled = true
                 }
 
