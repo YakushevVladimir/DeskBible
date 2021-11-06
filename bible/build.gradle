@@ -40,7 +40,6 @@ jacoco {
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
         applicationId "ru.churchtools.deskbible"
@@ -89,16 +88,16 @@ dependencies {
 
     // Android support libraries
 
-    implementation "androidx.annotation:annotation:1.1.0"
-    implementation "androidx.appcompat:appcompat:1.1.0"
-    implementation "androidx.preference:preference:1.1.0"
+    implementation "androidx.annotation:annotation:1.3.0"
+    implementation "androidx.appcompat:appcompat:1.3.1"
+    implementation "androidx.preference:preference-ktx:1.1.1"
     implementation "androidx.gridlayout:gridlayout:1.0.0"
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-    implementation "com.google.android.material:material:1.1.0"
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.1'
+    implementation "com.google.android.material:material:1.4.0"
 
     // Firebase
 
-    implementation platform('com.google.firebase:firebase-bom:26.1.0')
+    implementation platform('com.google.firebase:firebase-bom:29.0.0')
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-crashlytics'
 
@@ -119,22 +118,22 @@ dependencies {
 
     // AutoValue
 
-    annotationProcessor 'com.google.auto.value:auto-value:1.7.4'
-    compileOnly 'com.google.auto.value:auto-value-annotations:1.7.4'
+    annotationProcessor 'com.google.auto.value:auto-value:1.8.2'
+    compileOnly 'com.google.auto.value:auto-value-annotations:1.8.2'
 
     // RxJava
 
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
-    implementation 'io.reactivex.rxjava2:rxjava:2.2.20'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.21'
 
     // Others
 
-    implementation 'com.jrummyapps:colorpicker:2.1.6'
+    implementation 'com.jrummyapps:colorpicker:2.1.7'
 
     // Test dependencies
 
-    testImplementation "junit:junit:4.12"
+    testImplementation 'junit:junit:4.13.2'
     testImplementation "org.robolectric:robolectric:3.8"
-    testImplementation "org.mockito:mockito-core:2.18.3"
-    testImplementation "org.mockito:mockito-inline:2.18.0"
+    testImplementation 'org.mockito:mockito-core:4.0.0'
+    testImplementation 'org.mockito:mockito-inline:4.0.0'
 }
