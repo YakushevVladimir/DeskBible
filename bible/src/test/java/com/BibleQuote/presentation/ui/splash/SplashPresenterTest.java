@@ -28,8 +28,12 @@
 
 package com.BibleQuote.presentation.ui.splash;
 
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.BibleQuote.domain.controller.ILibraryController;
-import com.BibleQuote.utils.update.UpdateManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -40,12 +44,7 @@ import java.io.IOException;
 
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
-
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import ru.churchtools.deskbible.domain.migration.UpdateManager;
 
 public class SplashPresenterTest {
 
@@ -67,16 +66,16 @@ public class SplashPresenterTest {
     }
 
     @Test
-    public void update() throws Exception {
-        when(updateManager.update()).thenReturn(Observable.fromArray("message_1", "message_2", "message_3"));
+    public void update() {
+        when(updateManager.update()).thenReturn(Observable.fromArray(1, 2, 3));
         presenter.update();
-        verify(view, times(3)).showUpdateMessage(anyString());
+        verify(view, times(3)).showUpdateMessage(anyInt());
         verify(libraryController).init();
         verify(view).gotoReaderActivity();
     }
 
     @Test
-    public void updateWithError() throws Exception {
+    public void updateWithError() {
         when(updateManager.update()).thenReturn(Observable.error(new IOException("abort")));
         presenter.update();
         verify(view).showToast(anyInt());

@@ -28,16 +28,23 @@
 
 package com.BibleQuote.async.task;
 
+import android.content.ContentResolver;
 import android.content.Context;
+import android.net.Uri;
+import android.os.FileUtils;
+
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.BibleQuote.domain.controller.ILibraryController;
 import com.BibleQuote.domain.logger.StaticLogger;
-import com.BibleQuote.utils.FsUtils;
+import com.BibleQuote.utils.FilenameUtils;
 import com.BibleQuote.utils.Task;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+
+import ru.churchtools.deskbible.data.library.LibraryContext;
 
 /**
  * @author ru_phoenix
@@ -45,58 +52,59 @@ import java.io.File;
  */
 public class LoadModuleFromFile extends Task {
 
-    @Nullable
-    private final File mLibraryDir;
+    @NonNull
+    private final LibraryContext mLibraryContext;
     @NonNull
     private final ILibraryController mLibraryController;
     @NonNull
-    private final String mPath;
+    private final Context mContext;
+    @NonNull
+    private final Uri mUri;
     private StatusCode mStatusCode = StatusCode.Success;
 
-    public LoadModuleFromFile(@NonNull Context context, String message, @NonNull String path, @NonNull ILibraryController libraryController) {
+    public LoadModuleFromFile(@NonNull Context context,
+                              @NonNull String message,
+                              @NonNull Uri uri,
+                              @NonNull ILibraryController libraryController,
+                              @NonNull LibraryContext libraryContext) {
         super(message, false);
-        mPath = path;
+        mContext = context.getApplicationContext();
+        mUri = uri;
         mLibraryController = libraryController;
-        mLibraryDir = FsUtils.getLibraryDir(context);
+        mLibraryContext = libraryContext;
     }
 
     @Override
     protected Boolean doInBackground(String... arg0) {
-        StaticLogger.info(this, "Load module from " + mPath);
+        StaticLogger.info(this, "Load module from " + mUri);
 
-        if (mLibraryDir == null) {
+        File modulesDir = mLibraryContext.modulesDir();
+        if (!modulesDir.exists() && !modulesDir.mkdirs()) {
             mStatusCode = StatusCode.LibraryNotFound;
             StaticLogger.error(this, "Library directory not found");
             return false;
         }
 
-        try {
-            File source = new File(mPath);
-            if (!source.exists()) {
-                StaticLogger.error(this, "Module file not found");
-                mStatusCode = StatusCode.FileNotExist;
-                return false;
-            } else if (!source.canRead()) {
-                StaticLogger.error(this, "File not readable");
-                mStatusCode = StatusCode.ReadFailed;
-                return false;
-            } else if (!source.getName().endsWith("zip")) {
-                StaticLogger.error(this, "Unsupported module type");
-                mStatusCode = StatusCode.FileNotSupported;
-                return false;
-            }
+        ContentResolver contentResolver = mContext.getContentResolver();
+        String type = contentResolver.getType(mUri);
+        if (!"application/zip".equals(type)) {
+            mStatusCode = StatusCode.FileNotSupported;
+            return false;
+        }
 
-            File target = new File(mLibraryDir, source.getName());
-            if (!source.renameTo(target)) {
-                StaticLogger.error(this, "Unable to move file to module directory");
-                mStatusCode = StatusCode.MoveFailed;
-                return false;
-            }
+        String fileName = FilenameUtils.getFileName(mContext, mUri);
+        if (fileName == null) {
+            mStatusCode = StatusCode.FileNotExist;
+            return false;
+        }
 
-            mLibraryController.loadModule(target.getAbsolutePath());
+        try(InputStream stream = contentResolver.openInputStream(mUri)) {
+            File target = new File(modulesDir, fileName);
+            FileUtils.copy(stream, new FileOutputStream(target));
+            mLibraryController.loadModule(target);
         } catch (Exception e) {
             StaticLogger.error(this, e.getMessage(), e);
-            mStatusCode = StatusCode.Unknown;
+            mStatusCode = StatusCode.MoveFailed;
             return false;
         }
 
@@ -107,5 +115,5 @@ public class LoadModuleFromFile extends Task {
         return mStatusCode;
     }
 
-    public enum StatusCode {Success, Unknown, FileNotExist, ReadFailed, FileNotSupported, MoveFailed, LibraryNotFound}
+    public enum StatusCode {Success, FileNotExist, FileNotSupported, MoveFailed, LibraryNotFound}
 }

@@ -35,5 +35,5 @@ interface SplashView extends BaseView {
 
     void gotoReaderActivity();
 
-    void showUpdateMessage(String message);
+    void showUpdateMessage(int message);
 }

@@ -35,9 +35,10 @@ import com.BibleQuote.domain.exceptions.BookDefinitionException;
 import com.BibleQuote.domain.exceptions.BooksDefinitionException;
 import com.BibleQuote.domain.exceptions.OpenModuleException;
 
+import java.io.File;
 import java.util.Map;
 
-public interface LibraryLoader<T extends BaseModule> {
+public interface LibraryLoader {
 
 	/**
 	 * Загрузка списка модулей из хранилища без чтения данных.
@@ -47,5 +48,5 @@ public interface LibraryLoader<T extends BaseModule> {
 	@NonNull
     Map<String, BaseModule> loadFileModules();
 
-    BaseModule loadModule(String path) throws OpenModuleException, BooksDefinitionException, BookDefinitionException;
+    BaseModule loadModule(File file) throws OpenModuleException, BooksDefinitionException, BookDefinitionException;
 }

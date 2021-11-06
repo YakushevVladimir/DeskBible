@@ -33,6 +33,7 @@ import com.BibleQuote.domain.exceptions.BookDefinitionException;
 import com.BibleQuote.domain.exceptions.BooksDefinitionException;
 import com.BibleQuote.domain.exceptions.OpenModuleException;
 
+import java.io.File;
 import java.util.Map;
 
 /**
@@ -62,10 +63,10 @@ public interface ILibraryController {
     /**
      * Загружает из хранилища модуль по его пути\
      *
-     * @param path путь к модулю в хранилище
+     * @param file файл с модулем для загрузки
      * @throws OpenModuleException по указанному пути модуль не найден
      */
-    void loadModule(String path) throws OpenModuleException, BooksDefinitionException, BookDefinitionException;
+    void loadModule(File file) throws OpenModuleException, BooksDefinitionException, BookDefinitionException;
 
     /**
      * Загружает из хранилища список модулей без загрузки их данных. Для каждого из модулей

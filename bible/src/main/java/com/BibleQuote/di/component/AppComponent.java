@@ -36,12 +36,21 @@ import com.BibleQuote.di.module.FragmentModule;
 import javax.inject.Singleton;
 
 import dagger.Component;
+import ru.churchtools.deskbible.di.app.LibraryModule;
+import ru.churchtools.deskbible.di.app.MigrationModule;
 
-@Component(modules = AppModule.class)
+@Component(
+        modules = {
+                AppModule.class,
+                LibraryModule.class,
+                MigrationModule.class
+        }
+)
 @Singleton
 public interface AppComponent {
 
     ActivityComponent activityComponent(ActivityModule module);
+
     FragmentComponent fragmentComponent(FragmentModule module);
 
     void inject(BibleQuoteApp application);

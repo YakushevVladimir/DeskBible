@@ -42,10 +42,10 @@ import java.io.ObjectOutputStream;
 
 public class FsCacheRepository implements ICacheRepository {
 
-    private File cache;
+    private final File cache;
 
-    public FsCacheRepository(File cacheDir, String cacheName) {
-        this.cache = new File(cacheDir, cacheName);
+    public FsCacheRepository(File cacheDir) {
+        this.cache = cacheDir;
     }
 
     @Override

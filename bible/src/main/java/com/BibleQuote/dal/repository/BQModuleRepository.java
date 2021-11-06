@@ -30,8 +30,9 @@ package com.BibleQuote.dal.repository;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import androidx.annotation.NonNull;
 import android.util.Base64;
+
+import androidx.annotation.NonNull;
 
 import com.BibleQuote.domain.entity.BaseModule;
 import com.BibleQuote.domain.entity.Book;
@@ -39,7 +40,6 @@ import com.BibleQuote.domain.entity.Chapter;
 import com.BibleQuote.domain.entity.Verse;
 import com.BibleQuote.domain.exceptions.BookDefinitionException;
 import com.BibleQuote.domain.exceptions.BookNotFoundException;
-import com.BibleQuote.domain.exceptions.BooksDefinitionException;
 import com.BibleQuote.domain.exceptions.DataAccessException;
 import com.BibleQuote.domain.exceptions.OpenModuleException;
 import com.BibleQuote.domain.logger.StaticLogger;
@@ -73,9 +73,9 @@ public class BQModuleRepository implements IModuleRepository<String, BQModule> {
     private static final String TAG = BQModuleRepository.class.getSimpleName();
     private static final String INI_FILENAME = "bibleqt.ini";
     private static final HashMap<String, String> charsets = new HashMap<>();
-    private static final Map<String, Chapter> chapterPool = Collections.synchronizedMap(new CachePool<Chapter>());
+    private static final Map<String, Chapter> chapterPool = Collections.synchronizedMap(new CachePool<>());
 
-    private FsUtilsWrapper fsUtils;
+    private final FsUtilsWrapper fsUtils;
 
     static {
         charsets.put("0", "ISO-8859-1"); // ANSI charset
@@ -132,19 +132,15 @@ public class BQModuleRepository implements IModuleRepository<String, BQModule> {
     }
 
     @Override
-    public BQModule loadModule(String path) throws OpenModuleException, BooksDefinitionException, BookDefinitionException {
-        if (path.endsWith("zip")) {
-            path = path + File.separator + INI_FILENAME;
-        }
-
-        BQModule result = new BQModule(path);
+    public BQModule loadModule(File file) throws OpenModuleException, BookDefinitionException {
+        BQModule result = new BQModule(file.getAbsolutePath(), INI_FILENAME);
         try {
             result.setDefaultEncoding(getModuleEncoding(getReader(result, result.iniFileName)));
             fillModule(result, getReader(result, result.iniFileName));
             return result;
         } catch (DataAccessException | IllegalArgumentException e) {
-            StaticLogger.error(TAG, "Error open module from " + path, e);
-            throw new OpenModuleException(path, result.modulePath);
+            StaticLogger.error(TAG, "Error open module from " + file, e);
+            throw new OpenModuleException(file.getAbsolutePath(), result.modulePath);
         }
     }
 
@@ -192,7 +188,7 @@ public class BQModuleRepository implements IModuleRepository<String, BQModule> {
     }
 
     private void fillModule(BQModule module, BufferedReader bReader)
-            throws DataAccessException, BooksDefinitionException, BookDefinitionException {
+            throws DataAccessException, BookDefinitionException {
         if (bReader == null) {
             return;
         }
@@ -223,8 +219,7 @@ public class BQModuleRepository implements IModuleRepository<String, BQModule> {
 
                 key = str.substring(0, delimiterPos).trim().toLowerCase();
                 delimiterPos++;
-                value = delimiterPos >= str.length() ? "" : str.substring(
-                        delimiterPos, str.length()).trim();
+                value = delimiterPos >= str.length() ? "" : str.substring(delimiterPos).trim();
 
                 switch (key) {
                     case "biblename":
@@ -288,7 +283,7 @@ public class BQModuleRepository implements IModuleRepository<String, BQModule> {
             }
         }
 
-        String tagFilter[] = {"p", "b", "i", "em", "strong", "q", "big", "sub", "sup", "h1", "h2", "h3", "h4"};
+        String[] tagFilter = {"p", "b", "i", "em", "strong", "q", "big", "sub", "sup", "h1", "h2", "h3", "h4"};
         ArrayList<String> tagArray = new ArrayList<>();
         Collections.addAll(tagArray, tagFilter);
 
@@ -321,9 +316,8 @@ public class BQModuleRepository implements IModuleRepository<String, BQModule> {
                 fullName = fullNames.get(i);
                 shortName = shortNames.get(i);
                 chapters = chapterQty.get(i);
-                BQBook book = new BQBook(module, fullName, path,
-                        (shortNames.size() > i ? shortName : ""),
-                        chapters);
+                shortNames.size();
+                BQBook book = new BQBook(module, fullName, path, shortName, chapters);
                 module.getBooks().put(book.getID(), book);
             } catch (IndexOutOfBoundsException e) {
                 String message = String.format(
@@ -389,7 +383,7 @@ public class BQModuleRepository implements IModuleRepository<String, BQModule> {
                 delimiterPos++;
                 value = delimiterPos >= str.length()
                         ? ""
-                        : str.substring(delimiterPos, str.length()).trim();
+                        : str.substring(delimiterPos).trim();
                 if (key.equals("desiredfontcharset")) {
                     return charsets.containsKey(value) ? charsets.get(value) : encoding;
                 } else if (key.equals("defaultencoding")) {

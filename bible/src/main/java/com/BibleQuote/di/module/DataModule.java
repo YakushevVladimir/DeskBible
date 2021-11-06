@@ -44,6 +44,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import ru.churchtools.deskbible.data.library.LibraryContext;
 
 @Module
 public class DataModule {
@@ -72,8 +73,8 @@ public class DataModule {
     }
 
     @Provides
-    ITskRepository getTskRepository(Context context) {
-        return new XmlTskRepository(context.getFilesDir());
+    ITskRepository getTskRepository(LibraryContext context) {
+        return new XmlTskRepository(context.tskFile());
     }
 
 }

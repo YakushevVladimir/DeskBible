@@ -36,7 +36,6 @@ import com.BibleQuote.domain.exceptions.BooksDefinitionException;
 import com.BibleQuote.domain.exceptions.OpenModuleException;
 import com.BibleQuote.domain.logger.StaticLogger;
 import com.BibleQuote.domain.repository.LibraryLoader;
-import com.BibleQuote.entity.modules.BQModule;
 import com.BibleQuote.utils.FsUtils;
 import com.BibleQuote.utils.OnlyBQIni;
 import com.BibleQuote.utils.OnlyBQZipIni;
@@ -49,15 +48,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class FsLibraryLoader implements LibraryLoader<BQModule> {
+public class FsLibraryLoader implements LibraryLoader {
 
     @NonNull
-    private List<File> mLibraryDirs;
+    private final List<File> mModulesDirs;
     @NonNull
-    private BQModuleRepository mModuleRepository;
+    private final BQModuleRepository mModuleRepository;
 
-    public FsLibraryLoader(@NonNull List<File> libraryDirs, @NonNull BQModuleRepository moduleRepository) {
-        this.mLibraryDirs = Collections.unmodifiableList(libraryDirs);
+    public FsLibraryLoader(@NonNull List<File> modulesDirs, @NonNull BQModuleRepository moduleRepository) {
+        this.mModulesDirs = Collections.unmodifiableList(modulesDirs);
         this.mModuleRepository = moduleRepository;
     }
 
@@ -66,7 +65,7 @@ public class FsLibraryLoader implements LibraryLoader<BQModule> {
     public synchronized Map<String, BaseModule> loadFileModules() {
         StaticLogger.info(this, "Load modules info");
 
-        final List<File> libraryDirs = prepareLibraryDirs(mLibraryDirs);
+        final List<File> libraryDirs = prepareLibraryDirs(mModulesDirs);
         if (libraryDirs.size() == 0) {
             StaticLogger.error(this, "Module library folder not found");
             return Collections.emptyMap();
@@ -75,12 +74,12 @@ public class FsLibraryLoader implements LibraryLoader<BQModule> {
         Map<String, BaseModule> result = new TreeMap<>();
 
         // Load zip-compressed BQ-modules
-        List<String> bqZipIniFiles = searchModules(libraryDirs, new OnlyBQZipIni());
+        List<File> bqZipIniFiles = searchModules(libraryDirs, new OnlyBQZipIni());
         StaticLogger.info(this, "Load zip-modules info");
-        for (String bqZipIniFile : bqZipIniFiles) {
+        for (File bqZipIniFile : bqZipIniFiles) {
             StaticLogger.info(this, "\t- " + bqZipIniFile);
             try {
-                BaseModule module = loadFileModule(getZipDataSourceId(bqZipIniFile));
+                BaseModule module = loadFileModule(bqZipIniFile);
                 result.put(module.getID(), module);
             } catch (OpenModuleException | BookDefinitionException | BooksDefinitionException e) {
                 StaticLogger.error(this, e.getMessage(), e);
@@ -88,12 +87,12 @@ public class FsLibraryLoader implements LibraryLoader<BQModule> {
         }
 
         // Load standard BQ-modules
-        List<String> bqIniFiles = searchModules(libraryDirs, new OnlyBQIni());
+        List<File> bqIniFiles = searchModules(libraryDirs, new OnlyBQIni());
         StaticLogger.info(this, "Load standard modules info");
-        for (String moduleDataSourceId : bqIniFiles) {
-            StaticLogger.info(this, "\t- " + moduleDataSourceId);
+        for (File item : bqIniFiles) {
+            StaticLogger.info(this, "\t- " + item);
             try {
-                BaseModule module = loadFileModule(moduleDataSourceId);
+                BaseModule module = loadFileModule(item.getParentFile());
                 result.put(module.getID(), module);
             } catch (OpenModuleException | BookDefinitionException | BooksDefinitionException e) {
                 StaticLogger.error(this, e.getMessage(), e);
@@ -104,19 +103,12 @@ public class FsLibraryLoader implements LibraryLoader<BQModule> {
     }
 
     @Override
-    public BaseModule loadModule(String path) throws OpenModuleException, BooksDefinitionException,
+    public BaseModule loadModule(File file) throws OpenModuleException, BooksDefinitionException,
             BookDefinitionException {
-        if (path.endsWith("zip")) {
-            path = getZipDataSourceId(path);
-        }
-        return loadFileModule(path);
+        return loadFileModule(file);
     }
 
-    private String getZipDataSourceId(String path) {
-        return path + File.separator + "bibleqt.ini";
-    }
-
-    private BaseModule loadFileModule(String moduleDataSourceId)
+    private BaseModule loadFileModule(File moduleDataSourceId)
             throws OpenModuleException, BooksDefinitionException, BookDefinitionException {
         return mModuleRepository.loadModule(moduleDataSourceId);
     }
@@ -138,8 +130,8 @@ public class FsLibraryLoader implements LibraryLoader<BQModule> {
      *
      * @return Возвращает ArrayList со списком ini-файлов модулей
      */
-    private List<String> searchModules(@NonNull List<File> libraryDirs, @NonNull FileFilter filter) {
-        ArrayList<String> result = new ArrayList<>();
+    private List<File> searchModules(@NonNull List<File> libraryDirs, @NonNull FileFilter filter) {
+        List<File> result = new ArrayList<>();
         for (File item : libraryDirs) {
             // Рекурсивная функция проходит по всем каталогам в поисках ini-файлов Цитаты
             FsUtils.searchByFilter(item, result, filter);

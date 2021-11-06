@@ -47,10 +47,10 @@ public class BQModule extends BaseModule {
 	public final String iniFileName;
 	private final Boolean isArchive;
 
-	public BQModule(String iniFilePath) {
-		modulePath = iniFilePath.substring(0, iniFilePath.lastIndexOf(File.separator));
-		iniFileName = iniFilePath.substring(iniFilePath.lastIndexOf(File.separator) + 1);
-		isArchive = modulePath.toLowerCase().endsWith(".zip");
+	public BQModule(String modulePath, String iniFilename) {
+		this.modulePath = modulePath;
+		this.iniFileName = iniFilename;
+		this.isArchive = this.modulePath.toLowerCase().endsWith(".zip");
 	}
 
 	public String getModulePath() {

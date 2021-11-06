@@ -43,12 +43,12 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
-import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
 import com.BibleQuote.async.task.AsyncOpenModule;
 import com.BibleQuote.async.task.AsyncRefreshModules;
 import com.BibleQuote.async.task.LoadModuleFromFile;
 import com.BibleQuote.di.component.ActivityComponent;
+import com.BibleQuote.domain.controller.ILibraryController;
 import com.BibleQuote.domain.entity.BaseModule;
 import com.BibleQuote.domain.entity.BibleReference;
 import com.BibleQuote.domain.entity.Book;
@@ -61,7 +61,6 @@ import com.BibleQuote.entity.ItemList;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.presentation.dialogs.NotifyDialog;
 import com.BibleQuote.presentation.ui.base.AsyncTaskActivity;
-import com.BibleQuote.utils.FilenameUtils;
 import com.BibleQuote.utils.Task;
 
 import java.util.ArrayList;
@@ -75,6 +74,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnItemClick;
+import ru.churchtools.deskbible.data.library.LibraryContext;
 
 public class LibraryActivity extends AsyncTaskActivity {
 
@@ -89,7 +89,12 @@ public class LibraryActivity extends AsyncTaskActivity {
     @BindView(R.id.chapterChoose) GridView chapterList;
     @BindView(R.id.modules) ListView modulesList;
 
-    @Inject Librarian librarian;
+    @Inject
+    Librarian librarian;
+    @Inject
+    LibraryContext mLibraryContext;
+    @Inject
+    ILibraryController mILibraryController;
 
     private String bookID = Librarian.EMPTY_OBJ;
     private ArrayList<ItemList> books = new ArrayList<>();
@@ -156,16 +161,12 @@ public class LibraryActivity extends AsyncTaskActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case ACTION_CODE_GET_FILE:
-                if (resultCode == RESULT_OK) {
-                    Uri uri = data.getData();
-                    String path = FilenameUtils.getPath(this, uri);
-                    getModuleFromFile(path);
-                }
-                break;
-            default:
-                Log.e(TAG, "Unknown request code: " + requestCode);
+        if (requestCode == ACTION_CODE_GET_FILE) {
+            if (resultCode == RESULT_OK) {
+                getModuleFromFile(data.getData());
+            }
+        } else {
+            Log.e(TAG, "Unknown request code: " + requestCode);
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -302,9 +303,13 @@ public class LibraryActivity extends AsyncTaskActivity {
                 R.id.id, R.id.name});
     }
 
-    private void getModuleFromFile(String path) {
-        mAsyncManager.setupTask(new LoadModuleFromFile(this, getString(R.string.copy_module_from_file), path,
-                BibleQuoteApp.getInstance().getLibraryController()), this);
+    private void getModuleFromFile(Uri uri) {
+        mAsyncManager.setupTask(new LoadModuleFromFile(
+                this,
+                getString(R.string.copy_module_from_file),
+                uri,
+                mILibraryController,
+                mLibraryContext), this);
     }
 
     private void onClickBook() {
@@ -335,14 +340,8 @@ public class LibraryActivity extends AsyncTaskActivity {
             case Success:
                 updateView(MODULE_VIEW);
                 return;
-            case Unknown:
-                errorMessage = getString(R.string.file_not_moved);
-                break;
             case FileNotExist:
                 errorMessage = getString(R.string.file_not_exist);
-                break;
-            case ReadFailed:
-                errorMessage = getString(R.string.file_cant_read);
                 break;
             case FileNotSupported:
                 errorMessage = getString(R.string.file_not_supported);

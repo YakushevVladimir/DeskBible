@@ -46,8 +46,7 @@ public class TSKController implements ITSKController {
 
 	private ITskRepository repository;
 	private Map<String, LinkedHashSet<BibleReference>> bCrossReferenceCache = Collections
-			.synchronizedMap(new CachePool<LinkedHashSet<BibleReference>>(
-					MAX_PULL_SIZE));
+			.synchronizedMap(new CachePool<>(MAX_PULL_SIZE));
 
 	public TSKController(ITskRepository repository) {
 		this.repository = repository;
