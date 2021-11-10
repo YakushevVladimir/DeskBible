@@ -28,30 +28,27 @@
 
 package com.BibleQuote.domain.search;
 
+import static com.google.common.truth.Truth.assertThat;
+import static org.mockito.Mockito.when;
+
 import com.BibleQuote.domain.entity.BaseModule;
 import com.BibleQuote.domain.exceptions.BookNotFoundException;
 import com.BibleQuote.domain.repository.IModuleRepository;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
+@RunWith(MockitoJUnitRunner.class)
 public class MultiThreadSearchProcessorTest {
 
-    private MultiThreadSearchProcessor<String, BaseModule> searchProcessor;
-    private BaseModule module;
-    private final String testContentGen = "<h4>1</h4>\n" +
+    private static final String TEST_CONTENT_GEN = "<h4>1</h4>\n" +
             "<p><sup>1</sup> В начале сотворил Бог небо и землю.\n" +
             "<p><sup>2</sup> Земля же была безвидна и пуста, и тьма над бездною, и Дух Божий носился над водою.\n" +
             "<p><sup>3</sup> И сказал Бог: да будет свет. И стал свет.\n" +
@@ -161,7 +158,7 @@ public class MultiThreadSearchProcessorTest {
             "<p><sup>24</sup> если за Каина отмстится всемеро, то за Ламеха в семьдесят раз всемеро.\n" +
             "<p><sup>25</sup> И познал Адам еще <font color='#7a8080'>[Еву,]</font> жену свою, и она родила сына, и нарекла ему имя: Сиф, потому что, <font color='#7a8080'>[говорила она,]</font> Бог положил мне другое семя, вместо Авеля, которого убил Каин.\n" +
             "<p><sup>26</sup> У Сифа также родился сын, и он нарек ему имя: Енос; тогда начали призывать имя Господа <font color='#7a8080'>[Бога]</font>.\n";
-    private final String testContentExo = "<h4>1</h4>\n" +
+    private static final String TEST_CONTENT_EXO = "<h4>1</h4>\n" +
             "<p><sup>1</sup> Вот имена сынов Израилевых, которые вошли в Египет с Иаковом <font color='#7a8080'>[отцом их]</font>, вошли каждый со <font color='#7a8080'>[всем]</font> домом своим:\n" +
             "<p><sup>2</sup> Рувим, Симеон, Левий и Иуда,\n" +
             "<p><sup>3</sup> Иссахар, Завулон и Вениамин,\n" +
@@ -266,32 +263,37 @@ public class MultiThreadSearchProcessorTest {
             "<p><sup>30</sup> и пересказал <font color='#7a8080'>[им]</font> Аарон все слова, которые говорил Господь Моисею; и сделал Моисей знамения пред глазами народа,\n" +
             "<p><sup>31</sup> и поверил народ; и услышали, что Господь посетил сынов Израилевых и увидел страдание их, и преклонились они и поклонились.\n";
 
+    @Mock
+    private IModuleRepository<String, BaseModule> repository;
+    @Mock
+    private BaseModule module;
+
+    private MultiThreadSearchProcessor<String, BaseModule> searchProcessor;
+
     @Before
     public void setUp() throws Exception {
-        IModuleRepository<String, BaseModule> repository = mock(MockModuleRepository.class);
-        when(repository.getBookContent(any(), eq("Gen"))).thenReturn(testContentGen);
-        when(repository.getBookContent(any(), eq("Exo"))).thenReturn(testContentExo);
-        when(repository.getBookContent(any(), eq("Sam"))).thenThrow(BookNotFoundException.class);
-
-        module = mock(BaseModule.class);
         when(module.getChapterSign()).thenReturn("<h4>");
         when(module.getVerseSign()).thenReturn("<p>");
         when(module.isChapterZero()).thenReturn(false);
         when(module.getID()).thenReturn("RST");
 
+        when(repository.getBookContent(module, "Gen")).thenReturn(TEST_CONTENT_GEN);
+        when(repository.getBookContent(module, "Exo")).thenReturn(TEST_CONTENT_EXO);
+        when(repository.getBookContent(module, "Sam")).thenThrow(BookNotFoundException.class);
+
         searchProcessor = new MultiThreadSearchProcessor<>(repository);
     }
 
     @Test
-    public void search() throws Exception {
+    public void search() {
         Map<String, String> results = searchProcessor.search(module, Arrays.asList("Gen", "Exo"), "бог");
-        assertThat(results.size(), equalTo(76));
+        assertThat(results.size()).isEqualTo(76);
     }
 
     @Test
-    public void searchBookNotFound() throws Exception {
+    public void searchBookNotFound() {
         Map<String, String> results = searchProcessor.search(module, Collections.singletonList("Sam"), "бог");
-        assertNotNull(results);
-        assertThat(results.size(), equalTo(0));
+        assertThat(results);
+        assertThat(results.size()).isEqualTo(0);
     }
 }
