@@ -29,16 +29,15 @@
 package com.BibleQuote.domain.search;
 
 import android.graphics.Bitmap;
+
 import androidx.annotation.NonNull;
 
 import com.BibleQuote.domain.entity.BaseModule;
 import com.BibleQuote.domain.entity.Chapter;
-import com.BibleQuote.domain.exceptions.BookDefinitionException;
-import com.BibleQuote.domain.exceptions.BookNotFoundException;
-import com.BibleQuote.domain.exceptions.BooksDefinitionException;
-import com.BibleQuote.domain.exceptions.OpenModuleException;
 import com.BibleQuote.domain.repository.IModuleRepository;
 import com.BibleQuote.entity.modules.BQModule;
+
+import java.io.File;
 
 class MockModuleRepository implements IModuleRepository<String, BaseModule> {
 
@@ -48,18 +47,18 @@ class MockModuleRepository implements IModuleRepository<String, BaseModule> {
     }
 
     @Override
-    public Chapter loadChapter(BaseModule module, String bookID, int chapter) throws BookNotFoundException {
+    public Chapter loadChapter(BaseModule module, String bookID, int chapter) {
         return null;
     }
 
     @Override
-    public BaseModule loadModule(String path) throws OpenModuleException, BooksDefinitionException, BookDefinitionException {
+    public BaseModule loadModule(File path) {
         return null;
     }
 
     @NonNull
     @Override
-    public String getBookContent(BaseModule module, String bookID) throws BookNotFoundException {
+    public String getBookContent(BaseModule module, String bookID) {
         return "";
     }
 }

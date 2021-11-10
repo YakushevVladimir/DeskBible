@@ -37,16 +37,17 @@ import com.BibleQuote.domain.exceptions.OpenModuleException;
 import com.BibleQuote.domain.logger.StaticLogger;
 import com.BibleQuote.domain.repository.LibraryLoader;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
 public class FsLibraryController implements ILibraryController {
 
-    private LibraryRepository libraryRepository;
-    private LibraryLoader<? extends BaseModule> libraryLoader;
+    private final LibraryRepository libraryRepository;
+    private final LibraryLoader libraryLoader;
 
-    public FsLibraryController(LibraryLoader<? extends BaseModule> libraryLoader, LibraryRepository libraryRepository) {
+    public FsLibraryController(LibraryLoader libraryLoader, LibraryRepository libraryRepository) {
         this.libraryLoader = libraryLoader;
         this.libraryRepository = libraryRepository;
     }
@@ -91,8 +92,8 @@ public class FsLibraryController implements ILibraryController {
     }
 
     @Override
-    public void loadModule(String path) throws OpenModuleException, BooksDefinitionException, BookDefinitionException {
-        StaticLogger.info(this, "Load module from " + path);
-        libraryRepository.add(libraryLoader.loadModule(path));
+    public void loadModule(File file) throws OpenModuleException, BooksDefinitionException, BookDefinitionException {
+        StaticLogger.info(this, "Load module from " + file);
+        libraryRepository.add(libraryLoader.loadModule(file));
     }
 }

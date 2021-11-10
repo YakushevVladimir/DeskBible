@@ -27,16 +27,17 @@
  */
 package com.BibleQuote.presentation.ui.splash;
 
-import android.Manifest;
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+import static androidx.core.content.PermissionChecker.PERMISSION_GRANTED;
+
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.content.ContextCompat;
 
 import com.BibleQuote.R;
@@ -45,22 +46,35 @@ import com.BibleQuote.domain.logger.StaticLogger;
 import com.BibleQuote.presentation.ui.base.BaseActivity;
 import com.BibleQuote.presentation.ui.reader.ReaderActivity;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import butterknife.BindView;
 
 public class SplashActivity extends BaseActivity<SplashPresenter> implements SplashView {
 
-    private static final int REQUEST_PERMISSIONS = 1;
-
     @BindView(R.id.root_layout)
     ViewGroup rootLayout;
     @BindView(R.id.update_description)
     TextView updateDescriptionView;
+    private ActivityResultLauncher<String> mActivityResultLauncher;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
+
+        mActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+            FirebaseAnalytics instance = FirebaseAnalytics.getInstance(this);
+            if (isGranted) {
+                StaticLogger.info(this, "Permissions request granted");
+                presenter.update();
+            } else {
+                Snackbar.make(rootLayout, R.string.msg_permission_denied, Snackbar.LENGTH_INDEFINITE)
+                        .setAction(R.string.retry, v -> checkPermissions())
+                        .show();
+                StaticLogger.info(this, "Permissions denied");
+            }
+        });
     }
 
     @Override
@@ -85,41 +99,19 @@ public class SplashActivity extends BaseActivity<SplashPresenter> implements Spl
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_PERMISSIONS) {
-            for (int result : grantResults) {
-                if (result == PackageManager.PERMISSION_DENIED) {
-                    Snackbar.make(rootLayout, R.string.msg_permission_denied, Snackbar.LENGTH_INDEFINITE)
-                            .setAction(R.string.retry, v -> checkPermissions())
-                            .show();
-                    StaticLogger.info(this, "Permissions denied");
-                    return;
-                }
-            }
-            StaticLogger.info(this, "Permissions granted");
-            presenter.update();
-        }
-    }
-
-    @Override
     public void gotoReaderActivity() {
         startActivity(new Intent(this, ReaderActivity.class));
         finish();
     }
 
     @Override
-    public void showUpdateMessage(String message) {
+    public void showUpdateMessage(int message) {
         updateDescriptionView.setText(message);
     }
 
     private void checkPermissions() {
-        int state = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        if (state != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(
-                    this,
-                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    REQUEST_PERMISSIONS);
+        if (ContextCompat.checkSelfPermission(this, READ_EXTERNAL_STORAGE) != PERMISSION_GRANTED) {
+            mActivityResultLauncher.launch(READ_EXTERNAL_STORAGE);
         } else {
             StaticLogger.info(this, "Permissions granted");
             presenter.update();

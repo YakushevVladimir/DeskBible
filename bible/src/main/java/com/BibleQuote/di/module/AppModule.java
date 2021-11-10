@@ -46,7 +46,6 @@ import com.BibleQuote.domain.AnalyticsHelper;
 import com.BibleQuote.domain.analytics.FirebaseAnalyticsHelper;
 import com.BibleQuote.domain.controller.ILibraryController;
 import com.BibleQuote.domain.controller.ITSKController;
-import com.BibleQuote.domain.entity.BaseModule;
 import com.BibleQuote.domain.logger.CompositeLogger;
 import com.BibleQuote.domain.logger.Logger;
 import com.BibleQuote.domain.repository.ICacheRepository;
@@ -55,7 +54,6 @@ import com.BibleQuote.domain.repository.ITskRepository;
 import com.BibleQuote.domain.repository.LibraryLoader;
 import com.BibleQuote.managers.history.HistoryManager;
 import com.BibleQuote.managers.history.IHistoryManager;
-import com.BibleQuote.utils.DataConstants;
 import com.BibleQuote.utils.FsUtilsWrapper;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -64,11 +62,15 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import ru.churchtools.deskbible.data.library.LibraryContext;
+import ru.churchtools.deskbible.domain.migration.Migration;
+import ru.churchtools.deskbible.domain.migration.UpdateManager;
 
 @Module(includes = {DataModule.class})
 public class AppModule {
@@ -97,19 +99,18 @@ public class AppModule {
 
     @Provides
     @Singleton
-    ILibraryController getLibraryController(Context context, LibraryLoader<? extends BaseModule> repository) {
-        ICacheRepository cacheRepository = new FsCacheRepository(context.getFilesDir(), DataConstants.getLibraryCache());
+    ILibraryController getLibraryController(LibraryContext context, LibraryLoader repository) {
+        ICacheRepository cacheRepository = new FsCacheRepository(context.libraryCacheFile());
         return new FsLibraryController(repository, new CachedLibraryRepository(cacheRepository));
     }
 
     @Provides
-    LibraryLoader<? extends BaseModule> getLibraryLoader(Context context) {
-        List<File> libraryDirs = Arrays.asList(
-                DataConstants.getExternalLibraryPath(),
-                DataConstants.getLibraryPath(context)
-        );
+    LibraryLoader getLibraryLoader(LibraryContext libraryContext) {
+        List<File> modulesDir = Arrays.asList(
+                libraryContext.modulesDir(),
+                libraryContext.modulesExternalDir());
         final FsUtilsWrapper fsUtils = new FsUtilsWrapper();
-        return new FsLibraryLoader(libraryDirs, new BQModuleRepository(fsUtils));
+        return new FsLibraryLoader(modulesDir, new BQModuleRepository(fsUtils));
     }
 
     @Provides
@@ -138,5 +139,11 @@ public class AppModule {
         }
 
         return new CompositeLogger(loggers);
+    }
+
+    @Singleton
+    @Provides
+    UpdateManager provideUpdateManager(PreferenceHelper prefHelper, Set<Migration> migrations) {
+        return new UpdateManager(prefHelper, migrations);
     }
 }

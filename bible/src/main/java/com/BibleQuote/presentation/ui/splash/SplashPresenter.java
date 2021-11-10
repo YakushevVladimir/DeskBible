@@ -32,11 +32,11 @@ import com.BibleQuote.R;
 import com.BibleQuote.domain.controller.ILibraryController;
 import com.BibleQuote.domain.logger.StaticLogger;
 import com.BibleQuote.presentation.ui.base.BasePresenter;
-import com.BibleQuote.utils.update.UpdateManager;
 
 import javax.inject.Inject;
 
 import io.reactivex.Completable;
+import ru.churchtools.deskbible.domain.migration.UpdateManager;
 
 public class SplashPresenter extends BasePresenter<SplashView> {
 

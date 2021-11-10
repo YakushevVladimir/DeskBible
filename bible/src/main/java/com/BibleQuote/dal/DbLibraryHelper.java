@@ -30,7 +30,6 @@ package com.BibleQuote.dal;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Environment;
 
 import com.BibleQuote.dal.repository.bookmarks.BookmarksTags;
 import com.BibleQuote.dal.repository.migration.Migration;
@@ -38,10 +37,7 @@ import com.BibleQuote.dal.repository.migration.Migration_1_2;
 import com.BibleQuote.dal.repository.migration.Migration_2_3;
 import com.BibleQuote.domain.entity.Bookmark;
 import com.BibleQuote.domain.entity.Tag;
-import com.BibleQuote.utils.DataConstants;
-import com.BibleQuote.utils.FsUtils;
 
-import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -77,11 +73,11 @@ public final class DbLibraryHelper {
     private static final List<Migration> MIGRATIONS = Arrays.asList(new Migration_1_2(), new Migration_2_3());
     private static final int VERSION = 3;
 
-    private final Context appContext;
+    private final Context mContext;
     private SQLiteDatabase database;
 
     public DbLibraryHelper(Context context) {
-        appContext = context.getApplicationContext();
+        mContext = context;
     }
 
     public SQLiteDatabase getDatabase() {
@@ -91,39 +87,14 @@ public final class DbLibraryHelper {
         return database;
     }
 
-    public void closeDatabase() {
-        if (database != null && database.isOpen()) {
-            database.close();
-        }
-        database = null;
-    }
-
-    private File getDatabaseFile() {
-        File dbExternalDir = new File(DataConstants.getDbExternalDataPath());
-        File dbFile = FsUtils.findFile(DB_NAME,
-                dbExternalDir,
-                new File(DataConstants.getDbDataPath()),
-                appContext.getFilesDir());
-        if (dbFile == null) {
-            if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-                if (!dbExternalDir.exists() && !dbExternalDir.mkdir()) {
-                    dbFile = appContext.getDatabasePath(DB_NAME);
-                } else {
-                    dbFile = new File(dbExternalDir, DB_NAME);
-                }
-            }
-        }
-        return dbFile;
-    }
-
     private void onCreate(SQLiteDatabase db) {
         for (String command : CREATE_DATABASE) {
             db.execSQL(command);
         }
     }
 
-    private void onUpgrade(SQLiteDatabase db, final int oldVersion, final int newVersion) {
-        if (oldVersion == newVersion) {
+    private void onUpgrade(SQLiteDatabase db, final int oldVersion) {
+        if (oldVersion == DbLibraryHelper.VERSION) {
             // миграция не требуется
             return;
         }
@@ -141,14 +112,14 @@ public final class DbLibraryHelper {
             currVersion = migration.newVersion;
 
             // если достигли требуемой версии БД, то прерываем миграцию
-            if (currVersion == newVersion) {
+            if (currVersion == DbLibraryHelper.VERSION) {
                 break;
             }
         }
     }
 
     private SQLiteDatabase openOrCreateDatabase() {
-        SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(getDatabaseFile(), null);
+        SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(mContext.getDatabasePath(DB_NAME), null);
         int oldVersion = db.getVersion();
         if (oldVersion < VERSION) {
             db.beginTransaction();
@@ -157,7 +128,7 @@ public final class DbLibraryHelper {
                     onCreate(db);
                     oldVersion = 1;
                 }
-                onUpgrade(db, oldVersion, VERSION);
+                onUpgrade(db, oldVersion);
                 db.setVersion(VERSION);
                 db.setTransactionSuccessful();
             } finally {

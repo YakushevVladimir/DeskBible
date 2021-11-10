@@ -30,6 +30,7 @@ package com.BibleQuote.utils;
 
 import android.content.Context;
 import android.os.Environment;
+
 import androidx.annotation.NonNull;
 
 import com.BibleQuote.BuildConfig;
@@ -39,16 +40,9 @@ import java.io.File;
 public final class DataConstants {
 
     private static final String APP_DIR_NAME = "BibleQuote";
-    private static final String APP_PACKAGE_NAME = "com.BibleQuote";
     private static final String DB_DATA_DIR_NAME = "data";
-    private static final String LIBRARY_CACHE = "library.cache";
 
     private DataConstants() {
-    }
-
-    public static String getDbDataPath() {
-        return Environment.getDataDirectory() + File.separator
-                + "data" + File.separator + DataConstants.APP_PACKAGE_NAME + File.separator + DB_DATA_DIR_NAME;
     }
 
     public static String getDbExternalDataPath() {
@@ -58,15 +52,6 @@ public final class DataConstants {
 
     public static String getFsAppDirName() {
         return Environment.getExternalStorageDirectory() + File.separator + APP_DIR_NAME;
-    }
-
-    public static String getLibraryCache() {
-        return LIBRARY_CACHE;
-    }
-
-    @NonNull
-    public static File getExternalLibraryPath() {
-        return new File(getFsAppDirName(), BuildConfig.MODULE_DIR_NAME);
     }
 
     @NonNull

@@ -29,6 +29,7 @@
 package com.BibleQuote.domain.repository;
 
 import android.graphics.Bitmap;
+
 import androidx.annotation.NonNull;
 
 import com.BibleQuote.domain.entity.BaseModule;
@@ -39,6 +40,8 @@ import com.BibleQuote.domain.exceptions.BooksDefinitionException;
 import com.BibleQuote.domain.exceptions.OpenModuleException;
 import com.BibleQuote.entity.modules.BQModule;
 
+import java.io.File;
+
 /**
  *
  */
@@ -48,7 +51,7 @@ public interface IModuleRepository<D, T extends BaseModule> {
 
     Chapter loadChapter(T module, String bookID, int chapter) throws BookNotFoundException;
 
-    T loadModule(D path) throws OpenModuleException, BooksDefinitionException, BookDefinitionException;
+    T loadModule(File path) throws OpenModuleException, BooksDefinitionException, BookDefinitionException;
 
     @NonNull
     String getBookContent(T module, String bookID) throws BookNotFoundException;

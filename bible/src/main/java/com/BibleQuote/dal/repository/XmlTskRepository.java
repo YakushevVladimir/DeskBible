@@ -45,6 +45,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 
 public class XmlTskRepository implements ITskRepository {
 
@@ -54,10 +55,10 @@ public class XmlTskRepository implements ITskRepository {
 	private static final String BOOK = "book";
 	private static final String CHAPTER = "chapter";
 	private static final String VERSE = "verse";
-	private final File tskDir;
+	private final File mTskFile;
 
-	public XmlTskRepository(File tskDir) {
-		this.tskDir = tskDir;
+	public XmlTskRepository(File tskFile) {
+		mTskFile = tskFile;
 	}
 
 	@Override
@@ -132,10 +133,9 @@ public class XmlTskRepository implements ITskRepository {
 	}
 
 	private XmlPullParser getParser() throws XmlPullParserException, UnsupportedEncodingException, TskNotFoundException {
-		File tsk = new File(tskDir, "tsk.xml");
 		InputStreamReader iReader;
 		try {
-			iReader = new InputStreamReader(new FileInputStream(tsk), "UTF-8");
+			iReader = new InputStreamReader(new FileInputStream(mTskFile), StandardCharsets.UTF_8);
 		} catch (FileNotFoundException e) {
 			throw new TskNotFoundException();
 		}

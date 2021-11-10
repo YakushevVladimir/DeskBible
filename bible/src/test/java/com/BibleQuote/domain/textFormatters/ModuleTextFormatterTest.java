@@ -28,6 +28,8 @@
 
 package com.BibleQuote.domain.textFormatters;
 
+import static org.mockito.Mockito.when;
+
 import com.BibleQuote.domain.entity.BaseModule;
 import com.BibleQuote.entity.modules.BQModule;
 import com.BibleQuote.utils.PreferenceHelper;
@@ -42,11 +44,8 @@ import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
-import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE)
@@ -54,11 +53,11 @@ public class ModuleTextFormatterTest {
 
     @Mock PreferenceHelper prefHelper;
 
-    private String testVerses =
+    private final String testVerses =
             "<p>12 Услышав же Иисус, что Иоанн отдан <I>под</I> <I>стражу,</I> удалился в Галилею\n" +
             "<p>13 и, оставив Назарет, пришел и поселился в Капернауме приморском, в пределах Завулоновых и Неффалимовых,";
 
-    private String testVersesWithStrong =
+    private final String testVersesWithStrong =
             "<p>12 Услышав же Иисус G1234 G59, что Иоанн отдан <I>под</I> <I>стражу,</I> удалился в Галилею\n" +
             "<p>13 и, оставив Назарет, пришел 1234 59 и поселился в Капернауме приморском, в пределах Завулоновых и Неффалимовых,";
 
@@ -69,7 +68,7 @@ public class ModuleTextFormatterTest {
         MockitoAnnotations.initMocks(this);
         when(prefHelper.viewBookVerse()).thenReturn(true);
 
-        mModule = new BQModule("base" + File.separator + "biblequote.ini");
+        mModule = new BQModule("base", "biblequote.ini");
         mModule.setContainsStrong(false);
         mModule.setBible(true);
     }
@@ -80,7 +79,7 @@ public class ModuleTextFormatterTest {
     }
 
     @Test
-    public void testFullTagsClean() throws Exception {
+    public void testFullTagsClean() {
         ModuleTextFormatter formatter = new ModuleTextFormatter(mModule, new StripTagsTextFormatter());
         formatter.setVisibleVerseNumbers(false);
 
@@ -92,7 +91,7 @@ public class ModuleTextFormatterTest {
     }
 
     @Test
-    public void testSetVisibleVerseNumbers() throws Exception {
+    public void testSetVisibleVerseNumbers() {
         ModuleTextFormatter formatter = new ModuleTextFormatter(mModule, prefHelper);
         formatter.setVisibleVerseNumbers(false);
 
@@ -102,7 +101,7 @@ public class ModuleTextFormatterTest {
     }
 
     @Test
-    public void testFormatCleanTags() throws Exception {
+    public void testFormatCleanTags() {
         ModuleTextFormatter formatter = new ModuleTextFormatter(mModule, prefHelper);
 
         String result = formatter.format(testVerses);
@@ -111,7 +110,7 @@ public class ModuleTextFormatterTest {
     }
 
     @Test
-    public void testFormatModuleWithStrong() throws Exception {
+    public void testFormatModuleWithStrong() {
         mModule.setContainsStrong(true);
         ModuleTextFormatter formatter = new ModuleTextFormatter(mModule, prefHelper);
 
@@ -127,7 +126,7 @@ public class ModuleTextFormatterTest {
     }
 
     @Test
-    public void testFormatModuleWithoutStrong() throws Exception {
+    public void testFormatModuleWithoutStrong() {
         mModule.setContainsStrong(false);
         ModuleTextFormatter formatter = new ModuleTextFormatter(mModule, prefHelper);
 

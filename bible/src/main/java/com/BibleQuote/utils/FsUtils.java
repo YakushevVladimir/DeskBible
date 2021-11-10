@@ -28,8 +28,6 @@
 package com.BibleQuote.utils;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.util.Log;
 
 import com.BibleQuote.domain.exceptions.DataAccessException;
@@ -46,9 +44,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UTFDataFormatException;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -64,7 +60,7 @@ public final class FsUtils {
 
     static InputStream getStreamFromZip(String path, String fileName) {
         try {
-            FileInputStream fis = new FileInputStream(new File(path));
+            FileInputStream fis = new FileInputStream(path);
             ZipInputStream zis = new ZipInputStream(fis);
             ZipEntry entry;
             while ((entry = zis.getNextEntry()) != null) {
@@ -159,7 +155,7 @@ public final class FsUtils {
         return bReader;
     }
 
-    public static void searchByFilter(File currentFile, ArrayList<String> resultFiles, FileFilter filter) {
+    public static void searchByFilter(File currentFile, List<File> resultFiles, FileFilter filter) {
         StaticLogger.info(TAG, "Search modules into " + currentFile.getAbsolutePath());
 
         try {
@@ -173,7 +169,7 @@ public final class FsUtils {
                     searchByFilter(file, resultFiles, filter);
                 } else if (file.canRead()) {
                     StaticLogger.info(TAG, "\t- add file " + file.getAbsolutePath());
-                    resultFiles.add(file.getAbsolutePath());
+                    resultFiles.add(file);
                 }
             }
         } catch (Exception e) {
@@ -204,7 +200,7 @@ public final class FsUtils {
     public static String getAssetString(Context context, String fileName) {
         try (
                 InputStream assetIS = context.getResources().getAssets().open(fileName);
-                InputStreamReader localInputStreamReader = new InputStreamReader(assetIS, Charset.forName("UTF-8"));
+                InputStreamReader localInputStreamReader = new InputStreamReader(assetIS, StandardCharsets.UTF_8);
                 BufferedReader localBufferedReader = new BufferedReader(localInputStreamReader)
         ) {
             StringBuilder sBuilder = new StringBuilder();
@@ -215,46 +211,5 @@ public final class FsUtils {
         } catch (IOException e) {
             return "";
         }
-    }
-
-    /**
-     * Получение директории с модулями
-     *
-     * @param context контекст приложения
-     * @return директория для хранения модулей или {@code null}
-     */
-    @Nullable
-    public static File getLibraryDir(@NonNull Context context) {
-        final List<File> paths = Arrays.asList(DataConstants.getExternalLibraryPath(), DataConstants.getLibraryPath(context));
-        for (File file : paths) {
-            if (file.exists() || file.mkdirs()) {
-                return file;
-            }
-        }
-
-        StaticLogger.error(TAG, "Can't create library dir");
-        return null;
-    }
-
-    /**
-     * Осуществляет поиск файла в списке директорий.
-     *
-     * @param name имя искомого файла
-     * @param dirs список директорий, в которых осуществляется поиск
-     * @return найденный файл или {@code null}
-     */
-    @Nullable
-    public static File findFile(String name, File... dirs) {
-        for (File dir : dirs) {
-            if (!dir.exists()) {
-                continue;
-            }
-
-            File result = new File(dir, name);
-            if (result.exists() && result.canWrite()) {
-                return result;
-            }
-        }
-        return null;
     }
 }
