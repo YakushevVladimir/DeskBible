@@ -36,15 +36,16 @@ import android.os.FileUtils;
 import androidx.annotation.NonNull;
 
 import com.BibleQuote.domain.controller.ILibraryController;
-import com.BibleQuote.domain.logger.StaticLogger;
 import com.BibleQuote.utils.FilenameUtils;
 import com.BibleQuote.utils.Task;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.lang.ref.WeakReference;
 
 import ru.churchtools.deskbible.data.library.LibraryContext;
+import ru.churchtools.deskbible.domain.logger.StaticLogger;
 
 /**
  * @author ru_phoenix
@@ -57,7 +58,7 @@ public class LoadModuleFromFile extends Task {
     @NonNull
     private final ILibraryController mLibraryController;
     @NonNull
-    private final Context mContext;
+    private final WeakReference<Context> mContext;
     @NonNull
     private final Uri mUri;
     private StatusCode mStatusCode = StatusCode.Success;
@@ -68,7 +69,7 @@ public class LoadModuleFromFile extends Task {
                               @NonNull ILibraryController libraryController,
                               @NonNull LibraryContext libraryContext) {
         super(message, false);
-        mContext = context.getApplicationContext();
+        mContext = new WeakReference<>(context.getApplicationContext());
         mUri = uri;
         mLibraryController = libraryController;
         mLibraryContext = libraryContext;
@@ -76,6 +77,11 @@ public class LoadModuleFromFile extends Task {
 
     @Override
     protected Boolean doInBackground(String... arg0) {
+        Context context = mContext.get();
+        if (context == null) {
+            return false;
+        }
+
         StaticLogger.info(this, "Load module from " + mUri);
 
         File modulesDir = mLibraryContext.modulesDir();
@@ -85,14 +91,14 @@ public class LoadModuleFromFile extends Task {
             return false;
         }
 
-        ContentResolver contentResolver = mContext.getContentResolver();
+        ContentResolver contentResolver = context.getContentResolver();
         String type = contentResolver.getType(mUri);
         if (!"application/zip".equals(type)) {
             mStatusCode = StatusCode.FileNotSupported;
             return false;
         }
 
-        String fileName = FilenameUtils.getFileName(mContext, mUri);
+        String fileName = FilenameUtils.getFileName(context, mUri);
         if (fileName == null) {
             mStatusCode = StatusCode.FileNotExist;
             return false;

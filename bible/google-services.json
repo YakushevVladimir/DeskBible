@@ -15,10 +15,55 @@
       },
       "oauth_client": [
         {
+          "client_id": "724406199442-2rs1h49gcak6hc9uhq42k3i7v16mrlfl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ru.churchtools.deskbible",
+            "certificate_hash": "355eef1f01c37d568350217285b6362fd11973bf"
+          }
+        },
+        {
           "client_id": "724406199442-posfm8jmnrpf2nmb2btgi3b23b62of7a.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "ru.churchtools.deskbible",
+            "certificate_hash": "82a661163f18ad822e7ef084fe3f6c885139214d"
+          }
+        },
+        {
+          "client_id": "724406199442-grcfauvgh68beolvovqpmak2bsne9con.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBqFuSFLfXW6Y_3QP7CnPs1uULJz18EV38"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "724406199442-grcfauvgh68beolvovqpmak2bsne9con.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:724406199442:android:55bd383df2f4ed5d84324b",
+        "android_client_info": {
+          "package_name": "ru.churchtools.deskbible.debug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "724406199442-cf92j2ko8tfkhugsgacqhsd5lk1t3hvb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ru.churchtools.deskbible.debug",
             "certificate_hash": "82a661163f18ad822e7ef084fe3f6c885139214d"
           }
         },

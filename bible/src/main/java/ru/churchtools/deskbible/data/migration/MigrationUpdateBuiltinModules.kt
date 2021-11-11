@@ -30,9 +30,9 @@ package ru.churchtools.deskbible.data.migration
 
 import android.content.Context
 import com.BibleQuote.R
-import com.BibleQuote.domain.logger.StaticLogger
 import com.BibleQuote.utils.DataConstants
 import ru.churchtools.deskbible.data.library.LibraryContext
+import ru.churchtools.deskbible.domain.logger.StaticLogger
 import ru.churchtools.deskbible.domain.migration.Migration
 import java.io.File
 import java.io.IOException
@@ -60,7 +60,6 @@ class MigrationUpdateBuiltinModules(
         StaticLogger.info(this, "Update built-in modules into ${libraryContext.libraryDir()}")
 
         // Удаление ранее скопированных встроенных модулей и файлов библиотеки
-        libraryContext.libraryDir().deleteRecursively()
         DataConstants.getLibraryPath(context).deleteRecursively()
         File(context.filesDir, LibraryContext.FILE_CACHE).delete()
 

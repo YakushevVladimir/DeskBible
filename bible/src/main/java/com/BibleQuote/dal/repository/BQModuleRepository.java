@@ -42,7 +42,6 @@ import com.BibleQuote.domain.exceptions.BookDefinitionException;
 import com.BibleQuote.domain.exceptions.BookNotFoundException;
 import com.BibleQuote.domain.exceptions.DataAccessException;
 import com.BibleQuote.domain.exceptions.OpenModuleException;
-import com.BibleQuote.domain.logger.StaticLogger;
 import com.BibleQuote.domain.repository.IModuleRepository;
 import com.BibleQuote.domain.search.algorithm.BoyerMoorAlgorithm;
 import com.BibleQuote.domain.search.algorithm.SearchAlgorithm;
@@ -64,6 +63,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import ru.churchtools.deskbible.domain.logger.StaticLogger;
 
 /**
  *

@@ -32,7 +32,6 @@ import com.BibleQuote.R;
 import com.BibleQuote.domain.entity.BibleReference;
 import com.BibleQuote.domain.entity.Bookmark;
 import com.BibleQuote.domain.entity.Tag;
-import com.BibleQuote.domain.logger.StaticLogger;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.managers.bookmarks.BookmarksManager;
 import com.BibleQuote.presentation.ui.base.BasePresenter;
@@ -40,6 +39,8 @@ import com.BibleQuote.presentation.ui.base.BasePresenter;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import ru.churchtools.deskbible.domain.logger.StaticLogger;
 
 public class BookmarksPresenter extends BasePresenter<BookmarksView> {
 

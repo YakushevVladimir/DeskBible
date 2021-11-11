@@ -33,11 +33,12 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.BibleQuote.domain.entity.Bookmark;
-import com.BibleQuote.domain.logger.StaticLogger;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.util.Date;
+import java.util.Objects;
+
+import ru.churchtools.deskbible.domain.logger.StaticLogger;
 
 public class Migration_2_3 extends Migration {
 
@@ -99,8 +100,8 @@ public class Migration_2_3 extends Migration {
                 date = cursor.getString(cursor.getColumnIndex(Bookmark.DATE));
                 ContentValues cv = new ContentValues(1);
                 try {
-                    cv.put(Bookmark.TIME, dateFormat.parse(date).getTime());
-                } catch (ParseException ex) {
+                    cv.put(Bookmark.TIME, Objects.requireNonNull(dateFormat.parse(date)).getTime());
+                } catch (Exception ex) {
                     StaticLogger.error(TAG, "Failure update time", ex);
                     cv.put(Bookmark.TIME, new Date().getTime());
                 }

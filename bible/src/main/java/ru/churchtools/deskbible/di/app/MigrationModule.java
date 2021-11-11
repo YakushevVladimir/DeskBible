@@ -24,14 +24,15 @@ public interface MigrationModule {
 
     @IntoSet
     @Provides
-    static Migration provideUpdateModulesMigration(LibraryContext libraryContext, Context context) {
+    static Migration provideUpdateModulesMigration(LibraryContext libraryContext,
+                                                   Context context) {
         return new MigrationUpdateBuiltinModules(libraryContext, context, 4);
     }
 
     @IntoSet
     @Provides
     static Migration provideReloadModulesMigration(ILibraryController libraryController) {
-        return new MigrationReloadModules(libraryController, 4);
+        return new MigrationReloadModules(libraryController, 5);
     }
 
     @IntoSet

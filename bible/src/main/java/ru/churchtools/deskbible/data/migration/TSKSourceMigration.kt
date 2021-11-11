@@ -30,11 +30,12 @@ package ru.churchtools.deskbible.data.migration
 
 import android.content.Context
 import com.BibleQuote.R
-import com.BibleQuote.domain.logger.StaticLogger
 import ru.churchtools.deskbible.data.library.LibraryContext
 import ru.churchtools.deskbible.data.library.LibraryContext.Companion.FILE_TSK
+import ru.churchtools.deskbible.domain.logger.StaticLogger
 import ru.churchtools.deskbible.domain.migration.Migration
 import java.io.File
+import java.io.IOException
 
 class TSKSourceMigration(
     private val libraryContext: LibraryContext,
@@ -60,8 +61,16 @@ class TSKSourceMigration(
 
     private fun saveTSK() {
         StaticLogger.info(this, "Save TSK file")
-        context.resources.openRawResource(R.raw.tsk).use { stream ->
-            stream.copyTo(libraryContext.tskFile().outputStream())
+
+        val libraryDir = libraryContext.libraryDir()
+        if (!libraryDir.exists() && !libraryDir.mkdirs()) {
+            throw IOException("Library folder create failed")
+        }
+
+        context.resources.openRawResource(R.raw.tsk).use { inputStream ->
+            libraryContext.tskFile().outputStream().use { outputStream ->
+                inputStream.copyTo(outputStream)
+            }
         }
     }
 }

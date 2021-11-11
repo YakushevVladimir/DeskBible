@@ -34,7 +34,7 @@ package ru.churchtools.deskbible.domain.migration
  * @property version версия приложения, начиная с которой должна выполняться миграция
  */
 abstract class Migration(
-    private val version: Int
+    val version: Int
 ) {
 
     /**

@@ -29,9 +29,9 @@
 package ru.churchtools.deskbible.domain.migration
 
 import com.BibleQuote.BuildConfig
-import com.BibleQuote.domain.logger.StaticLogger
 import com.BibleQuote.utils.PreferenceHelper
 import io.reactivex.Observable
+import ru.churchtools.deskbible.domain.logger.StaticLogger
 
 /**
  * Класс отвечающий за выполнение [Migration] при обновлении версии приложения
@@ -46,10 +46,12 @@ class UpdateManager(
             StaticLogger.info(this, "Start update manager...")
             val currVersionCode = prefHelper.getInt("versionCode")
             if (BuildConfig.VERSION_CODE > currVersionCode) {
-                migrationList.forEach {
-                    emitter.onNext(it.description)
-                    it.migrate(currVersionCode)
-                }
+                migrationList
+                    .sortedBy { it.version }
+                    .forEach {
+                        emitter.onNext(it.description)
+                        it.migrate(currVersionCode)
+                    }
                 prefHelper.saveInt("versionCode", BuildConfig.VERSION_CODE)
                 StaticLogger.info(this, "Update success")
             }

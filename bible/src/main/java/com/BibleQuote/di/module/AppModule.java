@@ -39,15 +39,10 @@ import com.BibleQuote.dal.controller.TSKController;
 import com.BibleQuote.dal.repository.BQModuleRepository;
 import com.BibleQuote.dal.repository.FsCacheRepository;
 import com.BibleQuote.dal.repository.FsLibraryLoader;
-import com.BibleQuote.data.logger.AndroidLogger;
-import com.BibleQuote.data.logger.CrashlyticsLogger;
-import com.BibleQuote.data.logger.file.FileLogger;
 import com.BibleQuote.domain.AnalyticsHelper;
 import com.BibleQuote.domain.analytics.FirebaseAnalyticsHelper;
 import com.BibleQuote.domain.controller.ILibraryController;
 import com.BibleQuote.domain.controller.ITSKController;
-import com.BibleQuote.domain.logger.CompositeLogger;
-import com.BibleQuote.domain.logger.Logger;
 import com.BibleQuote.domain.repository.ICacheRepository;
 import com.BibleQuote.domain.repository.IHistoryRepository;
 import com.BibleQuote.domain.repository.ITskRepository;
@@ -57,6 +52,7 @@ import com.BibleQuote.managers.history.IHistoryManager;
 import com.BibleQuote.utils.FsUtilsWrapper;
 import com.BibleQuote.utils.PreferenceHelper;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -69,6 +65,10 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import ru.churchtools.deskbible.data.library.LibraryContext;
+import ru.churchtools.deskbible.data.logger.AndroidLogger;
+import ru.churchtools.deskbible.data.logger.CrashlyticsLogger;
+import ru.churchtools.deskbible.domain.logger.CompositeLogger;
+import ru.churchtools.deskbible.domain.logger.Logger;
 import ru.churchtools.deskbible.domain.migration.Migration;
 import ru.churchtools.deskbible.domain.migration.UpdateManager;
 
@@ -132,8 +132,7 @@ public class AppModule {
     @Singleton
     Logger provideLogger() {
         final List<Logger> loggers = new ArrayList<>();
-        loggers.add(new FileLogger());
-        loggers.add(new CrashlyticsLogger());
+       loggers.add(new CrashlyticsLogger(FirebaseCrashlytics.getInstance()));
         if (BuildConfig.DEBUG) {
             loggers.add(new AndroidLogger());
         }

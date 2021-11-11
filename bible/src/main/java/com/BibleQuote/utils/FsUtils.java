@@ -31,7 +31,6 @@ import android.content.Context;
 import android.util.Log;
 
 import com.BibleQuote.domain.exceptions.DataAccessException;
-import com.BibleQuote.domain.logger.StaticLogger;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -48,6 +47,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+
+import ru.churchtools.deskbible.domain.logger.StaticLogger;
 
 public final class FsUtils {
 

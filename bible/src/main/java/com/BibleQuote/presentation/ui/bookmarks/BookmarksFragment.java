@@ -32,13 +32,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.DialogFragment;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.view.ActionMode;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -47,11 +40,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.ActionMode;
+import androidx.fragment.app.DialogFragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.BibleQuote.R;
 import com.BibleQuote.di.component.FragmentComponent;
 import com.BibleQuote.domain.entity.Bookmark;
 import com.BibleQuote.domain.entity.Tag;
-import com.BibleQuote.domain.logger.StaticLogger;
 import com.BibleQuote.presentation.dialogs.BookmarksDialog;
 import com.BibleQuote.presentation.ui.base.BaseFragment;
 import com.BibleQuote.presentation.ui.bookmarks.adapter.BookmarkAdapter;
@@ -62,6 +62,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import ru.churchtools.deskbible.domain.logger.StaticLogger;
 
 /**
  * User: Vladimir Yakushev
@@ -69,7 +70,8 @@ import butterknife.Unbinder;
  */
 public class BookmarksFragment extends BaseFragment<BookmarksPresenter> implements BookmarksView {
 
-    @BindView(R.id.list_bookmarks) RecyclerView viewBookmarksList;
+    @BindView(R.id.list_bookmarks)
+    RecyclerView viewBookmarksList;
 
     private Unbinder unbinder;
 
@@ -80,14 +82,14 @@ public class BookmarksFragment extends BaseFragment<BookmarksPresenter> implemen
 
         setHasOptionsMenu(true);
 
-        viewBookmarksList.setLayoutManager(new LinearLayoutManager(getContext()));
+        viewBookmarksList.setLayoutManager(new LinearLayoutManager(requireContext()));
         viewBookmarksList.setHasFixedSize(true);
-        viewBookmarksList.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayout.VERTICAL));
+        viewBookmarksList.addItemDecoration(new DividerItemDecoration(requireContext(), LinearLayout.VERTICAL));
 
         try {
             presenter.setChangeListener((OnBookmarksChangeListener) getActivity());
         } catch (ClassCastException e) {
-            throw new ClassCastException(getActivity().toString() + " must implement OnBookmarksChangeListener");
+            throw new ClassCastException(requireActivity().toString() + " must implement OnBookmarksChangeListener");
         }
 
         return view;
@@ -100,14 +102,14 @@ public class BookmarksFragment extends BaseFragment<BookmarksPresenter> implemen
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
         StaticLogger.info(this, "onCreateOptionsMenu");
         inflater.inflate(R.menu.menu_bookmarks, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
-    public void onPrepareOptionsMenu(Menu menu) {
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
         super.onPrepareOptionsMenu(menu);
     }
 
@@ -152,8 +154,9 @@ public class BookmarksFragment extends BaseFragment<BookmarksPresenter> implemen
 
     @Override
     public void startBookmarkAction(String title) {
-        ActionMode currActionMode = ((AppCompatActivity) getActivity())
-                .startSupportActionMode(new BookmarksSelectAction(getActivity(), presenter));
+        AppCompatActivity activity = (AppCompatActivity) requireActivity();
+        ActionMode currActionMode = activity
+                .startSupportActionMode(new BookmarksSelectAction(activity, presenter));
         if (currActionMode != null) {
             currActionMode.setTitle(title);
         }
@@ -162,7 +165,7 @@ public class BookmarksFragment extends BaseFragment<BookmarksPresenter> implemen
     @Override
     public void openBookmarkDialog(Bookmark bookmark) {
         DialogFragment bmDial = BookmarksDialog.newInstance(bookmark);
-        bmDial.show(getActivity().getSupportFragmentManager(), "bookmark");
+        bmDial.show(requireActivity().getSupportFragmentManager(), "bookmark");
     }
 
     @Override
@@ -189,9 +192,9 @@ public class BookmarksFragment extends BaseFragment<BookmarksPresenter> implemen
 
     private static class BookmarksSelectAction implements ActionMode.Callback {
 
-        private Context context;
-        private BookmarksPresenter presenter;
-        private MenuInflater menuInflater;
+        private final Context context;
+        private final BookmarksPresenter presenter;
+        private final MenuInflater menuInflater;
 
         BookmarksSelectAction(Activity activity, BookmarksPresenter presenter) {
             this.presenter = presenter;
