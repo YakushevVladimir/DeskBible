@@ -60,7 +60,6 @@ class MigrationUpdateBuiltinModules(
         StaticLogger.info(this, "Update built-in modules into ${libraryContext.libraryDir()}")
 
         // Удаление ранее скопированных встроенных модулей и файлов библиотеки
-        libraryContext.libraryDir().deleteRecursively()
         DataConstants.getLibraryPath(context).deleteRecursively()
         File(context.filesDir, LibraryContext.FILE_CACHE).delete()
 

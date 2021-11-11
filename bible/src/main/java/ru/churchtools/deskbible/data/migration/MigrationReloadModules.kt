@@ -37,7 +37,7 @@ import ru.churchtools.deskbible.domain.migration.Migration
  *
  * @author Vladimir Yakushev <ru.phoenix@gmail.com>
  */
-class MigrationReloadModules(
+open class MigrationReloadModules(
     private val libraryController: ILibraryController,
     version: Int
 ) : Migration(version) {

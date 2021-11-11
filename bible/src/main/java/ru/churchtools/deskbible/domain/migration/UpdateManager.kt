@@ -46,10 +46,12 @@ class UpdateManager(
             StaticLogger.info(this, "Start update manager...")
             val currVersionCode = prefHelper.getInt("versionCode")
             if (BuildConfig.VERSION_CODE > currVersionCode) {
-                migrationList.forEach {
-                    emitter.onNext(it.description)
-                    it.migrate(currVersionCode)
-                }
+                migrationList
+                    .sortedBy { it.version }
+                    .forEach {
+                        emitter.onNext(it.description)
+                        it.migrate(currVersionCode)
+                    }
                 prefHelper.saveInt("versionCode", BuildConfig.VERSION_CODE)
                 StaticLogger.info(this, "Update success")
             }
