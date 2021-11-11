@@ -32,12 +32,13 @@ import com.BibleQuote.domain.controller.LibraryRepository;
 import com.BibleQuote.domain.entity.BaseModule;
 import com.BibleQuote.domain.entity.ModuleList;
 import com.BibleQuote.domain.exceptions.DataAccessException;
-import com.BibleQuote.domain.logger.StaticLogger;
 import com.BibleQuote.domain.repository.ICacheRepository;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+
+import ru.churchtools.deskbible.domain.logger.StaticLogger;
 
 public class CachedLibraryRepository implements LibraryRepository {
 

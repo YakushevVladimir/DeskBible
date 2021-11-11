@@ -29,9 +29,9 @@
 package ru.churchtools.deskbible.domain.migration
 
 import com.BibleQuote.BuildConfig
-import com.BibleQuote.domain.logger.StaticLogger
 import com.BibleQuote.utils.PreferenceHelper
 import io.reactivex.Observable
+import ru.churchtools.deskbible.domain.logger.StaticLogger
 
 /**
  * Класс отвечающий за выполнение [Migration] при обновлении версии приложения

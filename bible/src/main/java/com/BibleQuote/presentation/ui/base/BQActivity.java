@@ -29,6 +29,7 @@
 package com.BibleQuote.presentation.ui.base;
 
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -36,11 +37,11 @@ import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.di.component.ActivityComponent;
 import com.BibleQuote.di.component.AppComponent;
 import com.BibleQuote.di.module.ActivityModule;
-import com.BibleQuote.domain.logger.StaticLogger;
 
 import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+import ru.churchtools.deskbible.domain.logger.StaticLogger;
 
 public abstract class BQActivity extends AppCompatActivity {
 

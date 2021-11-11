@@ -34,13 +34,14 @@ import com.BibleQuote.domain.entity.BaseModule;
 import com.BibleQuote.domain.exceptions.BookDefinitionException;
 import com.BibleQuote.domain.exceptions.BooksDefinitionException;
 import com.BibleQuote.domain.exceptions.OpenModuleException;
-import com.BibleQuote.domain.logger.StaticLogger;
 import com.BibleQuote.domain.repository.LibraryLoader;
 
 import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+
+import ru.churchtools.deskbible.domain.logger.StaticLogger;
 
 public class FsLibraryController implements ILibraryController {
 

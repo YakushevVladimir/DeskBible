@@ -30,7 +30,7 @@ package com.BibleQuote.dal.repository.migration;
 
 import android.database.sqlite.SQLiteDatabase;
 
-import com.BibleQuote.domain.logger.StaticLogger;
+import ru.churchtools.deskbible.domain.logger.StaticLogger;
 
 public class Migration_1_2 extends Migration {
 

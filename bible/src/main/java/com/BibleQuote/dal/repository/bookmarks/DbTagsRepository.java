@@ -31,16 +31,18 @@ package com.BibleQuote.dal.repository.bookmarks;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
 import androidx.annotation.NonNull;
 
 import com.BibleQuote.dal.DbLibraryHelper;
 import com.BibleQuote.domain.entity.Tag;
 import com.BibleQuote.domain.entity.TagWithCount;
-import com.BibleQuote.domain.logger.StaticLogger;
 import com.BibleQuote.domain.repository.ITagsRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import ru.churchtools.deskbible.domain.logger.StaticLogger;
 
 public class DbTagsRepository implements ITagsRepository {
 

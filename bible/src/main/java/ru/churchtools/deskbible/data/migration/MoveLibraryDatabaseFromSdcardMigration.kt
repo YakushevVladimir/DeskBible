@@ -32,11 +32,10 @@ import android.content.Context
 import android.os.Environment
 import com.BibleQuote.R
 import com.BibleQuote.dal.DbLibraryHelper
-import com.BibleQuote.domain.logger.StaticLogger
 import com.BibleQuote.utils.DataConstants
+import ru.churchtools.deskbible.domain.logger.StaticLogger
 import ru.churchtools.deskbible.domain.migration.Migration
 import java.io.File
-import java.io.IOException
 
 class MoveLibraryDatabaseFromSdcardMigration(
     private val context: Context,
@@ -58,15 +57,11 @@ class MoveLibraryDatabaseFromSdcardMigration(
             return
         }
 
-        try {
-            externalDbDir.listFiles {
-                    pathname -> pathname.name.contains(DbLibraryHelper.DB_NAME)
-            }?.forEach { file ->
-                file.copyTo(context.getDatabasePath(file.name))
-            }
-            StaticLogger.info(this, "Файл БД закладок перенесен на карту памяти")
-        } catch (ex: IOException) {
-            StaticLogger.error(this, "Перемещение БД закладок не удалось", ex)
+        externalDbDir.listFiles { pathname ->
+            pathname.name.contains(DbLibraryHelper.DB_NAME)
+        }?.forEach { file ->
+            file.copyTo(context.getDatabasePath(file.name))
+            StaticLogger.info(this, "Файл БД закладок ${file.name} перенесен на карту памяти")
         }
     }
 }

@@ -31,18 +31,21 @@ import android.app.Application;
 import android.content.Context;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.BibleQuote.async.AsyncManager;
 import com.BibleQuote.di.component.AppComponent;
 import com.BibleQuote.di.component.DaggerAppComponent;
 import com.BibleQuote.di.module.AppModule;
 import com.BibleQuote.domain.controller.ILibraryController;
-import com.BibleQuote.domain.logger.Logger;
-import com.BibleQuote.domain.logger.StaticLogger;
 import com.BibleQuote.domain.repository.IBookmarksRepository;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.utils.PreferenceHelper;
 
 import javax.inject.Inject;
+
+import ru.churchtools.deskbible.domain.logger.Logger;
+import ru.churchtools.deskbible.domain.logger.StaticLogger;
 
 public class BibleQuoteApp extends Application implements Thread.UncaughtExceptionHandler {
 
@@ -107,7 +110,7 @@ public class BibleQuoteApp extends Application implements Thread.UncaughtExcepti
     }
 
     @Override
-    public void uncaughtException(Thread thread, Throwable ex) {
+    public void uncaughtException(Thread thread, @NonNull Throwable ex) {
         logger.error(thread.getName(), Log.getStackTraceString(ex));
         if (exceptionHandler != null) {
             exceptionHandler.uncaughtException(thread, ex);

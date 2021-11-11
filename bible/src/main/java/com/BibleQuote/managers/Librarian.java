@@ -30,6 +30,7 @@ package com.BibleQuote.managers;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+
 import androidx.annotation.NonNull;
 
 import com.BibleQuote.domain.controller.ILibraryController;
@@ -46,7 +47,6 @@ import com.BibleQuote.domain.exceptions.BookNotFoundException;
 import com.BibleQuote.domain.exceptions.BooksDefinitionException;
 import com.BibleQuote.domain.exceptions.OpenModuleException;
 import com.BibleQuote.domain.exceptions.TskNotFoundException;
-import com.BibleQuote.domain.logger.StaticLogger;
 import com.BibleQuote.domain.textFormatters.BacklightTextFormatter;
 import com.BibleQuote.domain.textFormatters.ModuleTextFormatter;
 import com.BibleQuote.domain.textFormatters.StripTagsTextFormatter;
@@ -70,6 +70,8 @@ import java.util.TreeSet;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import ru.churchtools.deskbible.domain.logger.StaticLogger;
 
 @Singleton
 public class Librarian {

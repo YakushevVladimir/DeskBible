@@ -30,9 +30,9 @@ package ru.churchtools.deskbible.data.migration
 
 import android.content.Context
 import com.BibleQuote.R
-import com.BibleQuote.domain.logger.StaticLogger
 import com.BibleQuote.utils.DataConstants
 import ru.churchtools.deskbible.data.library.LibraryContext
+import ru.churchtools.deskbible.domain.logger.StaticLogger
 import ru.churchtools.deskbible.domain.migration.Migration
 import java.io.File
 import java.io.IOException

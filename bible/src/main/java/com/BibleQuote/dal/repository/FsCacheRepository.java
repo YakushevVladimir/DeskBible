@@ -30,7 +30,6 @@ package com.BibleQuote.dal.repository;
 
 import com.BibleQuote.domain.entity.ModuleList;
 import com.BibleQuote.domain.exceptions.DataAccessException;
-import com.BibleQuote.domain.logger.StaticLogger;
 import com.BibleQuote.domain.repository.ICacheRepository;
 
 import java.io.File;
@@ -39,6 +38,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+
+import ru.churchtools.deskbible.domain.logger.StaticLogger;
 
 public class FsCacheRepository implements ICacheRepository {
 

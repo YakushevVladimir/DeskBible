@@ -42,13 +42,13 @@ import androidx.core.content.ContextCompat;
 
 import com.BibleQuote.R;
 import com.BibleQuote.di.component.ActivityComponent;
-import com.BibleQuote.domain.logger.StaticLogger;
 import com.BibleQuote.presentation.ui.base.BaseActivity;
 import com.BibleQuote.presentation.ui.reader.ReaderActivity;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import butterknife.BindView;
+import ru.churchtools.deskbible.domain.logger.StaticLogger;
 
 public class SplashActivity extends BaseActivity<SplashPresenter> implements SplashView {
 

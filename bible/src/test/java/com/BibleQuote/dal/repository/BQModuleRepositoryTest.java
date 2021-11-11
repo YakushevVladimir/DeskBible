@@ -28,7 +28,12 @@
 
 package com.BibleQuote.dal.repository;
 
-import com.BibleQuote.domain.logger.Logger;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
+
 import com.BibleQuote.entity.modules.BQModule;
 import com.BibleQuote.utils.FsUtils;
 import com.BibleQuote.utils.FsUtilsWrapper;
@@ -43,52 +48,45 @@ import org.robolectric.annotation.Config;
 
 import java.io.InputStream;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
-
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE)
 public class BQModuleRepositoryTest {
 
     @Mock FsUtilsWrapper fsUtilsWrapper;
     @Mock BQModule module;
-    @Mock Logger logger;
 
     private BQModuleRepository repository;
 
     @Test
-    public void convertImagePathsToBase64WithAltInEnd() throws Exception {
+    public void convertImagePathsToBase64WithAltInEnd() {
         String result1 = repository.cacheFileFromArchive(module, "test string with <img src=\"bible.png\" alt=\"bible\"> and other symbols");
         assertNotNull(result1);
         assertEquals(27921, result1.length());
     }
 
     @Test
-    public void convertImagePathsToBase64WithAltInStart() throws Exception {
+    public void convertImagePathsToBase64WithAltInStart() {
         String result2 = repository.cacheFileFromArchive(module, "test string with <img alt=\"bible\" src=\"bible.png\"> and other symbols");
         assertNotNull(result2);
         assertEquals(27921, result2.length());
     }
 
     @Test
-    public void convertImagePathsToBase64WithoutAlt() throws Exception {
+    public void convertImagePathsToBase64WithoutAlt() {
         String result3 = repository.cacheFileFromArchive(module, "test string with <img src='bible.png'> and other symbols");
         assertNotNull(result3);
         assertEquals(27909, result3.length());
     }
 
     @Test
-    public void convertImagePathsToBase64WithoutAltLowerCase() throws Exception {
+    public void convertImagePathsToBase64WithoutAltLowerCase() {
         String result3 = repository.cacheFileFromArchive(module, "<p><IMG SRC= \"theatre_seats.jpg\"> ".toLowerCase());
         assertNotNull(result3);
         assertEquals(27879, result3.length());
     }
 
     @Test
-    public void convertImagePathsToBase64withNonArchiveModules() throws Exception {
+    public void convertImagePathsToBase64withNonArchiveModules() {
         when(module.isArchive()).thenReturn(false);
         String testLine = "test string with <img src=\"bible.png\" alt=\"bible\"> and other symbols";
         String result = repository.cacheFileFromArchive(module, testLine);

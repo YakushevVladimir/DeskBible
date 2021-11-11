@@ -18,40 +18,40 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * Project: BibleQuote-for-Android
+ * Project: DeskBible
  * File: AndroidLogger.java
  *
- * Created by Vladimir Yakushev at 10/2017
+ * Created by Vladimir Yakushev at 11/2021
  * E-mail: ru.phoenix@gmail.com
- * WWW: http://www.scripturesoftware.org
+ * WWW: http://www.churchtools.ru
  */
+package ru.churchtools.deskbible.data.logger
 
-package com.BibleQuote.data.logger;
+import android.util.Log
+import ru.churchtools.deskbible.domain.logger.Logger
 
-import androidx.annotation.NonNull;
-import android.util.Log;
+/**
+ * Реализация [Logger] для отправки сообщений с логами в LogCat
+ */
+class AndroidLogger : Logger {
 
-import com.BibleQuote.domain.logger.Logger;
-
-public class AndroidLogger extends Logger {
-
-    @Override
-    public void debug(@NonNull Object tag, @NonNull String message) {
-        Log.d(getTag(tag), message);
+    override fun debug(tag: String, message: String) {
+        Log.d(tag, message)
     }
 
-    @Override
-    public void error(@NonNull Object tag, @NonNull String message) {
-        Log.e(getTag(tag), message);
+    override fun error(tag: String, message: String) {
+        Log.e(tag, message)
     }
 
-    @Override
-    public void error(@NonNull Object tag, @NonNull String message, @NonNull Throwable th) {
-        Log.e(getTag(tag), message, th);
+    override fun error(tag: String, message: String, th: Throwable) {
+        Log.e(tag, message, th)
     }
 
-    @Override
-    public void info(@NonNull Object tag, @NonNull String message) {
-        Log.i(getTag(tag), message);
+    override fun info(tag: String, message: String) {
+        Log.i(tag, message)
+    }
+
+    override fun warn(tag: String, message: String) {
+        Log.w(tag, message)
     }
 }

@@ -18,27 +18,24 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * Project: BibleQuote-for-Android
- * File: Logger.java
+ * Project: DeskBible
+ * File: Logger.kt
  *
- * Created by Vladimir Yakushev at 10/2017
+ * Created by Vladimir Yakushev at 11/2021
  * E-mail: ru.phoenix@gmail.com
- * WWW: http://www.scripturesoftware.org
+ * WWW: http://www.churchtools.ru
  */
 
-package com.BibleQuote.domain.logger;
+package ru.churchtools.deskbible.domain.logger
 
-import androidx.annotation.NonNull;
-
-public abstract class Logger {
-
+interface Logger {
     /**
      * Запись в протокол событий отладочного сообщения
      *
      * @param tag     имя класса-инициатора события
      * @param message текст помещаемый в протокол событий
      */
-    public abstract void debug(@NonNull Object tag, @NonNull String message);
+    fun debug(tag: String, message: String)
 
     /**
      * Запись в протокол событий сообщения об ошибке
@@ -46,7 +43,7 @@ public abstract class Logger {
      * @param tag     имя класса-инициатора события
      * @param message текст помещаемый в протокол событий
      */
-    public abstract void error(@NonNull Object tag, @NonNull String message);
+    fun error(tag: String, message: String)
 
     /**
      * Запись в протокол событий сообщения об ошибке
@@ -55,7 +52,7 @@ public abstract class Logger {
      * @param message текст помещаемый в протокол событий
      * @param th      ссылка на полученный Exception
      */
-    public abstract void error(@NonNull Object tag, @NonNull String message, @NonNull Throwable th);
+    fun error(tag: String, message: String, th: Throwable)
 
     /**
      * Запись в протокол событий информационного сообщения
@@ -63,13 +60,13 @@ public abstract class Logger {
      * @param tag     имя класса-инициатора события
      * @param message текст помещаемый в протокол событий
      */
-    public abstract void info(@NonNull Object tag, @NonNull String message);
+    fun info(tag: String, message: String)
 
-    protected String getTag(@NonNull Object src) {
-        if (src instanceof String) {
-            return (String) src;
-        } else {
-            return String.format("%s (%d)", src.getClass().getSimpleName(), src.hashCode());
-        }
-    }
+    /**
+     * Запись в протокол событий сообщения с предупреждением
+     *
+     * @param tag     имя класса-инициатора события
+     * @param message текст помещаемый в протокол событий
+     */
+    fun warn(tag: String, message: String)
 }

@@ -133,5 +133,6 @@ dependencies {
     testImplementation 'org.mockito:mockito-inline:4.0.0'
     testImplementation 'org.hamcrest:hamcrest:2.2'
     testImplementation "com.google.truth:truth:1.1.3"
+    testImplementation 'io.mockk:mockk:1.12.0'
 }
 

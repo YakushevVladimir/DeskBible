@@ -34,7 +34,6 @@ import com.BibleQuote.domain.entity.BaseModule;
 import com.BibleQuote.domain.exceptions.BookDefinitionException;
 import com.BibleQuote.domain.exceptions.BooksDefinitionException;
 import com.BibleQuote.domain.exceptions.OpenModuleException;
-import com.BibleQuote.domain.logger.StaticLogger;
 import com.BibleQuote.domain.repository.LibraryLoader;
 import com.BibleQuote.utils.FsUtils;
 import com.BibleQuote.utils.OnlyBQIni;
@@ -47,6 +46,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+
+import ru.churchtools.deskbible.domain.logger.StaticLogger;
 
 public class FsLibraryLoader implements LibraryLoader {
 
