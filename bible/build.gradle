@@ -40,7 +40,7 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 6
         versionName "2.1"
-        resConfigs("en", "ru", "be", "de", "es", "no", "sv", "uk")
+        resConfigs("en", "ru", "be", "uk")
         buildConfigField("String", "MODULE_DIR_NAME", "\"modules\"")
         setProperty("archivesBaseName", "deskbible-v" + versionName + "." + versionCode)
     }
@@ -53,6 +53,7 @@ android {
     buildTypes {
         debug {
             testCoverageEnabled true
+            applicationIdSuffix '.debug'
         }
         release {
             shrinkResources true
