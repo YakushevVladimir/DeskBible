@@ -38,8 +38,8 @@ android {
         applicationId "ru.churchtools.deskbible"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 7
-        versionName "2.2"
+        versionCode 8
+        versionName "2.2.1"
         resConfigs("en", "ru", "be", "uk")
         buildConfigField("String", "MODULE_DIR_NAME", "\"modules\"")
         setProperty("archivesBaseName", "deskbible-v" + versionName + "." + versionCode)

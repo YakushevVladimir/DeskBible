@@ -47,6 +47,7 @@ class UpdateManager(
             val currVersionCode = prefHelper.getInt("versionCode")
             if (BuildConfig.VERSION_CODE > currVersionCode) {
                 migrationList
+                    .filter { it.version > currVersionCode }
                     .sortedBy { it.version }
                     .forEach {
                         emitter.onNext(it.description)

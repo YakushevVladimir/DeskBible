@@ -30,6 +30,7 @@ package ru.churchtools.deskbible.data.migration
 
 import android.content.Context
 import com.BibleQuote.R
+import com.BibleQuote.domain.controller.ILibraryController
 import com.BibleQuote.utils.DataConstants
 import ru.churchtools.deskbible.data.library.LibraryContext
 import ru.churchtools.deskbible.domain.logger.StaticLogger
@@ -46,6 +47,7 @@ import java.io.IOException
  */
 class MigrationUpdateBuiltinModules(
     private val libraryContext: LibraryContext,
+    private val libraryController: ILibraryController,
     private val context: Context,
     versionCode: Int
 ) : Migration(versionCode) {
@@ -73,6 +75,8 @@ class MigrationUpdateBuiltinModules(
                 context.resources.openRawResource(resId).copyTo(it)
             }
         }
+
+        libraryController.reloadModules()
     }
 
     override fun getMigrationDescription(): Int {
