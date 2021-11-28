@@ -29,7 +29,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    ext.kotlin_version = '1.5.31'
+    ext.kotlin_version = '1.6.0'
     repositories {
         mavenCentral()
         google()
@@ -51,9 +51,10 @@ ext {
     targetSdkVersion = 30
 
     androidx_version = '1.1.0'
-    daggerVersion = "2.40"
-    retrofitVersion = "2.9.0"
     butterknifeVersion = "10.2.3"
+    daggerVersion = "2.40"
+    lifecycle_version = '2.3.1'
+    retrofitVersion = "2.9.0"
 }
 
 allprojects {

@@ -25,33 +25,38 @@
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
+package ru.churchtools.deskbible.di.app
 
-package com.BibleQuote.di.component;
+import android.content.Context
+import com.BibleQuote.BibleQuoteApp
+import com.BibleQuote.di.component.ActivityComponent
+import com.BibleQuote.di.component.FragmentComponent
+import com.BibleQuote.di.module.ActivityModule
+import com.BibleQuote.di.module.AppModule
+import com.BibleQuote.di.module.DataModule
+import com.BibleQuote.di.module.FragmentModule
+import dagger.BindsInstance
+import dagger.Component
+import javax.inject.Singleton
 
-import com.BibleQuote.BibleQuoteApp;
-import com.BibleQuote.di.module.ActivityModule;
-import com.BibleQuote.di.module.AppModule;
-import com.BibleQuote.di.module.FragmentModule;
-
-import javax.inject.Singleton;
-
-import dagger.Component;
-import ru.churchtools.deskbible.di.app.LibraryModule;
-import ru.churchtools.deskbible.di.app.MigrationModule;
-
-@Component(
-        modules = {
-                AppModule.class,
-                LibraryModule.class,
-                MigrationModule.class
-        }
-)
+@Component(modules = [
+    AppModule::class,
+    DataModule::class,
+    ConfigModule::class,
+    LibraryModule::class,
+    MigrationModule::class
+])
 @Singleton
-public interface AppComponent {
+interface AppComponent {
 
-    ActivityComponent activityComponent(ActivityModule module);
+    fun activityComponent(module: ActivityModule): ActivityComponent
 
-    FragmentComponent fragmentComponent(FragmentModule module);
+    fun fragmentComponent(module: FragmentModule): FragmentComponent
 
-    void inject(BibleQuoteApp application);
+    fun inject(application: BibleQuoteApp)
+
+    @Component.Factory
+    interface Factory {
+        fun create(@BindsInstance context: Context): AppComponent
+    }
 }

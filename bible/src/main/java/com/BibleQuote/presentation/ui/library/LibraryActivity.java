@@ -43,6 +43,8 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import com.BibleQuote.R;
 import com.BibleQuote.async.task.AsyncOpenModule;
 import com.BibleQuote.async.task.AsyncRefreshModules;
@@ -105,6 +107,10 @@ public class LibraryActivity extends AsyncTaskActivity {
     private int modulePos, bookPos, chapterPos;
     private ArrayList<ItemList> modules = new ArrayList<>();
     private int viewMode = 1;
+
+    public static Intent createIntent(@NonNull Context context) {
+        return new Intent(context, LibraryActivity.class);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

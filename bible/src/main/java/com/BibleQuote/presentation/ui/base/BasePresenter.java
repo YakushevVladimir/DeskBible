@@ -28,6 +28,9 @@
 
 package com.BibleQuote.presentation.ui.base;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import java.lang.ref.WeakReference;
 
 import io.reactivex.disposables.CompositeDisposable;
@@ -54,7 +57,25 @@ public abstract class BasePresenter<T extends BaseView> {
         compositeDisposable.add(disposable);
     }
 
+    @Nullable
     protected T getView() {
         return viewRef.get();
+    }
+
+    protected void getViewAndExecute(@NonNull Command<T> command) {
+        T view = getView();
+        if (view != null) {
+            command.execute(view);
+        }
+    }
+
+    /**
+     * Команда для выполнения на View
+     *
+     * @param <T> тип класса View
+     */
+    protected interface Command<T> {
+
+        void execute(@NonNull T view);
     }
 }

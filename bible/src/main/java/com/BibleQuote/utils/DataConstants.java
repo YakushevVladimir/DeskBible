@@ -33,14 +33,13 @@ import android.os.Environment;
 
 import androidx.annotation.NonNull;
 
-import com.BibleQuote.BuildConfig;
-
 import java.io.File;
 
 public final class DataConstants {
 
     private static final String APP_DIR_NAME = "BibleQuote";
     private static final String DB_DATA_DIR_NAME = "data";
+    private static final String MODULE_DIR_NAME = "modules";
 
     private DataConstants() {
     }
@@ -56,6 +55,6 @@ public final class DataConstants {
 
     @NonNull
     public static File getLibraryPath(@NonNull Context context) {
-        return new File(context.getFilesDir(), BuildConfig.MODULE_DIR_NAME);
+        return new File(context.getFilesDir(), MODULE_DIR_NAME);
     }
 }

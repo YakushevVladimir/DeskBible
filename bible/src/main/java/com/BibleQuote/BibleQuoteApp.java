@@ -34,9 +34,6 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.BibleQuote.async.AsyncManager;
-import com.BibleQuote.di.component.AppComponent;
-import com.BibleQuote.di.component.DaggerAppComponent;
-import com.BibleQuote.di.module.AppModule;
 import com.BibleQuote.domain.controller.ILibraryController;
 import com.BibleQuote.domain.repository.IBookmarksRepository;
 import com.BibleQuote.managers.Librarian;
@@ -44,6 +41,8 @@ import com.BibleQuote.utils.PreferenceHelper;
 
 import javax.inject.Inject;
 
+import ru.churchtools.deskbible.di.app.AppComponent;
+import ru.churchtools.deskbible.di.app.DaggerAppComponent;
 import ru.churchtools.deskbible.domain.logger.Logger;
 import ru.churchtools.deskbible.domain.logger.StaticLogger;
 
@@ -60,7 +59,7 @@ public class BibleQuoteApp extends Application implements Thread.UncaughtExcepti
 
     private AppComponent appComponent;
 
-    private Thread.UncaughtExceptionHandler exceptionHandler;
+    private final Thread.UncaughtExceptionHandler exceptionHandler;
 
     public BibleQuoteApp() {
         super();
@@ -100,9 +99,7 @@ public class BibleQuoteApp extends Application implements Thread.UncaughtExcepti
     public void onCreate() {
         super.onCreate();
 
-        appComponent = DaggerAppComponent.builder()
-                .appModule(new AppModule(this))
-                .build();
+        appComponent = DaggerAppComponent.factory().create(this);
         appComponent.inject(this);
 
         StaticLogger.init(logger);

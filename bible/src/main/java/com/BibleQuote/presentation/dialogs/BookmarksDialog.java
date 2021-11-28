@@ -30,10 +30,6 @@ package com.BibleQuote.presentation.dialogs;
 
 import android.app.Dialog;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
-import androidx.appcompat.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,9 +37,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
+
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.R;
-import com.BibleQuote.di.component.AppComponent;
 import com.BibleQuote.di.component.FragmentComponent;
 import com.BibleQuote.di.module.FragmentModule;
 import com.BibleQuote.domain.AnalyticsHelper;
@@ -52,6 +52,8 @@ import com.BibleQuote.managers.bookmarks.BookmarksManager;
 import com.BibleQuote.presentation.ui.bookmarks.BookmarksActivity;
 
 import javax.inject.Inject;
+
+import ru.churchtools.deskbible.di.app.AppComponent;
 
 public class BookmarksDialog extends DialogFragment {
 
