@@ -30,7 +30,6 @@ package com.BibleQuote.di.module;
 
 import android.content.Context;
 
-import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.BuildConfig;
 import com.BibleQuote.async.AsyncManager;
 import com.BibleQuote.dal.controller.CachedLibraryRepository;
@@ -72,19 +71,8 @@ import ru.churchtools.deskbible.domain.logger.Logger;
 import ru.churchtools.deskbible.domain.migration.Migration;
 import ru.churchtools.deskbible.domain.migration.UpdateManager;
 
-@Module(includes = {DataModule.class})
+@Module
 public class AppModule {
-
-    private final BibleQuoteApp application;
-
-    public AppModule(BibleQuoteApp application) {
-        this.application = application;
-    }
-
-    @Provides
-    Context getAppContext() {
-        return application.getApplicationContext();
-    }
 
     @Provides
     @Singleton

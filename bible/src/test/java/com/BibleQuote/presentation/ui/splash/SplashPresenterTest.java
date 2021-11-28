@@ -44,6 +44,7 @@ import java.io.IOException;
 
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
+import ru.churchtools.deskbible.domain.config.FeatureToggle;
 import ru.churchtools.deskbible.domain.migration.UpdateManager;
 
 public class SplashPresenterTest {
@@ -51,18 +52,20 @@ public class SplashPresenterTest {
     @Mock private ILibraryController libraryController;
     @Mock private UpdateManager updateManager;
     @Mock private SplashView view;
+    @Mock private FeatureToggle featureToggle;
 
     private SplashPresenter presenter;
 
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        presenter = new SplashPresenter(libraryController, updateManager);
+        presenter = new SplashPresenter(libraryController, updateManager, featureToggle);
         presenter.attachView(view);
         presenter.onViewCreated();
 
         when(view.backgroundThread()).thenReturn(Schedulers.trampoline());
         when(view.mainThread()).thenReturn(Schedulers.trampoline());
+        when(featureToggle.newLibraryUiEnabled()).thenReturn(false);
     }
 
     @Test

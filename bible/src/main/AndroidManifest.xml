@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2011 Scripture Software
   ~
   ~ Licensed to the Apache Software Foundation (ASF) under one
@@ -30,80 +29,82 @@
     package="com.BibleQuote"
     android:installLocation="auto">
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <supports-screens
         android:anyDensity="true"
         android:largeScreens="true"
         android:normalScreens="true"
         android:smallScreens="true"
-        android:xlargeScreens="true"/>
+        android:xlargeScreens="true" />
 
     <application
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
         android:name=".BibleQuoteApp"
-        android:theme="@style/Theme.BibleQuote"
         android:allowBackup="true"
         android:fullBackupContent="@xml/backup_content"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
         android:requestLegacyExternalStorage="true"
-        android:supportsRtl="true">
+        android:supportsRtl="true"
+        android:theme="@style/Theme.BibleQuote">
         <activity
             android:name=".presentation.ui.splash.SplashActivity"
+            android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/SplashTheme">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
-                <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".presentation.ui.library.LibraryActivity"
-            android:label="@string/library"/>
+            android:label="@string/library" />
         <activity
             android:name=".presentation.ui.bookmarks.BookmarksActivity"
             android:label="@string/bookmarks"
             android:parentActivityName=".presentation.ui.reader.ReaderActivity"
-            android:theme="@style/Theme.BibleQuote.NoActionBar"/>
+            android:theme="@style/Theme.BibleQuote.NoActionBar" />
         <activity
             android:name=".presentation.ui.history.HistoryActivity"
-            android:label="@string/history"/>
+            android:label="@string/history" />
         <activity
             android:name=".presentation.ui.search.SearchActivity"
-            android:label="@string/search"/>
+            android:label="@string/search" />
         <activity
             android:name=".presentation.ui.settings.SettingsActivity"
-            android:label="@string/settings"/>
+            android:label="@string/settings" />
         <activity
             android:name=".presentation.ui.about.AboutActivity"
-            android:label="@string/about"/>
+            android:label="@string/about" />
         <activity
             android:name=".presentation.ui.help.HelpActivity"
-            android:label="@string/help"/>
+            android:label="@string/help" />
         <activity
             android:name=".presentation.ui.reader.ReaderActivity"
             android:configChanges="keyboardHidden|orientation"
+            android:exported="true"
             android:theme="@style/Theme.BibleQuote.NoActionBar">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER"/>
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
 
                 <data
                     android:host="b-bq.eu"
                     android:pathPattern=".*"
-                    android:scheme="http"/>
+                    android:scheme="http" />
                 <data
                     android:host="www.b-bq.eu"
                     android:pathPattern=".*"
-                    android:scheme="http"/>
+                    android:scheme="http" />
             </intent-filter>
         </activity>
         <activity
@@ -111,27 +112,27 @@
             android:label="@string/cross_reference" />
         <activity
             android:name=".presentation.ui.imagepreview.ImagePreviewActivity"
-            android:theme="@style/Theme.BibleQuote.NoActionBar"/>
+            android:theme="@style/Theme.BibleQuote.NoActionBar" />
 
         <uses-library
             android:name="com.sec.android.app.multiwindow"
-            android:required="false"/>
+            android:required="false" />
 
         <meta-data
             android:name="com.sec.android.support.multiwindow"
-            android:value="true"/>
+            android:value="true" />
         <meta-data
             android:name="com.sec.android.multiwindow.DEFAULT_SIZE_W"
-            android:resource="@dimen/app_defaultsize_w"/>
+            android:resource="@dimen/app_defaultsize_w" />
         <meta-data
             android:name="com.sec.android.multiwindow.DEFAULT_SIZE_H"
-            android:resource="@dimen/app_defaultsize_h"/>
+            android:resource="@dimen/app_defaultsize_h" />
         <meta-data
             android:name="com.sec.android.multiwindow.MINIMUM_SIZE_W"
-            android:resource="@dimen/app_minimumsize_w"/>
+            android:resource="@dimen/app_minimumsize_w" />
         <meta-data
             android:name="com.sec.android.multiwindow.MINIMUM_SIZE_H"
-            android:resource="@dimen/app_minimumsize_h"/>
+            android:resource="@dimen/app_minimumsize_h" />
 
         <meta-data
             android:name="io.fabric.ApiKey"

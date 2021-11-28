@@ -44,6 +44,8 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import okhttp3.Cache;
+import okhttp3.OkHttpClient;
 import ru.churchtools.deskbible.data.library.LibraryContext;
 
 @Module
@@ -77,4 +79,10 @@ public class DataModule {
         return new XmlTskRepository(context.tskFile());
     }
 
+    @Provides
+    OkHttpClient provideOkHttpClient(Context context) {
+        return new OkHttpClient.Builder()
+                .cache(new Cache(context.getCacheDir(), 5_000_000))
+                .build();
+    }
 }

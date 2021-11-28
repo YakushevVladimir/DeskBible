@@ -51,9 +51,10 @@ ext {
     targetSdkVersion = 30
 
     androidx_version = '1.1.0'
-    daggerVersion = "2.40"
-    retrofitVersion = "2.9.0"
     butterknifeVersion = "10.2.3"
+    daggerVersion = "2.40"
+    lifecycle_version = '2.3.1'
+    retrofitVersion = "2.9.0"
 }
 
 allprojects {

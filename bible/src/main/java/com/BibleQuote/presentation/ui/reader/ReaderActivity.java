@@ -78,7 +78,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.TreeSet;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
+import ru.churchtools.deskbible.domain.config.FeatureToggle;
 
 public class ReaderActivity extends BaseActivity<ReaderViewPresenter> implements ReaderView, IReaderViewListener {
 
@@ -88,6 +91,9 @@ public class ReaderActivity extends BaseActivity<ReaderViewPresenter> implements
     public static final int ID_PARALLELS = 5;
     public static final int ID_CHOOSE_CH = 1;
     public static final int ID_SEARCH = 2;
+
+    @Inject
+    FeatureToggle featureToggle;
 
     private static final String KEY_LINK_OSIS = "linkOSIS";
     private static final String TAG = ReaderActivity.class.getSimpleName();
@@ -181,7 +187,7 @@ public class ReaderActivity extends BaseActivity<ReaderViewPresenter> implements
         hideTTSPlayer();
         switch (item.getItemId()) {
             case R.id.action_bar_chooseCh:
-                openLibraryActivity();
+                presenter.onClickChooseChapter();
                 analyticsHelper.clickEvent("choose_ch");
                 break;
             case R.id.action_bar_search:
@@ -287,7 +293,7 @@ public class ReaderActivity extends BaseActivity<ReaderViewPresenter> implements
                 break;
             case onLongPress:
                 if (readerView.getReaderMode() == ReaderWebView.Mode.Read) {
-                    openLibraryActivity();
+                    presenter.onClickChooseChapter();
                 }
                 break;
             case onUpNavigation:
@@ -363,8 +369,7 @@ public class ReaderActivity extends BaseActivity<ReaderViewPresenter> implements
 
     @Override
     public void openLibraryActivity() {
-        Intent intent = new Intent().setClass(this, LibraryActivity.class);
-        startActivityForResult(intent, ID_CHOOSE_CH);
+        startActivityForResult(LibraryActivity.createIntent(this), ID_CHOOSE_CH);
     }
 
     @Override

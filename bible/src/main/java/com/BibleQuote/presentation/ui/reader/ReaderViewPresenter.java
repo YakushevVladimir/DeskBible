@@ -30,6 +30,8 @@ package com.BibleQuote.presentation.ui.reader;
 
 import android.net.Uri;
 
+import androidx.annotation.NonNull;
+
 import com.BibleQuote.di.scope.PerActivity;
 import com.BibleQuote.domain.AnalyticsHelper;
 import com.BibleQuote.domain.entity.BaseModule;
@@ -46,24 +48,34 @@ import javax.inject.Inject;
 
 import io.reactivex.Single;
 import io.reactivex.disposables.Disposable;
+import ru.churchtools.deskbible.domain.config.FeatureToggle;
 
 @PerActivity
 public class ReaderViewPresenter extends BasePresenter<ReaderView> implements TTSPlayerFragment.OnTTSStopSpeakListener {
 
-    private AnalyticsHelper analyticsHelper;
-    private Librarian librarian;
-    private PreferenceHelper preferenceHelper;
+    @NonNull
+    private final AnalyticsHelper analyticsHelper;
+    @NonNull
+    private final FeatureToggle featureToggle;
+    @NonNull
+    private final Librarian librarian;
+    @NonNull
+    private final PreferenceHelper preferenceHelper;
 
     @Inject
-    ReaderViewPresenter(Librarian librarian, PreferenceHelper prefHelper, AnalyticsHelper helper) {
+    ReaderViewPresenter(@NonNull Librarian librarian,
+                        @NonNull PreferenceHelper prefHelper,
+                        @NonNull AnalyticsHelper helper,
+                        @NonNull FeatureToggle featureToggle) {
         this.librarian = librarian;
         this.preferenceHelper = prefHelper;
         this.analyticsHelper = helper;
+        this.featureToggle = featureToggle;
     }
 
     @Override
     public void onStopSpeak() {
-        getView().hideTTSPlayer();
+        getViewAndExecute(ReaderView::hideTTSPlayer);
     }
 
     @Override
@@ -74,7 +86,7 @@ public class ReaderViewPresenter extends BasePresenter<ReaderView> implements TT
     void inverseNightMode() {
         boolean nightMode = !preferenceHelper.getTextAppearance().isNightMode();
         preferenceHelper.setNightMode(nightMode);
-        getView().setTextAppearance(preferenceHelper.getTextAppearance());
+        getViewAndExecute(view -> view.setTextAppearance(preferenceHelper.getTextAppearance()));
     }
 
     boolean isVolumeButtonsToScroll() {
@@ -86,13 +98,13 @@ public class ReaderViewPresenter extends BasePresenter<ReaderView> implements TT
             librarian.nextChapter();
             viewCurrentChapter();
         } catch (OpenModuleException e) {
-            getView().onOpenChapterFailure(e);
+            getViewAndExecute(view -> view.onOpenChapterFailure(e));
         }
     }
 
     void onChangeSettings() {
         initView();
-        getView().updateContent();
+        getViewAndExecute(ReaderView::updateContent);
     }
 
     void onPause() {
@@ -100,9 +112,10 @@ public class ReaderViewPresenter extends BasePresenter<ReaderView> implements TT
     }
 
     void onResume() {
-        ReaderView view = getView();
-        view.setKeepScreen(preferenceHelper.getBoolean("DisableTurnScreen"));
-        view.setCurrentOrientation(preferenceHelper.getBoolean("DisableAutoScreenRotation"));
+        getViewAndExecute(view -> {
+            view.setKeepScreen(preferenceHelper.getBoolean("DisableTurnScreen"));
+            view.setCurrentOrientation(preferenceHelper.getBoolean("DisableAutoScreenRotation"));
+        });
     }
 
     void openLastLink() {
@@ -122,22 +135,27 @@ public class ReaderViewPresenter extends BasePresenter<ReaderView> implements TT
             librarian.prevChapter();
             viewCurrentChapter();
         } catch (OpenModuleException e) {
-            getView().onOpenChapterFailure(e);
+            getViewAndExecute(view -> view.onOpenChapterFailure(e));
         }
     }
 
+    public void onClickChooseChapter() {
+        getViewAndExecute(ReaderView::openLibraryActivity);
+    }
+
     private void initView() {
-        ReaderView view = getView();
-        view.setTextAppearance(preferenceHelper.getTextAppearance());
-        view.setReaderMode(preferenceHelper.isReadModeByDefault() ? ReaderWebView.Mode.Read : ReaderWebView.Mode.Study);
-        view.setKeepScreen(preferenceHelper.getBoolean("DisableTurnScreen"));
-        view.setCurrentOrientation(preferenceHelper.getBoolean("DisableAutoScreenRotation"));
-        view.updateActivityMode();
+        getViewAndExecute(view -> {
+            view.setTextAppearance(preferenceHelper.getTextAppearance());
+            view.setReaderMode(preferenceHelper.isReadModeByDefault() ? ReaderWebView.Mode.Read : ReaderWebView.Mode.Study);
+            view.setKeepScreen(preferenceHelper.getBoolean("DisableTurnScreen"));
+            view.setCurrentOrientation(preferenceHelper.getBoolean("DisableAutoScreenRotation"));
+            view.updateActivityMode();
+        });
     }
 
     private void openChapterFromLink(BibleReference osisLink) {
         if (!librarian.isOSISLinkValid(osisLink)) {
-            getView().openLibraryActivity();
+            getViewAndExecute(view -> view.openLibraryActivity());
             return;
         }
 
@@ -145,33 +163,23 @@ public class ReaderViewPresenter extends BasePresenter<ReaderView> implements TT
         getView().showProgress(false);
         Disposable subscription = Single.just(osisLink)
                 .subscribeOn(getView().backgroundThread())
-                .map(link -> librarian.openChapter(link))
+                .map(librarian::openChapter)
                 .observeOn(getView().mainThread())
                 .subscribe(
-                        chapter -> {
-                            ReaderView view = getView();
-                            if (view == null) {
-                                return;
-                            }
-
+                        chapter -> getViewAndExecute(view -> {
                             BaseModule module = librarian.getCurrModule();
                             view.setTextFormatter(new ModuleTextFormatter(module, preferenceHelper));
                             view.setContent(librarian.getBaseUrl(), chapter, osisLink.getFromVerse(), module.isBible());
                             view.setTitle(osisLink.getModuleID(), librarian.getHumanBookLink());
                             view.hideProgress();
-                        },
-                        throwable -> {
-                            ReaderView view = getView();
-                            if (view != null) {
-                                view.onOpenChapterFailure(throwable);
-                            }
-                        }
+                        }),
+                        throwable -> getViewAndExecute(view ->view.onOpenChapterFailure(throwable))
                 );
         addSubscription(subscription);
     }
 
     private void viewCurrentChapter() {
-        getView().disableActionMode();
+        getViewAndExecute(ReaderView::disableActionMode);
         openChapterFromLink(librarian.getCurrentOSISLink());
     }
 }

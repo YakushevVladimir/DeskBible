@@ -28,6 +28,21 @@
 
 package com.BibleQuote.presentation.ui.reader;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import android.net.Uri;
 
 import com.BibleQuote.domain.AnalyticsHelper;
@@ -47,43 +62,32 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
-import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import io.reactivex.schedulers.Schedulers;
+import ru.churchtools.deskbible.domain.config.FeatureToggle;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyBoolean;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-@RunWith(RobolectricTestRunner.class)
-@Config(manifest = Config.NONE)
+@RunWith(MockitoJUnitRunner.class)
 public class ReaderViewPresenterTest {
 
-    @Mock AnalyticsHelper analyticsHelper;
-    @Mock Librarian librarian;
-    @Mock PreferenceHelper preferenceHelper;
-    @Mock ReaderView view;
+    private static final String BASE_URL = "/root/path";
+    private static final String HUMAN_LINK = "Gen 1:1";
+
+    @Mock
+    private AnalyticsHelper analyticsHelper;
+    @Mock
+    private Librarian librarian;
+    @Mock
+    private PreferenceHelper preferenceHelper;
+    @Mock
+    private ReaderView view;
+    @Mock
+    private FeatureToggle featureToggle;
+
     private ReaderViewPresenter presenter;
 
     @Before
     public void setUp() throws Exception {
-        MockitoAnnotations.initMocks(this);
-
         when(preferenceHelper.getTextAppearance()).thenReturn(mock(TextAppearance.class));
         when(preferenceHelper.isReadModeByDefault()).thenReturn(true);
         when(preferenceHelper.getBoolean(anyString())).thenReturn(true);
@@ -91,12 +95,13 @@ public class ReaderViewPresenterTest {
         when(view.mainThread()).thenReturn(Schedulers.trampoline());
         when(view.backgroundThread()).thenReturn(Schedulers.trampoline());
 
-        presenter = new ReaderViewPresenter(librarian, preferenceHelper, analyticsHelper);
+        presenter = new ReaderViewPresenter(
+                librarian, preferenceHelper, analyticsHelper, featureToggle);
         presenter.attachView(view);
     }
 
     @Test
-    public void inverseNightMode() throws Exception {
+    public void inverseNightMode() {
         TextAppearance textAppearance = mock(TextAppearance.class);
         when(textAppearance.isNightMode()).thenReturn(false);
         when(preferenceHelper.getTextAppearance()).thenReturn(textAppearance);
@@ -113,13 +118,13 @@ public class ReaderViewPresenterTest {
     }
 
     @Test
-    public void isVolumeButtonsToScroll() throws Exception {
+    public void isVolumeButtonsToScroll() {
         when(preferenceHelper.volumeButtonsToScroll()).thenReturn(false);
         assertFalse(presenter.isVolumeButtonsToScroll());
     }
 
     @Test
-    public void nextChapter() throws Exception {
+    public void nextChapter() {
         when(librarian.isOSISLinkValid(any())).thenReturn(false);
         presenter.nextChapter();
         verify(librarian).getCurrentOSISLink();
@@ -137,7 +142,7 @@ public class ReaderViewPresenterTest {
     }
 
     @Test
-    public void onChangeSettings() throws Exception {
+    public void onChangeSettings() {
         presenter.onChangeSettings();
         verify(view, times(1)).setTextAppearance(any(TextAppearance.class));
         verify(view, times(1)).setReaderMode(any(ReaderWebView.Mode.class));
@@ -148,14 +153,14 @@ public class ReaderViewPresenterTest {
     }
 
     @Test
-    public void onPause() throws Exception {
+    public void onPause() {
         when(view.getCurrVerse()).thenReturn(10);
         presenter.onPause();
         verify(librarian).setCurrentVerseNumber(eq(10));
     }
 
     @Test
-    public void onResume() throws Exception {
+    public void onResume() {
         when(preferenceHelper.getBoolean(eq("DisableTurnScreen"))).thenReturn(false);
         when(preferenceHelper.getBoolean(eq("DisableAutoScreenRotation"))).thenReturn(true);
         presenter.onResume();
@@ -164,13 +169,13 @@ public class ReaderViewPresenterTest {
     }
 
     @Test
-    public void onStopSpeak() throws Exception {
+    public void onStopSpeak() {
         presenter.onStopSpeak();
         verify(view).hideTTSPlayer();
     }
 
     @Test
-    public void onViewCreated() throws Exception {
+    public void onViewCreated() {
         presenter.onViewCreated();
         verify(view, times(1)).setTextAppearance(any(TextAppearance.class));
         verify(view, times(1)).setReaderMode(any(ReaderWebView.Mode.class));
@@ -180,7 +185,7 @@ public class ReaderViewPresenterTest {
     }
 
     @Test
-    public void openLastLink() throws Exception {
+    public void openLastLink() {
         when(librarian.isOSISLinkValid(any())).thenReturn(false);
         when(preferenceHelper.getLastRead()).thenReturn("RST.Gen.1");
         presenter.openLastLink();
@@ -191,12 +196,13 @@ public class ReaderViewPresenterTest {
 
     @Test
     public void openLinkFromUri() throws Exception {
-        final String baseUrl = "/root/path";
-        final String humanLink = "Gen 1:1";
-        initMocks(baseUrl, humanLink);
+        Uri deeplink = mock(Uri.class);
+        when(deeplink.getPath()).thenReturn("/Gen/1_1/RST");
+
+        initMocks();
         when(librarian.openChapter(any())).thenReturn(mock(Chapter.class));
 
-        presenter.openLink(Uri.parse("http://bq.app/Gen/1_1/RST"));
+        presenter.openLink(deeplink);
 
         ArgumentCaptor<BibleReference> captorBR = ArgumentCaptor.forClass(BibleReference.class);
         verify(librarian).openChapter(captorBR.capture());
@@ -204,8 +210,8 @@ public class ReaderViewPresenterTest {
 
         verify(librarian).getCurrModule();
         verify(view).setTextFormatter(any(ModuleTextFormatter.class));
-        verify(view).setContent(eq(baseUrl), any(Chapter.class), eq(1), eq(true));
-        verify(view).setTitle(eq("RST"), eq(humanLink));
+        verify(view).setContent(eq(BASE_URL), any(Chapter.class), eq(1), eq(true));
+        verify(view).setTitle(eq("RST"), eq(HUMAN_LINK));
 
         InOrder progressOrder = inOrder(view);
         progressOrder.verify(view).showProgress(eq(false));
@@ -214,9 +220,7 @@ public class ReaderViewPresenterTest {
 
     @Test
     public void openLinkStringWithClosedActivity() throws Exception {
-        final String baseUrl = "/root/path";
-        final String humanLink = "Gen 1:1";
-        initMocks(baseUrl, humanLink);
+        initMocks();
         doAnswer(invocation -> {
             presenter.detachView();
             return mock(Chapter.class);
@@ -231,9 +235,7 @@ public class ReaderViewPresenterTest {
 
     @Test
     public void openLinkStringWithError() throws Exception {
-        final String baseUrl = "/root/path";
-        final String humanLink = "Gen 1:1";
-        initMocks(baseUrl, humanLink);
+        initMocks();
         when(librarian.openChapter(any())).thenThrow(new OpenModuleException("RST", ""));
 
         presenter.openLink("RST.Gen.1.1");
@@ -244,7 +246,7 @@ public class ReaderViewPresenterTest {
     }
 
     @Test
-    public void prevChapter() throws Exception {
+    public void prevChapter() {
         when(librarian.isOSISLinkValid(any())).thenReturn(false);
         presenter.prevChapter();
         verify(librarian).getCurrentOSISLink();
@@ -261,21 +263,17 @@ public class ReaderViewPresenterTest {
         verify(view).onOpenChapterFailure(any());
     }
 
-    private void initMocks(String baseUrl, String humanLink) {
+    private void initMocks() {
         final BaseModule module = mock(BaseModule.class);
         when(module.isBible()).thenReturn(true);
         when(module.isContainsStrong()).thenReturn(false);
 
-        doAnswer(new Answer() {
-            @Override
-            public Boolean answer(InvocationOnMock invocation) throws Throwable {
-                BibleReference reference = invocation.getArgument(0);
-                return reference.getPath() != null;
-            }
+        doAnswer(invocation -> {
+            BibleReference reference = invocation.getArgument(0);
+            return reference.getPath() != null;
         }).when(librarian).isOSISLinkValid(any());
         when(librarian.getCurrModule()).thenReturn(module);
-        when(librarian.getBaseUrl()).thenReturn(baseUrl);
-        when(librarian.getHumanBookLink()).thenReturn(humanLink);
-        when(preferenceHelper.viewBookVerse()).thenReturn(true);
+        when(librarian.getBaseUrl()).thenReturn(BASE_URL);
+        when(librarian.getHumanBookLink()).thenReturn(HUMAN_LINK);
     }
 }

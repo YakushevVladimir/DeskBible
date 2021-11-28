@@ -1,0 +1,15 @@
+gradle.taskGraph.whenReady { taskGraph ->
+    if(taskGraph.hasTask(':bible:assembleRelease')) {
+        Properties localProps = new Properties()
+        localProps.load(new FileInputStream(file('../local.properties')))
+
+        def storePassword = localProps["STORE_PASSWORD"]
+        def keyAlias = localProps["KEY_ALIAS"]
+        def keyPassword = localProps["KEY_PASSWORD"]
+
+        // set signing config key passwords
+        android.signingConfigs.releaseConfig.storePassword = storePassword
+        android.signingConfigs.releaseConfig.keyAlias = keyAlias
+        android.signingConfigs.releaseConfig.keyPassword = keyPassword
+    }
+}
