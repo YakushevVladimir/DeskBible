@@ -47,12 +47,7 @@ android {
     }
 
     signingConfigs {
-        releaseConfig {
-            storeFile file('/Users/a17604831/work/bible/deskbible.keystore')
-            storePassword ''
-            keyAlias ''
-            keyPassword ''
-        }
+        releaseConfig {}
     }
 
     compileOptions {
