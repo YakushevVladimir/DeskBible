@@ -25,101 +25,76 @@
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.scripturesoftware.org
  */
+package com.BibleQuote.async.task
 
-package com.BibleQuote.async.task;
-
-import android.content.ContentResolver;
-import android.content.Context;
-import android.net.Uri;
-import android.os.FileUtils;
-
-import androidx.annotation.NonNull;
-
-import com.BibleQuote.domain.controller.ILibraryController;
-import com.BibleQuote.utils.FilenameUtils;
-import com.BibleQuote.utils.Task;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.lang.ref.WeakReference;
-
-import ru.churchtools.deskbible.data.library.LibraryContext;
-import ru.churchtools.deskbible.domain.logger.StaticLogger;
+import android.content.Context
+import android.net.Uri
+import com.BibleQuote.domain.controller.ILibraryController
+import com.BibleQuote.utils.FilenameUtils
+import com.BibleQuote.utils.Task
+import ru.churchtools.deskbible.data.library.LibraryContext
+import ru.churchtools.deskbible.domain.logger.StaticLogger.error
+import ru.churchtools.deskbible.domain.logger.StaticLogger.info
+import java.io.File
+import java.lang.ref.WeakReference
 
 /**
  * @author ru_phoenix
  * @version 1.0
  */
-public class LoadModuleFromFile extends Task {
+class LoadModuleFromFile(
+    context: Context,
+    message: String,
+    private val uri: Uri,
+    private val libraryController: ILibraryController,
+    private val libraryContext: LibraryContext
+) : Task(message, false) {
+    private val weakContext: WeakReference<Context> = WeakReference(context.applicationContext)
 
-    @NonNull
-    private final LibraryContext mLibraryContext;
-    @NonNull
-    private final ILibraryController mLibraryController;
-    @NonNull
-    private final WeakReference<Context> mContext;
-    @NonNull
-    private final Uri mUri;
-    private StatusCode mStatusCode = StatusCode.Success;
+    var statusCode = StatusCode.Success
+        private set
 
-    public LoadModuleFromFile(@NonNull Context context,
-                              @NonNull String message,
-                              @NonNull Uri uri,
-                              @NonNull ILibraryController libraryController,
-                              @NonNull LibraryContext libraryContext) {
-        super(message, false);
-        mContext = new WeakReference<>(context.getApplicationContext());
-        mUri = uri;
-        mLibraryController = libraryController;
-        mLibraryContext = libraryContext;
-    }
+    override fun doInBackground(vararg arg0: String): Boolean {
+        info(this, "Load module from $uri")
 
-    @Override
-    protected Boolean doInBackground(String... arg0) {
-        Context context = mContext.get();
-        if (context == null) {
-            return false;
-        }
-
-        StaticLogger.info(this, "Load module from " + mUri);
-
-        File modulesDir = mLibraryContext.modulesDir();
+        val modulesDir = libraryContext.modulesDir()
         if (!modulesDir.exists() && !modulesDir.mkdirs()) {
-            mStatusCode = StatusCode.LibraryNotFound;
-            StaticLogger.error(this, "Library directory not found");
-            return false;
+            statusCode = StatusCode.LibraryNotFound
+            error(this, "Library directory not found")
+            return false
         }
 
-        ContentResolver contentResolver = context.getContentResolver();
-        String type = contentResolver.getType(mUri);
-        if (!"application/zip".equals(type)) {
-            mStatusCode = StatusCode.FileNotSupported;
-            return false;
+        val context = weakContext.get() ?: return false
+        val contentResolver = context.contentResolver
+
+        val type = contentResolver.getType(uri)
+        if ("application/zip" != type) {
+            statusCode = StatusCode.FileNotSupported
+            return false
         }
 
-        String fileName = FilenameUtils.getFileName(context, mUri);
+        val fileName = FilenameUtils.getFileName(context, uri)
         if (fileName == null) {
-            mStatusCode = StatusCode.FileNotExist;
-            return false;
+            statusCode = StatusCode.FileNotExist
+            return false
         }
 
-        try(InputStream stream = contentResolver.openInputStream(mUri)) {
-            File target = new File(modulesDir, fileName);
-            FileUtils.copy(stream, new FileOutputStream(target));
-            mLibraryController.loadModule(target);
-        } catch (Exception e) {
-            StaticLogger.error(this, e.getMessage(), e);
-            mStatusCode = StatusCode.MoveFailed;
-            return false;
+        try {
+            contentResolver.openInputStream(uri)?.use { stream ->
+                val target = File(modulesDir, fileName)
+                stream.copyTo(target.outputStream())
+                libraryController.loadModule(target)
+            }
+        } catch (e: Exception) {
+            error(this, e.message, e)
+            statusCode = StatusCode.MoveFailed
+            return false
         }
 
-        return true;
+        return true
     }
 
-    public StatusCode getStatusCode() {
-        return mStatusCode;
+    enum class StatusCode {
+        Success, FileNotExist, FileNotSupported, MoveFailed, LibraryNotFound
     }
-
-    public enum StatusCode {Success, FileNotExist, FileNotSupported, MoveFailed, LibraryNotFound}
 }
