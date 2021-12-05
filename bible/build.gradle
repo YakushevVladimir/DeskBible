@@ -40,10 +40,10 @@ android {
         applicationId "ru.churchtools.deskbible"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 8
-        versionName "2.2.1"
+        versionCode 9
+        versionName "2.2.2"
         resConfigs("en", "ru", "be", "uk")
-        setProperty("archivesBaseName", "deskbible-v" + versionName + "." + versionCode)
+        setProperty("archivesBaseName", "deskbible-v${versionName}(${versionCode})")
     }
 
     signingConfigs {
