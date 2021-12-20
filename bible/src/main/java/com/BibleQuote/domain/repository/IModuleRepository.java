@@ -38,16 +38,15 @@ import com.BibleQuote.domain.exceptions.BookDefinitionException;
 import com.BibleQuote.domain.exceptions.BookNotFoundException;
 import com.BibleQuote.domain.exceptions.BooksDefinitionException;
 import com.BibleQuote.domain.exceptions.OpenModuleException;
-import com.BibleQuote.entity.modules.BQModule;
 
 import java.io.File;
 
 /**
  *
  */
-public interface IModuleRepository<D, T extends BaseModule> {
+public interface IModuleRepository<T extends BaseModule> {
 
-    Bitmap getBitmap(BQModule module, String path);
+    Bitmap getBitmap(T module, String path);
 
     Chapter loadChapter(T module, String bookID, int chapter) throws BookNotFoundException;
 

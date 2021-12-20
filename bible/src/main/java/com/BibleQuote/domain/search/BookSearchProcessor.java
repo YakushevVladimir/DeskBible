@@ -44,14 +44,14 @@ import java.util.Map;
 class BookSearchProcessor<D, T extends BaseModule> {
 
     private final Map<String, String> result = new LinkedHashMap<>();
-    private final IModuleRepository<D, T> repository;
+    private final IModuleRepository<T> repository;
     private T module;
     private String bookID;
     private String query;
     private String[] words;
     private Map<String, SearchAlgorithm> algoritms = new HashMap<>();
 
-    BookSearchProcessor(IModuleRepository<D, T> repository, T module, String bookID, String query) {
+    BookSearchProcessor(IModuleRepository<T> repository, T module, String bookID, String query) {
         this.repository = repository;
         this.module = module;
         this.bookID = bookID;
@@ -110,6 +110,10 @@ class BookSearchProcessor<D, T extends BaseModule> {
         int offset = start;
         for (String word : words) {
             SearchAlgorithm algorithm = algoritms.get(word);
+            if (algorithm == null) {
+                return;
+            }
+
             offset = algorithm.indexOf(bookContent, offset, end);
             if (offset == -1) {
                 return;

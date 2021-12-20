@@ -35,14 +35,13 @@ import androidx.annotation.NonNull;
 import com.BibleQuote.domain.entity.BaseModule;
 import com.BibleQuote.domain.entity.Chapter;
 import com.BibleQuote.domain.repository.IModuleRepository;
-import com.BibleQuote.entity.modules.BQModule;
 
 import java.io.File;
 
-class MockModuleRepository implements IModuleRepository<String, BaseModule> {
+class MockModuleRepository implements IModuleRepository<BaseModule> {
 
     @Override
-    public Bitmap getBitmap(BQModule module, String path) {
+    public Bitmap getBitmap(BaseModule module, String path) {
         return null;
     }
 

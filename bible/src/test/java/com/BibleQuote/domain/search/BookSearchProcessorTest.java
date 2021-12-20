@@ -28,6 +28,14 @@
 
 package com.BibleQuote.domain.search;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import com.BibleQuote.domain.entity.BaseModule;
 import com.BibleQuote.domain.repository.IModuleRepository;
 
@@ -37,17 +45,9 @@ import org.junit.Test;
 import java.util.Map;
 import java.util.Set;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 public class BookSearchProcessorTest {
 
-    private IModuleRepository<String, BaseModule> repository;
+    private IModuleRepository<BaseModule> repository;
     private BaseModule module;
     private String testContent = "<h4>1</h4>\n" +
             "<p><sup>1</sup> В начале сотворил Бог небо и землю.\n" +

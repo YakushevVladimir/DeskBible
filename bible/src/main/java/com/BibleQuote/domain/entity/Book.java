@@ -43,7 +43,7 @@ public abstract class Book implements Serializable {
 	private static final long serialVersionUID = -6348188202419079481L;
 
 	private String name;
-    private ArrayList<String> shortNames = new ArrayList<>();
+    private ArrayList<String> shortNames;
     private String osisId;
     private Integer chapterQty;
     private boolean hasChapterZero;
@@ -118,6 +118,7 @@ public abstract class Book implements Serializable {
         this.name = name;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return name;
