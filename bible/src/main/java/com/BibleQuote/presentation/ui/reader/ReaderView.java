@@ -32,7 +32,7 @@ import com.BibleQuote.domain.entity.Chapter;
 import com.BibleQuote.domain.textFormatters.ITextFormatter;
 import com.BibleQuote.entity.TextAppearance;
 import com.BibleQuote.presentation.ui.base.BaseView;
-import com.BibleQuote.presentation.widget.ReaderWebView;
+import com.BibleQuote.presentation.widget.Mode;
 
 interface ReaderView extends BaseView {
 
@@ -42,7 +42,7 @@ interface ReaderView extends BaseView {
 
     void setKeepScreen(boolean isKeepScreen);
 
-    void setReaderMode(ReaderWebView.Mode mode);
+    void setReaderMode(Mode mode);
 
     void setTextAppearance(TextAppearance textAppearance);
 

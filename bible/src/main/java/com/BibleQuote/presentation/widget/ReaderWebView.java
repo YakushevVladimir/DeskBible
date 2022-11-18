@@ -30,6 +30,7 @@ package com.BibleQuote.presentation.widget;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -354,10 +355,6 @@ public class ReaderWebView extends WebView
         loadUrl("javascript: getCurrentVerse();");
     }
 
-    public enum Mode {
-        Read, Study, Speak
-    }
-
     private static final class ChromeClient extends WebChromeClient {
 
         public boolean onJsAlert(WebView webView, String url, String message, JsResult result) {
@@ -375,6 +372,7 @@ public class ReaderWebView extends WebView
         private final WeakReference<ReaderWebView> reader;
 
         ReaderTaskHandler(ReaderWebView readerWebView) {
+            super(Looper.getMainLooper());
             this.reader = new WeakReference<>(readerWebView);
         }
 
