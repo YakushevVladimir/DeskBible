@@ -61,7 +61,7 @@ public class SplashPresenter extends BasePresenter<SplashView> {
 
     @Override
     public void onViewCreated() {
-        // nothing
+        update();
     }
 
     void update() {

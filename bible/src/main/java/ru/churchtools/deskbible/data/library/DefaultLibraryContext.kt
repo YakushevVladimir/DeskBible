@@ -28,7 +28,6 @@
 
 package ru.churchtools.deskbible.data.library
 
-import com.BibleQuote.utils.DataConstants
 import ru.churchtools.deskbible.data.library.LibraryContext.Companion.DIR_LIBRARY
 import ru.churchtools.deskbible.data.library.LibraryContext.Companion.DIR_MODULES
 import ru.churchtools.deskbible.data.library.LibraryContext.Companion.FILE_CACHE
@@ -47,8 +46,6 @@ class DefaultLibraryContext(
     override fun libraryCacheFile(): File  = File(libraryDir(), FILE_CACHE)
 
     override fun modulesDir(): File = File(libraryDir(), DIR_MODULES)
-
-    override fun modulesExternalDir(): File = File(DataConstants.getFsAppDirName(), DIR_MODULES)
 
     override fun tskFile(): File = File(libraryDir(), FILE_TSK)
 }

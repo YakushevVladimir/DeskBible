@@ -34,6 +34,7 @@ import com.BibleQuote.managers.BibleBooksID;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Yakushev Vladimir, Sergey Ursul
@@ -42,11 +43,11 @@ public abstract class Book implements Serializable {
 
 	private static final long serialVersionUID = -6348188202419079481L;
 
-	private String name;
-    private ArrayList<String> shortNames;
+	private final String name;
     private String osisId;
-    private Integer chapterQty;
-    private boolean hasChapterZero;
+    private final List<String> shortNames;
+    private final Integer chapterQty;
+    private final boolean hasChapterZero;
 
     public Book(String name, String shortNames, int chapterQty, boolean hasChapterZero) {
         this.name = name;
@@ -110,12 +111,8 @@ public abstract class Book implements Serializable {
     /**
      * Краткое имя книги. являющееся первым в списке кратких имен
      */
-    private ArrayList<String> getShortNames() {
+    private List<String> getShortNames() {
         return shortNames;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     @NonNull
@@ -129,8 +126,8 @@ public abstract class Book implements Serializable {
         return (name.length() < 4 ? name : name.substring(0, 3)) + ".";
     }
 
-    private ArrayList<String> getShortNames(String shortNames) {
-        final ArrayList<String> result = this.getShortNames();
+    private List<String> getShortNames(String shortNames) {
+        final List<String> result = new ArrayList<>();
         String[] names = shortNames == null ? new String[]{} : shortNames.trim().split("\\s+");
         if (names.length == 0) {
             result.add(createShortName());

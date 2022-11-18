@@ -28,6 +28,8 @@
 
 package com.BibleQuote.di.module;
 
+import static java.util.Collections.singletonList;
+
 import android.content.Context;
 
 import com.BibleQuote.BuildConfig;
@@ -55,7 +57,6 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -94,9 +95,7 @@ public class AppModule {
 
     @Provides
     LibraryLoader getLibraryLoader(LibraryContext libraryContext) {
-        List<File> modulesDir = Arrays.asList(
-                libraryContext.modulesDir(),
-                libraryContext.modulesExternalDir());
+        List<File> modulesDir = singletonList(libraryContext.modulesDir());
         final FsUtilsWrapper fsUtils = new FsUtilsWrapper();
         return new FsLibraryLoader(modulesDir, new BQModuleRepository(fsUtils));
     }

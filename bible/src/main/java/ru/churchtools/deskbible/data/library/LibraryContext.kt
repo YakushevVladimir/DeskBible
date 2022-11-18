@@ -54,11 +54,6 @@ interface LibraryContext {
     fun modulesDir(): File
 
     /**
-     * Директория с файлами модулей на внешнем носителе
-     */
-    fun modulesExternalDir(): File
-
-    /**
      * Файл с параллельными местами Писания
      */
     fun tskFile(): File

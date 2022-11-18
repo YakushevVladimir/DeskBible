@@ -38,6 +38,7 @@ import com.BibleQuote.domain.controller.ILibraryController;
 import com.BibleQuote.domain.repository.IBookmarksRepository;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.utils.PreferenceHelper;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import javax.inject.Inject;
 
@@ -98,6 +99,7 @@ public class BibleQuoteApp extends Application implements Thread.UncaughtExcepti
     @Override
     public void onCreate() {
         super.onCreate();
+        FirebaseAnalytics.getInstance(this);
 
         appComponent = DaggerAppComponent.factory().create(this);
         appComponent.inject(this);

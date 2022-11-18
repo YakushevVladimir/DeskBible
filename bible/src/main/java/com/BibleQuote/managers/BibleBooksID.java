@@ -31,12 +31,13 @@ package com.BibleQuote.managers;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public final class BibleBooksID {
 
-	private static HashMap<String, String> qualifier;
-	private static HashMap<String, String[]> bookShortNames = new HashMap<String, String[]>() {
+	private static Map<String, String> qualifier;
+	private static final Map<String, String[]> bookShortNames = new HashMap<String, String[]>() {
 		private static final long serialVersionUID = 1L;
 
 		{
@@ -208,7 +209,7 @@ public final class BibleBooksID {
 		}
 	}
 
-	private static void addBookID(String id, ArrayList<String> shortNames) {
+	private static void addBookID(String id, List<String> shortNames) {
 		for (String name : shortNames) {
 			if (!qualifier.containsKey(name.toLowerCase())) qualifier.put(name.toLowerCase(), id);
 		}
@@ -220,7 +221,7 @@ public final class BibleBooksID {
 		return getID(moduleShortNames);
 	}
 
-	public static String getID(ArrayList<String> shortNames) {
+	public static String getID(List<String> shortNames) {
 		if (shortNames.size() == 0) {
 			return null;
 		}
