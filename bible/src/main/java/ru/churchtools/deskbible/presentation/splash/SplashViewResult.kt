@@ -18,22 +18,19 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * Project: BibleQuote-for-Android
- * File: SplashView.java
+ * Project: DeskBible
+ * File: SplashViewResult.kt
  *
- * Created by Vladimir Yakushev at 4/2018
+ * Created by Vladimir Yakushev at 11/2022
  * E-mail: ru.phoenix@gmail.com
- * WWW: http://www.scripturesoftware.org
+ * WWW: http://www.churchtools.ru
  */
 
-package com.BibleQuote.presentation.ui.splash;
+package ru.churchtools.deskbible.presentation.splash
 
-import com.BibleQuote.presentation.ui.base.BaseView;
+sealed class SplashViewResult {
 
-
-interface SplashView extends BaseView {
-
-    void gotoReaderActivity();
-
-    void showUpdateMessage(int message);
+    data class UpdateResult(val message: Int) : SplashViewResult()
+    object InitFailure : SplashViewResult()
+    object InitSuccess : SplashViewResult()
 }

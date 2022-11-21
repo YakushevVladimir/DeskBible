@@ -70,6 +70,7 @@ import com.BibleQuote.presentation.ui.library.LibraryActivity;
 import com.BibleQuote.presentation.ui.reader.tts.TTSPlayerFragment;
 import com.BibleQuote.presentation.ui.search.SearchActivity;
 import com.BibleQuote.presentation.ui.settings.SettingsActivity;
+import com.BibleQuote.presentation.widget.Mode;
 import com.BibleQuote.presentation.widget.ReaderWebView;
 import com.BibleQuote.utils.DevicesKeyCodes;
 import com.google.android.material.navigation.NavigationView;
@@ -80,7 +81,6 @@ import java.util.TreeSet;
 
 import javax.inject.Inject;
 
-import butterknife.BindView;
 import ru.churchtools.deskbible.domain.config.FeatureToggle;
 
 public class ReaderActivity extends BaseActivity<ReaderViewPresenter> implements ReaderView, IReaderViewListener {
@@ -98,18 +98,22 @@ public class ReaderActivity extends BaseActivity<ReaderViewPresenter> implements
     private static final String KEY_LINK_OSIS = "linkOSIS";
     private static final String TAG = ReaderActivity.class.getSimpleName();
 
-    @BindView(R.id.drawer_layout) DrawerLayout drawerLayout;
-    @BindView(R.id.navigation_view) NavigationView navigationView;
-    @BindView(R.id.readerView) ReaderWebView readerView;
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
+    private ReaderWebView readerView;
 
     private ActionMode currActionMode;
     private boolean exitToBackKey;
-    private ReaderWebView.Mode oldMode;
+    private Mode oldMode;
     private TTSPlayerFragment ttsPlayer;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        drawerLayout = findViewById(R.id.drawer_layout);
+        navigationView = findViewById(R.id.navigation_view);
+        readerView = findViewById(R.id.readerView);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -292,7 +296,7 @@ public class ReaderActivity extends BaseActivity<ReaderViewPresenter> implements
                 }
                 break;
             case onLongPress:
-                if (readerView.getReaderMode() == ReaderWebView.Mode.Read) {
+                if (readerView.getReaderMode() == Mode.Read) {
                     presenter.onClickChooseChapter();
                 }
                 break;
@@ -378,7 +382,7 @@ public class ReaderActivity extends BaseActivity<ReaderViewPresenter> implements
     }
 
     @Override
-    public void setReaderMode(ReaderWebView.Mode mode) {
+    public void setReaderMode(Mode mode) {
         readerView.setMode(mode);
         updateActivityMode();
     }
@@ -418,7 +422,7 @@ public class ReaderActivity extends BaseActivity<ReaderViewPresenter> implements
         getSupportFragmentManager().beginTransaction().add(R.id.tts_player_frame, ttsPlayer).commit();
 
         oldMode = readerView.getReaderMode();
-        readerView.setMode(ReaderWebView.Mode.Speak);
+        readerView.setMode(Mode.Speak);
     }
 
     @Override
@@ -444,7 +448,7 @@ public class ReaderActivity extends BaseActivity<ReaderViewPresenter> implements
     public void updateActivityMode() {
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            if (readerView.getReaderMode() == ReaderWebView.Mode.Read) {
+            if (readerView.getReaderMode() == Mode.Read) {
                 actionBar.hide();
             } else {
                 actionBar.show();

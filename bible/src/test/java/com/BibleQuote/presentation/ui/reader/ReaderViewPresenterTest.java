@@ -53,7 +53,7 @@ import com.BibleQuote.domain.exceptions.OpenModuleException;
 import com.BibleQuote.domain.textFormatters.ModuleTextFormatter;
 import com.BibleQuote.entity.TextAppearance;
 import com.BibleQuote.managers.Librarian;
-import com.BibleQuote.presentation.widget.ReaderWebView;
+import com.BibleQuote.presentation.widget.Mode;
 import com.BibleQuote.utils.PreferenceHelper;
 
 import org.junit.Before;
@@ -96,7 +96,7 @@ public class ReaderViewPresenterTest {
         when(view.backgroundThread()).thenReturn(Schedulers.trampoline());
 
         presenter = new ReaderViewPresenter(
-                librarian, preferenceHelper, analyticsHelper, featureToggle);
+                librarian, preferenceHelper, analyticsHelper);
         presenter.attachView(view);
     }
 
@@ -145,7 +145,7 @@ public class ReaderViewPresenterTest {
     public void onChangeSettings() {
         presenter.onChangeSettings();
         verify(view, times(1)).setTextAppearance(any(TextAppearance.class));
-        verify(view, times(1)).setReaderMode(any(ReaderWebView.Mode.class));
+        verify(view, times(1)).setReaderMode(any(Mode.class));
         verify(view, times(1)).setKeepScreen(anyBoolean());
         verify(view, times(1)).setCurrentOrientation(anyBoolean());
         verify(view, times(1)).updateActivityMode();
@@ -178,7 +178,7 @@ public class ReaderViewPresenterTest {
     public void onViewCreated() {
         presenter.onViewCreated();
         verify(view, times(1)).setTextAppearance(any(TextAppearance.class));
-        verify(view, times(1)).setReaderMode(any(ReaderWebView.Mode.class));
+        verify(view, times(1)).setReaderMode(any(Mode.class));
         verify(view, times(1)).setKeepScreen(anyBoolean());
         verify(view, times(1)).setCurrentOrientation(anyBoolean());
         verify(view, times(1)).updateActivityMode();

@@ -19,33 +19,15 @@
  * under the License.
  *
  * Project: DeskBible
- * File: DefaultLibraryContext.kt
+ * File: Mode.java
  *
- * Created by Vladimir Yakushev at 11/2021
+ * Created by Vladimir Yakushev at 12/2021
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.churchtools.ru
  */
 
-package ru.churchtools.deskbible.data.library
+package com.BibleQuote.presentation.widget;
 
-import ru.churchtools.deskbible.data.library.LibraryContext.Companion.DIR_LIBRARY
-import ru.churchtools.deskbible.data.library.LibraryContext.Companion.DIR_MODULES
-import ru.churchtools.deskbible.data.library.LibraryContext.Companion.FILE_CACHE
-import ru.churchtools.deskbible.data.library.LibraryContext.Companion.FILE_TSK
-import java.io.File
-
-/**
- * Основная реализация контекста библиотеки приложения
- */
-class DefaultLibraryContext(
-    private val filesDir: File
-) : LibraryContext {
-
-    override fun libraryDir(): File = File(filesDir, DIR_LIBRARY)
-
-    override fun libraryCacheFile(): File  = File(libraryDir(), FILE_CACHE)
-
-    override fun modulesDir(): File = File(libraryDir(), DIR_MODULES)
-
-    override fun tskFile(): File = File(libraryDir(), FILE_TSK)
+public enum Mode {
+    Read, Study, Speak
 }

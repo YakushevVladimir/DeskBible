@@ -41,22 +41,19 @@ import com.BibleQuote.domain.textFormatters.ModuleTextFormatter;
 import com.BibleQuote.managers.Librarian;
 import com.BibleQuote.presentation.ui.base.BasePresenter;
 import com.BibleQuote.presentation.ui.reader.tts.TTSPlayerFragment;
-import com.BibleQuote.presentation.widget.ReaderWebView;
+import com.BibleQuote.presentation.widget.Mode;
 import com.BibleQuote.utils.PreferenceHelper;
 
 import javax.inject.Inject;
 
 import io.reactivex.Single;
 import io.reactivex.disposables.Disposable;
-import ru.churchtools.deskbible.domain.config.FeatureToggle;
 
 @PerActivity
 public class ReaderViewPresenter extends BasePresenter<ReaderView> implements TTSPlayerFragment.OnTTSStopSpeakListener {
 
     @NonNull
     private final AnalyticsHelper analyticsHelper;
-    @NonNull
-    private final FeatureToggle featureToggle;
     @NonNull
     private final Librarian librarian;
     @NonNull
@@ -65,12 +62,10 @@ public class ReaderViewPresenter extends BasePresenter<ReaderView> implements TT
     @Inject
     ReaderViewPresenter(@NonNull Librarian librarian,
                         @NonNull PreferenceHelper prefHelper,
-                        @NonNull AnalyticsHelper helper,
-                        @NonNull FeatureToggle featureToggle) {
+                        @NonNull AnalyticsHelper helper) {
         this.librarian = librarian;
         this.preferenceHelper = prefHelper;
         this.analyticsHelper = helper;
-        this.featureToggle = featureToggle;
     }
 
     @Override
@@ -146,7 +141,7 @@ public class ReaderViewPresenter extends BasePresenter<ReaderView> implements TT
     private void initView() {
         getViewAndExecute(view -> {
             view.setTextAppearance(preferenceHelper.getTextAppearance());
-            view.setReaderMode(preferenceHelper.isReadModeByDefault() ? ReaderWebView.Mode.Read : ReaderWebView.Mode.Study);
+            view.setReaderMode(preferenceHelper.isReadModeByDefault() ? Mode.Read : Mode.Study);
             view.setKeepScreen(preferenceHelper.getBoolean("DisableTurnScreen"));
             view.setCurrentOrientation(preferenceHelper.getBoolean("DisableAutoScreenRotation"));
             view.updateActivityMode();
@@ -173,7 +168,7 @@ public class ReaderViewPresenter extends BasePresenter<ReaderView> implements TT
                             view.setTitle(osisLink.getModuleID(), librarian.getHumanBookLink());
                             view.hideProgress();
                         }),
-                        throwable -> getViewAndExecute(view ->view.onOpenChapterFailure(throwable))
+                        throwable -> getViewAndExecute(view -> view.onOpenChapterFailure(throwable))
                 );
         addSubscription(subscription);
     }

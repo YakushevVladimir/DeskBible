@@ -19,33 +19,21 @@
  * under the License.
  *
  * Project: DeskBible
- * File: DefaultLibraryContext.kt
+ * File: RxSchedulers.kt
  *
- * Created by Vladimir Yakushev at 11/2021
+ * Created by Vladimir Yakushev at 11/2022
  * E-mail: ru.phoenix@gmail.com
  * WWW: http://www.churchtools.ru
  */
 
-package ru.churchtools.deskbible.data.library
+package ru.churchtools.deskbible.domain
 
-import ru.churchtools.deskbible.data.library.LibraryContext.Companion.DIR_LIBRARY
-import ru.churchtools.deskbible.data.library.LibraryContext.Companion.DIR_MODULES
-import ru.churchtools.deskbible.data.library.LibraryContext.Companion.FILE_CACHE
-import ru.churchtools.deskbible.data.library.LibraryContext.Companion.FILE_TSK
-import java.io.File
+import io.reactivex.Scheduler
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
-/**
- * Основная реализация контекста библиотеки приложения
- */
-class DefaultLibraryContext(
-    private val filesDir: File
-) : LibraryContext {
-
-    override fun libraryDir(): File = File(filesDir, DIR_LIBRARY)
-
-    override fun libraryCacheFile(): File  = File(libraryDir(), FILE_CACHE)
-
-    override fun modulesDir(): File = File(libraryDir(), DIR_MODULES)
-
-    override fun tskFile(): File = File(libraryDir(), FILE_TSK)
-}
+data class RxSchedulers(
+    val io: Scheduler = Schedulers.io(),
+    val computation: Scheduler = Schedulers.computation(),
+    val mainThread: Scheduler = AndroidSchedulers.mainThread()
+)

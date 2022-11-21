@@ -69,7 +69,7 @@ import ru.churchtools.deskbible.domain.logger.StaticLogger;
 /**
  *
  */
-public class BQModuleRepository implements IModuleRepository<String, BQModule> {
+public class BQModuleRepository implements IModuleRepository<BQModule> {
 
     private static final String TAG = BQModuleRepository.class.getSimpleName();
     private static final String INI_FILENAME = "bibleqt.ini";

@@ -39,9 +39,9 @@ import com.BibleQuote.presentation.ui.library.LibraryActivity;
 import com.BibleQuote.presentation.ui.reader.ReaderActivity;
 import com.BibleQuote.presentation.ui.search.SearchActivity;
 import com.BibleQuote.presentation.ui.settings.SettingsActivity;
-import com.BibleQuote.presentation.ui.splash.SplashActivity;
 
 import dagger.Subcomponent;
+import ru.churchtools.deskbible.presentation.splash.SplashActivity;
 
 @PerActivity
 @Subcomponent(modules = {ActivityModule.class})

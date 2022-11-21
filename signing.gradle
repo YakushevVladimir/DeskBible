@@ -1,31 +1,24 @@
-gradle.taskGraph.whenReady { taskGraph ->
-    if(taskGraph.hasTask(':bible:assembleRelease')) {
-        File mStoreFile
-        String mStorePassword
-        String mKeyAlias
-        String mKeyPassword
-
-        File propFile = file('../local.properties')
-        if (!propFile.exists()) {
-            mStoreFile = file('../debug.keystore')
-            mStorePassword = "debug_pass"
-            mKeyAlias = "debug"
-            mKeyPassword = "debug_pass"
-        } else {
-            Properties localProps = new Properties()
-            localProps.load(new FileInputStream(propFile))
-
-            mStoreFile = file('../deskbible.keystore')
-            mStorePassword = localProps["STORE_PASSWORD"]
-            mKeyAlias = localProps["KEY_ALIAS"]
-            mKeyPassword = localProps["KEY_PASSWORD"]
-        }
-
-        android.signingConfigs.releaseConfig {
-            storeFile = mStoreFile
-            storePassword = mStorePassword
-            keyAlias = mKeyAlias
-            keyPassword = mKeyPassword
-        }
+Map<String, String> signingValues() {
+    File propFile = project.rootProject.file('local.properties')
+    if (!propFile.exists()) {
+        return [
+                storeFile    : project.rootProject.file('debug.keystore'),
+                storePassword: "debug_pass",
+                keyAlias     : "debug",
+                keyPassword  : "debug_pass"
+        ]
+    } else {
+        Properties localProps = new Properties()
+        localProps.load(new FileInputStream(propFile))
+        return [
+                storeFile    : project.rootProject.file('deskbible.keystore'),
+                storePassword: localProps["STORE_PASSWORD"],
+                keyAlias     : localProps["KEY_ALIAS"],
+                keyPassword  : localProps["KEY_PASSWORD"]
+        ]
     }
+}
+
+ext {
+    signingValues = this.&signingValues
 }

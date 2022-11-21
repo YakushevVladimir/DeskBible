@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2011 Scripture Software
   ~
   ~ Licensed to the Apache Software Foundation (ASF) under one
@@ -24,11 +23,12 @@
   ~
   ~ Created by Vladimir Yakushev at 8/2017
   ~ E-mail: ru.phoenix@gmail.com
-  ~ WWW: http://www.scripturesoftware.org
-  -->
-
-<full-backup-content>
-    <include domain="sharedpref" path="."/>
-    <include domain="database" path="."/>
-    <include domain="file" path="library" />
-</full-backup-content>
+  ~ WWW: http://www.scr
+ -->
+<data-extraction-rules>
+    <cloud-backup>
+        <include domain="sharedpref" path="." />
+        <include domain="database" path="."/>
+        <include domain="file" path="library" />
+    </cloud-backup>
+</data-extraction-rules>

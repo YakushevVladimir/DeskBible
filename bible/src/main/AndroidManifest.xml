@@ -26,7 +26,6 @@
   ~ WWW: http://www.scripturesoftware.org
   -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.BibleQuote"
     android:installLocation="auto">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -49,11 +48,11 @@
         android:label="@string/app_name"
         android:requestLegacyExternalStorage="true"
         android:supportsRtl="true"
-        android:theme="@style/Theme.BibleQuote">
+        android:theme="@style/Theme.BibleQuote"
+        android:dataExtractionRules="@xml/data_extraction_rules">
         <activity
-            android:name=".presentation.ui.splash.SplashActivity"
+            android:name="ru.churchtools.deskbible.presentation.splash.SplashActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

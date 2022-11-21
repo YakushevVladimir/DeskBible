@@ -54,6 +54,7 @@ class LoadModuleFromFile(
     var statusCode = StatusCode.Success
         private set
 
+    @Deprecated("Deprecated in Java")
     override fun doInBackground(vararg arg0: String): Boolean {
         info(this, "Load module from $uri")
 

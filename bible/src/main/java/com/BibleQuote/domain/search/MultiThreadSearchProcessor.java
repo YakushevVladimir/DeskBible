@@ -47,10 +47,10 @@ public class MultiThreadSearchProcessor<D, T extends BaseModule> {
     private static final int CPU_COUNT = Runtime.getRuntime().availableProcessors();
     private static final int POOL_SIZE = CPU_COUNT * 2 + 1;
 
-    private final IModuleRepository<D, T> repository;
+    private final IModuleRepository<T> repository;
     private ExecutorService executor;
 
-    public MultiThreadSearchProcessor(IModuleRepository<D, T> repository) {
+    public MultiThreadSearchProcessor(IModuleRepository<T> repository) {
         this.repository = repository;
         this.executor = Executors.newFixedThreadPool(POOL_SIZE);
     }

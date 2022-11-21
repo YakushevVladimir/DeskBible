@@ -264,7 +264,7 @@ public class MultiThreadSearchProcessorTest {
             "<p><sup>31</sup> и поверил народ; и услышали, что Господь посетил сынов Израилевых и увидел страдание их, и преклонились они и поклонились.\n";
 
     @Mock
-    private IModuleRepository<String, BaseModule> repository;
+    private IModuleRepository<BaseModule> repository;
     @Mock
     private BaseModule module;
 
