@@ -67,6 +67,7 @@ import dagger.Provides;
 import ru.churchtools.deskbible.data.library.LibraryContext;
 import ru.churchtools.deskbible.data.logger.AndroidLogger;
 import ru.churchtools.deskbible.data.logger.CrashlyticsLogger;
+import ru.churchtools.deskbible.domain.RxSchedulers;
 import ru.churchtools.deskbible.domain.logger.CompositeLogger;
 import ru.churchtools.deskbible.domain.logger.Logger;
 import ru.churchtools.deskbible.domain.migration.Migration;
@@ -131,5 +132,12 @@ public class AppModule {
     @Provides
     UpdateManager provideUpdateManager(PreferenceHelper prefHelper, Set<Migration> migrations) {
         return new UpdateManager(prefHelper, migrations);
+    }
+
+
+    @Singleton
+    @Provides
+    RxSchedulers  provideRxSchedulers() {
+        return new RxSchedulers();
     }
 }
