@@ -33,7 +33,7 @@ import com.BibleQuote.di.scope.PerActivity;
 import com.BibleQuote.presentation.ui.bookmarks.BookmarksActivity;
 import com.BibleQuote.presentation.ui.crossreference.CrossReferenceActivity;
 import com.BibleQuote.presentation.ui.help.HelpActivity;
-import com.BibleQuote.presentation.ui.history.HistoryActivity;
+import ru.churchtools.deskbible.presentation.history.HistoryActivity;
 import com.BibleQuote.presentation.ui.imagepreview.ImagePreviewActivity;
 import com.BibleQuote.presentation.ui.library.LibraryActivity;
 import com.BibleQuote.presentation.ui.reader.ReaderActivity;
