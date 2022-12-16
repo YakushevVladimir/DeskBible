@@ -70,7 +70,7 @@
             android:parentActivityName=".presentation.ui.reader.ReaderActivity"
             android:theme="@style/Theme.BibleQuote.NoActionBar" />
         <activity
-            android:name=".presentation.ui.history.HistoryActivity"
+            android:name="ru.churchtools.deskbible.presentation.history.HistoryActivity"
             android:label="@string/history" />
         <activity
             android:name=".presentation.ui.search.SearchActivity"
