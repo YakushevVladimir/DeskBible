@@ -31,10 +31,12 @@ import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.viewModels
 import com.BibleQuote.R
 import com.BibleQuote.di.component.ActivityComponent
 import com.BibleQuote.presentation.ui.base.BQActivity
 import com.BibleQuote.presentation.widget.TouchImageView
+import javax.inject.Inject
 
 class ImagePreviewActivity : BQActivity() {
 
@@ -45,6 +47,11 @@ class ImagePreviewActivity : BQActivity() {
     private val imageView: TouchImageView by lazy {
         findViewById(R.id.image)
     }
+
+    private val viewModel: ImagePreviewViewModel by viewModels { viewModelFactory }
+
+    @Inject
+    lateinit var viewModelFactory: ImagePreviewViewModel.Factory
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
