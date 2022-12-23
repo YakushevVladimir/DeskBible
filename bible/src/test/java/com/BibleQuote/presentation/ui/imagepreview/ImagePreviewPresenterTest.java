@@ -28,67 +28,59 @@
 
 package com.BibleQuote.presentation.ui.imagepreview;
 
-import android.graphics.Bitmap;
-
 import com.BibleQuote.managers.Librarian;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
+@Ignore("Класс устарел")
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE)
 public class ImagePreviewPresenterTest {
 
     @Mock Librarian librarian;
-    @Mock ImagePreviewView view;
-    private ImagePreviewPresenter presenter;
+//    @Mock ImagePreviewView view;
+//    private ImagePreviewPresenter presenter;
 
     @Before
     public void setUp() throws Exception {
-        MockitoAnnotations.initMocks(this);
-        presenter = new ImagePreviewPresenter(librarian);
-        presenter.attachView(view);
+//        MockitoAnnotations.initMocks(this);
+//        presenter = new ImagePreviewPresenter(librarian);
+//        presenter.attachView(view);
     }
 
     @Test
     public void setImagePath() throws Exception {
-        presenter.setImagePath(null);
-        presenter.setImagePath("");
+//        presenter.setImagePath(null);
+//        presenter.setImagePath("");
     }
 
     @Test
     public void onViewCreatedWithNullImagePath() throws Exception {
-        presenter.setImagePath(null);
-        presenter.onViewCreated();
-        verify(view).imageNotFound();
+//        presenter.setImagePath(null);
+//        presenter.onViewCreated();
+//        verify(view).imageNotFound();
     }
 
     @Test
     public void onViewCreatedWithoutBitmap() throws Exception {
-        presenter.setImagePath("");
-        when(librarian.getModuleImage(anyString())).thenReturn(null);
-        presenter.onViewCreated();
-        verify(view).imageNotFound();
+//        presenter.setImagePath("");
+//        when(librarian.getModuleImage(anyString())).thenReturn(null);
+//        presenter.onViewCreated();
+//        verify(view).imageNotFound();
     }
 
     @Test
     public void onViewCreatedWithBitmap() throws Exception {
-        presenter.setImagePath("");
-        when(librarian.getModuleImage(anyString())).thenReturn(mock(Bitmap.class));
-        presenter.onViewCreated();
-        verify(view, never()).imageNotFound();
-        verify(view).updatePreviewDrawable(any());
+//        presenter.setImagePath("");
+//        when(librarian.getModuleImage(anyString())).thenReturn(mock(Bitmap.class));
+//        presenter.onViewCreated();
+//        verify(view, never()).imageNotFound();
+//        verify(view).updatePreviewDrawable(any());
     }
 }
