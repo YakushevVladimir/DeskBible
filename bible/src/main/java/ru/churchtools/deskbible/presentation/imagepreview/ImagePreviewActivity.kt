@@ -57,6 +57,13 @@ class ImagePreviewActivity : BQActivity() {
         super.onCreate(savedInstanceState)
 
         imageView.maxZoom = DEFAULT_ZOOM.toFloat()
+
+        viewModel.imageState.observe(this) {
+            when (it) {
+                is ImagePreviewViewResult.DrawImage -> updatePreviewDrawable(it.image)
+                is ImagePreviewViewResult.UnsuccessfulSearch -> imageNotFound()
+            }
+        }
     }
 
     fun getRootLayout(): Int {
