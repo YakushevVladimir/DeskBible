@@ -32,7 +32,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.ui.imagepreview.ImagePreviewActivity">
+    tools:context="ru.churchtools.deskbible.presentation.imagepreview.ImagePreviewActivity">
 
     <com.BibleQuote.presentation.widget.TouchImageView
         android:id="@+id/image"
