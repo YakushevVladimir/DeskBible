@@ -110,7 +110,7 @@
             android:name=".presentation.ui.crossreference.CrossReferenceActivity"
             android:label="@string/cross_reference" />
         <activity
-            android:name=".presentation.ui.imagepreview.ImagePreviewActivity"
+            android:name="ru.churchtools.deskbible.presentation.imagepreview.ImagePreviewActivity"
             android:theme="@style/Theme.BibleQuote.NoActionBar" />
 
         <uses-library
