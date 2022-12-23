@@ -40,8 +40,6 @@ import javax.inject.Inject
 
 class ImagePreviewActivity : BQActivity() {
 
-    private val TAG: String = ImagePreviewActivity::javaClass.name
-    private val IMAGE_PATH: String = "image_path"
     private val DEFAULT_ZOOM: Int = 10
 
     private val imageView: TouchImageView by lazy {
@@ -64,22 +62,20 @@ class ImagePreviewActivity : BQActivity() {
                 is ImagePreviewViewResult.UnsuccessfulSearch -> imageNotFound()
             }
         }
-    }
 
-    fun getRootLayout(): Int {
-        return R.layout.activity_image_view
+        viewModel.onActivityCreate()
     }
 
     override fun inject(component: ActivityComponent) {
         component.inject(this)
     }
 
-    fun imageNotFound() {
+    private fun imageNotFound() {
         Toast.makeText(this, R.string.image_not_found, Toast.LENGTH_LONG).show()
         finish()
     }
 
-    fun updatePreviewDrawable(value: Bitmap) {
+    private fun updatePreviewDrawable(value: Bitmap) {
         imageView.setImageDrawable(BitmapDrawable(resources, value))
     }
 }
