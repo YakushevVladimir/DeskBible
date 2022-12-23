@@ -65,7 +65,7 @@ import com.BibleQuote.presentation.ui.base.BaseActivity;
 import com.BibleQuote.presentation.ui.bookmarks.BookmarksActivity;
 import com.BibleQuote.presentation.ui.help.HelpActivity;
 import ru.churchtools.deskbible.presentation.history.HistoryActivity;
-import com.BibleQuote.presentation.ui.imagepreview.ImagePreviewActivity;
+import ru.churchtools.deskbible.presentation.imagepreview.ImagePreviewActivity;
 import com.BibleQuote.presentation.ui.library.LibraryActivity;
 import com.BibleQuote.presentation.ui.reader.tts.TTSPlayerFragment;
 import com.BibleQuote.presentation.ui.search.SearchActivity;
