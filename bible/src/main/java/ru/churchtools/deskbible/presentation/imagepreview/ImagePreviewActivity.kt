@@ -27,9 +27,12 @@
  */
 package ru.churchtools.deskbible.presentation.imagepreview
 
+import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
 import com.BibleQuote.R
@@ -40,7 +43,6 @@ import javax.inject.Inject
 
 class ImagePreviewActivity : BQActivity() {
 
-    private val DEFAULT_ZOOM: Int = 10
 
     private val imageView: TouchImageView by lazy {
         findViewById(R.id.image)
@@ -53,17 +55,21 @@ class ImagePreviewActivity : BQActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_image_view)
 
-        imageView.maxZoom = DEFAULT_ZOOM.toFloat()
-
-        viewModel.imageState.observe(this) {
-            when (it) {
-                is ImagePreviewViewResult.DrawImage -> updatePreviewDrawable(it.image)
-                is ImagePreviewViewResult.UnsuccessfulSearch -> imageNotFound()
+        intent.getStringExtra(IMAGE_PATH)?.let { path ->
+            viewModel.imageState.observe(this) { result ->
+                when (result) {
+                    is ImagePreviewViewResult.DrawImage -> updatePreviewDrawable(result.image)
+                    is ImagePreviewViewResult.UnsuccessfulSearch -> imageNotFound()
+                }
             }
+            viewModel.onActivityCreate(path)
         }
-
-        viewModel.onActivityCreate()
+            ?: let {
+                Log.e(TAG, "No params")
+                imageNotFound()
+            }
     }
 
     override fun inject(component: ActivityComponent) {
@@ -76,6 +82,20 @@ class ImagePreviewActivity : BQActivity() {
     }
 
     private fun updatePreviewDrawable(value: Bitmap) {
+        imageView.maxZoom = DEFAULT_ZOOM.toFloat()
         imageView.setImageDrawable(BitmapDrawable(resources, value))
+    }
+
+    companion object {
+        private val TAG: String = ImagePreviewActivity::class.java.simpleName
+        private const val IMAGE_PATH: String = "image_path"
+        private const val DEFAULT_ZOOM: Int = 10
+
+        @JvmStatic
+        fun getIntent(context: Context, imagePath: String): Intent {
+            val intent = Intent(context, ImagePreviewActivity::class.java)
+            intent.putExtra(IMAGE_PATH, imagePath)
+            return intent
+        }
     }
 }

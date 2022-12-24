@@ -524,8 +524,7 @@ public class ReaderActivity extends BaseActivity<ReaderViewPresenter> implements
     }
 
     private void openImageViewActivity(String imagePath) {
-        ImagePreviewActivity.IMAGE_PATH = imagePath;
-        startActivity(new Intent(this, ImagePreviewActivity.class));
+        startActivity(ImagePreviewActivity.getIntent(this, imagePath));
     }
 
     private void openSearchActivity() {

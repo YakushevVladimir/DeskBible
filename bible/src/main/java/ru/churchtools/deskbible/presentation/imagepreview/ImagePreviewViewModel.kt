@@ -1,6 +1,5 @@
 package ru.churchtools.deskbible.presentation.imagepreview
 
-import android.graphics.Bitmap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -17,11 +16,8 @@ class ImagePreviewViewModel(
     val imageState: LiveData<ImagePreviewViewResult>
         get() = _imageState
 
-    private lateinit var imageBitmap: Bitmap
-    private val IMAGE_PATH: String = "image_path"
-
-    fun onActivityCreate() {
-        imageBitmap = myLibrarian.getModuleImage(IMAGE_PATH)
+    fun onActivityCreate(imagePath: String) {
+        val imageBitmap = myLibrarian.getModuleImage(imagePath)
         _imageState.value = ImagePreviewViewResult.DrawImage(imageBitmap)
     }
 
