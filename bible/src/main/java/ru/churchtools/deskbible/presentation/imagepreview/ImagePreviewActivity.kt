@@ -43,7 +43,6 @@ import javax.inject.Inject
 
 class ImagePreviewActivity : BQActivity() {
 
-
     private val imageView: TouchImageView by lazy {
         findViewById(R.id.image)
     }
