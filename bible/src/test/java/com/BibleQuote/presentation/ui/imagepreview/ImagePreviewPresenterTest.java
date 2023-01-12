@@ -28,18 +28,6 @@
 
 package com.BibleQuote.presentation.ui.imagepreview;
 
-import android.graphics.Bitmap;
-
-import com.BibleQuote.managers.Librarian;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -47,6 +35,20 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import android.graphics.Bitmap;
+
+import com.BibleQuote.managers.Librarian;
+
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
+
+@Ignore("Тесты устарели после удаление ImagePreviewPresenter")
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE)
 public class ImagePreviewPresenterTest {
