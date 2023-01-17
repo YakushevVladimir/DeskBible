@@ -68,6 +68,8 @@ public interface ILibraryController {
      */
     void loadModule(File file) throws OpenModuleException, BooksDefinitionException, BookDefinitionException;
 
+    boolean removeModule(String moduleId) throws OpenModuleException;
+
     /**
      * Загружает из хранилища список модулей без загрузки их данных. Для каждого из модулей
      * установлен флаг isClosed = true.

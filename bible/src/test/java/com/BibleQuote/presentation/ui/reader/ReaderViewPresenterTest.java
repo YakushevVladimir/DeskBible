@@ -129,7 +129,7 @@ public class ReaderViewPresenterTest {
         presenter.nextChapter();
         verify(librarian).getCurrentOSISLink();
         verify(view).disableActionMode();
-        verify(view).openLibraryActivity();
+        verify(view).selectBibleLink();
     }
 
     @Test
@@ -191,7 +191,7 @@ public class ReaderViewPresenterTest {
         presenter.openLastLink();
         verify(preferenceHelper).getLastRead();
         verify(librarian).isOSISLinkValid(any());
-        verify(view).openLibraryActivity();
+        verify(view).selectBibleLink();
     }
 
     @Test
@@ -251,7 +251,7 @@ public class ReaderViewPresenterTest {
         presenter.prevChapter();
         verify(librarian).getCurrentOSISLink();
         verify(view).disableActionMode();
-        verify(view).openLibraryActivity();
+        verify(view).selectBibleLink();
     }
 
     @Test

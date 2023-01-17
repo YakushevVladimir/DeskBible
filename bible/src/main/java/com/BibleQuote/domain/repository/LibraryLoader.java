@@ -49,4 +49,6 @@ public interface LibraryLoader {
     Map<String, BaseModule> loadFileModules();
 
     BaseModule loadModule(File file) throws OpenModuleException, BooksDefinitionException, BookDefinitionException;
+
+	boolean removeModule(BaseModule module);
 }

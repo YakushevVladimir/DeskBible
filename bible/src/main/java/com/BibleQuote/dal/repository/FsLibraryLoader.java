@@ -35,6 +35,7 @@ import com.BibleQuote.domain.exceptions.BookDefinitionException;
 import com.BibleQuote.domain.exceptions.BooksDefinitionException;
 import com.BibleQuote.domain.exceptions.OpenModuleException;
 import com.BibleQuote.domain.repository.LibraryLoader;
+import com.BibleQuote.entity.modules.BQModule;
 import com.BibleQuote.utils.FsUtils;
 import com.BibleQuote.utils.OnlyBQIni;
 import com.BibleQuote.utils.OnlyBQZipIni;
@@ -107,6 +108,15 @@ public class FsLibraryLoader implements LibraryLoader {
     public BaseModule loadModule(File file) throws OpenModuleException, BooksDefinitionException,
             BookDefinitionException {
         return loadFileModule(file);
+    }
+
+    @Override
+    public boolean removeModule(BaseModule module) {
+        if (module instanceof BQModule) {
+            return mModuleRepository.removeModule((BQModule) module);
+        } else {
+            return false;
+        }
     }
 
     private BaseModule loadFileModule(File moduleDataSourceId)

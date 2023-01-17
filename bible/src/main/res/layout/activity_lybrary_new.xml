@@ -1,8 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<!--
-  ~ Copyright (c) 2011-2015 Scripture Software
-  ~ http://www.scripturesoftware.org
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2011 Scripture Software
   ~
   ~ Licensed to the Apache Software Foundation (ASF) under one
   ~ or more contributor license agreements.  See the NOTICE file
@@ -12,7 +9,7 @@
   ~ "License"); you may not use this file except in compliance
   ~ with the License.  You may obtain a copy of the License at
   ~
-  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~ http://www.apache.org/licenses/LICENSE-2.0
   ~
   ~ Unless required by applicable law or agreed to in writing,
   ~ software distributed under the License is distributed on an
@@ -20,14 +17,17 @@
   ~ KIND, either express or implied.  See the License for the
   ~ specific language governing permissions and limitations
   ~ under the License.
+  ~
+  ~ Project: DeskBible
+  ~ File: activity_lybrary_new.xml
+  ~
+  ~ Created by Vladimir Yakushev at 1/2023
+  ~ E-mail: ru.phoenix@gmail.com
+  ~ WWW: http://www.churchtools.ru
   -->
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto">
-	<item
-		android:id="@+id/menu_library_add"
-		android:title="@string/menu_library_add"
-		android:orderInCategory="0"
-		android:icon="@drawable/ic_action_get"
-		app:showAsAction="ifRoom|withText"/>
-</menu>
+<androidx.fragment.app.FragmentContainerView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fragment_container_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"/>

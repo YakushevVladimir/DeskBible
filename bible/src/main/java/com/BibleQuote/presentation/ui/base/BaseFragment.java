@@ -29,9 +29,11 @@
 package com.BibleQuote.presentation.ui.base;
 
 import android.os.Bundle;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import android.widget.Toast;
 
 import com.BibleQuote.BibleQuoteApp;
 import com.BibleQuote.di.component.FragmentComponent;
@@ -66,11 +68,13 @@ public abstract class BaseFragment<T extends BasePresenter> extends Fragment imp
         detachView();
     }
 
+    @NonNull
     @Override
     public Scheduler backgroundThread() {
         return Schedulers.newThread();
     }
 
+    @NonNull
     @Override
     public Scheduler mainThread() {
         return AndroidSchedulers.mainThread();

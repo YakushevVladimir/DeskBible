@@ -39,6 +39,10 @@ import java.util.List;
 public interface LibraryRepository {
 
     void add(BaseModule module);
+
+    void remove(BaseModule module);
+
     List<BaseModule> modules();
+
     void replace(Collection<BaseModule> modules);
 }

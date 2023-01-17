@@ -67,6 +67,7 @@ import dagger.Provides;
 import ru.churchtools.deskbible.data.library.LibraryContext;
 import ru.churchtools.deskbible.data.logger.AndroidLogger;
 import ru.churchtools.deskbible.data.logger.CrashlyticsLogger;
+import ru.churchtools.deskbible.di.app.ApplicationContext;
 import ru.churchtools.deskbible.domain.RxSchedulers;
 import ru.churchtools.deskbible.domain.logger.CompositeLogger;
 import ru.churchtools.deskbible.domain.logger.Logger;
@@ -75,6 +76,12 @@ import ru.churchtools.deskbible.domain.migration.UpdateManager;
 
 @Module
 public class AppModule {
+
+    @Provides
+    @ApplicationContext
+    Context provideApplicationContext(Context context) {
+        return context;
+    }
 
     @Provides
     @Singleton

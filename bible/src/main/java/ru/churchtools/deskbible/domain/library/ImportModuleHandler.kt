@@ -18,32 +18,23 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * Project: BibleQuote-for-Android
- * File: AsyncRefreshModules.java
+ * Project: DeskBible
+ * File: LoadModuleHandler.kt
  *
- * Created by Vladimir Yakushev at 9/2017
+ * Created by Vladimir Yakushev at 12/2022
  * E-mail: ru.phoenix@gmail.com
- * WWW: http://www.scripturesoftware.org
+ * WWW: http://www.churchtools.ru
  */
 
-package com.BibleQuote.async.task;
+package ru.churchtools.deskbible.domain.library
 
-import com.BibleQuote.BibleQuoteApp;
-import com.BibleQuote.domain.controller.ILibraryController;
-import com.BibleQuote.utils.Task;
+import android.net.Uri
 
-public class AsyncRefreshModules extends Task {
+interface ImportModuleHandler {
 
-	private ILibraryController libCtrl;
+    suspend fun loadModule(uri: Uri): StatusCode
 
-	public AsyncRefreshModules(String message, Boolean isHidden) {
-		super(message, isHidden);
-		this.libCtrl = BibleQuoteApp.getInstance().getLibraryController();
-	}
-
-	@Override
-	protected Boolean doInBackground(String... arg0) {
-        libCtrl.reloadModules();
-        return true;
+    enum class StatusCode {
+        Success, FileNotExist, FileNotSupported, MoveFailed, LibraryNotFound
     }
 }

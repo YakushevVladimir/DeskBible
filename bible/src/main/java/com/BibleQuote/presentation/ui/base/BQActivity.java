@@ -30,6 +30,7 @@ package com.BibleQuote.presentation.ui.base;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -64,10 +65,12 @@ public abstract class BQActivity extends AppCompatActivity {
         StaticLogger.info(this, "Stop activity");
     }
 
+    @NonNull
     public Scheduler backgroundThread() {
         return Schedulers.newThread();
     }
 
+    @NonNull
     public Scheduler mainThread() {
         return AndroidSchedulers.mainThread();
     }

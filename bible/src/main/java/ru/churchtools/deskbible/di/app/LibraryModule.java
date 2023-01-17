@@ -30,10 +30,13 @@ package ru.churchtools.deskbible.di.app;
 
 import android.content.Context;
 
+import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
 import ru.churchtools.deskbible.data.library.DefaultLibraryContext;
+import ru.churchtools.deskbible.data.library.ImportModuleHandlerImpl;
 import ru.churchtools.deskbible.data.library.LibraryContext;
+import ru.churchtools.deskbible.domain.library.ImportModuleHandler;
 
 /**
  * Dagger-модуль с зависимостями для библиотеки приложения
@@ -47,4 +50,7 @@ public interface LibraryModule {
     static LibraryContext provideLibraryContext(Context context) {
         return new DefaultLibraryContext(context.getFilesDir());
     }
+
+    @Binds
+    ImportModuleHandler bindLoadModuleHandler(ImportModuleHandlerImpl impl);
 }

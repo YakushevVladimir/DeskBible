@@ -57,6 +57,8 @@ import com.BibleQuote.utils.modules.LinkConverter;
 import com.BibleQuote.utils.share.ShareBuilder;
 import com.BibleQuote.utils.share.ShareBuilder.Destination;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -83,11 +85,11 @@ public class Librarian {
     private Integer currChapterNumber = -1;
     private BaseModule currModule;
     private Integer currVerseNumber = 1;
-    private IHistoryManager historyManager;
-    private ILibraryController libCtrl;
-    private PreferenceHelper preferenceHelper;
     private Map<String, String> searchResults = new LinkedHashMap<>();
-    private ITSKController tskCtrl;
+    private final IHistoryManager historyManager;
+    private final ILibraryController libCtrl;
+    private final PreferenceHelper preferenceHelper;
+    private final ITSKController tskCtrl;
 
     /**
      * Инициализация контроллеров библиотеки, модулей, книг и глав.
@@ -321,6 +323,11 @@ public class Librarian {
         return getBookItemLists(module);
     }
 
+    public List<Book> getBooks(@NonNull String moduleId) throws OpenModuleException {
+        BaseModule module = libCtrl.getModuleByID(moduleId);
+        return getModuleController(module).getBooks();
+    }
+
     public Bitmap getModuleImage(String path) {
         if (currModule == null) {
             return null;
@@ -467,5 +474,13 @@ public class Librarian {
 
     private IModuleController getModuleController(BaseModule module) {
         return Injector.getModuleController(module);
+    }
+
+    public BaseModule getModule(String moduleId) throws OpenModuleException {
+        return libCtrl.getModuleByID(moduleId);
+    }
+
+    public boolean removeModule(@NotNull String moduleId) throws OpenModuleException {
+        return libCtrl.removeModule(moduleId);
     }
 }

@@ -18,34 +18,18 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- * Project: BibleQuote-for-Android
- * File: FragmentComponent.java
+ * Project: DeskBible
+ * File: ApplicationContext.kt
  *
- * Created by Vladimir Yakushev at 10/2017
+ * Created by Vladimir Yakushev at 12/2022
  * E-mail: ru.phoenix@gmail.com
- * WWW: http://www.scripturesoftware.org
+ * WWW: http://www.churchtools.ru
  */
 
-package com.BibleQuote.di.component;
+package ru.churchtools.deskbible.di.app
 
-import com.BibleQuote.di.module.FragmentModule;
-import com.BibleQuote.di.scope.PerFragment;
-import com.BibleQuote.presentation.dialogs.BookmarksDialog;
-import com.BibleQuote.presentation.ui.bookmarks.BookmarksFragment;
-import com.BibleQuote.presentation.ui.bookmarks.TagsFragment;
+import javax.inject.Qualifier
 
-import dagger.Subcomponent;
-import ru.churchtools.deskbible.presentation.library.LibraryFragment;
-
-@PerFragment
-@Subcomponent(modules = {FragmentModule.class})
-public interface FragmentComponent {
-
-    void inject(BookmarksDialog fragment);
-
-    void inject(BookmarksFragment fragment);
-
-    void inject(TagsFragment fragment);
-
-    void inject(LibraryFragment libraryFragment);
-}
+@Qualifier
+@Retention(AnnotationRetention.RUNTIME)
+annotation class ApplicationContext

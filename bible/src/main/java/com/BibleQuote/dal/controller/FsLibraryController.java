@@ -97,4 +97,12 @@ public class FsLibraryController implements ILibraryController {
         StaticLogger.info(this, "Load module from " + file);
         libraryRepository.add(libraryLoader.loadModule(file));
     }
+
+    @Override
+    public boolean removeModule(String moduleId) throws OpenModuleException {
+        StaticLogger.debug(this, "Remove module: " + moduleId);
+        BaseModule module = getModuleByID(moduleId);
+        libraryRepository.remove(module);
+        return libraryLoader.removeModule(module);
+    }
 }

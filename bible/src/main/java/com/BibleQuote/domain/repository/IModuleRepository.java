@@ -54,4 +54,6 @@ public interface IModuleRepository<T extends BaseModule> {
 
     @NonNull
     String getBookContent(T module, String bookID) throws BookNotFoundException;
+
+    boolean removeModule(T module);
 }

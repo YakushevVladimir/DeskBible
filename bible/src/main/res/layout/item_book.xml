@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2011 Scripture Software
   ~
   ~ Licensed to the Apache Software Foundation (ASF) under one
@@ -26,32 +25,37 @@
   ~ E-mail: ru.phoenix@gmail.com
   ~ WWW: http://www.scripturesoftware.org
   -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
+    android:layout_width="match_parent"
     android:layout_height="@dimen/library_item_height"
     android:orientation="horizontal">
 
     <TextView
         android:id="@+id/id"
         android:layout_width="@dimen/book_id_width"
-        android:layout_height="fill_parent"
-        android:background="#ffffffff"
+        android:layout_height="wrap_content"
+        android:maxLines="2"
         android:gravity="center"
-        android:lines="2"
-        android:padding="2sp"
-        android:textColor="#ffababab"
-        android:textSize="@dimen/text_size_small"
-        tools:text="RST"/>
+        android:padding="@dimen/default_margin_min"
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Gen" />
 
     <TextView
         android:id="@+id/name"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:background="#ffffffff"
-        android:gravity="center_vertical"
-        android:lines="2"
-        android:textColor="#000000"
-        android:textSize="@dimen/text_size_medium"
-        tools:text="Русский синодальный текст с номерами Стронга"/>
-</LinearLayout>
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:maxLines="2"
+        android:paddingStart="0dp"
+        android:paddingEnd="@dimen/default_margin_min"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/id"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Genesis" />
+</androidx.constraintlayout.widget.ConstraintLayout>

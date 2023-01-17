@@ -28,6 +28,7 @@
 
 package com.BibleQuote.presentation.ui.reader;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -44,6 +45,9 @@ import android.view.Surface;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -64,7 +68,6 @@ import com.BibleQuote.presentation.ui.about.AboutActivity;
 import com.BibleQuote.presentation.ui.base.BaseActivity;
 import com.BibleQuote.presentation.ui.bookmarks.BookmarksActivity;
 import com.BibleQuote.presentation.ui.help.HelpActivity;
-import ru.churchtools.deskbible.presentation.history.HistoryActivity;
 import com.BibleQuote.presentation.ui.imagepreview.ImagePreviewActivity;
 import com.BibleQuote.presentation.ui.library.LibraryActivity;
 import com.BibleQuote.presentation.ui.reader.tts.TTSPlayerFragment;
@@ -82,6 +85,9 @@ import java.util.TreeSet;
 import javax.inject.Inject;
 
 import ru.churchtools.deskbible.domain.config.FeatureToggle;
+import ru.churchtools.deskbible.presentation.history.HistoryActivity;
+import ru.churchtools.deskbible.presentation.library.LibraryFragment;
+import ru.churchtools.deskbible.presentation.library.NewLibraryActivity;
 
 public class ReaderActivity extends BaseActivity<ReaderViewPresenter> implements ReaderView, IReaderViewListener {
 
@@ -106,6 +112,7 @@ public class ReaderActivity extends BaseActivity<ReaderViewPresenter> implements
     private boolean exitToBackKey;
     private Mode oldMode;
     private TTSPlayerFragment ttsPlayer;
+    private ActivityResultLauncher<Intent> selectModuleLauncher;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -129,6 +136,11 @@ public class ReaderActivity extends BaseActivity<ReaderViewPresenter> implements
             return onNavigationItemSelected(menuItem);
         });
 
+        selectModuleLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                this::onModuleSelectResult
+        );
+
         ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar, R.string.openDrawer, R.string.closeDrawer) {
             @Override
@@ -151,6 +163,15 @@ public class ReaderActivity extends BaseActivity<ReaderViewPresenter> implements
             presenter.openLink(intent.getData());
         } else {
             presenter.openLastLink();
+        }
+    }
+
+    private void onModuleSelectResult(ActivityResult result) {
+        if (result.getResultCode() == Activity.RESULT_OK) {
+            Intent data = result.getData();
+            if (data != null) {
+                presenter.onModuleSelected(data.getStringExtra(LibraryFragment.EXTRA_MODULE_ID));
+            }
         }
     }
 
@@ -372,7 +393,7 @@ public class ReaderActivity extends BaseActivity<ReaderViewPresenter> implements
     }
 
     @Override
-    public void openLibraryActivity() {
+    public void selectBibleLink() {
         startActivityForResult(LibraryActivity.createIntent(this), ID_CHOOSE_CH);
     }
 
@@ -481,6 +502,9 @@ public class ReaderActivity extends BaseActivity<ReaderViewPresenter> implements
 
     private boolean onNavigationItemSelected(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
+            case R.id.drawer_library:
+                openLibraryActivity();
+                return true;
             case R.id.drawer_bookmarks:
                 openBookmarkActivity();
                 return true;
@@ -499,6 +523,10 @@ public class ReaderActivity extends BaseActivity<ReaderViewPresenter> implements
             default:
                 return false;
         }
+    }
+
+    private void openLibraryActivity() {
+        selectModuleLauncher.launch(NewLibraryActivity.createIntent(this));
     }
 
     private void openAboutActivity() {

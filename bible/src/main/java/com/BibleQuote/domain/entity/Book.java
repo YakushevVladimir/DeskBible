@@ -35,15 +35,16 @@ import com.BibleQuote.managers.BibleBooksID;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Yakushev Vladimir, Sergey Ursul
  */
 public abstract class Book implements Serializable {
 
-	private static final long serialVersionUID = -6348188202419079481L;
+    private static final long serialVersionUID = -6348188202419079481L;
 
-	private final String name;
+    private final String name;
     private String osisId;
     private final List<String> shortNames;
     private final Integer chapterQty;
@@ -56,12 +57,12 @@ public abstract class Book implements Serializable {
         this.shortNames = getShortNames(shortNames);
     }
 
-	/**
-	 * Количество глав в книге
-	 */
-	public Integer getChapterQty() {
-		return chapterQty;
-	}
+    /**
+     * Количество глав в книге
+     */
+    public Integer getChapterQty() {
+        return chapterQty;
+    }
 
     public abstract String getDataSourceID();
 
@@ -119,6 +120,23 @@ public abstract class Book implements Serializable {
     @Override
     public String toString() {
         return name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Book book = (Book) o;
+        return hasChapterZero == book.hasChapterZero
+                && name.equals(book.name)
+                && osisId.equals(book.osisId)
+                && Objects.equals(shortNames, book.shortNames)
+                && chapterQty.equals(book.chapterQty);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, osisId, shortNames, chapterQty, hasChapterZero);
     }
 
     @NonNull

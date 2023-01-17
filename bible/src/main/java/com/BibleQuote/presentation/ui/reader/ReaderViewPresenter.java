@@ -36,6 +36,9 @@ import com.BibleQuote.di.scope.PerActivity;
 import com.BibleQuote.domain.AnalyticsHelper;
 import com.BibleQuote.domain.entity.BaseModule;
 import com.BibleQuote.domain.entity.BibleReference;
+import com.BibleQuote.domain.entity.Book;
+import com.BibleQuote.domain.exceptions.BookDefinitionException;
+import com.BibleQuote.domain.exceptions.BooksDefinitionException;
 import com.BibleQuote.domain.exceptions.OpenModuleException;
 import com.BibleQuote.domain.textFormatters.ModuleTextFormatter;
 import com.BibleQuote.managers.Librarian;
@@ -43,6 +46,8 @@ import com.BibleQuote.presentation.ui.base.BasePresenter;
 import com.BibleQuote.presentation.ui.reader.tts.TTSPlayerFragment;
 import com.BibleQuote.presentation.widget.Mode;
 import com.BibleQuote.utils.PreferenceHelper;
+
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -135,7 +140,7 @@ public class ReaderViewPresenter extends BasePresenter<ReaderView> implements TT
     }
 
     public void onClickChooseChapter() {
-        getViewAndExecute(ReaderView::openLibraryActivity);
+        getViewAndExecute(ReaderView::selectBibleLink);
     }
 
     private void initView() {
@@ -150,7 +155,7 @@ public class ReaderViewPresenter extends BasePresenter<ReaderView> implements TT
 
     private void openChapterFromLink(BibleReference osisLink) {
         if (!librarian.isOSISLinkValid(osisLink)) {
-            getViewAndExecute(view -> view.openLibraryActivity());
+            getViewAndExecute(view -> view.selectBibleLink());
             return;
         }
 
@@ -176,5 +181,42 @@ public class ReaderViewPresenter extends BasePresenter<ReaderView> implements TT
     private void viewCurrentChapter() {
         getViewAndExecute(ReaderView::disableActionMode);
         openChapterFromLink(librarian.getCurrentOSISLink());
+    }
+
+    public void onModuleSelected(@NonNull String moduleId) {
+        addSubscription(Single.fromCallable(() -> handleSelectedModule(moduleId))
+                .subscribeOn(getView().backgroundThread())
+                .observeOn(getView().mainThread())
+                .doOnSubscribe(disposable -> getView().showProgress(true))
+                .doAfterTerminate(() -> getView().showProgress(false))
+                .subscribe(
+                        this::openChapterFromLink,
+                        throwable -> getViewAndExecute(view -> view.onOpenChapterFailure(throwable))
+                )
+        );
+    }
+
+    @NonNull
+    private BibleReference handleSelectedModule(@NonNull String moduleId) throws OpenModuleException, BooksDefinitionException, BookDefinitionException {
+        BibleReference reference = librarian.getCurrentOSISLink();
+        if (moduleId.equals(reference.getModuleID())) {
+            return reference;
+        }
+
+        BaseModule module = librarian.getModule(moduleId);
+        Map<String, Book> books = module.getBooks();
+        if (books.containsKey(reference.getBookID())) {
+                return new BibleReference(
+                        moduleId,
+                        reference.getBookID(),
+                        reference.getChapter(),
+                        reference.getFromVerse());
+        }
+
+        return new BibleReference(
+                moduleId,
+                books.keySet().iterator().next(),
+                module.isChapterZero() ? 0 : 1,
+                1);
     }
 }

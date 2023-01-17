@@ -54,7 +54,7 @@ interface ReaderView extends BaseView {
 
     void onOpenChapterFailure(Throwable ex);
 
-    void openLibraryActivity();
+    void selectBibleLink();
 
     void setContent(String baseUrl, Chapter chapter, int verse, boolean isBible);
 

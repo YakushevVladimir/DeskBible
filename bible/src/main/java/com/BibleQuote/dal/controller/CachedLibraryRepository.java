@@ -42,8 +42,8 @@ import ru.churchtools.deskbible.domain.logger.StaticLogger;
 
 public class CachedLibraryRepository implements LibraryRepository {
 
-    private ICacheRepository cacheRepository;
-    private CopyOnWriteArrayList<BaseModule> modules = new CopyOnWriteArrayList<>();
+    private final ICacheRepository cacheRepository;
+    private final CopyOnWriteArrayList<BaseModule> modules = new CopyOnWriteArrayList<>();
 
     public CachedLibraryRepository(ICacheRepository cacheRepository) {
         this.cacheRepository = cacheRepository;
@@ -75,6 +75,12 @@ public class CachedLibraryRepository implements LibraryRepository {
     public void add(BaseModule module) {
         StaticLogger.info(this, "Adding a module to the cache");
         modules.add(module);
+        cacheModulesList();
+    }
+
+    @Override
+    public void remove(BaseModule module) {
+        modules.remove(module);
         cacheModulesList();
     }
 

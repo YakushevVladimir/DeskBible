@@ -188,6 +188,12 @@ public class BQModuleRepository implements IModuleRepository<BQModule> {
         return bookContent.toString();
     }
 
+    @Override
+    public boolean removeModule(BQModule module) {
+        File file = new File(module.getModulePath());
+        return file.exists() && file.delete();
+    }
+
     private void fillModule(BQModule module, BufferedReader bReader)
             throws DataAccessException, BookDefinitionException {
         if (bReader == null) {
@@ -386,7 +392,7 @@ public class BQModuleRepository implements IModuleRepository<BQModule> {
                         ? ""
                         : str.substring(delimiterPos).trim();
                 if (key.equals("desiredfontcharset")) {
-                    return charsets.containsKey(value) ? charsets.get(value) : encoding;
+                    return charsets.getOrDefault(value, encoding);
                 } else if (key.equals("defaultencoding")) {
                     return value;
                 }
