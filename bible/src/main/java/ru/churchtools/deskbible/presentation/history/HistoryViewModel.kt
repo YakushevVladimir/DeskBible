@@ -17,17 +17,13 @@ class HistoryViewModel(
     val historyState: LiveData<HistoryViewResult>
         get() = _historyState
 
-    private lateinit var historyList: List<ItemList>
-
     fun onActivityCreate() {
         updateHistoryList()
     }
 
-    fun onClickList(position: Int) {
-        if (position in historyList.indices) {
-            historyList[position][ItemList.ID]?.let { link ->
-                _historyState.value = HistoryViewResult.OpenLink(link)
-            }
+    fun onClickList(item: ItemList) {
+        item[ItemList.ID]?.let { link ->
+            _historyState.value = HistoryViewResult.OpenLink(link)
         }
     }
 
@@ -37,7 +33,7 @@ class HistoryViewModel(
     }
 
     private fun updateHistoryList() {
-        historyList = myLibrarian.historyList
+        val historyList = myLibrarian.historyList
         _historyState.value = HistoryViewResult.HistoryList(historyList)
     }
 
