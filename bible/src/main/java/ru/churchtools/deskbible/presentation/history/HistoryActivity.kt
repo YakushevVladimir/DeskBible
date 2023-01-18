@@ -31,12 +31,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.widget.AdapterView
-import android.widget.AdapterView.OnItemClickListener
-import android.widget.ListView
-import android.widget.SimpleAdapter
 import androidx.activity.viewModels
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.RecyclerView
 import com.BibleQuote.R
 import com.BibleQuote.di.component.ActivityComponent
 import com.BibleQuote.entity.ItemList
@@ -45,8 +42,8 @@ import javax.inject.Inject
 
 class HistoryActivity : BQActivity() {
 
-    private val vHistoryList: ListView by lazy {
-        findViewById(R.id.FavoritsLV)
+    private val recyclerViewHistoryList: RecyclerView by lazy {
+        findViewById(R.id.historyRecyclerView)
     }
 
     private val viewModel: HistoryViewModel by viewModels { viewModelFactory }
@@ -58,18 +55,15 @@ class HistoryActivity : BQActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_history)
 
+        val itemDecoration = DividerItemDecoration(this, RecyclerView.VERTICAL)
+        recyclerViewHistoryList.addItemDecoration(itemDecoration)
+
         viewModel.historyState.observe(this) {
             when (it) {
-                is HistoryViewResult.HistoryList -> setListAdapter(it.list)
+                is HistoryViewResult.HistoryList -> setRecyclerViewAdapter(it.list)
                 is HistoryViewResult.OpenLink -> sendResult(it.link)
             }
         }
-
-        vHistoryList.onItemClickListener =
-            OnItemClickListener { _: AdapterView<*>?, _: View?, position: Int, _: Long ->
-                viewModel.onClickList(position)
-            }
-
         viewModel.onActivityCreate()
     }
 
@@ -101,12 +95,10 @@ class HistoryActivity : BQActivity() {
         }
     }
 
-    private fun setListAdapter(list: List<ItemList>) {
-        vHistoryList.adapter = SimpleAdapter(
-            this,
-            list,
-            R.layout.item_list_no_id,
-            arrayOf(ItemList.ID, ItemList.Name),
-            intArrayOf(R.id.id, R.id.name))
+    private fun setRecyclerViewAdapter(list: List<ItemList>) {
+        val adapter = HistoryAdapter(list) {
+            viewModel.onClickList(it)
+        }
+        recyclerViewHistoryList.adapter = adapter
     }
 }
